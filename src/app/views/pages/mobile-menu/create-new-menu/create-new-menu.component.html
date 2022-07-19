@@ -1,0 +1,112 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Profil mobile'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="menuForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce menu existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">Nom de menu mobile: *</label>
+                                <input type="text" formControlName="name" (change)="onChangeCode()" id="menu"
+                                    [className]="menuForm.controls['name'].errors && (menuForm.controls['name'].dirty || menuForm.controls['name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="menuForm.controls['name'].errors && (menuForm.controls['name'].dirty || menuForm.controls['name'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">Actif:</label>
+        
+                                <span class="switch switch-icon">
+                                    <label>
+                                        <input type="checkbox"
+                                            class="form-control form-control-sm form-control-solid"
+                                            formControlName="menu_active" name="select" />
+                                        <span></span>
+                                    </label>
+                                </span>
+        
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">Description: *</label>
+                                <input type="text" formControlName="menu_description"
+                                    [className]="menuForm.controls['menu_description'].errors && (menuForm.controls['menu_description'].dirty || menuForm.controls['menu_description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="menuForm.controls['menu_description'].errors && (menuForm.controls['menu_description'].dirty || menuForm.controls['menu_description'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-group ">Type menu</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="menu_type">
+                                    <option value=""></option>
+                              
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-group">Destination menu : </label>
+                                <input type="text" formControlName="menu_goto"
+                                [className]="menuForm.controls['menu_goto'].errors && (menuForm.controls['menu_goto'].dirty || menuForm.controls['menu_goto'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <div *ngIf="menuForm.controls['menu_goto'].errors && (menuForm.controls['menu_goto'].dirty || menuForm.controls['menu_goto'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-group">Selectionnez une image : </label>
+                                <input type="file" formControlName="menu_image"
+                                [className]="menuForm.controls['menu_image'].errors && (menuForm.controls['menu_image'].dirty || menuForm.controls['menu_image'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <div *ngIf="menuForm.controls['menu_image'].errors && (menuForm.controls['menu_image'].dirty || menuForm.controls['menu_image'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+
+
+
+
+
+
+
+            </form>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

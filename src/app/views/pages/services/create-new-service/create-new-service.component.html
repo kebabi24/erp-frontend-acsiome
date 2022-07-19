@@ -1,0 +1,110 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Créer un nouveau service'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="serviceForm">
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-group">Pèriode d'activation service</label>
+                                <input type="text" formControlName="service_period_activate_date" 
+                                    [className]="serviceForm.controls['service_period_activate_date'].errors && (serviceForm.controls['service_period_activate_date'].dirty || serviceForm.controls['service_period_activate_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="serviceForm.controls['service_period_activate_date'].errors && (serviceForm.controls['service_period_activate_date'].dirty || serviceForm.controls['service_period_activate_date'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-group">Date de création service : </label>
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
+                                        name="service_creation_date" formControlName="service_creation_date" ngbDatepicker
+                                        #service_creation_date="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="service_creation_date.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-group">Date de fermeture service: </label>
+
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
+                                        name="service_closing_date" ngbDatepicker formControlName="service_closing_date"
+                                        #service_closing_date="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="service_closing_date.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-group ">Séléctionner un role pour ce service</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="service_roleId">
+                                    <option value=""></option>
+                                            <option *ngFor="let elem of roles" [value]="elem.id">
+                                            {{elem.role_name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-group ">Séléctionner un itineraire </label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="service_itineraryId">
+                                    <option value=""></option>
+                                            <option *ngFor="let elem of itinerary" [value]="elem.id">
+                                            {{elem.itinerary_name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">Etat service:</label>
+        
+                                <span class="switch switch-icon">
+                                    <label>
+                                        <input type="checkbox"
+                                            class="form-control form-control-sm form-control-solid"
+                                            formControlName="service_open" name="select" />
+                                        <span></span>
+                                    </label>
+                                </span>
+        
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

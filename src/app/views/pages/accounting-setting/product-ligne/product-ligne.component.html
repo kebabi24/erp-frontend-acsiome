@@ -1,0 +1,1290 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une Ligne De Produit'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <form class="form" [formGroup]="productligneForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce Code existe deja
+                </kt-alert>     
+                <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Ligne Produit: *</label>
+                        
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="pl_prod_line"  (change)="onChangeCode()"
+                                [className]="productligneForm.controls['pl_prod_line'].errors && (productligneForm.controls['pl_prod_line'].dirty || productligneForm.controls['pl_prod_line'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="productligneForm.controls['pl_prod_line'].errors && (productligneForm.controls['pl_prod_line'].dirty || productligneForm.controls['pl_prod_line'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        
+
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="pl_desc"
+                        [className]="productligneForm.controls['pl_desc'].errors && (productligneForm.controls['pl_desc'].dirty || productligneForm.controls['pl_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="productligneForm.controls['pl_desc'].errors && (productligneForm.controls['pl_desc'].dirty || productligneForm.controls['pl_desc'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">    
+
+                    <div class="form-group col-2">
+                        <label class="form-group"> a Taxer: </label>
+                            <span class="switch switch-icon ">
+                                <label>
+                                    <input type="checkbox" formControlName="pl_taxable" name="Permanent"
+                                        class="form-control form-control-sm form-control-solid">
+                                    <span></span>
+                                </label>
+                            </span>
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Taux Taxe: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="pl_taxc" class="form-control form-control-solid"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)=opentax(contenttax)>
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">ss compte par defaut: *</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group"> Remplacer: </label>
+                        <span class="switch switch-icon ">
+                            <label>
+                                <input type="checkbox" name="Permanent"
+                                    class="form-control form-control-sm form-control-solid">
+                                <span></span>
+                            </label>
+                        </span>
+
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Centre de cout par defaut:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group"> Remplacer: </label>
+                        <span class="switch switch-icon ">
+                            <label>
+                                <input type="checkbox" name="Permanent"
+                                    class="form-control form-control-sm form-control-solid">
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+            </form>
+                    <ngb-tabset class="col-12">
+                        <ngb-tab title="Comptes de Stock">
+                            <ng-template ngbTabContent>
+                                <form class="form" [formGroup]="stockForm">
+                                    <div class="row">    
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte Stock: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_inv_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="compte stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_inv_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_inv_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">    
+                                            <label class="form-group">Centre de Coût: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_inv_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte Ecart Stock:</label>
+                                            
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_dscr_acct"  class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_dscr_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_dscr_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Coût: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_dscr_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte de Rebut:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_scrp_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_scrp_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_scrp_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Coût:</label>
+    
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_scrp_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Revaler:</label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_cchg_acct"  class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Revaler">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_cchg_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>    
+ 
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" fromControlName="pl_cchg_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre Coût:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" fromControlName="pl_cchg_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte Ecart transite:</label>
+                                            
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_xfer_acct"  class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Transite">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_xfer_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte" fromControlName="pl_xfer_sub">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Coût:</label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout" fromControlName="pl_xfer_cc">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </ng-template>
+                        </ngb-tab>
+                        <ngb-tab title="Comptes des Ventes">
+                            <ng-template ngbTabContent>
+                                <form class="form" [formGroup]="venteForm">
+                                <div class="row">    
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte de Vente: </label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_sls_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_sls_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte: </label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_sls_sub" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de Cout: </label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_sls_cc" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte Remise Vente:</label>
+                                        
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_dsc_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_dsc_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte:</label>
+                                    
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_dsc_sub" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de cout:</label>
+                                    
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_dsc_cc" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">    
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte CPV matières:</label>
+                                       
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_cmtl_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_cmtl_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_cmtl_sub" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de Cout:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_cmtl_cc" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte CPV MO:</label>
+                                    
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_clbr_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_clbr_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_clbr_sub" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de Cout:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_clbr_cc" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte CPV FGV:</label>
+                                    
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_cbdn_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_cbdn_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_cbdn_sub" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de Cout:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_cbdn_cc" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte CPV FGF:</label>
+                                        
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_covh_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_covh_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_covh_sub" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de Cout:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_covh_cc" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Compte CPV sous-trait:</label>
+                                        
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_csub_acct" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pl_csub_acct')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Sous Compte:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_csub_sub"  class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="sous compte">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Centre de Cout:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" formControlName="pl_csub_cc"  class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" placeholder="centre tout">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+
+                                </form>
+
+                            </ng-template>
+                        </ngb-tab>
+
+                        <ngb-tab title="Comptes des Achats">
+                            <ng-template ngbTabContent>
+                                <form class="form" [formGroup]="achatForm">
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte Achats: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_pur_acct"  class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_pur_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_pur_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_pur_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">   
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte Récept OA: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_rcpt_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_rcpt_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_rcpt_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_rcpt_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte input FGF: </label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_ovh_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_ovh_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_ovh_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_ovh_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Ecart Prix OA: </label>
+                                       
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_ppv_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_ppv_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_ppv_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" >
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_ppv_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Cp Ecart CF: </label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_apvu_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_apvu_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_apvu_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_apvu_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Cp Ecart Taux CF: </label>
+                                           
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_apvr_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_apvr_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_apvr_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_apvr_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </ng-template>
+                        </ngb-tab>
+                        <ngb-tab title="Comptes de production">
+                            <ng-template ngbTabContent>
+                                <form class="form" [formGroup]="prodForm">
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte STK Atelier: </label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_flr_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_flr_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_flr_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_flr_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Ecart Util Matière: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_mvar_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_mvar_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_mvar_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_mvar_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Ecart Taux Matière: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_mvrr_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_mvrr_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_mvrr_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_mvrr_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Ecart Mélange: </label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" formControlName="pl_xvar_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_xvar_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_xvar_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_xvar_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Coût Production: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_cop_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_cop_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_cop_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_cop_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Ecart Util Sous-Traite: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_svar_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_svar_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_svar_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_svar_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Taux ST: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_svrr_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_svrr_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_svrr_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_svrr_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte en cours: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_wip_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_wip_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_wip_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_wip_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Compte Ecart Coût OF: </label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_wvar_acct" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="Compte Ecart Stock">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content,'pl_wvar_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_wvar_sub" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="sous compte">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Centre de Cout:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" formControlName="pl_wvar_cc" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" placeholder="centre tout">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </ng-template>
+                        </ngb-tab>
+                    </ngb-tabset>
+              
+           
+        </div>
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="accounts">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contenttax let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionstax" (onAngularGridCreated)="angularGridReadytax($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtax($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionstax" [dataset]="datatax">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>
