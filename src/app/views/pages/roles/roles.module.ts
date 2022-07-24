@@ -52,6 +52,8 @@ import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import { RoleService, ItineraryService } from "../../../core/erp"
 import { TreeModule } from "@circlon/angular-tree-component";
+import { EditRoleComponent } from './edit-role/edit-role.component';
+
 
 
 const routes: Routes = [
@@ -63,10 +65,14 @@ const routes: Routes = [
         path: "list-all-roles",
         component: ListAllRolesComponent,
     },
+    {
+        path: "edit-role",
+        component: EditRoleComponent,
+    },
 ]
 
 @NgModule({
-    declarations: [RolesComponent , CreateNewRolesComponent, ListAllRolesComponent],
+    declarations: [RolesComponent , CreateNewRolesComponent, ListAllRolesComponent, EditRoleComponent],
     imports: [
         CommonModule,
         HttpClientModule,

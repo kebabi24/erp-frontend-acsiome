@@ -2,69 +2,167 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
-import { Column, AngularGridInstance, FieldType, GridOption } from 'angular-slickgrid';
-
+import { NgbDropdownConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AngularGridInstance, FieldType, GridOption, Column } from 'angular-slickgrid';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ItineraryService, Role, RoleService, UsersMobileService } from 'src/app/core/erp';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
-import { Role, RoleService, ItineraryService, Itinerary  } from "../../../../core/erp"
-
 
 @Component({
-  selector: 'kt-create-new-roles',
-  templateUrl: './create-new-roles.component.html',
-  styleUrls: ['./create-new-roles.component.scss']
+  selector: 'kt-edit-role',
+  templateUrl: './edit-role.component.html',
+  styleUrls: ['./edit-role.component.scss']
 })
-export class CreateNewRolesComponent implements OnInit {
-    role: Role
-    roleForm: FormGroup
-    hasFormErrors = false
-    isExist = false
-    loadingSubject = new BehaviorSubject<boolean>(true)
-    loading$: Observable<boolean>
-    users: []
-    itinerary: []
-    selectedItinerary: number[] = []
-    columnDefinitions: Column[] = []
-    columnDefinitions2: Column[] = []
-    gridOptions: GridOption = {}
-    gridOptions2: GridOption = {}
-    gridObj: any
-    angularGrid: AngularGridInstance
-    gridObj2: any
-    angularGrid2: AngularGridInstance
-    selectedTitle: any
-    message: any
+export class EditRoleComponent implements OnInit {
+  role: Role
+  roleForm: FormGroup
+  hasFormErrors = false
+  isExist = false
+  loadingSubject = new BehaviorSubject<boolean>(true)
+  loading$: Observable<boolean>
+  users: []
+  itinerary: []
+  selectedItinerary: number[] = []
+  columnDefinitions: Column[] = []
+  columnDefinitions2: Column[] = []
+  gridOptions: GridOption = {}
+  gridOptions2: GridOption = {}
+  gridObj: any
+  angularGrid: AngularGridInstance
+  gridObj2: any
+  angularGrid2: AngularGridInstance
+  selectedTitle: any
+  message: any
+  roleEdit: any
+  title: String = 'Modifier role - '
+  userMobile_code : String
   constructor(
-        config: NgbDropdownConfig,
-        private roleF : FormBuilder,
-        private activatedRoute: ActivatedRoute,
-        private router: Router,
-        public dialog: MatDialog,
-        private layoutUtilsService: LayoutUtilsService,
-        private roleService: RoleService,
-        private itineraryService: ItineraryService,
-        private modalService: NgbModal
-  ) {
-        config.autoClose = true
-        this.prepareGrid2()
+      config: NgbDropdownConfig,
+      private roleF: FormBuilder,
+      private activatedRoute: ActivatedRoute,
+      private router: Router,
+      public dialog: MatDialog,
+      private layoutUtilsService: LayoutUtilsService,
+      private modalService: NgbModal,
+      private roleService : RoleService,
+      private itineraryService: ItineraryService,
+  ) { 
+      config.autoClose = true
+      this.prepareGrid2()
   }
 
   ngOnInit(): void {
-        this.loading$ = this.loadingSubject.asObservable()
+    this.loading$ = this.loadingSubject.asObservable()
+        this.loadingSubject.next(true)
+        this.activatedRoute.params.subscribe((params) => {
+        const id = params.id
+        this.roleService.getOne(id).subscribe((response: any)=>{
+        this.roleEdit = response.data
+        this.initCode()
         this.loadingSubject.next(false)
-        this.createForm()
+        this.title = this.title + this.roleEdit.role_code
+          })
+      })
+  }
+
+  initCode() {
+    this.createForm()
+    this.loadingSubject.next(false)
   }
 
   createForm() {
     this.loadingSubject.next(false)
-
-    this.role = new Role()
     this.roleForm = this.roleF.group({
-        role_code: [this.role.role_code, Validators.required],
-        role_name: [this.role.role_name, Validators.required],
-        userMobile_code: [{value: this.role.userMobile_code, disabled: !this.isExist}, Validators.required],
+
+        role_code: [{value: this.roleEdit.role_code, disabled : false}, Validators.required],
+        role_name: [{value: this.roleEdit.role_name, disabled : true}],
+        userMobile_code: [this.roleEdit.userMobile_code, Validators.required],
+        init: [ false],
+
     })
+  
+  }
+
+  open(content) {
+    this.prepareGrid()
+    this.modalService.open(content, { size: "lg" })
+  }
+
+  reset() {
+    this.role = new Role()
+    this.createForm()
+    this.hasFormErrors = false
+  }
+
+  onSubmit() {
+    this.hasFormErrors = false
+    const controls = this.roleForm.controls
+    /** check form */
+    if (this.roleForm.invalid) {
+        Object.keys(controls).forEach((controlName) =>
+            controls[controlName].markAsTouched()
+        )
+
+        this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+        this.hasFormErrors = true;
+  
+        return
+    }
+
+    
+
+    // tslint:disable-next-line:prefer-const
+    const id =  this.roleEdit.id
+
+    let role = this.prepareRole()
+    this.addRole(role, this.selectedItinerary)
+  }
+
+  prepareRole(): Role {
+    const controls = this.roleForm.controls
+    const _role = new Role()
+    _role.role_code =   controls.role_code.value
+    _role.role_name = controls.fullname.value
+    _role.userMobile_code =   this.userMobile_code
+
+    return _role
+  }
+
+  addRole(_role: Role, _itinerary : any) {
+    this.loadingSubject.next(true)
+    this.roleService.addRole({role: _role, itinerary: _itinerary}).subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+            this.layoutUtilsService.showActionNotification(
+                "Erreur verifier les informations",
+                MessageType.Create,
+                10000,
+                true,
+                true
+            )
+            this.loadingSubject.next(false)
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        this.loadingSubject.next(false)
+        this.router.navigateByUrl("/roles/list-all-roles")
+
+    
+    }
+    )
+  }
+
+
+  goBack() {
+    this.loadingSubject.next(false)
+    const url = `/roles/list-all-roles`
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
   }
 
   prepareGrid2(){
@@ -78,12 +176,12 @@ export class CreateNewRolesComponent implements OnInit {
           maxWidth: 80,
       },
       {
-        id: "itinerary_code",
-        name: "Code de l'itinéraire",
-        field: "itinerary_code",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
+          id: "itinerary_code",
+          name: "Code de l'itinéraire",
+          field: "itinerary_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
       },
       {
           id: "itinerary_name",
@@ -139,27 +237,6 @@ export class CreateNewRolesComponent implements OnInit {
     
   }
 
-  onChangeCode() {
-    const controls = this.roleForm.controls
-    
-    this.roleService.getByOne({role_code: controls.role_code.value }).subscribe(
-        (res: any) => {
-          console.log("aa", res.data);
-       
-          if (res.data) {
-            alert("Ce role exist déja")
-            controls.role_code.setValue(null) 
-            document.getElementById("role").focus(); 
-
-          } else { 
-            controls.role_name.enable()
-            controls.userMobile_code.enable()
-            
-        }
-               
-    })
-
-  }
   prepareGrid() {
     this.columnDefinitions = [
         {
@@ -171,6 +248,14 @@ export class CreateNewRolesComponent implements OnInit {
             maxWidth: 80,
         },
         {
+            id: "userMobile_code",
+            name: "Code d'utilisateur",
+            field: "userMobile_code",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
             id: "username",
             name: "Nom d'utilisateur",
             field: "username",
@@ -178,14 +263,6 @@ export class CreateNewRolesComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
         },
-        {
-          id: "userMobile_code",
-          name: "code d'utilisateur",
-          field: "userMobile_code",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
         {
           id: "fullname",
           name: "Nom complet",
@@ -195,9 +272,9 @@ export class CreateNewRolesComponent implements OnInit {
           type: FieldType.string,
         },
         {
-          id: "profile_code",
+          id: "profile_name",
           name: "code profil",
-          field: "profile_code",
+          field: "profile_name",
           sortable: true,
           filterable: true,
           type: FieldType.string,
@@ -246,7 +323,8 @@ export class CreateNewRolesComponent implements OnInit {
         .getAllUsers()
         .subscribe((response: any) => (this.users = response.data))
   }
-  onChangeRole() {
+
+  onChangeCode() {
     const controls = this.roleForm.controls
     
     this.roleService.getByOne({role_code: controls.role_code.value }).subscribe(
@@ -254,110 +332,35 @@ export class CreateNewRolesComponent implements OnInit {
           console.log("aa", res.data);
        
           if (res.data) {
-            this.router.navigateByUrl(`/roles/edit-role/${res.data.id}`)
-            //console.log(res.data.id)
-          }
+            alert("Ce role exist déja")
+            controls.role_code.setValue(null) 
+            document.getElementById("role").focus(); 
+
+          } else { 
+            controls.role_name.enable()
+            controls.userMobile_code.enable()
+            
+        }
                
     })
 
   }
 
-  open(content) {
-    this.prepareGrid()
-    this.modalService.open(content, { size: "lg" })
-  }
-  
-  reset() {
-    this.role = new Role()
-    this.createForm()
-    this.hasFormErrors = false
-}
-// save data
-  onSubmit() {
-    this.hasFormErrors = false
-    const controls = this.roleForm.controls
-    /** check form */
-    if (this.roleForm.invalid) {
-        Object.keys(controls).forEach((controlName) =>
-            controls[controlName].markAsTouched()
-        )
-
-        this.hasFormErrors = true
-        return
-    }
-  
-
-    // tslint:disable-next-line:prefer-const
-    let role = this.prepareRole()
-    //console.log(this.selectedItinerary)
-    this.addRole(role, this.selectedItinerary)
-  }
-  prepareRole(): Role {
-    const controls = this.roleForm.controls
-    const _role = new Role()
-    _role.role_code = controls.role_code.value
-    _role.role_name = controls.role_name.value
-    _role.userMobile_code = controls.userMobile_code.value
-
-    return _role
-  }
-
-  /**
-     * Add role
-     *
-     * @param _role: RoleModel
-     */
-   addRole(_role: Role, _itinerary : any) {
-    this.loadingSubject.next(true)
-    this.roleService.addRole({role: _role, itinerary: _itinerary}).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-            this.layoutUtilsService.showActionNotification(
-                "Erreur verifier les informations",
-                MessageType.Create,
-                10000,
-                true,
-                true
-            )
-            this.loadingSubject.next(false)
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-        )
-        this.loadingSubject.next(false)
-        this.router.navigateByUrl("/itinerary/list-itinerary")
-
-    
-    }
-    )
-  }
-
-
-
-  goBack() {
-    this.loadingSubject.next(false)
-    const url = `/roles/list-all-roles`
-    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-  }
   handleSelectedRowsChanged(e, args) {
     const controls = this.roleForm.controls
     if (Array.isArray(args.rows) && this.gridObj) {
         args.rows.map((idx) => {
             const item = this.gridObj.getDataItem(idx)
+            this.userMobile_code = item.userMobile_code
             controls.userMobile_code.setValue(item.userMobile_code || "")
         })
     }
   }
+
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid
     this.gridObj = (angularGrid && angularGrid.slickGrid) || {}
   }
-
 
   handleSelectedRowsChanged2(e, args) {
     if (Array.isArray(args.rows) && this.gridObj2) {
@@ -375,6 +378,8 @@ export class CreateNewRolesComponent implements OnInit {
     this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {}
   }
   
+
+
 
 
 }

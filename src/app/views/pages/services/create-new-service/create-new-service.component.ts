@@ -66,8 +66,8 @@ export class CreateNewServiceComponent implements OnInit {
         service_period_activate_date: [this.service.service_period_activate_date, Validators.required],
         service_creation_date: [{value: this.service.service_creation_date}, Validators.required],
         service_closing_date: [{value: this.service.service_closing_date}, Validators.required],
-        service_roleId: [{value: this.service.service_roleId}, Validators.required],
-        service_itineraryId: [{value: this.service.service_itineraryId}, Validators.required],
+        role_code: [{value: this.service.role_code}, Validators.required],
+        itinerary_code: [{value: this.service.itinerary_code}, Validators.required],
         service_open: [{value: this.service.service_open}, Validators.required],
         
     })
@@ -106,8 +106,8 @@ export class CreateNewServiceComponent implements OnInit {
     _service.service_period_activate_date = controls.service_period_activate_date.value
     _service.service_creation_date = controls.service_creation_date.value
     _service.service_closing_date = controls.service_closing_date.value
-    _service.service_roleId = controls.service_roleId.value
-    _service.service_itineraryId = controls.service_itineraryId.value
+    _service.role_code = controls.role_code.value
+    _service.itinerary_code = controls.itinerary_code.value
     _service.service_open = controls.service_open.value
     return _service
 

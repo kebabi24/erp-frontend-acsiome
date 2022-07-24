@@ -27,7 +27,7 @@ import {
 
 } from "../../../../core/erp"
 import { config } from 'process';
-
+export type ControlPosition = keyof typeof google.maps.ControlPosition;
 @Component({
   selector: 'kt-create-customer-mobile',
   templateUrl: './create-customer-mobile.component.html',

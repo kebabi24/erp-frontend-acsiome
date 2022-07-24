@@ -57,7 +57,7 @@ export class CreateUserMobileComponent implements OnInit {
     angularGrid: AngularGridInstance
     selectedTitle: any
     message: any
-    profile_id : Number
+    profile_code : String
     constructor(
         config: NgbDropdownConfig,
         private userFB: FormBuilder,
@@ -89,7 +89,7 @@ export class CreateUserMobileComponent implements OnInit {
             password: [{value: this.userMobile.password, disabled: true}, Validators.required],
             new_password: [{value: "", disabled: true}],
             email: [{value: this.userMobile.email, disabled: !this.isExist}],
-            profile_id: [{value: this.userMobile.profileId, disabled: !this.isExist}, Validators.required],
+            profile_code: [{value: this.userMobile.profile_code, disabled: !this.isExist}, Validators.required],
             hold: [{value: this.userMobile.hold, disabled: !this.isExist}, Validators.required],
 
 
@@ -240,8 +240,8 @@ export class CreateUserMobileComponent implements OnInit {
         _user.fullname = controls.fullname.value
         _user.password = controls.password.value
         _user.email = controls.email.value
-        console.log(this.profile_id)
-        _user.profileId = this.profile_id
+        console.log(this.profile_code)
+        _user.profile_code = this.profile_code
         _user.hold = controls.hold.value
 
         return _user
@@ -295,8 +295,8 @@ export class CreateUserMobileComponent implements OnInit {
             args.rows.map((idx) => {
                 const item = this.gridObj.getDataItem(idx)
                 //console.log(item.id)
-                this.profile_id = item.id
-                controls.profile_id.setValue(item.profile_name || "")
+                this.profile_code = item.profile_code
+                controls.profile_code.setValue(item.profile_code || "")
                 //console.log(item.profile_name)
             })
         }

@@ -22,12 +22,26 @@
         <div class="example-preview">
 
             <form class="form" [formGroup]="profileForm">
-
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce code profile existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeProfile()" class="btn">Cliquez ici</button>
+                </kt-alert>
                 <div class="row">
                     <div class="col-6">
                         <div class="row">
                             <div class="form-group col-4">
                                 <label class="form-group">code profile: *</label>
+                                <input type="text" formControlName="profile_code" (change)="onChangeCode()" id="profile"
+                                    [className]="profileForm.controls['profile_code'].errors && (profileForm.controls['profile_code'].dirty || profileForm.controls['profile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="profileForm.controls['profile_code'].errors && (profileForm.controls['profile_code'].dirty || profileForm.controls['profile_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">nom du profile: *</label>
                                 <input type="text" formControlName="profile_name"
                                     [className]="profileForm.controls['profile_name'].errors && (profileForm.controls['profile_name'].dirty || profileForm.controls['profile_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                 <div *ngIf="profileForm.controls['profile_name'].errors && (profileForm.controls['profile_name'].dirty || profileForm.controls['profile_name'].touched) "

@@ -56,7 +56,7 @@ export class EditUserMobileComponent implements OnInit {
   user_pwd_before: string;
   userMobileEdit: any
   title: String = 'Modifier utilisateur - '
-  profile_id : Number
+  profile_code : String
   constructor(
       
       config: NgbDropdownConfig,
@@ -95,7 +95,7 @@ export class EditUserMobileComponent implements OnInit {
             username: [{value: this.userMobileEdit.username, disabled : false}, Validators.required],
             fullname: [{value: this.userMobileEdit.fullname, disabled : true}],
             email: [{value: this.userMobileEdit.email, disabled : false}],
-            profile_name: [this.userMobileEdit.profile_name, Validators.required],
+            profile_code: [this.userMobileEdit.profile_code, Validators.required],
             hold: [this.userMobileEdit.hold],
             init: [ false],
     
@@ -141,7 +141,7 @@ export class EditUserMobileComponent implements OnInit {
         const _userMobile = new UserMobile()
         _userMobile.username =   controls.username.value
         _userMobile.fullname = controls.fullname.value
-        _userMobile.profileId =   this.profile_id
+        _userMobile.profile_code =   this.profile_code
         _userMobile.email =   controls.email.value 
         _userMobile.hold =   controls.hold.value
         if (controls.init.value == true ) {_userMobile.password = this.userMobileEdit.username}
@@ -187,8 +187,8 @@ export class EditUserMobileComponent implements OnInit {
         if (Array.isArray(args.rows) && this.gridObj) {
             args.rows.map((idx) => {
                 const item = this.gridObj.getDataItem(idx)
-                this.profile_id = item.id
-                controls.profile_name.setValue(item.profile_name || "")
+                this.profile_code = item.profile_code
+                controls.profile_code.setValue(item.profile_code || "")
             })
         }
       }

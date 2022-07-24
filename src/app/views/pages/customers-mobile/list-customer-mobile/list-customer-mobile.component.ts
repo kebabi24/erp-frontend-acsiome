@@ -94,7 +94,14 @@ export class ListCustomerMobileComponent implements OnInit {
             minWidth: 80,
             maxWidth: 80,
         },
-       
+        {
+          id: "customer_code",
+          name: "Code client",
+          field: "customer_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
         {
             id: "customer_name",
             name: "Client",

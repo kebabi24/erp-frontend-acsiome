@@ -80,14 +80,14 @@
                         <label class="form-group">Profile: *</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" formControlName="profile_id"
-                                [className]="userForm.controls['profile_id'].errors && (userForm.controls['profile_id'].dirty || userForm.controls['profile_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            <input type="text" formControlName="profile_code"
+                                [className]="userForm.controls['profile_code'].errors && (userForm.controls['profile_code'].dirty || userForm.controls['profile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open(content)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
-                            <div *ngIf="userForm.controls['profile_id'].errors && (userForm.controls['profile_id'].dirty || userForm.controls['profile_id'].touched)"
+                            <div *ngIf="userForm.controls['profile_code'].errors && (userForm.controls['profile_code'].dirty || userForm.controls['profile_code'].touched)"
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
                         

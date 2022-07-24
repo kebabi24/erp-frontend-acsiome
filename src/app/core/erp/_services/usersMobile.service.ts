@@ -62,6 +62,10 @@ export class UsersMobileService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL_USER}/up${id}`,data, { headers: httpHeaders })
     }
+    public updatedP(id: Number, data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL_PROFILE}/up${id}`,data, { headers: httpHeaders })
+    }
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_USER}/find`,data, { headers: httpHeaders })   

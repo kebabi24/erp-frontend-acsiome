@@ -968,6 +968,12 @@ export class MenuConfig {
                         },
                     ],
                 },
+                {
+                    title: "",
+                    bullet: "",
+                    icon: "",
+                    root: true,
+                },
                 
             ],
         },

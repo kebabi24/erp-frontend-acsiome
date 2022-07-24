@@ -70,19 +70,19 @@
                             <div class="form-group col-6">
                                 <label class="form-group ">Séléctionner un role pour ce service</label>
                                 <select class="form-control form-control-sm form-control-solid"
-                                    id="exampleSelects1" formControlName="service_roleId">
+                                    id="exampleSelects1" formControlName="role_code">
                                     <option value=""></option>
-                                            <option *ngFor="let elem of roles" [value]="elem.id">
-                                            {{elem.role_name}}</option>
+                                            <option *ngFor="let elem of roles" [value]="elem.role_code">
+                                            {{elem.role_code}}</option>
                                 </select>
                             </div>
                             <div class="form-group col-6">
                                 <label class="form-group ">Séléctionner un itineraire </label>
                                 <select class="form-control form-control-sm form-control-solid"
-                                    id="exampleSelects1" formControlName="service_itineraryId">
+                                    id="exampleSelects1" formControlName="itinerary_code">
                                     <option value=""></option>
-                                            <option *ngFor="let elem of itinerary" [value]="elem.id">
-                                            {{elem.itinerary_name}}</option>
+                                            <option *ngFor="let elem of itinerary" [value]="elem.itinerary_code">
+                                            {{elem.itinerary_code}}</option>
                                 </select>
                             </div>
                             <div class="form-group col-2">

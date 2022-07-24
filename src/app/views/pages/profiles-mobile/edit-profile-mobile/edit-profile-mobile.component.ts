@@ -32,7 +32,7 @@ import {
   TREE_ACTIONS,
 } from "@circlon/angular-tree-component";
 
-import { ProfileMobile, UsersMobileService } from "../../../../core/erp";
+import { MobileMenuService, ProfileMobile, UsersMobileService } from "../../../../core/erp";
 
 const actionMapping: IActionMapping = {
   mouse: {
@@ -59,7 +59,7 @@ export class EditProfileMobileComponent implements OnInit {
   selectedMenus = [];
   nodes = [];
   prf: any;
-
+  profileMobileEdit: any
   options: ITreeOptions = {
     useCheckbox: true,
     actionMapping,
@@ -73,73 +73,93 @@ export class EditProfileMobileComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
-    private profileMobileService: UsersMobileService
+    private profileMobileService: UsersMobileService,
+    private menuService: MobileMenuService
   ) {
     config.autoClose = true;
-    this.createForm();
-    this.activatedRoute.params.subscribe((params) => {
-      this.id = params.id;
-      if (this.id) {
-        const controls = this.profileForm.controls;
-        const menus = new MenuMobileConfig().defaults;
-        menus.aside.items.map(obj=>{
-          if(obj.title){
-              const node : any = {}
-              node.name = obj.title
-              node.children = []
-              if(obj.submenu){
-                  obj.submenu.map(value=>{
-                      let item :any
-                      item = {name: value.title,checked:true,children:[]}
-                      if(value.submenu) {
-                          value.submenu.map(v=>{
-                              item.children.push({name: v.title, checked:true})
-                          })
-                      }
-                      node.children.push(item)
-                  })
+    // this.createForm();
+    this.menuService.getAllMenu().subscribe((response: any) => {
+      this.nodes = response.data
+      //console.log(this.nodes)
+    })
+    // this.activatedRoute.params.subscribe((params) => {
+    //   this.id = params.id;
+    //   if (this.id) {
+    //     const controls = this.profileForm.controls;
+    //     const menus = new MenuMobileConfig().defaults;
+    //     menus.aside.items.map(obj=>{
+    //       if(obj.title){
+    //           const node : any = {}
+    //           node.name = obj.title
+    //           node.children = []
+    //           if(obj.submenu){
+    //               obj.submenu.map(value=>{
+    //                   let item :any
+    //                   item = {name: value.title,checked:true,children:[]}
+    //                   if(value.submenu) {
+    //                       value.submenu.map(v=>{
+    //                           item.children.push({name: v.title, checked:true})
+    //                       })
+    //                   }
+    //                   node.children.push(item)
+    //               })
 
-              }
+    //           }
               
               
               
-              this.nodes.push(node)
-          }
-      })
-        this.profileMobileService.getProfile(this.id).subscribe(
-          (res: any) => {
-            console.log("aa", res.data);
-            this.prf = res.data
-            controls.profile_name.setValue(this.prf.profile_name)
-            const d1 = new Date(this.prf.profile_valid_date)
-            d1.setDate(d1.getDate() )
-            const d2 = new Date(this.prf.profile_exp_date)
-            d2.setDate(d2.getDate() )
-            controls.profile_valid_date.setValue({year: d1.getFullYear, month: d1.getMonth()+1, day: d1.getDate()})
-            controls.profile_exp_date.setValue({year: d2.getFullYear, month: d2.getMonth()+1, day: d2.getDate()})
-            //this.roles = JSON.parse(res.data.usrg_menus)
-            //const menus = new MenuMobileConfig().defaults;
-            //this.selectedMenus = this.roles
+    //           this.nodes.push(node)
+    //       }
+    //   })
+    //     this.profileMobileService.getProfile(this.id).subscribe(
+    //       (res: any) => {
+    //         console.log("aa", res.data);
+    //         this.prf = res.data
+    //         controls.profile_code.setValue(this.prf.profile_code)
+    //         controls.profile_name.setValue(this.prf.profile_name)
+    //         const d1 = new Date(this.prf.profile_valid_date)
+    //         d1.setDate(d1.getDate() )
+    //         const d2 = new Date(this.prf.profile_exp_date)
+    //         d2.setDate(d2.getDate() )
+    //         controls.profile_valid_date.setValue({year: d1.getFullYear, month: d1.getMonth()+1, day: d1.getDate()})
+    //         controls.profile_exp_date.setValue({year: d2.getFullYear, month: d2.getMonth()+1, day: d2.getDate()})
+    //         //this.roles = JSON.parse(res.data.usrg_menus)
+    //         //const menus = new MenuMobileConfig().defaults;
+    //         //this.selectedMenus = this.roles
             
-            // controls.usrd_code.setValue(this.users.usrd_code);
-            // controls.usrd_name.setValue(this.users.usrd_name);
-            // controls.usrd_user_name.setValue(this.users.usrd_user_name);
-            // controls.usrd_profile.setValue(this.users.usrd_profile);
+    //         // controls.usrd_code.setValue(this.users.usrd_code);
+    //         // controls.usrd_name.setValue(this.users.usrd_name);
+    //         // controls.usrd_user_name.setValue(this.users.usrd_user_name);
+    //         // controls.usrd_profile.setValue(this.users.usrd_profile);
             
-          },
-          (error) => {
-            this.hasFormErrors = true;
-          },
-          () => {}
-        );
-      }
-    });    
+    //       },
+    //       (error) => {
+    //         this.hasFormErrors = true;
+    //       },
+    //       () => {}
+    //     );
+    //   }
+    // });    
     
   }
   ngOnInit(): void {
-    this.loading$ = this.loadingSubject.asObservable();
-    this.loadingSubject.next(false);
+    this.loading$ = this.loadingSubject.asObservable()
+        this.loadingSubject.next(true)
+        this.activatedRoute.params.subscribe((params) => {
+        const id = params.id
+        this.profileMobileService.getOne(id).subscribe((response: any)=>{
+        this.profileMobileEdit = response.data
+        this.initCode()
+        this.loadingSubject.next(false)
+        //this.title = this.title + this.userMobileEdit.username
+          })
+      })
     
+  }
+
+  initCode() {
+    this.createForm()
+    this.loadingSubject.next(false)
   }
   onInitTree(event){
     while (this.roles == null){
@@ -167,9 +187,10 @@ export class EditProfileMobileComponent implements OnInit {
 
     this.profile = new ProfileMobile();
     this.profileForm = this.profileFB.group({
-      profile_name: [this.profile.profile_name, Validators.required],
-      profile_valid_date: [this.profile.profile_valid_date],
-      profile_exp_date: [this.profile.profile_exp_date],
+      profile_code: [this.profileMobileEdit.profile_code, Validators.required],
+      profile_name: [this.profileMobileEdit.profile_name, Validators.required],
+      profile_valid_date: [this.profileMobileEdit.profile_valid_date],
+      profile_exp_date: [this.profileMobileEdit.profile_exp_date],
     });
   }
 
@@ -187,10 +208,10 @@ export class EditProfileMobileComponent implements OnInit {
     const controls = this.profileForm.controls;
     /** check form */
    
-
+    const id =  this.profileMobileEdit.id
     // tslint:disable-next-line:prefer-const
     let profile = this.prepareProfile();
-    this.addProfile(profile);
+    this.addProfile(id, profile);
   }
   /**
    * Returns object for saving
@@ -216,9 +237,9 @@ export class EditProfileMobileComponent implements OnInit {
    *
    * @param _profile: ProfileMobileModel
    */
-  addProfile(_profile: ProfileMobile) {
+  addProfile(id, _profile: ProfileMobile) {
     this.loadingSubject.next(true);
-    this.profileMobileService.updateProfile(_profile, this.id).subscribe(
+    this.profileMobileService.updatedP(id, _profile).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(

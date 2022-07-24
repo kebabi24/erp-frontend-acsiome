@@ -47,6 +47,7 @@ import { CreateCustomerMobileComponent } from './create-customer-mobile/create-c
 import { CustomersMobileComponent } from './customers-mobile.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { AddresseMobileService, CustomerMobileService } from '../../../core/erp';
+import { EditCustomerMobileComponent } from './edit-customer-mobile/edit-customer-mobile.component';
 
 const routes: Routes = [
           {
@@ -63,6 +64,7 @@ const routes: Routes = [
         CustomersMobileComponent,
         ListCustomerMobileComponent,
         CreateCustomerMobileComponent,
+        EditCustomerMobileComponent,
   ],
   imports: [
         CommonModule,

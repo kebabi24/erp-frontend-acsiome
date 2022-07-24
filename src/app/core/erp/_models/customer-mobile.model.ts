@@ -3,6 +3,7 @@ import { BaseModel } from "../../_base/crud";
 export class CustomerMobile extends BaseModel {
 
     id : Number
+    customer_code: String
     customer_name: String
     customer_name2: String
     customer_arabic_name: String

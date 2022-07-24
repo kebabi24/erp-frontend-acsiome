@@ -125,6 +125,7 @@ export class CreateProfileMobileComponent implements OnInit {
 
         this.profile = new ProfileMobile()
         this.profileForm = this.profileFB.group({
+          profile_code: [this.profile.profile_code, Validators.required],
           profile_name: [this.profile.profile_name, Validators.required],
           profile_valid_date: [this.profile.profile_valid_date],
           profile_exp_date: [this.profile.profile_exp_date],
@@ -136,6 +137,42 @@ export class CreateProfileMobileComponent implements OnInit {
         this.profile = new ProfileMobile()
         this.createForm()
         this.hasFormErrors = false
+    }
+    onChangeCode() {
+        const controls = this.profileForm.controls
+        
+        this.profileService.getByOne({profile_code: controls.profile_code.value }).subscribe(
+            (res: any) => {
+              console.log("aa", res.data);
+           
+              if (res.data) {
+                alert("Ce code profile existe déjà")
+                this.isExist = true
+                document.getElementById("profile").focus();
+                controls.profile_name.disable()
+              } else { 
+                controls.profile_name.enable()
+                controls.profile_valid_date.enable()
+                controls.profile_exp_date.enable()
+            }
+                   
+        })
+    
+      }
+      onChangeProfile() {
+        const controls = this.profileForm.controls
+        
+        this.profileService.getByOne({profile_code: controls.profile_code.value }).subscribe(
+            (res: any) => {
+              //console.log("aa", res.data);
+           
+              if (res.data) {
+                this.router.navigateByUrl(`/profiles-mobile/edit-profile-mobile/${res.data.id}`)
+                //console.log(res.data.id)
+              }
+                   
+        })
+
     }
     // save data
     onSubmit() {
@@ -162,6 +199,7 @@ export class CreateProfileMobileComponent implements OnInit {
     prepareProfile(): ProfileMobile {
         const controls = this.profileForm.controls
         const _profile = new ProfileMobile()
+        _profile.profile_code = controls.profile_code.value
         _profile.profile_name = controls.profile_name.value
         _profile.profile_valid_date = controls.profile_valid_date.value
         ? `${controls.profile_valid_date.value.year}/${controls.profile_valid_date.value.month}/${controls.profile_valid_date.value.day}`
