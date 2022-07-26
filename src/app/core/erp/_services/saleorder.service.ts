@@ -7,7 +7,7 @@ import { HttpUtilsService } from "../../_base/crud"
 import { environment } from "../../../../environments/environment"
 
 // model
-import { Quote } from "../_models/quote.model"
+// import { Quote } from "../_models/quote.model"
 
 const API_URL = environment.apiUrl + "/saleorders"
 
