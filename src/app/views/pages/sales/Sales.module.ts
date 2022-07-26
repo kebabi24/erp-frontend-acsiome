@@ -136,7 +136,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent],
+    declarations: [CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent],
     imports: [
         CommonModule,
         HttpClientModule,
