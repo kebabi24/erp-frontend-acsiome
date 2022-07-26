@@ -59,6 +59,7 @@ export class EditProfileMobileComponent implements OnInit {
   selectedMenus = [];
   nodes = [];
   prf: any;
+  message: string;
   profileMobileEdit: any
   options: ITreeOptions = {
     useCheckbox: true,
@@ -202,16 +203,27 @@ export class EditProfileMobileComponent implements OnInit {
   }
   // save data
   onSubmit() {
-    console.log('aaa')
-
-    this.hasFormErrors = false;
-    const controls = this.profileForm.controls;
+    this.hasFormErrors = false
+    const controls = this.profileForm.controls
     /** check form */
-   
-    const id =  this.profileMobileEdit.id
+    if (this.profileForm.invalid) {
+        Object.keys(controls).forEach((controlName) =>
+            controls[controlName].markAsTouched()
+        )
+
+        this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+        this.hasFormErrors = true;
+  
+        return
+    }
+
+    
+
     // tslint:disable-next-line:prefer-const
-    let profile = this.prepareProfile();
-    this.addProfile(id, profile);
+    const id =  this.profileMobileEdit.id
+
+    let address = this.prepareProfile()
+    this.addProfile(id, address)
   }
   /**
    * Returns object for saving
