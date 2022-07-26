@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core"
 import { CommonModule } from "@angular/common"
-import { SalesComponent } from "./Sales.component"
+import { SalesComponent } from "./sales.component"
 import { RouterModule, Routes } from "@angular/router"
 import { FormsModule, ReactiveFormsModule } from "@angular/forms"
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http"
@@ -136,7 +136,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent],
     imports: [
         CommonModule,
         HttpClientModule,
