@@ -162,31 +162,29 @@ export class EditProfileMobileComponent implements OnInit {
     this.createForm()
     this.loadingSubject.next(false)
   }
-  // onInitTree(event){
-  //   while (this.roles == null){
-  //     console.log('aaa')
-  //   }
-  //   event.treeModel.nodes.map(node=>{
-  //     if(this.roles.filter(elem=>elem==node.name)[0]){
-  //       const node_ = event.treeModel.getNodeById(node.id)
-  //       node_.setIsSelected(true)
-  //     }
-  //     node.children.map(node=>{
-  //       if(this.roles.filter(elem=>elem==node.name)[0]){
-  //         const node_ = event.treeModel.getNodeById(node.id)
-  //         node_.setIsSelected(true)
-  //       }
+  onInitTree(event){
+    while (this.roles == null){
+      console.log('aaa')
+    }
+    event.treeModel.nodes.map(node=>{
+      if(this.roles.filter(elem=>elem==node.name)[0]){
+        const node_ = event.treeModel.getNodeById(node.id)
+        node_.setIsSelected(true)
+      }
+      node.children.map(node=>{
+        if(this.roles.filter(elem=>elem==node.name)[0]){
+          const node_ = event.treeModel.getNodeById(node.id)
+          node_.setIsSelected(true)
+        }
   
-  //     })
+      })
 
-  //   })
-  // }
+    })
+  }
 
   //create form
   createForm() {
     this.loadingSubject.next(false);
-
-    this.profile = new ProfileMobile();
     this.profileForm = this.profileFB.group({
       profile_code: [this.profileMobileEdit.profile_code, Validators.required],
       profile_name: [this.profileMobileEdit.profile_name, Validators.required],

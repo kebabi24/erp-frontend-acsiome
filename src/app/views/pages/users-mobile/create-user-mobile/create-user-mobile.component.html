@@ -30,32 +30,22 @@
                 </kt-alert>
                 <div class="row">
                     <div class="form-group col-2">
+                        <label class="form-group">Code utilisateur *</label>
+                        <input type="text" formControlName="user_mobile_code" (change)="onChangeCode()" id="user"
+                            [className]="userForm.controls['user_mobile_code'].errors && (userForm.controls['user_mobile_code'].dirty || userForm.controls['user_mobile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="userForm.controls['user_mobile_code'].errors && (userForm.controls['user_mobile_code'].dirty || userForm.controls['user_mobile_code'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
                         <label class="form-group">Nom d'utilisateur *</label>
-                        <input type="text" formControlName="username" (change)="onChangeCode()" id="user"
+                        <input type="text" formControlName="username"
                             [className]="userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                         <div *ngIf="userForm.controls['username'].errors && (userForm.controls['username'].dirty || userForm.controls['username'].touched) "
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                     </div>
-                    <div class="form-group col-3">
-                        <label class="form-group">Nom Complet: *</label>
-                        <input type="text" formControlName="fullname"  (change)="onChangeUser()" 
-                            [className]="userForm.controls['fullname'].errors && (userForm.controls['fullname'].dirty || userForm.controls['fullname'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                        <div *ngIf="userForm.controls['fullname'].errors && (userForm.controls['fullname'].dirty || userForm.controls['fullname'].touched) "
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
-                    </div>
-
-                </div>
-                <div class="row">
-
-                    <div class="form-group col-2">
-                        <label class="form-group">email:</label>
-                        <input type="text" formControlName="email"
-                            [className]="userForm.controls['email'].errors && (userForm.controls['email'].dirty || userForm.controls['email'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                        <div *ngIf="userForm.controls['email'].errors && (userForm.controls['email'].dirty || userForm.controls['email'].touched) "
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
-                    </div>
-
+                 
 
                 </div>
                 <div class='row'>

@@ -141,9 +141,9 @@ export class CreateProfileMobileComponent implements OnInit {
     onChangeCode() {
         const controls = this.profileForm.controls
         
-        this.profileService.getByOne({profile_code: controls.profile_code.value }).subscribe(
+        this.profileService.getByOneP({profile_code: controls.profile_code.value }).subscribe(
             (res: any) => {
-              console.log("aa", res.data);
+              console.log("aa");
            
               if (res.data) {
                 alert("Ce code profile existe déjà")
@@ -238,7 +238,7 @@ export class CreateProfileMobileComponent implements OnInit {
                     true
                 )
                 this.loadingSubject.next(false)
-                this.router.navigateByUrl("/")
+                this.router.navigateByUrl("/profiles-mobile/profiles-list-mobile")
             }
         )
     }

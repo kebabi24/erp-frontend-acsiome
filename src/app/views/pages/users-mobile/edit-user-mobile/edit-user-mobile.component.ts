@@ -91,10 +91,12 @@ export class EditUserMobileComponent implements OnInit {
       createForm() {
         this.loadingSubject.next(false)
         this.userForm = this.userFB.group({
-
+            user_mobile_code: [{value: this.userMobileEdit.user_mobile_code, disabled : false}, Validators.required],
             username: [{value: this.userMobileEdit.username, disabled : false}, Validators.required],
-            fullname: [{value: this.userMobileEdit.fullname, disabled : true}],
-            email: [{value: this.userMobileEdit.email, disabled : false}],
+            //fullname: [{value: this.userMobileEdit.fullname, disabled : true}],
+            //email: [{value: this.userMobileEdit.email, disabled : false}],
+            password: [{value: this.userMobileEdit.password}, Validators.required],
+            new_password: [{value: ""}],
             profile_code: [this.userMobileEdit.profile_code, Validators.required],
             hold: [this.userMobileEdit.hold],
             init: [ false],
@@ -139,11 +141,13 @@ export class EditUserMobileComponent implements OnInit {
       prepareUser(): UserMobile {
         const controls = this.userForm.controls
         const _userMobile = new UserMobile()
+        _userMobile.user_mobile_code =   controls.user_mobile_code.value
         _userMobile.username =   controls.username.value
-        _userMobile.fullname = controls.fullname.value
+        //_userMobile.fullname = controls.fullname.value
         _userMobile.profile_code =   this.profile_code
-        _userMobile.email =   controls.email.value 
+        // _userMobile.email =   controls.email.value 
         _userMobile.hold =   controls.hold.value
+        _userMobile.password =   controls.password.value
         if (controls.init.value == true ) {_userMobile.password = this.userMobileEdit.username}
         return _userMobile
       }

@@ -83,14 +83,14 @@ export class CreateUserMobileComponent implements OnInit {
 
         this.userMobile = new UserMobile()
         this.userForm = this.userFB.group({
-            
+            user_mobile_code: [this.userMobile.user_mobile_code, Validators.required],
             username: [this.userMobile.username, Validators.required],
-            fullname: [{value: this.userMobile.fullname, disabled: !this.isExist}, Validators.required],
+            //fullname: [{value: this.userMobile.fullname, disabled: !this.isExist}, Validators.required],
             password: [{value: this.userMobile.password, disabled: true}, Validators.required],
             new_password: [{value: "", disabled: true}],
-            email: [{value: this.userMobile.email, disabled: !this.isExist}],
+            // email: [{value: this.userMobile.email, disabled: !this.isExist}],
             profile_code: [{value: this.userMobile.profile_code, disabled: !this.isExist}, Validators.required],
-            hold: [{value: this.userMobile.hold, disabled: !this.isExist}, Validators.required],
+            hold: [{value: this.userMobile.hold}, Validators.required],
 
 
         })
@@ -99,7 +99,7 @@ export class CreateUserMobileComponent implements OnInit {
     onChangeCode() {
         const controls = this.userForm.controls
         
-        this.userMobileService.getByOne({username: controls.username.value }).subscribe(
+        this.userMobileService.getByOne({user_mobile_code: controls.user_mobile_code.value }).subscribe(
             (res: any) => {
               console.log("aa", res.data);
            
@@ -107,20 +107,22 @@ export class CreateUserMobileComponent implements OnInit {
                 alert("Ce nom d'utilisateur existe déjà")
                 this.isExist = true
                 document.getElementById("user").focus();
-                controls.fullname.disable()
-                controls.email.disable()
-                controls.user_password.disable()
+                controls.username.disable()
+                //controls.fullname.disable()
+                // controls.email.disable()
+                controls.password.disable()
                 controls.new_password.disable()
-                controls.profile_id.disable()
-                controls.hold.disable()
+                controls.profile_code.disable()
+           
               } else { 
                 this.isExist = false
-                controls.fullname.enable()
-                controls.email.enable()
+                controls.username.enable()
+                //controls.fullname.enable()
+                // controls.email.enable()
                 controls.password.enable()
                 controls.new_password.enable()
-                controls.profile_id.enable()
-                controls.hold.enable()
+                controls.profile_code.enable()
+            
             }
                    
         })
@@ -129,7 +131,7 @@ export class CreateUserMobileComponent implements OnInit {
     onChangeUser() {
         const controls = this.userForm.controls
         
-        this.userMobileService.getByOne({username: controls.username.value }).subscribe(
+        this.userMobileService.getByOne({user_mobile_code: controls.user_mobile_code.value }).subscribe(
             (res: any) => {
               console.log("aa", res.data);
            
@@ -236,10 +238,11 @@ export class CreateUserMobileComponent implements OnInit {
     prepareUser(): UserMobile {
         const controls = this.userForm.controls
         const _user = new UserMobile()
+        _user.user_mobile_code = controls.user_mobile_code.value
         _user.username = controls.username.value
-        _user.fullname = controls.fullname.value
+        //_user.fullname = controls.fullname.value
         _user.password = controls.password.value
-        _user.email = controls.email.value
+        // _user.email = controls.email.value
         console.log(this.profile_code)
         _user.profile_code = this.profile_code
         _user.hold = controls.hold.value

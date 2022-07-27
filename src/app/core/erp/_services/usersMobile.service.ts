@@ -54,6 +54,11 @@ export class UsersMobileService {
         return this.http.get(`${API_URL_USER}/${id}`, { headers: httpHeaders })
     }
 
+    public getOneProfile(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_PROFILE}/${id}`, { headers: httpHeaders })
+    }
+
     public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL_USER}/${id}`,data, { headers: httpHeaders })
@@ -73,6 +78,10 @@ export class UsersMobileService {
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_USER}/findone`,data, { headers: httpHeaders })   
+    }
+    public getByOneP(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_PROFILE}/findone`,data, { headers: httpHeaders })   
     }
     
 }
