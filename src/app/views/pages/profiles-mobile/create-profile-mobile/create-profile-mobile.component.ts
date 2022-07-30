@@ -167,7 +167,7 @@ export class CreateProfileMobileComponent implements OnInit {
               //console.log("aa", res.data);
            
               if (res.data) {
-                this.router.navigateByUrl(`/profiles-mobile/edit-profile-mobile/${res.data.profile_code}`)
+                this.router.navigateByUrl(`/profiles-mobile/edit-profile-mobile/${res.data.id}`)
                 //console.log(res.data.id)
               }
                    

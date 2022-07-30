@@ -102,10 +102,10 @@ export class EditCustomerMobileComponent implements OnInit {
     }
 
      // tslint:disable-next-line:prefer-const
-     const id =  this.customerMobileEdit.id
+     const customer_code =  this.customerMobileEdit.customer_code
 
-    //  let customer = this.prepareCustomer()
-    //  this.addCustomer(id, customer)
+     let customer = this.prepareCustomerMobile()
+    //  this.addCustomerMobile(customer_code, customer)
 
   }
 
@@ -115,21 +115,64 @@ export class EditCustomerMobileComponent implements OnInit {
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
-  // prepareCustomer(): CustomerMobile {
-  //   // console.log('aaa')
+  prepareCustomerMobile(): CustomerMobile {
+    // console.log('aaa')
 
-  //   const controls = this.customerMobileForm.controls;
-  //   const _customer = new CustomerMobile();
-  //   _customer.profile_code = controls.profile_code.value;
-  //   _customer.profile_name = controls.profile_name.value;
-  //   _customer.profile_valid_date = controls.profile_valid_date.value
-  //     ? `${controls.profile_valid_date.value.year}/${controls.profile_valid_date.value.month}/${controls.profile_valid_date.value.day}`
-  //     : null;
-  //   _customer.profile_exp_date = controls.profile_exp_date.value
-  //     ? `${controls.profile_exp_date.value.year}/${controls.profile_exp_date.value.month}/${controls.profile_exp_date.value.day}`
-  //     : null;
-    
+    const controls = this.customerMobileForm.controls;
+    const _customerMobile = new CustomerMobile();
+      _customerMobile.customer_code = controls.customer_code.value
+      _customerMobile.customer_name = controls.customer_name.value
+      _customerMobile.customer_name2 = controls.customer_name2.value
+      _customerMobile.customer_arabic_name= controls.customer_arabic_name.value
+      _customerMobile.customer_contact = controls.customer_contact.value
+      _customerMobile.customer_email = controls.customer_email.value
+      _customerMobile.customer_phone_one = controls.customer_phone_one.value
+      _customerMobile.customer_phone_two = controls.customer_phone_two.value
+      _customerMobile.customer_fax = controls.customer_fax.value
+      _customerMobile.customer_web_adr = controls.customer_web_adr.value
+      _customerMobile.customer_barcode = controls.customer_barcode.value
+      _customerMobile.addresse_one = controls.addresse_one.value
+      _customerMobile.addresse_two = controls.addresse_two.value
+      _customerMobile.addresse_extended = controls.addresse_extended.value
+      _customerMobile.city = controls.city.value
+      _customerMobile.state = controls.state.value
+      _customerMobile.postal_code = controls.postal_code.value
+      _customerMobile.country = controls.country.value
+      _customerMobile.geoarea_code = controls.geoarea_code.value
 
-  //   return _profile;
+
+    return _customerMobile
+  }
+  /** 
+  * Add profile
+  *
+  * @param _customerMobile: CustomerMobileModel
+  */
+  //  addCustomerMobile(customer_code, _customerMobile: CustomerMobile) {
+  //  this.loadingSubject.next(true);
+  //  this.customerMobileService.update(id, _profile).subscribe(
+  //    (reponse) => console.log("response", Response),
+  //    (error) => {
+  //      this.layoutUtilsService.showActionNotification(
+  //        "Erreur verifier les informations",
+  //        MessageType.Create,
+  //        10000,
+  //        true,
+  //        true
+  //      );
+  //      this.loadingSubject.next(false);
+  //    },
+  //    () => {
+  //      this.layoutUtilsService.showActionNotification(
+  //        "modifié avec succès",
+  //        MessageType.Create,
+  //        10000,
+  //        true,
+  //        true
+  //      );
+  //      this.loadingSubject.next(false);
+  //      this.router.navigateByUrl("/");
+  //    }
+  //  );
   // }
 }

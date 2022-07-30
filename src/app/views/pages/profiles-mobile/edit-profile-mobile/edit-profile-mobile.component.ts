@@ -147,8 +147,8 @@ export class EditProfileMobileComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(true)
         this.activatedRoute.params.subscribe((params) => {
-        const profile_code = params.profile_code
-        this.profileMobileService.getOneProfile(profile_code).subscribe((response: any)=>{
+        const id = params.id
+        this.profileMobileService.getOneProfile(id).subscribe((response: any)=>{
         this.profileMobileEdit = response.data
         this.initCode()
         this.loadingSubject.next(false)
