@@ -65,7 +65,7 @@ const routes: Routes = [
         component: ListUserMobileComponent,
     },
     {
-        path: "edit-user-mobile/:id",
+        path: "edit-user-mobile/:user_mobile_code",
         component: EditUserMobileComponent,
     },
 ]

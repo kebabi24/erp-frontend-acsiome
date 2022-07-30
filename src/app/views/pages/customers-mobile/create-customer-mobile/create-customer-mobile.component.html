@@ -25,13 +25,21 @@
                             <form [formGroup]="customerMobileForm" class="form">
 
                                 <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                                    (close)="onAlertClose($event)">
-                                    Ce Code existe deja
-                                </kt-alert>
+                                (close)="onAlertClose($event)">
+                                Ce code customer existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeProfile()" class="btn">Cliquez ici</button>
+                            </kt-alert>
                                 <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group " id="code" >Nom du client:</label>
+                                        <label class="form-group " id="code" >Code client:</label>
                                         <input type="text" (change)="onChangeCode()"
+                                            [className]="customerMobileForm.controls['customer_code'].errors && (customerMobileForm.controls['customer_code'].dirty || customerMobileForm.controls['customer_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                            formControlName="customer_code">
+                                        <div *ngIf="customerMobileForm.controls['customer_code'].errors && (customerMobileForm.controls['customer_code'].dirty || customerMobileForm.controls['customer_code'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label class="form-group " >Nom du client:</label>
+                                        <input type="text"
                                             [className]="customerMobileForm.controls['customer_name'].errors && (customerMobileForm.controls['customer_name'].dirty || customerMobileForm.controls['customer_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="customer_name">
                                         <div *ngIf="customerMobileForm.controls['customer_name'].errors && (customerMobileForm.controls['customer_name'].dirty || customerMobileForm.controls['customer_name'].touched)"
@@ -137,42 +145,21 @@
                                   
                                 </div>
 
-                                
-                            </form>
-                        </ng-template>
-                    </ngb-tab>
-                    <ngb-tab>
-                        <ng-template ngbTabTitle>
-                            Addresse
-                            <div style="width: 10px;"></div>
-                            <a *ngIf="hasFormErrors"
-                                class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
-                                <i class="flaticon2-information"></i>
-                                <span class="pulse-ring"></span>
-                            </a>
-                        </ng-template>
-                        <ng-template ngbTabContent>
-                            <form [formGroup]="addresseForm" class="form" >
-                                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
-                                (close)="onAlertClose($event)">
-                                Modifiez quelques éléments et réessayez de soumettre.
-                            </kt-alert>
-
                                 <div class="row">
                                     <div class="form-group col-4">
                                         <label class="form-group">Addresse 1: *</label>
                                         <input type="text" 
-                                        [className]="addresseForm.controls['addresse_one'].errors && (addresseForm.controls['addresse_one'].dirty || addresseForm.controls['addresse_one'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                        [className]="customerMobileForm.controls['addresse_one'].errors && (customerMobileForm.controls['addresse_one'].dirty || customerMobileForm.controls['addresse_one'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="addresse_one">
-                                        <div *ngIf="addresseForm.controls['addresse_one'].errors && (addresseForm.controls['addresse_one'].dirty || addresseForm.controls['addresse_one'].touched)"
+                                        <div *ngIf="customerMobileForm.controls['addresse_one'].errors && (customerMobileForm.controls['addresse_one'].dirty || customerMobileForm.controls['addresse_one'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                                     <div class="form-group col-4">
                                         <label class="form-group">Addresse 2 :</label>
                                         <input type="text" 
-                                        [className]="addresseForm.controls['addresse_two'].errors && (addresseForm.controls['addresse_two'].dirty || addresseForm.controls['addresse_two'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                        [className]="customerMobileForm.controls['addresse_two'].errors && (customerMobileForm.controls['addresse_two'].dirty || customerMobileForm.controls['addresse_two'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="addresse_two">
-                                        <div *ngIf="addresseForm.controls['addresse_two'].errors && (addresseForm.controls['addresse_two'].dirty || addresseForm.controls['addresse_two'].touched)"
+                                        <div *ngIf="customerMobileForm.controls['addresse_two'].errors && (customerMobileForm.controls['addresse_two'].dirty || customerMobileForm.controls['addresse_two'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                              
@@ -190,47 +177,52 @@
                                    
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">Wilaya :</label>
-                                        <input type="text" 
-                                        [className]="addresseForm.controls['state'].errors && (addresseForm.controls['state'].dirty || addresseForm.controls['state'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                        formControlName="state">
-                                        <div *ngIf="addresseForm.controls['state'].errors && (addresseForm.controls['state'].dirty || addresseForm.controls['state'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        <label class="form-group">Wilaya : * </label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            id="exampleSelects1" formControlName="city">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of ad_country" [value]="elem.code_cmmt">
+                                            {{elem.code_cmmt}}</option>
+                                        </select>
                              
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">Commune :</label>
-                                        <input type="text" 
-                                        [className]="addresseForm.controls['city'].errors && (addresseForm.controls['city'].dirty || addresseForm.controls['city'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                        formControlName="city">
-                                        <div *ngIf="addresseForm.controls['city'].errors && (addresseForm.controls['city'].dirty || addresseForm.controls['city'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        <label class="form-group">Commune : * </label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            id="exampleSelects1" formControlName="state">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of ad_country" [value]="elem.code_cmmt">
+                                            {{elem.code_cmmt}}</option>
+                                        </select>
                             
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">Code postale : </label>
-                                        <input type="text" 
-                                        [className]="addresseForm.controls['postal_code'].errors && (addresseForm.controls['postal_code'].dirty || addresseForm.controls['postal_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                        formControlName="postal_code">
-                                        <div *ngIf="addresseForm.controls['postal_code'].errors && (addresseForm.controls['postal_code'].dirty || addresseForm.controls['postal_code'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        <label class="form-group">Code postale : * </label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            id="exampleSelects1" formControlName="postal_code">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of ad_country" [value]="elem.code_cmmt">
+                                            {{elem.code_cmmt}}</option>
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-2">
                                         <label class="form-group">Geoarea code : </label>
                                         <input type="text" 
-                                        [className]="addresseForm.controls['geoarea_code'].errors && (addresseForm.controls['geoarea_code'].dirty || addresseForm.controls['geoarea_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                        [className]="customerMobileForm.controls['geoarea_code'].errors && (customerMobileForm.controls['geoarea_code'].dirty || customerMobileForm.controls['geoarea_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="geoarea_code">
-                                        <div *ngIf="addresseForm.controls['geoarea_code'].errors && (addresseForm.controls['geoarea_code'].dirty || addresseForm.controls['geoarea_code'].touched)"
+                                        <div *ngIf="customerMobileForm.controls['geoarea_code'].errors && (customerMobileForm.controls['geoarea_code'].dirty || customerMobileForm.controls['geoarea_code'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                                     
                                 </div>
                                
                                
+                       
                             </form>
                         </ng-template>
                     </ngb-tab>
+                   
                 </ngb-tabset>
             </div>
 

@@ -147,8 +147,8 @@ export class EditProfileMobileComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(true)
         this.activatedRoute.params.subscribe((params) => {
-        const id = params.id
-        this.profileMobileService.getOne(id).subscribe((response: any)=>{
+        const profile_code = params.profile_code
+        this.profileMobileService.getOneProfile(profile_code).subscribe((response: any)=>{
         this.profileMobileEdit = response.data
         this.initCode()
         this.loadingSubject.next(false)
@@ -186,10 +186,10 @@ export class EditProfileMobileComponent implements OnInit {
   createForm() {
     this.loadingSubject.next(false);
     this.profileForm = this.profileFB.group({
-      profile_code: [this.profileMobileEdit.profile_code, Validators.required],
-      profile_name: [this.profileMobileEdit.profile_name, Validators.required],
-      profile_valid_date: [this.profileMobileEdit.profile_valid_date],
-      profile_exp_date: [this.profileMobileEdit.profile_exp_date],
+      profile_code: [{value: this.profileMobileEdit.profile_code, disabled : false}, Validators.required],
+      profile_name: [{value: this.profileMobileEdit.profile_name, disabled : false}, Validators.required],
+      profile_valid_date: [{value: this.profileMobileEdit.profile_valid_date, disabled : false}, Validators.required],
+      profile_exp_date: [{value: this.profileMobileEdit.profile_exp_date, disabled : false}, Validators.required],
     });
   }
 
@@ -231,6 +231,7 @@ export class EditProfileMobileComponent implements OnInit {
 
     const controls = this.profileForm.controls;
     const _profile = new ProfileMobile();
+    _profile.profile_code = controls.profile_code.value;
     _profile.profile_name = controls.profile_name.value;
     _profile.profile_valid_date = controls.profile_valid_date.value
       ? `${controls.profile_valid_date.value.year}/${controls.profile_valid_date.value.month}/${controls.profile_valid_date.value.day}`
@@ -249,7 +250,7 @@ export class EditProfileMobileComponent implements OnInit {
    */
   addProfile(id, _profile: ProfileMobile) {
     this.loadingSubject.next(true);
-    this.profileMobileService.updatedP(id, _profile).subscribe(
+    this.profileMobileService.updateP(id, _profile).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(

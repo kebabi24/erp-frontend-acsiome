@@ -49,27 +49,27 @@ export class UsersMobileService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL_USER, { headers: httpHeaders })
     }
-    public getOne(id: Number) {
+    public getOne(user_mobile_code: String) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL_USER}/${id}`, { headers: httpHeaders })
+        return this.http.get(`${API_URL_USER}/${user_mobile_code}`, { headers: httpHeaders })
     }
 
-    public getOneProfile(id: Number) {
+    public getOneProfile(profile_code: String) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL_PROFILE}/${id}`, { headers: httpHeaders })
+        return this.http.get(`${API_URL_PROFILE}/${profile_code}`, { headers: httpHeaders })
     }
 
-    public update(id: Number, data:any) {
+    public update(user_mobile_code: String, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL_USER}/${id}`,data, { headers: httpHeaders })
+        return this.http.put(`${API_URL_USER}/${user_mobile_code}`,data, { headers: httpHeaders })
     }
-    public updated(id: Number, data:any) {
+    // public updated(id: Number, data:any) {
+    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
+    //     return this.http.put(`${API_URL_USER}/up${id}`,data, { headers: httpHeaders })
+    // }
+    public updateP(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL_USER}/up${id}`,data, { headers: httpHeaders })
-    }
-    public updatedP(id: Number, data:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL_PROFILE}/up${id}`,data, { headers: httpHeaders })
+        return this.http.put(`${API_URL_PROFILE}/${id}`,data, { headers: httpHeaders })
     }
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

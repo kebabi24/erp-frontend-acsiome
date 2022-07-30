@@ -136,7 +136,8 @@ export class CreateUserMobileComponent implements OnInit {
               console.log("aa", res.data);
            
               if (res.data) {
-                this.router.navigateByUrl(`/users-mobile/edit-user-mobile/${res.data.id}`)
+                console.log(res.data.user_mobile_code)
+                this.router.navigateByUrl(`/users-mobile/edit-user-mobile/${res.data.user_mobile_code}`)
                 //console.log(res.data.id)
               }
                    

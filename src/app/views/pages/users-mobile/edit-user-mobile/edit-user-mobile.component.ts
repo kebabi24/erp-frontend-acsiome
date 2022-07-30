@@ -74,8 +74,8 @@ export class EditUserMobileComponent implements OnInit {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(true)
         this.activatedRoute.params.subscribe((params) => {
-        const id = params.id
-        this.userMobileService.getOne(id).subscribe((response: any)=>{
+        // console.log(params)
+        this.userMobileService.getOne(params.user_mobile_code).subscribe((response: any)=>{
         this.userMobileEdit = response.data
         this.initCode()
         this.loadingSubject.next(false)
@@ -131,10 +131,10 @@ export class EditUserMobileComponent implements OnInit {
         
 
         // tslint:disable-next-line:prefer-const
-        const id =  this.userMobileEdit.id
+        const user_mobile_code =  this.userMobileEdit.user_mobile_code
     
         let address = this.prepareUser()
-        this.addUser(id, address)
+        this.addUser(user_mobile_code, address)
       }
 
 
@@ -153,9 +153,9 @@ export class EditUserMobileComponent implements OnInit {
       }
 
 
-      addUser(id ,_user: UserMobile) {
+      addUser(user_mobile_code ,_user: UserMobile) {
         this.loadingSubject.next(true)
-        this.userMobileService.updated(id,_user).subscribe(
+        this.userMobileService.update(user_mobile_code,_user).subscribe(
             (reponse) => console.log("response", Response),
             (error) => {
                 this.layoutUtilsService.showActionNotification(

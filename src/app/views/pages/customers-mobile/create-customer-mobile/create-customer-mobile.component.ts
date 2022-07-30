@@ -59,7 +59,7 @@ export class CreateCustomerMobileComponent implements OnInit {
     private layoutConfigService: LayoutConfigService,
     private modalService: NgbModal,
     private customerMobileService: CustomerMobileService,
-    private adresseMobileService: AddresseMobileService,
+    // private adresseMobileService: AddresseMobileService,
     private codeService: CodeService,
     private cdr: ChangeDetectorRef,
     config: NgbDropdownConfig
@@ -78,7 +78,7 @@ export class CreateCustomerMobileComponent implements OnInit {
 
   init(){
     this.createCustomerForm()
-    this.createAddresseMobileForm()
+    // this.createAddresseMobileForm()
     this.loadingSubject.next(false)
   }
 
@@ -89,11 +89,22 @@ export class CreateCustomerMobileComponent implements OnInit {
   //  this.loadingSubject.next(false)
     this.customerMobile = new CustomerMobile()
     this.customerMobileForm = this.formBuilder.group({
-      customer_name: [this.customerMobile.customer_name, Validators.required],
+      customer_code: [this.customerMobile.customer_code, Validators.required],
+      customer_name: [{value : this.customerMobile.customer_name, disabled: !this.isExist}, Validators.required],
       customer_name2: [{value : this.customerMobile.customer_name2, disabled: !this.isExist}], 
       customer_arabic_name: [{value : this.customerMobile.customer_arabic_name, disabled: !this.isExist}], 
       customer_contact: [{value : this.customerMobile.customer_contact, disabled: !this.isExist},Validators.required],
-      customer_phone_one: [{value : this.customerMobile.customer_phone_one, disabled: !this.isExist},Validators.required],
+      addresse_one : [{value : this.customerMobile.addresse_one, disabled : !this.isExist}], 
+      addresse_two: [{value : this.customerMobile.addresse_two, disabled: !this.isExist}], 
+      addresse_extended: [{value : this.customerMobile.addresse_extended, disabled: !this.isExist}], 
+      city: [{value : this.customerMobile.city, disabled: !this.isExist}], 
+      state: [{value : this.customerMobile.state, disabled: !this.isExist}], 
+      postal_code: [{value : this.customerMobile.postal_code, disabled: !this.isExist}], 
+      country: [{value : this.customerMobile.country, disabled: !this.isExist}], 
+      geoarea_code: [{value : this.customerMobile.geoarea_code, disabled: !this.isExist}], 
+      longitude: [{value : this.customerMobile.longitude, disabled: !this.isExist}], 
+      latitude: [{value : this.customerMobile.latitude, disabled: !this.isExist}], 
+      customer_phone_one: [{value : this.customerMobile.customer_phone_one, disabled: !this.isExist}],
       customer_phone_two: [{value : this.customerMobile.customer_phone_two, disabled: !this.isExist}],
       customer_email: [{value : this.customerMobile.customer_email, disabled: !this.isExist}],
       customer_fax: [{value : this.customerMobile.customer_fax, disabled: !this.isExist}],
@@ -103,38 +114,38 @@ export class CreateCustomerMobileComponent implements OnInit {
 
   }
 
-  createAddresseMobileForm(){
-    // this.loadingSubject.next(false)
-     this.addresseMobile = new AddresseMobile()
-     this.addresseForm = this.formBuilder.group({
-       //customer_id : [{value : this.addresseMobile.customer_id }], 
-       addresse_one : [{value : this.addresseMobile.addresse_one, disabled : !this.isExist}], 
-       addresse_two: [{value : this.addresseMobile.addresse_two, disabled: !this.isExist}], 
-       addresse_extended: [{value : this.addresseMobile.addresse_extended, disabled: !this.isExist}], 
-       city: [{value : this.addresseMobile.city, disabled: !this.isExist}], 
-       state: [{value : this.addresseMobile.state, disabled: !this.isExist}], 
-       postal_code: [{value : this.addresseMobile.postal_code, disabled: !this.isExist}], 
-       country: [{value : this.addresseMobile.country, disabled: !this.isExist}], 
-       geoarea_code: [{value : this.addresseMobile.geoarea_code, disabled: !this.isExist}], 
-       longitude: [{value : this.addresseMobile.longitude, disabled: !this.isExist}], 
-       latitude: [{value : this.addresseMobile.latitude, disabled: !this.isExist}], 
-     })
-   }
+  // createAddresseMobileForm(){
+  //   // this.loadingSubject.next(false)
+  //    this.addresseMobile = new AddresseMobile()
+  //    this.addresseForm = this.formBuilder.group({
+  //      //customer_id : [{value : this.addresseMobile.customer_id }], 
+      //  addresse_one : [{value : this.addresseMobile.addresse_one, disabled : !this.isExist}], 
+      //  addresse_two: [{value : this.addresseMobile.addresse_two, disabled: !this.isExist}], 
+      //  addresse_extended: [{value : this.addresseMobile.addresse_extended, disabled: !this.isExist}], 
+      //  city: [{value : this.addresseMobile.city, disabled: !this.isExist}], 
+      //  state: [{value : this.addresseMobile.state, disabled: !this.isExist}], 
+      //  postal_code: [{value : this.addresseMobile.postal_code, disabled: !this.isExist}], 
+      //  country: [{value : this.addresseMobile.country, disabled: !this.isExist}], 
+      //  geoarea_code: [{value : this.addresseMobile.geoarea_code, disabled: !this.isExist}], 
+      //  longitude: [{value : this.addresseMobile.longitude, disabled: !this.isExist}], 
+      //  latitude: [{value : this.addresseMobile.latitude, disabled: !this.isExist}], 
+  //    })
+  //  }
   
   onChangeCode() {
     const controls = this.customerMobileForm.controls
-    const controls1 = this.addresseForm.controls
-    this.customerMobileService.getByOne({customer_name: controls.customer_name.value }).subscribe(
+    // const controls1 = this.addresseForm.controls
+    this.customerMobileService.getByOne({customer_code: controls.customer_code.value }).subscribe(
         (res: any) => {
           //console.log("aa", res.data);
        
           if (res.data) {
-            alert("Cet Utilisateur exist déja")
-            controls.customer_name.setValue(null) 
-            document.getElementById("user").focus(); 
+            alert("Ce client exist déja")
+            controls.customer_code.setValue(null) 
+            document.getElementById("code").focus(); 
 
           } else { 
-
+            controls.customer_name.enable()
             controls.customer_name2.enable()
             controls.customer_contact.enable()
             controls.customer_arabic_name.enable()
@@ -146,20 +157,36 @@ export class CreateCustomerMobileComponent implements OnInit {
             controls.customer_web_adr.enable()
             controls.customer_barcode.enable()
             //addresse
-            controls1.addresse_one.enable()
-            controls1.addresse_two.enable()
-            controls1.addresse_extended.enable()
-            controls1.city.enable()
-            controls1.state.enable()
-            controls1.postal_code.enable()
-            controls1.country.enable()
-            controls1.geoarea_code.enable()
-            controls1.longitude.enable()
-            controls1.latitude.enable()
+            controls.addresse_one.enable()
+            controls.addresse_two.enable()
+            controls.addresse_extended.enable()
+            controls.city.enable()
+            controls.state.enable()
+            controls.postal_code.enable()
+            controls.country.enable()
+            controls.geoarea_code.enable()
+            controls.longitude.enable()
+            controls.latitude.enable()
 
 
             
         }
+               
+    })
+
+  }
+
+  onChangeCustomer() {
+    const controls = this.customerMobileForm.controls
+    
+    this.customerMobileService.getByOne({customer_code: controls.customer_code.value }).subscribe(
+        (res: any) => {
+          //console.log("aa", res.data);
+       
+          if (res.data) {
+            this.router.navigateByUrl(`/customers-mobile/edit-customer-mobile/${res.data.customer_code}`)
+            //console.log(res.data.id)
+          }
                
     })
 
@@ -171,10 +198,10 @@ export class CreateCustomerMobileComponent implements OnInit {
   }
   reset() {
     this.customerMobile = new CustomerMobile()
-    this.addresseMobile = new AddresseMobile()
+    // this.addresseMobile = new AddresseMobile()
     this.createCustomerForm()
-    this.createAddresseMobileForm()
-    this.hasaddresseFormErrors = false
+    // this.createAddresseMobileForm()
+    this.hasFormErrors = false
   }
 
   /**
@@ -185,7 +212,7 @@ export class CreateCustomerMobileComponent implements OnInit {
    onSubmit() {
     this.hasFormErrors = false
     const controls = this.customerMobileForm.controls
-    const controls_ = this.addresseForm.controls
+    // const controls_ = this.addresseForm.controls
 
     /** check form */
     if (this.customerMobileForm.invalid) {
@@ -197,36 +224,29 @@ export class CreateCustomerMobileComponent implements OnInit {
       //this.selectedTab = 0
       return
     }
-    if (this.addresseForm.invalid) {
-        Object.keys(controls_).forEach((controlName) =>
-            controls[controlName].markAsTouched()
-        )
 
-        this.hasaddresseFormErrors = true
-        return
-    }
     let customer = this.prepareCustomerMobile()
         //console.log(this.selectedMenus)
-    let addresse = this.prepareAddresseCustomerMobile()
-    this.addCustomerMobile(customer, addresse)
+    // let addresse = this.prepareAddresseCustomerMobile()
+    this.addCustomerMobile(customer)
   }
 
-  prepareAddresseCustomerMobile(){
-    const _controls = this.addresseForm.controls
-    const _addresseMobile = new AddresseMobile()
-    const controls = this.customerMobileForm.controls
+  // prepareAddresseCustomerMobile(){
+  //   const _controls = this.addresseForm.controls
+  //   const _addresseMobile = new AddresseMobile()
+  //   const controls = this.customerMobileForm.controls
 
-    _addresseMobile.addresse_one = _controls.addresse_one.value
-    _addresseMobile.addresse_two = _controls.addresse_two.value
-    _addresseMobile.addresse_extended = _controls.addresse_extended.value
-    _addresseMobile.city = _controls.city.value
-    _addresseMobile.state = _controls.state.value
-    _addresseMobile.postal_code = _controls.postal_code.value
-    _addresseMobile.country = _controls.country.value
-    _addresseMobile.geoarea_code = _controls.geoarea_code.value
+  //   _addresseMobile.addresse_one = _controls.addresse_one.value
+  //   _addresseMobile.addresse_two = _controls.addresse_two.value
+  //   _addresseMobile.addresse_extended = _controls.addresse_extended.value
+  //   _addresseMobile.city = _controls.city.value
+  //   _addresseMobile.state = _controls.state.value
+  //   _addresseMobile.postal_code = _controls.postal_code.value
+  //   _addresseMobile.country = _controls.country.value
+  //   _addresseMobile.geoarea_code = _controls.geoarea_code.value
 
-    return _addresseMobile
-  }
+  //   return _addresseMobile
+  // }
 
   // addAddresseCustomerMobile(_addresseMobile: AddresseMobile) {
   //   //  console.log(_addresseMobile)
@@ -262,7 +282,7 @@ export class CreateCustomerMobileComponent implements OnInit {
   prepareCustomerMobile(){
     const controls = this.customerMobileForm.controls
     const _customerMobile = new CustomerMobile()
-
+    _customerMobile.customer_code = controls.customer_code.value
     _customerMobile.customer_name = controls.customer_name.value
     _customerMobile.customer_name2 = controls.customer_name2.value
     _customerMobile.customer_arabic_name= controls.customer_arabic_name.value
@@ -273,14 +293,23 @@ export class CreateCustomerMobileComponent implements OnInit {
     _customerMobile.customer_fax = controls.customer_fax.value
     _customerMobile.customer_web_adr = controls.customer_web_adr.value
     _customerMobile.customer_barcode = controls.customer_barcode.value
+    _customerMobile.addresse_one = controls.addresse_one.value
+    _customerMobile.addresse_two = controls.addresse_two.value
+    _customerMobile.addresse_extended = controls.addresse_extended.value
+    _customerMobile.city = controls.city.value
+    _customerMobile.state = controls.state.value
+    _customerMobile.postal_code = controls.postal_code.value
+    _customerMobile.country = controls.country.value
+    _customerMobile.geoarea_code = controls.geoarea_code.value
+
 
     return _customerMobile
   }
 
 
-  addCustomerMobile(_customerMobile: CustomerMobile, _addresse: any) {
+  addCustomerMobile(_customerMobile: CustomerMobile) {
     this.loadingSubject.next(true)
-    this.customerMobileService.addCustomerMobile({_customerMobile, _addresse}).subscribe(
+    this.customerMobileService.addCustomerMobile({_customerMobile}).subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
             this.layoutUtilsService.showActionNotification(

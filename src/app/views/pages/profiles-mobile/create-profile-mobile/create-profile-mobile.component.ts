@@ -162,12 +162,12 @@ export class CreateProfileMobileComponent implements OnInit {
       onChangeProfile() {
         const controls = this.profileForm.controls
         
-        this.profileService.getByOne({profile_code: controls.profile_code.value }).subscribe(
+        this.profileService.getByOneP({profile_code: controls.profile_code.value }).subscribe(
             (res: any) => {
               //console.log("aa", res.data);
            
               if (res.data) {
-                this.router.navigateByUrl(`/profiles-mobile/edit-profile-mobile/${res.data.id}`)
+                this.router.navigateByUrl(`/profiles-mobile/edit-profile-mobile/${res.data.profile_code}`)
                 //console.log(res.data.id)
               }
                    
