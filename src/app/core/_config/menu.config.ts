@@ -530,63 +530,63 @@ export class MenuConfig {
                     submenu: [
                         {
                             title: "Offres Commerciales",
-                            page: "/Sales/create-quote",
+                            page: "/sales/create-quote",
                         },
                         {
                             title: "Liste des Offres",
-                            page: "/Sales/req-list",
+                            page: "/sales/req-list",
                         },
                         {
                             title: "Confirmation Offre",
-                            page: "/Sales/purchase-order-approval",
+                            page: "/sales/purchase-order-approval",
                         },
                        {
                             title: "Commande Clients",
-                            page: "/Sales/create-so",
+                            page: "/sales/create-so",
                         },
                         {
                             title: "Débloque commande",
-                            page: "/Sales/unblock-so",
+                            page: "/sales/unblock-so",
                         },
                         {
                             title: "Confirmation commande",
-                            page: "/Sales/confirm-so",
+                            page: "/sales/confirm-so",
                         },
                         {
                             title: "Liste des Commandes",
-                            page: "/Sales/so-list",
+                            page: "/sales/so-list",
                         },
                         {
                             title: "Génération des BL",
-                            page: "/Sales/create-psh",
+                            page: "/sales/create-psh",
                         },
                         {
                             title: "Paiement des BL",
-                            page: "/Sales/payment-psh",
+                            page: "/sales/payment-psh",
                         },
                         {
                             title: "Facturation ",
-                            page: "/Sales/create-invoice",
+                            page: "/sales/create-invoice",
                         },
                         {
                             title: "Facture en Attente ",
-                            page: "/Sales/create-direct-invoice",
+                            page: "/sales/create-direct-invoice",
                         },
                         {
                             title: "Facture Projet ",
-                            page: "/Sales/create-project-invoice",
+                            page: "/sales/create-project-invoice",
                         },
                         {
                             title: "Impression Facture en Attente ",
-                            page: "/Sales/print-invoice",
+                            page: "/sales/print-invoice",
                         },
                         {
                             title: "Imputation Facture ",
-                            page: "/Sales/input-invoice",
+                            page: "/sales/input-invoice",
                         },
                         {
                             title: "Liste des Factures",
-                            page: "/Sales/invoice-list",
+                            page: "/sales/invoice-list",
                         }
                     ],
                 },

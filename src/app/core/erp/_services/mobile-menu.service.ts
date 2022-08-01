@@ -11,6 +11,7 @@ import { MenuMobile } from "../_models/mobile-menu.model"
 
 const API_URL_MENU = environment.apiUrl + "/mobile-menu"
 
+
 @Injectable()
 export class MobileMenuService {
     httpOptions = this.httpUtils.getHTTPHeaders()
@@ -29,6 +30,11 @@ export class MobileMenuService {
     public getAllMenu() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL_MENU, { headers: httpHeaders })
+    }
+
+    public getBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_MENU}/findmenu`,data, { headers: httpHeaders })   
     }
 
     public getByOne(data: any) {

@@ -66,7 +66,7 @@ const routes: Routes = [
         component: ListAllRolesComponent,
     },
     {
-        path: "edit-role",
+        path: "edit-role/:id",
         component: EditRoleComponent,
     },
 ]

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit, OnChanges } from "@angular/core"
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
 
 // Angular slickgrid
@@ -58,7 +58,8 @@ export class CreateProfileMobileComponent implements OnInit {
     public nodes = [
       
     ];
-    //public menus = []
+    public menus = [];
+    public test = []
     options: ITreeOptions = {
       useCheckbox: true,
       actionMapping
@@ -76,15 +77,16 @@ export class CreateProfileMobileComponent implements OnInit {
         private menuService: MobileMenuService
     ) {
         config.autoClose = true
-         
-        this.menuService.getAllMenu().subscribe((response: any) => {
-            this.nodes = response.data
-            //console.log(this.nodes)
-        })
-       
+        this.prepareMenu()
+        // this.menuService.getAllMenu().subscribe((response: any) => {
+        //     this.menus = response.data
             
+        //     //console.log(this.nodes)
+        // })
+       
+        
         // const menus = new MenuMobileConfig().defaults
-        // menus.aside.items.map(obj=>{
+        // this.menus.map(obj=>{
         //     if(obj.title){
         //         const node : any = {}
                 
@@ -115,7 +117,6 @@ export class CreateProfileMobileComponent implements OnInit {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(true)
         this.createForm()
-        //console.log(this.selectedMenus)
     }
  
 
@@ -174,10 +175,37 @@ export class CreateProfileMobileComponent implements OnInit {
         })
 
     }
+
+    prepareMenu() {
+
+        // fill the dataset with your data
+        this.menuService.getAllMenu().subscribe(
+            
+            (response: any) => {
+            this.menus = response.data
+            this.nodes = this.menus.map((item) => {
+                const node : any = {
+                    id: item.id,
+                    name: item.menu_name,
+                    code: item.menu_code,
+                    children: []
+                };
+                return node;
+              });
+            
+            },
+            (error) => {
+                this.menus = []
+            },
+            () => {}
+        )
+        //console.log(this.nodes)
+    }
     // save data
     onSubmit() {
         this.hasFormErrors = false
         const controls = this.profileForm.controls
+
         /** check form */
         if (this.profileForm.invalid) {
             Object.keys(controls).forEach((controlName) =>
@@ -216,6 +244,7 @@ export class CreateProfileMobileComponent implements OnInit {
      * @param _profile: ProfileMobileModel
      */
     addProfile(_profile: ProfileMobile, _selectedMenu: any) {
+        
         this.loadingSubject.next(true)
         this.profileService.addProfile({profile: _profile, menus: _selectedMenu}).subscribe(
             (reponse) => console.log("response", Response),
@@ -253,17 +282,14 @@ export class CreateProfileMobileComponent implements OnInit {
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
     onSelect(event) {
-      console.log(event)
       const {node:{data:id}} = event
-      this.selectedMenus.push(id.id)
-      //console.log(this.selectedMenus)
-      if(!this.selectedMenus.includes(event.node.parent.data.id)) this.selectedMenus.push(event.node.parent.data.id)
+      this.selectedMenus.push(id.code)
+      if(!this.selectedMenus.includes(event.node.data.code)) this.selectedMenus.push(event.node.data.code)
     }
     onDeselect(event) {
       const {node:{data:id}} = event
-      const index = this.selectedMenus.indexOf(id.id)
+      const index = this.selectedMenus.indexOf(id.code)
       this.selectedMenus.splice(index,1)
-      //console.log(this.selectedMenus)
     }
     
 }

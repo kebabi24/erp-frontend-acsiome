@@ -20,16 +20,16 @@
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="row">
+            <div class="form-group col-12">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button>
+                </kt-alert>
+            </div>
             <div class="col-4">
+                
                 <form class="form" [formGroup]="roleForm">
-                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                    (close)="onAlertClose($event)">
-                    Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button>
-                    </kt-alert>
-                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                        (close)="onAlertClose($event)">
-                        Ce Code existe deja
-                    </kt-alert>
+                    
                     <div class="row">
                         <div class="form-group col-6">
                             <label class="form-group">Role code : *</label>
@@ -60,14 +60,14 @@
                             <label class="form-group">utilisateur: *</label>
                             <div class="input-group input-group-sm">
 
-                                <input type="text" formControlName="userMobile_code"
-                                    [className]="roleForm.controls['userMobile_code'].errors && (roleForm.controls['userMobile_code'].dirty || roleForm.controls['userMobile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                <input type="text" formControlName="user_mobile_code"
+                                    [className]="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                     aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" (click)="open(content)">
                                         <i class="text-dark-50 flaticon2-search"></i> </span>
                                 </div>
-                                <div *ngIf="roleForm.controls['userMobile_code'].errors && (roleForm.controls['userMobile_code'].dirty || roleForm.controls['userMobile_code'].touched)"
+                                <div *ngIf="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched)"
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div>
                             

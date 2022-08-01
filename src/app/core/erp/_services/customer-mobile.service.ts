@@ -42,5 +42,10 @@ export class CustomerMobileService {
         return this.http.get(`${API_URL_CUSTOMER}/${customer_code}`, { headers: httpHeaders })
     }
 
+    public update(id: String, data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL_CUSTOMER}/${id}`,data, { headers: httpHeaders })
+    }
+
  
 }

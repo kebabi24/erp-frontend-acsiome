@@ -56,8 +56,13 @@ export class EditProfileMobileComponent implements OnInit {
   isExist = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
-  selectedMenus = [];
-  nodes = [];
+  selectedMenus = []
+
+  public nodes = [
+      
+    ];
+  public menus = [];
+  public test = []
   prf: any;
   message: string;
   profileMobileEdit: any
@@ -78,11 +83,12 @@ export class EditProfileMobileComponent implements OnInit {
     private menuService: MobileMenuService
   ) {
     config.autoClose = true;
+    this.prepareMenu()
     // this.createForm();
-    this.menuService.getAllMenu().subscribe((response: any) => {
-      this.nodes = response.data
+    // this.menuService.getAllMenu().subscribe((response: any) => {
+    //   this.nodes = response.data
       //console.log(this.nodes)
-    })
+    // })
     // this.activatedRoute.params.subscribe((params) => {
     //   this.id = params.id;
     //   if (this.id) {
@@ -161,25 +167,58 @@ export class EditProfileMobileComponent implements OnInit {
   initCode() {
     this.createForm()
     this.loadingSubject.next(false)
+    this.profileMobileService
+            .getMenuByProfile({ profile_code: this.profileMobileEdit.profile_code })
+            .subscribe((response: any) => {
+            this.test = response.data
+            console.log(this.test)
+
+            this.selectedMenus = this.test.map((item) => {
+              return item.menu_code;
+            });
+            console.log(this.selectedMenus.length)
+            this.roles = this.selectedMenus
+            })
+            
+            
+            
+    
   }
+  prepareMenu(){
+         // fill the dataset with your data
+         this.menuService.getAllMenu().subscribe(
+            
+          (response: any) => {
+          this.menus = response.data
+          this.nodes = this.menus.map((item) => {
+              const node : any = {
+                  id: item.id,
+                  name: item.menu_name,
+                  code: item.menu_code,
+                  children: []
+              };
+              return node;
+            });        
+          },
+          (error) => {
+              this.menus = []
+          },
+          () => {}
+      )
+        
+   
+
+  }
+
+
   onInitTree(event){
-    while (this.roles == null){
-      console.log('aaa')
-    }
     event.treeModel.nodes.map(node=>{
-      if(this.roles.filter(elem=>elem==node.name)[0]){
+      if(this.roles.filter(elem=>elem==node.code)[0]){
         const node_ = event.treeModel.getNodeById(node.id)
         node_.setIsSelected(true)
       }
-      node.children.map(node=>{
-        if(this.roles.filter(elem=>elem==node.name)[0]){
-          const node_ = event.treeModel.getNodeById(node.id)
-          node_.setIsSelected(true)
-        }
-  
-      })
-
     })
+   
   }
 
   //create form
@@ -221,7 +260,7 @@ export class EditProfileMobileComponent implements OnInit {
     const id =  this.profileMobileEdit.id
 
     let address = this.prepareProfile()
-    this.addProfile(id, address)
+    this.addProfile(id, address, this.selectedMenus)
   }
   /**
    * Returns object for saving
@@ -248,9 +287,10 @@ export class EditProfileMobileComponent implements OnInit {
    *
    * @param _profile: ProfileMobileModel
    */
-  addProfile(id, _profile: ProfileMobile) {
+  addProfile(id, _profile: ProfileMobile, selectedMenus: any[]) {
+    //console.log(this.selectedMenus)
     this.loadingSubject.next(true);
-    this.profileMobileService.updateP(id, _profile).subscribe(
+    this.profileMobileService.updateP(id, {profile : _profile,menus: selectedMenus}).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(
@@ -289,16 +329,18 @@ export class EditProfileMobileComponent implements OnInit {
     const {
       node: { data: name },
     } = event;
-    if (!this.selectedMenus.includes(name.name)) this.selectedMenus.push(name.name);
-     if (!this.selectedMenus.includes(event.node.parent.data.name))
-       this.selectedMenus.push(event.node.parent.data.name);
+    if (!this.selectedMenus.includes(name.code)) this.selectedMenus.push(name.code);
+    //  if (!this.selectedMenus.includes(event.node.data.name.code))
+    //    this.selectedMenus.push(event.node.data.name.code);
+       console.log(this.selectedMenus)
   }
   onDeselect(event) {
     const {
       node: { data: name },
     } = event;
-    const index = this.selectedMenus.indexOf(name.name);
+    const index = this.selectedMenus.indexOf(name.code);
     this.selectedMenus.splice(index, 1);
+    console.log(this.selectedMenus)
   }
 
 

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CustomerMobile, CustomerMobileService, MobileMenuService, UsersMobileService } from 'src/app/core/erp';
-import { LayoutUtilsService } from 'src/app/core/_base/crud';
+import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
 
 @Component({
   selector: 'kt-edit-customer-mobile',
@@ -38,8 +38,8 @@ export class EditCustomerMobileComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(true)
     this.activatedRoute.params.subscribe((params) => {
-    const customer_code = params.customer_code
-    this.customerMobileService.getOne(customer_code).subscribe((response: any)=>{
+    const id = params.id
+    this.customerMobileService.getOne(id).subscribe((response: any)=>{
     this.customerMobileEdit = response.data
     this.initCode()
     this.loadingSubject.next(false)
@@ -102,10 +102,10 @@ export class EditCustomerMobileComponent implements OnInit {
     }
 
      // tslint:disable-next-line:prefer-const
-     const customer_code =  this.customerMobileEdit.customer_code
+     const id =  this.customerMobileEdit.id
 
      let customer = this.prepareCustomerMobile()
-    //  this.addCustomerMobile(customer_code, customer)
+     this.addCustomerMobile(id, customer)
 
   }
 
@@ -148,31 +148,31 @@ export class EditCustomerMobileComponent implements OnInit {
   *
   * @param _customerMobile: CustomerMobileModel
   */
-  //  addCustomerMobile(customer_code, _customerMobile: CustomerMobile) {
-  //  this.loadingSubject.next(true);
-  //  this.customerMobileService.update(id, _profile).subscribe(
-  //    (reponse) => console.log("response", Response),
-  //    (error) => {
-  //      this.layoutUtilsService.showActionNotification(
-  //        "Erreur verifier les informations",
-  //        MessageType.Create,
-  //        10000,
-  //        true,
-  //        true
-  //      );
-  //      this.loadingSubject.next(false);
-  //    },
-  //    () => {
-  //      this.layoutUtilsService.showActionNotification(
-  //        "modifié avec succès",
-  //        MessageType.Create,
-  //        10000,
-  //        true,
-  //        true
-  //      );
-  //      this.loadingSubject.next(false);
-  //      this.router.navigateByUrl("/");
-  //    }
-  //  );
-  // }
+   addCustomerMobile(id, _customerMobile: CustomerMobile) {
+   this.loadingSubject.next(true);
+   this.customerMobileService.update(id, _customerMobile).subscribe(
+     (reponse) => console.log("response", Response),
+     (error) => {
+       this.layoutUtilsService.showActionNotification(
+         "Erreur verifier les informations",
+         MessageType.Create,
+         10000,
+         true,
+         true
+       );
+       this.loadingSubject.next(false);
+     },
+     () => {
+       this.layoutUtilsService.showActionNotification(
+         "modifié avec succès",
+         MessageType.Create,
+         10000,
+         true,
+         true
+       );
+       this.loadingSubject.next(false);
+       this.router.navigateByUrl("/");
+     }
+   );
+  }
 }

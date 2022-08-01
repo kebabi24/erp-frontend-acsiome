@@ -63,7 +63,7 @@ export class CreateNewRolesComponent implements OnInit {
     this.roleForm = this.roleF.group({
         role_code: [this.role.role_code, Validators.required],
         role_name: [this.role.role_name, Validators.required],
-        userMobile_code: [{value: this.role.userMobile_code, disabled: !this.isExist}, Validators.required],
+        user_mobile_code: [{value: this.role.user_mobile_code, disabled: !this.isExist}, Validators.required],
     })
   }
 
@@ -148,7 +148,7 @@ export class CreateNewRolesComponent implements OnInit {
        
           if (res.data) {
             alert("Ce role exist déja")
-            controls.role_code.setValue(null) 
+            this.isExist = true
             document.getElementById("role").focus(); 
 
           } else { 
@@ -179,9 +179,9 @@ export class CreateNewRolesComponent implements OnInit {
             type: FieldType.string,
         },
         {
-          id: "userMobile_code",
+          id: "user_mobile_code",
           name: "code d'utilisateur",
-          field: "userMobile_code",
+          field: "user_mobile_code",
           sortable: true,
           filterable: true,
           type: FieldType.string,
@@ -254,6 +254,7 @@ export class CreateNewRolesComponent implements OnInit {
           console.log("aa", res.data);
        
           if (res.data) {
+            console.log("here")
             this.router.navigateByUrl(`/roles/edit-role/${res.data.id}`)
             //console.log(res.data.id)
           }
@@ -297,7 +298,7 @@ export class CreateNewRolesComponent implements OnInit {
     const _role = new Role()
     _role.role_code = controls.role_code.value
     _role.role_name = controls.role_name.value
-    _role.userMobile_code = controls.userMobile_code.value
+    _role.user_mobile_code = controls.user_mobile_code.value
 
     return _role
   }
@@ -349,7 +350,7 @@ export class CreateNewRolesComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObj) {
         args.rows.map((idx) => {
             const item = this.gridObj.getDataItem(idx)
-            controls.userMobile_code.setValue(item.userMobile_code || "")
+            controls.user_mobile_code.setValue(item.user_mobile_code || "")
         })
     }
   }

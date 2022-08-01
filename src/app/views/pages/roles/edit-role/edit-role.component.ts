@@ -35,7 +35,7 @@ export class EditRoleComponent implements OnInit {
   message: any
   roleEdit: any
   title: String = 'Modifier role - '
-  userMobile_code : String
+  user_mobile_code : String
   constructor(
       config: NgbDropdownConfig,
       private roleF: FormBuilder,
@@ -76,7 +76,7 @@ export class EditRoleComponent implements OnInit {
 
         role_code: [{value: this.roleEdit.role_code, disabled : false}, Validators.required],
         role_name: [{value: this.roleEdit.role_name, disabled : true}],
-        userMobile_code: [this.roleEdit.userMobile_code, Validators.required],
+        user_mobile_code: [this.roleEdit.user_mobile_code, Validators.required],
         init: [ false],
 
     })
@@ -123,7 +123,7 @@ export class EditRoleComponent implements OnInit {
     const _role = new Role()
     _role.role_code =   controls.role_code.value
     _role.role_name = controls.fullname.value
-    _role.userMobile_code =   this.userMobile_code
+    _role.user_mobile_code =   this.user_mobile_code
 
     return _role
   }
@@ -248,9 +248,9 @@ export class EditRoleComponent implements OnInit {
             maxWidth: 80,
         },
         {
-            id: "userMobile_code",
+            id: "user_mobile_code",
             name: "Code d'utilisateur",
-            field: "userMobile_code",
+            field: "user_mobile_code",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -262,14 +262,6 @@ export class EditRoleComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
-        },
-        {
-          id: "fullname",
-          name: "Nom complet",
-          field: "fullname",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
         },
         {
           id: "profile_name",
@@ -351,8 +343,8 @@ export class EditRoleComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObj) {
         args.rows.map((idx) => {
             const item = this.gridObj.getDataItem(idx)
-            this.userMobile_code = item.userMobile_code
-            controls.userMobile_code.setValue(item.userMobile_code || "")
+            this.user_mobile_code = item.user_mobile_code
+            controls.user_mobile_code.setValue(item.user_mobile_code || "")
         })
     }
   }

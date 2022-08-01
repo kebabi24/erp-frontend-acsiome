@@ -58,6 +58,10 @@ const routes: Routes = [
               path: "create-customer-mobile",
               component: CreateCustomerMobileComponent,
           },
+          {
+            path: "edit-customer-mobile/:id",
+            component: EditCustomerMobileComponent,
+        },
 ]
 @NgModule({
   declarations: [

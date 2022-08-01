@@ -46,10 +46,6 @@ export class CreateNewServiceComponent implements OnInit {
         this.roleService
           .getAllRoles()
           .subscribe((response: any) => this.roles = response.data)
-        this.itineraryService
-          .getAllItinerary()
-          .subscribe((response: any) => this.itinerary = response.data)
-
   }
 
   ngOnInit(): void {
@@ -63,14 +59,28 @@ export class CreateNewServiceComponent implements OnInit {
 
     this.service = new MobileService()
     this.serviceForm = this.serviceF.group({
-        service_period_activate_date: [this.service.service_period_activate_date, Validators.required],
+        service_code: [this.service.service_code, Validators.required],
         service_creation_date: [{value: this.service.service_creation_date}, Validators.required],
         service_closing_date: [{value: this.service.service_closing_date}, Validators.required],
-        role_code: [{value: this.service.role_code}, Validators.required],
-        itinerary_code: [{value: this.service.itinerary_code}, Validators.required],
-        service_open: [{value: this.service.service_open}, Validators.required],
+        role_code: [{value: this.service.role_code}],
+        itinerary_code: [{value: this.service.itinerary_code}],
+        // service_open: [{value: this.service.service_open}, Validators.required],
         
     })
+  }
+
+  onChangeCode() {
+    const controls = this.serviceForm.controls
+    const _service = new MobileService()
+    const role_code = controls.role_code.value
+    this.itineraryService.getItineraryByRole({role_code: role_code}).subscribe(
+            
+      (response: any) => {
+      this.itinerary = response.data
+      console.log(response.data)
+      }
+  )
+
   }
 
   reset() {
@@ -103,17 +113,18 @@ export class CreateNewServiceComponent implements OnInit {
     const controls = this.serviceForm.controls
     const _service = new MobileService()
 
-    _service.service_period_activate_date = controls.service_period_activate_date.value
+    _service.service_code = controls.service_code.value
     _service.service_creation_date = controls.service_creation_date.value
     _service.service_closing_date = controls.service_closing_date.value
     _service.role_code = controls.role_code.value
     _service.itinerary_code = controls.itinerary_code.value
-    _service.service_open = controls.service_open.value
+    // _service.service_open = controls.service_open.value
     return _service
 
   }
 
   addItinerary(_service: MobileService){
+    console.log(_service)
     this.loadingSubject.next(true)
         this.mobileService.addService(_service).subscribe(
             (reponse) => console.log("response", Response),

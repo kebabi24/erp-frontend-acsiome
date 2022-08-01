@@ -83,5 +83,10 @@ export class UsersMobileService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_PROFILE}/findone`,data, { headers: httpHeaders })   
     }
+
+    public getMenuByProfile(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_PROFILE}/findmenu`,data, { headers: httpHeaders })   
+    }
     
 }
