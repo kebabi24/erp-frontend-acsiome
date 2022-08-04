@@ -56,8 +56,9 @@ export class RoleService {
 
     public getOne(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL_USER}/${id}`, { headers: httpHeaders })
+        return this.http.get(`${API_URL_ROLE}/${id}`, { headers: httpHeaders })
     }
+    
 
     public updated(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

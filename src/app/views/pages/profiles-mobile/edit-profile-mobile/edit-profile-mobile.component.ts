@@ -83,92 +83,36 @@ export class EditProfileMobileComponent implements OnInit {
     private menuService: MobileMenuService
   ) {
     config.autoClose = true;
-    this.prepareMenu()
-    // this.createForm();
-    // this.menuService.getAllMenu().subscribe((response: any) => {
-    //   this.nodes = response.data
-      //console.log(this.nodes)
-    // })
-    // this.activatedRoute.params.subscribe((params) => {
-    //   this.id = params.id;
-    //   if (this.id) {
-    //     const controls = this.profileForm.controls;
-    //     const menus = new MenuMobileConfig().defaults;
-    //     menus.aside.items.map(obj=>{
-    //       if(obj.title){
-    //           const node : any = {}
-    //           node.name = obj.title
-    //           node.children = []
-    //           if(obj.submenu){
-    //               obj.submenu.map(value=>{
-    //                   let item :any
-    //                   item = {name: value.title,checked:true,children:[]}
-    //                   if(value.submenu) {
-    //                       value.submenu.map(v=>{
-    //                           item.children.push({name: v.title, checked:true})
-    //                       })
-    //                   }
-    //                   node.children.push(item)
-    //               })
-
-    //           }
-              
-              
-              
-    //           this.nodes.push(node)
-    //       }
-    //   })
-    //     this.profileMobileService.getProfile(this.id).subscribe(
-    //       (res: any) => {
-    //         console.log("aa", res.data);
-    //         this.prf = res.data
-    //         controls.profile_code.setValue(this.prf.profile_code)
-    //         controls.profile_name.setValue(this.prf.profile_name)
-    //         const d1 = new Date(this.prf.profile_valid_date)
-    //         d1.setDate(d1.getDate() )
-    //         const d2 = new Date(this.prf.profile_exp_date)
-    //         d2.setDate(d2.getDate() )
-    //         controls.profile_valid_date.setValue({year: d1.getFullYear, month: d1.getMonth()+1, day: d1.getDate()})
-    //         controls.profile_exp_date.setValue({year: d2.getFullYear, month: d2.getMonth()+1, day: d2.getDate()})
-    //         //this.roles = JSON.parse(res.data.usrg_menus)
-    //         //const menus = new MenuMobileConfig().defaults;
-    //         //this.selectedMenus = this.roles
-            
-    //         // controls.usrd_code.setValue(this.users.usrd_code);
-    //         // controls.usrd_name.setValue(this.users.usrd_name);
-    //         // controls.usrd_user_name.setValue(this.users.usrd_user_name);
-    //         // controls.usrd_profile.setValue(this.users.usrd_profile);
-            
-    //       },
-    //       (error) => {
-    //         this.hasFormErrors = true;
-    //       },
-    //       () => {}
-    //     );
-    //   }
-    // });    
-    
+    this.createForm()
+    this.prepareMenu()    
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(true)
+        const controls = this.profileForm.controls;
         this.activatedRoute.params.subscribe((params) => {
         const id = params.id
         this.profileMobileService.getOneProfile(id).subscribe((response: any)=>{
-        this.profileMobileEdit = response.data
+        this.prf = response.data
+        controls.profile_code.setValue(this.prf.profile_code)
+        controls.profile_name.setValue(this.prf.profile_name)
+        const d1 = new Date(this.prf.profile_valid_date)
+        d1.setDate(d1.getDate() )
+        const d2 = new Date(this.prf.profile_exp_date)
+        d2.setDate(d2.getDate() )
+        controls.profile_valid_date.setValue({year: d1.getFullYear, month: d1.getMonth()+1, day: d1.getDate()})
+        controls.profile_exp_date.setValue({year: d2.getFullYear, month: d2.getMonth()+1, day: d2.getDate()})
         this.initCode()
         this.loadingSubject.next(false)
-        //this.title = this.title + this.userMobileEdit.username
           })
       })
     
   }
 
   initCode() {
-    this.createForm()
     this.loadingSubject.next(false)
     this.profileMobileService
-            .getMenuByProfile({ profile_code: this.profileMobileEdit.profile_code })
+            .getMenuByProfile({ profile_code: this.prf.profile_code })
             .subscribe((response: any) => {
             this.test = response.data
             console.log(this.test)
@@ -176,7 +120,7 @@ export class EditProfileMobileComponent implements OnInit {
             this.selectedMenus = this.test.map((item) => {
               return item.menu_code;
             });
-            console.log(this.selectedMenus.length)
+            console.log(this.selectedMenus)
             this.roles = this.selectedMenus
             })
             
@@ -212,6 +156,7 @@ export class EditProfileMobileComponent implements OnInit {
 
 
   onInitTree(event){
+    console.log(event)
     event.treeModel.nodes.map(node=>{
       if(this.roles.filter(elem=>elem==node.code)[0]){
         const node_ = event.treeModel.getNodeById(node.id)
@@ -224,11 +169,12 @@ export class EditProfileMobileComponent implements OnInit {
   //create form
   createForm() {
     this.loadingSubject.next(false);
+    this.profile = new ProfileMobile();
     this.profileForm = this.profileFB.group({
-      profile_code: [{value: this.profileMobileEdit.profile_code, disabled : false}, Validators.required],
-      profile_name: [{value: this.profileMobileEdit.profile_name, disabled : false}, Validators.required],
-      profile_valid_date: [{value: this.profileMobileEdit.profile_valid_date, disabled : false}, Validators.required],
-      profile_exp_date: [{value: this.profileMobileEdit.profile_exp_date, disabled : false}, Validators.required],
+      profile_code: [{value: this.profile.profile_code, disabled : false}, Validators.required],
+      profile_name: [{value: this.profile.profile_name, disabled : false}, Validators.required],
+      profile_valid_date: [{value: this.profile.profile_valid_date, disabled : false}, Validators.required],
+      profile_exp_date: [{value: this.profile.profile_exp_date, disabled : false}, Validators.required],
     });
   }
 
@@ -257,8 +203,8 @@ export class EditProfileMobileComponent implements OnInit {
     
 
     // tslint:disable-next-line:prefer-const
-    const id =  this.profileMobileEdit.id
-
+    const id =  this.prf.id
+    console.log(id)
     let address = this.prepareProfile()
     this.addProfile(id, address, this.selectedMenus)
   }
@@ -332,7 +278,7 @@ export class EditProfileMobileComponent implements OnInit {
     if (!this.selectedMenus.includes(name.code)) this.selectedMenus.push(name.code);
     //  if (!this.selectedMenus.includes(event.node.data.name.code))
     //    this.selectedMenus.push(event.node.data.name.code);
-       console.log(this.selectedMenus)
+      //  console.log(this.selectedMenus)
   }
   onDeselect(event) {
     const {

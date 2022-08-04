@@ -375,6 +375,10 @@ export class CreateNewRolesComponent implements OnInit {
     this.angularGrid2 = angularGrid
     this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {}
   }
+
+  onChange(e){
+    console.log(e)
+  }
   
 
 

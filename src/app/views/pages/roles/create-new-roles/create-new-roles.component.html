@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)" (onGridInitialized)="onChange($event)"
                 [gridOptions]="gridOptions2" [dataset]="itinerary">
             </angular-slickgrid>
         </div>

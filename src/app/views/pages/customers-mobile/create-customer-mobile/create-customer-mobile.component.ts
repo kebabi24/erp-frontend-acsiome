@@ -307,8 +307,32 @@ export class CreateCustomerMobileComponent implements OnInit {
   }
 
 
-  addCustomerMobile(_customerMobile: CustomerMobile) {
-    console.log(_customerMobile)
+  addCustomerMobile(customer_mobile: CustomerMobile) {
+    this.loadingSubject.next(true)
+        this.customerMobileService.addCustomerMobile(customer_mobile).subscribe(
+            (reponse) => console.log("response", Response),
+            (error) => {
+                this.layoutUtilsService.showActionNotification(
+                    "Erreur verifier les informations",
+                    MessageType.Create,
+                    10000,
+                    true,
+                    true
+                )
+                this.loadingSubject.next(false)
+            },
+            () => {
+                this.layoutUtilsService.showActionNotification(
+                    "Ajout avec succès",
+                    MessageType.Create,
+                    10000,
+                    true,
+                    true
+                )
+                this.loadingSubject.next(false)
+                this.router.navigateByUrl("/customers-mobile/list-customer-mobile")
+            }
+        )
   }
   onAlertClose($event) {
     this.hasFormErrors = false

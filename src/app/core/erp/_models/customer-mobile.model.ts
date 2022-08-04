@@ -7,6 +7,13 @@ export class CustomerMobile extends BaseModel {
     customer_name: String
     customer_name2: String
     customer_arabic_name: String
+    customer_phone_one: String
+    customer_phone_two: String
+    customer_email: String
+    customer_fax: String
+    customer_web_adr: String
+    customer_branch_code: String
+    customer_barcode: String
     customer_contact: String
     addresse_one: String
     addresse_two: String
@@ -19,11 +26,5 @@ export class CustomerMobile extends BaseModel {
     geoarea_code: String
     longitude: String
     latitude: String
-    customer_phone_one: String
-    customer_phone_two: String
-    customer_email: String
-    customer_fax: String
-    customer_web_adr: String
-    customer_branch_code: String
-    customer_barcode: String
+ 
 }

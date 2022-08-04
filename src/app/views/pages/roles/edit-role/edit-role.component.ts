@@ -48,35 +48,36 @@ export class EditRoleComponent implements OnInit {
       private itineraryService: ItineraryService,
   ) { 
       config.autoClose = true
+      this.createForm()
       this.prepareGrid2()
   }
 
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(true)
+        const controls = this.roleForm.controls;
         this.activatedRoute.params.subscribe((params) => {
         const id = params.id
         this.roleService.getOne(id).subscribe((response: any)=>{
         this.roleEdit = response.data
-        this.initCode()
+        controls.role_code.setValue(this.roleEdit.role_code)
+        controls.role_name.setValue(this.roleEdit.role_name)
+        controls.user_mobile_code.setValue(this.roleEdit.user_mobile_code)
         this.loadingSubject.next(false)
-        this.title = this.title + this.roleEdit.role_code
+        this.title = this.title + this.roleEdit.role_name
           })
       })
   }
 
-  initCode() {
-    this.createForm()
-    this.loadingSubject.next(false)
-  }
+ 
 
   createForm() {
     this.loadingSubject.next(false)
+    this.role = new Role()
     this.roleForm = this.roleF.group({
-
-        role_code: [{value: this.roleEdit.role_code, disabled : false}, Validators.required],
-        role_name: [{value: this.roleEdit.role_name, disabled : true}],
-        user_mobile_code: [this.roleEdit.user_mobile_code, Validators.required],
+        role_code: [{value: this.role.role_code, disabled : false}, Validators.required],
+        role_name: [{value: this.role.role_name, disabled : true}],
+        user_mobile_code: [this.role.user_mobile_code, Validators.required],
         init: [ false],
 
     })

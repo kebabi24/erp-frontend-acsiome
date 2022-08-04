@@ -119,6 +119,7 @@ export class ListCustomerMobileComponent implements OnInit {
           type: FieldType.date,
         },
         
+        
     ]
 
     this.gridOptions = {

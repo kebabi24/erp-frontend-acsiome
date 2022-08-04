@@ -30,124 +30,47 @@
                             </kt-alert>
                                 <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group " id="code" >Code client:</label>
+                                        <label class="form-group " id="code" >Code:</label>
                                         <input type="text" (change)="onChangeCode()"
                                             [className]="customerMobileForm.controls['customer_code'].errors && (customerMobileForm.controls['customer_code'].dirty || customerMobileForm.controls['customer_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="customer_code">
                                         <div *ngIf="customerMobileForm.controls['customer_code'].errors && (customerMobileForm.controls['customer_code'].dirty || customerMobileForm.controls['customer_code'].touched)"
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group " >Nom du client:</label>
+                                        <label class="form-group " >Nom:</label>
                                         <input type="text"
                                             [className]="customerMobileForm.controls['customer_name'].errors && (customerMobileForm.controls['customer_name'].dirty || customerMobileForm.controls['customer_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="customer_name">
                                         <div *ngIf="customerMobileForm.controls['customer_name'].errors && (customerMobileForm.controls['customer_name'].dirty || customerMobileForm.controls['customer_name'].touched)"
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group ">Deuxième nom du client:</label>
+                                        <label class="form-group ">Nom 2:</label>
                                             <input type="text"
                                                 [className]="customerMobileForm.controls['customer_name2'].errors && (customerMobileForm.controls['customer_name2'].dirty || customerMobileForm.controls['customer_name2'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 formControlName="customer_name2">
                                             <div *ngIf="customerMobileForm.controls['customer_name2'].errors && (customerMobileForm.controls['customer_name2'].dirty || customerMobileForm.controls['customer_name2'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group ">الإسم الكامل بااللغة العربية:</label>
+                                        <label class="form-group ">Nom Arabe</label>
                                             <input type="text"
                                                 [className]="customerMobileForm.controls['customer_arabic_name'].errors && (customerMobileForm.controls['customer_arabic_name'].dirty || customerMobileForm.controls['customer_arabic_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 formControlName="customer_arabic_name">
                                             <div *ngIf="customerMobileForm.controls['customer_arabic_name'].errors && (customerMobileForm.controls['customer_arabic_name'].dirty || customerMobileForm.controls['customer_arabic_name'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
-                                    
-
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Contact principal:</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_contact'].errors && (customerMobileForm.controls['customer_contact'].dirty || customerMobileForm.controls['customer_contact'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_contact">
-                                            <div *ngIf="customerMobileForm.controls['customer_contact'].errors && (customerMobileForm.controls['customer_contact'].dirty || customerMobileForm.controls['customer_contact'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Numéro de téléphone :</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_phone_one'].errors && (customerMobileForm.controls['customer_phone_one'].dirty || customerMobileForm.controls['customer_phone_one'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_phone_one">
-                                            <div *ngIf="customerMobileForm.controls['customer_phone_one'].errors && (customerMobileForm.controls['customer_phone_one'].dirty || customerMobileForm.controls['customer_phone_one'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Numéro de téléphone:</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_phone_two'].errors && (customerMobileForm.controls['customer_phone_two'].dirty || customerMobileForm.controls['customer_phone_two'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_phone_two">
-                                            <div *ngIf="customerMobileForm.controls['customer_phone_two'].errors && (customerMobileForm.controls['customer_phone_two'].dirty || customerMobileForm.controls['customer_phone_two'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                   
-                                  
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Addresse email:</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_email'].errors && (customerMobileForm.controls['customer_email'].dirty || customerMobileForm.controls['customer_email'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_email">
-                                            <div *ngIf="customerMobileForm.controls['customer_email'].errors && (customerMobileForm.controls['customer_email'].dirty || customerMobileForm.controls['customer_email'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Numéro fax:</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_fax'].errors && (customerMobileForm.controls['customer_fax'].dirty || customerMobileForm.controls['customer_fax'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_fax">
-                                            <div *ngIf="customerMobileForm.controls['customer_fax'].errors && (customerMobileForm.controls['customer_fax'].dirty || customerMobileForm.controls['customer_fax'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                  
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Addresse web:</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_web_adr'].errors && (customerMobileForm.controls['customer_web_adr'].dirty || customerMobileForm.controls['customer_web_adr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_web_adr">
-                                            <div *ngIf="customerMobileForm.controls['customer_web_adr'].errors && (customerMobileForm.controls['customer_web_adr'].dirty || customerMobileForm.controls['customer_web_adr'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Code à barre:</label>
-                                        
-                                            <input type="text"
-                                                [className]="customerMobileForm.controls['customer_barcode'].errors && (customerMobileForm.controls['customer_barcode'].dirty || customerMobileForm.controls['customer_barcode'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                                formControlName="customer_barcode">
-                                            <div *ngIf="customerMobileForm.controls['customer_barcode'].errors && (customerMobileForm.controls['customer_barcode'].dirty || customerMobileForm.controls['customer_barcode'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        
-                                    </div>
-                                  
-                                </div>
-
                                 <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group">Addresse 1: *</label>
+                                        <label class="form-group">Addresse1:</label>
                                         <input type="text" 
                                         [className]="customerMobileForm.controls['addresse_one'].errors && (customerMobileForm.controls['addresse_one'].dirty || customerMobileForm.controls['addresse_one'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="addresse_one">
@@ -155,7 +78,7 @@
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
                                     <div class="form-group col-4">
-                                        <label class="form-group">Addresse 2 :</label>
+                                        <label class="form-group">Addresse2:</label>
                                         <input type="text" 
                                         [className]="customerMobileForm.controls['addresse_two'].errors && (customerMobileForm.controls['addresse_two'].dirty || customerMobileForm.controls['addresse_two'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="addresse_two">
@@ -167,7 +90,94 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group">Pays : * </label>
+                                        <label class="form-group ">Contact:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_contact'].errors && (customerMobileForm.controls['customer_contact'].dirty || customerMobileForm.controls['customer_contact'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_contact">
+                                            <div *ngIf="customerMobileForm.controls['customer_contact'].errors && (customerMobileForm.controls['customer_contact'].dirty || customerMobileForm.controls['customer_contact'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Téléphone:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_phone_one'].errors && (customerMobileForm.controls['customer_phone_one'].dirty || customerMobileForm.controls['customer_phone_one'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_phone_one">
+                                            <div *ngIf="customerMobileForm.controls['customer_phone_one'].errors && (customerMobileForm.controls['customer_phone_one'].dirty || customerMobileForm.controls['customer_phone_one'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Tel 2:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_phone_two'].errors && (customerMobileForm.controls['customer_phone_two'].dirty || customerMobileForm.controls['customer_phone_two'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_phone_two">
+                                            <div *ngIf="customerMobileForm.controls['customer_phone_two'].errors && (customerMobileForm.controls['customer_phone_two'].dirty || customerMobileForm.controls['customer_phone_two'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Fax:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_fax'].errors && (customerMobileForm.controls['customer_fax'].dirty || customerMobileForm.controls['customer_fax'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_fax">
+                                            <div *ngIf="customerMobileForm.controls['customer_fax'].errors && (customerMobileForm.controls['customer_fax'].dirty || customerMobileForm.controls['customer_fax'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                   
+                                  
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Email:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_email'].errors && (customerMobileForm.controls['customer_email'].dirty || customerMobileForm.controls['customer_email'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_email">
+                                            <div *ngIf="customerMobileForm.controls['customer_email'].errors && (customerMobileForm.controls['customer_email'].dirty || customerMobileForm.controls['customer_email'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Web:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_web_adr'].errors && (customerMobileForm.controls['customer_web_adr'].dirty || customerMobileForm.controls['customer_web_adr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_web_adr">
+                                            <div *ngIf="customerMobileForm.controls['customer_web_adr'].errors && (customerMobileForm.controls['customer_web_adr'].dirty || customerMobileForm.controls['customer_web_adr'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">QR:</label>
+                                        
+                                            <input type="text"
+                                                [className]="customerMobileForm.controls['customer_barcode'].errors && (customerMobileForm.controls['customer_barcode'].dirty || customerMobileForm.controls['customer_barcode'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="customer_barcode">
+                                            <div *ngIf="customerMobileForm.controls['customer_barcode'].errors && (customerMobileForm.controls['customer_barcode'].dirty || customerMobileForm.controls['customer_barcode'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Geoarea:</label>
+                                        <input type="text" 
+                                        [className]="customerMobileForm.controls['geoarea_code'].errors && (customerMobileForm.controls['geoarea_code'].dirty || customerMobileForm.controls['geoarea_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                        formControlName="geoarea_code">
+                                        <div *ngIf="customerMobileForm.controls['geoarea_code'].errors && (customerMobileForm.controls['geoarea_code'].dirty || customerMobileForm.controls['geoarea_code'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                    </div>
+                                   
+                                  
+                                </div> 
+
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Pays:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             id="exampleSelects1" formControlName="country">
                                             <option value=""></option>
@@ -177,7 +187,7 @@
                                    
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">Wilaya : * </label>
+                                        <label class="form-group">Wilaya:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             id="exampleSelects1" formControlName="city">
                                             <option value=""></option>
@@ -187,7 +197,7 @@
                              
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">Commune : * </label>
+                                        <label class="form-group">Commune:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             id="exampleSelects1" formControlName="state">
                                             <option value=""></option>
@@ -197,7 +207,7 @@
                             
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">Code postale : * </label>
+                                        <label class="form-group">Code postale:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             id="exampleSelects1" formControlName="postal_code">
                                             <option value=""></option>
@@ -206,14 +216,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="form-group col-2">
-                                        <label class="form-group">Geoarea code : </label>
-                                        <input type="text" 
-                                        [className]="customerMobileForm.controls['geoarea_code'].errors && (customerMobileForm.controls['geoarea_code'].dirty || customerMobileForm.controls['geoarea_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                        formControlName="geoarea_code">
-                                        <div *ngIf="customerMobileForm.controls['geoarea_code'].errors && (customerMobileForm.controls['geoarea_code'].dirty || customerMobileForm.controls['geoarea_code'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                    </div>
+                                    
                                     
                                 </div>
                                

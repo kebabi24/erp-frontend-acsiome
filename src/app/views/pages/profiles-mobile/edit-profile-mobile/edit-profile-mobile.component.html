@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="form-group col-4">
                                 <label class="form-group">code profile: *</label>
-                                <input type="text" formControlName="profile_code" [(ngModel)]="profileMobileEdit.profile_code"
+                                <input type="text" formControlName="profile_code" [(ngModel)]="prf.profile_code"
                                     [className]="profileForm.controls['profile_code'].errors && (profileForm.controls['profile_code'].dirty || profileForm.controls['profile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                 <div *ngIf="profileForm.controls['profile_code'].errors && (profileForm.controls['profile_code'].dirty || profileForm.controls['profile_code'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
@@ -38,7 +38,7 @@
                         <div class="row">
                             <div class="form-group col-4">
                                 <label class="form-group">nom du profile: *</label>
-                                <input type="text" formControlName="profile_name" 
+                                <input type="text" formControlName="profile_name"
                                     [className]="profileForm.controls['profile_name'].errors && (profileForm.controls['profile_name'].dirty || profileForm.controls['profile_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                 <div *ngIf="profileForm.controls['profile_name'].errors && (profileForm.controls['profile_name'].dirty || profileForm.controls['profile_name'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
