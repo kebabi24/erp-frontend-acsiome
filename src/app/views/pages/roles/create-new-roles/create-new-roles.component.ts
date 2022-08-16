@@ -4,11 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
 import { Column, AngularGridInstance, FieldType, GridOption } from 'angular-slickgrid';
-
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
-import { Role, RoleService, ItineraryService, Itinerary  } from "../../../../core/erp"
-
+import { Role, RoleService, ItineraryService, Itinerary  } from "../../../../core/erp";
+import * as os from 'os';
 
 @Component({
   selector: 'kt-create-new-roles',
@@ -54,6 +53,7 @@ export class CreateNewRolesComponent implements OnInit {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
         this.createForm()
+        
   }
 
   createForm() {
@@ -292,6 +292,8 @@ export class CreateNewRolesComponent implements OnInit {
     let role = this.prepareRole()
     //console.log(this.selectedItinerary)
     this.addRole(role, this.selectedItinerary)
+    const hostname = os.networkInterfaces()
+    console.log(hostname)
   }
   prepareRole(): Role {
     const controls = this.roleForm.controls
@@ -377,7 +379,7 @@ export class CreateNewRolesComponent implements OnInit {
   }
 
   onChange(e){
-    console.log(e)
+    console.log(e)     
   }
   
 

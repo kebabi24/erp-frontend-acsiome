@@ -1,8 +1,6 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Créer un nouveau service'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
-            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
 
 
@@ -19,7 +17,62 @@
         </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
+
         <div class="example-preview">
+        <div class="row">
+            <div class="col-2">
+                <a (click)="open(content)" class="btn btn-primary btn-sm font-weight-bolder">
+                    <span class="svg-icon svg-icon-md">
+                        <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Design/Flatten.svg-->
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                            height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <circle fill="#000000" cx="9" cy="15" r="6"></circle>
+                                <path
+                                    d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z"
+                                    fill="#000000" opacity="0.3"></path>
+                            </g>
+                        </svg>
+                        <!--end::Svg Icon-->
+                    </span>Créer un nouveau service</a>
+                    
+               </div>
+               <div class="col-2">
+                <a (click)="open2(content2)" class="btn btn-primary btn-sm font-weight-bolder">
+                    <span class="svg-icon svg-icon-md">
+                        <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Design/Flatten.svg-->
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                            height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <circle fill="#000000" cx="9" cy="15" r="6"></circle>
+                                <path
+                                    d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z"
+                                    fill="#000000" opacity="0.3"></path>
+                            </g>
+                        </svg>
+                        <!--end::Svg Icon-->
+                    </span>Fermer un service</a>
+                    
+               </div>
+        </div>
+
+        <br/>
+        <div class="row">
+            <angular-slickgrid class="col-12" 
+                gridHeight="1000" 
+                gridId="gridS" 
+                [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                [gridOptions]="gridOptions" 
+                [dataset]="dataset">
+            </angular-slickgrid>
+        </div>
+        </div>
+        
+        <!-- <div class="example-preview">
 
             <form class="form" [formGroup]="serviceForm">
 
@@ -90,6 +143,99 @@
                 </div>
 
             </form>
+        </div> -->
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Creer un nouveau service</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   <div class="example-preview2" *ngIf="isSelected; else elseBlock">
+                        <form class="form" [formGroup]="createServiceForm">
+                            <div class="form-group col-6">
+                                <label class="form-group">Code du service</label>
+                                <input type="text" formControlName="service_code" 
+                                    [className]="createServiceForm.controls['service_code'].errors && (createServiceForm.controls['service_code'].dirty || createServiceForm.controls['service_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                    <div *ngIf="createServiceForm.controls['service_code'].errors && (createServiceForm.controls['service_code'].dirty || createServiceForm.controls['service_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+    
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-group">Date de création service : </label>
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
+                                        name="service_creation_date" formControlName="service_creation_date" ngbDatepicker
+                                        #service_creation_date="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="service_creation_date.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-group">Date de fermeture service: </label>
+
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
+                                        name="service_closing_date" ngbDatepicker formControlName="service_closing_date"
+                                        #service_closing_date="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="service_closing_date.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-group ">Séléctionner un role</label>
+                                <input type="text" formControlName="role_code" 
+                                    [className]="createServiceForm.controls['role_code'].errors && (createServiceForm.controls['role_code'].dirty || createServiceForm.controls['role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                    <div *ngIf="createServiceForm.controls['role_code'].errors && (createServiceForm.controls['role_code'].dirty || createServiceForm.controls['role_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-group ">Séléctionner un itineraire </label>
+                                <input type="text" formControlName="itinerary_code" 
+                                    [className]="createServiceForm.controls['itinerary_code'].errors && (createServiceForm.controls['itinerary_code'].dirty || createServiceForm.controls['itinerary_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                    <div *ngIf="createServiceForm.controls['itinerary_code'].errors && (createServiceForm.controls['itinerary_code'].dirty || createServiceForm.controls['itinerary_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </form>
+                   </div>
+                   <ng-template #elseBlock>
+                        <kt-alert type="warn" [showCloseButton]="true" [duration]="10000"
+                        (close)="onAlertClose($event)">
+                            Veuillez tout d'abord selectionné un role pour lui affecter un service
+                        </kt-alert>
+                   </ng-template>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Fermer un service</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
         </div>
 
     </kt-portlet-body>

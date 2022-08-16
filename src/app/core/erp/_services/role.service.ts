@@ -40,6 +40,12 @@ export class RoleService {
     }
 
 
+    public getIpAdrez() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        // return this.http.post(API_ROLE_ITINERARY, data, { headers: httpHeaders })
+        return this.http.get("http://api.ipify.org/?format=json", {headers: httpHeaders})
+        
+    }
     public updateRole(data,id) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(API_URL_ROLE + '/'+ id,data , { headers: httpHeaders })
