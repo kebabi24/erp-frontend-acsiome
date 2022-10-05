@@ -29,13 +29,20 @@
                     Ce Code existe deja
                 </kt-alert>
                 <div class="row">
-                    <div class="form-group col-2">
+                    <!--div class="form-group col-2">
                         <label class="form-group">code : *</label>
                         <input type="text" formControlName="usrd_code" (change)="onChangeCode()"
                             [className]="userForm.controls['usrd_code'].errors && (userForm.controls['usrd_code'].dirty || userForm.controls['usrd_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                         <div *ngIf="userForm.controls['usrd_code'].errors && (userForm.controls['usrd_code'].dirty || userForm.controls['usrd_code'].touched) "
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
+                    </div-->
+                    <div class="form-group col-2">
+                        <label class="form-group">Code utilisateur: *</label>
+                        <input type="text" formControlName="usrd_user_name"  (change)="onChangeUser()" id="user"
+                            [className]="userForm.controls['usrd_user_name'].errors && (userForm.controls['usrd_user_name'].dirty || userForm.controls['usrd_user_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="userForm.controls['usrd_user_name'].errors && (userForm.controls['usrd_user_name'].dirty || userForm.controls['usrd_user_name'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
                     </div>
                     <div class="form-group col-3">
                         <label class="form-group">Nom Complet: *</label>
@@ -67,13 +74,7 @@
 
                 </div>
                 <div class='row'>
-                    <div class="form-group col-2">
-                        <label class="form-group">Nom d'utilisateur: *</label>
-                        <input type="text" formControlName="usrd_user_name"  (change)="onChangeUser()" id="user"
-                            [className]="userForm.controls['usrd_user_name'].errors && (userForm.controls['usrd_user_name'].dirty || userForm.controls['usrd_user_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                        <div *ngIf="userForm.controls['usrd_user_name'].errors && (userForm.controls['usrd_user_name'].dirty || userForm.controls['usrd_user_name'].touched) "
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
-                    </div>
+                  
                 </div>
                 <div class='row'>
                     
@@ -112,6 +113,20 @@
                         </div>
                         
                     </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Site :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" (change)="changeSite()" formControlName="usrd_site" placeholder="* pour tout les sites"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+
                     <div class="form-group col-2">
                         <label class="form-group">Actif:</label>
 
@@ -153,6 +168,30 @@
                 </div>
             </ng-template>
         </div>
-
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Site </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionssite"
+                            (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="datasite">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+    
     </kt-portlet-body>
 </kt-portlet>

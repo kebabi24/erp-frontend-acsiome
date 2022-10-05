@@ -10,4 +10,5 @@ export class User extends BaseModel{
     usrd_phone: String
     usrd_profile: String
     usrd_active: Boolean
+    usrd_site : String
 }

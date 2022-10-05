@@ -243,7 +243,7 @@ export class EditProfileComponent implements OnInit {
           true
         );
         this.loadingSubject.next(false);
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl("/profiles/profiles-list");
       }
     );
   }

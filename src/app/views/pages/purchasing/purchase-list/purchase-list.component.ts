@@ -22,6 +22,7 @@ import {
   Sorters,
   ColumnFilter,
   Filter,
+  GridService,
   FilterArguments,
   FilterCallback,
   MultipleSelectOption,
@@ -58,12 +59,15 @@ export class PurchaseListComponent implements OnInit {
 // slick grid
 selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
 gridObj: any;
+gridService: GridService;
 dataviewObj: any;
 angularGrid: AngularGridInstance;
 draggableGroupingPlugin: any;    
 columnDefinitions: Column[] = [];
 gridOptions: GridOption = {};
 dataset: any[] = [];
+user;
+site;
 constructor(
   private activatedRoute: ActivatedRoute,
   private router: Router,
@@ -71,14 +75,20 @@ constructor(
   private layoutUtilsService: LayoutUtilsService,
   private poService: PurchaseOrderService
 ) {
-  this.prepareGrid();
+  
 }
 
-ngOnInit(): void {}
+ngOnInit(): void {
+  this.user =  JSON.parse(localStorage.getItem('user'))
+  if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
+  console.log(this.site)
+  this.prepareGrid();
+}
 angularGridReady(angularGrid: AngularGridInstance) {
   this.angularGrid = angularGrid;
   this.gridObj = angularGrid.slickGrid; // grid object
   this.dataviewObj = angularGrid.dataView;
+  this.gridService = angularGrid.gridService;
 }
 
 prepareGrid() {
@@ -97,7 +107,7 @@ prepareGrid() {
       name: "Code",
       field: "po_nbr",
       minWidth: 80,
-      maxWidth: 80,
+      maxWidth: 100,
       selectable: true,
       filterable: true,
       grouping: {
@@ -187,7 +197,7 @@ prepareGrid() {
           // (required), what aggregators (accumulator) to use and on which field to do so
          // new Aggregators.Avg('tr_qty_loc'),
           new Aggregators.Sum('pod_qty_ord'),
-          new Aggregators.Sum('pod_qty_rcvd')
+        //  new Aggregators.Sum('pod_qty_rcvd')
         ],
         aggregateCollapsed: true,
     
@@ -231,9 +241,29 @@ prepareGrid() {
       filterable: true,
       groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
       type: FieldType.float,
-
-    },
+      grouping: {
+        getter: 'pod_part',
+       // formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
+        aggregateCollapsed: true,
     
+        collapsed: false,
+      }
+    },
+    {
+      id: "pod_site",
+      name: "Site",
+      field: "pod_site",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      type: FieldType.string,
+    },
     {
       id: "pod_price",
       name: "Prix",
@@ -247,10 +277,14 @@ prepareGrid() {
   ];
 
   this.gridOptions = {
-    autoResize: {
-      containerId: 'demo-container',
-      sidePadding: 10
-    },
+    // autoResize: {
+    //   containerId: 'demo-container',
+    //   sidePadding: 10
+    // },
+    
+    autoHeight:true,
+  
+    enableAutoResize:true,
     enableDraggableGrouping: true,
     createPreHeaderPanel: true,
     showPreHeaderPanel: true,
@@ -301,8 +335,12 @@ prepareGrid() {
 
 // fill the dataset with your data
 this.dataset = []
+console.log(this.site, "hounadz")
+if(this.site == null) {
+  console.log("ssssssssssssssssssssssssssss")
 this.poService.getAllwithDetail().subscribe(
-    (response: any) =>  ( this.dataset = response.data),
+    (response: any) =>  { this.dataset = response.data
+    this.dataviewObj.setItems(this.dataset)},
    
    
 
@@ -313,7 +351,25 @@ this.poService.getAllwithDetail().subscribe(
     () => {}
    
 )  
-
+  }
+  else {
+    var site = this.site
+    this.dataset = []
+    console.log(site, "hnahnahnahnahan")
+    this.poService.getAllwithDetailSite({site}).subscribe(
+      (response: any) =>  { this.dataset = response.data
+      this.dataviewObj.setItems(this.dataset)},
+     
+     
+  
+     (error) => {
+      
+          this.dataset = []
+      },
+      () => {}
+     
+  )  
+  }
   // fill the dataset with your data
 }
 

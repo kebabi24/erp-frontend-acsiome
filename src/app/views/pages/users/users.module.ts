@@ -50,7 +50,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { UsersService } from "../../../core/erp"
+import { UsersService, SiteService } from "../../../core/erp"
 import { TreeModule } from "@circlon/angular-tree-component";
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { ChangeUserComponent } from './change-user/change-user.component'
@@ -106,6 +106,7 @@ const routes: Routes = [
             multi: true,
         },
         UsersService,
+        SiteService,
         TypesUtilsService,
         LayoutUtilsService,
         HttpUtilsService,

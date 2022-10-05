@@ -3,6 +3,8 @@ import { Component, OnInit } from "@angular/core";
 import {
   Column,
   GridOption,
+  GridService,
+  AngularGridInstance,
   Formatter,
   Formatters,
   Editor,
@@ -40,6 +42,11 @@ export class RequisitionsListComponent implements OnInit {
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
   dataset: any[] = [];
+  gridObj: any;
+  gridService: GridService;
+  dataView: any;
+  angularGrid: AngularGridInstance;
+draggableGroupingPlugin: any;    
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -52,7 +59,12 @@ export class RequisitionsListComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.gridObj = angularGrid.slickGrid; // grid object
+    this.dataView = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
+  }
   createCode() {
     this.router.navigateByUrl("purchasing/create-req");
   }
@@ -149,7 +161,7 @@ export class RequisitionsListComponent implements OnInit {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       autoEdit: false,
-      autoHeight: false,
+      autoHeight: true,
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;
         try {
@@ -204,7 +216,8 @@ export class RequisitionsListComponent implements OnInit {
     // fill the dataset with your data
     this.dataset = [];
     this.requisitionService.getAll().subscribe(
-      (response: any) => (this.dataset = response.data),
+      (response: any) => {this.dataset = response.data
+      this.dataView.setItems(this.dataset)},
       (error) => {
         this.dataset = [];
       },

@@ -28,7 +28,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { User, UsersService } from "../../../../core/erp"
+import { User, UsersService, SiteService } from "../../../../core/erp"
 import { MenuConfig } from '../../../../core/_config/menu.config'
 import {
     NgbModal,
@@ -56,6 +56,12 @@ export class CreateUserComponent implements OnInit {
     angularGrid: AngularGridInstance
     selectedTitle: any
     message: any
+    datasite: [];
+    columnDefinitionssite: Column[] = [];
+    gridOptionssite: GridOption = {};
+    gridObjsite: any;
+    angularGridsite: AngularGridInstance;
+    error = false;
     constructor(
         config: NgbDropdownConfig,
         private userFB: FormBuilder,
@@ -64,6 +70,7 @@ export class CreateUserComponent implements OnInit {
         public dialog: MatDialog,
         private layoutUtilsService: LayoutUtilsService,
         private userService: UsersService,
+        private siteService: SiteService,
         private modalService: NgbModal
     ) {
         config.autoClose = true
@@ -81,14 +88,15 @@ export class CreateUserComponent implements OnInit {
 
         this.user = new User()
         this.userForm = this.userFB.group({
-            usrd_code: [this.user.usrd_code, Validators.required],
+           // usrd_code: [this.user.usrd_code, Validators.required],
             usrd_name: [{value: this.user.usrd_name, disabled: !this.isExist}, Validators.required],
-            usrd_user_name: [{value: this.user.usrd_user_name, disabled: !this.isExist}, Validators.required],
+            usrd_user_name: [this.user.usrd_user_name , Validators.required],
             usrd_pwd: [{value: this.user.usrd_pwd, disabled: true}, Validators.required],
             usrd_pwd_new: [{value: "", disabled: true}],
             usrd_email: [{value: this.user.usrd_email, disabled: !this.isExist}],
             usrd_phone: [{value: this.user.usrd_phone, disabled: !this.isExist}],
             usrd_profile: [{value: this.user.usrd_profile, disabled: !this.isExist}, Validators.required],
+            usrd_site: [{value: this.user.usrd_site, disabled: !this.isExist}, Validators.required],
             usrd_active: [{value: this.user.usrd_active, disabled: !this.isExist}, Validators.required],
 
         })
@@ -114,6 +122,7 @@ export class CreateUserComponent implements OnInit {
             controls.usrd_phone.enable()
             controls.usrd_profile.enable()
             controls.usrd_active.enable()
+            controls.usrd_site.enable()
            
               }
                    
@@ -134,10 +143,15 @@ export class CreateUserComponent implements OnInit {
 
               } else { 
             
-                
-           
-            controls.usrd_pwd.enable()
-            controls.usrd_pwd_new.enable()
+                controls.usrd_name.enable()
+                controls.usrd_user_name.enable()        
+                controls.usrd_email.enable()
+                controls.usrd_phone.enable()
+                controls.usrd_profile.enable()
+                controls.usrd_active.enable()
+                controls.usrd_site.enable()
+                controls.usrd_pwd.enable()
+                controls.usrd_pwd_new.enable()
            
            
               }
@@ -245,13 +259,40 @@ export class CreateUserComponent implements OnInit {
         let address = this.prepareUser()
         this.addUser(address)
     }
+    changeSite() {
+        const controls = this.userForm.controls; // chof le champs hada wesh men form rah
+        const si_site = controls.usrd_site.value;
+        if (si_site != "*") {
+            this.siteService.getByOne({ si_site }).subscribe(
+            (res: any) => {
+                console.log(res)
+                const { data } = res;
+        
+                if (!data) {
+                this.layoutUtilsService.showActionNotification(
+                    "ce Site n'existe pas!",
+                    MessageType.Create,
+                    10000,
+                    true,
+                    true
+                );
+                this.error = true;
+                } else {
+                this.error = false;
+                }
+            },
+            (error) => console.log(error)
+            );
+        }    
+      }
+
     /**
      * Returns object for saving
      */
     prepareUser(): User {
         const controls = this.userForm.controls
         const _user = new User()
-        _user.usrd_code = controls.usrd_code.value
+        _user.usrd_code =  controls.usrd_user_name.value
         _user.usrd_name = controls.usrd_name.value
         _user.usrd_user_name = controls.usrd_user_name.value
         _user.usrd_pwd = controls.usrd_pwd.value
@@ -259,6 +300,7 @@ export class CreateUserComponent implements OnInit {
         _user.usrd_phone = controls.usrd_phone.value
         _user.usrd_profile = controls.usrd_profile.value
         _user.usrd_active = controls.usrd_active.value
+        _user.usrd_site = controls.usrd_site.value
 
         return _user
     }
@@ -317,4 +359,88 @@ export class CreateUserComponent implements OnInit {
         this.angularGrid = angularGrid
         this.gridObj = (angularGrid && angularGrid.slickGrid) || {}
     }
+    handleSelectedRowsChangedsite(e, args) {
+        const controls = this.userForm.controls;
+       
+        if (Array.isArray(args.rows) && this.gridObjsite) {
+          args.rows.map((idx) => {
+            const item = this.gridObjsite.getDataItem(idx);
+            // TODO : HERE itterate on selected field and change the value of the selected field
+                controls.usrd_site.setValue(item.si_site || "");
+        
+          });
+        }
+    }
+
+
+    angularGridReadysite(angularGrid: AngularGridInstance) {
+        this.angularGridsite = angularGrid;
+        this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {};
+      }
+    
+      prepareGridsite() {
+        this.columnDefinitionssite = [
+          {
+            id: "id",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
+    
+            minWidth: 50,
+            maxWidth: 50,
+          },
+          {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+          },
+          {
+            id: "si_site",
+            name: "Site",
+            field: "si_site",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "si_desc",
+            name: "Designation",
+            field: "si_desc",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+        ];
+    
+        this.gridOptionssite = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          enableFiltering: true,
+          autoEdit: false,
+          autoHeight: false,
+          frozenColumn: 0,
+          frozenBottom: true,
+          enableRowSelection: true,
+          enableCheckboxSelector: true,
+          checkboxSelector: {},
+          multiSelect: false,
+          rowSelectionOptions: {
+            selectActiveRow: true,
+          },
+        };
+    
+        // fill the dataset with your data
+        this.siteService
+          .getAll()
+          .subscribe((response: any) => (this.datasite = response.data));
+      }
+      opensite(contentsite ) {
+        this.prepareGridsite();
+        this.modalService.open(contentsite, { size: "lg" });
+      }
 }
