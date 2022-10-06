@@ -937,7 +937,13 @@ export class CreatesaleorderComponent implements OnInit {
       this.saleOrderService
         .add({ saleOrder: _so, saleOrderDetail: detail })
         .subscribe(
-          (reponse: any) => (so = reponse.data),
+          (reponse: any) => {
+            so = reponse.data
+          	const arrayOctet = new Uint8Array(reponse.pdf.data)
+            const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+            const fileUrl = URL.createObjectURL(file);
+            window.open(fileUrl)  
+          },
           (error) => {
             this.layoutUtilsService.showActionNotification(
               "Erreur verifier les informations",
@@ -958,7 +964,7 @@ export class CreatesaleorderComponent implements OnInit {
             );
             this.loadingSubject.next(false);
             console.log(this.dataset);
-            if(controls.print.value == true) this.printpdf(so.so_nbr) //printSO(this.customer, this.dataset, so);
+            //if(controls.print.value == true) this.printpdf(so.so_nbr) //printSO(this.customer, this.dataset, so);
             this.router.navigateByUrl("/");
           }
         );
