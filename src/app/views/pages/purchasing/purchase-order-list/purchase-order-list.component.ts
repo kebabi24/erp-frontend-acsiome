@@ -7,6 +7,8 @@ import {
   Formatters,
   Editor,
   Editors,
+  AngularGridInstance,
+  GridService,
   FieldType,
   OnEventArgs,
 } from "angular-slickgrid";
@@ -26,7 +28,7 @@ import {
 } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { PurchaseOrderService } from "../../../../core/erp";
+import { PurchaseOrderService, SiteService } from "../../../../core/erp";
 import { RowDetailViewPoComponent } from "../rowDetails/rowdetail-view-po.component";
 import { RowDetailPreloadComponent } from '../rowDetails/row-details-preload.component';
 @Component({
@@ -39,17 +41,34 @@ export class PurchaseOrderListComponent implements OnInit {
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
   dataset: any[] = [];
+  dataView: any;
+  angularGrid: AngularGridInstance;
+  grid: any;
+  gridService: GridService;
+  user;
+  site;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
-    private poService: PurchaseOrderService
+    private poService: PurchaseOrderService,
+    private siteService: SiteService
   ) {
-    this.prepareGrid();
+   
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.user =  JSON.parse(localStorage.getItem('user'))
+   if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
+   this.prepareGrid();
+  }
+  gridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.dataView = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid;
+    this.gridService = angularGrid.gridService;
+  }
 
   createCode() {
     this.router.navigateByUrl("purchasing/create-po");
@@ -94,7 +113,7 @@ export class PurchaseOrderListComponent implements OnInit {
         name: "Code",
         field: "po.po_nbr",
         minWidth: 80,
-        maxWidth: 80,
+        maxWidth: 100,
         selectable: true,
       },
       {
@@ -131,7 +150,8 @@ export class PurchaseOrderListComponent implements OnInit {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       autoEdit: false,
-      autoHeight: false,
+      autoHeight: true,
+      //rowHeight: 500,
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;
         try {
@@ -184,13 +204,30 @@ export class PurchaseOrderListComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset = [];
+    if (this.site== null) {
     this.poService.getAll().subscribe(
-      (response: any) => (this.dataset = response.data),
+      (response: any) => {this.dataset = response.data
+        this.dataView.setItems(this.dataset) },
       (error) => {
         this.dataset = [];
       },
       () => {}
     );
+    }
+    else {
+      var site = this.site
+      this.poService.getBySite({site}).subscribe(
+        (response: any) => {this.dataset = response.data
+          this.dataView.setItems(this.dataset) 
+        },
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
+      
+
+    }
   }
   simulateServerAsyncCall(item: any) {
     return new Promise((resolve) => {

@@ -141,7 +141,8 @@ export class PoReceipComponent implements OnInit {
   gridOptionsum: GridOption = {};
   gridObjum: any;
   angularGridum: AngularGridInstance;
-
+  
+  site: String
 
   row_number;
   message = "";
@@ -609,6 +610,12 @@ export class PoReceipComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+  if (this.user.usrd_site == "*"){
+    this.site = null
+  } else {
+   this.site=  this.user.usrd_site
+  }
+    
     this.createForm();
     
   }
@@ -630,7 +637,7 @@ export class PoReceipComponent implements OnInit {
       }],
       prh_xinvoice: [this.purchaseReceive.prh_xinvoice],
       prh_curr: [this.purchaseReceive.prh_curr],
-      prh_site: [this.purchaseReceive.prh_site, Validators.required],
+      prh_site: [this.site, Validators.required],
       prh_ex_rate: [this.purchaseReceive.prh_ex_rate],
       prh_ex_rate2: [this.purchaseReceive.prh_ex_rate2],
       
@@ -789,6 +796,15 @@ export class PoReceipComponent implements OnInit {
             alert("Site n'existe pas  ")
             controls.prh_site.setValue(null);
             document.getElementById("prh_site").focus();
+          } else {
+           if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
+            alert("Site n'est pas autorisé pour cet utilisateur ")
+            controls.prh_site.setValue(null);
+            document.getElementById("prh_site").focus();
+             
+
+
+           } 
           }
       
       });
@@ -1480,9 +1496,17 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
         },
       };
     // fill the dataset with your data
+    if(this.user.usrd_site == "*") {
     this.siteService
       .getAll()
       .subscribe((response: any) => (this.datasite = response.data));
+    }
+    else {
+      this.siteService
+      .getBy({si_site : this.user.usrd_site})
+      .subscribe((response: any) => (this.datasite = response.data));
+  
+    }
   }
   opensite(contentsite) {
     this.prepareGridsite();

@@ -29,6 +29,10 @@ export class PurchaseOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
     }
+    public getBySite(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findsite', data, { headers: httpHeaders })
+    }
     public getByrange(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findrange', data, { headers: httpHeaders })
@@ -58,6 +62,11 @@ export class PurchaseOrderService {
     public getAllwithDetail() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/allwithdetail', { headers: httpHeaders })
+    }
+    public getAllwithDetailSite(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        
+        return this.http.post(`${API_URL}/allwithdetailsite`,data, { headers: httpHeaders })
     }
     // UPDATE
     public update(data: any, id:any) {

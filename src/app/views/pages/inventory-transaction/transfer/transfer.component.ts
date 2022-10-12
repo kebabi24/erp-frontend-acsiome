@@ -186,6 +186,7 @@ export class TransferComponent implements OnInit {
       this.loading$ = this.loadingSubject.asObservable()
       this.loadingSubject.next(true)
         this.user =  JSON.parse(localStorage.getItem('user'))       
+        console.log("hna user",this.user)
         
            this.createForm()
            this.loadingSubject.next(false)
@@ -208,23 +209,24 @@ export class TransferComponent implements OnInit {
           day: date.getDate()
         }],
         tr_rmks: [this.inventoryTransaction.tr_rmks],    
-        tr_site:  [this.inventoryTransaction.tr_site],
+        //tr_site:  [this.inventoryTransaction.tr_site],
+        tr_site:  [this.user.usrd_site],
         tr_loc: [this.inventoryTransaction.tr_loc],
-        tr_ref_site: [this.inventoryTransaction.tr_ref_site],
+        tr_ref_site: [this.user.usrd_site],
         tr_ref_loc: [this.inventoryTransaction.tr_ref_loc],
         print:[true],
        
       
     })  
-      const controls = this.trForm.controls;
-      this.siteService.getByOne({ si_default: true  }).subscribe(
-        (res: any) => {
-        this.site = res.data.si_site
+      // const controls = this.trForm.controls;
+      // this.siteService.getByOne({ si_default: true  }).subscribe(
+      //   (res: any) => {
+      //   this.site = res.data.si_site
         
-        controls.tr_site.setValue(this.site );
-        controls.tr_ref_site.setValue(this.site );
+      //   controls.tr_site.setValue(this.site );
+      //   controls.tr_ref_site.setValue(this.site );
     
-      })
+      // })
     
       
         

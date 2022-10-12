@@ -23,8 +23,9 @@
     <kt-portlet-body>
         <div class="example-preview">
             <div class="row">
-                <angular-slickgrid class="col-12" gridHeight="1000" gridId="gridProfil" [columnDefinitions]="columnDefinitions"
-                    [gridOptions]="gridOptions" [dataset]="dataset">
+                <angular-slickgrid class="col-12" gridId="gridProfil" [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions" [dataset]="dataset"
+                    (onAngularGridCreated)="angularGridReady($event)">
                 </angular-slickgrid>
             </div>
             

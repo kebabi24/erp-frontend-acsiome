@@ -55,6 +55,7 @@ import {
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 
 
 @Component({
@@ -140,7 +141,7 @@ error = false;
   vpServer;
   provider;
   curr
-
+  site:String;
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
@@ -378,14 +379,17 @@ console.log(resp.data)
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
 
-          this.siteService.getByOne({ si_site: args.dataContext.pod_site,}).subscribe(
-            (response: any) => {
+          if(this.site == null) {
+            this.siteService.getByOne({ si_site: args.dataContext.pod_site,}).subscribe(
+              (response: any) => {
               
-          console.log(response.data)
+               console.log(response.data)
 
                 if (response.data) {
                   
+               
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_site: response.data.si_site})
+               
                 }
                 else {
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , pod_site: null});
@@ -393,7 +397,18 @@ console.log(resp.data)
                      // this.gridService.onItemUpdated;
                       alert("Site N'existe pas")
                 }
-          });     
+            }); 
+          }
+          else {
+            if(args.dataContext.pod_site != this.site) {
+
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_site: this.site})
+              alert("Accés refusé à ce site")
+          
+
+
+            }
+          }
       }
       },
       {
@@ -549,6 +564,8 @@ console.log(resp.data)
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+   if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
+   console.log(this.site,this.user.usrd_site)
     this.createForm();
     this.createtotForm();
     this.activatedRoute.params.subscribe((params) => {
@@ -587,7 +604,7 @@ console.log(resp.data)
                   pod_um: detail.vpd_um,
                   pod_price: detail.vpd_q_price,
                   pod_disc_pct: 0,
-                  pod_site: detail.item.pt_site,
+                  pod_site: this.site,
                   pod_loc: detail.item.pt_loc,
                   pod_type: detail.item.pt_type,
                   pod_cc: "",
@@ -609,7 +626,7 @@ console.log(resp.data)
                 pod_um: detail.vpd_um,
                 pod_price: detail.vpd_q_price,
                 pod_disc_pct: 0,
-                pod_site: detail.item.pt_site,
+                pod_site: this.site,
                 pod_loc: detail.item.pt_loc,
                 pod_type: detail.item.pt_type,
                 pod_cc: "",
@@ -862,7 +879,7 @@ console.log(resp.data)
                       pod_um: detail.vpd_um,
                       pod_price: detail.vpd_q_price,
                       pod_disc_pct: 0,
-                      pod_site: detail.item.pt_site,
+                      pod_site: this.site,
                       pod_loc: detail.item.pt_loc,
                       pod_type: "",
                       pod_cc: "",
@@ -883,7 +900,7 @@ console.log(resp.data)
                     pod_um: detail.vpd_um,
                     pod_price: detail.vpd_q_price,
                     pod_disc_pct: 0,
-                    pod_site: detail.item.pt_site,
+                    pod_site: this.site,
                     pod_loc: detail.item.pt_loc,
                     pod_type: detail.item.pt_type,
                     pod_cc: "",
@@ -918,7 +935,7 @@ console.log(resp.data)
                       pod_um: detail.item.pt_um,
                       pod_price: 0,
                       pod_disc_pct: 0,
-                      pod_site: detail.item.pt_site,
+                      pod_site: this.site,
                       pod_loc: detail.item.pt_loc,
                       pod_type: detail.item.pt_type,
                       pod_cc: "",
@@ -1157,7 +1174,7 @@ changeTax(){
         pod_um: "",
         pod_price: 0,
         pod_disc_pct: 0,
-        pod_site: "",
+        pod_site: this.site,
         pod_loc: "",
         pod_type: "",
         pod_cc: "",
@@ -1419,7 +1436,7 @@ changeTax(){
         updateItem.pod_part = item.pt_part;
         updateItem.desc = item.pt_desc1;
         updateItem.pod_um = item.pt_um;
-        updateItem.pod_site = item.pt_site;
+        updateItem.pod_site = this.site;
         updateItem.pod_loc = item.pt_loc
         updateItem.pod_taxable = item.pt_taxable
         updateItem.pod_tax_code = item.pt_taxc
@@ -1580,7 +1597,7 @@ changeTax(){
                           pod_um: detail.vpd_um,
                           pod_price: detail.vpd_q_price,
                           pod_disc_pct: 0,
-                          pod_site: detail.item.pt_site,
+                          pod_site: this.site,
                           pod_loc: detail.item.pt_loc,
                           pod_type: detail.item.pt_type,
                           pod_cc: "",
@@ -1602,7 +1619,7 @@ changeTax(){
                         pod_um: detail.vpd_um,
                         pod_price: detail.vpd_q_price,
                         pod_disc_pct: 0,
-                        pod_site: detail.item.pt_site,
+                        pod_site: this.site,
                         pod_loc: detail.item.pt_loc,
                         pod_type: detail.item.pt_type,
                         pod_cc: "",
@@ -1637,7 +1654,7 @@ changeTax(){
                           pod_um: detail.item.pt_um,
                           pod_price: 0,
                           pod_disc_pct: 0,
-                          pod_site: detail.item.pt_site,
+                          pod_site: this.site,
                           pod_loc: detail.item.pt_loc,
                           pod_type: detail.item.pt_type,
                           pod_cc: "",
@@ -1658,7 +1675,7 @@ changeTax(){
                         pod_um: detail.item.pt_um,
                         pod_price: 0,
                         pod_disc_pct: 0,
-                        pod_site: detail.item.pt_site,
+                        pod_site: this.site,
                         pod_loc: detail.item.pt_part,
                         pod_type: detail.item.pt_type,
                         pod_cc: "",
@@ -2180,10 +2197,18 @@ prepareGridsite() {
       },
     };
   // fill the dataset with your data
-  this.siteService
-    .getAll()
-    .subscribe((response: any) => (this.datasite = response.data));
-}
+ if(this.site == null) {
+      this.siteService
+        .getAll()
+        .subscribe((response: any) => (this.datasite = response.data));
+    }else {
+      this.siteService
+        .getBy({si_site: this.site})
+        .subscribe((response: any) => (this.datasite = response.data));
+      
+   }
+  }
+
 opensite(contentsite) {
   this.prepareGridsite();
   this.modalService.open(contentsite, { size: "lg" });
