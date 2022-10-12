@@ -23,9 +23,12 @@ export class CreateNewServiceComponent implements OnInit {
   isExist = false
   loadingSubject = new BehaviorSubject<boolean>(true)
   loading$: Observable<boolean>
-  services: []
+  public services = [
+      
+  ];
+  public data = [];
   roles : string[] = []
-  itinerary: string[] = []
+  itinerary: any[] = []
   dataset: any[] = []
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
@@ -37,7 +40,8 @@ export class CreateNewServiceComponent implements OnInit {
   grid: any
   dataView: any
   selectedRow: any
-  isSelected = false
+  isNotSelected = true
+  isClose = false
   constructor(
     config: NgbDropdownConfig,
         private serviceF : FormBuilder,
@@ -52,8 +56,7 @@ export class CreateNewServiceComponent implements OnInit {
         private modalService: NgbModal
   ) { 
         config.autoClose = true
-        this.prepareGrid()
-        // this.gridService.highlightRow("")
+        this.prepareGrid()    
   }
 
   ngOnInit(): void {
@@ -125,9 +128,18 @@ export class CreateNewServiceComponent implements OnInit {
           type: FieldType.string,
         },
         {
-          id: "service",
+          id: "profile_name",
+          name: "Nom profile",
+          field: "profile_name",
+          sortable: true,
+          width: 100,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "code_service",
           name: "Code service",
-          field: "service",
+          field: "code_service",
           sortable: true,
           width: 100,
           filterable: true,
@@ -135,7 +147,7 @@ export class CreateNewServiceComponent implements OnInit {
         },
         {
           id: "etat_service",
-          name: "Etat service",
+          name: "Ouvert",
           field: "etat_service",
           sortable: true,
           width: 100,
@@ -159,19 +171,16 @@ export class CreateNewServiceComponent implements OnInit {
           width: 100,
           filterable: true,
           type: FieldType.string,
-        },
+        }, 
         {
           id: "itinerary_name",
-          name: "Nom itinéraire",
+          name: "Nom itinéraire ",
           field: "itinerary_name",
           sortable: true,
           width: 100,
           filterable: true,
           type: FieldType.string,
-        },
-    
-
-        
+        },        
     ]
 
     this.gridOptions = {
@@ -204,166 +213,72 @@ export class CreateNewServiceComponent implements OnInit {
     }
 
     // fill the dataset with your data
-    this.dataset = [
+    this.dataset = []
+    this.dataset = this.prepareDataset()
+  }
+
+  prepareDataset(){
+    this.mobileService.getAllService().subscribe(
+      (response: any) => 
       {
-        id:"1",
-        role_code:"RV-001", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-000",
-        service: "SER-001", 
-        etat_service: "false", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      }, 
-      {
-        id:"2",
-        role_code:"RV-002", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-001",
-        service: "SER-001", 
-        etat_service: "false", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      }, 
-      {
-        id:"3",
-        role_code:"RV-003", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-002",
-        service: "SER-001", 
-        etat_service: "true", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
-      {
-        id:"4",
-        role_code:"RV-004", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-003",
-        service: "SER-001", 
-        etat_service: "true", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
-      {
-        id:"5",
-        role_code:"RV-001", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-004",
-        service: "SER-001", 
-        etat_service: "true", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      }, 
-      {
-        id:"6",
-        role_code:"RV-002", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-005",
-        service: "SER-001", 
-        etat_service: "true", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      }, 
-      {
-        id:"7",
-        role_code:"RV-003", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-006",
-        service: "SER-001", 
-        etat_service: "false", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
-      {
-        id:"8",
-        role_code:"RV-004", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-007",
-        service: "SER-001", 
-        etat_service: "false", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
-      {
-        id:"9",
-        role_code:"RV-004", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-008",
-        service: "SER-001", 
-        etat_service: "false", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
-      {
-        id:"10",
-        role_code:"RV-004", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-009",
-        service: "SER-001", 
-        etat_service: "false", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
-      {
-        id:"11",
-        role_code:"RV-004", 
-        role_name: "vendeur", 
-        user_mobile_code: "UM-001", 
-        username: "Nouaaim", 
-        profile_code:"PR-0010",
-        service: "SER-001", 
-        etat_service: "true", 
-        service_period_activate_date: "01/01/1993", 
-        itinerary_code: "ITN-001", 
-        itinerary_name:"ZONE01"
-      },
+        this.data = response.data
+        this.dataset = this.data.map((item) => {
+          this.services.push(item)
+          const itineraries = item.role_itineraries
+          const itn = itineraries.filter((item_itinerary) => 
+            (item.service != null) &&
+              item_itinerary.itinerary.itinerary_code === item.service.itinerary_code
+          )
+          // console.log(itn)
+          // console.log(itineraries)
+          if(item.service == null){
+            const node : any = {
+              id: item.id,
+              role_code: item.role_code,
+              role_name: item.role_name,
+              user_mobile_code: item.user_mobile_code,
+              username: item.userMobile.username, 
+              profile_code: item.userMobile.profile.profile_code,
+              profile_name: item.userMobile.profile.profile_name, 
+              code_service: null,
+              etat_service: null,
+              service_period_activate_date: null, 
+              itinerary_code: null, 
+              itinerary_name: null
+
+              
+          };
+          return node;
+          }else {
+            const node : any = {
+              id: item.id,
+              role_code: item.role_code,
+              role_name: item.role_name,
+              user_mobile_code: item.user_mobile_code,
+              username: item.userMobile.username, 
+              profile_code: item.userMobile.profile.profile_code,
+              profile_name: item.userMobile.profile.profile_name,
+              code_service: item.service.service_code,
+              etat_service: "Oui",
+              service_period_activate_date: item.service.service_period_activate_date, 
+              itinerary_code: item.service.itinerary_code,
+              itinerary_name: itn[0].itinerary.itinerary_name
+              
+          };
+          return node;
+          }
+        });
+        // console.log(this.data)
       
+      },
+      (error) => {
+          this.dataset = []
 
-    ]
-
-    // this.mobileService.getAllService().subscribe(
-    //     (response: any) => 
-    //     {
-    //       this.dataset = response.data,
-    //       console.log(this.dataset)
-    //     },
-    //     (error) => {
-    //         this.dataset = []
-
-    //     },
-    //     () => {}
-    // )
+      },
+      () => {}
+  )
+    console.log(this.services)
+    return this.dataset
   }
 
   // onChangeCode() {
@@ -387,7 +302,7 @@ export class CreateNewServiceComponent implements OnInit {
   // }
 
   onSubmit() {
-    console.log(this.selectedRow.role_code)
+    // console.log(this.selectedRow.role_code)
 
     // tslint:disable-next-line:prefer-const
     // let service = this.prepareService()
@@ -446,69 +361,90 @@ export class CreateNewServiceComponent implements OnInit {
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
 }
 
-handleSelectedRowsChanged(e, args) {
-  if (Array.isArray(args.rows) && this.grid) {
+  handleSelectedRowsChanged(e, args) {
+    if (Array.isArray(args.rows) && this.grid) {
       args.rows.map((idx) => {
           const item = this.grid.getDataItem(idx)
-          item.etat_service = false
+          // this.itinerary = this.services[idx].role_itineraries
+          this.itinerary = []
+          this.services[idx].role_itineraries.map((item: any) =>{
+            this.itinerary.push({itinerary_code: item.itinerary.itinerary_code, itinerary_name: item.itinerary.itinerary_name })
+          })
+          console.log(this.itinerary)
           this.selectedRow = item
-          console.log(item)
       })
+    }
+
+          if(this.selectedRow.etat_service === null){
+            this.createForm(this.selectedRow)
+            this.createService()
+            this.isNotSelected = false 
+            this.isClose = true
+          }else{
+            this.closeService()
+            this.isClose = false
+            this.isNotSelected = false 
+          }
+
+}
+  closeService(){
+    console.log("close")
   }
-  this.isSelected = true
-  this.createForm(this.selectedRow)
-}
+  createService(){
+    console.log("create")
+  }
 
-createForm(row) {
-  console.log(row)
-  this.loadingSubject.next(false)
-  this.service = new MobileService()
-  this.createServiceForm = this.serviceF.group({
-      service_code: [row.service, Validators.required],
-      service_creation_date: [{value: this.service.service_closing_date}, Validators.required],
-      service_closing_date: [{value: this.service.service_closing_date}, Validators.required],
-      role_code: [row.role_code, Validators.required],
-      itinerary_code: [row.itinerary_code, Validators.required],
-      // service_open: [{value: this.service.service_open}, Validators.required],
-      
-  })
-}
+  createForm(row) {
+    // console.log(row)
+    this.loadingSubject.next(false)
+    this.service = new MobileService()
+    this.createServiceForm = this.serviceF.group({
+        // service_code: [{value: row.service_code, disabled: true}],
+        service_creation_date: [{value: this.service.service_closing_date}, Validators.required],
+        service_closing_date: [{value: this.service.service_closing_date}, Validators.required],
+        role_code: [row.role_code, Validators.required],
+        role_name: [row.role_name, Validators.required],
+        itinerary_code: [row.itinerary_code, Validators.required],
+        // service_open: [{value: this.service.service_open}, Validators.required],
+        
+    })
+  }
 
 
+    angularGridReady(angularGrid: AngularGridInstance) {
+      this.angularGrid = angularGrid;
+        this.dataView = angularGrid.dataView;
+        this.grid = angularGrid.slickGrid;
 
-angularGridReady(angularGrid: AngularGridInstance) {
-  this.angularGrid = angularGrid;
-    this.dataView = angularGrid.dataView;
-    this.grid = angularGrid.slickGrid;
-
-    // if you want to change background color of Duration over 50 right after page load,
-    // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
-    this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
-    this.grid.invalidate();
-    this.grid.render();
-}
-
-updateItemMetadata(previousItemMetadata: any) {
-  const newCssClass = 'highlight-bg';
-  return (rowNumber: number) => {
-    const item = this.dataView.getItem(rowNumber);
-    let meta = {
-      cssClasses: ''
-    };
-    if (typeof previousItemMetadata === 'object') {
-      meta = previousItemMetadata(rowNumber);
+        // if you want to change background color of Duration over 50 right after page load,
+        // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
+        this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
+        this.grid.invalidate();
+        this.grid.render();
     }
 
-    if (meta && item && item.etat_service) {
-      const state = item.etat_service;
-      if (state === "true") {
-        meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
-      }
-    }
+    updateItemMetadata(previousItemMetadata: any) {
+      const newCssClass = 'highlight-bg';
+      console.log(this.dataView)
+      return (rowNumber: number) => {
+        const item = this.dataView.getItem(rowNumber);
+        let meta = {
+          cssClasses: ''
+        };
+        if (typeof previousItemMetadata === 'object') {
+          meta = previousItemMetadata(rowNumber);
+        }
 
-    return meta;
-  };
-}
+        if (meta && item && item.etat_service) {
+          const state = item.etat_service;
+          if (state === "Oui") {
+            meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
+          }
+        }
+
+        return meta;
+      };
+    }
 
 
 

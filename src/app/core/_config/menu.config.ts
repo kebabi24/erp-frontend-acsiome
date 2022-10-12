@@ -36,7 +36,13 @@ export class MenuConfig {
                         
                     ],
                 },
-                
+                {
+                    title: "Pos",
+                    bullet: "dot",
+                    icon: "flaticon2-shopping-cart",
+                    root: true,
+                    page: "/pos",
+                },
                 {
                     title: "Paramétrages",
                     root: true,

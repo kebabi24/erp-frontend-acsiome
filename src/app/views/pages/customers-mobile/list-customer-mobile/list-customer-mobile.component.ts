@@ -9,6 +9,7 @@ import {
   Editors,
   FieldType,
   OnEventArgs,
+  AngularGridInstance,
 } from "angular-slickgrid"
 
 import { ActivatedRoute, Router } from "@angular/router"
@@ -31,6 +32,9 @@ export class ListCustomerMobileComponent implements OnInit {
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
+  dataView: any
+  grid: any
+  angularGrid: AngularGridInstance
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -139,6 +143,7 @@ export class ListCustomerMobileComponent implements OnInit {
       
         (response: any) => {
           this.dataset = response.data
+          this.dataView.setItems(this.dataset)
         },
         (error) => {
             this.dataset = []
@@ -147,4 +152,19 @@ export class ListCustomerMobileComponent implements OnInit {
     )
   }
 
+
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+      this.dataView = angularGrid.dataView;
+      this.grid = angularGrid.slickGrid;
+
+      // if you want to change background color of Duration over 50 right after page load,
+      // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
+      // this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
+      this.grid.invalidate();
+      this.grid.render();
+  }
+
 }
+
+

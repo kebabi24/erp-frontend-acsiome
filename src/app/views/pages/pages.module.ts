@@ -16,6 +16,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { ServicesComponent } from './services/services.component';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
+import { PosComponent } from './pos/pos.component';
 
 
 

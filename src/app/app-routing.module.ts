@@ -110,6 +110,10 @@ const routes: Routes = [
         loadChildren: () => import('./views/pages/dashboard/dashboard.module').then(m => m.DashboardModule),
       },
       {
+        path: 'pos',
+        loadChildren: () => import('./views/pages/pos/pos.module').then(m => m.PosModule),
+      },
+      {
         path: 'price-setting',
         loadChildren: () => import('./views/pages/price-setting/price-setting.module').then(m => m.PriceSettingModule),
       },

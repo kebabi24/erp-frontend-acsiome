@@ -3,18 +3,33 @@
   <ng-container>
     <!--begin::Daterange-->
     <div class="d-flex align-items-center">
-
-      <div class="btn btn-light btn-sm font-weight-bold mr-3" id="kt_dashboard_daterangepicker" data-toggle="tooltip"
-        title="Select dashboard daterange" data-placement="left">
-        <span class="text-muted font-weight-bold mr-2" id="kt_dashboard_daterangepicker_title">Aujourd'hui</span>
-        <span class="text-primary font-weight-bold" id="kt_dashboard_daterangepicker_date">{{todayString}}</span>
+      <div
+        class="btn btn-light btn-sm font-weight-bold mr-3"
+        id="kt_dashboard_daterangepicker"
+        data-toggle="tooltip"
+        title="Select dashboard daterange"
+        data-placement="left"
+      >
+        <span
+          class="text-muted font-weight-bold mr-2"
+          id="kt_dashboard_daterangepicker_title"
+          >Aujourd'hui</span
+        >
+        <span
+          class="text-primary font-weight-bold"
+          id="kt_dashboard_daterangepicker_date"
+          >{{ todayString }}</span
+        >
       </div>
     </div>
     <!--end::Daterange-->
   </ng-container>
   <ng-container *ngIf="searchDisplay">
     <!--begin: Search -->
-    <kt-search-dropdown [icon]="'./assets/media/svg/icons/General/Search.svg'" [useSVG]="true"></kt-search-dropdown>
+    <kt-search-dropdown
+      [icon]="'./assets/media/svg/icons/General/Search.svg'"
+      [useSVG]="true"
+    ></kt-search-dropdown>
     <!--end: Search -->
   </ng-container>
 
@@ -46,7 +61,9 @@
 
   <ng-container *ngIf="userDisplay">
     <ng-container *ngIf="userLayout === 'dropdown'">
-      <kt-user-profile [userDropdownStyle]="userDropdownStyle"></kt-user-profile>
+      <kt-user-profile
+        [userDropdownStyle]="userDropdownStyle"
+      ></kt-user-profile>
     </ng-container>
     <ng-container *ngIf="userLayout === 'offcanvas'">
       <!--begin: User bar -->

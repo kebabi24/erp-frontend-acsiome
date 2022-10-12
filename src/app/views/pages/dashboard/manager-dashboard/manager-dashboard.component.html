@@ -1,6 +1,6 @@
 <kt-portlet>
-    <kt-portlet-body [class]="'kt-portlet__body--fit'">
-        <!--div class="row row-no-padding row-col-separator-xl">
+  <kt-portlet-body [class]="'kt-portlet__body--fit'">
+    <!--div class="row row-no-padding row-col-separator-xl">
             <div class="card-body">
                 <span class="svg-icon svg-icon-2x svg-icon-danger">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -35,131 +35,111 @@
             
         </div-->
 
-        <div class="row">
-            
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'CA/Cout par Projet '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdiv10" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
+    <div class="row">
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/Cout par Projet '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv10" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
 
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'CA/Cout par Mois '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdivr" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/Cout par Mois '"> </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivr" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'Realisation par Fournisseur '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA par Mois '"> </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv1" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA par Famille '"> </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv3" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
 
-        </div>    
-        <div class="row">
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'Realisation par Fournisseur '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdiv" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'CA par Mois '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdiv1" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
-        </div>
-        <div class="row">
-            
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'CA par Famille '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdiv3" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA par Classe '"> </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv2" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+    </div>
 
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'CA par Classe '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdiv2" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
-        </div>
+    <div class="row">
+      <div class="col-xl-6">
+        <table class="table table-striped mb-6">
+          <thead>
+            <tr>
+              <th scope="col">Wilaya</th>
+              <th scope="col">CA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Alger</th>
+              <td>35930</td>
+            </tr>
+            <tr>
+              <th scope="row">Sétif</th>
+              <td>25365</td>
+            </tr>
 
-
-
-        <div class="row">
-            <div class="col-xl-6">
-                <table class="table table-striped mb-6">
-                    <thead>
-                        <tr>
-                            <th scope="col">Wilaya</th>
-                            <th scope="col">CA</th>
-                        
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Alger</th>
-                            <td>35930</td>
-                            
-                        </tr>
-                        <tr>
-                            <th scope="row">Sétif</th>
-                            <td>25365</td>
-                            
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">Oran</th>
-                            <td>15214</td>
-                            
-                        </tr>
-                        <tr>
-                            <th scope="row">Bejaia</th>
-                            <td>3125</td>
-                            
-                        </tr>
-                        <tr>
-                            <th scope="row">Constantine</th>
-                            <td>14598</td>
-                            
-                        </tr>
-                        <tr>
-                            <th scope="row">Ouaregla</th>
-                            <td>13598</td>
-                            
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-xl-6">
-                <kt-portlet [class]="'kt-portlet--height-fluid'">
-                    <kt-portlet-header [title]="'CA par Wilaya '">
-                    </kt-portlet-header>
-                    <kt-portlet-body>
-                        <div id="chartdiv4" style="width: 100%; height: 350px"></div>
-                    </kt-portlet-body>
-                </kt-portlet>
-            </div>
-
-        </div>
-    </kt-portlet-body>
+            <tr>
+              <th scope="row">Oran</th>
+              <td>15214</td>
+            </tr>
+            <tr>
+              <th scope="row">Bejaia</th>
+              <td>3125</td>
+            </tr>
+            <tr>
+              <th scope="row">Constantine</th>
+              <td>14598</td>
+            </tr>
+            <tr>
+              <th scope="row">Ouaregla</th>
+              <td>13598</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA par Wilaya '"> </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv4" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+    </div>
+  </kt-portlet-body>
 </kt-portlet>
-

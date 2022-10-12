@@ -153,18 +153,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                   <div class="example-preview2" *ngIf="isSelected; else elseBlock">
+                    <kt-alert *ngIf="isNotSelected" type="warn" [showCloseButton]="true" [duration]="10000"
+                        (close)="onAlertClose($event)">
+                        Veuillez tout d'abord selectionné un role pour lui affecter un service
+                    </kt-alert>
+                   <div class="example-preview2" *ngIf="isClose">
                         <form class="form" [formGroup]="createServiceForm">
                             <div class="form-group col-6">
-                                <label class="form-group">Code du service</label>
-                                <input type="text" formControlName="service_code" 
-                                    [className]="createServiceForm.controls['service_code'].errors && (createServiceForm.controls['service_code'].dirty || createServiceForm.controls['service_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                                    <div *ngIf="createServiceForm.controls['service_code'].errors && (createServiceForm.controls['service_code'].dirty || createServiceForm.controls['service_code'].touched) "
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-    
-                            </div>
-                            <div class="form-group col-6">
-                                <label class="form-group">Date de création service : </label>
+                                <label class="form-group">Période service : </label>
                                 <div class="input-group input-group-sm">
                                     <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
                                         name="service_creation_date" formControlName="service_creation_date" ngbDatepicker
@@ -176,47 +172,44 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="form-group col-6">
-                                <label class="form-group">Date de fermeture service: </label>
-
-                                <div class="input-group input-group-sm">
-                                    <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
-                                        name="service_closing_date" ngbDatepicker formControlName="service_closing_date"
-                                        #service_closing_date="ngbDatepicker">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" (click)="service_closing_date.toggle()" type="button">
-                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="form-group col-6">
-                                <label class="form-group ">Séléctionner un role</label>
+                                <label class="form-group ">Code role</label>
                                 <input type="text" formControlName="role_code" 
                                     [className]="createServiceForm.controls['role_code'].errors && (createServiceForm.controls['role_code'].dirty || createServiceForm.controls['role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                     <div *ngIf="createServiceForm.controls['role_code'].errors && (createServiceForm.controls['role_code'].dirty || createServiceForm.controls['role_code'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div>
                             <div class="form-group col-6">
-                                <label class="form-group ">Séléctionner un itineraire </label>
-                                <input type="text" formControlName="itinerary_code" 
-                                    [className]="createServiceForm.controls['itinerary_code'].errors && (createServiceForm.controls['itinerary_code'].dirty || createServiceForm.controls['itinerary_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                                    <div *ngIf="createServiceForm.controls['itinerary_code'].errors && (createServiceForm.controls['itinerary_code'].dirty || createServiceForm.controls['itinerary_code'].touched) "
+                                <label class="form-group ">Nom role</label>
+                                <input type="text" formControlName="role_name" 
+                                    [className]="createServiceForm.controls['role_name'].errors && (createServiceForm.controls['role_name'].dirty || createServiceForm.controls['role_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                    <div *ngIf="createServiceForm.controls['role_name'].errors && (createServiceForm.controls['role_name'].dirty || createServiceForm.controls['role_name'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            
+                            
+                            <div class="form-group col-6">
+                                <label class="form-group ">Séléctionner un itinéraire</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="itinerary_code">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of itinerary" [value]="elem.itinerary_name">
+                                    {{elem.itinerary_code}} {{elem.itinerary_name}}</option>
+                                </select>
                             </div>
                         </form>
                    </div>
-                   <ng-template #elseBlock>
-                        <kt-alert type="warn" [showCloseButton]="true" [duration]="10000"
+                 
+                        <kt-alert *ngIf="!isClose && !isNotSelected" type="warn" [showCloseButton]="true" [duration]="10000"
                         (close)="onAlertClose($event)">
-                            Veuillez tout d'abord selectionné un role pour lui affecter un service
+                            Ce service est déjà ouvert
                         </kt-alert>
-                   </ng-template>
+                   
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    <button type="button" class="btn btn-primary" (click)="createService()">Ok</button>
                 </div>
             </ng-template>
         </div>
@@ -229,11 +222,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+                    <kt-alert  type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                        Voulez vous vraiment fermer ce service ?
+                    </kt-alert>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    <button type="button" class="btn btn-primary" (click)="closeService()">Ok</button>
                 </div>
             </ng-template>
         </div>
