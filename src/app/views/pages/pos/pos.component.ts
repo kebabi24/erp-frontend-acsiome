@@ -80,6 +80,8 @@ export class PosComponent implements OnInit {
   gridOptions: GridOption;
   dataset: any[];
   ordersHistory: Array<Cart>;
+  showSize: boolean = false;
+  showSupp: boolean = false;
   constructor(
     config: NgbDropdownConfig,
     private modalService: NgbModal,
@@ -190,6 +192,8 @@ export class PosComponent implements OnInit {
   }
   checkInventory(PosInventory: PosInventory) {}
   onSelect(category: Category): void {
+    this.showSize = false;
+    this.showSupp = false;
     const result = this.categories.find(
       (item) => item.category_code === category.category_code
     );
@@ -213,7 +217,7 @@ export class PosComponent implements OnInit {
   }
 
   open(content) {
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "xl" });
   }
   open2(content) {
     this.modalService.open(content, { size: "lg" });
@@ -335,6 +339,7 @@ export class PosComponent implements OnInit {
   }
 
   setSupplement(suppliment: Spec) {
+    this.showSupp = true;
     let currentItemSuppliment = this.currentItem.suppliments;
 
     if (suppliment.isChecked === false) {
@@ -516,7 +521,8 @@ export class PosComponent implements OnInit {
   }
 
   introduceInventory(content) {
-    this.modalService.open(content, { size: "xl" });
+    this.showSize = true;
+    // this.modalService.open(content, { size: "xl" });
   }
 
   getHistory(content) {
@@ -643,7 +649,7 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset = [];
-    this.posCategoryService.getAllProductTag().subscribe(
+    this.posCategoryService.getAllProductTag({ tag_nbr: 4 }).subscribe(
       (response: any) => (this.dataset = response.data),
       (error) => {
         this.dataset = [];

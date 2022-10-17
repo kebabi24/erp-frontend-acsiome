@@ -115,8 +115,10 @@ export class PosCategoryService {
   }
 
   //get all
-  public getAllProductTag() {
+  public getAllProductTag(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.get(API_URL_TAG, { headers: httpHeaders });
+    return this.http.post(`${API_URL_TAG}/find`, data, {
+      headers: httpHeaders,
+    });
   }
 }

@@ -21,6 +21,7 @@ $nav-icon-width: 2rem;
 
 // Extended nav
 .nav {
+	flex-wrap: nowrap;
 	.nav-link {
 		display: flex;
 		align-items: center;
