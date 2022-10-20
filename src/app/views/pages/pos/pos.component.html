@@ -21,20 +21,18 @@
                 >
                   <!--end::Breadcrumb-->
                 </div>
+                <!--begin::Nav-->
+
                 <!--end::Page title-->
                 <!--begin::Actions-->
                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                  <!--begin::Secondary button-->
-
-                  <!--end::Secondary button-->
-                  <!--begin::Primary button-->
                   <button
                     (click)="introduceInventory(content3)"
                     class="btn btn-sm fw-bold btn-primary"
                   >
                     Saissir votre inventaire
                   </button>
-                  <!--end::Primary button-->
+
                   <button
                     (click)="getHistory(content4)"
                     class="btn btn-sm fw-bold btn-primary"
@@ -42,7 +40,6 @@
                     Historique des commandes
                   </button>
                 </div>
-                <!--end::Actions-->
               </div>
               <!--end::Toolbar container-->
             </div>
@@ -98,14 +95,14 @@
                             *ngFor="let productOnlist of selectedProducts"
                             type="button"
                             data-bs-toggle="pill"
-                            (click)="introduceInventory(content)"
+                            (click)="initializeProduct(productOnlist)"
                           >
                             <div class="card-body text-center" type="button">
                               <div class="mb-2">
                                 <div class="text-center">
                                   <span
                                     class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                    >{{ productOnlist.pt_desc1 }}</span
+                                    >{{ productOnlist.code_desc }}</span
                                   >
                                   <span
                                     class="text-gray-400 fw-semibold d-block fs-6 mt-n1"
@@ -129,49 +126,16 @@
                           <button
                             class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
                             type="button"
+                            *ngFor="let size of sizeOfProduct"
                             data-bs-toggle="pill"
-                            (click)="setSupplement(suppliment)"
+                            (click)="prepareProduct(size)"
                           >
                             <div class="card-body text-center" type="button">
                               <div class="mb-2">
                                 <div class="text-center">
                                   <span
                                     class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                    >Classic</span
-                                  >
-                                </div>
-                              </div>
-                            </div>
-                          </button>
-                          <button
-                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
-                            type="button"
-                            data-bs-toggle="pill"
-                            (click)="setSupplement(suppliment)"
-                          >
-                            <div class="card-body text-center" type="button">
-                              <div class="mb-2">
-                                <div class="text-center">
-                                  <span
-                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                    >Sans crudités</span
-                                  >
-                                </div>
-                              </div>
-                            </div>
-                          </button>
-                          <button
-                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
-                            type="button"
-                            data-bs-toggle="pill"
-                            (click)="setSupplement(suppliment)"
-                          >
-                            <div class="card-body text-center" type="button">
-                              <div class="mb-2">
-                                <div class="text-center">
-                                  <span
-                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                    >Méga</span
+                                    >{{ size.pt_group }}</span
                                   >
                                 </div>
                               </div>
@@ -193,14 +157,14 @@
                             *ngFor="let suppliment of suppliments"
                             type="button"
                             data-bs-toggle="pill"
-                            (click)="introduceInventory(content)"
+                            (click)="setSupplement(suppliment)"
                           >
                             <div class="card-body text-center" type="button">
                               <div class="mb-2">
                                 <div class="text-center">
                                   <span
                                     class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                    >{{ suppliment.spec_pt_desc1 }}</span
+                                    >{{ suppliment.pt_desc1 }}</span
                                   >
                                 </div>
                               </div>
@@ -214,13 +178,120 @@
 
                       <!--end::Tap pane-->
                     </div>
+                    <div class="tab-content" *ngIf="showSauces">
+                      <div id="kt_pos_food_content_1">
+                        <div class="nav d-flex tab-pane fade show active">
+                          <button
+                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
+                            type="button"
+                            *ngFor="let sauce of sauces"
+                            data-bs-toggle="pill"
+                            (click)="setSauces(sauce)"
+                          >
+                            <div class="card-body text-center" type="button">
+                              <div class="mb-2">
+                                <div class="text-center">
+                                  <span
+                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                    >{{ sauce.pt_desc1 }}</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+
+                          <!--end::Card-->
+                        </div>
+                        <!--end::Wrapper-->
+                      </div>
+
+                      <!--end::Tap pane-->
+                    </div>
+                    <div class="tab-content" *ngIf="showSoda">
+                      <div id="kt_pos_food_content_1">
+                        <div class="nav d-flex tab-pane fade show active">
+                          <button
+                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
+                            type="button"
+                            *ngFor="let so of soda"
+                            data-bs-toggle="pill"
+                            (click)="setListOfSoda(so)"
+                          >
+                            <div class="card-body text-center" type="button">
+                              <div class="mb-2">
+                                <div class="text-center">
+                                  <span
+                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                    >{{ so.code_desc }}</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="tab-content" *ngIf="showListOfSoda">
+                      <div id="kt_pos_food_content_1">
+                        <div class="nav d-flex tab-pane fade show active">
+                          <button
+                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
+                            type="button"
+                            *ngFor="let drinks of drinksBrand"
+                            data-bs-toggle="pill"
+                          >
+                            <div class="card-body text-center" type="button">
+                              <div class="mb-2">
+                                <div class="text-center">
+                                  <span
+                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                    >{{ drinks.pt_desc1 }}</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="tab-content" *ngIf="showSupp">
+                      <div id="kt_pos_food_content_1">
+                        <div class="d-flex tab-pane fade show active">
+                          <button
+                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
+                            *ngFor="let boisson of boissons"
+                            type="button"
+                            data-bs-toggle="pill"
+                          >
+                            <div class="card-body text-center" type="button">
+                              <div class="mb-2">
+                                <div class="text-center">
+                                  <span
+                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                    >{{ boisson.pt_desc1 }}</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div> -->
+                    <button
+                      *ngIf="addProductBtn"
+                      (click)="customizeProduct(content2)"
+                      class="btn btn-primary fs-1 w-100 py-4"
+                      style="margin-top: 15px"
+                    >
+                      Ajouter au panier
+                    </button>
                   </div>
 
                   <!--end::Content-->
                   <!--begin::Sidebar-->
                   <div class="flex-column">
                     <div
-                      class="flex-row-auto w-xl-425px"
+                      class="flex-row-auto w-xl-475px"
                       style="margin-top: 17px"
                     >
                       <!--begin::Pos order-->
@@ -298,15 +369,14 @@
                                       />
                                       <span
                                         class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-6 me-1"
-                                        >{{ elem.pt_desc1 }} -
-                                        {{ elem.size }}</span
-                                      >
+                                        >{{ elem.pt_desc1 }}
+                                      </span>
                                     </div>
                                     <div>
                                       <span
                                         *ngFor="let item of elem.suppliments"
                                         class="fw-semibold text-gray-600 cursor-pointer text-hover-primary fs-6 me-1"
-                                        >{{ item.spec_pt_desc1 }},
+                                        >{{ item.pt_desc1 }},
                                       </span>
                                     </div>
                                     <div>
@@ -411,7 +481,7 @@
                                     <span
                                       class="fw text-primary fs-1"
                                       data-kt-pos-element="item-total"
-                                      >{{ elem.pt_price }}DA</span
+                                      >{{ elem.pt_price }} DA</span
                                     >
                                   </td>
                                 </tr>
@@ -510,6 +580,137 @@
                             >
                               Payer
                             </button>
+                            <div class="form-floating">
+                              <input
+                                style="margin-top: 10px"
+                                type="email"
+                                class="form-control text-gray-800 fw-bold"
+                                placeholder="00.0"
+                                id="floatingInputValue"
+                                value=""
+                              />
+                              <label for="floatingInputValue">Montant </label>
+                            </div>
+
+                            <button
+                              style="margin-top: 10px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              2000 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 10px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              1000 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 14px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              500 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 12px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              200 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              100 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              50 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              20 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              10 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              5 DA
+                            </button>
+                            <div class="form-floating">
+                              <input
+                                style="margin-top: 10px"
+                                type="email"
+                                class="form-control text-gray-800 fw-bold"
+                                placeholder="00.0"
+                                id="floatingInputValue"
+                                value=""
+                              />
+                              <label for="floatingInputValue">Monnaie</label>
+                            </div>
+                            <button
+                              style="margin-top: 10px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              2000 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 10px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              1000 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 14px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              500 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 12px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              200 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              100 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              50 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              20 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              10 DA
+                            </button>
+                            <button
+                              style="margin-top: 10px; margin-left: 4px"
+                              class="btn btn-light-primary fs-4 fw-bold py-4"
+                            >
+                              5 DA
+                            </button>
                             <!--end::Actions-->
                           </div>
                           <!--end::Payment Method-->
@@ -577,7 +778,7 @@
                   <span class="card-label fw-bold text-gray-800"
                     >Liste des commandes</span
                   >
-                  <span class="text-gray-400 mt-1 fw-semibold fs-6"
+                  <span class="text-gray-800 mt-1 fw-semibold fs-6"
                     >Nombre de commandes : {{ ordersHistory.length }}</span
                   >
                 </h3>
@@ -596,49 +797,59 @@
                     <tr
                       class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0"
                     >
-                      <th class="min-w-100px">Numéro commande</th>
-                      <th class="text-end min-w-100px">Client</th>
-                      <th class="text-end min-w-125px">Nature client</th>
-                      <th class="text-end min-w-100px">Date et heure</th>
-                      <th class="text-end min-w-100px">Total</th>
-                      <th class="text-end min-w-50px">Status</th>
-                      <th class="text-end"></th>
+                      <th class="text-gray-800 min-w-100px">Numéro commande</th>
+                      <th class="text-start text-gray-800 min-w-100px">
+                        Client
+                      </th>
+                      <th class="text-start text-gray-800 min-w-125px">
+                        Type de consommation
+                      </th>
+                      <th class="text-start text-gray-800 min-w-100px">
+                        Date et heure
+                      </th>
+                      <th class="text-start text-gray-800 min-w-100px">
+                        Total
+                      </th>
+                      <th class="text-start text-gray-800 min-w-50px">
+                        Status
+                      </th>
+                      <th class="text-start"></th>
                     </tr>
                     <!--end::Table row-->
                   </thead>
                   <!--end::Table head-->
                   <!--begin::Table body-->
-                  <tbody class="fw-bold text-gray-600">
+                  <tbody class="fw-bold text-gray-800">
                     <tr *ngFor="let order of ordersHistory">
                       <td>
-                        <a
-                          href="../../demo1/dist/apps/ecommerce/catalog/edit-product.html"
-                          class="text-gray-800 text-hover-primary"
-                          >{{ order.order_code }}</a
-                        >
+                        <a class="text-gray-800 text-hover-primary">{{
+                          order.order_code
+                        }}</a>
                       </td>
-                      <td class="text-end">{{ order.customer }}</td>
-                      <td class="text-end">
-                        <a href="#" class="text-gray-600 text-hover-primary">{{
+                      <td class="text-start">{{ order.customer }}</td>
+                      <td class="text-start">
+                        <a href="#" class="text-gray-800 text-hover-primary">{{
                           order.order_emp
                         }}</a>
                       </td>
-                      <td class="text-end">{{ order.created_date }}</td>
-                      <td class="text-end">
+                      <td class="text-start">{{ order.created_date }}</td>
+                      <td class="text-start">
                         <span class="text-gray-800 fw-bolder"
                           >{{ order.total_price }} DA</span
                         >
                       </td>
-                      <td class="text-end">
+                      <td class="text-start">
                         <span class="badge py-3 px-4 fs-7 badge-light-warning"
                           >Non payé</span
                         >
                       </td>
-                      <td class="text-end">
+                      <td class="text-start">
                         <button
                           type="button"
                           class="btn btn-sm btn-icon btn-light btn-active-light-primary toggle h-25px w-25px"
                           data-kt-table-widget-4="expand_row"
+                          (click)="getItemFromHistory(order)"
+                          (click)="c('Close click')"
                         >
                           <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
                           <span class="svg-icon svg-icon-3 m-0 toggle-off">
@@ -763,9 +974,7 @@
             aria-controls="kt_account_notifications"
           >
             <div class="card-title m-0">
-              <h3 class="fw-bold m-0">
-                Personnalisez votre {{ currentItem.pt_desc1 }}
-              </h3>
+              <h3 class="fw-bold m-0">Personnalisez votre</h3>
             </div>
           </div>
           <!--begin::Card header-->
@@ -807,7 +1016,7 @@
                         </td>
                       </tr>
 
-                      <tr *ngIf="currentItem.pt_formule">
+                      <!-- <tr *ngIf="currentItem.pt_formule">
                         <td class="min-w-250px fs-4 fw-bold">Boissons</td>
                         <td class="w-125px" *ngFor="let boisson of boissons">
                           <div class="form-check form-check-solid">
@@ -824,7 +1033,7 @@
                             >
                           </div>
                         </td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
                 </div>
@@ -838,7 +1047,7 @@
                   (click)="addProductToCart()"
                   (click)="c('Close click')"
                 >
-                  Ajouter au panier
+                  Confirmer l'ajout
                 </button>
               </div>
               <!--end::Card footer-->

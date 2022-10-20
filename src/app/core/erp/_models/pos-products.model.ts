@@ -9,7 +9,11 @@ export class Product {
   pt_page: number;
   pt_formule: boolean;
   pt_bom_code: string;
-  suppliments: Array<Spec>;
-  ingredients: Array<Spec>;
-  size: string;
+  suppliments: Array<any>;
+  ingredients: Array<any>;
+  sauces?: Array<any>;
+  soda?: Array<any>;
+  pt_draw?: string;
+  comment: string;
+  line: string;
 }

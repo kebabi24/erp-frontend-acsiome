@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
+import { Observable, BehaviorSubject, Subscription, of, Subject } from "rxjs";
 import { Store } from "@ngrx/store";
 // import { Categories } from "../../../core/erp/data/mock-categories";
 import { Tables } from "../../../core/erp/data/mock-categories";
@@ -47,19 +47,23 @@ export class PosComponent implements OnInit {
   loading$: Observable<boolean>;
   categories: Category[];
   products: any[];
+  family: any[];
   cart: Cart;
   selectedCategory?: Category;
   selectedProducts?: Array<Product>;
-  suppliments: Spec[];
+  suppliments: any[];
   ingredients: Spec[];
-  boissons: any[];
+  soda: any[];
+  drinksBrand: any[];
+  sauces: any[];
   cartProducts?: Array<Product> = [];
+  lastSeq: Array<any>;
   showPrice: boolean = false;
   itemToAdd: Product;
   productInCartPrice: number = 0;
   subtotalPrice: number = 0;
-  AllProducts: Product;
-  currentItem: Product;
+  AllProducts: Array<Product>;
+  currentItem: any;
   updatedCart: Cart;
   loclocOrder: string = "Sur place";
   AllTables: string[];
@@ -82,6 +86,15 @@ export class PosComponent implements OnInit {
   ordersHistory: Array<Cart>;
   showSize: boolean = false;
   showSupp: boolean = false;
+  showSpec: boolean = false;
+  showSoda: boolean = false;
+  showSauces: boolean = false;
+  showListOfSoda: boolean = false;
+  families: Array<any>;
+  sizeOfProduct: Array<any>;
+  ItemsToAddToCard: Product;
+  addProductBtn: boolean = false;
+  private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
     private modalService: NgbModal,
@@ -99,19 +112,22 @@ export class PosComponent implements OnInit {
       this.categories = res.data.map((item) => {
         return item;
       });
-
-      // this.categories = Object.values(res.data);
+    });
+    this.posCategoryService
+      .getByCode({ code_fldname: "pt_draw" })
+      .subscribe((res: any) => {
+        this.families = res.data.map((item) => {
+          return item;
+        });
+      });
+    this.posCategoryService.getAllProducts().subscribe((res: any) => {
+      this.AllProducts = res.data.map((item) => {
+        return item;
+      });
     });
     this.posCategoryService.getBySupp({ pt_ms: true }).subscribe((res: any) => {
       this.suppliments = res.data.map((item) => {
-        const supp = {
-          id: item.id,
-          spec_code: item.pt_part,
-          spec_pt_desc1: item.pt_desc1,
-          isChecked: false,
-          price: item.pt_price,
-        };
-        return supp;
+        return item;
       });
     });
     this.posCategoryService
@@ -129,11 +145,20 @@ export class PosComponent implements OnInit {
           return ing;
         });
       });
-    this.posCategoryService.getByItems({ pt_page: 7 }).subscribe((res: any) => {
-      this.boissons = res.data.map((item) => {
-        return item;
+    this.posCategoryService
+      .getByCode({ code_cmmt: "CT007" })
+      .subscribe((res: any) => {
+        this.soda = res.data.map((item) => {
+          return item;
+        });
       });
-    });
+    this.posCategoryService
+      .getByItems({ pt_group: "Sauces" })
+      .subscribe((res: any) => {
+        this.sauces = res.data.map((item) => {
+          return item;
+        });
+      });
   }
 
   ngOnInit(): void {
@@ -191,29 +216,142 @@ export class PosComponent implements OnInit {
     return _pOsinventory;
   }
   checkInventory(PosInventory: PosInventory) {}
+
   onSelect(category: Category): void {
     this.showSize = false;
     this.showSupp = false;
-    const result = this.categories.find(
-      (item) => item.category_code === category.category_code
+    this.showSauces = false;
+    this.showSoda = false;
+    this.showListOfSoda = false;
+    this.selectedProducts = this.families.filter(
+      (item) => item.code_cmmt === category.category_code
     );
-    this.selectedProducts = result.items.map((item) => {
-      let itemCategory: Product = {
-        id: item.id,
-        pt_part: item.pt_part,
-        pt_desc1: item.pt_desc1,
-        pt_article: item.pt_article,
-        pt_formule: item.pt_formule,
-        pt_page: item.pt_page,
-        pt_price: item.pt_price,
-        pt_bom_code: item.pt_bom_code,
-        pt_qty: 1,
-        size: "item.size",
-        suppliments: [],
-        ingredients: [],
-      };
-      return itemCategory;
+
+    // this.selectedProducts = result.items.map((item) => {
+    //   let itemCategory: Product = {
+    //     id: item.id,
+    //     pt_part: item.pt_part,
+    //     pt_desc1: item.pt_desc1,
+    //     pt_article: item.pt_article,
+    //     pt_formule: item.pt_formule,
+    //     pt_page: item.pt_page,
+    //     pt_price: item.pt_price,
+    //     pt_bom_code: item.pt_bom_code,
+    //     pt_qty: 1,
+    //     size: "item.size",
+    //     suppliments: [],
+    //     ingredients: [],
+    //   };
+    //   return itemCategory;
+    // });
+  }
+
+  initializeProduct(productOnlist) {
+    this.sizeOfProduct = this.AllProducts.filter(
+      (item) => item.pt_draw === productOnlist.code_value
+    );
+    this.addProductBtn = true;
+    this.sizeOfProduct.map((item) => {
+      if (item.pt_group != null) {
+        this.showSize = true;
+      } else {
+        this.prepareProductWithoutSize(productOnlist);
+      }
     });
+
+    this.sizeOfProduct.map((item) => {
+      item.pt_group == "null" && (this.showSupp = false);
+    });
+    if (productOnlist.code_cmmt == "CT007") {
+      this.setListOfSoda(productOnlist);
+      this.showSize = false;
+    }
+  }
+  prepareProductWithoutSize(productOnlist) {
+    this.currentItem = this.sizeOfProduct.find(
+      (item) => item.pt_draw === productOnlist.code_value
+    );
+    this.addProductBtn = true;
+    this.currentItem = {
+      id: this.currentItem.id,
+      pt_part: this.currentItem.pt_part,
+      pt_desc1: this.currentItem.pt_desc1,
+      pt_article: this.currentItem.pt_article,
+      pt_formule: this.currentItem.pt_formule,
+      pt_page: this.currentItem.pt_page,
+      pt_price: this.currentItem.pt_price,
+      pt_bom_code: this.currentItem.pt_bom_code,
+      pt_qty: 1,
+      comment: this.currentItem.pt_group,
+      suppliments: [],
+      ingredients: [],
+      sauces: [],
+    };
+    console.log(this.currentItem);
+  }
+  prepareProduct(size) {
+    this.currentItem = this.sizeOfProduct.find(
+      (item) => item.pt_group === size.pt_group
+    );
+    console.log(size);
+    this.sizeProduct = this.currentItem.pt_group;
+    this.showSupp = true;
+
+    this.currentItem = {
+      id: this.currentItem.id,
+      pt_part: this.currentItem.pt_part,
+      pt_desc1: this.currentItem.pt_desc1,
+      pt_article: this.currentItem.pt_article,
+      pt_formule: this.currentItem.pt_formula,
+      pt_page: this.currentItem.pt_page,
+      pt_price: this.currentItem.pt_price,
+      pt_bom_code: this.currentItem.pt_bom_code,
+      pt_qty: 1,
+      comment: this.currentItem.pt_group,
+      suppliments: [],
+      ingredients: [],
+      sauces: [],
+    };
+  }
+  setSupplement(suppliment: any) {
+    this.showSauces = true;
+
+    this.currentItem && this.currentItem.suppliments.push(suppliment);
+    console.log(this.currentItem);
+  }
+  setSauces(sauce: any) {
+    this.currentItem &&
+      this.currentItem.pt_formule == true &&
+      (this.showSoda = true);
+    this.currentItem && this.currentItem.sauces.push(sauce);
+    console.log(this.currentItem.sauces);
+  }
+
+  setIngredient(ingredient: Spec) {
+    let currentItemSpec = this.currentItem.ingredients;
+
+    if (ingredient.isChecked === true) {
+      ingredient.isChecked = false;
+      currentItemSpec.push(ingredient);
+      console.log(ingredient);
+    } else {
+      ingredient.isChecked = true;
+      currentItemSpec = currentItemSpec.filter((s) => s !== ingredient);
+    }
+    this.currentItem.ingredients = currentItemSpec;
+  }
+
+  setSoda() {
+    this.currentItem &&
+      this.currentItem.pt_formula == true &&
+      (this.showSoda = true);
+  }
+
+  setListOfSoda(so: any) {
+    this.drinksBrand = this.AllProducts.filter(
+      (item) => item.pt_draw === so.code_value
+    );
+    this.showListOfSoda = true;
   }
 
   open(content) {
@@ -223,9 +361,9 @@ export class PosComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
-  customizeProduct(productOnlist: Product, content2): void {
-    this.currentItem = productOnlist;
-    this.open2(content2);
+  customizeProduct(content): void {
+    // this.currentItem = productOnlist;
+    this.open2(content);
   }
 
   addProductToCart() {
@@ -240,11 +378,13 @@ export class PosComponent implements OnInit {
         item.ingredients.length === checkItemExist.ingredients.length &&
         item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
           .length === checkItemExist.ingredients.length &&
-        item.size === checkItemExist.size
+        item.sauces.length === checkItemExist.sauces.length &&
+        item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
+          checkItemExist.sauces.length &&
+        item.comment === checkItemExist.comment
       );
     });
     if (itemExist) {
-      console.log(itemExist.size);
       itemExist.pt_price =
         Number(itemExist.pt_price) +
         Number(itemExist.pt_price) / itemExist.pt_qty;
@@ -252,7 +392,7 @@ export class PosComponent implements OnInit {
     } else {
       checkItemExist.suppliments.map((item) => {
         this.productInCartPrice =
-          Number(this.productInCartPrice) + Number(item.price);
+          Number(this.productInCartPrice) + Number(item.pt_price);
       });
       this.productInCartPrice =
         Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
@@ -276,26 +416,32 @@ export class PosComponent implements OnInit {
         pt_bom_code: checkItemExist.pt_bom_code,
         suppliments: checkItemExist.suppliments,
         ingredients: checkItemExist.ingredients,
-        size: this.sizeProduct,
+        sauces: checkItemExist.sauces,
+        comment: this.sizeProduct,
         pt_qty: 1,
+        line: this.cartProducts.length.toString(),
       };
 
       this.cart.products.push(this.itemToAdd);
       this.showPrice = true;
     }
+    console.log(typeof checkItemExist.pt_price);
     this.cartProducts = this.cart.products;
-    this.suppliments.map((item) => {
-      item.isChecked = false;
-    });
+    console.log(this.cartProducts);
     this.ingredients.map((item) => {
       item.isChecked = true;
     });
-    console.log(checkItemExist);
     this.subtotalPrice = this.calculateSubTotal();
     this.currentItem.suppliments = [];
     this.currentItem.ingredients = [];
     this.productInCartPrice = 0;
     this.selectedIndex = 0;
+    this.showSize = false;
+    this.showSoda = false;
+    this.showSpec = false;
+    this.showSupp = false;
+    this.showSauces = false;
+    this.currentItem = undefined;
   }
 
   locOrder(content) {
@@ -331,39 +477,10 @@ export class PosComponent implements OnInit {
               });
             });
     });
-    console.log(this.cartProducts);
   }
 
   chooseTable(table) {
     this.currentTable = table;
-  }
-
-  setSupplement(suppliment: Spec) {
-    this.showSupp = true;
-    let currentItemSuppliment = this.currentItem.suppliments;
-
-    if (suppliment.isChecked === false) {
-      suppliment.isChecked = true;
-      currentItemSuppliment.push(suppliment);
-    } else {
-      suppliment.isChecked = false;
-      currentItemSuppliment = currentItemSuppliment.filter(
-        (s) => s !== suppliment
-      );
-    }
-    this.currentItem.suppliments = currentItemSuppliment;
-  }
-  setIngredient(ingredient: Spec) {
-    let currentItemSpec = this.currentItem.ingredients;
-
-    if (ingredient.isChecked === true) {
-      ingredient.isChecked = false;
-      currentItemSpec.push(ingredient);
-    } else {
-      ingredient.isChecked = true;
-      currentItemSpec = currentItemSpec.filter((s) => s !== ingredient);
-    }
-    this.currentItem.ingredients = currentItemSpec;
   }
 
   clearCurrentCart(): void {
@@ -414,17 +531,15 @@ export class PosComponent implements OnInit {
   }
 
   prepareCart(content): void {
-    // this.loadingSubject.next(true);
     let cart: Cart = {
       id: Math.floor(Math.random() * 101) + 1,
-      code_cart: "CC-" + Math.floor(Math.random() * 101) + 1,
+      code_cart: "PC-" + Math.floor(Math.random() * 1001) + 1,
       products: this.cartProducts,
       order_emp: this.loclocOrder,
       customer: "particulier",
       total_price: this.subtotalPrice,
     };
-    console.log(cart);
-
+    console.log(cart.products);
     this.posCategoryService.addOrder({ cart }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
@@ -505,6 +620,32 @@ export class PosComponent implements OnInit {
         this.loadingSubject.next(false);
       }
     );
+
+    this.posCategoryService.createPosWorkOrderDetail({ cart }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+
+    console.log(cart);
     this.cart.products = [];
     this.cartProducts = [];
     this.showPrice = false;
@@ -521,8 +662,8 @@ export class PosComponent implements OnInit {
   }
 
   introduceInventory(content) {
-    this.showSize = true;
-    // this.modalService.open(content, { size: "xl" });
+    // this.showSize = true;
+    this.modalService.open(content, { size: "xl" });
   }
 
   getHistory(content) {
@@ -532,6 +673,20 @@ export class PosComponent implements OnInit {
       });
     });
     this.modalService.open(content, { size: "xl" });
+  }
+  getItemFromHistory(order) {
+    this.posCategoryService
+      .getSomeOrders({ order_code: order.order_code })
+      .subscribe((res: any) => {
+        const productsfromhistory = res.data.map((item) => {
+          this.posCategoryService
+            .getOneProduct({ pt_part: item.pt_part })
+            .subscribe((res: any) => {
+              this.cartProducts.push(res.data);
+            });
+        });
+      });
+    console.log(this.cartProducts);
   }
 
   gridReady(angularGrid: AngularGridInstance) {
@@ -543,61 +698,6 @@ export class PosComponent implements OnInit {
 
   initGrid() {
     this.columnDefinitions = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        minWidth: 40,
-        maxWidth: 40,
-      },
-
-      {
-        id: "tag_part",
-        name: "Article",
-        field: "tag_part",
-        minWidth: 50,
-        maxWidth: 50,
-        selectable: true,
-      },
-      {
-        id: "mvid",
-        field: "cmvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById(
-            "openItemsGrid"
-          ) as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "tag_serial",
-        name: "Lot",
-        field: "tag_serial",
-        minWidth: 100,
-        maxWidth: 100,
-        selectable: true,
-      },
-      {
-        id: "tag_site",
-        name: "Site",
-        field: "tag_site",
-        sortable: true,
-        width: 50,
-        filterable: false,
-      },
-      {
-        id: "tag_loc",
-        name: "Emplacement",
-        field: "tag_loc",
-        sortable: true,
-        width: 50,
-        filterable: false,
-      },
       {
         id: "description",
         name: "Description",

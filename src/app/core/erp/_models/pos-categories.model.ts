@@ -3,6 +3,6 @@ export class Category {
   id: Number;
   category_code: string;
   category_name: string;
-  items?: Array<Product>;
-  category_img: string;
+  items?: Array<any>;
+  category_img?: string;
 }
