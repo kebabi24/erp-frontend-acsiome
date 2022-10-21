@@ -829,8 +829,18 @@ export class CreatePshComponent implements OnInit {
       
       
     // tslint:disable-next-line:prefer-const
+    /**********************************************/
+    const controlstot = this.totForm.controls
+    console.log("controlestot : ", controlstot.tht.value)
+    const tot = {
+      tht : controlstot.tht.value,
+      tva : controlstot.tva.value,
+      timbre : controlstot.timbre.value
+    }
+    console.log("\n\n tot : ", tot)
+    /**********************************************/
     let ps = this.prepare()
-    this.addIt( this.dataset,ps, this.pshnbr);
+    this.addIt(this.dataset,ps, this.pshnbr, tot); //from this.totForm.controls;
     let as = this.prepareAs()
     console.log("hhhhhh", as)
     this.addAs(as,this.pshnbr);
@@ -918,7 +928,7 @@ export class CreatePshComponent implements OnInit {
       );
   }
   
-   addIt( detail: any, ps, pshnbr) {
+   addIt( detail: any, ps, pshnbr, tot) {
     for (let data in detail) {
       delete this.dataset[data].id;
       delete this.dataset[data].cmvid;
@@ -928,9 +938,14 @@ export class CreatePshComponent implements OnInit {
     const controls = this.pshForm.controls
     
     this.saleShiperService
-      .add({detail, ps,pshnbr})
+      .add({detail, ps,pshnbr, tot})
       .subscribe(
-       (reponse: any) => (console.log(reponse)),
+       (reponse: any) => {
+        console.log(reponse)
+      	const arrayOctet = new Uint8Array(reponse.pdf.data)
+        const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        const fileUrl = URL.createObjectURL(file);
+        window.open(fileUrl)},
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -952,7 +967,7 @@ export class CreatePshComponent implements OnInit {
           this.loadingSubject.next(false);
          console.log(this.customer, pshnbr, this.dataset);
          let cr_terms = controls.psh_cr_terms.value;
-          if(controls.print.value == true)  this.printpdf(pshnbr) //printBL(this.customer, this.dataset, pshnbr, cr_terms);
+          //if(controls.print.value == true)  this.printpdf(pshnbr) //printBL(this.customer, this.dataset, pshnbr, cr_terms);
           this.router.navigateByUrl("/");
         }
       );

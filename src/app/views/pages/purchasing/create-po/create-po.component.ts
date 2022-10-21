@@ -793,7 +793,13 @@ console.log(resp.data)
     this.purchaseOrderService
       .add({ purchaseOrder: _po, purchaseOrderDetail: detail })
       .subscribe(
-        (reponse: any) => (po = reponse.data),
+        (reponse: any) => {
+          po = reponse.data
+          const arrayOctet = new Uint8Array(reponse.pdf.data)
+          const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+          const fileUrl = URL.createObjectURL(file);
+          window.open(fileUrl)
+        },
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -814,7 +820,7 @@ console.log(resp.data)
           );
           this.loadingSubject.next(false);
           console.log(this.provider, po, this.dataset);
-          if(controls.print.value == true) this.printpdf(po.po_nbr) //printBc(this.provider, this.dataset, po, this.curr);
+          //if(controls.print.value == true) this.printpdf(po.po_nbr) //printBc(this.provider, this.dataset, po, this.curr);
           this.router.navigateByUrl("/");
         }
       );

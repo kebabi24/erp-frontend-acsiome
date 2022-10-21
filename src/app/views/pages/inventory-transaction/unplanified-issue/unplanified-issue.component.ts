@@ -911,7 +911,12 @@ export class UnplanifiedIssueComponent implements OnInit {
       this.inventoryTransactionService
         .addIssUnp({detail, it,nlot})
         .subscribe(
-         (reponse: any) => console.log(reponse),
+         (reponse: any) => {
+          console.log(reponse)
+          const arrayOctet = new Uint8Array(reponse.pdf.data)
+          const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+          const fileUrl = URL.createObjectURL(file);
+          window.open(fileUrl)},
           (error) => {
             this.layoutUtilsService.showActionNotification(
               "Erreur verifier les informations",
@@ -933,7 +938,7 @@ export class UnplanifiedIssueComponent implements OnInit {
             this.loadingSubject.next(false);
         //    console.log(this.provider, po, this.dataset);
         //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-        if(controls.print.value == true) printISSUNP(this.provider, this.dataset, nlot)
+        //if(controls.print.value == true) printISSUNP(this.provider, this.dataset, nlot)
           this.router.navigateByUrl("/");
           }
         );

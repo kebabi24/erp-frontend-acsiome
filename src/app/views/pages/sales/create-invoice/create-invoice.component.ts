@@ -642,7 +642,6 @@ export class CreateInvoiceComponent implements OnInit {
       : null;
     
       if (controls.ith_taxable.value == null || controls.ith_taxable.value == "" ) { _ih.ith_taxable = false} else { _ih.ith_taxable = controls.ith_taxable.value}
-    
    
     _ih.ith_rmks = controls.ith_rmks.value;
     
@@ -678,7 +677,13 @@ export class CreateInvoiceComponent implements OnInit {
     this.invoiceOrderService
       .addIv({ invoiceOrderTemp: _ih, invoiceOrderTempDetail: detail })
       .subscribe(
-        (reponse: any) => (ih = reponse.data),
+        (reponse: any) => {
+          ih = reponse.data
+          const arrayOctet = new Uint8Array(reponse.pdf.data)
+          const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+          const fileUrl = URL.createObjectURL(file);
+          window.open(fileUrl)
+        },
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -744,7 +749,7 @@ var j = 0
                          
   }
   console.log("hnahna", this.iharray)
-          if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
+          //if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
           this.router.navigateByUrl("/Sales/create-invoice");
           this.reset()
         }
