@@ -134,13 +134,22 @@ export class PurchaseOrderListComponent implements OnInit {
         filterable: false,
       },
       {
-        id: "po_req_id",
-        name: "Numero de demande ",
-        field: "po.po_req_id",
+        id: "po_stat",
+        name: "Status",
+        field: "po.po_stat",
         sortable: true,
         width: 80,
         filterable: false,
-        type: FieldType.float,
+        type: FieldType.string,
+      },
+      {
+        id: "po_site",
+        name: "Status",
+        field: "po.po_site",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
       },
     ];
 
@@ -199,6 +208,11 @@ export class PurchaseOrderListComponent implements OnInit {
 
         // Optionally pass your Parent Component reference to your Child Component (row detail component)
         parent: this,
+      },
+      presets: {
+        sorters: [
+          { columnId: 'po_nbr', direction: 'DESC' },
+         ],
       },
     };
 
