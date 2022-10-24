@@ -1,9 +1,17 @@
 import { Component, OnInit } from "@angular/core";
-import { Observable, BehaviorSubject, Subscription, of, Subject } from "rxjs";
+import {
+  Observable,
+  BehaviorSubject,
+  Subscription,
+  of,
+  Subject,
+  Observer,
+} from "rxjs";
 import { Store } from "@ngrx/store";
-// import { Categories } from "../../../core/erp/data/mock-categories";
+import { bk } from "../../../core/erp/mockdata";
 import { Tables } from "../../../core/erp/data/mock-categories";
 import { Category } from "../../../core/erp/_models/pos-categories.model";
+import { Bank } from "../../../core/erp/_models/bank.model";
 import { Spec } from "../../../core/erp/_models/spec.model";
 import { PosInventory } from "../../../core/erp/_models/pos-inventory.model";
 import { Product } from "../../../core/erp/_models/pos-products.model";
@@ -40,12 +48,14 @@ import {
   styleUrls: ["./pos.component.scss"],
 })
 export class PosComponent implements OnInit {
+  bkForm: FormGroup;
+  bk: any;
+  hasFormErrors = false;
   inventory: PosInventory;
   InventoryForm: FormGroup;
-  hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
-  categories: Category[];
+  categories: Observable<Category[]>;
   products: any[];
   family: any[];
   cart: Cart;
@@ -81,8 +91,15 @@ export class PosComponent implements OnInit {
   gridService: GridService;
   dataView: any;
   columnDefinitions: Column[];
+  columnDefinitions2: Column[];
   gridOptions: GridOption;
+  gridOptions2: GridOption;
+  columnDefinitions3: Column[];
+  gridOptions3: GridOption;
+  columnDefinitions4: Column[];
+  gridOptions4: GridOption;
   dataset: any[];
+  gridObj: any;
   ordersHistory: Array<Cart>;
   showSize: boolean = false;
   showSupp: boolean = false;
@@ -94,10 +111,27 @@ export class PosComponent implements OnInit {
   sizeOfProduct: Array<any>;
   ItemsToAddToCard: Product;
   addProductBtn: boolean = false;
+  workOrders: any[];
+  detail: any[] = [];
+  it: any;
+  detailSo: any[] = [];
+  itSo: any;
+  salesOrder: any[];
+  user;
+  inventoryData: any[] = [];
+  tag_cnt_qty;
+  datasetRec: any[] = [];
+  bank: any[] = [];
+  chooseCaisse: boolean;
+  inventoryTabcaisse: any[] = [];
+  regie: boolean = false;
+  value1: any;
+  value2: any;
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
     private modalService: NgbModal,
+    private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private InventoryFB: FormBuilder,
     private router: Router,
@@ -137,10 +171,11 @@ export class PosComponent implements OnInit {
           const ing = {
             id: item.id,
             spec_code: item.pt_part,
-            spec_pt_desc1: item.pt_desc1,
-            spec_pt_desc2: item.pt_desc2,
+            pt_desc1: item.pt_desc1,
+            pt_desc2: item.pt_desc2,
+            pt_bom_code: item.pt_bom_code,
             isChecked: true,
-            price: item.pt_price,
+            pt_price: item.pt_price,
           };
           return ing;
         });
@@ -164,7 +199,11 @@ export class PosComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.bk = bk;
     this.AllTables = Tables;
+
+    this.user = JSON.parse(localStorage.getItem("user"));
+    console.log("hna user", this.user.usrd_site);
 
     this.cart = {
       id: Math.floor(Math.random() * 101) + 1,
@@ -173,49 +212,13 @@ export class PosComponent implements OnInit {
       order_emp: this.loclocOrder,
       customer: "particulier",
       total_price: 0,
+      usrd_site: this.user.usrd_site,
     };
 
     this.initGrid();
+
+    // this.initGrid2();
   }
-
-  createInventoryForm() {
-    this.loadingSubject.next(false);
-
-    this.inventory = new PosInventory();
-    this.InventoryForm = this.InventoryFB.group({
-      inv1: [this.inventory.inv1, Validators.required],
-      inv2: [this.inventory.inv2, Validators.required],
-      inv3: [this.inventory.inv3, Validators.required],
-    });
-  }
-  onSubmit() {
-    this.hasFormErrors = false;
-    const controls = this.InventoryForm.controls;
-    /** check form */
-    if (this.InventoryForm.invalid) {
-      Object.keys(controls).forEach((controlName) =>
-        controls[controlName].markAsTouched()
-      );
-
-      this.hasFormErrors = true;
-      return;
-    }
-
-    // tslint:disable-next-line:prefer-const
-    this.PosInventory = this.getInventory();
-    this.checkInventory(this.PosInventory);
-  }
-
-  getInventory(): PosInventory {
-    const controls = this.InventoryForm.controls;
-    const _pOsinventory = new PosInventory();
-    _pOsinventory.inv1 = controls.inv1.value;
-    _pOsinventory.inv2 = controls.inv2.value;
-    _pOsinventory.inv3 = controls.inv3.value;
-
-    return _pOsinventory;
-  }
-  checkInventory(PosInventory: PosInventory) {}
 
   onSelect(category: Category): void {
     this.showSize = false;
@@ -278,7 +281,7 @@ export class PosComponent implements OnInit {
       pt_desc1: this.currentItem.pt_desc1,
       pt_article: this.currentItem.pt_article,
       pt_formule: this.currentItem.pt_formule,
-      pt_page: this.currentItem.pt_page,
+      pt_loc: this.currentItem.pt_loc,
       pt_price: this.currentItem.pt_price,
       pt_bom_code: this.currentItem.pt_bom_code,
       pt_qty: 1,
@@ -303,7 +306,7 @@ export class PosComponent implements OnInit {
       pt_desc1: this.currentItem.pt_desc1,
       pt_article: this.currentItem.pt_article,
       pt_formule: this.currentItem.pt_formula,
-      pt_page: this.currentItem.pt_page,
+      pt_loc: this.currentItem.pt_loc,
       pt_price: this.currentItem.pt_price,
       pt_bom_code: this.currentItem.pt_bom_code,
       pt_qty: 1,
@@ -367,6 +370,7 @@ export class PosComponent implements OnInit {
   }
 
   addProductToCart() {
+    console.log(this.AllProducts);
     const checkItemExist = this.currentItem;
     checkItemExist.size = this.sizeProduct;
     const itemExist: Product = this.cartProducts.find((item) => {
@@ -412,12 +416,12 @@ export class PosComponent implements OnInit {
         pt_article: checkItemExist.pt_article,
         pt_price: Number(this.productInCartPrice),
         pt_formule: checkItemExist.pt_formule,
-        pt_page: checkItemExist.pt_page,
         pt_bom_code: checkItemExist.pt_bom_code,
         suppliments: checkItemExist.suppliments,
         ingredients: checkItemExist.ingredients,
         sauces: checkItemExist.sauces,
         comment: this.sizeProduct,
+        pt_loc: checkItemExist.pt_loc,
         pt_qty: 1,
         line: this.cartProducts.length.toString(),
       };
@@ -427,7 +431,7 @@ export class PosComponent implements OnInit {
     }
     console.log(typeof checkItemExist.pt_price);
     this.cartProducts = this.cart.products;
-    console.log(this.cartProducts);
+    console.log(this.cart);
     this.ingredients.map((item) => {
       item.isChecked = true;
     });
@@ -444,18 +448,22 @@ export class PosComponent implements OnInit {
     this.currentItem = undefined;
   }
 
-  locOrder(content) {
-    if (this.loclocOrder === "Sur place") {
-      this.loclocOrder = "Emporté";
-      this.cartProducts != null && this.setBomCode();
-    } else if (this.loclocOrder === "Emporté") {
-      this.loclocOrder = "Livraison";
-      this.cartProducts != null && this.setBomCode();
-    } else {
-      this.loclocOrder = "Sur place";
-      this.cartProducts != null && this.setBomCode();
-      this.modalService.open(content, { size: "lg" });
-    }
+  locOrderS(content) {
+    this.loclocOrder = "Sur place";
+    this.cartProducts != null && this.setBomCode();
+    this.modalService.open(content, { size: "lg" });
+
+    return this.loclocOrder;
+  }
+  locOrderE() {
+    this.loclocOrder = "Emporté";
+    this.cartProducts != null && this.setBomCode();
+
+    return this.loclocOrder;
+  }
+  locOrderL() {
+    this.loclocOrder = "Livraison";
+    this.cartProducts != null && this.setBomCode();
     return this.loclocOrder;
   }
 
@@ -487,9 +495,7 @@ export class PosComponent implements OnInit {
     this.cartProducts = [];
     this.cart.products = this.cartProducts;
     this.showPrice = false;
-    this.suppliments.map((item) => {
-      item.isChecked = false;
-    });
+
     this.ingredients.map((item) => {
       item.isChecked = true;
     });
@@ -538,6 +544,7 @@ export class PosComponent implements OnInit {
       order_emp: this.loclocOrder,
       customer: "particulier",
       total_price: this.subtotalPrice,
+      usrd_site: this.user.usrd_site,
     };
     console.log(cart.products);
     this.posCategoryService.addOrder({ cart }).subscribe(
@@ -663,8 +670,77 @@ export class PosComponent implements OnInit {
 
   introduceInventory(content) {
     // this.showSize = true;
+  }
+
+  podRec(content) {
+    this.modalService.open(content, { size: "xl" });
+    console.log(this.datasetRec);
+    this.initGrid2();
+  }
+
+  checkInventory(content) {
     this.modalService.open(content, { size: "xl" });
   }
+
+  setInventory() {
+    this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+  checkInventory2(content) {
+    this.modalService.open(content, { size: "xl" });
+  }
+
+  setInventory2() {
+    this.dataset.map((item) => {
+      return (item.ld_rev = "M"), (item.tag_cnt_qty = 0);
+    });
+
+    this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+  handleSelectedRowsChanged(e, args) {}
 
   getHistory(content) {
     this.posCategoryService.getAllOrders().subscribe((res: any) => {
@@ -676,18 +752,134 @@ export class PosComponent implements OnInit {
   }
   getItemFromHistory(order) {
     this.posCategoryService
-      .getSomeOrders({ order_code: order.order_code })
+      .getOneOrder({ order_code: order.order_code })
       .subscribe((res: any) => {
-        const productsfromhistory = res.data.map((item) => {
-          this.posCategoryService
-            .getOneProduct({ pt_part: item.pt_part })
-            .subscribe((res: any) => {
-              this.cartProducts.push(res.data);
-            });
+        this.cart = res.data;
+        this.showPrice = true;
+        this.cartProducts = res.data.products;
+      });
+  }
+
+  WodData() {
+    this.posCategoryService
+      .getWod({ wod_nbr: this.cart.code_cart })
+      .subscribe((res: any) => {
+        this.workOrders = res.data.map((item) => {
+          return item;
         });
       });
-    console.log(this.cartProducts);
+    this.workOrders.forEach((wo) => {
+      const d = {
+        tr_part: wo.wod_part,
+        tr_lot: wo.wod_lot,
+        tr_price: wo.wod_price,
+        tr_site: wo.wod_site,
+        tr_qty_loc: Number(wo.wod_qty_req),
+        tr_qty_chg: Number(wo.wod_qty_req),
+        tr_nbr: wo.wod_nbr,
+        tr_serial: null,
+        tr_loc: wo.wod_loc,
+        tr_um_conv: 1,
+      };
+      this.detail.push(d);
+    });
+    this.it = this.cart.created_date;
   }
+
+  Sodata() {
+    this.posCategoryService
+      .getWod({ wod_nbr: this.cart.code_cart })
+      .subscribe((res: any) => {
+        this.salesOrder = res.data.map((item) => {
+          return item;
+        });
+      });
+    this.salesOrder.forEach((so) => {
+      const d = {
+        tr_part: so.wod_part,
+        tr_lot: so.wod_lot,
+        tr_price: so.wod_price,
+        tr_site: so.wod_site,
+        tr_qty_loc: Number(so.wod_qty_req),
+        tr_qty_chg: Number(so.wod_qty_req),
+        tr_nbr: so.wod_nbr,
+        tr_serial: null,
+        tr_loc: so.wod_loc,
+        tr_um_conv: 1,
+      };
+      this.detailSo.push(d);
+    });
+    this.itSo = this.cart.created_date;
+  }
+  getValue1(ticket: any) {
+    console.log(ticket);
+    this.value1 = this.value1 + ticket;
+  }
+  getValue2(ticket: any) {
+    console.log(ticket);
+    this.value2 = this.value2 + ticket;
+  }
+  paiement() {
+    this.WodData();
+    this.posCategoryService
+      .createIssWo({ detail: this.detail, it: this.it })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+    this.Sodata();
+    this.posCategoryService
+      .createIssSo({ detail: this.detailSo, it: this.itSo })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+    this.detail = [];
+    this.it = null;
+    this.cartProducts = [];
+    this.showPrice = false;
+  }
+  time = new Observable<string>((observer: Observer<string>) => {
+    setInterval(() => observer.next(""), 1000);
+  });
 
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -749,12 +941,440 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset = [];
-    this.posCategoryService.getAllProductTag({ tag_nbr: 4 }).subscribe(
-      (response: any) => (this.dataset = response.data),
-      (error) => {
-        this.dataset = [];
+    this.posCategoryService
+      .getAllProductInventory({ ld_site: this.user.usrd_site })
+      .subscribe(
+        (response: any) => (this.dataset = response.data),
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
+  }
+
+  initGrid2() {
+    this.columnDefinitions2 = [
+      {
+        id: "description",
+        name: "Description",
+        field: "item.pt_desc1",
+        sortable: true,
+        width: 80,
+        filterable: false,
       },
-      () => {}
-    );
+      {
+        id: "pod_qty_ord",
+        name: "Qte Commandée",
+        field: "pod_qty_ord",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "pod_serial",
+        name: "Numéro de lot",
+        field: "pod_serial",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "pod_qty_rcvd",
+        name: "Qte receptionnée",
+        field: "pod_qty_rcvd",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "pod_qty_chg",
+        name: "Qte livrée",
+        field: "pod_qty_chg",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+    ];
+
+    this.gridOptions2 = {
+      asyncEditorLoading: false,
+
+      editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      formatterOptions: {
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: true,
+
+        // Defaults to undefined, minimum number of decimals
+        minDecimal: 2,
+
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: " ", // can be any of ',' | '_' | ' ' | ''
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    this.dataset = [];
+    this.posCategoryService
+      .getPoRec({ pod_site: this.user.usrd_site })
+      .subscribe(
+        (response: any) => (this.datasetRec = response.detail),
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
+  }
+
+  podRecRec() {
+    this.datasetRec.map((item) => {
+      return (item.pod_qty_rcvd = item.pod_qty_rcvd);
+    });
+    this.posCategoryService
+      .createRctPo({ detail: this.datasetRec, it: new Date() })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+  }
+
+  initGrid3() {
+    this.columnDefinitions3 = [
+      {
+        id: "bk_desc",
+        name: "Description",
+        field: "bk_desc",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "bk_num_doc",
+        name: "Numéro document",
+        field: "bk_num_doc",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "bk_balance",
+        name: "Montant",
+        field: "bk_balance",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_2000",
+        name: "Billet 2000",
+        field: "bk_2000",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_1000",
+        name: "Billet 1000",
+        field: "bk_1000",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_0500",
+        name: "Billet 500",
+        field: "bk_0500",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_0200",
+        name: "Billet 200",
+        field: "bk_0200",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_p200",
+        name: "Billet 200 p",
+        field: "bk_p200",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_p100",
+        name: "Billet 100 ",
+        field: "bk_p100",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_p050",
+        name: "Billet 50 p",
+        field: "bk_p050",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_p020",
+        name: "Billet 20 p",
+        field: "bk_p020",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_p010",
+        name: "Billet 10 p",
+        field: "bk_p010",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+      {
+        id: "bk_p005",
+        name: "Billet 5 p",
+        field: "bk_p005",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+    ];
+
+    this.gridOptions3 = {
+      asyncEditorLoading: false,
+
+      editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      formatterOptions: {
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: true,
+
+        // Defaults to undefined, minimum number of decimals
+        minDecimal: 2,
+
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: " ", // can be any of ',' | '_' | ' ' | ''
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    this.dataset = [];
+    this.posCategoryService
+      .getBank({ bk_user1: this.user.usrd_code })
+      .subscribe(
+        (response: any) => (this.bank = response.data),
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
+  }
+
+  opBk(content) {
+    this.initGrid3();
+    this.modalService.open(content, { size: "xl" });
+    this.posCategoryService
+      .getBank({ bk_user1: this.user.usrd_code })
+      .subscribe((res: any) => {
+        this.bank = res.data.map((item) => {
+          return item;
+        });
+      });
+  }
+
+  onSubmitCaisseInventory() {
+    this.bank.map((item) => {
+      return (
+        (item.bk_balance = item.bk_balance),
+        (item.bk_2000 = item.bk_2000),
+        (item.bk_1000 = item.bk_1000),
+        (item.bk_0500 = item.bk_0500),
+        (item.bk_0200 = item.bk_0200),
+        (item.bk_p200 = item.bk_p200),
+        (item.bk_p100 = item.bk_p100),
+        (item.bk_p050 = item.bk_p050),
+        (item.bk_p020 = item.bk_p020),
+        (item.bk_p010 = item.bk_p010),
+        (item.bk_p005 = item.bk_p005)
+      );
+    });
+    this.posCategoryService
+      .createBkBkh({ detail: this.bank, type: "INV-D" })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+    this.bank = [];
+  }
+
+  onSubmitCaisseClotureInventory() {
+    this.bank.map((item) => {
+      return (
+        (item.bk_balance = item.bk_balance),
+        (item.bk_2000 = item.bk_2000),
+        (item.bk_1000 = item.bk_1000),
+        (item.bk_0500 = item.bk_0500),
+        (item.bk_0200 = item.bk_0200),
+        (item.bk_p200 = item.bk_p200),
+        (item.bk_p100 = item.bk_p100),
+        (item.bk_p050 = item.bk_p050),
+        (item.bk_p020 = item.bk_p020),
+        (item.bk_p010 = item.bk_p010),
+        (item.bk_p005 = item.bk_p005)
+      );
+    });
+    this.posCategoryService
+      .createBkBkh({ detail: this.bank, type: "INV-F" })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+    this.bank = [];
+  }
+
+  createCustomerForm() {
+    this.bkForm = this.formBuilder.group({
+      balance: "",
+      balance2: "",
+    });
   }
 }

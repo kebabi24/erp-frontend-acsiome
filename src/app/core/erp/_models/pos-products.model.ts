@@ -6,10 +6,10 @@ export class Product {
   pt_article: string;
   pt_price: number;
   pt_qty: number;
-  pt_page: number;
   pt_formule: boolean;
   pt_bom_code: string;
   suppliments: Array<any>;
+  pt_loc: string;
   ingredients: Array<any>;
   sauces?: Array<any>;
   soda?: Array<any>;

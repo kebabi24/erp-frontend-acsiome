@@ -1,8 +1,9 @@
 export class Spec {
   id: Number;
   spec_code: string;
-  spec_pt_desc1: string;
-  spec_pt_desc2?: string;
+  pt_desc1: string;
+  pt_desc2?: string;
   isChecked: boolean;
-  price: number;
+  pt_bom_code: string;
+  pt_price: number;
 }

@@ -18,13 +18,18 @@ const API_URL_ORDER_DETAIL = environment.apiUrl + "/pos-order";
 const API_URL_SUPP = environment.apiUrl + "/items";
 const API_URL_ITEMS = environment.apiUrl + "/items";
 const API_URL_WO = environment.apiUrl + "/work-orders";
+const API_URL_ISSWO = environment.apiUrl + "/inventory-transactions";
+const API_URL_INV = environment.apiUrl + "/inventory-transactions";
+const API_URL_ISSSO = environment.apiUrl + "/saleorders";
 const API_URL_WOD = environment.apiUrl + "/work-order-details";
 const API_URL_BOM = environment.apiUrl + "/bom-parts";
 const API_URL_LD = environment.apiUrl + "/location-details";
 const API_URL_TAG = environment.apiUrl + "/tags";
 const API_URL_CODE = environment.apiUrl + "/codes";
 const API_URL_SEQ = environment.apiUrl + "/sequences";
-
+const API_URL_PO = environment.apiUrl + "/purchase-orders";
+const API_URL_PR = environment.apiUrl + "/purchase-receives";
+const API_URL_BK = environment.apiUrl + "/banks";
 @Injectable()
 export class PosCategoryService {
   httpOptions = this.httpUtils.getHTTPHeaders();
@@ -46,6 +51,18 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL, { headers: httpHeaders });
   }
+  public getPoRec(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_PO}/findAllpodRec`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public getBank(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_BK}/findBk`, data, {
+      headers: httpHeaders,
+    });
+  }
 
   public getAllProducts() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
@@ -64,9 +81,16 @@ export class PosCategoryService {
     return this.http.get(API_URL_ORDER, { headers: httpHeaders });
   }
 
-  public getSomeOrders(data: any) {
+  public getOneOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.post(`${API_URL_ORDER}/findsomeorders`, data, {
+    return this.http.post(`${API_URL_ORDER}/findorder`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public getWod(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_WOD}/find`, data, {
       headers: httpHeaders,
     });
   }
@@ -169,6 +193,53 @@ export class PosCategoryService {
     });
   }
 
+  public createIssWo(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_ISSWO}/iss-wo`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public createInventory(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(API_URL_INV, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public checkInventory(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_INV}/cyc-cnt`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public createIssSo(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_INV}/iss-so`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public createRctPo(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_PR}/rct-po`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public createBkBkh(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_BK}/bk`, data, {
+      headers: httpHeaders,
+    });
+  }
+
   public getOneWorkOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_WO}/findone`, data, {
@@ -177,9 +248,9 @@ export class PosCategoryService {
   }
 
   //get all
-  public getAllProductTag(data: any) {
+  public getAllProductInventory(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.post(`${API_URL_TAG}/find`, data, {
+    return this.http.post(`${API_URL_LD}/find`, data, {
       headers: httpHeaders,
     });
   }
