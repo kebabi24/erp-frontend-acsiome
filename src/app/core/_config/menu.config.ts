@@ -510,6 +510,10 @@ export class MenuConfig {
                             page: "/purchasing/create-po",
                         },
                         {
+                            title: "Calcule des commandes",
+                            page: "/purchasing/create-oa",
+                        },
+                        {
                             title: "Impression Bon de commande",
                             page: "/purchasing/print-po",
                         },

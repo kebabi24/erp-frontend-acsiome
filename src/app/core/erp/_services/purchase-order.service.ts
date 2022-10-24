@@ -24,6 +24,11 @@ export class PurchaseOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
+    public addPos(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/add', data, { headers: httpHeaders })
+    }
+
     // READ
     public findBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
