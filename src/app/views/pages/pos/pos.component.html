@@ -431,7 +431,7 @@
                                       <span
                                         *ngFor="let item of elem.ingredients"
                                         class="fw-semibold text-gray-600 cursor-pointer text-hover-primary fs-6 me-1"
-                                        >{{ item.pt_desc2 }},
+                                        >Sans {{ item.pt_desc1 }},
                                       </span>
                                     </div>
                                   </td>
@@ -560,7 +560,7 @@
                               <span
                                 class="d-block lh-1 mb-2"
                                 data-kt-pos-element="total"
-                                >{{ subtotalPrice }} DA</span
+                                >{{ cart.total_price }} DA</span
                               >
                               <span
                                 class="d-block mb-2"
@@ -571,7 +571,7 @@
                               <span
                                 class="d-block fs-2qx lh-1"
                                 data-kt-pos-element="grant-total"
-                                >{{ subtotalPrice }} DA</span
+                                >{{ cart.total_price }} DA</span
                               >
                             </div>
                             <!--end::Content-->

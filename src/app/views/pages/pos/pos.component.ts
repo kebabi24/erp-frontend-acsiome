@@ -165,7 +165,7 @@ export class PosComponent implements OnInit {
       });
     });
     this.posCategoryService
-      .getByItems({ pt_status: "MP" })
+      .getByItems({ pt_status: "MP-ACTIF", pt_group: "SPEC" })
       .subscribe((res: any) => {
         this.ingredients = res.data.map((item) => {
           const ing = {
@@ -683,6 +683,9 @@ export class PosComponent implements OnInit {
   }
 
   setInventory() {
+    this.dataset.map((item) => {
+      console.log(item.tag_cnt_qty);
+    });
     this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
@@ -713,7 +716,7 @@ export class PosComponent implements OnInit {
 
   setInventory2() {
     this.dataset.map((item) => {
-      return (item.ld_rev = "M"), (item.tag_cnt_qty = 0);
+      return (item.ld_rev = "M");
     });
 
     this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
