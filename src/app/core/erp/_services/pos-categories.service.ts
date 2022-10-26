@@ -246,6 +246,14 @@ export class PosCategoryService {
     });
   }
 
+  public processTopaiement(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_BK}/prP`, data, {
+      headers: httpHeaders,
+    });
+  }
+
   public getOneWorkOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_WO}/findone`, data, {

@@ -1,11 +1,12 @@
 import { Product } from "./pos-products.model";
 export class Cart {
   id: Number;
-  code_cart: string;
+  order_code: string;
   products: Array<Product>;
   usrd_site: string;
   order_emp: string;
   customer: string;
   total_price: number;
+  status: string;
   created_date?: Date;
 }

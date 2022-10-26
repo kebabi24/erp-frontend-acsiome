@@ -100,7 +100,7 @@ export class PosComponent implements OnInit {
   gridOptions4: GridOption;
   dataset: any[];
   gridObj: any;
-  ordersHistory: Array<Cart>;
+  ordersHistory: Array<Cart> = [];
   showSize: boolean = false;
   showSupp: boolean = false;
   showSpec: boolean = false;
@@ -111,12 +111,12 @@ export class PosComponent implements OnInit {
   sizeOfProduct: Array<any>;
   ItemsToAddToCard: Product;
   addProductBtn: boolean = false;
-  workOrders: any[];
+  workOrders: any[] = [];
   detail: any[] = [];
   it: any;
   detailSo: any[] = [];
   itSo: any;
-  salesOrder: any[];
+  salesOrder: any[] = [];
   user;
   inventoryData: any[] = [];
   tag_cnt_qty;
@@ -131,7 +131,7 @@ export class PosComponent implements OnInit {
   constructor(
     config: NgbDropdownConfig,
     private modalService: NgbModal,
-    private formBuilder: FormBuilder,
+    private bkFb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private InventoryFB: FormBuilder,
     private router: Router,
@@ -203,20 +203,22 @@ export class PosComponent implements OnInit {
     this.AllTables = Tables;
 
     this.user = JSON.parse(localStorage.getItem("user"));
-    console.log("hna user", this.user.usrd_site);
 
     this.cart = {
       id: Math.floor(Math.random() * 101) + 1,
-      code_cart: "CC-" + Math.floor(Math.random() * 101) + 1,
+      order_code: "CC-" + Math.floor(Math.random() * 101) + 1,
       products: [],
       order_emp: this.loclocOrder,
       customer: "particulier",
+      status: "N",
       total_price: 0,
+
       usrd_site: this.user.usrd_site,
     };
 
     this.initGrid();
-
+    this.initGrid3();
+    this.createBkForm();
     // this.initGrid2();
   }
 
@@ -290,15 +292,14 @@ export class PosComponent implements OnInit {
       ingredients: [],
       sauces: [],
     };
-    console.log(this.currentItem);
   }
   prepareProduct(size) {
     this.currentItem = this.sizeOfProduct.find(
       (item) => item.pt_group === size.pt_group
     );
-    console.log(size);
+
     this.sizeProduct = this.currentItem.pt_group;
-    this.showSupp = true;
+    this.showSauces = true;
 
     this.currentItem = {
       id: this.currentItem.id,
@@ -316,18 +317,18 @@ export class PosComponent implements OnInit {
       sauces: [],
     };
   }
-  setSupplement(suppliment: any) {
-    this.showSauces = true;
+  setSauce(sauce: any) {
+    this.showSupp = true;
 
-    this.currentItem && this.currentItem.suppliments.push(suppliment);
-    console.log(this.currentItem);
+    this.currentItem && this.currentItem.sauces.push(sauce);
+    // console.log(this.currentItem);
   }
-  setSauces(sauce: any) {
+  setSupplement(suppliment: any) {
     this.currentItem &&
       this.currentItem.pt_formule == true &&
       (this.showSoda = true);
-    this.currentItem && this.currentItem.sauces.push(sauce);
-    console.log(this.currentItem.sauces);
+    this.currentItem && this.currentItem.suppliments.push(suppliment);
+    // console.log(this.currentItem.sauces);
   }
 
   setIngredient(ingredient: Spec) {
@@ -336,7 +337,6 @@ export class PosComponent implements OnInit {
     if (ingredient.isChecked === true) {
       ingredient.isChecked = false;
       currentItemSpec.push(ingredient);
-      console.log(ingredient);
     } else {
       ingredient.isChecked = true;
       currentItemSpec = currentItemSpec.filter((s) => s !== ingredient);
@@ -370,7 +370,6 @@ export class PosComponent implements OnInit {
   }
 
   addProductToCart() {
-    console.log(this.AllProducts);
     const checkItemExist = this.currentItem;
     checkItemExist.size = this.sizeProduct;
     const itemExist: Product = this.cartProducts.find((item) => {
@@ -429,9 +428,9 @@ export class PosComponent implements OnInit {
       this.cart.products.push(this.itemToAdd);
       this.showPrice = true;
     }
-    console.log(typeof checkItemExist.pt_price);
+
     this.cartProducts = this.cart.products;
-    console.log(this.cart);
+
     this.ingredients.map((item) => {
       item.isChecked = true;
     });
@@ -539,14 +538,16 @@ export class PosComponent implements OnInit {
   prepareCart(content): void {
     let cart: Cart = {
       id: Math.floor(Math.random() * 101) + 1,
-      code_cart: "PC-" + Math.floor(Math.random() * 1001) + 1,
+      order_code: "PC-" + Math.floor(Math.random() * 1001) + 1,
       products: this.cartProducts,
       order_emp: this.loclocOrder,
       customer: "particulier",
+      status: "N",
       total_price: this.subtotalPrice,
+
       usrd_site: this.user.usrd_site,
     };
-    console.log(cart.products);
+
     this.posCategoryService.addOrder({ cart }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
@@ -628,31 +629,30 @@ export class PosComponent implements OnInit {
       }
     );
 
-    this.posCategoryService.createPosWorkOrderDetail({ cart }).subscribe(
-      (reponse) => console.log("response", Response),
-      (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.loadingSubject.next(false);
-      },
-      () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.loadingSubject.next(false);
-      }
-    );
+    // this.posCategoryService.createPosWorkOrderDetail({ cart }).subscribe(
+    //   (reponse) => console.log("response", Response),
+    //   (error) => {
+    //     this.layoutUtilsService.showActionNotification(
+    //       "Erreur verifier les informations",
+    //       MessageType.Create,
+    //       10000,
+    //       true,
+    //       true
+    //     );
+    //     this.loadingSubject.next(false);
+    //   },
+    //   () => {
+    //     this.layoutUtilsService.showActionNotification(
+    //       "Ajout avec succès",
+    //       MessageType.Create,
+    //       10000,
+    //       true,
+    //       true
+    //     );
+    //     this.loadingSubject.next(false);
+    //   }
+    // );
 
-    console.log(cart);
     this.cart.products = [];
     this.cartProducts = [];
     this.showPrice = false;
@@ -674,17 +674,17 @@ export class PosComponent implements OnInit {
 
   podRec(content) {
     this.modalService.open(content, { size: "xl" });
-    console.log(this.datasetRec);
+
     this.initGrid2();
   }
 
-  checkInventory(content) {
+  checkCloseInventory(content) {
     this.modalService.open(content, { size: "xl" });
   }
 
-  setInventory() {
+  setCloseInventory() {
     this.dataset.map((item) => {
-      console.log(item.tag_cnt_qty);
+      return (item.tag_cnt_qty = item.tag_cnt_qty);
     });
     this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
@@ -710,13 +710,13 @@ export class PosComponent implements OnInit {
       }
     );
   }
-  checkInventory2(content) {
+  checkOpenInventory2(content) {
     this.modalService.open(content, { size: "xl" });
   }
 
-  setInventory2() {
+  setOpenInventory2() {
     this.dataset.map((item) => {
-      return (item.ld_rev = "M");
+      return (item.ld_rev = "M"), (item.tag_cnt_qty = item.tag_cnt_qty);
     });
 
     this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
@@ -754,50 +754,40 @@ export class PosComponent implements OnInit {
     this.modalService.open(content, { size: "xl" });
   }
   getItemFromHistory(order) {
+    const elem: Cart = this.ordersHistory.find(
+      (item) => item.order_code === order.order_code
+    );
     this.posCategoryService
-      .getOneOrder({ order_code: order.order_code })
+      .getOneOrder({ order_code: elem.order_code })
       .subscribe((res: any) => {
-        this.cart = res.data;
-        this.showPrice = true;
         this.cartProducts = res.data.products;
       });
-  }
-
-  WodData() {
+    console.log(elem);
+    this.cart = elem;
     this.posCategoryService
-      .getWod({ wod_nbr: this.cart.code_cart })
+      .getWod({ wod_nbr: this.cart.order_code })
       .subscribe((res: any) => {
         this.workOrders = res.data.map((item) => {
           return item;
         });
-      });
-    this.workOrders.forEach((wo) => {
-      const d = {
-        tr_part: wo.wod_part,
-        tr_lot: wo.wod_lot,
-        tr_price: wo.wod_price,
-        tr_site: wo.wod_site,
-        tr_qty_loc: Number(wo.wod_qty_req),
-        tr_qty_chg: Number(wo.wod_qty_req),
-        tr_nbr: wo.wod_nbr,
-        tr_serial: null,
-        tr_loc: wo.wod_loc,
-        tr_um_conv: 1,
-      };
-      this.detail.push(d);
-    });
-    this.it = this.cart.created_date;
-  }
-
-  Sodata() {
-    this.posCategoryService
-      .getWod({ wod_nbr: this.cart.code_cart })
-      .subscribe((res: any) => {
-        this.salesOrder = res.data.map((item) => {
-          return item;
+        this.workOrders.forEach((wo) => {
+          const d = {
+            tr_part: wo.wod_part,
+            tr_lot: wo.wod_lot,
+            tr_price: wo.wod_price,
+            tr_site: wo.wod_site,
+            tr_qty_loc: Number(wo.wod_qty_req),
+            tr_qty_chg: Number(wo.wod_qty_req),
+            tr_nbr: wo.wod_nbr,
+            tr_serial: null,
+            tr_loc: wo.wod_loc,
+            tr_um_conv: 1,
+          };
+          this.detail.push(d);
         });
       });
-    this.salesOrder.forEach((so) => {
+
+    this.workOrders.forEach((so) => {
       const d = {
         tr_part: so.wod_part,
         tr_lot: so.wod_lot,
@@ -812,20 +802,27 @@ export class PosComponent implements OnInit {
       };
       this.detailSo.push(d);
     });
-    this.itSo = this.cart.created_date;
+    this.it = this.cart.created_date;
+    return this.detail;
   }
-  getValue1(ticket: any) {
-    console.log(ticket);
-    this.value1 = this.value1 + ticket;
-  }
-  getValue2(ticket: any) {
-    console.log(ticket);
-    this.value2 = this.value2 + ticket;
-  }
+
+  // Sodata() {
+  //   this.posCategoryService
+  //     .getWod({ wod_nbr: this.cart.code_cart })
+  //     .subscribe((res: any) => {
+  //       this.salesOrder = res.data.map((item) => {
+  //         return item;
+  //       });
+  //     });
+
+  //   this.itSo = this.cart.created_date;
+  // }
+
   paiement() {
-    this.WodData();
+    console.log("pssss", this.cartProducts);
+    console.log(this.workOrders);
     this.posCategoryService
-      .createIssWo({ detail: this.detail, it: this.it })
+      .createIssWo({ detail: this.detail, it: new Date() })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -849,9 +846,9 @@ export class PosComponent implements OnInit {
           this.loadingSubject.next(false);
         }
       );
-    this.Sodata();
+    console.log(this.detailSo);
     this.posCategoryService
-      .createIssSo({ detail: this.detailSo, it: this.itSo })
+      .createIssSo({ detail: this.detail, it: new Date() })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -874,10 +871,41 @@ export class PosComponent implements OnInit {
           );
           this.loadingSubject.next(false);
         }
-      );
+      ) &&
+      this.posCategoryService
+        .processTopaiement({
+          cart: this.cart,
+          type: "R",
+          user_site: this.user.usrd_site,
+        })
+        .subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+            this.layoutUtilsService.showActionNotification(
+              "Erreur verifier les informations",
+              MessageType.Create,
+              10000,
+              true,
+              true
+            );
+            this.loadingSubject.next(false);
+          },
+          () => {
+            this.layoutUtilsService.showActionNotification(
+              "Ajout avec succès",
+              MessageType.Create,
+              10000,
+              true,
+              true
+            );
+            this.loadingSubject.next(false);
+          }
+        );
+    console.log("pssss22222", this.cartProducts);
     this.detail = [];
-    this.it = null;
+    (this.workOrders = []), (this.detailSo = []), (this.it = null);
     this.cartProducts = [];
+    this.cart.products = [];
     this.showPrice = false;
   }
   time = new Observable<string>((observer: Observer<string>) => {
@@ -945,7 +973,10 @@ export class PosComponent implements OnInit {
 
     this.dataset = [];
     this.posCategoryService
-      .getAllProductInventory({ ld_site: this.user.usrd_site })
+      .getAllProductInventory({
+        ld_site: this.user.usrd_site,
+        ld_ref: "MP-ACTIF",
+      })
       .subscribe(
         (response: any) => (this.dataset = response.data),
         (error) => {
@@ -1112,126 +1143,6 @@ export class PosComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
       },
-      {
-        id: "bk_2000",
-        name: "Billet 2000",
-        field: "bk_2000",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_1000",
-        name: "Billet 1000",
-        field: "bk_1000",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_0500",
-        name: "Billet 500",
-        field: "bk_0500",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_0200",
-        name: "Billet 200",
-        field: "bk_0200",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_p200",
-        name: "Billet 200 p",
-        field: "bk_p200",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_p100",
-        name: "Billet 100 ",
-        field: "bk_p100",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_p050",
-        name: "Billet 50 p",
-        field: "bk_p050",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_p020",
-        name: "Billet 20 p",
-        field: "bk_p020",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_p010",
-        name: "Billet 10 p",
-        field: "bk_p010",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
-      {
-        id: "bk_p005",
-        name: "Billet 5 p",
-        field: "bk_p005",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
-      },
     ];
 
     this.gridOptions3 = {
@@ -1264,7 +1175,7 @@ export class PosComponent implements OnInit {
 
     this.dataset = [];
     this.posCategoryService
-      .getBank({ bk_user1: this.user.usrd_code })
+      .getBank({ bk_user1: this.user.usrd_site })
       .subscribe(
         (response: any) => (this.bank = response.data),
         (error) => {
@@ -1275,12 +1186,12 @@ export class PosComponent implements OnInit {
   }
 
   opBk(content) {
-    this.initGrid3();
     this.modalService.open(content, { size: "xl" });
     this.posCategoryService
-      .getBank({ bk_user1: this.user.usrd_code })
+      .getBank({ bk_user1: this.user.usrd_site })
       .subscribe((res: any) => {
         this.bank = res.data.map((item) => {
+          item.bk_balance = 0;
           return item;
         });
       });
@@ -1374,10 +1285,13 @@ export class PosComponent implements OnInit {
     this.bank = [];
   }
 
-  createCustomerForm() {
-    this.bkForm = this.formBuilder.group({
-      balance: "",
-      balance2: "",
+  createBkForm() {
+    this.bkForm = this.bkFb.group({
+      bk_code: "",
+      bk_balance: "",
     });
+  }
+  mouvementCaisse(content) {
+    this.modalService.open(content, { size: "lg" });
   }
 }
