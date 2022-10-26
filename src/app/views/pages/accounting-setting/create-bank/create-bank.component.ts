@@ -70,6 +70,7 @@ import {
     DeviseService,
     EntityService,
     TaxeService,
+    UsersService,
 } from "../../../../core/erp"
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
@@ -115,6 +116,11 @@ export class CreateBankComponent implements OnInit {
 
   error = false
 
+  users: []
+    columnDefinitionsuser: Column[] = []
+    gridOptionsuser: GridOption = {}
+    gridObjuser: any
+    angularGriduser: AngularGridInstance
   
   fieldcode = "";
 
@@ -190,6 +196,7 @@ export class CreateBankComponent implements OnInit {
       private bankService: BankService,
       private entityService: EntityService,
       private deviseService: DeviseService,
+      private usersService: UsersService,
       private cdr: ChangeDetectorRef,
       config: NgbDropdownConfig
   ) {
@@ -624,7 +631,10 @@ export class CreateBankComponent implements OnInit {
         bk_edft_acct: [{ value: this.bank.bk_edft_acct, disabled: !this.isExist }],
         bk_edft_sub: [{ value: this.bank.bk_edft_sub, disabled: !this.isExist }],
         bk_edft_cc: [{ value: this.bank.bk_edft_cc, disabled: !this.isExist }],
-         
+        
+        bk_userid: [{ value: this.bank.bk_userid, disabled: !this.isExist }],
+        user_name: [{ value: null, disabled: true }],
+        
 
 
       })
@@ -706,6 +716,7 @@ export class CreateBankComponent implements OnInit {
                   controls1.bk_edft_acct.enable()
                   controls1.bk_edft_sub.enable()
                   controls1.bk_edft_cc.enable()
+                  controls1.bk_userid.enable()
                  
                 }
               
@@ -880,7 +891,7 @@ export class CreateBankComponent implements OnInit {
       _bank.bk_edft_acct = controls.bk_edft_acct.value
       _bank.bk_edft_sub = controls.bk_edft_sub.value
       _bank.bk_edft_cc = controls.bk_edft_cc.value
-
+      _bank.bk_userid = controls.bk_userid.value
       return _bank
   }
 
@@ -1451,4 +1462,114 @@ export class CreateBankComponent implements OnInit {
     }
   
   
+
+    prepareGriduser() {
+      this.columnDefinitionsuser = [
+          {
+              id: "id",
+              name: "id",
+              field: "id",
+              sortable: true,
+              minWidth: 80,
+              maxWidth: 80,
+          },
+          {
+              id: "usrd_code",
+              name: "code user",
+              field: "usrd_code",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+          },
+          {
+              id: "usrd_name",
+              name: "nom",
+              field: "usrd_name",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+          },
+      ]
+
+      this.gridOptionsuser = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          enableFiltering: true,
+          autoEdit: false,
+          autoHeight: false,
+          frozenColumn: 0,
+          frozenBottom: true,
+          enableRowSelection: true,
+          enableCheckboxSelector: true,
+          checkboxSelector: {
+              // optionally change the column index position of the icon (defaults to 0)
+              // columnIndexPosition: 1,
+
+              // remove the unnecessary "Select All" checkbox in header when in single selection mode
+              hideSelectAllCheckbox: true,
+
+              // you can override the logic for showing (or not) the expand icon
+              // for example, display the expand icon only on every 2nd row
+              // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+          },
+          multiSelect: false,
+          rowSelectionOptions: {
+              // True (Single Selection), False (Multiple Selections)
+              selectActiveRow: true,
+          },
+      }
+
+      // fill the dataset with your data
+      this.usersService
+          .getAllUsers()
+          .subscribe((response: any) => (this.users = response.data))
+  }
+  openuser(content) {
+      this.prepareGriduser()
+      this.modalService.open(content, { size: "lg" })
+  }
+  handleSelectedRowsChangeduser(e, args) {
+    const controls = this.bankForm.controls
+    if (Array.isArray(args.rows) && this.gridObjuser) {
+        args.rows.map((idx) => {
+            const item = this.gridObjuser.getDataItem(idx)
+              controls.bk_userid.setValue(item.usrd_code || "")
+              controls.user_name.setValue(item.usrd_name || "")
+              
+            })
+    }
+}
+
+angularGridReadyuser(angularGrid: AngularGridInstance) {
+    this.angularGriduser = angularGrid
+    this.gridObjuser = (angularGrid && angularGrid.slickGrid) || {}
+}
+changeuser(){
+
+  const controls1 = this.bankForm.controls 
+  let usrd_code : any
+      usrd_code  = controls1.bk_userid.value
+  
+  
+this.usersService.getByOne({usrd_code}).subscribe((res:any)=>{
+    const {data} = res
+    console.log(res)
+    if (!data){ this.layoutUtilsService.showActionNotification(
+        "ce compte n'existe pas!",
+        MessageType.Create,
+        10000,
+        true,
+        true
+    )
+    this.error = true}
+    else {
+        this.error = false
+        controls1.user_name.setValue(data.usrd_name)
+    }
+
+
+},error=>console.log(error))
+}
+
 }
