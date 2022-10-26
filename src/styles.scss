@@ -16,9 +16,9 @@
 @import "./assets/sass/style.angular.scss";
 @import "./assets/sass/vendors/angular/material/angular-material";
 @import "./assets/sass/vendors/angular/material/include";
-// @import "./assets/css/style.bundle.css";
-// @import "./assets/plugins/custom/datatables/datatables.bundle.css";
-// @import "./assets/plugins/global1/plugins.bundle.css";
+@import "./assets/css/style.bundle.css";
+@import "./assets/plugins/custom/datatables/datatables.bundle.css";
+@import "./assets/plugins/global1/plugins.bundle.css";
 
 // Default Layout themes
 @import "./assets/sass/themes/layout/header/base/light.scss";

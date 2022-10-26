@@ -505,9 +505,9 @@ console.log(resp.data)
         },
       },
       {
-        id: "prod_qty",
-        name: "Qte Prévu",
-        field: "prod_qty",
+        id: "add_qty",
+        name: "Qte Ajoutée",
+        field: "add_qty",
         sortable: true,
         width: 50,
         filterable: false,
@@ -515,7 +515,22 @@ console.log(resp.data)
         editor: {
           model: Editors.float,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , prod_qty: Number(args.dataContext.ord_qty) + Number(args.dataContext.add_qty) })
+
+        }
       },
+      {
+        id: "prod_qty",
+        name: "Qte Prévu",
+        field: "prod_qty",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+       
+      },
+      
       
     ];
 
