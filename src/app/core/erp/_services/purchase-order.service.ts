@@ -34,6 +34,10 @@ export class PurchaseOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
     }
+    public getByStat(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findstat', data, { headers: httpHeaders })
+    }
     public getBySite(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findsite', data, { headers: httpHeaders })

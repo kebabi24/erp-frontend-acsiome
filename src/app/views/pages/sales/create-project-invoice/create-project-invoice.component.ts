@@ -824,7 +824,7 @@ error = false;
           if(controls.print.value == true)  this.printpdf(so) ;//printSO(this.customer, this.dataset, so);
           this.reset();
           this.loadingSubject.next(true);
-          this.router.navigateByUrl("/Sales/create-project-invoice");
+          this.router.navigateByUrl("/sales/create-project-invoice");
           
    //       this.dataset = [];
         }

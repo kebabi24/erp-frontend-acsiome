@@ -600,7 +600,7 @@ var j = 0
 
           if(controls.print.value == true) printIH(this.customer, iharray, ih,this.curr);
           this.reset()
-          this.router.navigateByUrl("/Sales/print-invoice");
+          this.router.navigateByUrl("/sales/print-invoice");
           this.reset()
         }
       );

@@ -1107,7 +1107,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
         const item = this.gridObj5.getDataItem(idx);
         controls.prh_nbr.setValue(item.po_nbr || "");
         const po_nbr = controls.prh_nbr.value;
-        this.purchaseOrderService.findBy({ po_nbr: item.po.po_nbr }).subscribe(
+        this.purchaseOrderService.findBy({ po_nbr: item.po_nbr }).subscribe(
           (res: any) => {
             const { purchaseOrder, details } = res.data;
             const det1 = details;
@@ -1213,7 +1213,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
       {
         id: "po_nbr",
         name: "N° BC",
-        field: "po.po_nbr",
+        field: "po_nbr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1221,7 +1221,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
       {
         id: "po_ord_date",
         name: "Date",
-        field: "po.po_ord_date",
+        field: "po_ord_date",
         sortable: true,
         filterable: true,
         type: FieldType.date,
@@ -1229,7 +1229,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
       {
         id: "po_vend",
         name: "Fournisseur",
-        field: "po.po_vend",
+        field: "po_vend",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1237,7 +1237,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
       {
         id: "po_status",
         name: "status",
-        field: "po.po_status",
+        field: "po_status",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1284,7 +1284,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
 
     // fill the dataset with your data
     this.purchaseOrderService
-      .getAll()
+      .getByStat({po_stat : "V"})
       .subscribe((response: any) => {
         console.log(response.data)
         this.pos = response.data });

@@ -750,7 +750,7 @@ var j = 0
   }
   console.log("hnahna", this.iharray)
           //if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
-          this.router.navigateByUrl("/Sales/create-invoice");
+          this.router.navigateByUrl("/sales/create-invoice");
           this.reset()
         }
       );

@@ -46,6 +46,10 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findAll`,data, { headers: httpHeaders })
     }
+    public getByAllSo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findAllso`,data, { headers: httpHeaders })
+    }
     public getAllwithDetail() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/allwithdetail', { headers: httpHeaders })
@@ -72,6 +76,9 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/So/${id}`,data, { headers: httpHeaders })
     }
-    
+    public updateSod(data:any,id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/Sod/${id}`,data, { headers: httpHeaders })
+    }
     // DELETE
 }

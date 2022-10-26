@@ -54,7 +54,7 @@ export class PsService {
         
     }
     // UPDATE
-    public update(id: Number, data:any) {
+    public update( data:any,id: String) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
     }
