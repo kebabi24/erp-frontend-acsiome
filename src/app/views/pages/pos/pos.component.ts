@@ -1731,4 +1731,8 @@ export class PosComponent implements OnInit {
         }
       );
   }
+
+  pEmp(content) {
+    this.modalService.open(content, { size: "xl" });
+  }
 }

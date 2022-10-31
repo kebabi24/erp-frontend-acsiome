@@ -76,19 +76,20 @@
                 >
                   Paiement marchandise
                 </button>
-                <button
-                  (click)="addClientModal(content17)"
-                  class="btn fw-bold btn-primary"
-                  style="background-color: #9e110d; font-size: large"
-                >
-                  Ajouter client
-                </button>
+
                 <button
                   (click)="podRec(content9)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
                 >
                   Réception commandes
+                </button>
+                <button
+                  (click)="pEmp(content18)"
+                  class="btn fw-bold btn-primary"
+                  style="background-color: #9e110d; font-size: large"
+                >
+                  Pointage des employés
                 </button>
                 <!-- <button class="btn btn-sm fw-bold btn-primary">
                       Réception autres
@@ -374,10 +375,13 @@
                       class="card card-flush"
                       style="background-color: #ffb701"
                     >
-                      <div class="form-group col-2 flex-row-auto">
-                        <label class="form-group">Entreprise:</label>
-
+                      <div class="flex-row" style="margin-top: 20px">
                         <span class="switch switch-icon">
+                          <label
+                            class="form-group"
+                            style="margin-left: 90px; margin-right: 10px"
+                            >Entreprise:</label
+                          >
                           <label>
                             <input
                               type="checkbox"
@@ -387,8 +391,16 @@
                             />
                             <span></span>
                           </label>
+                          <button
+                            (click)="addClientModal(content17)"
+                            class="btn fw-bold btn-primary"
+                            style="background-color: #9e110d; font-size: large"
+                          >
+                            Ajouter client
+                          </button>
                         </span>
                       </div>
+
                       <!--begin::Header-->
                       <!-- <div class="form-floating">
                           <input
@@ -2352,5 +2364,37 @@
         </button>
       </div>
     </ng-template>
+  </div>
+  <div>
+    <ng-template #content18 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Pointage des employés</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="c('Close click')"
+        >
+          Annuller
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="c('Close click')"
+        >
+          Ok
+        </button>
+      </div>
+    </ng-template>
+    <button
+      hidden
+      id="openItemsGrid"
+      class="btn btn-primary"
+      (click)="open4(content15)"
+    >
+      Launch demo modal
+    </button>
   </div>
 </body>
