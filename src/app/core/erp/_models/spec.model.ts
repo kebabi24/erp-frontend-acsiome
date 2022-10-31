@@ -6,4 +6,5 @@ export class Spec {
   isChecked: boolean;
   pt_bom_code: string;
   pt_price: number;
+  pt_net_wt: number;
 }
