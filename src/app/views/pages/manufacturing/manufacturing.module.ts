@@ -80,6 +80,8 @@ import { EditGammeComponent } from './edit-gamme/edit-gamme.component';
 import { EditWorkCenterComponent } from './edit-work-center/edit-work-center.component';
 import { ListWorkCenterComponent } from './list-work-center/list-work-center.component';
 import { AffectBomComponent } from './affect-bom/affect-bom.component';
+import { ListPsComponent } from './list-ps/list-ps.component';
+import { EditPsComponent } from './edit-ps/edit-ps.component';
 
 
 
@@ -135,6 +137,14 @@ const routes: Routes = [
     component: CreatePsComponent
   },
   {
+    path: 'list-ps',
+    component: ListPsComponent
+  },
+  {
+    path: 'edit-ps/:id',
+    component: EditPsComponent
+  },
+  {
     path: 'create-cause',
     component: CreateCauseComponent
   },
@@ -167,7 +177,7 @@ const routes: Routes = [
       CreateNomenclatureComponent, 
       CreateCauseComponent, 
       WorctEntryComponent, 
-      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent
+      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent
     ],
 
     imports: [

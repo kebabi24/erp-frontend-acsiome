@@ -489,9 +489,9 @@ export class CreatePsComponent implements OnInit {
    addIt( detail: any, it) {
     for (let data of detail) {
       delete data.id;
+      delete data.line
       delete data.desc;
       delete data.cmvid;
-     
     }
     this.loadingSubject.next(true);
     const controls = this.psForm.controls;
@@ -541,20 +541,12 @@ export class CreatePsComponent implements OnInit {
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
-        tr_line: this.dataset.length + 1,
-        tr_part: "",
+        line: this.dataset.length + 1,
+        ps_comp: "",
         cmvid: "",
         desc: "",
-        tr_qty_loc: 0,
-        tr_um: "",
-        tr_um_conv: 1,
-        tr_price: 0,
-        tr_site: "",
-        cmvids: "",
-        tr_loc: "",
-        tr_serial: null,
-        tr_status: null,
-        tr_expire: null,
+        ps_qty_req: 0,
+        
       },
       { position: "bottom" }
     );

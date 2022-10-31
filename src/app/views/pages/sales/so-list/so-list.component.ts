@@ -116,7 +116,7 @@ prepareGrid() {
       // use onCellClick OR grid.onClick.subscribe which you can see down below
       onCellClick: (e: Event, args: OnEventArgs) => {
           const id = args.dataContext.id
-          this.router.navigateByUrl(`/Sales/edit-so/${id}`)
+          this.router.navigateByUrl(`/sales/edit-so/${id}`)
       },
   },
     {

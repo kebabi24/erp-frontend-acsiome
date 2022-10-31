@@ -1153,7 +1153,7 @@ error = false;
           if(controls.print.value == true)  this.printpdf(so.so_nbr) // printSO(this.customer, this.dataset, so);
           this.reset();
           this.loadingSubject.next(true);
-          this.router.navigateByUrl("/Sales/create-direct-invoice");
+          this.router.navigateByUrl("/sales/create-direct-invoice");
           
    //       this.dataset = [];
         }

@@ -293,7 +293,7 @@ export class PaymentPshComponent implements OnInit {
           );
           this.loadingSubject.next(false);
           
-          this.router.navigateByUrl("/Sales/payment-psh");
+          this.router.navigateByUrl("/sales/payment-psh");
           this.reset()
         }
       );

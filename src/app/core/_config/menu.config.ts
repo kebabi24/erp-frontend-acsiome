@@ -539,6 +539,10 @@ export class MenuConfig {
                     icon: "flaticon-cart",
                     submenu: [
                         {
+                            title: "Vente Caisse",
+                            page: "/sales/sales-box",
+                        },
+                        {
                             title: "Offres Commerciales",
                             page: "/sales/create-quote",
                         },
@@ -717,6 +721,10 @@ export class MenuConfig {
                         {
 							title: 'Maint des Nomenclature',
 							page: '/manufacturing/create-ps',
+						},
+                        {
+							title: 'Liste des Nomenclature',
+							page: '/manufacturing/list-ps',
 						},
 						{
 							title: 'Déclaration Production',

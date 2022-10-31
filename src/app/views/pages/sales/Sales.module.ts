@@ -66,6 +66,7 @@ import { ConfirmSoComponent } from './confirm-so/confirm-so.component';
 import { EditSoComponent } from './edit-so/edit-so.component';
 import { CreateProjectInvoiceComponent } from './create-project-invoice/create-project-invoice.component';
 import { InputInvoiceComponent } from './input-invoice/input-invoice.component';
+import { SalesBoxComponent } from './sales-box/sales-box.component';
 
 const routes: Routes = [
     {
@@ -75,68 +76,73 @@ const routes: Routes = [
         // data: { moduleName: 'ecommerce' },
         children: [
        
-            {
-                path: "create-quote",
-                component: CreateQuoteComponent,
-            },
-            {
-                  path: "create-so",
-                component: CreatesaleorderComponent,
-            },
-            {
-                path: "so-list",
-              component: SoListComponent,
-            },
-            {
-              path: "edit-so/:id",
-              component: EditSoComponent,
+          {
+              path: "create-quote",
+              component: CreateQuoteComponent,
           },
-            {
-                path: "unblock-so",
-              component: UnblockSoComponent,
-            },
-            {
-                path: "confirm-so",
-              component: ConfirmSoComponent,
-            },
-            {
-                path: "create-psh",
-              component: CreatePshComponent,
-            },
-            {
-                path: "payment-psh",
-              component: PaymentPshComponent,
-            },
-        
-            {
-                path: "create-invoice",
-              component: CreateInvoiceComponent,
-            },
+          {
+                path: "create-so",
+              component: CreatesaleorderComponent,
+          },
+          {
+              path: "so-list",
+            component: SoListComponent,
+          },
+          {
+            path: "edit-so/:id",
+            component: EditSoComponent,
+          },
+          {
+              path: "unblock-so",
+            component: UnblockSoComponent,
+          },
+          {
+              path: "confirm-so",
+            component: ConfirmSoComponent,
+          },
+          {
+              path: "create-psh",
+            component: CreatePshComponent,
+          },
+          {
+              path: "payment-psh",
+            component: PaymentPshComponent,
+          },
+      
+          {
+              path: "create-invoice",
+            component: CreateInvoiceComponent,
+          },
 
-            {
-                path: "create-direct-invoice",
-              component: CreateDirectInvoiceComponent,
-            },
-            {
-              path: "create-project-invoice",
-              component: CreateProjectInvoiceComponent,
-            },
-          
-            {
-                path: "print-invoice",
-              component: PrintInvoiceComponent,
-            },
-            {
-              path: "input-invoice",
-            component: InputInvoiceComponent,
+          {
+              path: "create-direct-invoice",
+            component: CreateDirectInvoiceComponent,
           },
+          {
+            path: "create-project-invoice",
+            component: CreateProjectInvoiceComponent,
+          },
+        
+          {
+              path: "print-invoice",
+            component: PrintInvoiceComponent,
+          },
+          {
+            path: "input-invoice",
+          component: InputInvoiceComponent,
+          },
+          {
+            path: "sales-box",
+          component: SalesBoxComponent,
+          },
+
           
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, SalesBoxComponent],
     imports: [
         CommonModule,
         HttpClientModule,

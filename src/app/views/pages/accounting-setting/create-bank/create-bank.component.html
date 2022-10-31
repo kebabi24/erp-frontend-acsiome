@@ -679,7 +679,35 @@
 
                                 </div>
                                 
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                       
+                                        <label class="form-group "> Utilisateur:</label>
+                                        
+                                        <div class="input-group input-group-sm">
 
+                                            <input type="text" class="form-control form-control-solid" (change)="changeuser()"
+                                                aria-describedby="basic-addon2" formControlName="bk_userid">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="openuser(contentuser)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                       
+                                        <label class="form-group "> Nom:</label>
+                                        
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" formControlName="user_name">
+                                           
+                                        </div>        
+                                    </div>
+                                    
+                                </div>
                             </form>
                         </ng-template>
                     </ngb-tab>
@@ -819,5 +847,29 @@
                 </div>
             </ng-template>
         </div>
+        <div>
+            <ng-template #contentuser let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Utilisateur</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridUser"
+                            [columnDefinitions]="columnDefinitionsuser" (onAngularGridCreated)="angularGridReadyuser($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangeduser($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsuser" [dataset]="users">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
     </kt-portlet-body>
 </kt-portlet>
