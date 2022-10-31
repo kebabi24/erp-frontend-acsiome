@@ -1,7 +1,7 @@
 import { Product } from "./pos-products.model";
 export class Cart {
   id: Number;
-  order_code: string;
+  order_code?: string;
   products: Array<Product>;
   usrd_site: string;
   order_emp: string;

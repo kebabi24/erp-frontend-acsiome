@@ -30,6 +30,8 @@ const API_URL_SEQ = environment.apiUrl + "/sequences";
 const API_URL_PO = environment.apiUrl + "/purchase-orders";
 const API_URL_PR = environment.apiUrl + "/purchase-receives";
 const API_URL_BK = environment.apiUrl + "/banks";
+const API_URL_CUSTOMER = environment.apiUrl + "/customers";
+
 @Injectable()
 export class PosCategoryService {
   httpOptions = this.httpUtils.getHTTPHeaders();
@@ -45,6 +47,13 @@ export class PosCategoryService {
   public addOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(API_URL_ORDER, data, { headers: httpHeaders });
+  }
+
+  public addPo(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_PO}/createposunp`, data, {
+      headers: httpHeaders,
+    });
   }
   // READ
   public getAll() {
@@ -67,6 +76,12 @@ export class PosCategoryService {
   public getAllProducts() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL_ITEMS, { headers: httpHeaders });
+  }
+  public getSomeProducts(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ITEMS}/find`, data, {
+      headers: httpHeaders,
+    });
   }
 
   public getOneProduct(data: any) {
@@ -145,6 +160,13 @@ export class PosCategoryService {
     });
   }
 
+  public getItem(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ITEMS}/find`, data, {
+      headers: httpHeaders,
+    });
+  }
+
   public getByOne(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/findOne`, data, { headers: httpHeaders });
@@ -217,6 +239,14 @@ export class PosCategoryService {
   public checkInventory(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
 
+    return this.http.post(`${API_URL_INV}/cyc-rcnt`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public checkInventory2(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
     return this.http.post(`${API_URL_INV}/cyc-cnt`, data, {
       headers: httpHeaders,
     });
@@ -242,6 +272,21 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
 
     return this.http.post(`${API_URL_BK}/bk`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public createFRequest(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_BK}/createFRequest`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public createCustomer(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL_CUSTOMER}/cmPos`, data, {
       headers: httpHeaders,
     });
   }

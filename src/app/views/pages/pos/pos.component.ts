@@ -48,7 +48,11 @@ import {
   styleUrls: ["./pos.component.scss"],
 })
 export class PosComponent implements OnInit {
+  item: any;
+  row_number;
   bkForm: FormGroup;
+  mvForm: FormGroup;
+  customerForm: FormGroup;
   bk: any;
   hasFormErrors = false;
   inventory: PosInventory;
@@ -85,8 +89,8 @@ export class PosComponent implements OnInit {
   sizeProduct: string = "Classic";
   PosInventory: PosInventory;
   secondFormule: string;
-  row_number;
   angularGrid: AngularGridInstance;
+  angularGrid4: AngularGridInstance;
   grid: any;
   gridService: GridService;
   dataView: any;
@@ -98,8 +102,13 @@ export class PosComponent implements OnInit {
   gridOptions3: GridOption;
   columnDefinitions4: Column[];
   gridOptions4: GridOption;
+  columnDefinitions5: Column[];
+  gridOptions5: GridOption;
   dataset: any[];
+  dataset5: any[];
+  items: any[];
   gridObj: any;
+  gridObj4: any;
   ordersHistory: Array<Cart> = [];
   showSize: boolean = false;
   showSupp: boolean = false;
@@ -125,13 +134,17 @@ export class PosComponent implements OnInit {
   chooseCaisse: boolean;
   inventoryTabcaisse: any[] = [];
   regie: boolean = false;
-  value1: any;
+  value1: boolean = false;
   value2: any;
+  cartAmount: number = 0;
+  bk_type: any;
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
     private modalService: NgbModal,
     private bkFb: FormBuilder,
+    private mvFb: FormBuilder,
+    private customerFb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private InventoryFB: FormBuilder,
     private router: Router,
@@ -218,7 +231,10 @@ export class PosComponent implements OnInit {
 
     this.initGrid();
     this.initGrid3();
+    this.initGrid4();
     this.createBkForm();
+    this.createMvForm();
+    this.createCustomerForm();
     // this.initGrid2();
   }
 
@@ -257,7 +273,7 @@ export class PosComponent implements OnInit {
     );
     this.addProductBtn = true;
     this.sizeOfProduct.map((item) => {
-      if (item.pt_group != null) {
+      if (item.pt_group != "Libanais" || "Gyros" || "Pita") {
         this.showSize = true;
       } else {
         this.prepareProductWithoutSize(productOnlist);
@@ -276,7 +292,9 @@ export class PosComponent implements OnInit {
     this.currentItem = this.sizeOfProduct.find(
       (item) => item.pt_draw === productOnlist.code_value
     );
+    console.log("hhh");
     this.addProductBtn = true;
+
     this.currentItem = {
       id: this.currentItem.id,
       pt_part: this.currentItem.pt_part,
@@ -318,15 +336,17 @@ export class PosComponent implements OnInit {
     };
   }
   setSauce(sauce: any) {
-    this.showSupp = true;
-
+    this.currentItem.pt_formule == false && (this.showSupp = true);
+    this.currentItem &&
+      this.currentItem.pt_formule == true &&
+      (this.showSoda = true) &&
+      (this.showSupp = false);
     this.currentItem && this.currentItem.sauces.push(sauce);
     // console.log(this.currentItem);
   }
   setSupplement(suppliment: any) {
-    this.currentItem &&
-      this.currentItem.pt_formule == true &&
-      (this.showSoda = true);
+    console.log(suppliment);
+
     this.currentItem && this.currentItem.suppliments.push(suppliment);
     // console.log(this.currentItem.sauces);
   }
@@ -346,7 +366,7 @@ export class PosComponent implements OnInit {
 
   setSoda() {
     this.currentItem &&
-      this.currentItem.pt_formula == true &&
+      this.currentItem.pt_formule == true &&
       (this.showSoda = true);
   }
 
@@ -355,13 +375,14 @@ export class PosComponent implements OnInit {
       (item) => item.pt_draw === so.code_value
     );
     this.showListOfSoda = true;
+    // this.showSupp = true;
   }
 
   open(content) {
     this.modalService.open(content, { size: "xl" });
   }
   open2(content) {
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "sm" });
   }
 
   customizeProduct(content): void {
@@ -434,7 +455,7 @@ export class PosComponent implements OnInit {
     this.ingredients.map((item) => {
       item.isChecked = true;
     });
-    this.subtotalPrice = this.calculateSubTotal();
+    this.cartAmount = this.calculateSubTotal();
     this.currentItem.suppliments = [];
     this.currentItem.ingredients = [];
     this.productInCartPrice = 0;
@@ -509,8 +530,8 @@ export class PosComponent implements OnInit {
         Number(product.pt_price) - Number(product.pt_price) / product.pt_qty;
       product.pt_qty = product.pt_qty - 1;
     }
-    this.subtotalPrice = this.calculateSubTotal();
-    this.cart.total_price = this.subtotalPrice;
+    this.cartAmount = this.calculateSubTotal();
+    this.cart.total_price = this.cartAmount;
     this.cart.products.length === 0 && (this.showPrice = false);
   }
 
@@ -524,8 +545,8 @@ export class PosComponent implements OnInit {
         item.pt_qty = productCart.pt_qty + 1;
       }
     });
-    this.subtotalPrice = this.calculateSubTotal();
-    this.cart.total_price = this.subtotalPrice;
+    this.cartAmount = this.calculateSubTotal();
+    this.cart.total_price = this.cartAmount;
   }
 
   calculateSubTotal() {
@@ -543,9 +564,9 @@ export class PosComponent implements OnInit {
       order_emp: this.loclocOrder,
       customer: "particulier",
       status: "N",
-      total_price: this.subtotalPrice,
+      total_price: this.cartAmount,
 
-      usrd_site: this.user.usrd_site,
+      usrd_site: this.user.usrd_user_name,
     };
 
     this.posCategoryService.addOrder({ cart }).subscribe(
@@ -684,9 +705,9 @@ export class PosComponent implements OnInit {
 
   setCloseInventory() {
     this.dataset.map((item) => {
-      return (item.tag_cnt_qty = item.tag_cnt_qty);
+      return (item.ld_rev = "M"), (item.tag_cnt_qty = item.tag_cnt_qty);
     });
-    this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
+    this.posCategoryService.checkInventory2({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(
@@ -714,11 +735,15 @@ export class PosComponent implements OnInit {
     this.modalService.open(content, { size: "xl" });
   }
 
-  setOpenInventory2() {
-    this.dataset.map((item) => {
-      return (item.ld_rev = "M"), (item.tag_cnt_qty = item.tag_cnt_qty);
-    });
+  openModal(content) {
+    this.modalService.open(content, { size: "sm" });
+  }
 
+  setOpenInventory2() {
+    this.value1 = true;
+    this.dataset.map((item) => {
+      return (item.tag_cnt_qty = item.tag_cnt_qty);
+    });
     this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
@@ -761,7 +786,9 @@ export class PosComponent implements OnInit {
       .getOneOrder({ order_code: elem.order_code })
       .subscribe((res: any) => {
         this.cartProducts = res.data.products;
+        this.cartAmount = res.data.total_price;
       });
+    console.log(this.cartProducts);
     console.log(elem);
     this.cart = elem;
     this.posCategoryService
@@ -876,7 +903,7 @@ export class PosComponent implements OnInit {
         .processTopaiement({
           cart: this.cart,
           type: "R",
-          user_site: this.user.usrd_site,
+          user_site: this.user.usrd_user_name,
         })
         .subscribe(
           (reponse) => console.log("response", Response),
@@ -917,6 +944,11 @@ export class PosComponent implements OnInit {
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
+  }
+
+  gridReady4(angularGrid: AngularGridInstance) {
+    this.angularGrid4 = angularGrid;
+    this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
   }
 
   initGrid() {
@@ -975,7 +1007,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService
       .getAllProductInventory({
         ld_site: this.user.usrd_site,
-        ld_ref: "MP-ACTIF",
+        ld_ref: "MP",
       })
       .subscribe(
         (response: any) => (this.dataset = response.data),
@@ -1082,6 +1114,161 @@ export class PosComponent implements OnInit {
       );
   }
 
+  initGrid5() {
+    this.columnDefinitions5 = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.angularGrid.gridService.deleteItem(args.dataContext);
+          }
+        },
+      },
+      {
+        id: "pt_part",
+        name: "Désignation",
+        field: "pt_part",
+        sortable: true,
+        width: 50,
+        filterable: false,
+      },
+      {
+        id: "pt_desc",
+        name: "Article",
+        field: "pt_desc",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.pt_part);
+          this.posCategoryService
+            .getItem({ pt_part: args.dataContext.pt_part })
+            .subscribe((resp: any) => {
+              if (resp.data) {
+                this.gridService.updateItemById(args.dataContext.id, {
+                  ...args.dataContext,
+                  pt_part: resp.data.pt_part,
+                  pt_price: resp.data.pt_price,
+                  pt_vend: resp.data.pt_vend,
+                });
+              } else {
+                alert("Article Nexiste pas");
+                this.gridService.updateItemById(args.dataContext.id, {
+                  ...args.dataContext,
+                  pt_part: null,
+                });
+              }
+            });
+        },
+      },
+      {
+        id: "mvid",
+        field: "cmvid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          let element: HTMLElement = document.getElementById(
+            "openItemsGrid"
+          ) as HTMLElement;
+          element.click();
+        },
+      },
+      {
+        id: "pt_ord_qty",
+        name: "Quantité",
+        field: "pt_ord_qty",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.pt_ord_qty);
+        },
+      },
+      {
+        id: "pt_price",
+        name: "Prix d'achat",
+        field: "pt_price",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.pt_price);
+        },
+      },
+      {
+        id: "pt_vend",
+        name: "Fournisseur",
+        field: "pt_vend",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        editor: {
+          model: Editors.text,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.pt_vend);
+        },
+      },
+    ];
+
+    this.gridOptions5 = {
+      asyncEditorLoading: false,
+
+      editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      formatterOptions: {
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: true,
+
+        // Defaults to undefined, minimum number of decimals
+        minDecimal: 2,
+
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: " ", // can be any of ',' | '_' | ' ' | ''
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    this.dataset5 = [];
+    this.posCategoryService
+      .getPoRec({ pod_site: this.user.usrd_site })
+      .subscribe(
+        (response: any) => (this.dataset5 = response.detail),
+        (error) => {
+          this.dataset5 = [];
+        },
+        () => {}
+      );
+  }
+
   podRecRec() {
     this.datasetRec.map((item) => {
       return (item.pod_qty_rcvd = item.pod_qty_rcvd);
@@ -1175,7 +1362,7 @@ export class PosComponent implements OnInit {
 
     this.dataset = [];
     this.posCategoryService
-      .getBank({ bk_user1: this.user.usrd_site })
+      .getBank({ bk_user1: this.user.usrd_user_name })
       .subscribe(
         (response: any) => (this.bank = response.data),
         (error) => {
@@ -1185,10 +1372,105 @@ export class PosComponent implements OnInit {
       );
   }
 
+  initGrid4() {
+    this.columnDefinitions4 = [
+      {
+        id: "pt_part",
+        name: "code article",
+        field: "pt_part",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "pt_desc1",
+        name: "description article",
+        field: "pt_desc1",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "pt_price",
+        name: "prix d'achat",
+        field: "pt_price",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+    ];
+
+    this.gridOptions4 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    this.dataset = [];
+    this.posCategoryService.getSomeProducts({ pt_buyer: "REC" }).subscribe(
+      (response: any) => (this.items = response.data),
+      (error) => {
+        this.dataset = [];
+      },
+      () => {}
+    );
+  }
+  open4(content) {
+    this.modalService.open(content, { size: "lg" });
+
+    this.initGrid4();
+  }
+
+  handleSelectedRowsChanged4(e, args) {
+    console.log(args.rows);
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    console.log(updateItem);
+    if (Array.isArray(args.rows) && this.gridObj4) {
+      args.rows.map((idx) => {
+        const item = this.gridObj4.getDataItem(idx);
+        console.log(item);
+
+        this.posCategoryService
+          .getItem({ pt_part: item.pt_part, pt_site: item.pt_site })
+          .subscribe((response: any) => {
+            this.item = response.data;
+            updateItem.pt_part = item.pt_part;
+            updateItem.pt_desc = item.pt_desc1;
+            updateItem.pt_price = item.pt_price;
+            updateItem.pt_vend = item.pt_vend;
+            this.gridService.updateItem(updateItem);
+            console.log(response.data);
+          });
+      });
+    }
+  }
   opBk(content) {
     this.modalService.open(content, { size: "xl" });
     this.posCategoryService
-      .getBank({ bk_user1: this.user.usrd_site })
+      .getBank({ bk_user1: this.user.usrd_user_name })
       .subscribe((res: any) => {
         this.bank = res.data.map((item) => {
           item.bk_balance = 0;
@@ -1214,7 +1496,7 @@ export class PosComponent implements OnInit {
       );
     });
     this.posCategoryService
-      .createBkBkh({ detail: this.bank, type: "INV-D" })
+      .createBkBkh({ detail: this.bank, type: "O" })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1258,7 +1540,7 @@ export class PosComponent implements OnInit {
       );
     });
     this.posCategoryService
-      .createBkBkh({ detail: this.bank, type: "INV-F" })
+      .createBkBkh({ detail: this.bank, type: "C" })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1291,7 +1573,162 @@ export class PosComponent implements OnInit {
       bk_balance: "",
     });
   }
+  createMvForm() {
+    this.mvForm = this.mvFb.group({
+      mv_cause: "",
+      mv_amt: "",
+    });
+  }
+  createCustomerForm() {
+    this.customerForm = this.customerFb.group({
+      customer_code: "",
+      customer_name: "",
+      customer_addr: "",
+      customer_phone_one: 0,
+      customer_birthday: "",
+    });
+  }
   mouvementCaisse(content) {
     this.modalService.open(content, { size: "lg" });
+    this.initGrid5();
+  }
+
+  addNewItem(elem) {
+    console.log(elem);
+    this.gridService.addItem(
+      {
+        id: this.dataset5.length + 1,
+        pt_line: this.dataset5.length + 1,
+      },
+      { position: "bottom" }
+    );
+  }
+  selectOption(id: number) {
+    //getted from event
+    console.log(id);
+    //getted from binding
+    console.log(this.bk_type);
+  }
+
+  PlanPOD() {
+    this.posCategoryService
+      .addPo({ Site: this.user.usrd_site, purchaseOrder: this.dataset5 })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+  }
+  mvBank(content) {
+    this.modalService.open(content, { size: "xl" });
+  }
+
+  addClientModal(content) {
+    this.modalService.open(content, { size: "xl" });
+  }
+  prepareMv(): any {
+    const controls = this.mvForm.controls;
+    const _mv = {
+      mv_cause: "",
+      mv_amt: 0,
+    };
+    _mv.mv_cause = controls.mv_cause.value;
+    _mv.mv_amt = controls.mv_amt.value;
+
+    return _mv;
+  }
+
+  prepareCustomer(): any {
+    const controls = this.customerForm.controls;
+    const _customer = {
+      customer_code: "",
+      customer_name: "",
+      customer_addr: "",
+      customer_phone_one: 0,
+      customer_birthday: "",
+    };
+    _customer.customer_code = controls.customer_code.value;
+    _customer.customer_name = controls.customer_name.value;
+    _customer.customer_addr = controls.customer_addr.value;
+    _customer.customer_phone_one = controls.customer_phone_one.value;
+    _customer.customer_birthday = controls.customer_birthday.value;
+
+    return _customer;
+  }
+
+  onSubmitCustomer() {
+    const customer = this.prepareCustomer();
+
+    this.posCategoryService.createCustomer({ customer }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+
+  onSubmitMv() {
+    const mv = this.prepareMv();
+    console.log(mv);
+    this.posCategoryService
+      .createFRequest({ mv, type: "D", user_site: this.user.usrd_user_name })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
   }
 }
