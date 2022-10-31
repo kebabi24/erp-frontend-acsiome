@@ -1844,30 +1844,7 @@ export class PosComponent implements OnInit {
         .subscribe((response: any) => (this.emps = response.data))
   }
 
-  handleSelectedRowsChanged18(e, args) {
-    console.log(args.rows);
-    let updateItem = this.gridService18.getDataItemByRowIndex(this.row_number);
-    console.log(updateItem);
-    if (Array.isArray(args.rows) && this.gridObj18) {
-      args.rows.map((idx) => {
-        const item = this.gridObj18.getDataItem(idx);
-        console.log(item);
-
-        // this.posCategoryService
-        //   .getItem({ pt_part: item.pt_part, pt_site: item.pt_site })
-        //   .subscribe((response: any) => {
-        //     this.item = response.data;
-        //     updateItem.pt_part = item.pt_part;
-        //     updateItem.pt_desc = item.pt_desc1;
-        //     updateItem.pt_price = item.pt_price;
-        //     updateItem.pt_vend = item.pt_vend;
-        //     this.gridService.updateItem(updateItem);
-        //     console.log(response.data);
-        //   });
-      });
-    }
-  }
-
+  
   onSubmitEmpTime(){
     this.employeService
       .addTime({ empDetails: this.emps })
