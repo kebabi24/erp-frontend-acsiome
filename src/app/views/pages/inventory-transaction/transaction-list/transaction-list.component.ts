@@ -14,6 +14,7 @@ import {
   Filters,
   Formatters,
   FlatpickrOption,
+  GridService,
   GridOption,
   Grouping,
   GroupingGetterFunction,
@@ -75,12 +76,14 @@ export class TransactionListComponent implements OnInit {
   angularGrid: AngularGridInstance;
 
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
-  gridObj: any;
-  dataviewObj: any;
+  grid: any;
+  gridService: GridService;
+  dataview: any;
   tr_type: any[] = [];
   
   elem: any[] = [];
   tab: any[] = [] ;
+  datefilter: any;
   constructor(
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
@@ -113,14 +116,19 @@ export class TransactionListComponent implements OnInit {
   
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
-    this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataviewObj = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid; // grid object
+    this.dataview = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
   }
   prepareGrid() {
 
 
- 
-  
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate();
+ this.datefilter =  String(currentYear) + '-' + String(currentMonth) + '-' + '01'
+
       this.columnDefinitions = [
           
           {
@@ -260,17 +268,17 @@ export class TransactionListComponent implements OnInit {
               collapsed: false,
             }
           }, 
-          {
-            id: 'finish', name: 'Finish', field: 'tr_effdate', nameKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
-            type: FieldType.date,
-            filterable: true,
-            filter: {
-              model: Filters.dateRange,
+          // {
+          //   id: 'finish', name: 'Finish', field: 'tr_effdate', nameKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
+          //   type: FieldType.date,
+          //   filterable: true,
+          //   filter: {
+          //     model: Filters.dateRange,
     
-              // override any of the Flatpickr options through "filterOptions"
-             // editorOptions: { minDate: 'today' } as FlatpickrOption
-            }
-          },
+          //     // override any of the Flatpickr options through "filterOptions"
+          //    // editorOptions: { minDate: 'today' } as FlatpickrOption
+          //   }
+          // },
           {
             id: "tr_effdate",
             name: "Date Effet",
@@ -288,7 +296,7 @@ export class TransactionListComponent implements OnInit {
             filterable: true,
             filter: {
               model: Filters.dateRange,
-    
+              operator: 'RangeInclusive',
               // override any of the Flatpickr options through "filterOptions"
               //editorOptions: { minDate: 'today' } as FlatpickrOption
             },
@@ -313,10 +321,7 @@ export class TransactionListComponent implements OnInit {
     //        filterable: true,
             filter: {
               model: Filters.dateRange,
-              filterOptions: {
-                minDate: 'today'
-              } as FlatpickrOption
-
+             
               // override any of the Flatpickr options through "filterOptions"
           //    editorOptions: { minDate: 'today' } as FlatpickrOption
             },
@@ -427,10 +432,25 @@ export class TransactionListComponent implements OnInit {
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
+        autoHeight: false,
         enableSorting: true,
         exportOptions: {
           sanitizeDataExport: true
         },
+        presets: {
+          filters: [
+           
+            // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
+            { columnId: 'tr_effdate', operator: '>=', searchTerms: [this.datefilter] },
+            // { columnId: 'effort-driven', searchTerms: [true] },
+          ],
+          // sorters: [
+          //   { columnId: 'duration', direction: 'DESC' },
+          //   { columnId: 'complete', direction: 'ASC' }
+          // ],
+        },
+       
+     
         gridMenu: {
           onCommand: (e, args) => {
             if (args.command === 'toggle-preheader') {
@@ -466,7 +486,8 @@ export class TransactionListComponent implements OnInit {
     this.dataset = []
     this.inventoryTransactionService.getAll().subscribe(
       
-        (response: any) => (this.dataset = response.data),
+        (response: any) => {this.dataset = response.data
+          this.dataview.setItems(this.dataset)},
         
         (error) => {
             this.dataset = []
@@ -493,17 +514,17 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
   }
   
   collapseAllGroups() {
-    this.dataviewObj.collapseAllGroups();
+    this.dataview.collapseAllGroups();
   }
 
   expandAllGroups() {
-    this.dataviewObj.expandAllGroups();
+    this.dataview.expandAllGroups();
   }
   clearGrouping() {
     if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.draggableGroupingPlugin.clearDroppedGroups();
     }
-    this.gridObj.invalidate(); // invalidate all rows and re-render
+    this.grid.invalidate(); // invalidate all rows and re-render
   }
 
 

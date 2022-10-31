@@ -543,6 +543,10 @@ export class MenuConfig {
                             page: "/sales/sales-box",
                         },
                         {
+                            title: "Rapport Journalier",
+                            page: "/sales/dayly-site-trans",
+                        },
+                        {
                             title: "Offres Commerciales",
                             page: "/sales/create-quote",
                         },

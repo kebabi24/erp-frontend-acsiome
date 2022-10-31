@@ -1,0 +1,56 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Rapport Journalier" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="poForm">
+                <div class="row">
+                    
+                    <div class="form-group col-2" align="right" >
+                        <label class="form-group">Date de Calcul:</label>
+                        <div class="input-group input-group-sm" align="right" >
+                            <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" (change)="change()"
+                                 placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f
+                                #calc_date="ngbDatepicker"  (ngModelChange)= "change()" >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="calc_date.toggle()"  type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+                </div> 
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                    </angular-slickgrid>
+                </div>
+                <br>
+             
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="mGrid"
+                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                        (onAngularGridCreated)="gridReady($event)">
+                    </angular-slickgrid>
+                </div>
+            </form>
+           
+        </div>
+
+       
+
+       
+        
+    </kt-portlet-body>
+</kt-portlet>

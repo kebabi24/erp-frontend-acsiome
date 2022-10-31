@@ -11,6 +11,7 @@ import {
   FieldType,
   FileType,
   Filters,
+  GridService,
   Formatters,
   GridOption,
   Grouping,
@@ -44,6 +45,11 @@ import { EmployeService} from "../../../../core/erp"
   styleUrls: ['./list-employe.component.scss']
 })
 export class ListEmployeComponent implements OnInit {
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+  angularGrid: AngularGridInstance;
+  draggableGroupingPlugin: any;    
   columnDefinitions: Column[] = []
     gridOptions: GridOption = {}
     dataset: any[] = []
@@ -60,7 +66,12 @@ export class ListEmployeComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    
+    angularGridReady(angularGrid: AngularGridInstance) {
+      this.angularGrid = angularGrid;
+      this.grid = angularGrid.slickGrid; // grid object
+      this.dataview = angularGrid.dataView;
+      this.gridService = angularGrid.gridService;
+    }
     prepareGrid() {
         this.columnDefinitions = [
             {
@@ -220,7 +231,7 @@ export class ListEmployeComponent implements OnInit {
             enableExcelCopyBuffer: true,
             enableFiltering: true,
             autoEdit: false,
-            autoHeight: false,
+            autoHeight: true,
             frozenColumn: 0,
             frozenBottom: true,
         }
@@ -228,7 +239,8 @@ export class ListEmployeComponent implements OnInit {
         // fill the dataset with your data
         this.dataset = []
         this.employeService.getAll().subscribe(
-            (response: any) => (this.dataset = response.data),
+            (response: any) => {this.dataset = response.data
+              this.dataview.setItems(this.dataset)},
             (error) => {
                 this.dataset = []
             },

@@ -52,7 +52,7 @@ import { QuoteService, UsersService, ItemService, CodeService, TaxeService, Sale
          SaleShiperService,CustomerService,SequenceService, SiteService,LocationService, MesureService,
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
-         ConfigService, PayMethService, InvoiceOrderTempService} from '../../../core/erp';
+         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService} from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -67,6 +67,7 @@ import { EditSoComponent } from './edit-so/edit-so.component';
 import { CreateProjectInvoiceComponent } from './create-project-invoice/create-project-invoice.component';
 import { InputInvoiceComponent } from './input-invoice/input-invoice.component';
 import { SalesBoxComponent } from './sales-box/sales-box.component';
+import { DaylySiteTransComponent } from './dayly-site-trans/dayly-site-trans.component';
 
 const routes: Routes = [
     {
@@ -80,6 +81,10 @@ const routes: Routes = [
               path: "create-quote",
               component: CreateQuoteComponent,
           },
+          {
+            path: "dayly-site-trans",
+            component: DaylySiteTransComponent,
+        },
           {
                 path: "create-so",
               component: CreatesaleorderComponent,
@@ -142,7 +147,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, SalesBoxComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, SalesBoxComponent, DaylySiteTransComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -202,6 +207,7 @@ const routes: Routes = [
         PayMethService,
         ProductLineService,
         InvoiceOrderTempService,
+        PosCategoryService,
     ],
 
     entryComponents: [
