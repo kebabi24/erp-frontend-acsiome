@@ -106,7 +106,7 @@ export class PosComponent implements OnInit {
   grid18: any;
   gridService18: GridService;
   dataView18: any;
-
+  lists: any[] = [];
   columnDefinitions: Column[];
   columnDefinitions2: Column[];
   gridOptions: GridOption;
@@ -281,6 +281,8 @@ export class PosComponent implements OnInit {
     this.showSauces = false;
     this.showSoda = false;
     this.showListOfSoda = false;
+    this.showListOfBrands = false;
+    this.lists = [];
     this.selectedProducts = this.families.filter(
       (item) => item.code_cmmt === category.category_code
     );
@@ -308,6 +310,9 @@ export class PosComponent implements OnInit {
     this.sizeOfProduct = this.AllProducts.filter(
       (item) => item.pt_draw === productOnlist.code_value
     );
+    for (let i = 0; i <= 2; i = i + 1) {
+      this.lists.push(this.sizeOfProduct[i]);
+    }
     this.addProductBtn = true;
     this.sizeOfProduct.map((item) => {
       if (item.pt_group != "Libanais" || "Gyros" || "Pita") {
