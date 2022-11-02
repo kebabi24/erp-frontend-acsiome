@@ -148,10 +148,10 @@
                 </div>
                 <div class="col-6" style="margin-top: 15px">
                   <div
-                    class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                    class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                   >
                     <button
-                      class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                      class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                       *ngFor="let productOnlist of selectedProducts"
                       type="button"
                       data-bs-toggle="pill"
@@ -251,7 +251,7 @@
                         class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           *ngFor="let suppliment of suppliments"
                           type="button"
                           data-bs-toggle="pill"
@@ -712,7 +712,6 @@
                                 #discount
                                 id="discount"
                                 name="discount"
-                                (change)="onChangeDiscount()"
                               />
                               <label for="floatingInputValue"
                                 >Numéro carte de fidélité
@@ -2406,33 +2405,22 @@
       <div class="modal-header">
         <h4 class="modal-title">Pointage des employés</h4>
       </div>
-      <div class="modal-body">
-        <div class="row">
-          <angular-slickgrid
-            class="col-12"
-            gridHeight="500"
-            gridId="empGrid"
-            [columnDefinitions]="columnDefinitions18"
-            [gridOptions]="gridOptions18"
-            [dataset]="emps"
-            (onAngularGridCreated)="gridReady18($event)"
-            
-          >
-          </angular-slickgrid>
-        </div>
-
-
-
-
-      </div>
+      <div class="modal-body"></div>
       <div class="modal-footer">
         <button
-            class="btn btn-primary px-12"
-            (click)="onSubmitEmpTime()"
-            (click)="c('Close click')"
-          >
-            Ajouter Pointage Employés 
-          </button>
+          type="button"
+          class="btn btn-secondary"
+          (click)="c('Close click')"
+        >
+          Annuller
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="c('Close click')"
+        >
+          Ok
+        </button>
       </div>
     </ng-template>
     <button
