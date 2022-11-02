@@ -261,8 +261,8 @@ export class PosComponent implements OnInit {
       customer: "particulier",
       status: "N",
       total_price: 0,
-
-      usrd_site: this.user.usrd_user_name,
+      usrd_name: this.user.usrd_user_name,
+      usrd_site: this.user.usrd_site,
     };
 
     this.initGrid();
@@ -626,8 +626,8 @@ export class PosComponent implements OnInit {
       customer: "particulier",
       status: "N",
       total_price: this.cartAmount,
-
-      usrd_site: this.user.usrd_user_name,
+      usrd_name: this.user.usrd_user_name,
+      usrd_site: this.user.usrd_site,
     };
 
     this.posCategoryService.addOrder({ cart }).subscribe(
@@ -967,7 +967,7 @@ export class PosComponent implements OnInit {
         .processTopaiement({
           cart: this.cart,
           type: "REC",
-          user_site: this.user.usrd_user_name,
+          user_name: this.user.usrd_user_name,
         })
         .subscribe(
           (reponse) => console.log("response", Response),

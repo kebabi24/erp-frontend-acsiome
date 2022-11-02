@@ -4,6 +4,7 @@ export class Cart {
   order_code?: string;
   products: Array<Product>;
   usrd_site: string;
+  usrd_name: string;
   order_emp: string;
   customer: string;
   total_price: number;
