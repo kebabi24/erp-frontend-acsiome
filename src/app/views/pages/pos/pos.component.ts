@@ -60,15 +60,18 @@ export class PosComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
   categories: Observable<Category[]>;
+  currentCategory: Category;
   products: any[];
   family: any[];
   cart: Cart;
+  all: any[] = [];
   selectedCategory?: Category;
   selectedProducts?: Array<Product>;
   suppliments: any[];
   ingredients: Spec[];
   soda: any[];
   drinksBrand: any[];
+  elem: any[];
   sauces: any[];
   cartProducts?: Array<Product> = [];
   lastSeq: Array<any>;
@@ -116,6 +119,7 @@ export class PosComponent implements OnInit {
   showSoda: boolean = false;
   showSauces: boolean = false;
   showListOfSoda: boolean = false;
+  showListOfBrands: boolean = false;
   families: Array<any>;
   sizeOfProduct: Array<any>;
   ItemsToAddToCard: Product;
@@ -138,6 +142,10 @@ export class PosComponent implements OnInit {
   value2: any;
   cartAmount: number = 0;
   bk_type: any;
+  disable: boolean = false;
+  discount: number = 0;
+  discountTable: any[] = [];
+  remisePrice: number = 0;
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
@@ -207,6 +215,16 @@ export class PosComponent implements OnInit {
           return item;
         });
       });
+    this.posCategoryService.getAllOrderss().subscribe((res: any) => {
+      this.all = res.data.map((item) => {
+        return item;
+      });
+    });
+    this.posCategoryService.getDiscountCode().subscribe((res: any) => {
+      this.discountTable = res.data.map((item) => {
+        return item;
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -219,14 +237,14 @@ export class PosComponent implements OnInit {
 
     this.cart = {
       id: Math.floor(Math.random() * 101) + 1,
-      order_code: "CC-" + Math.floor(Math.random() * 101) + 1,
+      order_code: "CC-" + Math.floor(Math.random() * 1001) + 1,
       products: [],
       order_emp: this.loclocOrder,
       customer: "particulier",
       status: "N",
       total_price: 0,
 
-      usrd_site: this.user.usrd_site,
+      usrd_site: this.user.usrd_user_name,
     };
 
     this.initGrid();
@@ -239,6 +257,7 @@ export class PosComponent implements OnInit {
   }
 
   onSelect(category: Category): void {
+    this.currentCategory = category;
     this.showSize = false;
     this.showSupp = false;
     this.showSauces = false;
@@ -284,8 +303,9 @@ export class PosComponent implements OnInit {
       item.pt_group == "null" && (this.showSupp = false);
     });
     if (productOnlist.code_cmmt == "CT007") {
-      this.setListOfSoda(productOnlist);
-      this.showSize = false;
+      this.setListOfBrands(productOnlist);
+      this.showSize = true;
+      this.showSauces = false;
     }
   }
   prepareProductWithoutSize(productOnlist) {
@@ -317,7 +337,9 @@ export class PosComponent implements OnInit {
     );
 
     this.sizeProduct = this.currentItem.pt_group;
-    this.showSauces = true;
+    this.currentCategory.direct === true
+      ? (this.showSauces = false)
+      : (this.showSauces = true);
 
     this.currentItem = {
       id: this.currentItem.id,
@@ -370,9 +392,25 @@ export class PosComponent implements OnInit {
       (this.showSoda = true);
   }
 
-  setListOfSoda(so: any) {
-    this.drinksBrand = this.AllProducts.filter(
+  setListOfBrands(so: any) {
+    this.posCategoryService
+      .getByCode({ code_cmmt: so.code_desc })
+      .subscribe((res: any) => {
+        this.drinksBrand = res.data.map((item) => {
+          return item;
+        });
+      });
+    this.elem = this.AllProducts.filter(
       (item) => item.pt_draw === so.code_value
+    );
+    // this.showListOfSoda = true;
+    this.showListOfBrands = true;
+    // this.showSupp = true;
+  }
+
+  setListOfItems(drinks: any) {
+    this.elem = this.AllProducts.filter(
+      (item) => item.pt_group === drinks.code_value
     );
     this.showListOfSoda = true;
     // this.showSupp = true;
@@ -386,13 +424,17 @@ export class PosComponent implements OnInit {
   }
 
   customizeProduct(content): void {
-    // this.currentItem = productOnlist;
-    this.open2(content);
+    if (this.currentCategory.direct === true) {
+      this.addProductToCart();
+    } else {
+      this.open2(content);
+    }
   }
 
   addProductToCart() {
     const checkItemExist = this.currentItem;
-    checkItemExist.size = this.sizeProduct;
+    // checkItemExist.size != undefined ? this.sizeOfProduct : null;
+
     const itemExist: Product = this.cartProducts.find((item) => {
       return (
         item.pt_part === checkItemExist.pt_part &&
@@ -519,6 +561,7 @@ export class PosComponent implements OnInit {
     this.ingredients.map((item) => {
       item.isChecked = true;
     });
+    this.disable = false;
   }
 
   onDecreaseQty(product: Product): void {
@@ -673,7 +716,8 @@ export class PosComponent implements OnInit {
     //     this.loadingSubject.next(false);
     //   }
     // );
-
+    this.cartAmount = 0;
+    this.remisePrice = 0;
     this.cart.products = [];
     this.cartProducts = [];
     this.showPrice = false;
@@ -782,6 +826,8 @@ export class PosComponent implements OnInit {
     const elem: Cart = this.ordersHistory.find(
       (item) => item.order_code === order.order_code
     );
+    this.disable = true;
+    this.showPrice = true;
     this.posCategoryService
       .getOneOrder({ order_code: elem.order_code })
       .subscribe((res: any) => {
@@ -902,7 +948,7 @@ export class PosComponent implements OnInit {
       this.posCategoryService
         .processTopaiement({
           cart: this.cart,
-          type: "R",
+          type: "REC",
           user_site: this.user.usrd_user_name,
         })
         .subscribe(
@@ -934,6 +980,7 @@ export class PosComponent implements OnInit {
     this.cartProducts = [];
     this.cart.products = [];
     this.showPrice = false;
+    this.disable = false;
   }
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => observer.next(""), 1000);
@@ -1007,7 +1054,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService
       .getAllProductInventory({
         ld_site: this.user.usrd_site,
-        ld_ref: "MP",
+        ld_status: "CONFORME",
       })
       .subscribe(
         (response: any) => (this.dataset = response.data),
@@ -1586,6 +1633,7 @@ export class PosComponent implements OnInit {
       customer_addr: "",
       customer_phone_one: 0,
       customer_birthday: "",
+      customer_gender: "",
     });
   }
   mouvementCaisse(content) {
@@ -1664,12 +1712,14 @@ export class PosComponent implements OnInit {
       customer_addr: "",
       customer_phone_one: 0,
       customer_birthday: "",
+      customer_gender: "",
     };
     _customer.customer_code = controls.customer_code.value;
     _customer.customer_name = controls.customer_name.value;
     _customer.customer_addr = controls.customer_addr.value;
     _customer.customer_phone_one = controls.customer_phone_one.value;
     _customer.customer_birthday = controls.customer_birthday.value;
+    _customer.customer_gender = controls.customer_gender.value;
 
     return _customer;
   }
@@ -1706,7 +1756,7 @@ export class PosComponent implements OnInit {
     const mv = this.prepareMv();
     console.log(mv);
     this.posCategoryService
-      .createFRequest({ mv, type: "D", user_site: this.user.usrd_user_name })
+      .createFRequest({ mv, type: "D", user_site: this.user.usrd_site })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1734,5 +1784,24 @@ export class PosComponent implements OnInit {
 
   pEmp(content) {
     this.modalService.open(content, { size: "xl" });
+  }
+
+  onChangeDiscount(discount) {
+    console.log(discount);
+
+    if (discount) {
+      const elem = this.discountTable.find((item) => item.cm_addr === discount);
+      if (elem) {
+        // console.log(elem.cm_disc_pct);
+        console.log(this.cart.total_price);
+
+        this.cart.total_price =
+          this.cartAmount * (1 - Number(elem.cm_disc_pct) / 100);
+
+        this.remisePrice = this.cartAmount * (Number(elem.cm_disc_pct) / 100);
+        this.cartAmount = this.cart.total_price;
+      }
+      console.log(this.remisePrice);
+    }
   }
 }

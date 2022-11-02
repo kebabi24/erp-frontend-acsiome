@@ -51,7 +51,7 @@ export class PosCategoryService {
 
   public addPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.post(`${API_URL_PO}/createposunp`, data, {
+    return this.http.post(`${API_URL_PO}/createposunpp`, data, {
       headers: httpHeaders,
     });
   }
@@ -69,6 +69,13 @@ export class PosCategoryService {
   public getBank(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_BK}/findBk`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public getDiscountCode() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_CUSTOMER, {
       headers: httpHeaders,
     });
   }
@@ -94,6 +101,10 @@ export class PosCategoryService {
   public getAllOrders() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL_ORDER, { headers: httpHeaders });
+  }
+  public getAllOrderss() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL_ORDER}/findw`, { headers: httpHeaders });
   }
 
   public getOneOrder(data: any) {

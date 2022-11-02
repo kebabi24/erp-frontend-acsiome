@@ -148,10 +148,10 @@
                 </div>
                 <div class="col-6" style="margin-top: 15px">
                   <div
-                    class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                    class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                   >
                     <button
-                      class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                      class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                       *ngFor="let productOnlist of selectedProducts"
                       type="button"
                       data-bs-toggle="pill"
@@ -183,10 +183,10 @@
                   <div class="tab-content" *ngIf="showSize">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
                           *ngFor="let size of sizeOfProduct"
                           data-bs-toggle="pill"
@@ -216,10 +216,10 @@
                   <div class="tab-content" *ngIf="showSauces">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
                           *ngFor="let sauce of sauces"
                           data-bs-toggle="pill"
@@ -248,10 +248,10 @@
                   <div class="tab-content" *ngIf="showSupp">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           *ngFor="let suppliment of suppliments"
                           type="button"
                           data-bs-toggle="pill"
@@ -280,14 +280,14 @@
                   <div class="tab-content" *ngIf="showSoda">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
                           *ngFor="let so of soda"
                           data-bs-toggle="pill"
-                          (click)="setListOfSoda(so)"
+                          (click)="setListOfBrands(so)"
                           style="background-color: #ffb701"
                         >
                           <div class="card-body text-center" type="button">
@@ -304,16 +304,17 @@
                       </div>
                     </div>
                   </div>
-                  <div class="tab-content" *ngIf="showListOfSoda">
+                  <div class="tab-content" *ngIf="showListOfBrands">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
-                          *ngFor="let drinks of drinksBrand"
+                          *ngFor="let drinks of elem"
                           data-bs-toggle="pill"
+                          (click)="setListOfItems(drinks)"
                           style="background-color: #ffb701"
                         >
                           <div class="card-body text-center" type="button">
@@ -536,6 +537,7 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onDecreaseQty(elem)"
+                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -576,6 +578,7 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onIncreaseQty(elem)"
+                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -646,12 +649,12 @@
                             <span
                               class="d-block lh-1 mb-2"
                               data-kt-pos-element="total"
-                              >{{ cartAmount }} DA</span
+                              >{{ cartAmount + remisePrice }} DA</span
                             >
                             <span
                               class="d-block mb-2"
                               data-kt-pos-element="discount"
-                              >{{ 0 }} DA</span
+                              >{{ remisePrice }} DA</span
                             >
 
                             <span
@@ -698,17 +701,34 @@
                             <span class="fs-7 fw-bold d-block">Cash</span>
                             <!--end::Title-->
                           </label>
-                          <div class="form-floating">
-                            <input
-                              style="background-color: beige"
-                              type="email"
-                              class="form-control text-gray-900 fw-bold"
-                              placeholder="00.0"
-                              id="floatingInputValue"
-                            />
-                            <label for="floatingInputValue"
-                              >Numéro carte de fidélité
-                            </label>
+                          <div class="row">
+                            <div class="form-floating">
+                              <input
+                                style="background-color: beige"
+                                type="email"
+                                class="form-control text-gray-900 fw-bold"
+                                placeholder="00.0"
+                                id="floatingInputValue"
+                                #discount
+                                id="discount"
+                                name="discount"
+                                (change)="onChangeDiscount()"
+                              />
+                              <label for="floatingInputValue"
+                                >Numéro carte de fidélité
+                              </label>
+                              <button
+                                (click)="onChangeDiscount(discount.value)"
+                                class="btn btn-primary fs-1 w-100 py-4"
+                                style="
+                                  background-color: #9e110d;
+                                  margin-top: 5px;
+                                "
+                                [disabled]="disable"
+                              >
+                                Vérifier
+                              </button>
+                            </div>
                           </div>
 
                           <!--end::Radio group-->
@@ -717,6 +737,7 @@
                             (click)="prepareCart(content)"
                             class="btn btn-primary fs-1 w-100 py-4"
                             style="background-color: #9e110d; margin-top: 5px"
+                            [disabled]="disable"
                           >
                             Lancer la préparation
                           </button>
@@ -2242,6 +2263,20 @@
       <div class="modal-body">
         <form class="form" [formGroup]="customerForm">
           <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Sexe: *</label>
+              <select
+                class="form-control form-control-sm form-control-solid"
+                id="exampleSelects1"
+                (change)="selectOption($event.target.value)"
+              >
+                <option value=""></option>
+                <option>Homme</option>
+                <option>Femme</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
             <div class="form-group col-4">
               <label class="form-group" id="code">Nom :</label>
               <input
@@ -2319,6 +2354,7 @@
               </div>
             </div>
           </div>
+
           <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Age: </label>

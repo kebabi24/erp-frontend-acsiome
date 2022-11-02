@@ -14,6 +14,7 @@ export class Product {
   sauces?: Array<any>;
   soda?: Array<any>;
   pt_draw?: string;
+  pt_group?: string;
   comment: string;
   line: string;
 }
