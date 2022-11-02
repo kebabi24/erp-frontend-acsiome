@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { HttpClient } from "@angular/common/http"
+import { HttpUtilsService } from "../../../core/_base/crud"
 import {
   Observable,
   BehaviorSubject,
@@ -19,7 +21,7 @@ import { Cart } from "../../../core/erp/_models/pos-cart.model";
 import { NgbDropdownConfig, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
-import { PosCategoryService } from "../../../core/erp";
+import { EmployeService, PosCategoryService } from "../../../core/erp";
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
 import {
   FormBuilder,
@@ -41,6 +43,10 @@ import {
   FieldType,
   OnEventArgs,
 } from "angular-slickgrid";
+
+
+import { environment } from "../../../../environments/environment"
+const API_URL = environment.apiUrl + "/codes"
 
 @Component({
   selector: "kt-pos",
@@ -97,6 +103,11 @@ export class PosComponent implements OnInit {
   grid: any;
   gridService: GridService;
   dataView: any;
+  angularGrid18: AngularGridInstance;
+  grid18: any;
+  gridService18: GridService;
+  dataView18: any;
+
   columnDefinitions: Column[];
   columnDefinitions2: Column[];
   gridOptions: GridOption;
@@ -107,6 +118,10 @@ export class PosComponent implements OnInit {
   gridOptions4: GridOption;
   columnDefinitions5: Column[];
   gridOptions5: GridOption;
+  columnDefinitions18: Column[];
+  gridOptions18: GridOption;
+  gridObj18: any;
+  emps: any[];
   dataset: any[];
   dataset5: any[];
   items: any[];
@@ -142,13 +157,19 @@ export class PosComponent implements OnInit {
   value2: any;
   cartAmount: number = 0;
   bk_type: any;
+<<<<<<< HEAD
   disable: boolean = false;
   discount: number = 0;
   discountTable: any[] = [];
   remisePrice: number = 0;
+=======
+  httpOptions = this.httpUtils.getHTTPHeaders()
+>>>>>>> ee3a254662cde055432b20017da624e90b547f0b
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
+    private http: HttpClient,
+    private httpUtils: HttpUtilsService,
     private modalService: NgbModal,
     private bkFb: FormBuilder,
     private mvFb: FormBuilder,
@@ -158,6 +179,7 @@ export class PosComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private posCategoryService: PosCategoryService,
+    private employeService: EmployeService,
     private fb: FormBuilder,
     private layoutUtilsService: LayoutUtilsService
   ) {
@@ -997,7 +1019,12 @@ export class PosComponent implements OnInit {
     this.angularGrid4 = angularGrid;
     this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
   }
-
+  gridReady18(angularGrid: AngularGridInstance) {
+    this.angularGrid18 = angularGrid;
+    this.dataView18 = angularGrid.dataView;
+    this.grid18 = angularGrid.slickGrid;
+    this.gridService18 = angularGrid.gridService;
+  }
   initGrid() {
     this.columnDefinitions = [
       {
@@ -1784,6 +1811,119 @@ export class PosComponent implements OnInit {
 
   pEmp(content) {
     this.modalService.open(content, { size: "xl" });
+   
+  this.initGrid18()
+  }
+
+  angularGridReady18(angularGrid: AngularGridInstance) {
+    this.angularGrid18 = angularGrid
+    this.gridObj18 = (angularGrid && angularGrid.slickGrid) || {}
+  }
+  
+  
+  initGrid18() {
+    this.emps=[]
+    this.columnDefinitions18 = [
+        {
+            id: "emp_fname",
+            name: "Nom",
+            field: "emp_fname",
+            sortable: true,
+            width: 80,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+          id: "emp_lname",
+          name: "Prénom",
+          field: "emp_lname",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+        id: "reason",
+        name: "Etat",
+        field: "reason",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.singleSelect,
+
+          // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
+          enableRenderHtml: true,
+          collectionAsync:  this.http.get(`${API_URL}/emptime`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       /*   customStructure: {    
+            value: 'code_value',
+            label: 'code_cmmt',
+            optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
+            //labelSuffix: 'text',
+         },*/
+          editorOptions: {
+            maxHeight: 400
+          }
+        },
+      },
+  
+        
+    ]
+  
+    this.gridOptions18 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        editable: true,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+  
+    // fill the dataset with your data
+    this.employeService
+        .getByTime({emp_site : this.user.usrd_site})
+        .subscribe((response: any) => (this.emps = response.data))
+  }
+
+  
+  onSubmitEmpTime(){
+    this.employeService
+      .addTime({ empDetails: this.emps })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
   }
 
   onChangeDiscount(discount) {

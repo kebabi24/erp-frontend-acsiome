@@ -211,6 +211,7 @@ error = false;
   stat: any;
   curr: any;
   sodid: any
+  selectedrow: any
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -779,6 +780,9 @@ error = false;
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      enableAutoResize: false,
+      enableCheckboxSelector: true,
+      enableFiltering: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -789,6 +793,25 @@ error = false;
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+      },
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: SlickGrid) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      columnPicker: {
+        hideForceFitButton: true
       },
       
     };
@@ -1487,6 +1510,7 @@ changeTax(){
   addNewItem() {
     this.gridService.addItem(
       {
+       
         id: this.dataset.length + 1,
         sod_line: this.dataset.length + 1,
  
@@ -1507,6 +1531,11 @@ changeTax(){
       },
       { position: "bottom" }
     );
+    
+      const item = this.grid.getDataItem(this.dataset.length + 1);
+      console.log(item)
+    
+  
   }
   handleSelectedRowsChanged2(e, args) {
     const controls = this.soForm.controls;

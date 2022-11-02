@@ -2406,22 +2406,33 @@
       <div class="modal-header">
         <h4 class="modal-title">Pointage des employés</h4>
       </div>
-      <div class="modal-body"></div>
+      <div class="modal-body">
+        <div class="row">
+          <angular-slickgrid
+            class="col-12"
+            gridHeight="500"
+            gridId="empGrid"
+            [columnDefinitions]="columnDefinitions18"
+            [gridOptions]="gridOptions18"
+            [dataset]="emps"
+            (onAngularGridCreated)="gridReady18($event)"
+            
+          >
+          </angular-slickgrid>
+        </div>
+
+
+
+
+      </div>
       <div class="modal-footer">
         <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="c('Close click')"
-        >
-          Annuller
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="c('Close click')"
-        >
-          Ok
-        </button>
+            class="btn btn-primary px-12"
+            (click)="onSubmitEmpTime()"
+            (click)="c('Close click')"
+          >
+            Ajouter Pointage Employés 
+          </button>
       </div>
     </ng-template>
     <button

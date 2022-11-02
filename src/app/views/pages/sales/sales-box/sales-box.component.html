@@ -255,82 +255,106 @@
                         Article</button>
                 </div>
                 <div class="row">
-                    <angular-slickgrid class="col-8" gridHeight="300" gridId="mGrid"
+                    <angular-slickgrid class="col-8" gridHeight="200" gridId="mGrid"
                         [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
                         (onAngularGridCreated)="gridReady($event)">
                     </angular-slickgrid>
 
-           <!--kamel-->
-           <form class="form" [formGroup]="totForm">
-            <h3 class="card-title text-center">Totaux:                </h3>
-            <div class row col-12>
+                    <!--kamel>
+                    <form class="form" [formGroup]="totForm">
+                        <h3 class="card-title text-center">Totaux:                </h3>
+                        <div class row col-12>
+                        
+                                
+                                <div class="form-group-lg row">
+                                    <label class="col-4 col-form-label  text-right ">Total HT</label>
+                                    <div class="col-8">
+                                        <input class="form-control" type="number"  style="text-align: right;" formControlName="tht">
+                                    </div>
+                                </div>
+                            
+                                <div class="form-group-lg row">
+                                    <label class="col-4 col-form-label  text-right ">TVA</label>
+                                    <div class="col-8">
+                                        <input class="form-control" type="number" style="text-align: right;" formControlName="tva">
+                                    </div>
+                                </div>
+                                <div class="form-group-lg row">
+                                    <label class="col-4 col-form-label  text-right ">Timbre</label>
+                                    <div class="col-8">
+                                        <input class="form-control" type="number" style="text-align: right;" formControlName="timbre">
+                                    </div>
+                                </div>
+                                <div class="form-group-lg row">
+                                    <label class="col-4 col-form-label  text-right ">TTC</label>
+                                    <div class="col-8">
+                                        <input class="form-control" type="number" style="text-align: right;" formControlName="ttc">
+                                    </div>
+                                </div>
+                            
+                        </div>        
+                        
+
+                    </form>
+                    <kamel-->
+                        
+                                                       <!--calc-->
+
+            <!--div class="container-fluid"-->
+ 
+                <div class="jumbotron col-sm-4 p-2 m-0 bg-inverse">
                
-                    
-                    <div class="form-group-lg row">
-                        <label class="col-4 col-form-label  text-right ">Total HT</label>
-                        <div class="col-8">
-                            <input class="form-control" type="number"  style="text-align: right;" formControlName="tht">
-                        </div>
-                    </div>
-                
-                    <div class="form-group-lg row">
-                        <label class="col-4 col-form-label  text-right ">TVA</label>
-                        <div class="col-8">
-                            <input class="form-control" type="number" style="text-align: right;" formControlName="tva">
-                        </div>
-                    </div>
-                    <div class="form-group-lg row">
-                        <label class="col-4 col-form-label  text-right ">Timbre</label>
-                        <div class="col-8">
-                            <input class="form-control" type="number" style="text-align: right;" formControlName="timbre">
-                        </div>
-                    </div>
-                    <div class="form-group-lg row">
-                        <label class="col-4 col-form-label  text-right ">TTC</label>
-                        <div class="col-8">
-                            <input class="form-control" type="number" style="text-align: right;" formControlName="ttc">
-                        </div>
-                    </div>
-                
-            </div>            
-        </form>
-           <!--kamel-->         
+                  <!--h1 class="text-center">Angular Calculator</h1>
+               
+                  
+                  <div class="input-group input-group-sm col-sm-12 m-0 p-0">
+                    <div class="col-sm-12 form-control text-lg-right" type="text">{{input}}</div>
+                  </div>
+               
+                  
+                  <div class="input-group input-group-sm col-sm-12 m-0 p-0">
+                    <div class="form-control text-sm-right" type="text">{{result}}</div>
+                  </div>
+               
+                  <div class="col-sm-12 p-1 m-0">
+                    <button class="btn btn-info col-sm-6" type="button" (click)="allClear()">C</button>
+                    <button class="btn btn-warning col-sm-3" type="button" (click)="clear()">x</button>
+                    <button class="btn btn-secondary col-sm-3" type="button" (click)="pressOperator('/')">/</button>
+                  </div-->
+               
+                  <div class="col-sm-12 p-1 m-0">
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('7')">7</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('8')">8</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('9')">9</button>
+                    <button class="btn btn-lg btn-secondary col-sm-3 p-1" type="button" (click)="pressOperator('*')">X</button>
+                  </div>
+                  <div class="col-sm-12 p-1 m-0">
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('4')">4</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('5')">5</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('6')">6</button>
+                    <button class="btn btn-lg btn-secondary col-sm-3 p-1" type="button" (click)="pressOperator('-')">-</button>
+                  </div>
+                  <div class="col-sm-12 p-1 m-0">
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('1')">1</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('2')">2</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('3')">3</button>
+                    <button class="btn btn-lg btn-secondary col-sm-3 p-1" type="button" (click)="pressOperator('+')">+</button>
+                  </div>
+                  <div class="col-sm-12 p-1 m-0">
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('.')">.</button>
+                    <button class="btn btn-lg btn-outline-secondary col-sm-3 p-1" type="button" (click)="pressNum('0')">0</button>
+                    <button class="btn btn-lg btn-success col-sm-6 p-1" type="button" (click)="getAnswer()">=</button>
+                  </div>
+               
+                </div>
+            <!--/div-->
+            <!--calc-->
+            
                 </div>
             </form>
 
-            <!--form class="form" [formGroup]="totForm">
-                <h3 class="card-title text-center">Totaux:                </h3>
-                <div class row col-6>
-                   
-                        
-                        <div class="form-group-sm row">
-                            <label class="col-9 col-form-label  text-right ">Total HT</label>
-                            <div class="col-2">
-                                <input class="form-control" type="number"  style="text-align: right;" formControlName="tht">
-                            </div>
-                        </div>
-                    
-                        <div class="form-group-sm row">
-                            <label class="col-9 col-form-label  text-right ">TVA</label>
-                            <div class="col-2">
-                                <input class="form-control" type="number" style="text-align: right;" formControlName="tva">
-                            </div>
-                        </div>
-                        <div class="form-group-sm row">
-                            <label class="col-9 col-form-label  text-right ">Timbre</label>
-                            <div class="col-2">
-                                <input class="form-control" type="number" style="text-align: right;" formControlName="timbre">
-                            </div>
-                        </div>
-                        <div class="form-group-sm row">
-                            <label class="col-9 col-form-label  text-right ">TTC</label>
-                            <div class="col-2">
-                                <input class="form-control" type="number" style="text-align: right;" formControlName="ttc">
-                            </div>
-                        </div>
-                    
-                </div>            
-            </form-->
+            <div class="row">
+             </div>
         </div>
 
        

@@ -18,6 +18,7 @@ import {
   GroupTotalFormatters,
   SortDirectionNumber,
   Sorters,
+  GridService,
   ColumnFilter,
   Filter,
   FilterArguments,
@@ -63,6 +64,11 @@ export class InventoryListComponent implements OnInit {
   draggableGroupingPlugin: any;
   angularGrid: AngularGridInstance;
 
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+ 
+
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   dataviewObj: any;
@@ -82,15 +88,14 @@ export class InventoryListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  
-  createCustomer() {
-      this.router.navigateByUrl("customers/customer-create")
-  }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
-    this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataviewObj = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid; // grid object
+    this.dataview = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
   }
+  
+  
   prepareGrid() {
 
       this.columnDefinitions = [
@@ -282,6 +287,7 @@ export class InventoryListComponent implements OnInit {
           preHeaderPanelHeight: 40,
           enableFiltering: true,
           enableSorting: true,
+          autoHeight: true,
           exportOptions: {
             sanitizeDataExport: true
           },
@@ -320,7 +326,8 @@ export class InventoryListComponent implements OnInit {
       this.dataset = []
       this.locationDetailService.getAll().subscribe(
         
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {this.dataset = response.data
+            this.dataview.setItems(this.dataset)},
           
           (error) => {
               this.dataset = []

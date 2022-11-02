@@ -10,6 +10,7 @@ import { environment } from "../../../../environments/environment"
 import { Employe } from "../_models/employe.model"
 
 const API_URL = environment.apiUrl + "/employes"
+const API_URL_EmpTime = environment.apiUrl + "/employe-times"
 
 @Injectable()
 export class EmployeService {
@@ -46,6 +47,13 @@ export class EmployeService {
         
         
     }
+    public getByTime(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findtime`,data, { headers: httpHeaders })
+
+        
+        
+    }
     public getByDet(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/finddet`,data, { headers: httpHeaders })
@@ -62,5 +70,9 @@ export class EmployeService {
     public delete(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
+    public addTime(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL_EmpTime, data, { headers: httpHeaders })
     }
 }
