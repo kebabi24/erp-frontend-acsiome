@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { HttpClient } from "@angular/common/http"
-import { HttpUtilsService } from "../../../core/_base/crud"
+import { HttpClient } from "@angular/common/http";
+import { HttpUtilsService } from "../../../core/_base/crud";
 import {
   Observable,
   BehaviorSubject,
@@ -44,9 +44,8 @@ import {
   OnEventArgs,
 } from "angular-slickgrid";
 
-
-import { environment } from "../../../../environments/environment"
-const API_URL = environment.apiUrl + "/codes"
+import { environment } from "../../../../environments/environment";
+const API_URL = environment.apiUrl + "/codes";
 
 @Component({
   selector: "kt-pos",
@@ -157,14 +156,11 @@ export class PosComponent implements OnInit {
   value2: any;
   cartAmount: number = 0;
   bk_type: any;
-<<<<<<< HEAD
   disable: boolean = false;
   discount: number = 0;
   discountTable: any[] = [];
   remisePrice: number = 0;
-=======
-  httpOptions = this.httpUtils.getHTTPHeaders()
->>>>>>> ee3a254662cde055432b20017da624e90b547f0b
+  httpOptions = this.httpUtils.getHTTPHeaders();
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
@@ -1811,36 +1807,35 @@ export class PosComponent implements OnInit {
 
   pEmp(content) {
     this.modalService.open(content, { size: "xl" });
-   
-  this.initGrid18()
+
+    this.initGrid18();
   }
 
   angularGridReady18(angularGrid: AngularGridInstance) {
-    this.angularGrid18 = angularGrid
-    this.gridObj18 = (angularGrid && angularGrid.slickGrid) || {}
+    this.angularGrid18 = angularGrid;
+    this.gridObj18 = (angularGrid && angularGrid.slickGrid) || {};
   }
-  
-  
+
   initGrid18() {
-    this.emps=[]
+    this.emps = [];
     this.columnDefinitions18 = [
-        {
-            id: "emp_fname",
-            name: "Nom",
-            field: "emp_fname",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.string,
-        },
-        {
-          id: "emp_lname",
-          name: "Prénom",
-          field: "emp_lname",
-          sortable: true,
-          width: 80,
-          filterable: true,
-          type: FieldType.string,
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
       },
       {
         id: "reason",
@@ -1855,75 +1850,69 @@ export class PosComponent implements OnInit {
 
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/emptime`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-       /*   customStructure: {    
+          collectionAsync: this.http.get(`${API_URL}/emptime`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+          /*   customStructure: {    
             value: 'code_value',
             label: 'code_cmmt',
             optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
             //labelSuffix: 'text',
          },*/
           editorOptions: {
-            maxHeight: 400
-          }
+            maxHeight: 400,
+          },
         },
       },
-  
-        
-    ]
-  
+    ];
+
     this.gridOptions18 = {
-        enableSorting: true,
-        enableCellNavigation: true,
-        enableExcelCopyBuffer: true,
-        enableFiltering: true,
-        autoEdit: false,
-        editable: true,
-        autoHeight: false,
-        frozenColumn: 0,
-        frozenBottom: true,
-        enableRowSelection: true,
-        enableCheckboxSelector: true,
-        checkboxSelector: {
-        },
-        multiSelect: false,
-        rowSelectionOptions: {
-            selectActiveRow: true,
-        },
-    }
-  
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      editable: true,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+
     // fill the dataset with your data
     this.employeService
-        .getByTime({emp_site : this.user.usrd_site})
-        .subscribe((response: any) => (this.emps = response.data))
+      .getByTime({ emp_site: this.user.usrd_site })
+      .subscribe((response: any) => (this.emps = response.data));
   }
 
-  
-  onSubmitEmpTime(){
-    this.employeService
-      .addTime({ empDetails: this.emps })
-      .subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        }
-      );
+  onSubmitEmpTime() {
+    this.employeService.addTime({ empDetails: this.emps }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
   }
 
   onChangeDiscount(discount) {
