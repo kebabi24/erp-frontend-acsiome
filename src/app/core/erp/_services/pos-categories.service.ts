@@ -60,6 +60,12 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL, { headers: httpHeaders });
   }
+  public getSeq(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_SEQ}/findone`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getPoRec(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/findAllpodRec`, data, {

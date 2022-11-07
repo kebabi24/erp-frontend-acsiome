@@ -53,6 +53,7 @@ const API_URL = environment.apiUrl + "/codes";
   styleUrls: ["./pos.component.scss"],
 })
 export class PosComponent implements OnInit {
+  seq: any[] = [];
   item: any;
   row_number;
   bkForm: FormGroup;
@@ -160,6 +161,9 @@ export class PosComponent implements OnInit {
   discount: number = 0;
   discountTable: any[] = [];
   remisePrice: number = 0;
+  currentSeq: number = 0;
+  selectedBank: string;
+  RequestBuyingArticle: boolean = false;
   httpOptions = this.httpUtils.getHTTPHeaders();
   private results: Observable<any[]>;
   constructor(
@@ -243,6 +247,9 @@ export class PosComponent implements OnInit {
         return item;
       });
     });
+    this.posCategoryService.getSeq({ seq_seq: "OP" }).subscribe((res: any) => {
+      this.currentSeq = res.data.seq_curr_val;
+    });
   }
 
   ngOnInit(): void {
@@ -255,7 +262,7 @@ export class PosComponent implements OnInit {
 
     this.cart = {
       id: Math.floor(Math.random() * 101) + 1,
-      order_code: "CC-" + Math.floor(Math.random() * 1001) + 1,
+
       products: [],
       order_emp: this.loclocOrder,
       customer: "particulier",
@@ -287,6 +294,7 @@ export class PosComponent implements OnInit {
       (item) => item.code_cmmt === category.category_code
     );
 
+    console.log(this.currentSeq);
     // this.selectedProducts = result.items.map((item) => {
     //   let itemCategory: Product = {
     //     id: item.id,
@@ -310,9 +318,7 @@ export class PosComponent implements OnInit {
     this.sizeOfProduct = this.AllProducts.filter(
       (item) => item.pt_draw === productOnlist.code_value
     );
-    for (let i = 0; i <= 2; i = i + 1) {
-      this.lists.push(this.sizeOfProduct[i]);
-    }
+
     this.addProductBtn = true;
     this.sizeOfProduct.map((item) => {
       if (item.pt_group != "Libanais" || "Gyros" || "Pita") {
@@ -358,7 +364,7 @@ export class PosComponent implements OnInit {
     this.currentItem = this.sizeOfProduct.find(
       (item) => item.pt_group === size.pt_group
     );
-
+    console.log(this.currentItem);
     this.sizeProduct = this.currentItem.pt_group;
     this.currentCategory.direct === true
       ? (this.showSauces = false)
@@ -416,16 +422,6 @@ export class PosComponent implements OnInit {
   }
 
   setListOfBrands(so: any) {
-    this.posCategoryService
-      .getByCode({ code_cmmt: so.code_desc })
-      .subscribe((res: any) => {
-        this.drinksBrand = res.data.map((item) => {
-          return item;
-        });
-      });
-    this.elem = this.AllProducts.filter(
-      (item) => item.pt_draw === so.code_value
-    );
     // this.showListOfSoda = true;
     this.showListOfBrands = true;
     // this.showSupp = true;
@@ -443,7 +439,7 @@ export class PosComponent implements OnInit {
     this.modalService.open(content, { size: "xl" });
   }
   open2(content) {
-    this.modalService.open(content, { size: "sm" });
+    this.modalService.open(content, { size: "md" });
   }
 
   customizeProduct(content): void {
@@ -546,9 +542,10 @@ export class PosComponent implements OnInit {
 
     return this.loclocOrder;
   }
-  locOrderL() {
+  locOrderL(content) {
     this.loclocOrder = "Livraison";
     this.cartProducts != null && this.setBomCode();
+    this.modalService.open(content, { size: "xl" });
     return this.loclocOrder;
   }
 
@@ -625,7 +622,7 @@ export class PosComponent implements OnInit {
   prepareCart(content): void {
     let cart: Cart = {
       id: Math.floor(Math.random() * 101) + 1,
-      order_code: "PC-" + Math.floor(Math.random() * 1001) + 1,
+
       products: this.cartProducts,
       order_emp: this.loclocOrder,
       customer: "particulier",
@@ -772,7 +769,7 @@ export class PosComponent implements OnInit {
 
   setCloseInventory() {
     this.dataset.map((item) => {
-      return (item.ld_rev = "M"), (item.tag_cnt_qty = item.tag_cnt_qty);
+      return (item.tag_cnt_qty = item.tag_cnt_qty);
     });
     this.posCategoryService.checkInventory2({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
@@ -797,6 +794,7 @@ export class PosComponent implements OnInit {
         this.loadingSubject.next(false);
       }
     );
+    this.dataset = [];
   }
   checkOpenInventory2(content) {
     this.modalService.open(content, { size: "xl" });
@@ -834,6 +832,7 @@ export class PosComponent implements OnInit {
         this.loadingSubject.next(false);
       }
     );
+    this.dataset = [];
   }
   handleSelectedRowsChanged(e, args) {}
 
@@ -1373,6 +1372,7 @@ export class PosComponent implements OnInit {
           this.loadingSubject.next(false);
         }
       );
+    this.datasetRec = [];
   }
 
   initGrid3() {
@@ -1455,7 +1455,7 @@ export class PosComponent implements OnInit {
         field: "pt_part",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
       },
       {
         id: "pt_desc1",
@@ -1463,7 +1463,7 @@ export class PosComponent implements OnInit {
         field: "pt_desc1",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
       },
       {
         id: "pt_price",
@@ -1471,7 +1471,7 @@ export class PosComponent implements OnInit {
         field: "pt_price",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
       },
     ];
 
@@ -1505,13 +1505,15 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset = [];
-    this.posCategoryService.getSomeProducts({ pt_buyer: "REC" }).subscribe(
-      (response: any) => (this.items = response.data),
-      (error) => {
-        this.dataset = [];
-      },
-      () => {}
-    );
+    this.posCategoryService
+      .getSomeProducts({ pt_buyer: this.selectedBank })
+      .subscribe(
+        (response: any) => (this.items = response.data),
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
   }
   open4(content) {
     this.modalService.open(content, { size: "lg" });
@@ -1665,7 +1667,7 @@ export class PosComponent implements OnInit {
     });
   }
   mouvementCaisse(content) {
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "xl" });
     this.initGrid5();
   }
 
@@ -1688,7 +1690,11 @@ export class PosComponent implements OnInit {
 
   PlanPOD() {
     this.posCategoryService
-      .addPo({ Site: this.user.usrd_site, purchaseOrder: this.dataset5 })
+      .addPo({
+        Site: this.user.usrd_site,
+        purchaseOrder: this.dataset5,
+        po_blanket: this.selectedBank,
+      })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1919,6 +1925,11 @@ export class PosComponent implements OnInit {
       }
     );
   }
+  selectChangeHandler(event: any) {
+    //update the ui
+
+    console.log(this.selectedBank);
+  }
 
   onChangeDiscount(discount) {
     console.log(discount);
@@ -1937,5 +1948,15 @@ export class PosComponent implements OnInit {
       }
       console.log(this.remisePrice);
     }
+  }
+
+  pArticle(content) {
+    this.modalService.open(content, { size: "xl" });
+  }
+  onSelectServiceBuy() {
+    this.RequestBuyingArticle = true;
+  }
+  onSelectAutre() {
+    this.RequestBuyingArticle = false;
   }
 }
