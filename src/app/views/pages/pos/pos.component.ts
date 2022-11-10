@@ -23,6 +23,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { EmployeService, PosCategoryService } from "../../../core/erp";
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
+import { DatePipe } from "@angular/common";
 import {
   FormBuilder,
   FormGroup,
@@ -70,7 +71,7 @@ export class PosComponent implements OnInit {
   products: any[];
   family: any[];
   cart: Cart;
-  all: any[] = [];
+  // all: any[] = [];
   selectedCategory?: Category;
   selectedProducts?: Array<Product>;
   suppliments: any[];
@@ -82,6 +83,9 @@ export class PosComponent implements OnInit {
   cartProducts?: Array<Product> = [];
   lastSeq: Array<any>;
   showPrice: boolean = false;
+  inShop: boolean = false;
+  showStatusDelivery: boolean = false;
+  showStatusOut: boolean = false;
   itemToAdd: Product;
   productInCartPrice: number = 0;
   subtotalPrice: number = 0;
@@ -90,7 +94,7 @@ export class PosComponent implements OnInit {
   updatedCart: Cart;
   loclocOrder: string = "Sur place";
   AllTables: string[];
-  currentTable: string;
+  currentTable: string = "01";
   isChecked: boolean = false;
   isDisabled: boolean = true;
   disableButton: boolean = true;
@@ -163,8 +167,16 @@ export class PosComponent implements OnInit {
   remisePrice: number = 0;
   currentSeq: number = 0;
   selectedBank: string;
+  platformes: any[] = [];
+  platformesOffers: any[] = [];
+  deliveryOption: string;
+  currentPlatformeOffers: any[] = [];
+  productOffers: any[] = [];
   RequestBuyingArticle: boolean = false;
   httpOptions = this.httpUtils.getHTTPHeaders();
+  pipe = new DatePipe("en-US");
+  offer: boolean = false;
+  currentOffer: any;
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
@@ -237,8 +249,8 @@ export class PosComponent implements OnInit {
           return item;
         });
       });
-    this.posCategoryService.getAllOrderss().subscribe((res: any) => {
-      this.all = res.data.map((item) => {
+    this.posCategoryService.getAllPlatformesOffers().subscribe((res: any) => {
+      this.platformesOffers = res.data.map((item) => {
         return item;
       });
     });
@@ -250,6 +262,13 @@ export class PosComponent implements OnInit {
     this.posCategoryService.getSeq({ seq_seq: "OP" }).subscribe((res: any) => {
       this.currentSeq = res.data.seq_curr_val;
     });
+    this.posCategoryService
+      .getByCode({ code_fldname: "del_desc" })
+      .subscribe((res: any) => {
+        this.platformes = res.data.map((item) => {
+          return item;
+        });
+      });
   }
 
   ngOnInit(): void {
@@ -517,6 +536,12 @@ export class PosComponent implements OnInit {
       item.isChecked = true;
     });
     this.cartAmount = this.calculateSubTotal();
+    this.offer &&
+      (this.cart.total_price =
+        this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
+      (this.remisePrice =
+        this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
+      (this.cartAmount = this.cart.total_price);
     this.currentItem.suppliments = [];
     this.currentItem.ingredients = [];
     this.productInCartPrice = 0;
@@ -533,19 +558,26 @@ export class PosComponent implements OnInit {
     this.loclocOrder = "Sur place";
     this.cartProducts != null && this.setBomCode();
     this.modalService.open(content, { size: "lg" });
-
+    this.inShop = true;
+    this.showStatusDelivery = false;
+    this.showStatusOut = false;
     return this.loclocOrder;
   }
   locOrderE() {
     this.loclocOrder = "Emporté";
     this.cartProducts != null && this.setBomCode();
-
+    this.showStatusOut = true;
+    this.inShop = false;
+    this.showStatusDelivery = false;
     return this.loclocOrder;
   }
   locOrderL(content) {
     this.loclocOrder = "Livraison";
     this.cartProducts != null && this.setBomCode();
     this.modalService.open(content, { size: "xl" });
+    this.inShop = false;
+    this.showStatusDelivery = true;
+    this.showStatusOut = false;
     return this.loclocOrder;
   }
 
@@ -593,6 +625,7 @@ export class PosComponent implements OnInit {
         Number(product.pt_price) - Number(product.pt_price) / product.pt_qty;
       product.pt_qty = product.pt_qty - 1;
     }
+
     this.cartAmount = this.calculateSubTotal();
     this.cart.total_price = this.cartAmount;
     this.cart.products.length === 0 && (this.showPrice = false);
@@ -631,7 +664,7 @@ export class PosComponent implements OnInit {
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
     };
-
+    console.log(cart.products);
     this.posCategoryService.addOrder({ cart }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
@@ -741,6 +774,10 @@ export class PosComponent implements OnInit {
     this.cart.products = [];
     this.cartProducts = [];
     this.showPrice = false;
+    this.inShop = false;
+    this.showStatusDelivery = false;
+    this.showStatusOut = false;
+    this.offer = false;
   }
 
   changeSelection(event, index) {
@@ -845,6 +882,7 @@ export class PosComponent implements OnInit {
     this.modalService.open(content, { size: "xl" });
   }
   getItemFromHistory(order) {
+    this.detail = [];
     const elem: Cart = this.ordersHistory.find(
       (item) => item.order_code === order.order_code
     );
@@ -880,23 +918,24 @@ export class PosComponent implements OnInit {
           };
           this.detail.push(d);
         });
+        console.log(this.detail);
       });
 
-    this.workOrders.forEach((so) => {
-      const d = {
-        tr_part: so.wod_part,
-        tr_lot: so.wod_lot,
-        tr_price: so.wod_price,
-        tr_site: so.wod_site,
-        tr_qty_loc: Number(so.wod_qty_req),
-        tr_qty_chg: Number(so.wod_qty_req),
-        tr_nbr: so.wod_nbr,
-        tr_serial: null,
-        tr_loc: so.wod_loc,
-        tr_um_conv: 1,
-      };
-      this.detailSo.push(d);
-    });
+    // this.workOrders.forEach((so) => {
+    //   const d = {
+    //     tr_part: so.wod_part,
+    //     tr_lot: so.wod_lot,
+    //     tr_price: so.wod_price,
+    //     tr_site: so.wod_site,
+    //     tr_qty_loc: Number(so.wod_qty_req),
+    //     tr_qty_chg: Number(so.wod_qty_req),
+    //     tr_nbr: so.wod_nbr,
+    //     tr_serial: null,
+    //     tr_loc: so.wod_loc,
+    //     tr_um_conv: 1,
+    //   };
+    //   this.detailSo.push(d);
+    // });
     this.it = this.cart.created_date;
     return this.detail;
   }
@@ -918,32 +957,6 @@ export class PosComponent implements OnInit {
     console.log(this.workOrders);
     this.posCategoryService
       .createIssWo({ detail: this.detail, it: new Date() })
-      .subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        }
-      );
-    console.log(this.detailSo);
-    this.posCategoryService
-      .createIssSo({ detail: this.detail, it: new Date() })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1005,7 +1018,10 @@ export class PosComponent implements OnInit {
     this.disable = false;
   }
   time = new Observable<string>((observer: Observer<string>) => {
-    setInterval(() => observer.next(""), 1000);
+    setInterval(() => {
+      observer.next("");
+      this.applyDel;
+    }, 1000);
   });
 
   gridReady(angularGrid: AngularGridInstance) {
@@ -1958,5 +1974,61 @@ export class PosComponent implements OnInit {
   }
   onSelectAutre() {
     this.RequestBuyingArticle = false;
+  }
+
+  onSelectDelivery(option) {
+    this.currentPlatformeOffers = [];
+    this.productOffers = [];
+    this.deliveryOption = option.code_desc;
+
+    const now = new Date();
+    let ChangedFormat = this.pipe.transform(now, "yyyy-MM-dd");
+
+    const current =
+      now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+    this.currentPlatformeOffers = this.platformesOffers.filter(
+      (del) =>
+        del.del_desc === option.code_desc &&
+        del.del_valid < ChangedFormat &&
+        del.del_exp > ChangedFormat
+    );
+
+    this.currentPlatformeOffers.map((item) => {
+      const elem = this.AllProducts.find(
+        (product) => product.pt_part === item.del_part_gift
+      );
+      this.productOffers.push(elem);
+    });
+  }
+
+  applyDel(p) {
+    this.cartProducts = [];
+    this.cart.products = [];
+    this.cartAmount = 0;
+    this.remisePrice = 0;
+    this.currentOffer = p;
+    this.offer = true;
+
+    this.productOffers.map((item) => {
+      const itemOffer = {
+        id: Math.random(),
+        pt_part: item.pt_part,
+        pt_desc1: item.pt_desc1,
+        pt_article: item.pt_article,
+        pt_price: item.pt_price * (1 - Number(p.del_pct_part_gift) / 100),
+        pt_formule: item.pt_formule,
+        pt_bom_code: item.pt_bom_code,
+        suppliments: [],
+        ingredients: [],
+        sauces: [],
+        comment: "",
+        pt_loc: item.pt_loc,
+        pt_qty: 1,
+        line: this.cartProducts.length.toString(),
+      };
+      this.cart.products.push(itemOffer);
+      this.cartProducts = this.cart.products;
+    });
   }
 }

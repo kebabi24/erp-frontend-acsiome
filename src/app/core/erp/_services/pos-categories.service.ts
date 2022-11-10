@@ -31,6 +31,7 @@ const API_URL_PO = environment.apiUrl + "/purchase-orders";
 const API_URL_PR = environment.apiUrl + "/purchase-receives";
 const API_URL_BK = environment.apiUrl + "/banks";
 const API_URL_CUSTOMER = environment.apiUrl + "/customers";
+const API_URL_DELIVERY = environment.apiUrl + "/delivery";
 
 @Injectable()
 export class PosCategoryService {
@@ -78,7 +79,10 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
-
+  public getAllPlatformesOffers() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_DELIVERY, { headers: httpHeaders });
+  }
   public getDiscountCode() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL_CUSTOMER, {

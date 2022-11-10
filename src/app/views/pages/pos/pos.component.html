@@ -495,6 +495,36 @@
                             </thead>
                             <!--end::Table head-->
                             <!--begin::Table body-->
+                            <tr *ngIf="inShop">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Commande table {{ currentTable }}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="showStatusOut">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Commande à emporter
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="showStatusDelivery">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Livraison avec {{ deliveryOption }}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
                             <tbody *ngFor="let elem of cartProducts">
                               <tr>
                                 <td class="pe-0">
@@ -2534,24 +2564,30 @@
   </div>
   <div>
     <ng-template #content18 let-c="close" let-d="dismiss">
-      <div class="modal-header" style="background-color: #f5f5dc">
+      <div class="modal-header">
         <h4 class="modal-title">Pointage des employés</h4>
       </div>
-      <div class="modal-body" style="background-color: #f5f5dc"></div>
-      <div class="modal-footer" style="background-color: #f5f5dc">
+      <div class="modal-body">
+        <div class="row">
+          <angular-slickgrid
+            class="col-12"
+            gridHeight="500"
+            gridId="empGrid"
+            [columnDefinitions]="columnDefinitions18"
+            [gridOptions]="gridOptions18"
+            [dataset]="emps"
+            (onAngularGridCreated)="gridReady18($event)"
+          >
+          </angular-slickgrid>
+        </div>
+      </div>
+      <div class="modal-footer">
         <button
-          type="button"
-          class="btn btn-secondary"
+          class="btn btn-primary px-12"
+          (click)="onSubmitEmpTime()"
           (click)="c('Close click')"
         >
-          Annuller
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="c('Close click')"
-        >
-          Ok
+          Ajouter Pointage Employés
         </button>
       </div>
     </ng-template>
@@ -2576,12 +2612,15 @@
               <ul
                 class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
               >
-                <li style="width: 200px; height: 65px">
+                <li
+                  *ngFor="let platforme of platformes"
+                  style="width: 200px; height: 65px"
+                >
                   <button
                     class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
                     data-bs-toggle="pill"
                     type="button"
-                    (click)="onSelectDelivery(category)"
+                    (click)="onSelectDelivery(platforme)"
                     style="
                       width: 200px;
                       height: 65px;
@@ -2592,20 +2631,37 @@
                       <span
                         class="text-gray-900 fw-bold fs-2 d-block"
                         style="margin-left: 5px"
-                        >Abracadabra</span
+                        >{{ platforme.code_desc }}</span
                       >
                     </div>
                   </button>
                 </li>
-                <li style="width: 200px; height: 65px">
+              </ul>
+
+              <!--end::Tab Content-->
+            </div>
+            <!--end: Card Body-->
+          </div>
+          <!--end::Pos food-->
+        </div>
+        <div style="margin-top: 10px">
+          <div class="card card-flush card-p-0 bg-transparent border-0">
+            <div>
+              <ul
+                class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+              >
+                <li
+                  *ngFor="let p of currentPlatformeOffers; let index = index"
+                  style="width: 200px; height: 150px"
+                >
                   <button
                     class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
                     data-bs-toggle="pill"
                     type="button"
-                    (click)="onSelectDelivery(category)"
+                    (click)="applyDel(p)"
                     style="
                       width: 200px;
-                      height: 65px;
+                      height: 150px;
                       background-color: #ffb701;
                     "
                   >
@@ -2613,71 +2669,19 @@
                       <span
                         class="text-gray-900 fw-bold fs-2 d-block"
                         style="margin-left: 5px"
-                        >Yassir</span
-                      >
-                    </div>
-                  </button>
-                </li>
-                <li style="width: 200px; height: 65px">
-                  <button
-                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                    data-bs-toggle="pill"
-                    type="button"
-                    (click)="onSelectDelivery(category)"
-                    style="
-                      width: 200px;
-                      height: 65px;
-                      background-color: #ffb701;
-                    "
-                  >
-                    <div class="">
+                        >Offre {{ index + 1 }}
+                      </span>
                       <span
-                        class="text-gray-900 fw-bold fs-2 d-block"
-                        style="margin-left: 5px"
-                        >Jumia</span
-                      >
-                    </div>
-                  </button>
-                </li>
-                <li style="width: 200px; height: 65px">
-                  <button
-                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                    data-bs-toggle="pill"
-                    type="button"
-                    (click)="onSelectDelivery(category)"
-                    style="
-                      width: 200px;
-                      height: 65px;
-                      background-color: #ffb701;
-                    "
-                  >
-                    <div class="">
+                        class="text-gray-900 fw-bold fs-4 d-block"
+                        style="margin-left: 12px"
+                        >{{ p.del_pct_disc }} % de réduction
+                      </span>
                       <span
-                        class="text-gray-900 fw-bold fs-2 d-block"
-                        style="margin-left: 5px"
-                        >Fast delivery</span
-                      >
-                    </div>
-                  </button>
-                </li>
-                <li style="width: 200px; height: 65px">
-                  <button
-                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                    data-bs-toggle="pill"
-                    type="button"
-                    (click)="onSelectDelivery(category)"
-                    style="
-                      width: 200px;
-                      height: 65px;
-                      background-color: #ffb701;
-                    "
-                  >
-                    <div class="">
-                      <span
-                        class="text-gray-900 fw-bold fs-2 d-block"
-                        style="margin-left: 5px"
-                        >Autre</span
-                      >
+                        *ngFor="let pOFF of productOffers"
+                        class="text-gray-900 fw-bold fs-7 d-block"
+                        style="margin-left: 10px"
+                        >{{ pOFF.pt_desc1 }}
+                      </span>
                     </div>
                   </button>
                 </li>
@@ -2696,14 +2700,14 @@
           class="btn btn-secondary"
           (click)="c('Close click')"
         >
-          Annuller
+          Annuler
         </button>
         <button
           type="button"
           class="btn btn-primary"
           (click)="c('Close click')"
         >
-          Ok
+          Appliquer
         </button>
       </div>
     </ng-template>
