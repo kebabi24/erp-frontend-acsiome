@@ -1803,19 +1803,49 @@ export class PosComponent implements OnInit {
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           enableRenderHtml: true,
           collectionAsync:  this.http.get(`${API_URL}/emptime`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-       /*   customStructure: {    
-            value: 'code_value',
-            label: 'code_cmmt',
-            optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
-            //labelSuffix: 'text',
-         },*/
-          editorOptions: {
-            maxHeight: 400
-          }
+        //   customStructure: {    
+        //     value: 'code_value',
+        //     label: 'code_cmmt',
+        //     optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
+        //     //labelSuffix: 'text',
+        //  },
+        //   editorOptions: {
+        //     maxHeight: 400
+        //   }
         },
       },
-  
+      {
+        id: "timestart",
+        name: "Heure D'entrée",
+        field: "timestart",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+       
+        }
         
+    },
+    {
+      id: "timeend",
+      name: "Heure De Sortie",
+      field: "timeend",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+      
+      editor: {
+        model: Editors.text
+      },
+      onCellChange: (e: Event, args: OnEventArgs) => {
+       
+      }
+  },  
     ]
   
     this.gridOptions18 = {
