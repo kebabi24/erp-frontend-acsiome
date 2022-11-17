@@ -21,7 +21,11 @@ import { Cart } from "../../../core/erp/_models/pos-cart.model";
 import { NgbDropdownConfig, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
-import { EmployeService, PosCategoryService } from "../../../core/erp";
+import {
+  EmployeService,
+  PosCategoryService,
+  MobileServiceService,
+} from "../../../core/erp";
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
 import { DatePipe } from "@angular/common";
 import {
@@ -177,6 +181,9 @@ export class PosComponent implements OnInit {
   pipe = new DatePipe("en-US");
   offer: boolean = false;
   currentOffer: any;
+  stateCaisse: boolean = false;
+  stateInventory: boolean = true;
+  globalState: boolean = true;
   private results: Observable<any[]>;
   constructor(
     config: NgbDropdownConfig,
@@ -192,6 +199,7 @@ export class PosComponent implements OnInit {
     public dialog: MatDialog,
     private posCategoryService: PosCategoryService,
     private employeService: EmployeService,
+    private mobileService: MobileServiceService,
     private fb: FormBuilder,
     private layoutUtilsService: LayoutUtilsService
   ) {
@@ -298,6 +306,20 @@ export class PosComponent implements OnInit {
     this.createMvForm();
     this.createCustomerForm();
     // this.initGrid2();
+    this.mobileService
+      .getByOne({ role_code: this.user.usrd_user_name, service_open: "true" })
+      .subscribe((res: any) => {
+        let service = res.data;
+        if (service) {
+          this.globalState = false;
+          this.stateCaisse = true;
+          this.stateInventory = true;
+        } else {
+          this.globalState = true;
+          this.stateCaisse = false;
+          this.stateInventory = true;
+        }
+      });
   }
 
   onSelect(category: Category): void {
@@ -514,7 +536,10 @@ export class PosComponent implements OnInit {
         pt_part: checkItemExist.pt_part,
         pt_desc1: checkItemExist.pt_desc1,
         pt_article: checkItemExist.pt_article,
-        pt_price: Number(this.productInCartPrice),
+        pt_price: this.offer
+          ? Number(this.productInCartPrice) *
+            (1 - Number(this.currentOffer.del_pct_disc) / 100)
+          : Number(this.productInCartPrice),
         pt_formule: checkItemExist.pt_formule,
         pt_bom_code: checkItemExist.pt_bom_code,
         suppliments: checkItemExist.suppliments,
@@ -536,12 +561,12 @@ export class PosComponent implements OnInit {
       item.isChecked = true;
     });
     this.cartAmount = this.calculateSubTotal();
-    this.offer &&
-      (this.cart.total_price =
-        this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
-      (this.remisePrice =
-        this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
-      (this.cartAmount = this.cart.total_price);
+    // this.offer &&
+    //   (this.cart.total_price =
+    //     this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
+    //   (this.remisePrice =
+    //     this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
+    //   (this.cartAmount = this.cart.total_price);
     this.currentItem.suppliments = [];
     this.currentItem.ingredients = [];
     this.productInCartPrice = 0;
@@ -606,13 +631,12 @@ export class PosComponent implements OnInit {
   }
 
   clearCurrentCart(): void {
+    this.cartAmount = 0;
+    this.remisePrice = 0;
     this.cartProducts = [];
     this.cart.products = this.cartProducts;
     this.showPrice = false;
-
-    this.ingredients.map((item) => {
-      item.isChecked = true;
-    });
+    this.offer = false;
     this.disable = false;
   }
 
@@ -632,9 +656,14 @@ export class PosComponent implements OnInit {
   }
 
   onIncreaseQty(productCart: Product): void {
+    const pt = this.AllProducts.find(
+      (elem) => elem.pt_part === productCart.pt_part
+    );
+    const prc = pt.pt_price;
     this.cartProducts.filter((item) => {
       if (item.pt_part === productCart.pt_part) {
-        const price = Number(item.pt_price);
+        // const price = Number(item.pt_price);
+
         item.pt_price =
           Number(productCart.pt_price) +
           Number(productCart.pt_price) / productCart.pt_qty;
@@ -685,6 +714,9 @@ export class PosComponent implements OnInit {
           true,
           true
         );
+        this.offer === true && (this.offer = false);
+        this.currentOffer = null;
+
         this.loadingSubject.next(false);
       }
     );
@@ -802,6 +834,9 @@ export class PosComponent implements OnInit {
 
   checkCloseInventory(content) {
     this.modalService.open(content, { size: "xl" });
+    this.dataset.map((item) => {
+      item.tag_cnt_qty = 0;
+    });
   }
 
   setCloseInventory() {
@@ -831,10 +866,12 @@ export class PosComponent implements OnInit {
         this.loadingSubject.next(false);
       }
     );
-    this.dataset = [];
   }
   checkOpenInventory2(content) {
     this.modalService.open(content, { size: "xl" });
+    this.dataset.map((item) => {
+      item.tag_cnt_qty = 0;
+    });
   }
 
   openModal(content) {
@@ -866,10 +903,11 @@ export class PosComponent implements OnInit {
           true,
           true
         );
+        this.stateInventory = true;
+        this.globalState = false;
         this.loadingSubject.next(false);
       }
     );
-    this.dataset = [];
   }
   handleSelectedRowsChanged(e, args) {}
 
@@ -1021,7 +1059,7 @@ export class PosComponent implements OnInit {
     setInterval(() => {
       observer.next("");
       this.applyDel;
-    }, 1000);
+    }, 10);
   });
 
   gridReady(angularGrid: AngularGridInstance) {
@@ -1573,23 +1611,12 @@ export class PosComponent implements OnInit {
   }
 
   onSubmitCaisseInventory() {
-    this.bank.map((item) => {
-      return (
-        (item.bk_balance = item.bk_balance),
-        (item.bk_2000 = item.bk_2000),
-        (item.bk_1000 = item.bk_1000),
-        (item.bk_0500 = item.bk_0500),
-        (item.bk_0200 = item.bk_0200),
-        (item.bk_p200 = item.bk_p200),
-        (item.bk_p100 = item.bk_p100),
-        (item.bk_p050 = item.bk_p050),
-        (item.bk_p020 = item.bk_p020),
-        (item.bk_p010 = item.bk_p010),
-        (item.bk_p005 = item.bk_p005)
-      );
-    });
     this.posCategoryService
-      .createBkBkh({ detail: this.bank, type: "O" })
+      .createBkBkh({
+        detail: this.bank,
+        type: "O",
+        user: this.user.usrd_user_name,
+      })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1610,6 +1637,8 @@ export class PosComponent implements OnInit {
             true,
             true
           );
+          this.stateCaisse = true;
+          this.stateInventory = false;
           this.loadingSubject.next(false);
         }
       );
@@ -1617,23 +1646,12 @@ export class PosComponent implements OnInit {
   }
 
   onSubmitCaisseClotureInventory() {
-    this.bank.map((item) => {
-      return (
-        (item.bk_balance = item.bk_balance),
-        (item.bk_2000 = item.bk_2000),
-        (item.bk_1000 = item.bk_1000),
-        (item.bk_0500 = item.bk_0500),
-        (item.bk_0200 = item.bk_0200),
-        (item.bk_p200 = item.bk_p200),
-        (item.bk_p100 = item.bk_p100),
-        (item.bk_p050 = item.bk_p050),
-        (item.bk_p020 = item.bk_p020),
-        (item.bk_p010 = item.bk_p010),
-        (item.bk_p005 = item.bk_p005)
-      );
-    });
     this.posCategoryService
-      .createBkBkh({ detail: this.bank, type: "C" })
+      .createBkBkh({
+        detail: this.bank,
+        type: "C",
+        user: this.user.usrd_user_name,
+      })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1654,6 +1672,9 @@ export class PosComponent implements OnInit {
             true,
             true
           );
+          this.globalState = true;
+          this.stateInventory = true;
+          this.stateCaisse = false;
           this.loadingSubject.next(false);
         }
       );
@@ -1994,12 +2015,12 @@ export class PosComponent implements OnInit {
         del.del_exp > ChangedFormat
     );
 
-    this.currentPlatformeOffers.map((item) => {
-      const elem = this.AllProducts.find(
-        (product) => product.pt_part === item.del_part_gift
-      );
-      this.productOffers.push(elem);
-    });
+    // this.currentPlatformeOffers.map((item) => {
+    //   const elem = this.AllProducts.find(
+    //     (product) => product.pt_part === item.del_part_gift
+    //   );
+    //   this.productOffers.push(elem);
+    // });
   }
 
   applyDel(p) {

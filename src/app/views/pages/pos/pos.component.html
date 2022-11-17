@@ -28,7 +28,7 @@
                 <button
                   (click)="checkOpenInventory2(content3)"
                   class="fw-bold btn btn-primary"
-                  [disabled]="value1"
+                  [disabled]="stateInventory"
                   style="background-color: #9e110d; font-size: large"
                 >
                   Inventaire d'ouverture
@@ -38,6 +38,7 @@
                   (click)="checkCloseInventory(content11)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Inventaire de clôture
                 </button>
@@ -45,6 +46,7 @@
                   (click)="opBk(content6)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="stateCaisse"
                 >
                   Ouverture caisse
                 </button>
@@ -52,6 +54,7 @@
                   (click)="opBk(content10)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   clôture caisse
                 </button>
@@ -59,21 +62,23 @@
                   (click)="mouvementCaisse(content12)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Demande de service
                 </button>
-                <button
+                <!-- <button
                   (click)="mvBank(content16)"
                   class="fw-bold btn btn-primary"
                   [disabled]="value1"
                   style="background-color: #9e110d; font-size: large"
                 >
                   Demande de fonds
-                </button>
+                </button> -->
                 <button
                   (click)="pArticle(content20)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Paiement marchandise
                 </button>
@@ -82,6 +87,7 @@
                   (click)="podRec(content9)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Réception commandes
                 </button>
@@ -89,6 +95,7 @@
                   (click)="pEmp(content18)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Pointage des employés
                 </button>
@@ -100,6 +107,7 @@
                   (click)="getHistory(content4)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Liste des commandes
                 </button>
@@ -125,6 +133,7 @@
                               height: 65px;
                               background-color: #ffb701;
                             "
+                            [disabled]="globalState"
                           >
                             <div class="">
                               <img src="{{ category.category_img }}" alt="" />
@@ -378,26 +387,29 @@
                       style="background-color: #ffb701"
                     >
                       <div class="flex-row" style="margin-top: 20px">
-                        <span class="switch switch-icon">
+                        <span
+                          class="switch switch-icon"
+                          style="margin-left: 45px"
+                        >
                           <label
-                            class="fw-bold text-gray-900"
-                            style="margin-left: 90px; margin-right: 10px"
+                            class="fw-bold text-gray-900 fs-1"
+                            style="margin-right: 5px"
                             >Entreprise:</label
                           >
                           <label>
                             <input
-                              style="margin-left: 120px; margin-right: 30px"
                               type="checkbox"
                               class="form-control form-control-sm form-control-solid"
                               formControlName="usrd_active"
                               name="select"
                             />
-                            <span></span>
+                            <span style="margin-right: 50px"></span>
                           </label>
                           <button
                             (click)="addClientModal(content17)"
                             class="btn fw-bold btn-primary"
                             style="background-color: #9e110d; font-size: large"
+                            [disabled]="globalState"
                           >
                             Ajouter client
                           </button>
@@ -440,6 +452,7 @@
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderS(content)"
                             style="margin-left: 35px; background-color: beige"
+                            [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
@@ -449,6 +462,7 @@
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderE()"
                             style="margin-left: 5px; background-color: beige"
+                            [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
@@ -457,6 +471,7 @@
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderL(content19)"
                             style="margin-left: 5px; background-color: beige"
+                            [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
@@ -471,6 +486,7 @@
                             "
                             (click)="clearCurrentCart()"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                            [disabled]="globalState"
                           >
                             Vider le panier
                           </button>
@@ -751,6 +767,7 @@
                               #discount
                               id="discount"
                               name="discount"
+                              [disabled]="globalState"
                             />
                             <label for="floatingInputValue"
                               >Numéro carte de fidélité
@@ -761,7 +778,7 @@
                             (click)="onChangeDiscount(discount.value)"
                             class="btn btn-primary fs-1 w-100 py-4"
                             style="background-color: #9e110d; margin-top: 5px"
-                            [disabled]="disable"
+                            [disabled]="globalState"
                           >
                             Vérifier
                           </button>
@@ -771,7 +788,7 @@
                             (click)="prepareCart(content)"
                             class="btn btn-primary fs-1 w-100 py-4"
                             style="background-color: #9e110d; margin-top: 5px"
-                            [disabled]="disable"
+                            [disabled]="globalState"
                           >
                             Lancer la préparation
                           </button>
@@ -796,6 +813,7 @@
                               id="floatingInputValue"
                               name="balance{{ value1 }}"
                               name="balance"
+                              [disabled]="globalState"
                             />
                             <label for="floatingInputValue"
                               >Montant versé
@@ -822,6 +840,7 @@
                               id="floatingInputValue"
                               name="balance2{{ value2 }}"
                               name="balance2"
+                              [disabled]="globalState"
                             />
                             <label for="floatingInputValue"
                               >Montant rendu
@@ -841,6 +860,7 @@
                             class="btn btn-primary fs-1 w-100 py-4"
                             (click)="paiement()"
                             style="margin-top: 10px; background-color: #9e110d"
+                            [disabled]="globalState"
                           >
                             Payer
                           </button>
@@ -875,7 +895,18 @@
   <div>
     <kt-portlet-body>
       <ng-template #content3 let-c="close" let-d="dismiss">
+        <div class="modal-header" style="background-color: #f5f5dc">
+          <h4 class="modal-title">Saisir votre inventaire d'ouverture</h4>
+        </div>
         <div class="modal-body" style="background-color: #f5f5dc">
+          <button
+            style="background-color: #9e110d"
+            class="btn btn-primary fs-2 w-100 mt-2 mb-2"
+            (click)="addNewItemInventory()"
+          >
+            Ajouter un Article
+          </button>
+
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -884,7 +915,7 @@
               [columnDefinitions]="columnDefinitions"
               [gridOptions]="gridOptions"
               [dataset]="dataset"
-              (onAngularGridCreated)="gridReady($event)"
+              (onAngularGridCreated)="gridReady2($event)"
               (sgOnSelectedRowsChanged)="
                 handleSelectedRowsChanged(
                   $event.detail.eventData,
@@ -894,12 +925,22 @@
             >
             </angular-slickgrid>
           </div>
+          <button
+            hidden
+            id="openItemsGrid2"
+            class="btn btn-primary"
+            (click)="open4(content15)"
+          >
+            Launch demo modal
+          </button>
         </div>
+
         <div
           class="card-footer d-flex justify-content-end py-6 px-9"
           style="background-color: #f5f5dc"
         >
           <button
+            style="background-color: #9e110d"
             class="btn btn-primary px-12"
             (click)="c('Close click')"
             (click)="openModal(content14)"
@@ -955,6 +996,9 @@
   <div>
     <kt-portlet-body>
       <ng-template #content11 let-c="close" let-d="dismiss">
+        <div class="modal-header" style="background-color: #f5f5dc">
+          <h4 class="modal-title">Saisir votre inventaire de clôture</h4>
+        </div>
         <div class="modal-body" style="background-color: #f5f5dc">
           <div class="row">
             <angular-slickgrid
@@ -1249,29 +1293,7 @@
               <div class="min-w-250px fs-1 fw-bold text-gray-900">
                 Spécifications
               </div>
-              <!-- <div
-                class="w-125px"
-                style="margin-top: 10px"
-                *ngFor="let ingredient of ingredients; let i = index"
-              >
-                <div
-                  class="form-check form-check-solid"
-                  (click)="setIngredient(ingredient)"
-                >
-                  <input
-                    name="{{ ingredient.id }}"
-                    class="form-check-input"
-                    type="checkbox"
-                    [checked]="ingredient.isChecked"
-                    style="background-color: #9e110d"
-                  />
-                  <label
-                    style="margin-top: 5px"
-                    class="form-check-label ps-2"
-                    >{{ ingredient.pt_desc1 }}</label
-                  >
-                </div>
-              </div> -->
+
               <div>
                 <ul
                   class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
@@ -2591,14 +2613,6 @@
         </button>
       </div>
     </ng-template>
-    <button
-      hidden
-      id="openItemsGrid"
-      class="btn btn-primary"
-      (click)="open4(content15)"
-    >
-      Launch demo modal
-    </button>
   </div>
   <div>
     <ng-template #content19 let-c="close" let-d="dismiss">
@@ -2711,14 +2725,6 @@
         </button>
       </div>
     </ng-template>
-    <button
-      hidden
-      id="openItemsGrid"
-      class="btn btn-primary"
-      (click)="open4(content15)"
-    >
-      Launch demo modal
-    </button>
   </div>
   <div>
     <ng-template #content20 let-c="close" let-d="dismiss">
@@ -2743,13 +2749,5 @@
         </button>
       </div>
     </ng-template>
-    <button
-      hidden
-      id="openItemsGrid"
-      class="btn btn-primary"
-      (click)="open4(content15)"
-    >
-      Launch demo modal
-    </button>
   </div>
 </body>

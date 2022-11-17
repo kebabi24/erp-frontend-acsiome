@@ -12,7 +12,7 @@
         "e2e": "ng e2e",
         "bundle-report": "webpack-bundle-analyzer dist/stats.json",
         "rtl": "webpack",
-        "pack": "electron-packager . abracadabra"
+        "pack": "electron-packager . abracadabra --platform=win32 --arch=ia32"
     },
     "private": true,
     "dependencies": {
@@ -100,6 +100,7 @@
         "css-loader": "^3.4.2",
         "electron": "^21.2.2",
         "electron-packager": "^17.1.1",
+        "electron-wix-msi": "^5.0.0",
         "html-webpack-plugin": "^5.2.0",
         "jasmine-core": "3.5.0",
         "jasmine-spec-reporter": "4.2.1",
