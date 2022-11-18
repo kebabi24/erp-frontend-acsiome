@@ -200,7 +200,7 @@
                           type="button"
                           *ngFor="let size of sizeOfProduct"
                           data-bs-toggle="pill"
-                          (click)="prepareProduct(size)"
+                          (click)="prepareProduct(size, content2)"
                           style="background-color: #ffb701"
                         >
                           <div class="card-body text-center" type="button">
@@ -364,14 +364,14 @@
                         </div>
                       </div>
                     </div> -->
-                  <button
+                  <!-- <button
                     *ngIf="addProductBtn"
                     (click)="customizeProduct(content2)"
                     class="btn btn-primary fs-1 w-100 py-4"
                     style="margin-top: 15px; background-color: #9e110d"
                   >
                     Ajouter au panier
-                  </button>
+                  </button> -->
                 </div>
 
                 <!--end::Content-->
@@ -500,15 +500,9 @@
                         <!--begin::Table container-->
                         <div class="table-responsive mb-8">
                           <!--begin::Table-->
-                          <table class="table align-middle gs-0 gy-4 my-0">
+                          <table class="table align-middle">
                             <!--begin::Table head-->
-                            <thead>
-                              <tr>
-                                <th class="min-w-175px"></th>
-                                <th class="w-125px"></th>
-                                <th class="w-60px"></th>
-                              </tr>
-                            </thead>
+
                             <!--end::Table head-->
                             <!--begin::Table body-->
                             <tr *ngIf="inShop">
@@ -581,11 +575,6 @@
                                   <!--begin::Dialer-->
                                   <div
                                     class="position-relative d-flex align-items-center"
-                                    data-kt-dialer="true"
-                                    data-kt-dialer-min="1"
-                                    data-kt-dialer-max="10"
-                                    data-kt-dialer-step="1"
-                                    data-kt-dialer-decimals="0"
                                   >
                                     <!--begin::Decrease control-->
                                     <button
@@ -670,7 +659,7 @@
                                   </div>
                                   <!--end::Dialer-->
                                 </td>
-                                <td class="text-end">
+                                <td class="text-start">
                                   <span
                                     class="fw text-gray-900 fs-1"
                                     data-kt-pos-element="item-total"
@@ -1303,21 +1292,34 @@
                     style="width: 240px; height: 65px; margin-top: 10px"
                   >
                     <button
+                      #btn
                       class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                      data-bs-toggle="pill"
-                      type="button"
+                      (click)="btn.classList.add('selected')"
                       (click)="setIngredient(ingredient)"
-                      style="
-                        width: 240px;
-                        height: 65px;
-                        background-color: #ffb701;
-                      "
+                      style="width: 240px; height: 65px"
                     >
                       <div class="">
                         <span
                           class="text-gray-900 fw-bold fs-2 d-block"
                           style="margin-left: 5px"
                           >{{ ingredient.pt_desc1 }}</span
+                        >
+                      </div>
+                    </button>
+                  </li>
+                  <li style="width: 240px; height: 65px; margin-top: 10px">
+                    <button
+                      class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                      data-bs-toggle="pill"
+                      type="button"
+                      (click)="setIngredient(ingredient)"
+                      style="width: 240px; height: 65px"
+                    >
+                      <div class="">
+                        <span
+                          class="text-gray-900 fw-bold fs-2 d-block"
+                          style="margin-left: 5px"
+                          >Sans garniture</span
                         >
                       </div>
                     </button>
@@ -1359,7 +1361,7 @@
                 (click)="addProductToCart()"
                 (click)="c('Close click')"
               >
-                Confirmer l'ajout
+                Personnaliser le produit
               </button>
             </div>
             <!--end::Card footer-->

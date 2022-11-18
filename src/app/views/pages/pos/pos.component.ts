@@ -185,6 +185,7 @@ export class PosComponent implements OnInit {
   stateInventory: boolean = true;
   globalState: boolean = true;
   private results: Observable<any[]>;
+  loy_num: number = 0;
   constructor(
     config: NgbDropdownConfig,
     private http: HttpClient,
@@ -336,6 +337,9 @@ export class PosComponent implements OnInit {
     );
 
     console.log(this.currentSeq);
+    this.productInCartPrice = 0;
+    this.currentItem = undefined;
+
     // this.selectedProducts = result.items.map((item) => {
     //   let itemCategory: Product = {
     //     id: item.id,
@@ -377,6 +381,8 @@ export class PosComponent implements OnInit {
       this.showSize = true;
       this.showSauces = false;
     }
+    this.productInCartPrice = 0;
+    this.currentItem = undefined;
   }
   prepareProductWithoutSize(productOnlist) {
     this.currentItem = this.sizeOfProduct.find(
@@ -401,7 +407,8 @@ export class PosComponent implements OnInit {
       sauces: [],
     };
   }
-  prepareProduct(size) {
+  prepareProduct(size, content) {
+    this.productInCartPrice = 0;
     this.currentItem = this.sizeOfProduct.find(
       (item) => item.pt_group === size.pt_group
     );
@@ -426,6 +433,90 @@ export class PosComponent implements OnInit {
       ingredients: [],
       sauces: [],
     };
+    if (this.currentCategory.direct === true) {
+      this.addProductToCart();
+    } else {
+      this.open2(content);
+    }
+    const checkItemExist = this.currentItem;
+    // checkItemExist.size != undefined ? this.sizeOfProduct : null;
+
+    // const itemExist: Product = this.cartProducts.find((item) => {
+    //   return (
+    //     item.pt_part === checkItemExist.pt_part &&
+    //     item.suppliments.length === checkItemExist.suppliments.length &&
+    //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
+    //       .length === checkItemExist.suppliments.length &&
+    //     item.ingredients.length === checkItemExist.ingredients.length &&
+    //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
+    //       .length === checkItemExist.ingredients.length &&
+    //     item.sauces.length === checkItemExist.sauces.length &&
+    //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
+    //       checkItemExist.sauces.length &&
+    //     item.comment === checkItemExist.comment
+    //   );
+    // });
+
+    checkItemExist.suppliments.map((item) => {
+      this.productInCartPrice =
+        Number(this.productInCartPrice) + Number(item.pt_price);
+    });
+    this.productInCartPrice =
+      Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
+    this.loclocOrder === "Emporté"
+      ? this.posCategoryService
+          .getByOneBom({ ptb_part: checkItemExist.pt_part })
+          .subscribe((res: any) => {
+            res.data.map((item) => {
+              checkItemExist.pt_bom_code = item.ptb_bom;
+            });
+          })
+      : null;
+    this.itemToAdd = {
+      id: Math.random(),
+      pt_part: checkItemExist.pt_part,
+      pt_desc1: checkItemExist.pt_desc1,
+      pt_article: checkItemExist.pt_article,
+      pt_price: this.offer
+        ? Number(this.productInCartPrice) *
+          (1 - Number(this.currentOffer.del_pct_disc) / 100)
+        : Number(this.productInCartPrice),
+      pt_formule: checkItemExist.pt_formule,
+      pt_bom_code: checkItemExist.pt_bom_code,
+      suppliments: checkItemExist.suppliments,
+      ingredients: checkItemExist.ingredients,
+      sauces: checkItemExist.sauces,
+      comment: this.sizeProduct,
+      pt_loc: checkItemExist.pt_loc,
+      pt_qty: 1,
+      line: this.cartProducts.length.toString(),
+    };
+
+    this.cart.products.push(this.itemToAdd);
+    this.showPrice = true;
+
+    this.cartProducts = this.cart.products;
+
+    this.ingredients.map((item) => {
+      item.isChecked = true;
+    });
+    this.cartAmount = this.calculateSubTotal();
+    // this.offer &&
+    //   (this.cart.total_price =
+    //     this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
+    //   (this.remisePrice =
+    //     this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
+    //   (this.cartAmount = this.cart.total_price);
+    // this.currentItem.suppliments = [];
+    // this.currentItem.ingredients = [];
+    // this.productInCartPrice = 0;
+    // this.selectedIndex = 0;
+    // this.showSize = false;
+    // this.showSoda = false;
+    // this.showSpec = false;
+    // this.showSupp = false;
+    // this.showSauces = false;
+    // this.currentItem = undefined;
   }
   setSauce(sauce: any) {
     this.currentItem.pt_formule == false && (this.showSupp = true);
@@ -484,103 +575,100 @@ export class PosComponent implements OnInit {
   }
 
   customizeProduct(content): void {
-    if (this.currentCategory.direct === true) {
-      this.addProductToCart();
-    } else {
-      this.open2(content);
-    }
+    // if (this.currentCategory.direct === true) {
+    //   this.addProductToCart();
+    // } else {
+    //   this.open2(content);
+    // }
   }
 
   addProductToCart() {
-    const checkItemExist = this.currentItem;
-    // checkItemExist.size != undefined ? this.sizeOfProduct : null;
-
-    const itemExist: Product = this.cartProducts.find((item) => {
-      return (
-        item.pt_part === checkItemExist.pt_part &&
-        item.suppliments.length === checkItemExist.suppliments.length &&
-        item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
-          .length === checkItemExist.suppliments.length &&
-        item.ingredients.length === checkItemExist.ingredients.length &&
-        item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
-          .length === checkItemExist.ingredients.length &&
-        item.sauces.length === checkItemExist.sauces.length &&
-        item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
-          checkItemExist.sauces.length &&
-        item.comment === checkItemExist.comment
-      );
-    });
-    if (itemExist) {
-      itemExist.pt_price =
-        Number(itemExist.pt_price) +
-        Number(itemExist.pt_price) / itemExist.pt_qty;
-      itemExist.pt_qty = itemExist.pt_qty + 1;
-    } else {
-      checkItemExist.suppliments.map((item) => {
-        this.productInCartPrice =
-          Number(this.productInCartPrice) + Number(item.pt_price);
-      });
-      this.productInCartPrice =
-        Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
-      this.loclocOrder === "Emporté"
-        ? this.posCategoryService
-            .getByOneBom({ ptb_part: checkItemExist.pt_part })
-            .subscribe((res: any) => {
-              res.data.map((item) => {
-                checkItemExist.pt_bom_code = item.ptb_bom;
-              });
-            })
-        : null;
-      this.itemToAdd = {
-        id: Math.random(),
-        pt_part: checkItemExist.pt_part,
-        pt_desc1: checkItemExist.pt_desc1,
-        pt_article: checkItemExist.pt_article,
-        pt_price: this.offer
-          ? Number(this.productInCartPrice) *
-            (1 - Number(this.currentOffer.del_pct_disc) / 100)
-          : Number(this.productInCartPrice),
-        pt_formule: checkItemExist.pt_formule,
-        pt_bom_code: checkItemExist.pt_bom_code,
-        suppliments: checkItemExist.suppliments,
-        ingredients: checkItemExist.ingredients,
-        sauces: checkItemExist.sauces,
-        comment: this.sizeProduct,
-        pt_loc: checkItemExist.pt_loc,
-        pt_qty: 1,
-        line: this.cartProducts.length.toString(),
-      };
-
-      this.cart.products.push(this.itemToAdd);
-      this.showPrice = true;
-    }
-
-    this.cartProducts = this.cart.products;
-
-    this.ingredients.map((item) => {
-      item.isChecked = true;
-    });
-    this.cartAmount = this.calculateSubTotal();
-    // this.offer &&
-    //   (this.cart.total_price =
-    //     this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
-    //   (this.remisePrice =
-    //     this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
-    //   (this.cartAmount = this.cart.total_price);
-    this.currentItem.suppliments = [];
-    this.currentItem.ingredients = [];
-    this.productInCartPrice = 0;
-    this.selectedIndex = 0;
-    this.showSize = false;
-    this.showSoda = false;
-    this.showSpec = false;
-    this.showSupp = false;
-    this.showSauces = false;
-    this.currentItem = undefined;
+    // const checkItemExist = this.currentItem;
+    // // checkItemExist.size != undefined ? this.sizeOfProduct : null;
+    // const itemExist: Product = this.cartProducts.find((item) => {
+    //   return (
+    //     item.pt_part === checkItemExist.pt_part &&
+    //     item.suppliments.length === checkItemExist.suppliments.length &&
+    //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
+    //       .length === checkItemExist.suppliments.length &&
+    //     item.ingredients.length === checkItemExist.ingredients.length &&
+    //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
+    //       .length === checkItemExist.ingredients.length &&
+    //     item.sauces.length === checkItemExist.sauces.length &&
+    //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
+    //       checkItemExist.sauces.length &&
+    //     item.comment === checkItemExist.comment
+    //   );
+    // });
+    // if (itemExist) {
+    //   itemExist.pt_price =
+    //     Number(itemExist.pt_price) +
+    //     Number(itemExist.pt_price) / itemExist.pt_qty;
+    //   itemExist.pt_qty = itemExist.pt_qty + 1;
+    // } else {
+    //   checkItemExist.suppliments.map((item) => {
+    //     this.productInCartPrice =
+    //       Number(this.productInCartPrice) + Number(item.pt_price);
+    //   });
+    //   this.productInCartPrice =
+    //     Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
+    //   this.loclocOrder === "Emporté"
+    //     ? this.posCategoryService
+    //         .getByOneBom({ ptb_part: checkItemExist.pt_part })
+    //         .subscribe((res: any) => {
+    //           res.data.map((item) => {
+    //             checkItemExist.pt_bom_code = item.ptb_bom;
+    //           });
+    //         })
+    //     : null;
+    //   this.itemToAdd = {
+    //     id: Math.random(),
+    //     pt_part: checkItemExist.pt_part,
+    //     pt_desc1: checkItemExist.pt_desc1,
+    //     pt_article: checkItemExist.pt_article,
+    //     pt_price: this.offer
+    //       ? Number(this.productInCartPrice) *
+    //         (1 - Number(this.currentOffer.del_pct_disc) / 100)
+    //       : Number(this.productInCartPrice),
+    //     pt_formule: checkItemExist.pt_formule,
+    //     pt_bom_code: checkItemExist.pt_bom_code,
+    //     suppliments: checkItemExist.suppliments,
+    //     ingredients: checkItemExist.ingredients,
+    //     sauces: checkItemExist.sauces,
+    //     comment: this.sizeProduct,
+    //     pt_loc: checkItemExist.pt_loc,
+    //     pt_qty: 1,
+    //     line: this.cartProducts.length.toString(),
+    //   };
+    //   this.cart.products.push(this.itemToAdd);
+    //   this.showPrice = true;
+    // }
+    // this.cartProducts = this.cart.products;
+    // this.ingredients.map((item) => {
+    //   item.isChecked = true;
+    // });
+    // this.cartAmount = this.calculateSubTotal();
+    // // this.offer &&
+    // //   (this.cart.total_price =
+    // //     this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
+    // //   (this.remisePrice =
+    // //     this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
+    // //   (this.cartAmount = this.cart.total_price);
+    // this.currentItem.suppliments = [];
+    // this.currentItem.ingredients = [];
+    // this.productInCartPrice = 0;
+    // this.selectedIndex = 0;
+    // this.showSize = false;
+    // this.showSoda = false;
+    // this.showSpec = false;
+    // this.showSupp = false;
+    // this.showSauces = false;
+    // this.currentItem = undefined;
   }
 
   locOrderS(content) {
     this.loclocOrder = "Sur place";
+    console.log(this.loclocOrder);
     this.cartProducts != null && this.setBomCode();
     this.modalService.open(content, { size: "lg" });
     this.inShop = true;
@@ -590,6 +678,7 @@ export class PosComponent implements OnInit {
   }
   locOrderE() {
     this.loclocOrder = "Emporté";
+    console.log(this.loclocOrder);
     this.cartProducts != null && this.setBomCode();
     this.showStatusOut = true;
     this.inShop = false;
@@ -597,7 +686,9 @@ export class PosComponent implements OnInit {
     return this.loclocOrder;
   }
   locOrderL(content) {
+    this.currentTable = null;
     this.loclocOrder = "Livraison";
+    console.log(this.loclocOrder);
     this.cartProducts != null && this.setBomCode();
     this.modalService.open(content, { size: "xl" });
     this.inShop = false;
@@ -607,12 +698,14 @@ export class PosComponent implements OnInit {
   }
 
   setBomCode() {
+    console.log("bom code qui change");
     this.cartProducts.map((product) => {
       this.loclocOrder === "Emporté" || this.loclocOrder === "Livraison"
         ? this.posCategoryService
             .getByOneBom({ ptb_part: product.pt_part })
             .subscribe((res: any) => {
               res.data.map((item) => {
+                console.log(item.ptb_bom);
                 return (product.pt_bom_code = item.ptb_bom);
               });
             })
@@ -620,6 +713,7 @@ export class PosComponent implements OnInit {
             .getByItems({ pt_part: product.pt_part })
             .subscribe((res: any) => {
               res.data.map((item) => {
+                console.log(item.pt_bom_code);
                 return (product.pt_bom_code = item.pt_bom_code);
               });
             });
@@ -655,21 +749,15 @@ export class PosComponent implements OnInit {
     this.cart.products.length === 0 && (this.showPrice = false);
   }
 
-  onIncreaseQty(productCart: Product): void {
-    const pt = this.AllProducts.find(
-      (elem) => elem.pt_part === productCart.pt_part
-    );
-    const prc = pt.pt_price;
-    this.cartProducts.filter((item) => {
-      if (item.pt_part === productCart.pt_part) {
-        // const price = Number(item.pt_price);
-
-        item.pt_price =
-          Number(productCart.pt_price) +
-          Number(productCart.pt_price) / productCart.pt_qty;
-        item.pt_qty = productCart.pt_qty + 1;
-      }
-    });
+  onIncreaseQty(product: Product): void {
+    // const pt = this.AllProducts.find(
+    //   (elem) => elem.pt_part === product.pt_part
+    // );
+    //const prc = pt.pt_price;
+    const pt = this.cartProducts.find((item) => item.id === product.id);
+    pt.pt_price =
+      Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
+    pt.pt_qty = product.pt_qty + 1;
     this.cartAmount = this.calculateSubTotal();
     this.cart.total_price = this.cartAmount;
   }
@@ -684,7 +772,6 @@ export class PosComponent implements OnInit {
   prepareCart(content): void {
     let cart: Cart = {
       id: Math.floor(Math.random() * 101) + 1,
-
       products: this.cartProducts,
       order_emp: this.loclocOrder,
       customer: "particulier",
@@ -692,6 +779,10 @@ export class PosComponent implements OnInit {
       total_price: this.cartAmount,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
+      loy_num: this.loy_num,
+      disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
+      del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
+      site_loc: this.currentTable ? this.currentTable : null,
     };
     console.log(cart.products);
     this.posCategoryService.addOrder({ cart }).subscribe(
@@ -810,6 +901,8 @@ export class PosComponent implements OnInit {
     this.showStatusDelivery = false;
     this.showStatusOut = false;
     this.offer = false;
+    this.loclocOrder = "Sur place";
+    this.currentTable = "01";
   }
 
   changeSelection(event, index) {
@@ -1972,6 +2065,7 @@ export class PosComponent implements OnInit {
     console.log(discount);
 
     if (discount) {
+      this.loy_num = discount;
       const elem = this.discountTable.find((item) => item.cm_addr === discount);
       if (elem) {
         // console.log(elem.cm_disc_pct);

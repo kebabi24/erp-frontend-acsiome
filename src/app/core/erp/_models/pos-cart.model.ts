@@ -10,4 +10,8 @@ export class Cart {
   total_price: number;
   status: string;
   created_date?: Date;
+  loy_num?: number;
+  disc_amt?: number;
+  del_comp?: string;
+  site_loc?: string;
 }
