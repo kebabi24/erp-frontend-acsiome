@@ -26,9 +26,17 @@
                 class="d-flex flex-column flex-xl-row justify-content-center gap-2"
               >
                 <button
+                  (click)="opBk(content6)"
+                  class="btn fw-bold btn-primary"
+                  style="background-color: #9e110d; font-size: large"
+                  [disabled]="stateCaisse"
+                >
+                  Ouverture caisse
+                </button>
+                <button
                   (click)="checkOpenInventory2(content3)"
                   class="fw-bold btn btn-primary"
-                  [disabled]="value1"
+                  [disabled]="stateInventory"
                   style="background-color: #9e110d; font-size: large"
                 >
                   Inventaire d'ouverture
@@ -38,20 +46,16 @@
                   (click)="checkCloseInventory(content11)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Inventaire de clôture
                 </button>
-                <button
-                  (click)="opBk(content6)"
-                  class="btn fw-bold btn-primary"
-                  style="background-color: #9e110d; font-size: large"
-                >
-                  Ouverture caisse
-                </button>
+
                 <button
                   (click)="opBk(content10)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   clôture caisse
                 </button>
@@ -59,20 +63,23 @@
                   (click)="mouvementCaisse(content12)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
-                  Demande d'achat
+                  Demande de service
                 </button>
-                <button
+                <!-- <button
                   (click)="mvBank(content16)"
                   class="fw-bold btn btn-primary"
                   [disabled]="value1"
                   style="background-color: #9e110d; font-size: large"
                 >
                   Demande de fonds
-                </button>
+                </button> -->
                 <button
+                  (click)="pArticle(content20)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Paiement marchandise
                 </button>
@@ -81,6 +88,7 @@
                   (click)="podRec(content9)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Réception commandes
                 </button>
@@ -88,6 +96,7 @@
                   (click)="pEmp(content18)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Pointage des employés
                 </button>
@@ -99,6 +108,7 @@
                   (click)="getHistory(content4)"
                   class="btn fw-bold btn-primary"
                   style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
                 >
                   Liste des commandes
                 </button>
@@ -124,6 +134,7 @@
                               height: 65px;
                               background-color: #ffb701;
                             "
+                            [disabled]="globalState"
                           >
                             <div class="">
                               <img src="{{ category.category_img }}" alt="" />
@@ -148,7 +159,7 @@
                 </div>
                 <div class="col-6" style="margin-top: 15px">
                   <div
-                    class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                    class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                   >
                     <button
                       class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
@@ -183,14 +194,14 @@
                   <div class="tab-content" *ngIf="showSize">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
                           *ngFor="let size of sizeOfProduct"
                           data-bs-toggle="pill"
-                          (click)="prepareProduct(size)"
+                          (click)="prepareProduct(size, content2)"
                           style="background-color: #ffb701"
                         >
                           <div class="card-body text-center" type="button">
@@ -216,10 +227,10 @@
                   <div class="tab-content" *ngIf="showSauces">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
                           *ngFor="let sauce of sauces"
                           data-bs-toggle="pill"
@@ -248,7 +259,7 @@
                   <div class="tab-content" *ngIf="showSupp">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
                           class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
@@ -280,14 +291,14 @@
                   <div class="tab-content" *ngIf="showSoda">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
                           *ngFor="let so of soda"
                           data-bs-toggle="pill"
-                          (click)="setListOfSoda(so)"
+                          (click)="setListOfBrands(so)"
                           style="background-color: #ffb701"
                         >
                           <div class="card-body text-center" type="button">
@@ -304,16 +315,17 @@
                       </div>
                     </div>
                   </div>
-                  <div class="tab-content" *ngIf="showListOfSoda">
+                  <div class="tab-content" *ngIf="showListOfBrands">
                     <div id="kt_pos_food_content_1">
                       <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                       >
                         <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
                           type="button"
-                          *ngFor="let drinks of drinksBrand"
+                          *ngFor="let drinks of elem"
                           data-bs-toggle="pill"
+                          (click)="setListOfItems(drinks)"
                           style="background-color: #ffb701"
                         >
                           <div class="card-body text-center" type="button">
@@ -353,14 +365,14 @@
                         </div>
                       </div>
                     </div> -->
-                  <button
+                  <!-- <button
                     *ngIf="addProductBtn"
                     (click)="customizeProduct(content2)"
                     class="btn btn-primary fs-1 w-100 py-4"
                     style="margin-top: 15px; background-color: #9e110d"
                   >
                     Ajouter au panier
-                  </button>
+                  </button> -->
                 </div>
 
                 <!--end::Content-->
@@ -376,10 +388,13 @@
                       style="background-color: #ffb701"
                     >
                       <div class="flex-row" style="margin-top: 20px">
-                        <span class="switch switch-icon">
+                        <span
+                          class="switch switch-icon"
+                          style="margin-left: 45px"
+                        >
                           <label
-                            class="form-group"
-                            style="margin-left: 90px; margin-right: 10px"
+                            class="fw-bold text-gray-900 fs-1"
+                            style="margin-right: 25px"
                             >Entreprise:</label
                           >
                           <label>
@@ -389,16 +404,84 @@
                               formControlName="usrd_active"
                               name="select"
                             />
-                            <span></span>
+                            <span style="margin-right: 50px"></span>
                           </label>
                           <button
                             (click)="addClientModal(content17)"
                             class="btn fw-bold btn-primary"
                             style="background-color: #9e110d; font-size: large"
+                            [disabled]="globalState"
                           >
                             Ajouter client
                           </button>
                         </span>
+                      </div>
+                      <!-- <div class="flex-row" style="margin-top: 20px">
+                        <div class="form-floating" style="width: 200px">
+                          <input
+                            style="width: 200px; background-color: beige"
+                            type="email"
+                            class="form-control text-gray-900"
+                            placeholder="00.0"
+                            id="floatingInputValue"
+                            #discount
+                            id="discount"
+                            name="discount"
+                            [disabled]="globalState"
+                          />
+                          <label for="floatingInputValue"
+                            >Numéro carte de fidélité
+                          </label>
+                        </div>
+                        <button
+                          (click)="onChangeDiscount(discount.value)"
+                          class="btn fw-bold btn-primary"
+                          style="background-color: #9e110d; font-size: large"
+                          [disabled]="globalState"
+                        >
+                          Vérifier
+                        </button>
+                      </div> -->
+                      <div class="flex card-header">
+                        <div class="card-toolbar">
+                          <div
+                            class="form-floating"
+                            style="
+                              width: 200px;
+                              margin-left: 15px;
+                              margin-right: 47px;
+                            "
+                          >
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                              #discount
+                              id="discount"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro carte de fidélité
+                            </label>
+                          </div>
+                          <button
+                            (click)="onChangeDiscount(discount.value)"
+                            class="btn fw-bold btn-primary"
+                            style="
+                              background-color: #9e110d;
+                              font-size: large;
+                              width: 157px;
+                            "
+                            [disabled]="globalState"
+                          >
+                            Vérifier
+                          </button>
+                        </div>
+
+                        <!--end::Toolbar-->
                       </div>
 
                       <!--begin::Header-->
@@ -431,29 +514,35 @@
                           />
                           <label for="floatingInputValue">Numéro carte </label>
                         </div> -->
-                      <div class="flex card-header pt-5">
+                      <div class="flex card-header">
                         <div class="card-toolbar">
                           <button
+                            id="btn1"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderS(content)"
-                            style="margin-left: 35px; background-color: beige"
+                            style="margin-left: 35px"
+                            [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
                             <!--end::Svg Icon-->Sur place
                           </button>
                           <button
+                            id="btn2"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderE()"
-                            style="margin-left: 5px; background-color: beige"
+                            style="margin-left: 5px"
+                            [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
                             <!--end::Svg Icon-->A Emporter</button
                           ><button
+                            id="btn3"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
-                            (click)="locOrderL()"
-                            style="margin-left: 5px; background-color: beige"
+                            (click)="locOrderL(content19)"
+                            style="margin-left: 5px"
+                            [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
@@ -468,6 +557,7 @@
                             "
                             (click)="clearCurrentCart()"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                            [disabled]="globalState"
                           >
                             Vider le panier
                           </button>
@@ -481,17 +571,41 @@
                         <!--begin::Table container-->
                         <div class="table-responsive mb-8">
                           <!--begin::Table-->
-                          <table class="table align-middle gs-0 gy-4 my-0">
+                          <table class="table align-middle">
                             <!--begin::Table head-->
-                            <thead>
-                              <tr>
-                                <th class="min-w-175px"></th>
-                                <th class="w-125px"></th>
-                                <th class="w-60px"></th>
-                              </tr>
-                            </thead>
+
                             <!--end::Table head-->
                             <!--begin::Table body-->
+                            <tr *ngIf="inShop">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Commande table {{ currentTable }}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="showStatusOut">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Commande à emporter
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="showStatusDelivery">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Livraison avec {{ deliveryOption }}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
                             <tbody *ngFor="let elem of cartProducts">
                               <tr>
                                 <td class="pe-0">
@@ -520,22 +634,25 @@
                                       >Sans {{ item.pt_desc1 }},
                                     </span>
                                   </div>
+                                  <div>
+                                    <span
+                                      *ngFor="let item of elem.sauces"
+                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                      >{{ item.pt_desc1 }},
+                                    </span>
+                                  </div>
                                 </td>
                                 <td class="pe-0">
                                   <!--begin::Dialer-->
                                   <div
                                     class="position-relative d-flex align-items-center"
-                                    data-kt-dialer="true"
-                                    data-kt-dialer-min="1"
-                                    data-kt-dialer-max="10"
-                                    data-kt-dialer-step="1"
-                                    data-kt-dialer-decimals="0"
                                   >
                                     <!--begin::Decrease control-->
                                     <button
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onDecreaseQty(elem)"
+                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -576,6 +693,7 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onIncreaseQty(elem)"
+                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -612,7 +730,7 @@
                                   </div>
                                   <!--end::Dialer-->
                                 </td>
-                                <td class="text-end">
+                                <td class="text-start">
                                   <span
                                     class="fw text-gray-900 fs-1"
                                     data-kt-pos-element="item-total"
@@ -635,7 +753,10 @@
                           <!--begin::Content-->
                           <div class="fs-6 fw-bold text-white">
                             <span class="d-block lh-1 mb-2">Sous totale</span>
-                            <span class="d-block mb-2">Remise</span>
+                            <span *ngIf="currentOffer" class="d-block mb-2"
+                              >Pourcentage de remise</span
+                            >
+                            <span class="d-block mb-2">Montant remise</span>
 
                             <span class="d-block fs-2qx lh-1">Net à payer</span>
                           </div>
@@ -646,13 +767,20 @@
                             <span
                               class="d-block lh-1 mb-2"
                               data-kt-pos-element="total"
-                              >{{ cartAmount }} DA</span
+                              >{{ cartAmount + remisePrice }} DA</span
                             >
+
+                            <span
+                              *ngIf="currentOffer"
+                              class="d-block mb-2"
+                              data-kt-pos-element="discount"
+                              >({{ currentOffer.del_pct_disc }} %)
+                            </span>
                             <span
                               class="d-block mb-2"
                               data-kt-pos-element="discount"
-                              >{{ 0 }} DA</span
-                            >
+                              >{{ remisePrice }} DA
+                            </span>
 
                             <span
                               class="d-block fs-2qx lh-1"
@@ -698,28 +826,25 @@
                             <span class="fs-7 fw-bold d-block">Cash</span>
                             <!--end::Title-->
                           </label>
-                          <div class="form-floating">
-                            <input
-                              style="background-color: beige"
-                              type="email"
-                              class="form-control text-gray-900 fw-bold"
-                              placeholder="00.0"
-                              id="floatingInputValue"
-                            />
-                            <label for="floatingInputValue"
-                              >Numéro carte de fidélité
-                            </label>
+                          <div class="flex-row">
+                            <button
+                              (click)="prepareCart(content)"
+                              class="btn btn-primary fs-1 w-50 py-4"
+                              style="background-color: #9e110d; margin-top: 5px"
+                              [disabled]="globalState"
+                              [disabled]="disable"
+                            >
+                              Lancer
+                            </button>
+                            <button
+                              class="btn btn-primary fs-1 w-50 py-4"
+                              (click)="paiement()"
+                              style="margin-top: 5px; background-color: #9e110d"
+                              [disabled]="globalState"
+                            >
+                              Payer
+                            </button>
                           </div>
-
-                          <!--end::Radio group-->
-                          <!--begin::Actions-->
-                          <button
-                            (click)="prepareCart(content)"
-                            class="btn btn-primary fs-1 w-100 py-4"
-                            style="background-color: #9e110d; margin-top: 5px"
-                          >
-                            Lancer la préparation
-                          </button>
 
                           <!-- <div class="form-floating">
                               <input
@@ -741,6 +866,7 @@
                               id="floatingInputValue"
                               name="balance{{ value1 }}"
                               name="balance"
+                              [disabled]="globalState"
                             />
                             <label for="floatingInputValue"
                               >Montant versé
@@ -767,6 +893,7 @@
                               id="floatingInputValue"
                               name="balance2{{ value2 }}"
                               name="balance2"
+                              [disabled]="globalState"
                             />
                             <label for="floatingInputValue"
                               >Montant rendu
@@ -782,13 +909,14 @@
                             >
                               {{ b.ticket }}
                             </button> -->
-                          <button
+                          <!-- <button
                             class="btn btn-primary fs-1 w-100 py-4"
                             (click)="paiement()"
                             style="margin-top: 10px; background-color: #9e110d"
+                            [disabled]="globalState"
                           >
                             Payer
-                          </button>
+                          </button> -->
 
                           <!--end::Actions-->
                         </div>
@@ -820,7 +948,18 @@
   <div>
     <kt-portlet-body>
       <ng-template #content3 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-header" style="background-color: #f5f5dc">
+          <h4 class="modal-title">Saisir votre inventaire d'ouverture</h4>
+        </div>
+        <div class="modal-body" style="background-color: #f5f5dc">
+          <button
+            style="background-color: #9e110d"
+            class="btn btn-primary fs-2 w-100 mt-2 mb-2"
+            (click)="addNewItemInventory()"
+          >
+            Ajouter un Article
+          </button>
+
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -829,7 +968,7 @@
               [columnDefinitions]="columnDefinitions"
               [gridOptions]="gridOptions"
               [dataset]="dataset"
-              (onAngularGridCreated)="gridReady($event)"
+              (onAngularGridCreated)="gridReady2($event)"
               (sgOnSelectedRowsChanged)="
                 handleSelectedRowsChanged(
                   $event.detail.eventData,
@@ -839,9 +978,22 @@
             >
             </angular-slickgrid>
           </div>
-        </div>
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
           <button
+            hidden
+            id="openItemsGrid2"
+            class="btn btn-primary"
+            (click)="open4(content15)"
+          >
+            Launch demo modal
+          </button>
+        </div>
+
+        <div
+          class="card-footer d-flex justify-content-end py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
+          <button
+            style="background-color: #9e110d"
             class="btn btn-primary px-12"
             (click)="c('Close click')"
             (click)="openModal(content14)"
@@ -862,12 +1014,19 @@
           data-bs-target="#kt_account_notifications"
           aria-expanded="true"
           aria-controls="kt_account_notifications"
+          style="background-color: #f5f5dc"
         >
-          <div class="card-title m-0 justify-content-center">
+          <div
+            class="card-title m-0 justify-content-center"
+            style="background-color: #f5f5dc"
+          >
             <h3 class="fw-bold m-0">Etes vous sur de votre inventaire?</h3>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-center py-6 px-9">
+        <div
+          class="card-footer d-flex justify-content-center py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
           <button
             class="btn btn-primary px-12"
             style="margin-right: 5px"
@@ -890,7 +1049,10 @@
   <div>
     <kt-portlet-body>
       <ng-template #content11 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-header" style="background-color: #f5f5dc">
+          <h4 class="modal-title">Saisir votre inventaire de clôture</h4>
+        </div>
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -910,7 +1072,10 @@
             </angular-slickgrid>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
+        <div
+          class="card-footer d-flex justify-content-end py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
           <button
             class="btn btn-primary px-12"
             (click)="c('Close click')"
@@ -925,7 +1090,7 @@
   <div>
     <kt-portlet-body>
       <ng-template #content9 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -945,7 +1110,10 @@
             </angular-slickgrid>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
+        <div
+          class="card-footer d-flex justify-content-end py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
           <button
             class="btn btn-primary px-12"
             (click)="c('Close click')"
@@ -960,10 +1128,13 @@
   <div>
     <kt-portlet-body>
       <ng-template #content4 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="col-xl-12">
             <!--begin::Table Widget 4-->
-            <div class="card card-flush h-xl-100">
+            <div
+              class="card card-flush h-xl-100"
+              style="background-color: #f5f5dc"
+            >
               <!--begin::Card header-->
               <div class="card-header pt-7">
                 <!--begin::Title-->
@@ -1113,7 +1284,7 @@
   <div>
     <kt-portlet-body>
       <ng-template #content let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="app-container container-xxl">
             <div class="row gy-5 g-xl-10">
               <div
@@ -1165,38 +1336,61 @@
           <form class="form">
             <!--begin::Card body-->
             <div
-              class="justify-content-center py-6 px-38"
+              class="justify-content-center py-6 px-48"
               style="background-color: beige"
             >
               <!--begin::Table-->
 
               <!--begin::Table row-->
 
-              <div class="min-w-250px fs-4 fw-bold">Spécifications</div>
-              <div
-                class="w-125px"
-                style="margin-top: 10px"
-                *ngFor="let ingredient of ingredients; let i = index"
-              >
-                <div
-                  class="form-check form-check-solid"
-                  (click)="setIngredient(ingredient)"
-                >
-                  <input
-                    name="{{ ingredient.id }}"
-                    class="form-check-input"
-                    type="checkbox"
-                    [checked]="ingredient.isChecked"
-                    style="background-color: #9e110d"
-                  />
-                  <label
-                    style="margin-top: 5px"
-                    class="form-check-label ps-2"
-                    >{{ ingredient.pt_desc1 }}</label
-                  >
-                </div>
+              <div class="min-w-250px fs-1 fw-bold text-gray-900">
+                Spécifications
               </div>
 
+              <div>
+                <ul
+                  class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                >
+                  <li
+                    *ngFor="let ingredient of ingredients; let i = index"
+                    style="width: 240px; height: 65px; margin-top: 10px"
+                  >
+                    <button
+                      id="{{ i }}"
+                      class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                      (click)="setIngredient(ingredient, i)"
+                      style="width: 240px; height: 65px"
+                      [disabled]="disableIng"
+                    >
+                      <div class="">
+                        <span
+                          class="text-gray-900 fw-bold fs-2 d-block"
+                          style="margin-left: 5px"
+                          >{{ ingredient.pt_desc1 }}</span
+                        >
+                      </div>
+                    </button>
+                  </li>
+                  <li style="width: 240px; height: 65px; margin-top: 10px">
+                    <button
+                      id="ing"
+                      class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                      (click)="setAllIngredient(ingredients)"
+                      style="width: 240px; height: 65px"
+                    >
+                      <div class="">
+                        <span
+                          class="text-gray-900 fw-bold fs-2 d-block"
+                          style="margin-left: 5px"
+                          >Sans garniture</span
+                        >
+                      </div>
+                    </button>
+                  </li>
+                </ul>
+
+                <!--end::Tab Content-->
+              </div>
               <!-- <tr *ngIf="currentItem.pt_formule">
                         <td class="min-w-250px fs-4 fw-bold">Boissons</td>
                         <td class="w-125px" *ngFor="let boisson of boissons">
@@ -1226,11 +1420,11 @@
             >
               <button
                 style="background-color: #9e110d"
-                class="btn btn-primary px-12"
+                class="btn btn-primary fs-1 w-100 py-4"
                 (click)="addProductToCart()"
                 (click)="c('Close click')"
               >
-                Confirmer l'ajout
+                Personnaliser le produit
               </button>
             </div>
             <!--end::Card footer-->
@@ -1243,22 +1437,90 @@
   </div>
   <div>
     <ng-template #content12 let-c="close" let-d="dismiss">
-      <div class="modal-header">
-        <h4 class="modal-title">Planifier une demande d'achat</h4>
-        <button
-          type="button"
-          class="close"
-          aria-label="Close"
-          (click)="d('Cross click')"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <h4 class="modal-title">Envoyer une demande de service</h4>
       </div>
-      <div class="modal-body">
-        <form class="form" [formGroup]="bkForm">
-          <div class="row">
-            <div class="form-group col-12">
-              <!-- <label class="form-group">Choisir une caisse: *</label>
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <ul class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2">
+          <li style="width: 260px; height: 65px">
+            <button
+              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+              data-bs-toggle="pill"
+              type="button"
+              (click)="onSelectServiceBuy()"
+              style="width: 260px; height: 65px; background-color: #ffb701"
+            >
+              <div class="">
+                <span
+                  class="text-gray-900 fw-bold fs-2 d-block"
+                  style="margin-left: 5px"
+                  >Achat</span
+                >
+              </div>
+            </button>
+          </li>
+          <li style="width: 260px; height: 65px">
+            <button
+              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+              data-bs-toggle="pill"
+              type="button"
+              (click)="onSelectAutre()"
+              style="width: 260px; height: 65px; background-color: #ffb701"
+            >
+              <div class="">
+                <span
+                  class="text-gray-900 fw-bold fs-2 d-block"
+                  style="margin-left: 5px"
+                  >Service</span
+                >
+              </div>
+            </button>
+          </li>
+          <li style="width: 260px; height: 65px">
+            <button
+              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+              data-bs-toggle="pill"
+              type="button"
+              (click)="onSelectAutre()"
+              style="width: 260px; height: 65px; background-color: #ffb701"
+            >
+              <div class="">
+                <span
+                  class="text-gray-900 fw-bold fs-2 d-block"
+                  style="margin-left: 5px"
+                  >Investissement</span
+                >
+              </div>
+            </button>
+          </li>
+          <li style="width: 260px; height: 65px">
+            <button
+              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+              data-bs-toggle="pill"
+              type="button"
+              (click)="onSelectAutre()"
+              style="width: 260px; height: 65px; background-color: #ffb701"
+            >
+              <div class="">
+                <span
+                  class="text-gray-900 fw-bold fs-2 d-block"
+                  style="margin-left: 5px"
+                  >Salaire</span
+                >
+              </div>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div
+        class="modal-body"
+        style="background-color: #f5f5dc"
+        *ngIf="RequestBuyingArticle"
+      >
+        <div class="row">
+          <div class="form-group col-12">
+            <!-- <label class="form-group">Choisir une caisse: *</label>
               <div class="input-group input-group-sm">
                 <input
                   type="text"
@@ -1289,55 +1551,55 @@
                 </div>
               </div> -->
 
-              <label class="form-group">Choisir une caisse: *</label>
-              <select
-                class="form-control form-control-sm form-control-solid"
-                id="exampleSelects1"
-                (change)="selectOption($event.target.value)"
-                [(ngModel)]="bk_type"
-              >
-                <option value=""></option>
-                <option *ngFor="let elem of bank" [value]="elem.code_value">
-                  {{ elem.bk_desc }}
-                </option>
-              </select>
-
-              <button
-                class="btn btn-sm btn-primary btn-elevate col-lg-12 mt-2"
-                (click)="addNewItem()"
-              >
-                Ajouter un Article
-              </button>
-
-              <div class="row">
-                <angular-slickgrid
-                  class="col-12"
-                  gridHeight="200"
-                  gridId="mGrid"
-                  [columnDefinitions]="columnDefinitions5"
-                  [gridOptions]="gridOptions5"
-                  [dataset]="dataset5"
-                  (onAngularGridCreated)="gridReady($event)"
-                  (sgOnSelectedRowsChanged)="
-                    handleSelectedRowsChanged(
-                      $event.detail.eventData,
-                      $event.detail.args
-                    )
-                  "
-                >
-                </angular-slickgrid>
-              </div>
-            </div>
-            <button
-              hidden
-              id="openItemsGrid"
-              class="btn btn-primary"
-              (click)="open4(content15)"
+            <label class="form-group">Choisir une caisse: *</label>
+            <select
+              class="form-control form-control-sm form-control-solid"
+              id="exampleSelects1"
+              [(ngModel)]="selectedBank"
+              (change)="selectChangeHandler()"
             >
-              Launch demo modal
+              <option *ngFor="let elem of bank" [value]="elem.bk_type">
+                {{ elem.bk_desc }}
+              </option>
+            </select>
+
+            <button
+              class="btn btn-primary fs-1 w-100 py-4 mt-2"
+              (click)="addNewItem()"
+            >
+              Ajouter un Article
             </button>
 
-            <!-- <div class="form-group col-4">
+            <div class="row" style="margin-top: 10px">
+              <angular-slickgrid
+                style="background-color: #f5f5dc"
+                class="col-12"
+                gridHeight="200"
+                gridId="mGrid"
+                [columnDefinitions]="columnDefinitions5"
+                [gridOptions]="gridOptions5"
+                [dataset]="dataset5"
+                (onAngularGridCreated)="gridReady($event)"
+                (sgOnSelectedRowsChanged)="
+                  handleSelectedRowsChanged(
+                    $event.detail.eventData,
+                    $event.detail.args
+                  )
+                "
+              >
+              </angular-slickgrid>
+            </div>
+          </div>
+          <button
+            hidden
+            id="openItemsGrid"
+            class="btn btn-primary"
+            (click)="open4(content15)"
+          >
+            Launch demo modal
+          </button>
+
+          <!-- <div class="form-group col-4">
               <label class="form-group">Montant à réserver : *</label>
               <input
                 type="text"
@@ -1361,10 +1623,9 @@
                 Ce Champs est obligatoire
               </div>
             </div> -->
-          </div>
-        </form>
+        </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="background-color: #f5f5dc">
         <button
           type="button"
           class="btn btn-primary px-12"
@@ -1379,7 +1640,7 @@
   <div>
     <kt-portlet-body>
       <ng-template #content6 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -1709,7 +1970,10 @@
               </div>
             </form> -->
         </div>
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
+        <div
+          class="card-footer d-flex justify-content-end py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
           <button
             class="btn btn-primary px-12"
             (click)="onSubmitCaisseInventory()"
@@ -1724,7 +1988,7 @@
   <div>
     <kt-portlet-body>
       <ng-template #content7 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -1744,7 +2008,10 @@
             </angular-slickgrid>
           </div>
         </div>
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
+        <div
+          class="card-footer d-flex justify-content-end py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
           <button class="btn btn-primary px-12" (click)="c('Close click')">
             Ajouter
           </button>
@@ -1755,7 +2022,7 @@
   <div>
     <kt-portlet-body>
       <ng-template #content10 let-c="close" let-d="dismiss">
-        <div class="modal-body">
+        <div class="modal-body" style="background-color: #f5f5dc">
           <div class="row">
             <angular-slickgrid
               class="col-12"
@@ -2085,7 +2352,10 @@
               </div>
             </form> -->
         </div>
-        <div class="card-footer d-flex justify-content-end py-6 px-9">
+        <div
+          class="card-footer d-flex justify-content-end py-6 px-9"
+          style="background-color: #f5f5dc"
+        >
           <button
             class="btn btn-primary px-12"
             (click)="onSubmitCaisseClotureInventory()"
@@ -2099,10 +2369,10 @@
   </div>
   <div>
     <ng-template #content15 let-c="close" let-d="dismiss">
-      <div class="modal-header">
+      <div class="modal-header" style="background-color: #f5f5dc">
         <h4 class="modal-title">Choissir l'article</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="background-color: #f5f5dc">
         <div class="row">
           <angular-slickgrid
             class="col-12"
@@ -2122,7 +2392,7 @@
           </angular-slickgrid>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="background-color: #f5f5dc">
         <button
           type="button"
           class="btn btn-secondary"
@@ -2150,10 +2420,10 @@
   </div>
   <div>
     <ng-template #content16 let-c="close" let-d="dismiss">
-      <div class="modal-header">
-        <h4 class="modal-title">Demande de fonds</h4>
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <h4 class="modal-title">Alimentation caisse régie</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="background-color: #f5f5dc">
         <form class="form" [formGroup]="mvForm">
           <div class="row">
             <div class="form-group col-6">
@@ -2183,39 +2453,38 @@
                   Ce Champs est obligatoire
                 </div>
               </div>
-              <div class="col-3">
-                <label class="form-group">Montant: *</label>
-                <div class="input-group input-group-sm">
-                  <input
-                    type="number"
-                    formControlName="mv_amt"
-                    [className]="
-                      mvForm.controls['mv_amt'].errors &&
-                      (mvForm.controls['mv_amt'].dirty ||
-                        mvForm.controls['mv_amt'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    aria-describedby="basic-addon2"
-                  />
 
-                  <div
-                    *ngIf="
-                      mvForm.controls['mv_amt'].errors &&
-                      (mvForm.controls['mv_amt'].dirty ||
-                        mvForm.controls['mv_amt'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
+              <label class="form-group">Montant: *</label>
+              <div class="input-group input-group-sm">
+                <input
+                  type="number"
+                  formControlName="mv_amt"
+                  [className]="
+                    mvForm.controls['mv_amt'].errors &&
+                    (mvForm.controls['mv_amt'].dirty ||
+                      mvForm.controls['mv_amt'].touched)
+                      ? 'form-control form-control-sm form-control-solid is-invalid'
+                      : 'form-control form-control-sm form-control-solid'
+                  "
+                  aria-describedby="basic-addon2"
+                />
+
+                <div
+                  *ngIf="
+                    mvForm.controls['mv_amt'].errors &&
+                    (mvForm.controls['mv_amt'].dirty ||
+                      mvForm.controls['mv_amt'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
                 </div>
               </div>
             </div>
           </div>
         </form>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="background-color: #f5f5dc">
         <button
           type="button"
           class="btn btn-secondary"
@@ -2236,11 +2505,25 @@
   </div>
   <div>
     <ng-template #content17 let-c="close" let-d="dismiss">
-      <div class="modal-header">
+      <div class="modal-header" style="background-color: #f5f5dc">
         <h4 class="modal-title">Ajout d'un nouveau client</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="background-color: #f5f5dc">
         <form class="form" [formGroup]="customerForm">
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Sexe: *</label>
+              <select
+                class="form-control form-control-sm form-control-solid"
+                id="exampleSelects1"
+                (change)="selectOption($event.target.value)"
+              >
+                <option value=""></option>
+                <option>Homme</option>
+                <option>Femme</option>
+              </select>
+            </div>
+          </div>
           <div class="row">
             <div class="form-group col-4">
               <label class="form-group" id="code">Nom :</label>
@@ -2319,6 +2602,7 @@
               </div>
             </div>
           </div>
+
           <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Age: </label>
@@ -2346,7 +2630,7 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="background-color: #f5f5dc">
         <button
           type="button"
           class="btn btn-secondary"
@@ -2380,32 +2664,141 @@
             [gridOptions]="gridOptions18"
             [dataset]="emps"
             (onAngularGridCreated)="gridReady18($event)"
-            
           >
           </angular-slickgrid>
         </div>
-
-
-
-
       </div>
       <div class="modal-footer">
         <button
-            class="btn btn-primary px-12"
-            (click)="onSubmitEmpTime()"
-            (click)="c('Close click')"
-          >
-            Ajouter Pointage Employés 
-          </button>
+          class="btn btn-primary px-12"
+          (click)="onSubmitEmpTime()"
+          (click)="c('Close click')"
+        >
+          Ajouter Pointage Employés
+        </button>
       </div>
     </ng-template>
-    <button
-      hidden
-      id="openItemsGrid"
-      class="btn btn-primary"
-      (click)="open4(content15)"
-    >
-      Launch demo modal
-    </button>
+  </div>
+  <div>
+    <ng-template #content19 let-c="close" let-d="dismiss">
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <h4 class="modal-title">Plateforme de livraisons</h4>
+      </div>
+      <div class="modal-body" style="background-color: #f5f5dc">
+        <div style="margin-top: 10px">
+          <div class="card card-flush card-p-0 bg-transparent border-0">
+            <div>
+              <ul
+                class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+              >
+                <li
+                  *ngFor="let platforme of platformes"
+                  style="width: 200px; height: 65px"
+                >
+                  <button
+                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                    data-bs-toggle="pill"
+                    type="button"
+                    (click)="onSelectDelivery(platforme)"
+                    style="
+                      width: 200px;
+                      height: 65px;
+                      background-color: #ffb701;
+                    "
+                  >
+                    <div class="">
+                      <span
+                        class="text-gray-900 fw-bold fs-2 d-block"
+                        style="margin-left: 5px"
+                        >{{ platforme.code_desc }}</span
+                      >
+                    </div>
+                  </button>
+                </li>
+              </ul>
+
+              <!--end::Tab Content-->
+            </div>
+            <!--end: Card Body-->
+          </div>
+          <!--end::Pos food-->
+        </div>
+        <div style="margin-top: 10px">
+          <div class="card card-flush card-p-0 bg-transparent border-0">
+            <div>
+              <ul
+                class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+              >
+                <li
+                  *ngFor="let p of currentPlatformeOffers; let index = index"
+                  style="width: 200px; height: 150px"
+                >
+                  <button
+                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                    data-bs-toggle="pill"
+                    type="button"
+                    (click)="applyDiscount(p)"
+                    (click)="c('Close click')"
+                    [disabled]="p.actif"
+                    style="
+                      width: 200px;
+                      height: 150px;
+                      background-color: #ffb701;
+                    "
+                  >
+                    <div class="">
+                      <span
+                        class="text-gray-900 fw-bold fs-2 d-block"
+                        style="margin-left: 5px"
+                        >Offre {{ index + 1 }}
+                      </span>
+                      <span
+                        class="text-gray-900 fw-bold fs-4 d-block"
+                        style="margin-left: 12px"
+                        >{{ p.del_pct_disc }} % de réduction
+                      </span>
+                      <span
+                        *ngFor="let pOFF of productOffers"
+                        class="text-gray-900 fw-bold fs-7 d-block"
+                        style="margin-left: 10px"
+                        >{{ pOFF.pt_desc1 }}
+                      </span>
+                    </div>
+                  </button>
+                </li>
+              </ul>
+
+              <!--end::Tab Content-->
+            </div>
+            <!--end: Card Body-->
+          </div>
+          <!--end::Pos food-->
+        </div>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content20 let-c="close" let-d="dismiss">
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <h4 class="modal-title">Paiement des articles receptionnés</h4>
+      </div>
+      <div class="modal-body" style="background-color: #f5f5dc"></div>
+      <div class="modal-footer" style="background-color: #f5f5dc">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="c('Close click')"
+        >
+          Annuller
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="c('Close click')"
+        >
+          Ok
+        </button>
+      </div>
+    </ng-template>
   </div>
 </body>
