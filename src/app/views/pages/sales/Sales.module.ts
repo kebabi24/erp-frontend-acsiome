@@ -66,7 +66,6 @@ import { ConfirmSoComponent } from './confirm-so/confirm-so.component';
 import { EditSoComponent } from './edit-so/edit-so.component';
 import { CreateProjectInvoiceComponent } from './create-project-invoice/create-project-invoice.component';
 import { InputInvoiceComponent } from './input-invoice/input-invoice.component';
-import { SalesBoxComponent } from './sales-box/sales-box.component';
 import { DaylySiteTransComponent } from './dayly-site-trans/dayly-site-trans.component';
 import { ListSalesComponent } from './list-sales/list-sales.component';
 
@@ -137,10 +136,7 @@ const routes: Routes = [
             path: "input-invoice",
           component: InputInvoiceComponent,
           },
-          {
-            path: "sales-box",
-          component: SalesBoxComponent,
-          },
+          
           {
             path: "list-sales",
             component: ListSalesComponent,
@@ -152,7 +148,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, SalesBoxComponent, DaylySiteTransComponent, ListSalesComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent],
     imports: [
         CommonModule,
         HttpClientModule,

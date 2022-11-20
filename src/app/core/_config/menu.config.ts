@@ -538,11 +538,11 @@ export class MenuConfig {
                     bullet: "dot",
                     icon: "flaticon-cart",
                     submenu: [
-                        
                         {
                             title: "Rapport Journalier",
                             page: "/sales/dayly-site-trans",
                         },
+                        
                         {
                             title: "Offres Commerciales",
                             page: "/sales/create-quote",
@@ -604,7 +604,7 @@ export class MenuConfig {
                             page: "/sales/invoice-list",
                         },
                         {
-                            title: "Consultation ders Ventes",
+                            title: "Consultation des Ventes",
                             page: "/sales/list-sales",
                         },
                     ],
