@@ -204,15 +204,20 @@ export class CreateProfileComponent implements OnInit {
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
     onSelect(event) {
-      console.log(event)
+      //console.log(event)
       const {node:{data:name}} = event
       this.selectedMenus.push(name.name)
       if(!this.selectedMenus.includes(event.node.parent.data.name)) this.selectedMenus.push(event.node.parent.data.name)
+      console.log(this.selectedMenus)
+      
     }
     onDeselect(event) {
       const {node:{data:name}} = event
       const index = this.selectedMenus.indexOf(name.name)
       this.selectedMenus.splice(index,1)
+      const indexs = this.selectedMenus.indexOf(event.node.parent.data.name)
+      
+      if(this.selectedMenus.includes(event.node.parent.data.name)) this.selectedMenus.splice(indexs,1)
     }
     
 }

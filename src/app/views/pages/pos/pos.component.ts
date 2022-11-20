@@ -1853,7 +1853,7 @@ export class PosComponent implements OnInit {
         enableCellNavigation: true,
         enableExcelCopyBuffer: true,
         enableFiltering: true,
-        autoEdit: false,
+        autoEdit: true,
         editable: true,
         autoHeight: false,
         frozenColumn: 0,

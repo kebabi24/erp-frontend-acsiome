@@ -538,10 +538,7 @@ export class MenuConfig {
                     bullet: "dot",
                     icon: "flaticon-cart",
                     submenu: [
-                        {
-                            title: "Vente Caisse",
-                            page: "/sales/sales-box",
-                        },
+                        
                         {
                             title: "Rapport Journalier",
                             page: "/sales/dayly-site-trans",
@@ -605,7 +602,11 @@ export class MenuConfig {
                         {
                             title: "Liste des Factures",
                             page: "/sales/invoice-list",
-                        }
+                        },
+                        {
+                            title: "Consultation ders Ventes",
+                            page: "/sales/list-sales",
+                        },
                     ],
                 },
                 {
@@ -745,95 +746,104 @@ export class MenuConfig {
 						
 					]
 				},
-
-                
                 {
-                    title: "Gestion des Projets",
-                    bullet: "dot",
-                    icon: "flaticon-profile",
+                    title: "Gestion des projets",
                     root: true,
+                    bullet: "dot",
+                    icon: "flaticon2-delivery-truck",
                     submenu: [
-                    {
-                        title: "Gestion des Métier",
-                        bullet: "dot",
-                        icon: "flaticon-profile",
-                        root: true,
-                        submenu: [
-                            {
-                                title: "La liste des Code Métiers",
-                                page: "/job/list-job",
-                            },
-                            {
-                                title: "Ajouter un Code Métier",
-                                page: "/job/create-job",
-                            },
-                        ],
-                    },
-                    {
-                        title: "Gestion des Listes Outils",
-                        bullet: "dot",
-                        icon: "flaticon-profile",
-                        root: true,
-                        submenu: [
-                            {
-                                title: "La liste des Listes Outils",
-                                page: "/tool/list-tool",
-                            },
-                            {
-                                title: "Ajouter une Liste Outil",
-                                page: "/tool/create-tool",
-                            },
-                        ],
-                    },
-                    
-                    {
-                        title: "Gestion des Instructions",
-                        bullet: "dot",
-                        icon: "flaticon-profile",
-                        root: true,
-                        submenu: [
-                            {
-                                title: "La liste des Instructions",
-                                page: "/task/list-task",
-                            },
-                            {
-                                title: "Ajouter une Instruction",
-                                page: "/task/create-task",
-                            },
-                        ],
-                    },
-                    {
-                        title: "Création des Projets",
-                        bullet: "dot",
-                        icon: "flaticon-profile",
-                        root: true,
-                        submenu: [
-                            {
-                                title: "La liste Detail des Projets",
-                                page: "/project/list-project",
-                            },
-                            {
-                                title: "Ajouter un projet",
-                                page: "/project/create-project",
-                            },
-                            {
-                                title: "La liste des Projets",
-                                page: "/project/list-pm",
-                            },
-                            {
-                                title: 'Affectation des Employés',
-                                page: '/accounting-setting/affect-emp',
-                            },
+                       
+                        {
+                            title: "La liste Detail des Projets",
+                            page: "/project/list-project",
+                        },
+                        {
+                            title: "Ajouter un projet",
+                            page: "/project/create-project",
+                        },
+                        {
+                            title: "La liste des Projets",
+                            page: "/project/list-pm",
+                        },
+                        {
+                            title: "Affectation des Employés",
+                            page: "/project/create-project",
+                        },
+                        {
+                            title: "Rapport des activités",
+                            page: "/project/add-report",
+                        },
 
-                            {
-                                title: "Rapport d'activité",
-                                page: "/project/add-report",
-                            },
-                           
-                        ],
-                    },
-                  ]
+                        {
+                            title: "Gestion des Métier",
+                            root: true,
+                            bullet: "dot",
+                            icon: "flaticon2-delivery-truck",
+                            submenu: [
+                                {
+                                    title: "La liste des Code Métiers",
+                                    page: "/job/list-job",
+                                },
+                                {
+                                    title: "Ajouter un Code Métier",
+                                    page: "/job/list-job",
+        
+                                },
+        
+                                
+                            ],
+                        },
+                        {
+                            title: "Gestion des Listes Outils",
+                            root: true,
+                            bullet: "dot",
+                            icon: "flaticon2-delivery-truck",
+                            submenu: [
+                                {
+                                    title: "La liste des Listes Outils",
+                                    page: "/tool/list-tool",
+                                },
+                                {
+                                    title: "Ajouter une Liste Outil",
+                                    page: "/tool/create-tool",
+                                },
+                                
+                            ]
+                        },
+                        {
+                            title: "Gestion des Instructions",
+                            root: true,
+                            bullet: "dot",
+                            icon: "flaticon2-delivery-truck",
+                            submenu: [
+                                
+                                {
+                                    title: "La liste des Instructions",
+                                    page: "/task/list-task",
+                                },
+                                {
+                                    title: "Ajouter une Instruction",
+                                    page: "/task/create-task",
+                                },
+                                
+                                
+                            ],
+                        },
+
+                                         
+                        // {
+                        //     title: "Création des Projets",
+                          
+                        //     submenu: [
+                                
+                        //     ],
+                        // },
+                    
+                      
+
+                    ]
                 },
+              
                 /*{
                     title: "Gestion des Maintenance",
                     bullet: "dot",
