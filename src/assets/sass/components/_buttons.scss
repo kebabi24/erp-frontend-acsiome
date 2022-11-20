@@ -371,7 +371,7 @@
 
 	// Light Style
 	.btn.btn-light-#{$name} {
-		$btn-background: theme-light-color($name);
+		$btn-background: #ffe093;
 		$btn-border: transparent;
 		$btn-color: $value;
 		$btn-icon: $value;

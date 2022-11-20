@@ -31,6 +31,7 @@ const API_URL_PO = environment.apiUrl + "/purchase-orders";
 const API_URL_PR = environment.apiUrl + "/purchase-receives";
 const API_URL_BK = environment.apiUrl + "/banks";
 const API_URL_CUSTOMER = environment.apiUrl + "/customers";
+const API_URL_DELIVERY = environment.apiUrl + "/delivery";
 
 @Injectable()
 export class PosCategoryService {
@@ -51,7 +52,7 @@ export class PosCategoryService {
 
   public addPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.post(`${API_URL_PO}/createposunp`, data, {
+    return this.http.post(`${API_URL_PO}/createposunpp`, data, {
       headers: httpHeaders,
     });
   }
@@ -59,6 +60,12 @@ export class PosCategoryService {
   public getAll() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL, { headers: httpHeaders });
+  }
+  public getSeq(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_SEQ}/findone`, data, {
+      headers: httpHeaders,
+    });
   }
   public getPoRec(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
@@ -69,6 +76,16 @@ export class PosCategoryService {
   public getBank(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_BK}/findBk`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public getAllPlatformesOffers() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_DELIVERY, { headers: httpHeaders });
+  }
+  public getDiscountCode() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_CUSTOMER, {
       headers: httpHeaders,
     });
   }
@@ -94,6 +111,10 @@ export class PosCategoryService {
   public getAllOrders() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL_ORDER, { headers: httpHeaders });
+  }
+  public getAllOrderss() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL_ORDER}/findw`, { headers: httpHeaders });
   }
 
   public getOneOrder(data: any) {
