@@ -32165,7 +32165,7 @@ fieldset:disabled .btn {
     --kt-warning-active: #f1bc00;
     --kt-danger-active: #d9214e;
     --kt-dark-active: #131628;
-    --kt-primary-light: #f1faff;
+    --kt-primary-light: #9e110d;
     --kt-secondary-light: #f5f8fa;
     --kt-success-light: #e8fff3;
     --kt-info-light: #f8f5ff;
@@ -32210,7 +32210,7 @@ fieldset:disabled .btn {
     --kt-text-gray-900: #181C32;
     --kt-body-bg: #ffffff;
     --kt-body-bg-rgb: 255, 255, 255;
-    --kt-body-color: #181C32;
+    --kt-body-color: #9e110d;
     --kt-link-color: #009ef7;
     --kt-link-hover-color: shift-color(#009ef7, 20%);
     --kt-border-color: #eff2f5;

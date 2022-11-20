@@ -5,4 +5,5 @@ export class Category {
   category_name: string;
   items?: Array<any>;
   category_img?: string;
+  direct: boolean;
 }

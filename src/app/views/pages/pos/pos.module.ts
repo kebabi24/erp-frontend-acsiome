@@ -30,7 +30,11 @@ import {
   UpdateStatusDialogComponent,
 } from "../../partials/content/crud";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
-import { EmployeService, PosCategoryService } from "../../../core/erp";
+import {
+  EmployeService,
+  MobileServiceService,
+  PosCategoryService,
+} from "../../../core/erp";
 
 const routes: Routes = [
   {
@@ -72,6 +76,7 @@ const routes: Routes = [
       multi: true,
     },
     PosCategoryService,
+    MobileServiceService,
     EmployeService,
     TypesUtilsService,
     LayoutUtilsService,

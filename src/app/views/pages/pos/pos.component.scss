@@ -1,7 +1,18 @@
 .scrolling-wrapper{
-	overflow-x: auto;
+	overflow-y: auto;
 
 }
 .disableDiv{
     pointer-events:none;
 }
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: 100px;
+  }
+
+  .selected {
+    background:#9e110d;
+  }

@@ -10,6 +10,8 @@ import { environment } from '../../../../environments/environment';
 import { HttpUtilsService } from "../../_base/crud"
 
 const API_USERS_URL = environment.apiUrl + "/auth/login";
+const API_CREATE_CUSTOMER_URL = environment.apiUrl + "/auth/createCustomer";
+const API_GET_PHONE = environment.apiUrl + "/auth/getPhone";
 const API_PERMISSION_URL = 'api/permissions';
 const API_ROLES_URL = 'api/roles';
 
@@ -28,6 +30,20 @@ export class AuthService {
     console.log(API_USERS_URL)
     return this.http.post(API_USERS_URL, {userName, password}, { headers: httpHeaders });
   }
+
+  createNewCustomer(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    console.log(API_USERS_URL)
+    return this.http.post(API_CREATE_CUSTOMER_URL, {data},{ headers: httpHeaders });
+  }
+
+ 
+  getCustomerPhone(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    console.log(API_USERS_URL)
+    return this.http.get(`${API_GET_PHONE}/${data}`,{ headers: httpHeaders });
+  }
+
   verifypwd(userName: string, password: string) {
     const httpHeaders = this.httpUtils.getHTTPHeaders()
     console.log(API_USERS_URL)
