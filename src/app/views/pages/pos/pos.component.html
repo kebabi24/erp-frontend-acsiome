@@ -26,6 +26,14 @@
                 class="d-flex flex-column flex-xl-row justify-content-center gap-2"
               >
                 <button
+                  (click)="opBk(content6)"
+                  class="btn fw-bold btn-primary"
+                  style="background-color: #9e110d; font-size: large"
+                  [disabled]="stateCaisse"
+                >
+                  Ouverture caisse
+                </button>
+                <button
                   (click)="checkOpenInventory2(content3)"
                   class="fw-bold btn btn-primary"
                   [disabled]="stateInventory"
@@ -42,14 +50,7 @@
                 >
                   Inventaire de clôture
                 </button>
-                <button
-                  (click)="opBk(content6)"
-                  class="btn fw-bold btn-primary"
-                  style="background-color: #9e110d; font-size: large"
-                  [disabled]="stateCaisse"
-                >
-                  Ouverture caisse
-                </button>
+
                 <button
                   (click)="opBk(content10)"
                   class="btn fw-bold btn-primary"
@@ -393,7 +394,7 @@
                         >
                           <label
                             class="fw-bold text-gray-900 fs-1"
-                            style="margin-right: 5px"
+                            style="margin-right: 25px"
                             >Entreprise:</label
                           >
                           <label>
@@ -414,6 +415,73 @@
                             Ajouter client
                           </button>
                         </span>
+                      </div>
+                      <!-- <div class="flex-row" style="margin-top: 20px">
+                        <div class="form-floating" style="width: 200px">
+                          <input
+                            style="width: 200px; background-color: beige"
+                            type="email"
+                            class="form-control text-gray-900"
+                            placeholder="00.0"
+                            id="floatingInputValue"
+                            #discount
+                            id="discount"
+                            name="discount"
+                            [disabled]="globalState"
+                          />
+                          <label for="floatingInputValue"
+                            >Numéro carte de fidélité
+                          </label>
+                        </div>
+                        <button
+                          (click)="onChangeDiscount(discount.value)"
+                          class="btn fw-bold btn-primary"
+                          style="background-color: #9e110d; font-size: large"
+                          [disabled]="globalState"
+                        >
+                          Vérifier
+                        </button>
+                      </div> -->
+                      <div class="flex card-header">
+                        <div class="card-toolbar">
+                          <div
+                            class="form-floating"
+                            style="
+                              width: 200px;
+                              margin-left: 15px;
+                              margin-right: 47px;
+                            "
+                          >
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                              #discount
+                              id="discount"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro carte de fidélité
+                            </label>
+                          </div>
+                          <button
+                            (click)="onChangeDiscount(discount.value)"
+                            class="btn fw-bold btn-primary"
+                            style="
+                              background-color: #9e110d;
+                              font-size: large;
+                              width: 157px;
+                            "
+                            [disabled]="globalState"
+                          >
+                            Vérifier
+                          </button>
+                        </div>
+
+                        <!--end::Toolbar-->
                       </div>
 
                       <!--begin::Header-->
@@ -446,12 +514,13 @@
                           />
                           <label for="floatingInputValue">Numéro carte </label>
                         </div> -->
-                      <div class="flex card-header pt-5">
+                      <div class="flex card-header">
                         <div class="card-toolbar">
                           <button
+                            id="btn1"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderS(content)"
-                            style="margin-left: 35px; background-color: beige"
+                            style="margin-left: 35px"
                             [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
@@ -459,18 +528,20 @@
                             <!--end::Svg Icon-->Sur place
                           </button>
                           <button
+                            id="btn2"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderE()"
-                            style="margin-left: 5px; background-color: beige"
+                            style="margin-left: 5px"
                             [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
 
                             <!--end::Svg Icon-->A Emporter</button
                           ><button
+                            id="btn3"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderL(content19)"
-                            style="margin-left: 5px; background-color: beige"
+                            style="margin-left: 5px"
                             [disabled]="globalState"
                           >
                             <!--begin::Svg Icon | path: icons/duotune/arrows/arr012.svg-->
@@ -682,7 +753,10 @@
                           <!--begin::Content-->
                           <div class="fs-6 fw-bold text-white">
                             <span class="d-block lh-1 mb-2">Sous totale</span>
-                            <span class="d-block mb-2">Remise</span>
+                            <span *ngIf="currentOffer" class="d-block mb-2"
+                              >Pourcentage de remise</span
+                            >
+                            <span class="d-block mb-2">Montant remise</span>
 
                             <span class="d-block fs-2qx lh-1">Net à payer</span>
                           </div>
@@ -695,11 +769,18 @@
                               data-kt-pos-element="total"
                               >{{ cartAmount + remisePrice }} DA</span
                             >
+
+                            <span
+                              *ngIf="currentOffer"
+                              class="d-block mb-2"
+                              data-kt-pos-element="discount"
+                              >({{ currentOffer.del_pct_disc }} %)
+                            </span>
                             <span
                               class="d-block mb-2"
                               data-kt-pos-element="discount"
-                              >{{ remisePrice }} DA</span
-                            >
+                              >{{ remisePrice }} DA
+                            </span>
 
                             <span
                               class="d-block fs-2qx lh-1"
@@ -745,42 +826,25 @@
                             <span class="fs-7 fw-bold d-block">Cash</span>
                             <!--end::Title-->
                           </label>
-
-                          <div class="form-floating">
-                            <input
-                              style="background-color: beige"
-                              type="email"
-                              class="form-control text-gray-900 fw-bold"
-                              placeholder="00.0"
-                              id="floatingInputValue"
-                              #discount
-                              id="discount"
-                              name="discount"
+                          <div class="flex-row">
+                            <button
+                              (click)="prepareCart(content)"
+                              class="btn btn-primary fs-1 w-50 py-4"
+                              style="background-color: #9e110d; margin-top: 5px"
                               [disabled]="globalState"
-                            />
-                            <label for="floatingInputValue"
-                              >Numéro carte de fidélité
-                            </label>
+                              [disabled]="disable"
+                            >
+                              Lancer
+                            </button>
+                            <button
+                              class="btn btn-primary fs-1 w-50 py-4"
+                              (click)="paiement()"
+                              style="margin-top: 5px; background-color: #9e110d"
+                              [disabled]="globalState"
+                            >
+                              Payer
+                            </button>
                           </div>
-
-                          <button
-                            (click)="onChangeDiscount(discount.value)"
-                            class="btn btn-primary fs-1 w-100 py-4"
-                            style="background-color: #9e110d; margin-top: 5px"
-                            [disabled]="globalState"
-                          >
-                            Vérifier
-                          </button>
-                          <!--end::Radio group-->
-                          <!--begin::Actions-->
-                          <button
-                            (click)="prepareCart(content)"
-                            class="btn btn-primary fs-1 w-100 py-4"
-                            style="background-color: #9e110d; margin-top: 5px"
-                            [disabled]="globalState"
-                          >
-                            Lancer la préparation
-                          </button>
 
                           <!-- <div class="form-floating">
                               <input
@@ -845,14 +909,14 @@
                             >
                               {{ b.ticket }}
                             </button> -->
-                          <button
+                          <!-- <button
                             class="btn btn-primary fs-1 w-100 py-4"
                             (click)="paiement()"
                             style="margin-top: 10px; background-color: #9e110d"
                             [disabled]="globalState"
                           >
                             Payer
-                          </button>
+                          </button> -->
 
                           <!--end::Actions-->
                         </div>
@@ -1292,11 +1356,11 @@
                     style="width: 240px; height: 65px; margin-top: 10px"
                   >
                     <button
-                      #btn
+                      id="{{ i }}"
                       class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                      (click)="btn.classList.add('selected')"
-                      (click)="setIngredient(ingredient)"
+                      (click)="setIngredient(ingredient, i)"
                       style="width: 240px; height: 65px"
+                      [disabled]="disableIng"
                     >
                       <div class="">
                         <span
@@ -1309,10 +1373,9 @@
                   </li>
                   <li style="width: 240px; height: 65px; margin-top: 10px">
                     <button
+                      id="ing"
                       class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                      data-bs-toggle="pill"
-                      type="button"
-                      (click)="setIngredient(ingredient)"
+                      (click)="setAllIngredient(ingredients)"
                       style="width: 240px; height: 65px"
                     >
                       <div class="">
@@ -2674,7 +2737,9 @@
                     class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
                     data-bs-toggle="pill"
                     type="button"
-                    (click)="applyDel(p)"
+                    (click)="applyDiscount(p)"
+                    (click)="c('Close click')"
+                    [disabled]="p.actif"
                     style="
                       width: 200px;
                       height: 150px;
@@ -2709,22 +2774,6 @@
           </div>
           <!--end::Pos food-->
         </div>
-      </div>
-      <div class="modal-footer" style="background-color: #f5f5dc">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="c('Close click')"
-        >
-          Annuler
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="c('Close click')"
-        >
-          Appliquer
-        </button>
       </div>
     </ng-template>
   </div>

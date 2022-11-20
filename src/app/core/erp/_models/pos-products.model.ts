@@ -16,5 +16,6 @@ export class Product {
   pt_draw?: string;
   pt_group?: string;
   comment: string;
+  pt_part_type: string;
   line: string;
 }
