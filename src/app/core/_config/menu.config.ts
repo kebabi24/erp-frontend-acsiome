@@ -607,6 +607,10 @@ export class MenuConfig {
                             title: "Consultation des Ventes",
                             page: "/sales/list-sales",
                         },
+                        {
+                            title: "Consultation des Commandes",
+                            page: "/sales/list-pos",
+                        },
                     ],
                 },
                 {

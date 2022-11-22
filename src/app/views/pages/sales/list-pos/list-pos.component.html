@@ -1,0 +1,25 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Consultation des Ventes" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+       
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+               
+                    
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                    </angular-slickgrid>
+                </div>
+                <br>
+           
+        </div>
+
+       
+
+       
+        
+    </kt-portlet-body>
+</kt-portlet>
