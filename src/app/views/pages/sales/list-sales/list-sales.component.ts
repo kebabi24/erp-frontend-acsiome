@@ -221,13 +221,13 @@ export class ListSalesComponent implements OnInit {
         field: "site",
         sortable: true,
         width: 50,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
         grouping: {
           getter: 'site',
           formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('qty'),
+            new Aggregators.Sum('ord_qty'),
             new Aggregators.Sum('amt')
           ],
             aggregateCollapsed: false,
@@ -241,14 +241,14 @@ export class ListSalesComponent implements OnInit {
         field: "part",
         sortable: true,
         width: 50,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
         grouping: {
           getter: 'part',
           formatter: (g) => `Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('qty'),
-          new Aggregators.Sum('qty')
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -261,7 +261,7 @@ export class ListSalesComponent implements OnInit {
         field: "desc1",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
       
       },
@@ -271,7 +271,7 @@ export class ListSalesComponent implements OnInit {
         field: "ord_qty",
         sortable: true,
         width: 50,
-        filterable: false,
+        filterable: true,
        
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
@@ -284,13 +284,93 @@ export class ListSalesComponent implements OnInit {
         field: "amt",
         sortable: true,
         width: 50,
-        filterable: false,
+        filterable: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       
-      
+      {
+        id: "parttupe",
+        name: "Type",
+        field: "parttype",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.float,
+        grouping: {
+          getter: 'parttype',
+          formatter: (g) => `Type : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "group",
+        name: "Groupe",
+        field: "group",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.float,
+        grouping: {
+          getter: 'group',
+          formatter: (g) => `Groupe : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "promo",
+        name: "Promo",
+        field: "promo",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.float,
+        grouping: {
+          getter: 'promo',
+          formatter: (g) => `Promo : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "size",
+        name: "Size",
+        field: "size",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.float,
+        grouping: {
+          getter: 'size',
+          formatter: (g) => `size : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+
     ];
 
     this.mvgridOptions = {
@@ -299,7 +379,7 @@ export class ListSalesComponent implements OnInit {
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
-        autoHeight: false,
+        autoHeight: true,
         enableSorting: true,
         exportOptions: {
           sanitizeDataExport: true

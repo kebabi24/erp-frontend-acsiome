@@ -215,6 +215,41 @@ export class ListPosComponent implements OnInit {
         
       },*/
       {
+        id: "created_date",
+        name: "Date Effet",
+        field: "created_date",
+        nameKey: 'created_date',
+        sortable: true,
+      
+
+        formatter: Formatters.dateIso, 
+        minWidth: 75,
+        width: 120,
+        exportWithFormatter: true,
+
+        type: FieldType.date,
+        filterable: true,
+        filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
+          
+        grouping: {
+          getter: 'created_date',
+          formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('total_price'),
+            new Aggregators.Sum('disc_amt')
+          ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          
+        }
+      },
+
+      {
         id: "usrd_site",
         name: "Site",
         field: "usrd_site",
