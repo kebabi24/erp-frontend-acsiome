@@ -375,47 +375,141 @@ export class PosComponent implements OnInit {
     } else {
       this.showSize = true;
     }
-    console.log(productOnlist);
     this.sizeOfProduct.map((item) => {
       item.pt_group == "null" && (this.showSupp = false);
     });
 
     this.productInCartPrice = 0;
     this.currentItem = undefined;
+    this.showListOfBrands = false;
   }
-  // prepareProductWithoutSize(productOnlist) {
-  //   this.currentItem = this.sizeOfProduct.find(
-  //     (item) => item.pt_draw === productOnlist.code_value
-  //   );
-  //   console.log("hhh");
-  //   this.addProductBtn = true;
 
-  //   this.currentItem = {
-  //     id: this.currentItem.id,
-  //     pt_part: this.currentItem.pt_part,
-  //     pt_desc1: this.currentItem.pt_desc1,
-  //     pt_article: this.currentItem.pt_article,
-  //     pt_formule: this.currentItem.pt_formule,
-  //     pt_loc: this.currentItem.pt_loc,
-  //     pt_price: this.currentItem.pt_price,
-  //     pt_bom_code: this.currentItem.pt_bom_code,
-  //     pt_qty: 1,
-  //     comment: this.currentItem.pt_group,
-  //     suppliments: [],
-  //     ingredients: [],
-  //     sauces: [],
-  //   };
-  // }
   prepareProduct(size, content) {
+    if (
+      size.pt_group === "COCA" ||
+      size.pt_group === "SCHWEPPES" ||
+      size.pt_group === "SCHWEPPES GOLD"
+    ) {
+      this.elem = this.AllProducts.filter(
+        (item) => item.pt_group === size.pt_group
+      );
+      this.showListOfBrands = true;
+      console.log(size.pt_group);
+    } else {
+      this.productInCartPrice = 0;
+      this.currentItem = this.sizeOfProduct.find(
+        (item) => item.pt_group === size.pt_group
+      );
+      console.log(this.currentItem);
+      this.sizeProduct = this.currentItem.pt_group;
+      this.currentCategory.direct === true
+        ? (this.showSauces = false)
+        : (this.showSauces = true);
+
+      this.currentItem = {
+        id: this.currentItem.id,
+        pt_part: this.currentItem.pt_part,
+        pt_desc1: this.currentItem.pt_desc1,
+        pt_article: this.currentItem.pt_article,
+        pt_formule: this.currentItem.pt_formula,
+        pt_loc: this.currentItem.pt_loc,
+        pt_price: this.currentItem.pt_price,
+        pt_bom_code: this.currentItem.pt_bom_code,
+        pt_qty: 1,
+        pt_part_type: this.currentItem.pt_part_type,
+        comment: this.currentItem.pt_group,
+        suppliments: [],
+        ingredients: [],
+        sauces: [],
+      };
+      if (this.currentCategory.direct === true) {
+        this.addProductToCart();
+      } else {
+        this.open2(content);
+      }
+      const checkItemExist = this.currentItem;
+      // checkItemExist.size != undefined ? this.sizeOfProduct : null;
+
+      // const itemExist: Product = this.cartProducts.find((item) => {
+      //   return (
+      //     item.pt_part === checkItemExist.pt_part &&
+      //     item.suppliments.length === checkItemExist.suppliments.length &&
+      //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
+      //       .length === checkItemExist.suppliments.length &&
+      //     item.ingredients.length === checkItemExist.ingredients.length &&
+      //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
+      //       .length === checkItemExist.ingredients.length &&
+      //     item.sauces.length === checkItemExist.sauces.length &&
+      //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
+      //       checkItemExist.sauces.length &&
+      //     item.comment === checkItemExist.comment
+      //   );
+      // });
+
+      checkItemExist.suppliments.map((item) => {
+        this.productInCartPrice =
+          Number(this.productInCartPrice) + Number(item.pt_price);
+      });
+      this.productInCartPrice =
+        Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
+      this.loclocOrder === "Emporté"
+        ? this.posCategoryService
+            .getByOneBom({ ptb_part: checkItemExist.pt_part })
+            .subscribe((res: any) => {
+              res.data.map((item) => {
+                checkItemExist.pt_bom_code = item.ptb_bom;
+              });
+            })
+        : null;
+      this.itemToAdd = {
+        id: this.currentItem.id,
+        pt_part: checkItemExist.pt_part,
+        pt_desc1: checkItemExist.pt_desc1,
+        pt_article: checkItemExist.pt_article,
+        pt_price: checkItemExist.pt_price,
+        pt_formule: checkItemExist.pt_formule,
+        pt_bom_code: checkItemExist.pt_bom_code,
+        suppliments: checkItemExist.suppliments,
+        ingredients: checkItemExist.ingredients,
+        sauces: checkItemExist.sauces,
+        comment: this.sizeProduct,
+        pt_part_type: checkItemExist.pt_part_type,
+        pt_loc: checkItemExist.pt_loc,
+        pt_qty: 1,
+        line: this.cartProducts.length.toString(),
+      };
+
+      this.cart.products.push(this.itemToAdd);
+      this.showPrice = true;
+
+      this.cartProducts = this.cart.products;
+      this.ingredients.map((item) => {
+        item.isChecked = true;
+      });
+      this.cartAmount = this.calculateSubTotal();
+      // this.offer &&
+      //   (this.cart.total_price =
+      //     this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
+      //   (this.remisePrice =
+      //     this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
+      //   (this.cartAmount = this.cart.total_price);
+      // this.currentItem.suppliments = [];
+      // this.currentItem.ingredients = [];
+      // this.productInCartPrice = 0;
+      // this.selectedIndex = 0;
+      // this.showSize = false;
+      // this.showSoda = false;
+      // this.showSpec = false;
+      // this.showSupp = false;
+      // this.showSauces = false;
+      // this.currentItem = undefined;
+      this.offer && this.applyDiscount(this.currentOffer);
+      this.disableIng = false;
+    }
+  }
+  prepareAnotherProduct(size) {
     this.productInCartPrice = 0;
-    this.currentItem = this.sizeOfProduct.find(
-      (item) => item.pt_group === size.pt_group
-    );
-    console.log(this.currentItem);
-    this.sizeProduct = this.currentItem.pt_group;
-    this.currentCategory.direct === true
-      ? (this.showSauces = false)
-      : (this.showSauces = true);
+    this.currentItem = size;
 
     this.currentItem = {
       id: this.currentItem.id,
@@ -433,11 +527,6 @@ export class PosComponent implements OnInit {
       ingredients: [],
       sauces: [],
     };
-    if (this.currentCategory.direct === true) {
-      this.addProductToCart();
-    } else {
-      this.open2(content);
-    }
     const checkItemExist = this.currentItem;
     // checkItemExist.size != undefined ? this.sizeOfProduct : null;
 
@@ -579,9 +668,8 @@ export class PosComponent implements OnInit {
   }
 
   setListOfBrands(so: any) {
-    // this.showListOfSoda = true;
     this.showListOfBrands = true;
-    // this.showSupp = true;
+    console.log(so);
   }
 
   setListOfItems(drinks: any) {
@@ -2056,16 +2144,16 @@ export class PosComponent implements OnInit {
 
           // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/emptime`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-        //   customStructure: {    
-        //     value: 'code_value',
-        //     label: 'code_cmmt',
-        //     optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
-        //     //labelSuffix: 'text',
-        //  },
-        //   editorOptions: {
-        //     maxHeight: 400
-        //   }
+          collectionAsync: this.http.get(`${API_URL}/emptime`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+          //   customStructure: {
+          //     value: 'code_value',
+          //     label: 'code_cmmt',
+          //     optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
+          //     //labelSuffix: 'text',
+          //  },
+          //   editorOptions: {
+          //     maxHeight: 400
+          //   }
         },
       },
       {
@@ -2079,48 +2167,42 @@ export class PosComponent implements OnInit {
         editor: {
           model: Editors.text,
         },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-       
-        }
-        
-    },
-    {
-      id: "timeend",
-      name: "Heure De Sortie",
-      field: "timeend",
-      sortable: true,
-      width: 80,
-      filterable: true,
-      type: FieldType.string,
-      
-      editor: {
-        model: Editors.text
+        onCellChange: (e: Event, args: OnEventArgs) => {},
       },
-      onCellChange: (e: Event, args: OnEventArgs) => {
-       
-      }
-  },  
-    ]
-  
+      {
+        id: "timeend",
+        name: "Heure De Sortie",
+        field: "timeend",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+
+        editor: {
+          model: Editors.text,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {},
+      },
+    ];
+
     this.gridOptions18 = {
-        enableSorting: true,
-        enableCellNavigation: true,
-        enableExcelCopyBuffer: true,
-        enableFiltering: true,
-        autoEdit: true,
-        editable: true,
-        autoHeight: false,
-        frozenColumn: 0,
-        frozenBottom: true,
-        enableRowSelection: true,
-        enableCheckboxSelector: true,
-        checkboxSelector: {
-        },
-        multiSelect: false,
-        rowSelectionOptions: {
-            selectActiveRow: true,
-        },
-    }
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: true,
+      editable: true,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
 
     // fill the dataset with your data
     this.employeService
