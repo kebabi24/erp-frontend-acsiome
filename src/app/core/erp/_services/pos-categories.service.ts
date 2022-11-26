@@ -11,6 +11,7 @@ import { Category } from "../_models/pos-categories.model";
 import { Observable } from "rxjs";
 import { Product } from "../_models/pos-products.model";
 import { D } from "@angular/cdk/keycodes";
+import { AnyFn } from "@ngrx/store/src/selector";
 
 const API_URL = environment.apiUrl + "/pos-category";
 const API_URL_ORDER = environment.apiUrl + "/pos-order";
@@ -108,9 +109,11 @@ export class PosCategoryService {
     });
   }
 
-  public getAllOrders() {
+  public getAllOrders(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.get(API_URL_ORDER, { headers: httpHeaders });
+    return this.http.post(`${API_URL_ORDER}/findall`, data, {
+      headers: httpHeaders,
+    });
   }
   public getAllOrderss() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
