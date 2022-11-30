@@ -1,338 +1,437 @@
-<kt-portlet class=" main-container" >
-    <kt-portlet-header class="main-container" [sticky]="true" [title]="'Réclamation de client'" [class]="'card-head-lg'" [viewLoading$]="loading$" style="background-color:beige">
-        <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-sm mr-2 btn-abracadabra">Sauvgarder </button>
-            <button hidden id="call-alert" type="button" (click)="open2(content2)" class="btn btn-sm mr-2 btn-abracadabra">Alert </button>
-        </ng-container>
+<kt-portlet class="main-container">
+  <kt-portlet-header
+    class="main-container"
+    [sticky]="true"
+    [title]="'Réclamation de client'"
+    [class]="'card-head-lg'"
+    [viewLoading$]="loading$"
+    style="background-color: beige"
+  >
+    <ng-container ktPortletTools>
+      <button
+        type="button"
+        (click)="goBack()"
+        class="btn btn-secondary btn-sm mr-2"
+      >
+        Annuler
+      </button>
+      <button
+        type="button"
+        (click)="onSubmit()"
+        class="btn btn-sm mr-2 btn-abracadabra"
+      >
+        Sauvgarder
+      </button>
+      <button
+        hidden
+        id="call-alert"
+        type="button"
+        (click)="open2(content2)"
+        class="btn btn-sm mr-2 btn-abracadabra"
+      >
+        Alert
+      </button>
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body class="main-container">
+    <div class="example-preview row">
+      <!-- RECLAMATION FORM -->
+      <form class="form col-6" [formGroup]="reclamationForm">
+        <!-- CARD -->
+        <div class="card card-custom gutter-b">
+          <div class="card-header">
+            <!-- TITLE  -->
+            <div class="card-title mt-2 mb-2 p-3">
+              <span class="card-icon">
+                <!-- text-warning -->
+                <i class="flaticon-user icon-xl" style="color: #ffb701"></i>
+              </span>
+              <h3 class="card-label section-title" style="color: #ffb701">
+                Données personnelles du client
+              </h3>
+            </div>
 
-    </kt-portlet-header>
-    <kt-portlet-body class="main-container" >
-        
-        <div class="example-preview row">
+            <!-- BUTTON -->
+            <!-- <div> -->
+            <div *ngIf="customerNotExist">
+              <button
+                type="button"
+                (click)="open(content)"
+                class="btn btn-sm mr-2 mt-3 btn-abracadabra"
+              >
+                Créer un client
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- PHONE -->
+            <div class="row align-middle">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Numéro de téléphone:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ phone_number }}</h3>
+              </div>
+            </div>
+            <!-- PHONE -->
 
-            <!-- RECLAMATION FORM -->
-            <form class="form col-6" [formGroup]="reclamationForm">
-                <!-- CARD -->
-                <div class="card card-custom gutter-b">
-                    <div class="card-header">
+            <!-- NAME -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Nom et prénom:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ name }}</h3>
+              </div>
+            </div>
+            <!-- NAME -->
 
-                        <!-- TITLE  -->
-                        <div class="card-title mt-2 mb-2 p-3 ">
-                            <span class="card-icon" >
-                                <!-- text-warning -->
-                                <i class="flaticon-user icon-xl" style="color: #ffb701"></i>
-                            </span>
-                            <h3 class="card-label section-title" style="color: #ffb701" >
-                                Données personnelles du client
-                            </h3>
-                        </div>
+            <!-- ADR -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Address:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ adress }}</h3>
+              </div>
+            </div>
+            <!-- ADR -->
 
-                        <!-- BUTTON -->
-                        <!-- <div> -->
-                         <div *ngIf="customerNotExist">
-                            <button  type="button" (click)="open(content)" class="btn  btn-sm mr-2 mt-3 btn-abracadabra">Créer un client</button>
-                        </div>
+            <!-- AGE -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Age:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ age }}</h3>
+              </div>
+            </div>
+            <!-- AGE -->
 
+            <!-- GENDER -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Gender:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ gender }}</h3>
+              </div>
+            </div>
+            <!-- GENDER -->
+
+            <!-- SELECT -->
+            <div class="row mt-5">
+              <div class="col-4">
+                <label>Choisir les causes:</label>
+              </div>
+            </div>
+            <div class="row mt-5 ml-2">
+              <div class="row">
+                <div
+                  class="col-12"
+                  *ngFor="let cause of reclamation_causes; let i = index"
+                >
+                  <div class="row mt-5">
+                    <fieldset class="col-6">
+                      <input
+                        type="checkbox"
+                        formControlName="{{ cause.code_value }}"
+                      />
+                      <label for="coding" class="ml-2">{{
+                        cause.code_desc
+                      }}</label>
+                    </fieldset>
+
+                    <div class="input-group input-group-sm col-6">
+                      <textarea
+                        rows="2"
+                        type="text"
+                        class="mt-1 form-control form-control-solid"
+                        formControlName="{{ cause.code_value }}text-area"
+                      >
+                      </textarea>
                     </div>
-                    <div class="card-body">
-
-                        <!-- PHONE -->
-                        <div class="row align-middle">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Numéro de téléphone:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{phone_number}}</h3>
-                            </div>
-                        </div>
-                        <!-- PHONE -->
-
-                        <!-- NAME -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Nom et prénom:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{name}}</h3>
-                            </div>
-                        </div>
-                        <!-- NAME -->
-
-                         <!-- ADR -->
-                         <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Address:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{adress}} </h3>
-                            </div>
-                        </div>
-                        <!-- ADR -->
-
-                        <!-- AGE -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Age:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{age}}</h3>
-                            </div>
-                        </div>
-                        <!-- AGE -->
-
-                        <!-- GENDER -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Gender:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{gender}}</h3>
-                            </div>
-                        </div>
-                        <!-- GENDER -->
-
-                        <!-- SELECT -->
-                        <div class="row  mt-5">
-                            <div class="col-4">
-                                <label >Choisir les causes:</label>
-                            </div>
-                        </div>
-                        <div class="row mt-5 ml-2">
-                                    <div class="row">
-                                        <div class="col-12" *ngFor="let cause of reclamation_causes ; let i = index">
-                                            <div class="row mt-5">
-                                                <fieldset class="col-6">
-
-                                                    <input type="checkbox"  formControlName="{{cause.code_value}}"/>
-                                                    <label for="coding" class="ml-2">{{cause.code_desc}}</label>
-                                                </fieldset>
-
-                                                <div class="input-group input-group-sm col-6">
-                                                    <textarea rows="2" type="text" class="mt-1 form-control form-control-solid"  formControlName="{{cause.code_value}}text-area">
-                                                    </textarea>
-                                                </div>
-
-                                            </div>
-                                          </div>
-                                    </div>
-                            
-                        </div>
-                        <!-- SELECT -->
-                    </div>
+                  </div>
                 </div>
-                <!-- CARD END  -->
-
-                
-            </form>
-            <!-- RECLAMATION FORM -->
-
-            <!-- ORDER FORM -->
-            <form class="form col-6" [formGroup]="reclamationForm">
-                <!-- CARD -->
-                <div class="card card-custom gutter-b">
-                    <div class="card-header">
-                     <div class="card-title mt-2 mb-2 p-3 ">
-                        <span class="card-icon section-title">
-                            <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
-                        </span>
-                        <h3 class="card-label  section-title" style="color: #ffb701">
-                            Détails de la commande
-                        </h3>
-                     </div>
-                    </div>
-                    <div class="card-body">
-                        <!-- FORM INPUTS -->
-
-                        <!-- ORDER NUMBER -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Numéro de commande:</label>
-                            </div>
-                            <div class="col-4">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control form-control-solid"  formControlName="order_code"
-                                    (change)="getOrder()"
-                                    aria-describedby="basic-addon2">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- ORDER NUMBER -->
-
-                        <!-- SITE -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Site de la boutique:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{order_site}}</h3>
-                            </div>
-                        </div>
-                        <!-- SITE -->
-                        
-
-                        <!-- SITE -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">Date de commande:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{order_date}}</h3>
-                            </div>
-                        </div>
-                        <!-- SITE -->
-
-                        <!-- EMP ORDER -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-4 align-middle">
-                                <label class="align-middle">EMP de commande:</label>
-                            </div>
-                            <div class="col-8">
-                                <h3 >{{order_emp}}</h3>
-                            </div>
-                        </div>
-                        <!-- EMP ORDER -->
-
-                        <!-- FORM INPUTS -->
-                    </div>
-                </div>
-                <!-- CARD END  -->
-
-                
-            </form>
-            <!-- ORDER FORM -->
+              </div>
+            </div>
+            <!-- SELECT -->
+          </div>
         </div>
+        <!-- CARD END  -->
+      </form>
+      <!-- RECLAMATION FORM -->
 
-          <!-- MODAL -->
+      <!-- ORDER FORM -->
+      <form class="form col-6" [formGroup]="reclamationForm">
+        <!-- CARD -->
+        <div class="card card-custom gutter-b">
+          <div class="card-header">
+            <div class="card-title mt-2 mb-2 p-3">
+              <span class="card-icon section-title">
+                <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
+              </span>
+              <h3 class="card-label section-title" style="color: #ffb701">
+                Détails de la commande
+              </h3>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- FORM INPUTS -->
+
+            <!-- ORDER NUMBER -->
+            <div>
+              {{ time | async }}
+            </div>
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Numéro de commande:</label>
+              </div>
+              <div class="col-4">
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    class="form-control form-control-solid"
+                    formControlName="order_code"
+                    (change)="getOrder()"
+                    aria-describedby="basic-addon2"
+                  />
+                </div>
+              </div>
+            </div>
+            <!-- ORDER NUMBER -->
+
+            <!-- SITE -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Site de la boutique:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ order_site }}</h3>
+              </div>
+            </div>
+            <!-- SITE -->
+
+            <!-- SITE -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Date de commande:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ order_date }}</h3>
+              </div>
+            </div>
+            <!-- SITE -->
+
+            <!-- EMP ORDER -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">EMP de commande:</label>
+              </div>
+              <div class="col-8">
+                <h3>{{ order_emp }}</h3>
+              </div>
+            </div>
+            <!-- EMP ORDER -->
+
+            <!-- FORM INPUTS -->
+          </div>
+        </div>
+        <!-- CARD END  -->
+      </form>
+      <!-- ORDER FORM -->
+    </div>
+
+    <!-- MODAL -->
+    <div class="row">
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Nouveau Client</h4>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="d('Cross click')"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
           <div class="row">
-            <ng-template #content let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Nouveau Client</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <!--begin::Form-->
+            <form
+              class="form"
+              [formGroup]="customerForm"
+              autocomplete="off"
+              novalidate="novalidate"
+              class="ml-5"
+            >
+              <!-- NAME -->
+              <div class="row align-middle mt-5">
+                <div class="col-6 align-middle">
+                  <label class="align-middle">Nom et prénom:</label>
                 </div>
-                <div class="modal-body">
-                    <div class="row"> 
-                       <!--begin::Form-->
-                       <form class="form" [formGroup]="customerForm" autocomplete="off" novalidate="novalidate" class="ml-5">
-
-
-                        <!-- NAME -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-6 align-middle">
-                                <label class="align-middle">Nom et prénom:</label>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control form-control-solid" 
-                                    aria-describedby="basic-addon2" formControlName="name">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- NAME -->
-
-                        <!-- AGE -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-6 align-middle">
-                                <label class="align-middle">Age:</label>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control form-control-solid" 
-                                    aria-describedby="basic-addon2" formControlName="age">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- AGE -->
-
-                        <!-- SEXE -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-6 align-middle">
-                                <label class="align-middle mt-2">Gender:</label>
-                            </div>
-                            <div class="col-6">
-                                <select formControlName="gender" 
-                                class="form-control form-control-solid" >
-                                
-                                <option value="homme" class="mt-1">Homme</option>
-                                <option value="femme">Femme</option>
-                                
-                                </select>
-                            </div>
-                                
-                        </div>
-                        <!-- SEXE -->
-
-                        <!-- COMMUNE -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-6 align-middle">
-                                <label class="align-middle">Commune:</label>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control form-control-solid" 
-                                    aria-describedby="basic-addon2" formControlName="commune">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- COMMUNE -->
-
-                        <!-- EMAIL -->
-                        <div class="row align-middle mt-5">
-                            <div class="col-6 align-middle">
-                                <label class="align-middle">Email:</label>
-                            </div>
-                            <div class="col-6">
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control form-control-solid" 
-                                    aria-describedby="basic-addon2" formControlName="email">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- EMAIL -->
-
-                    </form>
-                    <!--end::Form-->
-                    </div>
-            
+                <div class="col-6">
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="text"
+                      class="form-control form-control-solid"
+                      aria-describedby="basic-addon2"
+                      formControlName="name"
+                    />
+                  </div>
                 </div>
-                <div class="modal-footer">
-                    <button hidden id="closeForm" class="btn btn-primary" (click)="c('Close click')"></button>
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn  btn-abracadabra" (click)="saveCustomer()">Ajouter</button>
+              </div>
+
+              <!-- NAME -->
+
+              <!-- AGE -->
+              <div class="row align-middle mt-5">
+                <div class="col-6 align-middle">
+                  <label class="align-middle">Age:</label>
                 </div>
-            </ng-template>
+                <div class="col-6">
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="text"
+                      class="form-control form-control-solid"
+                      aria-describedby="basic-addon2"
+                      formControlName="age"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- AGE -->
+
+              <!-- SEXE -->
+              <div class="row align-middle mt-5">
+                <div class="col-6 align-middle">
+                  <label class="align-middle mt-2">Gender:</label>
+                </div>
+                <div class="col-6">
+                  <select
+                    formControlName="gender"
+                    class="form-control form-control-solid"
+                  >
+                    <option value="homme" class="mt-1">Homme</option>
+                    <option value="femme">Femme</option>
+                  </select>
+                </div>
+              </div>
+              <!-- SEXE -->
+
+              <!-- COMMUNE -->
+              <div class="row align-middle mt-5">
+                <div class="col-6 align-middle">
+                  <label class="align-middle">Commune:</label>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="text"
+                      class="form-control form-control-solid"
+                      aria-describedby="basic-addon2"
+                      formControlName="commune"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- COMMUNE -->
+
+              <!-- EMAIL -->
+              <div class="row align-middle mt-5">
+                <div class="col-6 align-middle">
+                  <label class="align-middle">Email:</label>
+                </div>
+                <div class="col-6">
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="text"
+                      class="form-control form-control-solid"
+                      aria-describedby="basic-addon2"
+                      formControlName="email"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- EMAIL -->
+            </form>
+            <!--end::Form-->
+          </div>
         </div>
-        <!-- MODAL END -->
-
-        <!-- MODAL 2 -->
-        <div class="row shake-modal">
-            <ng-template #content2 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title" style="color: #ffb701">Nouvel appel !</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row"> 
-                       <h2>Le numéro de téléphone <span style="color:#9e110d">{{phone_number}}</span> appelle</h2>
-                    </div>
-            
-                </div>
-                <div class="modal-footer">
-                    <button hidden id="closeForm" class="btn btn-primary" (click)="c('Close click')"></button>
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn  btn-abracadabra" (click)="c('Close click')">Répond à l'appel</button>
-                </div>
-            </ng-template>
+        <div class="modal-footer">
+          <button
+            hidden
+            id="closeForm"
+            class="btn btn-primary"
+            (click)="c('Close click')"
+          ></button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="c('Close click')"
+          >
+            Annuller
+          </button>
+          <button
+            type="button"
+            class="btn btn-abracadabra"
+            (click)="saveCustomer()"
+          >
+            Ajouter
+          </button>
         </div>
-        <!-- MODAL END 2-->
+      </ng-template>
+    </div>
+    <!-- MODAL END -->
 
-    </kt-portlet-body>
+    <!-- MODAL 2 -->
+    <div class="row shake-modal">
+      <ng-template #content2 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title" style="color: #ffb701">Nouvel appel !</h4>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="d('Cross click')"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <h2>
+              Le numéro de téléphone
+              <span style="color: #9e110d">{{ phone_number }}</span> appelle
+            </h2>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            hidden
+            id="closeForm"
+            class="btn btn-primary"
+            (click)="c('Close click')"
+          ></button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="c('Close click')"
+          >
+            Annuller
+          </button>
+          <button
+            type="button"
+            class="btn btn-abracadabra"
+            (click)="c('Close click')"
+          >
+            Répond à l'appel
+          </button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL END 2-->
+  </kt-portlet-body>
 </kt-portlet>
-
-
