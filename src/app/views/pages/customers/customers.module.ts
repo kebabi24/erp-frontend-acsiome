@@ -58,6 +58,8 @@ import { CustomerSoldelistComponent } from './customer-soldelist/customer-soldel
 import { CustomerCAlistComponent } from './customer-calist/customer-calist.component';
 import { CustomerCAbyItemlistComponent } from './customer-caby-itemlist/customer-caby-itemlist.component';
 import { CustomerActivitylistComponent } from './customer-activitylist/customer-activitylist.component'
+import { CustomerReclamationComponent } from "./customer-reclamation/customer-reclamation.component";
+import { CustomerSatisfactionComponent } from "./customer-satisfaction/customer-satisfaction.component";
 const routes: Routes = [
   {
       path: "",
@@ -93,6 +95,14 @@ const routes: Routes = [
               path: "Customer-soldelist",
               component: CustomerSoldelistComponent,
           },
+          { 
+            path: "customer-reclamation/:phone",
+            component: CustomerReclamationComponent,
+          },
+          { 
+            path: "customer-satisfaction",
+            component: CustomerSatisfactionComponent,
+          },
       ],
   },
 ]
@@ -107,6 +117,8 @@ const routes: Routes = [
         CustomerCAlistComponent,
         CustomerCAbyItemlistComponent,
         CustomerActivitylistComponent,
+        CustomerReclamationComponent,
+        CustomerSatisfactionComponent,
     ],
     imports: [
         CommonModule,

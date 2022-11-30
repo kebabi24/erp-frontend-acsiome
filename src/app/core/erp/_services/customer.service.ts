@@ -25,6 +25,37 @@ export class CustomerService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, customer, { headers: httpHeaders })
     }
+
+    // CREATE COMPLAINT
+    public createComplaint(complaintData : any, complaintDetailsData: any , customerData:any) {
+        console
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createComplaint`, {complaintData,complaintDetailsData,customerData}, { headers: httpHeaders })
+    }
+
+
+    public getCustomer(phone: String) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/getCustomer/${phone}`, { headers: httpHeaders })
+    }
+
+    public getOrder(order_code: String) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/getOrder/${order_code}`, { headers: httpHeaders })
+    }
+
+    public getReclamationCauses() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/getReclamationCauses`, { headers: httpHeaders })
+    }
+
+    // CREATE SATISFACTION
+    public createSatisfaction(satisfactionData : any, complaintDetailsData: any ) {
+        console
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createSatisfaction`, {satisfactionData,complaintDetailsData}, { headers: httpHeaders })
+    }
+
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
