@@ -79,9 +79,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   
-  createCustomer() {
-      this.router.navigateByUrl("customers/customer-create")
-  }
+  
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
@@ -185,6 +183,57 @@ export class CustomerListComponent implements OnInit {
             type: FieldType.string,
           },
           {
+            id: "ad_format",
+            name: "Age",
+            field: "address.ad_format",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'ad_format',
+              formatter: (g) => `Age: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: false,
+              collapsed: false,
+            }
+          },
+          
+          {
+            id: "ad_ref",
+            name: "Sexe",
+            field: "address.ad_ref",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'ad_ref',
+              formatter: (g) => `Sexe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: false,
+              collapsed: false,
+            }
+          },
+          {
+            id: "ad_ext",
+            name: "Email",
+            field: "address.ad_ext",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string, 
+          },
+          {
+            id: "cm_db",
+            name: "Promo",
+            field: "cm_db",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'cm_db',
+              formatter: (g) => `Promo: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: false,
+              collapsed: false,
+            }
+          },
+          {
             id: "cm_type",
             name: "Type",
             field: "cm_type",
@@ -267,10 +316,12 @@ export class CustomerListComponent implements OnInit {
       ]
 
       this.gridOptions = {
-          autoResize: {
-            containerId: 'demo-container',
-            sidePadding: 10
-          },
+          // autoResize: {
+          //   containerId: 'demo-container',
+          //   sidePadding: 10
+          // },
+          autoHeight:true,
+          enableAutoResize:true,
           enableDraggableGrouping: true,
           createPreHeaderPanel: true,
           showPreHeaderPanel: true,
@@ -314,7 +365,9 @@ export class CustomerListComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       this.customerService.getAll().subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {this.dataset = response.data
+          this.dataviewObj.setItems(this.dataset)
+          },
           (error) => {
               this.dataset = []
           },

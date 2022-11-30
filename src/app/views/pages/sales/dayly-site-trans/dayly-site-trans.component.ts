@@ -211,7 +211,7 @@ error = false;
         field: "part",
         sortable: true,
         width: 100,
-        filterable: false,
+        filterable: true,
         
       },
       {
@@ -220,7 +220,7 @@ error = false;
         field: "desc",
         sortable: true,
         width: 150,
-        filterable: false,
+        filterable: true,
       },
       {
         id: "serial",
@@ -228,7 +228,7 @@ error = false;
         field: "serial",
         sortable: true,
         width: 150,
-        filterable: false,
+        filterable: true,
       },
       {
         id: "qtyinvbeg",
@@ -265,7 +265,7 @@ error = false;
         field: "qtyiss",
         sortable: true,
         minWidth: 100,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
       },
       {
@@ -274,7 +274,7 @@ error = false;
         field: "qtyrest",
         sortable: true,
         minWidth: 100,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
       },
       {
@@ -283,7 +283,7 @@ error = false;
         field: "qtyinvfin",
         sortable: true,
         minWidth: 100,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
       },
       
@@ -292,6 +292,7 @@ error = false;
     this.gridOptions = {
       asyncEditorLoading: false,
       editable: true,
+      enableFiltering: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
@@ -374,7 +375,7 @@ error = false;
         field: "part",
         sortable: true,
         width: 50,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
         editor: {
           model: Editors.text,
@@ -386,11 +387,9 @@ error = false;
         field: "desc1",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
         type: FieldType.float,
-        editor: {
-          model: Editors.text,
-        },
+       
       },
       {
         id: "ord_qty",
@@ -400,9 +399,7 @@ error = false;
         width: 50,
         filterable: false,
         type: FieldType.float,
-        editor: {
-          model: Editors.float,
-        },
+       
       },
   
       
@@ -411,6 +408,7 @@ error = false;
     this.mvgridOptions = {
       asyncEditorLoading: false,
       editable: true,
+      enableFiltering: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
@@ -439,7 +437,7 @@ error = false;
     this.posCategoryService.getSumeQty({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
-       console.log(this.mvdataset)
+       
        this.mvdataView.setItems(this.mvdataset);
         
          },
