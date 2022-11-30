@@ -188,6 +188,7 @@ export class PosComponent implements OnInit {
   private results: Observable<any[]>;
   loy_num: number = 0;
   disableIng: boolean = false;
+  formule: boolean = false;
   constructor(
     config: NgbDropdownConfig,
     private http: HttpClient,
@@ -518,7 +519,7 @@ export class PosComponent implements OnInit {
       pt_article: this.currentItem.pt_article,
       pt_formule: this.currentItem.pt_formula,
       pt_loc: this.currentItem.pt_loc,
-      pt_price: this.currentItem.pt_price,
+      pt_price: this.formule ? Number(0) : this.currentItem.pt_price,
       pt_bom_code: this.currentItem.pt_bom_code,
       pt_qty: 1,
       pt_part_type: this.currentItem.pt_part_type,
@@ -605,6 +606,7 @@ export class PosComponent implements OnInit {
     // this.currentItem = undefined;
     this.offer && this.applyDiscount(this.currentOffer);
     this.disableIng = false;
+    this.formule = false;
   }
   setSauce(sauce: any) {
     this.currentItem.pt_formule == false && (this.showSupp = true);
@@ -669,7 +671,11 @@ export class PosComponent implements OnInit {
 
   setListOfBrands(so: any) {
     this.showListOfBrands = true;
-    console.log(so);
+    this.elem = this.AllProducts.filter(
+      (item) => item.pt_draw === so.code_value
+    );
+    console.log(this.elem);
+    this.formule = true;
   }
 
   setListOfItems(drinks: any) {
@@ -917,143 +923,59 @@ export class PosComponent implements OnInit {
   }
 
   prepareCart(content): void {
-    if (this.cartProducts.length === 0) {
-      console.log("nothing");
-    } else {
-      let cart: Cart = {
-        id: Math.floor(Math.random() * 101) + 1,
-        products: this.cartProducts,
-        order_emp: this.loclocOrder,
-        customer: "particulier",
-        status: "N",
-        total_price: this.cartAmount,
-        usrd_name: this.user.usrd_user_name,
-        usrd_site: this.user.usrd_site,
-        loy_num: this.loy_num,
-        disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
-        del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
-        site_loc: this.currentTable ? this.currentTable : null,
-      };
-      console.log(cart.products);
-      this.posCategoryService.addOrder({ cart }).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.offer === true && (this.offer = false);
-          this.currentOffer = null;
+    let cart: Cart = {
+      id: Math.floor(Math.random() * 101) + 1,
+      products: this.cartProducts,
+      order_emp: this.loclocOrder,
+      customer: "particulier",
+      status: "N",
+      total_price: this.cartAmount,
+      usrd_name: this.user.usrd_user_name,
+      usrd_site: this.user.usrd_site,
+      loy_num: this.loy_num,
+      disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
+      del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
+      site_loc: this.currentTable ? this.currentTable : null,
+    };
+    console.log(cart.products);
+    this.posCategoryService.addOrder({ cart }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.offer === true && (this.offer = false);
+        this.currentOffer = null;
 
-          this.loadingSubject.next(false);
-        }
-      );
+        this.loadingSubject.next(false);
+      }
+    );
 
-      // this.cartProducts.map((item) => {
-      //   this.posCategoryService
-      //     .getLd({ ld_part: item.pt_part, ld_lot: null })
-      //     .subscribe((res: any) => {
-      //       const pro = res.data;
-      //       console.log(pro.ld_qty_oh);
-      //     });
-      // });
-
-      this.posCategoryService.createld({ cart }).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        }
-      );
-
-      this.posCategoryService.createPosWorkOrder({ cart }).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        }
-      );
-
-      // this.posCategoryService.createPosWorkOrderDetail({ cart }).subscribe(
-      //   (reponse) => console.log("response", Response),
-      //   (error) => {
-      //     this.layoutUtilsService.showActionNotification(
-      //       "Erreur verifier les informations",
-      //       MessageType.Create,
-      //       10000,
-      //       true,
-      //       true
-      //     );
-      //     this.loadingSubject.next(false);
-      //   },
-      //   () => {
-      //     this.layoutUtilsService.showActionNotification(
-      //       "Ajout avec succès",
-      //       MessageType.Create,
-      //       10000,
-      //       true,
-      //       true
-      //     );
-      //     this.loadingSubject.next(false);
-      //   }
-      // );
-      this.cartAmount = 0;
-      this.remisePrice = 0;
-      this.cart.products = [];
-      this.cartProducts = [];
-      this.showPrice = false;
-      this.inShop = false;
-      this.showStatusDelivery = false;
-      this.showStatusOut = false;
-      this.offer = false;
-      this.loclocOrder = "Sur place";
-      this.currentTable = "01";
-    }
+    this.cartAmount = 0;
+    this.remisePrice = 0;
+    this.cart.products = [];
+    this.cartProducts = [];
+    this.showPrice = false;
+    this.inShop = false;
+    this.showStatusDelivery = false;
+    this.showStatusOut = false;
+    this.offer = false;
+    this.loclocOrder = "Sur place";
+    this.currentTable = "01";
   }
 
   changeSelection(event, index) {
@@ -1156,11 +1078,13 @@ export class PosComponent implements OnInit {
   handleSelectedRowsChanged(e, args) {}
 
   getHistory(content) {
-    this.posCategoryService.getAllOrders().subscribe((res: any) => {
-      this.ordersHistory = res.data.map((item) => {
-        return item;
+    this.posCategoryService
+      .getAllOrders({ user: this.user.usrd_user_name })
+      .subscribe((res: any) => {
+        this.ordersHistory = res.data.map((item) => {
+          return item;
+        });
       });
-    });
     this.modalService.open(content, { size: "xl" });
   }
   getItemFromHistory(order) {
@@ -1235,11 +1159,37 @@ export class PosComponent implements OnInit {
   // }
 
   paiement() {
-    if (this.cartProducts.length === 0) {
-      console.log("nothing!!!");
-    } else {
+    this.posCategoryService
+      .createIssWo({ detail: this.detail, user: this.user.usrd_user_name })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      ) &&
       this.posCategoryService
-        .createIssWo({ detail: this.detail, it: new Date() })
+        .processTopaiement({
+          cart: this.cart,
+          type: "REC",
+          user_name: this.user.usrd_user_name,
+        })
         .subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
@@ -1262,44 +1212,14 @@ export class PosComponent implements OnInit {
             );
             this.loadingSubject.next(false);
           }
-        ) &&
-        this.posCategoryService
-          .processTopaiement({
-            cart: this.cart,
-            type: "REC",
-            user_name: this.user.usrd_user_name,
-          })
-          .subscribe(
-            (reponse) => console.log("response", Response),
-            (error) => {
-              this.layoutUtilsService.showActionNotification(
-                "Erreur verifier les informations",
-                MessageType.Create,
-                10000,
-                true,
-                true
-              );
-              this.loadingSubject.next(false);
-            },
-            () => {
-              this.layoutUtilsService.showActionNotification(
-                "Ajout avec succès",
-                MessageType.Create,
-                10000,
-                true,
-                true
-              );
-              this.loadingSubject.next(false);
-            }
-          );
-      console.log("pssss22222", this.cartProducts);
-      this.detail = [];
-      (this.workOrders = []), (this.detailSo = []), (this.it = null);
-      this.cartProducts = [];
-      this.cart.products = [];
-      this.showPrice = false;
-      this.disable = false;
-    }
+        );
+    console.log("pssss22222", this.cartProducts);
+    this.detail = [];
+    (this.workOrders = []), (this.detailSo = []), (this.it = null);
+    this.cartProducts = [];
+    this.cart.products = [];
+    this.showPrice = false;
+    this.disable = false;
   }
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
