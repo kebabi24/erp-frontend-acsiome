@@ -140,6 +140,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getSumeQtyPs(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findsumqtyps`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getSumAmt(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findsumamt`, data, {
