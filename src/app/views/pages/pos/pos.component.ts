@@ -311,7 +311,7 @@ export class PosComponent implements OnInit {
     this.createCustomerForm();
     // this.initGrid2();
     this.mobileService
-      .getByOne({ role_code: this.user.usrd_user_name, service_open: "true" })
+      .getByOne({ role_code: this.user.usrd_code, service_open: "true" })
       .subscribe((res: any) => {
         let service = res.data;
         if (service) {
@@ -408,7 +408,7 @@ export class PosComponent implements OnInit {
         : (this.showSauces = true);
 
       this.currentItem = {
-        id: this.currentItem.id,
+        id: Math.random(),
         pt_part: this.currentItem.pt_part,
         pt_desc1: this.currentItem.pt_desc1,
         pt_article: this.currentItem.pt_article,
@@ -429,23 +429,6 @@ export class PosComponent implements OnInit {
         this.open2(content);
       }
       const checkItemExist = this.currentItem;
-      // checkItemExist.size != undefined ? this.sizeOfProduct : null;
-
-      // const itemExist: Product = this.cartProducts.find((item) => {
-      //   return (
-      //     item.pt_part === checkItemExist.pt_part &&
-      //     item.suppliments.length === checkItemExist.suppliments.length &&
-      //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
-      //       .length === checkItemExist.suppliments.length &&
-      //     item.ingredients.length === checkItemExist.ingredients.length &&
-      //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
-      //       .length === checkItemExist.ingredients.length &&
-      //     item.sauces.length === checkItemExist.sauces.length &&
-      //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
-      //       checkItemExist.sauces.length &&
-      //     item.comment === checkItemExist.comment
-      //   );
-      // });
 
       checkItemExist.suppliments.map((item) => {
         this.productInCartPrice =
@@ -463,7 +446,7 @@ export class PosComponent implements OnInit {
             })
         : null;
       this.itemToAdd = {
-        id: this.currentItem.id,
+        id: Math.random(),
         pt_part: checkItemExist.pt_part,
         pt_desc1: checkItemExist.pt_desc1,
         pt_article: checkItemExist.pt_article,
@@ -479,7 +462,23 @@ export class PosComponent implements OnInit {
         pt_qty: 1,
         line: this.cartProducts.length.toString(),
       };
+      // checkItemExist.size != undefined ? this.sizeOfProduct : null;
 
+      // const itemExist: Product = this.cartProducts.find((item) => {
+      //   return (
+      //     item.pt_part === checkItemExist.pt_part &&
+      //     item.suppliments.length === checkItemExist.suppliments.length &&
+      //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
+      //       .length === checkItemExist.suppliments.length &&
+      //     item.ingredients.length === checkItemExist.ingredients.length &&
+      //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
+      //       .length === checkItemExist.ingredients.length &&
+      //     item.sauces.length === checkItemExist.sauces.length &&
+      //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
+      //       checkItemExist.sauces.length &&
+      //     item.comment === checkItemExist.comment
+      //   );
+      // });
       this.cart.products.push(this.itemToAdd);
       this.showPrice = true;
 
@@ -513,7 +512,7 @@ export class PosComponent implements OnInit {
     this.currentItem = size;
 
     this.currentItem = {
-      id: this.currentItem.id,
+      id: Math.random(),
       pt_part: this.currentItem.pt_part,
       pt_desc1: this.currentItem.pt_desc1,
       pt_article: this.currentItem.pt_article,
@@ -563,7 +562,7 @@ export class PosComponent implements OnInit {
           })
       : null;
     this.itemToAdd = {
-      id: this.currentItem.id,
+      id: Math.random(),
       pt_part: checkItemExist.pt_part,
       pt_desc1: checkItemExist.pt_desc1,
       pt_article: checkItemExist.pt_article,
@@ -903,10 +902,7 @@ export class PosComponent implements OnInit {
   }
 
   onIncreaseQty(product: Product): void {
-    // const pt = this.AllProducts.find(
-    //   (elem) => elem.pt_part === product.pt_part
-    // );
-    //const prc = pt.pt_price;
+    console.log(product);
     const pt = this.cartProducts.find((item) => item.id === product.id);
     pt.pt_price =
       Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
@@ -920,6 +916,66 @@ export class PosComponent implements OnInit {
       return acc + Number(cur.pt_price);
     }, 0);
     return val;
+  }
+  getItemFromHistory(order) {
+    this.detail = [];
+    const elem: Cart = this.ordersHistory.find(
+      (item) => item.order_code === order.order_code
+    );
+    this.disable = true;
+    this.showPrice = true;
+    this.posCategoryService
+      .getOneOrder({ order_code: elem.order_code })
+      .subscribe((res: any) => {
+        this.cartProducts = res.data.products.map((item) => {
+          return item;
+        });
+        this.cartAmount = Number(res.data.total_price);
+      });
+    // console.log(this.cartProducts);
+    console.log(this.cartProducts);
+    this.cart = elem;
+    // this.posCategoryService
+    //   .getWod({ wod_nbr: this.cart.order_code })
+    //   .subscribe((res: any) => {
+    //     this.workOrders = res.data.map((item) => {
+    //       return item;
+    //     });
+    //     this.workOrders.forEach((wo) => {
+    //       const d = {
+    //         tr_part: wo.wod_part,
+    //         tr_lot: wo.wod_lot,
+    //         tr_price: wo.wod_price,
+    //         tr_site: wo.wod_site,
+    //         tr_qty_loc: Number(wo.wod_qty_req),
+    //         tr_qty_chg: Number(wo.wod_qty_req),
+    //         tr_nbr: wo.wod_nbr,
+    //         tr_serial: null,
+    //         tr_loc: wo.wod_loc,
+    //         tr_um_conv: 1,
+    //       };
+    //       this.detail.push(d);
+    //     });
+    //     console.log(this.detail);
+    //   });
+
+    // this.workOrders.forEach((so) => {
+    //   const d = {
+    //     tr_part: so.wod_part,
+    //     tr_lot: so.wod_lot,
+    //     tr_price: so.wod_price,
+    //     tr_site: so.wod_site,
+    //     tr_qty_loc: Number(so.wod_qty_req),
+    //     tr_qty_chg: Number(so.wod_qty_req),
+    //     tr_nbr: so.wod_nbr,
+    //     tr_serial: null,
+    //     tr_loc: so.wod_loc,
+    //     tr_um_conv: 1,
+    //   };
+    //   this.detailSo.push(d);
+    // });
+    // this.it = this.cart.created_date;
+    // return this.detail;
   }
 
   prepareCart(content): void {
@@ -964,6 +1020,31 @@ export class PosComponent implements OnInit {
         this.loadingSubject.next(false);
       }
     );
+    // this.posCategoryService
+    //   .createIssWo({ detail: this.detail, user: this.user.usrd_user_name })
+    //   .subscribe(
+    //     (reponse) => console.log("response", Response),
+    //     (error) => {
+    //       this.layoutUtilsService.showActionNotification(
+    //         "Erreur verifier les informations",
+    //         MessageType.Create,
+    //         10000,
+    //         true,
+    //         true
+    //       );
+    //       this.loadingSubject.next(false);
+    //     },
+    //     () => {
+    //       this.layoutUtilsService.showActionNotification(
+    //         "Ajout avec succès",
+    //         MessageType.Create,
+    //         10000,
+    //         true,
+    //         true
+    //       );
+    //       this.loadingSubject.next(false);
+    //     }
+    //   );
 
     this.cartAmount = 0;
     this.remisePrice = 0;
@@ -1087,64 +1168,6 @@ export class PosComponent implements OnInit {
       });
     this.modalService.open(content, { size: "xl" });
   }
-  getItemFromHistory(order) {
-    this.detail = [];
-    const elem: Cart = this.ordersHistory.find(
-      (item) => item.order_code === order.order_code
-    );
-    this.disable = true;
-    this.showPrice = true;
-    this.posCategoryService
-      .getOneOrder({ order_code: elem.order_code })
-      .subscribe((res: any) => {
-        this.cartProducts = res.data.products;
-        this.cartAmount = Number(res.data.total_price);
-      });
-    console.log(this.cartProducts);
-    console.log(elem);
-    this.cart = elem;
-    this.posCategoryService
-      .getWod({ wod_nbr: this.cart.order_code })
-      .subscribe((res: any) => {
-        this.workOrders = res.data.map((item) => {
-          return item;
-        });
-        this.workOrders.forEach((wo) => {
-          const d = {
-            tr_part: wo.wod_part,
-            tr_lot: wo.wod_lot,
-            tr_price: wo.wod_price,
-            tr_site: wo.wod_site,
-            tr_qty_loc: Number(wo.wod_qty_req),
-            tr_qty_chg: Number(wo.wod_qty_req),
-            tr_nbr: wo.wod_nbr,
-            tr_serial: null,
-            tr_loc: wo.wod_loc,
-            tr_um_conv: 1,
-          };
-          this.detail.push(d);
-        });
-        console.log(this.detail);
-      });
-
-    // this.workOrders.forEach((so) => {
-    //   const d = {
-    //     tr_part: so.wod_part,
-    //     tr_lot: so.wod_lot,
-    //     tr_price: so.wod_price,
-    //     tr_site: so.wod_site,
-    //     tr_qty_loc: Number(so.wod_qty_req),
-    //     tr_qty_chg: Number(so.wod_qty_req),
-    //     tr_nbr: so.wod_nbr,
-    //     tr_serial: null,
-    //     tr_loc: so.wod_loc,
-    //     tr_um_conv: 1,
-    //   };
-    //   this.detailSo.push(d);
-    // });
-    this.it = this.cart.created_date;
-    return this.detail;
-  }
 
   // Sodata() {
   //   this.posCategoryService
@@ -1160,7 +1183,11 @@ export class PosComponent implements OnInit {
 
   paiement() {
     this.posCategoryService
-      .createIssWo({ detail: this.detail, user: this.user.usrd_user_name })
+      .processTopaiement({
+        cart: this.cart,
+        type: "REC",
+        user_name: this.user.usrd_user_name,
+      })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1183,36 +1210,7 @@ export class PosComponent implements OnInit {
           );
           this.loadingSubject.next(false);
         }
-      ) &&
-      this.posCategoryService
-        .processTopaiement({
-          cart: this.cart,
-          type: "REC",
-          user_name: this.user.usrd_user_name,
-        })
-        .subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.layoutUtilsService.showActionNotification(
-              "Erreur verifier les informations",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.loadingSubject.next(false);
-          },
-          () => {
-            this.layoutUtilsService.showActionNotification(
-              "Ajout avec succès",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.loadingSubject.next(false);
-          }
-        );
+      );
     console.log("pssss22222", this.cartProducts);
     this.detail = [];
     (this.workOrders = []), (this.detailSo = []), (this.it = null);

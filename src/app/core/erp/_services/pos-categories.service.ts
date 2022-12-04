@@ -33,6 +33,7 @@ const API_URL_PR = environment.apiUrl + "/purchase-receives";
 const API_URL_BK = environment.apiUrl + "/banks";
 const API_URL_CUSTOMER = environment.apiUrl + "/customers";
 const API_URL_DELIVERY = environment.apiUrl + "/delivery";
+const API_URL_SITE = environment.apiUrl + "/sites";
 
 @Injectable()
 export class PosCategoryService {
@@ -79,6 +80,11 @@ export class PosCategoryService {
     return this.http.post(`${API_URL_BK}/findBk`, data, {
       headers: httpHeaders,
     });
+  }
+
+  public getAllSite() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_SITE, { headers: httpHeaders });
   }
   public getAllPlatformesOffers() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
@@ -348,6 +354,11 @@ export class PosCategoryService {
     return this.http.post(`${API_URL_LD}/find`, data, {
       headers: httpHeaders,
     });
+  }
+
+  public sendOrderFromCC(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL_ORDER, data, { headers: httpHeaders });
   }
 
   search(data: any): Observable<Object> {

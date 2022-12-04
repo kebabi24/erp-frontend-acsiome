@@ -1,24 +1,23 @@
 // Angular
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
 // Partials
-import { PartialsModule } from '../partials/partials.module';
+import { PartialsModule } from "../partials/partials.module";
 // Pages
-import { CoreModule } from '../../core/core.module';
-import { MailModule } from './apps/mail/mail.module';
-import {ProvidersModule} from './providers/providers.module'
-import { ECommerceModule } from './apps/e-commerce/e-commerce.module';
-import { UserManagementModule } from './user-management/user-management.module';
-import { MyPageComponent } from './my-page/my-page.component';
-import { AngularSlickgridModule } from 'angular-slickgrid';
-import { TreeModule } from '@circlon/angular-tree-component';
-import { ServicesComponent } from './services/services.component';
-import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
-import { PosComponent } from './pos/pos.component';
-
-
+import { CoreModule } from "../../core/core.module";
+import { MailModule } from "./apps/mail/mail.module";
+import { ProvidersModule } from "./providers/providers.module";
+import { ECommerceModule } from "./apps/e-commerce/e-commerce.module";
+import { UserManagementModule } from "./user-management/user-management.module";
+import { MyPageComponent } from "./my-page/my-page.component";
+import { AngularSlickgridModule } from "angular-slickgrid";
+import { TreeModule } from "@circlon/angular-tree-component";
+import { ServicesComponent } from "./services/services.component";
+import { MobileMenuComponent } from "./mobile-menu/mobile-menu.component";
+import { PosComponent } from "./pos/pos.component";
+import { PosVisitorComponent } from "./pos-visitor/pos-visitor.component";
 
 @NgModule({
   declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent],
@@ -34,9 +33,8 @@ import { PosComponent } from './pos/pos.component';
     ECommerceModule,
     UserManagementModule,
     ProvidersModule,
-    TreeModule
+    TreeModule,
   ],
-  providers: []
+  providers: [],
 })
-export class PagesModule {
-}
+export class PagesModule {}
