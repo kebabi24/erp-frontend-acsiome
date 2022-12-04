@@ -901,7 +901,7 @@ export class PosVisitorComponent implements OnInit {
     this.cart = elem;
   }
 
-  prepareCart(content): void {
+  prepareCart(): void {
     let cart: Cart = {
       id: Math.floor(Math.random() * 101) + 1,
       products: this.cartProducts,
@@ -1061,6 +1061,25 @@ export class PosVisitorComponent implements OnInit {
         this.loadingSubject.next(false);
       }
     );
+  }
+  onChangeDiscount(discount) {
+    console.log(discount);
+
+    if (discount) {
+      this.loy_num = discount;
+      const elem = this.discountTable.find((item) => item.cm_addr === discount);
+      if (elem) {
+        // console.log(elem.cm_disc_pct);
+        console.log(this.cart.total_price);
+
+        this.cart.total_price =
+          this.cartAmount * (1 - Number(elem.cm_disc_pct) / 100);
+
+        this.remisePrice = this.cartAmount * (Number(elem.cm_disc_pct) / 100);
+        this.cartAmount = this.cart.total_price;
+      }
+      console.log(this.remisePrice);
+    }
   }
 
   getSite(content) {
