@@ -1,16 +1,16 @@
 <kt-portlet class="main-container">
     <kt-portlet-header class="main-container" [sticky]="true" [title]="'Satisfaction du client'" [class]="'card-head-lg'" [viewLoading$]="loading$" style="background-color:beige">
-        <ng-container ktPortletTools>
+        <!-- <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
-        </ng-container>
+        </ng-container> -->
 
     </kt-portlet-header>
     <kt-portlet-body class="main-container">
         <div class="example-preview row">
 
             <!-- RECLAMATION FORM -->
-            <form class="form col-6" [formGroup]="satisfactionForm">
+            <form class="form col-6 offset-3" [formGroup]="satisfactionForm">
                 <!-- CARD -->
                 <div class="card card-custom gutter-b">
                     <div class="card-header">
@@ -29,6 +29,14 @@
 
                     </div>
                     <div class="card-body">
+                        <kt-alert  *ngIf="orderNotExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                        (close)="onAlertClose($event)">
+                        Aucune commande n'existe avec ce code
+                        </kt-alert>
+
+                        <div>
+                            {{ time | async }}
+                        </div>
 
                         <!-- ORDER NUMBER -->
                         <div class="row align-middle mt-5">
@@ -38,7 +46,7 @@
                         </div>
                             <div class="col-4 row  mt-2">
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control form-control-solid"  formControlName="order_code"
+                                    <input type="text" class="form-control form-control-solid" (change)="getOrder()"  formControlName="order_code"
                                     aria-describedby="basic-addon2">
                                 </div>
                             </div>
@@ -58,10 +66,10 @@
                             <div class=" ml-10 mb-5 feeedback-btn button " (click)="updateStatus('happy')">
                                <div class="happy image_div happy" ></div>
                             </div>
-                            <div class=" ml-10 mb-5  feeedback-btn button " (click)="updateStatus('okay')">
+                            <div class=" ml-10 mb-5  feeedback-btn button " (click)="open(content,'okay')">
                                 <div class="happy image_div okay"></div>
                             </div>
-                            <div class=" ml-10 mb-5 feeedback-btn button" (click)="open(content)">
+                            <div class=" ml-10 mb-5 feeedback-btn button" (click)="open(content,'angry')">
                                 <div class="happy image_div angry"></div>
                             </div>
                         </div>
@@ -70,8 +78,13 @@
                  
 
                     </div>
+                    <div class="card-footer d-flex justify-content-center">
+                        <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
+                        <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+                    </div>
                 </div>
                 <!-- CARD END  -->
+               
 
                 
             </form>
