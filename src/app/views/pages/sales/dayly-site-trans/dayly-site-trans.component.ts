@@ -239,7 +239,7 @@ error = false;
         filterable: false,
         type: FieldType.float,
         formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 }, 
+        params: { minDecimal: 2, maxDecimal: 2 }, 
        
       
       },
@@ -252,7 +252,7 @@ error = false;
         filterable: false,
         type: FieldType.float,     
         formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 }, 
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyrec",
@@ -263,7 +263,7 @@ error = false;
         filterable: false,
         type: FieldType.float,
         formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 }, 
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyiss",
@@ -274,7 +274,7 @@ error = false;
         filterable: true,
         type: FieldType.float,
         formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 }, 
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyrest",
@@ -285,7 +285,7 @@ error = false;
         filterable: true,
         type: FieldType.float,
         formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 }, 
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyinvfin",
@@ -296,7 +296,7 @@ error = false;
         filterable: true,
         type: FieldType.float,
         formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 }, 
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       
     ];
@@ -313,10 +313,10 @@ error = false;
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-        displayNegativeNumberWithParentheses: true,
+        displayNegativeNumberWithParentheses: false,
   
         // Defaults to undefined, minimum number of decimals
-        minDecimal: 2,
+        minDecimal:2,
         maxDecimal:2,
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678

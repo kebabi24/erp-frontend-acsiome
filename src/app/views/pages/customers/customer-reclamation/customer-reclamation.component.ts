@@ -66,6 +66,7 @@ export class CustomerReclamationComponent implements OnInit {
   gender: String;
   email: String;
   createdCustomer: Boolean = false;
+  orderNotExist: Boolean = false;
   customerNotExist: Boolean;
 
   order_code: String;
@@ -104,12 +105,14 @@ export class CustomerReclamationComponent implements OnInit {
     this.createForm();
     this.openCallAlert();
   }
+
   getOrder() {
     const controls = this.reclamationForm.controls;
     this.order_code = controls.order_code.value;
     this.customerService.getOrder(this.order_code).subscribe(
       (reponse) => {
         if (reponse["data"] == null) {
+          this.orderNotExist = true;
           console.log("null");
         } else {
           this.order_site = reponse["data"].usrd_site;
@@ -176,8 +179,6 @@ export class CustomerReclamationComponent implements OnInit {
             this.customeControls[cause.code_value + "text-area"] =
               new FormControl("");
           });
-          this.customeControls["rec_details"] = new FormControl("");
-          this.customeControls["cause"] = new FormControl("");
           this.customeControls["order_code"] = new FormControl("");
 
           this.reclamationForm = this.tagFB.group({
@@ -368,7 +369,17 @@ export class CustomerReclamationComponent implements OnInit {
     document.getElementById("closeForm").click();
   }
 
-  test() {
-    window.alert("hey");
+  // test() {
+  //   window.alert("hey");
+  // }
+
+  onAlertClose($event) {
+    this.orderNotExist = false
+    this.customeControls["order_code"] = new FormControl("");
+
+          this.reclamationForm = this.tagFB.group({
+            order_code: new FormControl(""),
+            ...this.customeControls,
+          });
   }
 }

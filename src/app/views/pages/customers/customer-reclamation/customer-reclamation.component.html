@@ -178,7 +178,11 @@
           </div>
           <div class="card-body">
             <!-- FORM INPUTS -->
-
+            <!-- *ngIf="isExist" -->
+            <kt-alert  *ngIf="orderNotExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Aucune commande n'existe avec ce code
+            </kt-alert>
             <!-- ORDER NUMBER -->
             <div>
               {{ time | async }}
