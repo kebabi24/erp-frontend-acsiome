@@ -303,6 +303,7 @@ export class PosVisitorComponent implements OnInit {
       total_price: 0,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
+      from: "CALL CENTER",
     };
 
     this.createCustomerForm();
@@ -915,34 +916,37 @@ export class PosVisitorComponent implements OnInit {
       disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
       del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
       site_loc: this.currentTable ? this.currentTable : null,
+      from: "CALL CENTER",
     };
     console.log(cart.products);
-    this.posCategoryService.sendOrderFromCC({ cart }).subscribe(
-      (reponse) => console.log("response", Response),
-      (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.loadingSubject.next(false);
-      },
-      () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.offer === true && (this.offer = false);
-        this.currentOffer = null;
+    this.posCategoryService
+      .addCallCenterOrder({ cart, user_site: this.user.usrd_site })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.offer === true && (this.offer = false);
+          this.currentOffer = null;
 
-        this.loadingSubject.next(false);
-      }
-    );
+          this.loadingSubject.next(false);
+        }
+      );
 
     this.cartAmount = 0;
     this.remisePrice = 0;
@@ -1005,7 +1009,7 @@ export class PosVisitorComponent implements OnInit {
       customer_code: "",
       customer_name: "",
       customer_addr: "",
-      customer_phone_one: 0,
+      customer_phone_one: null,
       customer_birthday: "",
       customer_gender: "",
     });
@@ -1017,18 +1021,21 @@ export class PosVisitorComponent implements OnInit {
 
   prepareCustomer(): any {
     const controls = this.customerForm.controls;
+    const phone_number = document.getElementById("phone_number");
+    var currentValue = phone_number.getAttribute("value");
+
     const _customer = {
       customer_code: "",
       customer_name: "",
       customer_addr: "",
-      customer_phone_one: 0,
+      customer_phone_one: null,
       customer_birthday: "",
       customer_gender: "",
     };
     _customer.customer_code = controls.customer_code.value;
     _customer.customer_name = controls.customer_name.value;
     _customer.customer_addr = controls.customer_addr.value;
-    _customer.customer_phone_one = controls.customer_phone_one.value;
+    _customer.customer_phone_one = currentValue;
     _customer.customer_birthday = controls.customer_birthday.value;
     _customer.customer_gender = controls.customer_gender.value;
 
@@ -1063,8 +1070,6 @@ export class PosVisitorComponent implements OnInit {
     );
   }
   onChangeDiscount(discount) {
-    console.log(discount);
-
     if (discount) {
       this.loy_num = discount;
       const elem = this.discountTable.find((item) => item.cm_addr === discount);
@@ -1079,6 +1084,17 @@ export class PosVisitorComponent implements OnInit {
         this.cartAmount = this.cart.total_price;
       }
       console.log(this.remisePrice);
+    }
+  }
+  onCheckCustomer(discount, content) {
+    if (discount) {
+      this.loy_num = discount;
+      const elem = this.discountTable.find((item) => item.cm_addr === discount);
+      if (elem) {
+        console.log("nothing");
+      } else {
+        this.modalService.open(content, { size: "xl" });
+      }
     }
   }
 

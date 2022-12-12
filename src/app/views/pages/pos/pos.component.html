@@ -652,7 +652,6 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onDecreaseQty(elem)"
-                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -693,7 +692,6 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onIncreaseQty(elem)"
-                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -832,7 +830,6 @@
                               class="btn btn-primary fs-1 w-50 py-4"
                               style="background-color: #9e110d; margin-top: 5px"
                               [disabled]="globalState"
-                              [disabled]="disable"
                             >
                               Lancer
                             </button>
@@ -952,13 +949,13 @@
           <h4 class="modal-title">Saisir votre inventaire d'ouverture</h4>
         </div>
         <div class="modal-body" style="background-color: #f5f5dc">
-          <button
+          <!-- <button
             style="background-color: #9e110d"
             class="btn btn-primary fs-2 w-100 mt-2 mb-2"
             (click)="addNewItemInventory()"
           >
             Ajouter un Article
-          </button>
+          </button> -->
 
           <div class="row">
             <angular-slickgrid
@@ -1177,6 +1174,9 @@
                       <th class="text-start text-gray-900 min-w-50px">
                         Status
                       </th>
+                      <th class="text-start text-gray-900 min-w-50px">
+                        Platforme
+                      </th>
                       <th class="text-start"></th>
                     </tr>
                     <!--end::Table row-->
@@ -1205,6 +1205,12 @@
                       <td class="text-start">
                         <span class="badge py-3 px-4 fs-7 badge-light-warning"
                           >Non payé</span
+                        >
+                      </td>
+                      <td class="text-start">
+                        <span
+                          class="badge py-3 px-4 fs-7 badge-light-warning"
+                          >{{ order.from }}</span
                         >
                       </td>
                       <td class="text-start">
