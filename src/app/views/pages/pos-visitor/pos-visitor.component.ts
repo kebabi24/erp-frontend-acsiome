@@ -301,6 +301,7 @@ export class PosVisitorComponent implements OnInit {
       customer: "particulier",
       status: "N",
       total_price: 0,
+      usrd_profile: this.user.usrd_profile,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
       from: "CALL CENTER",
@@ -911,6 +912,7 @@ export class PosVisitorComponent implements OnInit {
       status: "A",
       total_price: this.cartAmount,
       usrd_name: this.user.usrd_user_name,
+      usrd_profile: this.user.usrd_profile,
       usrd_site: this.currentSite.si_site,
       loy_num: this.loy_num,
       disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
@@ -1035,7 +1037,7 @@ export class PosVisitorComponent implements OnInit {
     _customer.customer_code = controls.customer_code.value;
     _customer.customer_name = controls.customer_name.value;
     _customer.customer_addr = controls.customer_addr.value;
-    _customer.customer_phone_one = currentValue;
+    _customer.customer_phone_one = controls.customer_phone_one.value;
     _customer.customer_birthday = controls.customer_birthday.value;
     _customer.customer_gender = controls.customer_gender.value;
 

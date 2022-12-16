@@ -5,6 +5,7 @@ export class Cart {
   products: Array<Product>;
   usrd_site: string;
   usrd_name: string;
+  usrd_profile: string;
   order_emp: string;
   customer: string;
   total_price: number;

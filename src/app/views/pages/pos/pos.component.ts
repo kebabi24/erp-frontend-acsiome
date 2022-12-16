@@ -35,7 +35,7 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-
+declare var electronPrinter: any;
 import {
   Column,
   GridOption,
@@ -49,24 +49,11 @@ import {
   OnEventArgs,
 } from "angular-slickgrid";
 
-// import {
-//   PosPrinter,
-//   PosPrintData,
-//   PosPrintOptions,
-// } from "electron-pos-printer";
 // import * as path from "path";
 
 import { environment } from "../../../../environments/environment";
 const API_URL = environment.apiUrl + "/codes";
-// const options: PosPrintOptions = {
-//   preview: false,
-//   margin: "0 0 0 0",
-//   copies: 1,
-//   printerName: "XP-80C",
-//   timeOutPerLine: 400,
-//   pageSize: "80mm", // page size
-//   boolean: false,
-// };
+
 @Component({
   selector: "kt-pos",
   templateUrl: "./pos.component.html",
@@ -205,6 +192,10 @@ export class PosComponent implements OnInit {
   disableIng: boolean = false;
   formule: boolean = false;
   editCart: boolean = false;
+  sites: any[] = [];
+  modif: boolean = false;
+  modifproduct = [];
+  currentTicketNumber = 0;
   constructor(
     config: NgbDropdownConfig,
     private http: HttpClient,
@@ -244,6 +235,12 @@ export class PosComponent implements OnInit {
     });
     this.posCategoryService.getBySupp({ pt_ms: true }).subscribe((res: any) => {
       this.suppliments = res.data.map((item) => {
+        return item;
+      });
+    });
+
+    this.posCategoryService.getAllSite().subscribe((response: any) => {
+      this.sites = response.data.map((item) => {
         return item;
       });
     });
@@ -290,6 +287,7 @@ export class PosComponent implements OnInit {
     });
     this.posCategoryService.getSeq({ seq_seq: "OP" }).subscribe((res: any) => {
       this.currentSeq = res.data.seq_curr_val;
+      this.currentTicketNumber = Number(this.currentSeq);
     });
     this.posCategoryService
       .getByCode({ code_fldname: "del_desc" })
@@ -316,6 +314,7 @@ export class PosComponent implements OnInit {
       customer: "particulier",
       status: "N",
       total_price: 0,
+      usrd_profile: this.user.usrd_profile,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
       from: "BOUTIQUE",
@@ -498,6 +497,9 @@ export class PosComponent implements OnInit {
       //     item.comment === checkItemExist.comment
       //   );
       // });
+      if (this.modif) {
+        this.modifproduct.push(this.itemToAdd);
+      }
       this.cart.products.push(this.itemToAdd);
       this.showPrice = true;
 
@@ -526,6 +528,7 @@ export class PosComponent implements OnInit {
       this.disableIng = false;
     }
   }
+
   prepareAnotherProduct(size) {
     this.productInCartPrice = 0;
     this.currentItem = size;
@@ -953,6 +956,7 @@ export class PosComponent implements OnInit {
         this.cartAmount = Number(res.data.total_price);
         this.cart.products = this.cartProducts;
       });
+    this.modif = true;
   }
 
   prepareCart(content): void {
@@ -966,94 +970,251 @@ export class PosComponent implements OnInit {
       total_price: this.cartAmount,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
+      usrd_profile: this.user.usrd_profile,
       loy_num: this.loy_num,
       disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
       del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
       site_loc: this.currentTable ? this.currentTable : null,
       from: "BOUTIQUE",
     };
-    // const data: PosPrintData[] = [
-    //   {
-    //     type: "image",
-    //     url: "https://randomuser.me/api/portraits/men/43.jpg", // file path
-    //     position: "center", // position of image: 'left' | 'center' | 'right'
-    //     width: "160px", // width of image in px; default: auto
-    //     height: "60px", // width of image in px; default: 50 or '50px'
-    //   },
-    //   {
-    //     type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-    //     value: "SAMPLE HEADING",
-    //     style: { fontWeight: "700", textAlign: "center", fontSize: "24px" },
-    //   },
-    //   {
-    //     type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table'
-    //     value: "Secondary text",
-    //     style: {
-    //       textDecoration: "underline",
-    //       fontSize: "10px",
-    //       textAlign: "center",
-    //       color: "red",
-    //     },
-    //   },
-    //   {
-    //     type: "barCode",
-    //     value: "023456789010",
-    //     height: "40px", // height of barcode, applicable only to bar and QR codes
-    //     width: "2px", // width of barcode, applicable only to bar and QR codes
-    //     displayValue: true, // Display value below barcode
-    //     fontsize: 12,
-    //   },
-    //   {
-    //     type: "qrCode",
-    //     value: "https://github.com/Hubertformin/electron-pos-printer",
-    //     height: "55px",
-    //     width: "55px",
-    //     style: { margin: "10 20px 20 20px" },
-    //   },
-    //   {
-    //     type: "table",
-    //     // style the table
-    //     style: { border: "1px solid #ddd" },
-    //     // list of the columns to be rendered in the table header
-    //     tableHeader: ["Animal", "Age"],
-    //     // multi dimensional array depicting the rows and columns of the table body
-    //     tableBody: [
-    //       ["Cat", "2"],
-    //       ["Dog", "4"],
-    //       ["Horse", "12"],
-    //       ["Pig", "4"],
-    //     ],
-    //     // list of columns to be rendered in the table footer
-    //     tableFooter: ["Animal", "Age"],
-    //     // custom style for the table header
-    //     tableHeaderStyle: { backgroundColor: "#000", color: "white" },
-    //     // custom style for the table body
-    //     tableBodyStyle: { border: "0.5px solid #ddd" },
-    //     // custom style for the table footer
-    //     tableFooterStyle: { backgroundColor: "#000", color: "white" },
-    //   },
-    //   {
-    //     type: "table",
-    //     style: { border: "1px solid #ddd" }, // style the table
-    //     // list of the columns to be rendered in the table header
-    //     tableHeader: [{ type: "text", value: "People" }],
-    //     // multi-dimensional array depicting the rows and columns of the table body
+    const site = this.sites.find(
+      (item) => item.si_site === this.user.usrd_site
+    );
+    let table1 = [];
+    let table2 = [];
+    let objj: {
+      type: string;
+      value: string;
+    };
+    this.cart.products.map((item) => {
+      let t = [
+        { type: "text", value: item.pt_desc1 },
+        {
+          type: "text",
+          value: (item.pt_price / item.pt_qty).toString() + ".00",
+        },
+        { type: "text", value: item.pt_qty.toString() },
+        { type: "text", value: item.pt_price.toString() + ".00" },
+      ];
+      table1.push(t);
+    });
+    if (this.modif === true) {
+      this.modifproduct.map((item) => {
+        const supp = item.suppliments;
+        let s: string = "";
+        supp.map((item) => {
+          s = s + item.pt_desc1;
+        });
 
-    //     // list of columns to be rendered in the table footer
+        const sauce = item.sauces;
+        let sa: string = "";
+        sauce.map((item) => {
+          sa = sa + " " + item.pt_desc1;
+        });
+        const ing = item.ingredients;
+        let i: string = "";
+        ing.map((item) => {
+          i = i + " " + "Sans " + item.pt_desc1;
+        });
+        let c = [
+          {
+            type: "text",
+            value: item.pt_qty,
+          },
+          {
+            type: "text",
+            value: item.pt_desc1 + " " + s + ", " + sa + ", " + i,
+          },
+        ];
+        table2.push(c);
+      });
+    } else {
+      this.cart.products.map((item) => {
+        const supp = item.suppliments;
+        let s: string = "";
+        supp.map((item) => {
+          s = s + item.pt_desc1;
+        });
 
-    //     // custom style for the table header
-    //     tableHeaderStyle: { backgroundColor: "red", color: "white" },
-    //     // custom style for the table body
-    //     tableBodyStyle: { border: "0.5px solid #ddd" },
-    //     // custom style for the table footer
-    //     tableFooterStyle: { backgroundColor: "#000", color: "white" },
-    //   },
-    // ];
-    // PosPrinter.print(data, options)
-    //   .then(console.log)
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+        const sauce = item.sauces;
+        let sa: string = "";
+        sauce.map((item) => {
+          sa = sa + " " + "Sauce " + item.pt_desc1;
+        });
+        const ing = item.ingredients;
+        let i: string = "";
+        ing.map((item) => {
+          i = i + " " + "Sans " + item.pt_desc1;
+        });
+        let c = [
+          {
+            type: "text",
+            value: item.pt_qty,
+          },
+          {
+            type: "text",
+            value: item.pt_desc1 + " " + s + ", " + sa + ", " + i,
+          },
+        ];
+        table2.push(c);
+      });
+    }
+
+    const net = this.cartAmount + this.remisePrice;
+    const order_c = "Numéro commande: " + this.cart.order_code;
+    const now = new Date();
+    let ChangedFormat = this.pipe.transform(now, "yyyy-MM-dd");
+
+    const current =
+      now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    const time = ChangedFormat + " " + current;
+    const data = [
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Contact client:",
+      },
+      {
+        type: "image",
+        path: "./src/app/views/pages/pos/logo.png", // file path
+        position: "center", // position of image: 'left' | 'center' | 'right'
+        width: "100px", // width of image in px; default: auto
+        height: "100px",
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: site.si_desc,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Tel : 0982 46 65 66",
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value:
+          this.loclocOrder === "Sur place"
+            ? "Table " + this.currentTable
+            : null,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder === "Emporté" ? "Emporté" : null,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder === "Livraison" ? "Livraison" : null,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Numéro ticket" + " " + Number(this.currentTicketNumber),
+      },
+
+      {
+        type: "barCode",
+        value: "Ticket number",
+        height: 20, // height of barcode, applicable only to bar and QR codes
+        width: 1, // width of barcode, applicable only to bar and QR codes
+        displayValue: false, // Display value below barcode
+        fontsize: 12,
+        position: "center",
+        style: { margin: "5px" },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: time,
+      },
+      {
+        type: "table",
+        style: { border: "1px solid #ddd" }, // style the table
+        // list of the columns to be rendered in the table header
+        tableHeader: [
+          { type: "text", value: "Produit" },
+          { type: "text", value: "PU" },
+          { type: "text", value: "Qté" },
+          { type: "text", value: "Montant" },
+        ],
+        // multi-dimensional array depicting the rows and columns of the table body
+        tableBody: table1,
+
+        tableBodyStyle: { border: "0.5px solid #ddd" },
+      },
+      // {
+      //   type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      //   value: this.cartAmount,
+      // },
+      // {
+      //   type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      //   value: this.remisePrice,
+      // },
+      // {
+      //   type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      //   value: net,
+      // },
+      {
+        type: "table",
+        style: { border: "1px solid #ddd", position: "right" }, // style the table
+        // list of the columns to be rendered in the table header
+        // multi-dimensional array depicting the rows and columns of the table body
+        tableBody: [
+          [
+            { type: "text", value: "Sous totale" },
+            { type: "text", value: net + ".00" },
+          ],
+          [
+            { type: "text", value: "Remise" },
+            { type: "text", value: 0 + ".00" },
+          ],
+          [
+            { type: "text", value: "Coût logistique" },
+            { type: "text", value: this.remisePrice + ".00" },
+          ],
+          [
+            { type: "text", value: "Totale à payer" },
+            { type: "text", value: this.cartAmount + ".00" },
+          ],
+        ],
+
+        tableBodyStyle: { border: "0.5px solid #ddd" },
+      },
+
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Le kebab authentique",
+      },
+    ];
+    const data2 = [
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: +this.currentTable ? "Numéro table" + this.currentTable : null,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Numéro ticket" + " " + Number(this.currentTicketNumber),
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: time,
+      },
+      {
+        type: "table",
+        style: { border: "1px solid #ddd" }, // style the table
+        // list of the columns to be rendered in the table header
+        tableHeader: [
+          { type: "text", value: "Qté" },
+          { type: "text", value: "Produit" },
+        ],
+        // multi-dimensional array depicting the rows and columns of the table body
+        tableBody: table2,
+
+        tableBodyStyle: { border: "0.5px solid #ddd" },
+      },
+    ];
+    // electronPrinter.print(data, data2);
+
+    //console.log(this.currentTicketNumber);
     this.posCategoryService
       .addOrder({ cart, editCart: this.editCart })
       .subscribe(
@@ -1121,6 +1282,8 @@ export class PosComponent implements OnInit {
     this.currentTable = "01";
     this.cart.order_code = null;
     this.editCart = false;
+    this.modif = false;
+    this.currentTicketNumber = Number(this.currentTicketNumber) + 1;
   }
 
   changeSelection(event, index) {
@@ -1839,11 +2002,12 @@ export class PosComponent implements OnInit {
   }
 
   onSubmitCaisseInventory() {
+    console.log(this.user);
     this.posCategoryService
       .createBkBkh({
         detail: this.bank,
         type: "O",
-        user: this.user.usrd_user_name,
+        user: this.user.usrd_profile,
         user_site: this.user.usrd_site,
       })
       .subscribe(
