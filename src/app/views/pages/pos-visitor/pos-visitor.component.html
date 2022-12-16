@@ -378,6 +378,42 @@
                             Vérifier
                           </button>
                         </div>
+                        <div class="card-toolbar">
+                          <div
+                            class="form-floating"
+                            style="
+                              width: 200px;
+                              margin-left: 15px;
+                              margin-right: 47px;
+                            "
+                          >
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              #discount
+                              id="phone_number"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro de téléphone
+                            </label>
+                          </div>
+                          <button
+                            (click)="onCheckCustomer(discount.value, content17)"
+                            class="btn fw-bold btn-primary"
+                            style="
+                              background-color: #9e110d;
+                              font-size: large;
+                              width: 157px;
+                            "
+                            [disabled]="globalState"
+                          >
+                            Vérifier
+                          </button>
+                        </div>
 
                         <!--end::Toolbar-->
                       </div>

@@ -1,10 +1,11 @@
 import { Product } from "./pos-products.model";
 export class Cart {
-  id: Number;
+  id?: Number;
   order_code?: string;
   products: Array<Product>;
   usrd_site: string;
   usrd_name: string;
+  usrd_profile: string;
   order_emp: string;
   customer: string;
   total_price: number;
@@ -14,4 +15,5 @@ export class Cart {
   disc_amt?: number;
   del_comp?: string;
   site_loc?: string;
+  from: string;
 }
