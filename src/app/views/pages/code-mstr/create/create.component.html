@@ -49,11 +49,17 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label class="form-group">Description: *</label>
+                        <label class="form-group">CMMT: *</label>
                         <input type="text" formControlName="code_cmmt" 
                             [className]="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                         <div *ngIf="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) "
                             class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="code_desc" class='form-control form-control-sm form-control-solid'>
                     </div>
                 </div>
                 <div class="row">

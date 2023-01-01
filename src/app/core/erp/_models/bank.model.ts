@@ -32,6 +32,7 @@ export class Bank extends BaseModel {
   bk_bk_acct2: String;
 
   bk_userid: String;
+  bk_type: String;
 
   bk_mod_date: String;
 

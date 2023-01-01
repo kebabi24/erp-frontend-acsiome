@@ -117,8 +117,17 @@ export class ListComponent implements OnInit {
             },
             {
                 id: "code_cmmt",
-                name: "Description",
+                name: "CMMT",
                 field: "code_cmmt",
+                sortable: true,
+                width: 200,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "code_desc",
+                name: "Description",
+                field: "code_desc",
                 sortable: true,
                 width: 200,
                 filterable: true,

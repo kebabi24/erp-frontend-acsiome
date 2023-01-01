@@ -145,6 +145,24 @@ export class ListBankComponent implements OnInit {
             type: FieldType.string,
           },
           {
+            id: "bk_type",
+            name: "Type",
+            field: "bk_type",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            
+          }, 
+          {
+            id: "bk_userid",
+            name: "Utilisateur",
+            field: "bk_userid",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            
+          }, 
+          {
             id: "ad_line1",
             name: "Adresse",
             field: "address.ad_line1",

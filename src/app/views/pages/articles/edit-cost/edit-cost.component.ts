@@ -435,6 +435,7 @@ onChangePart() {
                 
                 
               this.sct1Edit = response.data
+              console.log("kamel", this.sct1Edit)
 
               this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STDCR'}).subscribe((response: any)=>{
               
