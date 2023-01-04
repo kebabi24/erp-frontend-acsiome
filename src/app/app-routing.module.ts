@@ -193,6 +193,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: "pos-settings",
+        loadChildren: () =>
+          import("./views/pages/pos-settings/pos-settings.module").then(
+            (m) => m.PosSettingsModule
+          ),
+      },
+      {
         path: "price-setting",
         loadChildren: () =>
           import("./views/pages/price-setting/price-setting.module").then(

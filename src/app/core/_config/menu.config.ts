@@ -50,6 +50,22 @@ export class MenuConfig {
           page: "/pos-visitor",
         },
         {
+          title: "Paramétrages POS",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          submenu: [
+            {
+              title: "Listes des Plateformes",
+              page: "/pos-settings/list-delivery",
+            },
+            {
+              title: "Ajouter une Plateforme",
+              page: "/pos-settings/create-delivery",
+            },
+          ],
+        },
+        {
           title: "Paramétrages",
           root: true,
           bullet: "dot",

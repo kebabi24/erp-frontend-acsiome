@@ -71,6 +71,7 @@ export { BomPart } from "./_models/bom-part.model";
 export { GeneralLedger } from "./_models/general-ledger.model";
 export { CategoryProduct } from "./_models/pos-category-product.model";
 export { PosInventory } from "./_models/pos-inventory.model";
+export { Delivery } from "./_models/delivery.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -145,6 +146,7 @@ export { BomPartService } from "./_services/bom-part.service";
 export { WoroutingService } from "./_services/worouting.service";
 export { GeneralLedgerService } from "./_services/general-ledger.service";
 export { PosCategoryService } from "./_services/pos-categories.service";
+export { DeliveryService } from "./_services/delivery.service";
 
 export {
   printBc,

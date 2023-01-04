@@ -33,7 +33,7 @@
                 <div class='row'>    
                     <div class="form-group col-2">
                         <label class="form-group">Code: *</label>
-                        <input type="text" formControlName="code_value" (change)="onChangeCode()"
+                        <input type="text" formControlName="code_value" 
                             [className]="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                         <div *ngIf="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) "
                             class="invalid-feedback">Ce Champs est obligatoire</div>
