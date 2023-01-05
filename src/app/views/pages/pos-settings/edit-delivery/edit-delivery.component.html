@@ -1,206 +1,320 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
-        <ng-container ktPortletTools>
-            
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+  <kt-portlet-header
+    [sticky]="true"
+    [title]="title"
+    [class]="'card-head-lg'"
+    [viewLoading$]="loading$"
+  >
+    <ng-container ktPortletTools>
+      <button
+        type="button"
+        (click)="goBack()"
+        class="btn btn-secondary btn-sm mr-2"
+      >
+        Annuller
+      </button>
+      <button
+        type="button"
+        (click)="onSubmit()"
+        class="btn btn-success btn-sm mr-2"
+      >
+        Sauvgarder
+      </button>
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div class="example-preview">
+      <form class="form" [formGroup]="deliveryForm">
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Code Remise : *</label>
+            <input
+              type="text"
+              formControlName="del_code"
+              [(ngModel)]="deliveryEdit.del_code"
+              class="form-control form-control-sm form-control-solid"
+            />
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Plateforme:</label>
 
-        </ng-container>
-    </kt-portlet-header>
-    <kt-portlet-body>
-        <div class="example-preview">
+            <select
+              [className]="
+                deliveryForm.controls['del_desc'].errors &&
+                (deliveryForm.controls['del_desc'].dirty ||
+                  deliveryForm.controls['del_desc'].touched)
+                  ? 'form-control form-control-sm form-control-solid is-invalid'
+                  : 'form-control form-control-sm form-control-solid'
+              "
+              formControlName="del_desc"
+              id="exampleSelects1"
+            >
+              <option value=""></option>
+              <option *ngFor="let elem of del_desc" [value]="elem.code_desc">
+                {{ elem.code_desc }}
+              </option>
+            </select>
+            <div
+              *ngIf="
+                deliveryForm.controls['del_desc'].errors &&
+                (deliveryForm.controls['del_desc'].dirty ||
+                  deliveryForm.controls['del_desc'].touched)
+              "
+              class="invalid-feedback"
+            >
+              Ce Champs est obligatoire
+            </div>
+          </div>
+        </div>
 
-            <form class="form" [formGroup]="deliveryForm">
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Pourcentage Remise: </label>
+            <input
+              type="number"
+              step="0.01"
+              formControlName="del_pct_disc"
+              class="form-control form-control-sm form-control-solid"
+            />
+          </div>
 
-             
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Code Remise : *</label>
-                        <input type="text" formControlName="del_code"   [(ngModel)]="deliveryEdit.del_code"   
-                        class='form-control form-control-sm form-control-solid'>
-                       
+          <div class="form-group col-2">
+            <label class="form-group">Produit Offert:</label>
 
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group ">Plateforme:</label>
-
-                        <select
-                            [className]="deliveryForm.controls['del_desc'].errors && (deliveryForm.controls['del_desc'].dirty || deliveryForm.controls['del_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                            formControlName="del_desc" id="exampleSelects1">
-                            <option value=""></option>
-                            <option *ngFor="let elem of del_desc" [value]="elem.code_desc">
-                                 {{elem.code_desc}}</option>
-
-                        </select>
-                        <div *ngIf="deliveryForm.controls['del_desc'].errors && (deliveryForm.controls['del_desc'].dirty || deliveryForm.controls['del_desc'].touched)"
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Pourcentage Remise: </label>
-                        <input type="number" step ="0.01"  formControlName="del_pct_disc" class='form-control form-control-sm form-control-solid' >
-                    </div>
-                   
-                    <div class="form-group col-2">
-                        <label class="form-group ">Produit Offert:</label>
-
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" formControlName="del_part_gift"
-                                [className]="deliveryForm.controls['del_part_gift'].errors && (deliveryForm.controls['del_part_gift'].dirty || deliveryForm.controls['del_part_gift'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                (change)="onChangePart()" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="openpart(contentpart)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
-                            <div *ngIf="deliveryForm.controls['del_part_gift'].errors && (deliveryForm.controls['del_part_gift'].dirty || deliveryForm.controls['del_part_gift'].touched)"
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                        </div>
-
-                    </div>
-                    <!--div class="form-group col-4">
+            <div class="input-group input-group-sm">
+              <input
+                type="text"
+                formControlName="del_part_gift"
+                [className]="
+                  deliveryForm.controls['del_part_gift'].errors &&
+                  (deliveryForm.controls['del_part_gift'].dirty ||
+                    deliveryForm.controls['del_part_gift'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                aria-describedby="basic-addon2"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openpart(contentpart)">
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div
+                *ngIf="
+                  deliveryForm.controls['del_part_gift'].errors &&
+                  (deliveryForm.controls['del_part_gift'].dirty ||
+                    deliveryForm.controls['del_part_gift'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <!--div class="form-group col-4">
                         <label class="form-group">Description:</label>
                         <input type="text" class="form-control form-control-sm form-control-solid"   formControlName="pt_desc1" disabled>
 
                     </div-->
-                    <div class="form-group col-2">
-                        <label class="form-group">Pourcentage Remise produit: </label>
-                        <input type="number" step ="0.01" formControlName="del_pct_part_gift" class='form-control form-control-sm form-control-solid' >
-                    </div>
-                   
-                </div>
-                <div class="row">
-                    <div class="form-group col-2">
-                            <label class="form-group">Date Validité debut: </label>
-                        
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
-                                       name="del_valid"
-                                       formControlName="del_valid"
-                                       ngbDatepicker
-                                       #del_valid="ngbDatepicker">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" (click)="del_valid.toggle()" type="button">
-                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                    </button>
-                                </div>
-                            </div>
-    
-                        
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Date Validité Fin: </label>
-                        
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
-                                   name="del_exp"
-                                   ngbDatepicker
-                                   formControlName="del_exp"
-                                   #del_exp="ngbDatepicker">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" (click)="del_exp.toggle()" type="button">
-                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                    </div>
+          <div class="form-group col-2">
+            <label class="form-group">Pourcentage Remise produit: </label>
+            <input
+              type="number"
+              step="0.01"
+              formControlName="del_pct_part_gift"
+              class="form-control form-control-sm form-control-solid"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Date Validité debut: </label>
 
-                </div>
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Heure Début: </label>
-                        <input type="time" formControlName="del_start_offer" class='form-control form-control-sm form-control-solid' >
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Heure Fin: </label>
-                        <input type="time" formControlName="del_end_offer" class='form-control form-control-sm form-control-solid' >
-                    </div>
-                   
-                </div>
-                
-                <div class="row">
-                    <div class="form-group col-3">
-                        <label class="form-group">Condition: </label>
-                        <div class="col-6">
-                            <span class="switch switch-icon">
-                                <label>
-                                    <input type="checkbox" (change)="onChangeCnd()"
-                                        class="form-control form-control-sm form-control-solid"
-                                        formControlName="del_cndt_actif" name="select" />
-                                    <span></span>
-                                </label>
-                            </span>
-                        </div>
-     
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group ">Famille:</label>
+            <div class="input-group input-group-sm">
+              <input
+                class="form-control form-control-solid"
+                placeholder="jj-mm-aaaa"
+                name="del_valid"
+                formControlName="del_valid"
+                ngbDatepicker
+                #del_valid="ngbDatepicker"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-primary"
+                  (click)="del_valid.toggle()"
+                  type="button"
+                >
+                  <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Date Validité Fin: </label>
 
-                        <select
-                        class='form-control form-control-sm form-control-solid'
-                            formControlName="del_cndt" id="exampleSelects2">
-                            <option value=""></option>
-                            <option *ngFor="let elem of del_cndt" [value]="elem.code_value">
-                                {{elem.code_value}} {{elem.code_desc}}</option>
-
-                        </select>
-                        
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Quantité: </label>
-                        <input type="number" step ="0.01" formControlName="del_cndt_qty" class='form-control form-control-sm form-control-solid' >
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Actif: </label>
-                        <div class="col-6">
-                            <span class="switch switch-icon">
-                                <label>
-                                    <input type="checkbox"
-                                        class="form-control form-control-sm form-control-solid"
-                                        formControlName="actif" name="select" />
-                                    <span></span>
-                                </label>
-                            </span>
-                        </div>
-     
-                    </div>
-                    
-                </div>
-
-            </form>
+            <div class="input-group input-group-sm">
+              <input
+                class="form-control form-control-solid"
+                placeholder="jj-mm-aaaa"
+                name="del_exp"
+                ngbDatepicker
+                formControlName="del_exp"
+                #del_exp="ngbDatepicker"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-primary"
+                  (click)="del_exp.toggle()"
+                  type="button"
+                >
+                  <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Heure Début: </label>
+            <input
+              type="time"
+              formControlName="del_start_offer"
+              class="form-control form-control-sm form-control-solid"
+            />
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Heure Fin: </label>
+            <input
+              type="time"
+              formControlName="del_end_offer"
+              class="form-control form-control-sm form-control-solid"
+            />
+          </div>
         </div>
 
-    </kt-portlet-body>
-    <div>
-        <ng-template #contentpart let-c="close" let-d="dismiss">
-            <div class="modal-header">
-                <h4 class="modal-title">Choissir l'article</h4>
-                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="row">
+          <div class="form-group col-3">
+            <label class="form-group">Condition: </label>
+            <div class="col-6">
+              <span class="switch switch-icon">
+                <label>
+                  <input
+                    type="checkbox"
+                    (change)="onChangeCnd()"
+                    class="form-control form-control-sm form-control-solid"
+                    formControlName="del_cndt_actif"
+                    name="select"
+                  />
+                  <span></span>
+                </label>
+              </span>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
-                        [gridOptions]="gridOptions4" [dataset]="items">
-                    </angular-slickgrid>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-            </div>
-        </ng-template>
-        <button hidden id="openItemsGrid" class="btn btn-primary" (click)="openpart(contentpart)">Launch demo modal</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Famille:</label>
 
+            <select
+              class="form-control form-control-sm form-control-solid"
+              formControlName="del_cndt"
+              id="exampleSelects2"
+            >
+              <option value=""></option>
+              <option *ngFor="let elem of del_cndt" [value]="elem.code_value">
+                {{ elem.code_value }} {{ elem.code_desc }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Quantité: </label>
+            <input
+              type="number"
+              step="0.01"
+              formControlName="del_cndt_qty"
+              class="form-control form-control-sm form-control-solid"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Actif: </label>
+            <div class="col-6">
+              <span class="switch switch-icon">
+                <label>
+                  <input
+                    type="checkbox"
+                    class="form-control form-control-sm form-control-solid"
+                    formControlName="actif"
+                    name="select"
+                  />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
-    
+  </kt-portlet-body>
+  <div>
+    <ng-template #contentpart let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Choissir l'article</h4>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="d('Cross click')"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <angular-slickgrid
+            class="col-12"
+            gridHeight="300"
+            gridId="griditem"
+            [columnDefinitions]="columnDefinitions4"
+            (onAngularGridCreated)="angularGridReady4($event)"
+            (sgOnSelectedRowsChanged)="
+              handleSelectedRowsChanged4(
+                $event.detail.eventData,
+                $event.detail.args
+              )
+            "
+            [gridOptions]="gridOptions4"
+            [dataset]="items"
+          >
+          </angular-slickgrid>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="c('Close click')"
+        >
+          Annuller
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="c('Close click')"
+        >
+          Ok
+        </button>
+      </div>
+    </ng-template>
+    <button
+      hidden
+      id="openItemsGrid"
+      class="btn btn-primary"
+      (click)="openpart(contentpart)"
+    >
+      Launch demo modal
+    </button>
+  </div>
 </kt-portlet>
