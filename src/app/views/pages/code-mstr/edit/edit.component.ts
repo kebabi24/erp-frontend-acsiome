@@ -86,9 +86,10 @@ date2: any;
     createForm() {
     
         this.codeForm = this.codeFB.group({
+            code_fldname: [this.codeEdit.code_fldname],
             code_value: [this.codeEdit.code_value, Validators.required],
             code_cmmt: [this.codeEdit.code_cmmt, Validators.required],
-            code_fldname: [this.codeEdit.code_fldname, Validators.required],
+            code_desc: [ this.codeEdit.code_desc],
             chr01: [ this.codeEdit.chr01],
             chr02: [this.codeEdit.chr02],
             dec01: [this.codeEdit.dec01],
@@ -152,6 +153,7 @@ date2: any;
         _code.code_fldname = controls.code_fldname.value
         _code.code_value = controls.code_value.value
         _code.code_cmmt = controls.code_cmmt.value
+        _code.code_desc = controls.code_desc.value
         _code.chr01 = controls.chr01.value
         _code.chr02 = controls.chr02.value
         _code.dec01 = controls.dec01.value

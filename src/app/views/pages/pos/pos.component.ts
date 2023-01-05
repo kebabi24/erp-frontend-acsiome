@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { HttpUtilsService } from "../../../core/_base/crud";
 import {
@@ -22,6 +22,7 @@ import { NgbDropdownConfig, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
+  Customer,
   EmployeService,
   PosCategoryService,
   MobileServiceService,
@@ -35,7 +36,7 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-
+declare var electronPrinter: any;
 import {
   Column,
   GridOption,
@@ -49,6 +50,8 @@ import {
   OnEventArgs,
 } from "angular-slickgrid";
 
+// import * as path from "path";
+
 import { environment } from "../../../../environments/environment";
 const API_URL = environment.apiUrl + "/codes";
 
@@ -58,6 +61,8 @@ const API_URL = environment.apiUrl + "/codes";
   styleUrls: ["./pos.component.scss"],
 })
 export class PosComponent implements OnInit {
+  @ViewChild("discount") inputName;
+  customer: Customer;
   seq: any[] = [];
   item: any;
   row_number;
@@ -88,6 +93,9 @@ export class PosComponent implements OnInit {
   lastSeq: Array<any>;
   showPrice: boolean = false;
   inShop: boolean = false;
+  productId: number = 1;
+  nothing: boolean = false;
+  isExist: boolean = false;
   showStatusDelivery: boolean = false;
   showStatusOut: boolean = false;
   itemToAdd: Product;
@@ -98,7 +106,7 @@ export class PosComponent implements OnInit {
   updatedCart: Cart;
   loclocOrder: string = "Sur place";
   AllTables: string[];
-  currentTable: string = "01";
+  currentTable: string;
   isChecked: boolean = false;
   isDisabled: boolean = true;
   disableButton: boolean = true;
@@ -114,6 +122,10 @@ export class PosComponent implements OnInit {
   angularGrid18: AngularGridInstance;
   grid18: any;
   gridService18: GridService;
+  dataView6: any;
+  angularGrid6: AngularGridInstance;
+  grid6: any;
+  gridService6: GridService;
   dataView18: any;
   lists: any[] = [];
   columnDefinitions: Column[];
@@ -129,6 +141,9 @@ export class PosComponent implements OnInit {
   columnDefinitions18: Column[];
   gridOptions18: GridOption;
   gridObj18: any;
+  columnDefinitions6: Column[];
+  gridOptions6: GridOption;
+  gridObj6: any;
   emps: any[];
   dataset: any[];
   dataset5: any[];
@@ -156,6 +171,7 @@ export class PosComponent implements OnInit {
   user;
   inventoryData: any[] = [];
   tag_cnt_qty;
+
   datasetRec: any[] = [];
   bank: any[] = [];
   chooseCaisse: boolean;
@@ -189,6 +205,13 @@ export class PosComponent implements OnInit {
   loy_num: number = 0;
   disableIng: boolean = false;
   formule: boolean = false;
+  modif: boolean = false;
+  sites: any[] = [];
+  modifproduct = [];
+  currentTicketNumber = 0;
+  deliveryName: string;
+  chooseLoc: boolean = true;
+  dataset6: any[] = [];
   constructor(
     config: NgbDropdownConfig,
     private http: HttpClient,
@@ -231,15 +254,22 @@ export class PosComponent implements OnInit {
         return item;
       });
     });
+
+    this.posCategoryService.getAllSite().subscribe((response: any) => {
+      this.sites = response.data.map((item) => {
+        return item;
+      });
+    });
     this.posCategoryService
       .getByItems({ pt_status: "MP-ACTIF", pt_group: "SPEC" })
       .subscribe((res: any) => {
         this.ingredients = res.data.map((item) => {
           const ing = {
             id: item.id,
-            spec_code: item.pt_part,
+            pt_pt_part: item.pt_part,
             pt_desc1: item.pt_desc1,
             pt_desc2: item.pt_desc2,
+            pt_loc: item.pt_loc,
             pt_bom_code: item.pt_bom_code,
             isChecked: true,
             pt_price: item.pt_price,
@@ -271,9 +301,7 @@ export class PosComponent implements OnInit {
         return item;
       });
     });
-    this.posCategoryService.getSeq({ seq_seq: "OP" }).subscribe((res: any) => {
-      this.currentSeq = res.data.seq_curr_val;
-    });
+
     this.posCategoryService
       .getByCode({ code_fldname: "del_desc" })
       .subscribe((res: any) => {
@@ -299,19 +327,28 @@ export class PosComponent implements OnInit {
       customer: "particulier",
       status: "N",
       total_price: 0,
+      usrd_profile: this.user.usrd_profile,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
+      from: "BOUTIQUE",
     };
-
+    this.posCategoryService
+      .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
+      .subscribe((res: any) => {
+        this.currentSeq = res.data.seq_curr_val;
+        this.currentTicketNumber = Number(this.currentSeq);
+      });
+    console.log(this.currentSeq);
     this.initGrid();
     this.initGrid3();
     this.initGrid4();
+    // this.initGrid6();
     this.createBkForm();
     this.createMvForm();
     this.createCustomerForm();
     // this.initGrid2();
     this.mobileService
-      .getByOne({ role_code: this.user.usrd_user_name, service_open: "true" })
+      .getByOne({ role_code: this.user.usrd_code, service_open: "true" })
       .subscribe((res: any) => {
         let service = res.data;
         if (service) {
@@ -364,6 +401,8 @@ export class PosComponent implements OnInit {
   }
 
   initializeProduct(productOnlist) {
+    this.productId = this.productId + 1;
+    console.log(productOnlist);
     let test: boolean = false;
     this.sizeOfProduct = this.AllProducts.filter(
       (item) => item.pt_draw === productOnlist.code_value
@@ -386,6 +425,7 @@ export class PosComponent implements OnInit {
   }
 
   prepareProduct(size, content) {
+    this.productId = this.productId + 1;
     if (
       size.pt_group === "COCA" ||
       size.pt_group === "SCHWEPPES" ||
@@ -406,11 +446,12 @@ export class PosComponent implements OnInit {
       this.currentCategory.direct === true
         ? (this.showSauces = false)
         : (this.showSauces = true);
-
+      console.log("test", this.currentItem.pt_loc);
       this.currentItem = {
-        id: this.currentItem.id,
+        id: this.productId,
         pt_part: this.currentItem.pt_part,
         pt_desc1: this.currentItem.pt_desc1,
+        pt_desc2: this.currentItem.pt_desc2,
         pt_article: this.currentItem.pt_article,
         pt_formule: this.currentItem.pt_formula,
         pt_loc: this.currentItem.pt_loc,
@@ -423,29 +464,13 @@ export class PosComponent implements OnInit {
         ingredients: [],
         sauces: [],
       };
+      console.log(this.currentItem.pt_part_type);
       if (this.currentCategory.direct === true) {
         this.addProductToCart();
       } else {
         this.open2(content);
       }
       const checkItemExist = this.currentItem;
-      // checkItemExist.size != undefined ? this.sizeOfProduct : null;
-
-      // const itemExist: Product = this.cartProducts.find((item) => {
-      //   return (
-      //     item.pt_part === checkItemExist.pt_part &&
-      //     item.suppliments.length === checkItemExist.suppliments.length &&
-      //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
-      //       .length === checkItemExist.suppliments.length &&
-      //     item.ingredients.length === checkItemExist.ingredients.length &&
-      //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
-      //       .length === checkItemExist.ingredients.length &&
-      //     item.sauces.length === checkItemExist.sauces.length &&
-      //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
-      //       checkItemExist.sauces.length &&
-      //     item.comment === checkItemExist.comment
-      //   );
-      // });
 
       checkItemExist.suppliments.map((item) => {
         this.productInCartPrice =
@@ -463,9 +488,10 @@ export class PosComponent implements OnInit {
             })
         : null;
       this.itemToAdd = {
-        id: this.currentItem.id,
+        id: this.productId,
         pt_part: checkItemExist.pt_part,
         pt_desc1: checkItemExist.pt_desc1,
+        pt_desc2: checkItemExist.pt_desc2,
         pt_article: checkItemExist.pt_article,
         pt_price: checkItemExist.pt_price,
         pt_formule: checkItemExist.pt_formule,
@@ -479,7 +505,26 @@ export class PosComponent implements OnInit {
         pt_qty: 1,
         line: this.cartProducts.length.toString(),
       };
+      // checkItemExist.size != undefined ? this.sizeOfProduct : null;
 
+      // const itemExist: Product = this.cartProducts.find((item) => {
+      //   return (
+      //     item.pt_part === checkItemExist.pt_part &&
+      //     item.suppliments.length === checkItemExist.suppliments.length &&
+      //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
+      //       .length === checkItemExist.suppliments.length &&
+      //     item.ingredients.length === checkItemExist.ingredients.length &&
+      //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
+      //       .length === checkItemExist.ingredients.length &&
+      //     item.sauces.length === checkItemExist.sauces.length &&
+      //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
+      //       checkItemExist.sauces.length &&
+      //     item.comment === checkItemExist.comment
+      //   );
+      // });
+      if (this.modif) {
+        this.modifproduct.push(this.itemToAdd);
+      }
       this.cart.products.push(this.itemToAdd);
       this.showPrice = true;
 
@@ -504,18 +549,20 @@ export class PosComponent implements OnInit {
       // this.showSupp = false;
       // this.showSauces = false;
       // this.currentItem = undefined;
-      this.offer && this.applyDiscount(this.currentOffer);
+      // this.offer && this.applyDiscount(this.currentOffer);
       this.disableIng = false;
     }
   }
+
   prepareAnotherProduct(size) {
+    this.productId = this.productId + 1;
     this.productInCartPrice = 0;
     this.currentItem = size;
-
     this.currentItem = {
-      id: this.currentItem.id,
+      id: this.productId,
       pt_part: this.currentItem.pt_part,
       pt_desc1: this.currentItem.pt_desc1,
+      pt_desc2: this.currentItem.pt_desc2,
       pt_article: this.currentItem.pt_article,
       pt_formule: this.currentItem.pt_formula,
       pt_loc: this.currentItem.pt_loc,
@@ -528,6 +575,7 @@ export class PosComponent implements OnInit {
       ingredients: [],
       sauces: [],
     };
+    console.log(this.currentItem.pt_part_type);
     const checkItemExist = this.currentItem;
     // checkItemExist.size != undefined ? this.sizeOfProduct : null;
 
@@ -563,9 +611,10 @@ export class PosComponent implements OnInit {
           })
       : null;
     this.itemToAdd = {
-      id: this.currentItem.id,
+      id: this.productId,
       pt_part: checkItemExist.pt_part,
       pt_desc1: checkItemExist.pt_desc1,
+      pt_desc2: checkItemExist.pt_desc2,
       pt_article: checkItemExist.pt_article,
       pt_price: checkItemExist.pt_price,
       pt_formule: checkItemExist.pt_formule,
@@ -579,7 +628,9 @@ export class PosComponent implements OnInit {
       pt_qty: 1,
       line: this.cartProducts.length.toString(),
     };
-
+    if (this.modif) {
+      this.modifproduct.push(this.itemToAdd);
+    }
     this.cart.products.push(this.itemToAdd);
     this.showPrice = true;
 
@@ -604,7 +655,7 @@ export class PosComponent implements OnInit {
     // this.showSupp = false;
     // this.showSauces = false;
     // this.currentItem = undefined;
-    this.offer && this.applyDiscount(this.currentOffer);
+    // this.offer && this.applyDiscount(this.currentOffer);
     this.disableIng = false;
     this.formule = false;
   }
@@ -623,7 +674,6 @@ export class PosComponent implements OnInit {
     this.currentItem && this.currentItem.suppliments.push(suppliment);
     // console.log(this.currentItem.sauces);
   }
-
   setIngredient(ingredient, i) {
     let currentItemSpec = this.currentItem.ingredients;
 
@@ -651,18 +701,19 @@ export class PosComponent implements OnInit {
       (item) => item.id === this.currentItem.id
     );
     if (item.ingredients.length === this.ingredients.length) {
+      this.nothing = false;
       item.ingredients = [];
       const l = document.getElementById("ing");
       l.classList.remove("selected");
       this.disableIng = false;
     } else {
+      this.nothing = true;
       const l = document.getElementById("ing");
       l.classList.add("selected");
       item.ingredients = ingredient;
       this.disableIng = true;
     }
   }
-
   setSoda() {
     this.currentItem &&
       this.currentItem.pt_formule == true &&
@@ -789,16 +840,16 @@ export class PosComponent implements OnInit {
     this.loclocOrder = "Sur place";
     console.log(this.loclocOrder);
     this.cartProducts != null && this.setBomCode();
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "xl" });
     this.inShop = true;
     this.showStatusDelivery = false;
     this.showStatusOut = false;
     const s = document.getElementById("btn1");
     const e = document.getElementById("btn2");
     const l = document.getElementById("btn3");
-    s.classList.add("selected");
-    e.classList.remove("selected");
-    l.classList.remove("selected");
+    s.classList.add("selected1");
+    e.classList.remove("selected2");
+    l.classList.remove("selected3");
     this.offer = false;
     (this.cartAmount = this.cartAmount + this.remisePrice) &&
       (this.remisePrice = 0);
@@ -808,8 +859,10 @@ export class PosComponent implements OnInit {
     return this.loclocOrder;
   }
   locOrderE() {
+    this.chooseLoc = false;
     this.loclocOrder = "Emporté";
     console.log(this.loclocOrder);
+    this.currentTable = null;
     this.cartProducts != null && this.setBomCode();
     this.showStatusOut = true;
     this.inShop = false;
@@ -817,9 +870,9 @@ export class PosComponent implements OnInit {
     const s = document.getElementById("btn1");
     const e = document.getElementById("btn2");
     const l = document.getElementById("btn3");
-    e.classList.add("selected");
-    s.classList.remove("selected");
-    l.classList.remove("selected");
+    e.classList.add("selected2");
+    s.classList.remove("selected1");
+    l.classList.remove("selected3");
     this.offer = false;
     (this.cartAmount = this.cartAmount + this.remisePrice) &&
       (this.remisePrice = 0);
@@ -829,6 +882,7 @@ export class PosComponent implements OnInit {
     return this.loclocOrder;
   }
   locOrderL(content) {
+    this.chooseLoc = false;
     this.currentTable = null;
     this.loclocOrder = "Livraison";
     console.log(this.loclocOrder);
@@ -840,9 +894,9 @@ export class PosComponent implements OnInit {
     const s = document.getElementById("btn1");
     const e = document.getElementById("btn2");
     const l = document.getElementById("btn3");
-    e.classList.remove("selected");
-    s.classList.remove("selected");
-    l.classList.add("selected");
+    e.classList.remove("selected1");
+    s.classList.remove("selected2");
+    l.classList.add("selected3");
 
     return this.loclocOrder;
   }
@@ -871,6 +925,7 @@ export class PosComponent implements OnInit {
   }
 
   chooseTable(table) {
+    this.chooseLoc = false;
     this.currentTable = table;
   }
 
@@ -885,6 +940,11 @@ export class PosComponent implements OnInit {
     this.platformesOffers.map((item) => {
       item.actif = false;
     });
+    this.modif = false;
+    this.modifproduct = [];
+    this.showStatusOut = false;
+    this.inShop = false;
+    this.showStatusDelivery = false;
   }
 
   onDecreaseQty(product: Product): void {
@@ -903,10 +963,7 @@ export class PosComponent implements OnInit {
   }
 
   onIncreaseQty(product: Product): void {
-    // const pt = this.AllProducts.find(
-    //   (elem) => elem.pt_part === product.pt_part
-    // );
-    //const prc = pt.pt_price;
+    console.log(product);
     const pt = this.cartProducts.find((item) => item.id === product.id);
     pt.pt_price =
       Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
@@ -921,10 +978,70 @@ export class PosComponent implements OnInit {
     }, 0);
     return val;
   }
+  getItemFromHistory(order) {
+    this.modif = true;
+    const elem: Cart = this.ordersHistory.find(
+      (item) => item.order_code === order.order_code
+    );
+
+    this.cart.order_code = order.order_code;
+    this.disable = true;
+    this.showPrice = true;
+    this.posCategoryService
+      .getOneOrder({
+        order_code: elem.order_code,
+        usrd_site: this.user.usrd_site,
+      })
+      .subscribe((res: any) => {
+        this.cartProducts = res.data.products.map((item) => {
+          return item;
+        });
+        console.log(this.cart.order_code);
+        console.log(this.cartProducts);
+        this.cartAmount = Number(res.data.total_price);
+        this.cart.products = this.cartProducts;
+      });
+    this.cart = elem;
+  }
 
   prepareCart(content): void {
+    const loy = this.cart.products.find(
+      (item) => item.pt_part_type === "STD" || item.pt_part_type === "PRM"
+    );
+    if (loy && this.loy_num) {
+      this.posCategoryService
+        .setLoyCart({ customer_number: this.loy_num, type: loy.pt_part_type })
+        .subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+            this.layoutUtilsService.showActionNotification(
+              "Erreur verifier les informations",
+              MessageType.Create,
+              10000,
+              true,
+              true
+            );
+            this.loadingSubject.next(false);
+          },
+          () => {
+            this.layoutUtilsService.showActionNotification(
+              "Ajout avec succès",
+              MessageType.Create,
+              10000,
+              true,
+              true
+            );
+            this.loadingSubject.next(false);
+          }
+        );
+    }
+    console.log(this.currentSeq);
+    // console.log(this.cart.products);
     let cart: Cart = {
-      id: Math.floor(Math.random() * 101) + 1,
+      // id: Math.floor(Math.random() * 101) + 1,
+      order_code: this.modif
+        ? this.cart.order_code
+        : this.currentSeq.toString(),
       products: this.cartProducts,
       order_emp: this.loclocOrder,
       customer: "particulier",
@@ -932,50 +1049,411 @@ export class PosComponent implements OnInit {
       total_price: this.cartAmount,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
+      usrd_profile: this.user.usrd_profile,
       loy_num: this.loy_num,
       disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
       del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
       site_loc: this.currentTable ? this.currentTable : null,
+      from: this.currentOffer ? this.currentOffer.del_desc : null,
     };
-    console.log(cart.products);
-    this.posCategoryService.addOrder({ cart }).subscribe(
-      (reponse) => console.log("response", Response),
-      (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.loadingSubject.next(false);
-      },
-      () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.offer === true && (this.offer = false);
-        this.currentOffer = null;
-
-        this.loadingSubject.next(false);
-      }
+    console.log(cart);
+    const site = this.sites.find(
+      (item) => item.si_site === this.user.usrd_site
     );
+    let table1 = [];
+    let table2 = [];
+    let objj: {
+      type: string;
+      value: string;
+    };
+    console.log(this.cart.products);
+    this.cart.products.map((item) => {
+      let t = [
+        { type: "text", value: item.pt_desc2 },
+        {
+          type: "text",
+          value: (item.pt_price / item.pt_qty).toString() + ".00",
+        },
+        { type: "text", value: item.pt_qty.toString() },
+        { type: "text", value: item.pt_price.toString() + ".00" },
+      ];
+      table1.push(t);
+    });
+    if (this.modif === true) {
+      this.modifproduct.map((item) => {
+        let c = [
+          {
+            type: "text",
+            value: item.pt_qty,
+          },
+          {
+            type: "text",
+            value: item.pt_desc2,
+          },
+        ];
+        table2.push(c);
+        const supp = item.suppliments;
+        if (supp.length > 0) {
+          supp.map((s) => {
+            let c = [
+              {
+                type: "text",
+                value: "",
+              },
+              {
+                type: "text",
+                value: s.pt_desc1,
+              },
+            ];
+            table2.push(c);
+          });
+        }
+        const sauce = item.sauces;
+        if (sauce.length > 0) {
+          let sa: string = "";
+          sauce.map((item) => {
+            sa = sa + " " + item.pt_desc1 + (sauce.length > 0 ? ", " : "");
+          });
+          let c = [
+            {
+              type: "text",
+              value: "",
+            },
+            {
+              type: "text",
+              value: sa,
+            },
+          ];
+          table2.push(c);
+        }
+        let ing = item.ingredients;
+        if (ing.length > 0) {
+          ing.length === this.ingredients.length &&
+            (ing = [
+              {
+                pt_desc1: "garniture",
+              },
+            ]);
+          let i: string = "";
+          ing.map((item) => {
+            i = i + " " + "S " + item.pt_desc1 + (ing.length > 0 ? ", " : "");
+          });
+          let c = [
+            {
+              type: "text",
+              value: "",
+            },
+            {
+              type: "text",
+              value: i,
+            },
+          ];
+          table2.push(c);
+        }
+      });
+    } else {
+      this.cart.products.map((item) => {
+        let c = [
+          {
+            type: "text",
+            value: item.pt_qty,
+          },
+          {
+            type: "text",
+            value: item.pt_desc2,
+          },
+        ];
+        table2.push(c);
+        const supp = item.suppliments;
+        if (supp.length > 0) {
+          supp.map((s) => {
+            let c = [
+              {
+                type: "text",
+                value: "",
+              },
+              {
+                type: "text",
+                value: s.pt_desc1,
+              },
+            ];
+            table2.push(c);
+          });
+        }
+        const sauce = item.sauces;
+        if (sauce.length > 0) {
+          let sa: string = "";
+          sauce.map((item) => {
+            sa = sa + " " + item.pt_desc1 + (sauce.length > 0 ? ", " : "");
+          });
+          let c = [
+            {
+              type: "text",
+              value: "",
+            },
+            {
+              type: "text",
+              value: sa,
+            },
+          ];
+          table2.push(c);
+        }
+        let ing = item.ingredients;
+        if (ing.length > 0) {
+          ing.length === this.ingredients.length &&
+            (ing = [
+              {
+                pt_desc1: "garniture",
+              },
+            ]);
+          let i: string = "";
+          ing.map((item) => {
+            i = i + " " + "S " + item.pt_desc1 + (ing.length > 0 ? ", " : "");
+          });
+          let c = [
+            {
+              type: "text",
+              value: "",
+            },
+            {
+              type: "text",
+              value: i,
+            },
+          ];
+          table2.push(c);
+        }
+      });
+    }
+    const net = this.cartAmount + this.remisePrice;
+    // const order_c = "Numéro commande: " + this.cart.order_code;
+    const now = new Date();
+    let ChangedFormat = this.pipe.transform(now, "yyyy-MM-dd");
+    let currentOrderCode = this.modif
+      ? this.cart.order_code.slice(3)
+      : this.currentSeq;
+    const current =
+      now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    const time = ChangedFormat + " " + current;
+    const data = [
+      {
+        type: "image",
+        path: "./assets/logo.png", // file path
+        position: "center", // position of image: 'left' | 'center' | 'right'
+        width: "160px", // width of image in px; default: auto
+        height: "60px", // width of image in px; default: 50 or '50px'
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: site.si_desc,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Tel : 0982 46 65 66",
+      },
+      this.loclocOrder === "Sur place" && {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value:
+          this.loclocOrder === "Sur place"
+            ? "Table " + this.currentTable
+            : null,
+      },
+      this.loclocOrder === "Emporté" && {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder === "Emporté" ? "Emporté" : null,
+      },
+      this.loclocOrder === "Livraison" && {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder === "Livraison" ? "Livraison" : null,
+      },
+      this.loclocOrder === "Livraison" && {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder === "Livraison" ? this.deliveryName : null,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Numéro ticket" + " " + currentOrderCode,
+      },
+      {
+        type: "barCode",
+        value: "Ticket number",
+        height: 20, // height of barcode, applicable only to bar and QR codes
+        width: 1, // width of barcode, applicable only to bar and QR codes
+        displayValue: false, // Display value below barcode
+        fontsize: 12,
+        position: "center",
+        style: { margin: "5px" },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: time,
+      },
+      {
+        type: "table",
+        style: { border: "1px solid #ddd" }, // style the table
+        // list of the columns to be rendered in the table header
+        tableHeader: [
+          { type: "text", value: "Produit" },
+          { type: "text", value: "PU" },
+          { type: "text", value: "Qté" },
+          { type: "text", value: "Montant" },
+        ],
+        // multi-dimensional array depicting the rows and columns of the table body
+        tableBody: table1,
+        tableBodyStyle: { border: "0.5px solid #ddd" },
+      },
+      // {
+      //   type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      //   value: this.cartAmount,
+      // },
+      // {
+      //   type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      //   value: this.remisePrice,
+      // },
+      // {
+      //   type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+      //   value: net,
+      // },
+      {
+        type: "table",
+        style: { border: "1px solid #ddd", position: "right" }, // style the table
+        // list of the columns to be rendered in the table header
+        // multi-dimensional array depicting the rows and columns of the table body
+        tableBody: [
+          [
+            { type: "text", value: "Sous totale" },
+            { type: "text", value: net + ".00" },
+          ],
+          [
+            { type: "text", value: "Remise" },
+            { type: "text", value: 0 + ".00" },
+          ],
+          [
+            { type: "text", value: "Coût logistique" },
+            { type: "text", value: this.remisePrice + ".00" },
+          ],
+          [
+            { type: "text", value: "Totale à payer" },
+            { type: "text", value: this.cartAmount + ".00" },
+          ],
+        ],
+        tableBodyStyle: { border: "0.5px solid #ddd" },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Le kebab authentique",
+      },
+    ];
+    const data2 = [
+      this.loclocOrder === "Sur place" && {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value:
+          this.loclocOrder === "Sur place"
+            ? "Table " + this.currentTable
+            : null,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: "Numéro ticket" + " " + currentOrderCode,
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: time,
+      },
+      {
+        type: "table",
+        style: { border: "1px solid #ddd" }, // style the table
+        // list of the columns to be rendered in the table header
+        tableHeader: [
+          { type: "text", value: "Qté" },
+          { type: "text", value: "Produit" },
+        ],
+        // multi-dimensional array depicting the rows and columns of the table body
+        tableBody: table2,
+        tableBodyStyle: { border: "0.5px solid #ddd" },
+      },
+      {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value: this.loclocOrder,
+      },
+    ];
+    if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
+      // electronPrinter.print(data, data2);
+    }
 
+    if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
+      this.posCategoryService.addOrder({ cart, modif: this.modif }).subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.offer === true && (this.offer = false);
+          this.currentOffer = null;
+          this.loadingSubject.next(false);
+        }
+      );
+    }
+    //console.log(this.currentTicketNumber);
+
+    // this.posCategoryService
+    //   .createIssWo({ detail: this.detail, user: this.user.usrd_user_name })
+    //   .subscribe(
+    //     (reponse) => console.log("response", Response),
+    //     (error) => {
+    //       this.layoutUtilsService.showActionNotification(
+    //         "Erreur verifier les informations",
+    //         MessageType.Create,
+    //         10000,
+    //         true,
+    //         true
+    //       );
+    //       this.loadingSubject.next(false);
+    //     },
+    //     () => {
+    //       this.layoutUtilsService.showActionNotification(
+    //         "Ajout avec succès",
+    //         MessageType.Create,
+    //         10000,
+    //         true,
+    //         true
+    //       );
+    //       this.loadingSubject.next(false);
+    //     }
+    //   );
     this.cartAmount = 0;
     this.remisePrice = 0;
     this.cart.products = [];
     this.cartProducts = [];
     this.showPrice = false;
     this.inShop = false;
+    this.showSize = false;
+    this.showSauces = false;
     this.showStatusDelivery = false;
     this.showStatusOut = false;
     this.offer = false;
-    this.loclocOrder = "Sur place";
-    this.currentTable = "01";
+    this.cart.order_code = null;
+    !this.modif &&
+      (this.currentTicketNumber = Number(this.currentTicketNumber) + 1);
+    !this.modif && (this.currentSeq = Number(this.currentSeq) + 1);
+    this.modif = false;
+    this.modifproduct = [];
+    // this.currentSeq = Number(this.currentSeq) + 1;
+    this.chooseLoc = true;
+    this.inputName.nativeElement.value = "";
   }
 
   changeSelection(event, index) {
@@ -1087,64 +1565,6 @@ export class PosComponent implements OnInit {
       });
     this.modalService.open(content, { size: "xl" });
   }
-  getItemFromHistory(order) {
-    this.detail = [];
-    const elem: Cart = this.ordersHistory.find(
-      (item) => item.order_code === order.order_code
-    );
-    this.disable = true;
-    this.showPrice = true;
-    this.posCategoryService
-      .getOneOrder({ order_code: elem.order_code })
-      .subscribe((res: any) => {
-        this.cartProducts = res.data.products;
-        this.cartAmount = Number(res.data.total_price);
-      });
-    console.log(this.cartProducts);
-    console.log(elem);
-    this.cart = elem;
-    this.posCategoryService
-      .getWod({ wod_nbr: this.cart.order_code })
-      .subscribe((res: any) => {
-        this.workOrders = res.data.map((item) => {
-          return item;
-        });
-        this.workOrders.forEach((wo) => {
-          const d = {
-            tr_part: wo.wod_part,
-            tr_lot: wo.wod_lot,
-            tr_price: wo.wod_price,
-            tr_site: wo.wod_site,
-            tr_qty_loc: Number(wo.wod_qty_req),
-            tr_qty_chg: Number(wo.wod_qty_req),
-            tr_nbr: wo.wod_nbr,
-            tr_serial: null,
-            tr_loc: wo.wod_loc,
-            tr_um_conv: 1,
-          };
-          this.detail.push(d);
-        });
-        console.log(this.detail);
-      });
-
-    // this.workOrders.forEach((so) => {
-    //   const d = {
-    //     tr_part: so.wod_part,
-    //     tr_lot: so.wod_lot,
-    //     tr_price: so.wod_price,
-    //     tr_site: so.wod_site,
-    //     tr_qty_loc: Number(so.wod_qty_req),
-    //     tr_qty_chg: Number(so.wod_qty_req),
-    //     tr_nbr: so.wod_nbr,
-    //     tr_serial: null,
-    //     tr_loc: so.wod_loc,
-    //     tr_um_conv: 1,
-    //   };
-    //   this.detailSo.push(d);
-    // });
-    this.it = this.cart.created_date;
-    return this.detail;
-  }
 
   // Sodata() {
   //   this.posCategoryService
@@ -1159,8 +1579,14 @@ export class PosComponent implements OnInit {
   // }
 
   paiement() {
+    console.log(this.modifproduct);
+    console.log(this.cart.products);
     this.posCategoryService
-      .createIssWo({ detail: this.detail, user: this.user.usrd_user_name })
+      .processTopaiement({
+        cart: this.cart,
+        type: "REC",
+        user_name: this.user.usrd_user_name,
+      })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -1183,36 +1609,7 @@ export class PosComponent implements OnInit {
           );
           this.loadingSubject.next(false);
         }
-      ) &&
-      this.posCategoryService
-        .processTopaiement({
-          cart: this.cart,
-          type: "REC",
-          user_name: this.user.usrd_user_name,
-        })
-        .subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.layoutUtilsService.showActionNotification(
-              "Erreur verifier les informations",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.loadingSubject.next(false);
-          },
-          () => {
-            this.layoutUtilsService.showActionNotification(
-              "Ajout avec succès",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.loadingSubject.next(false);
-          }
-        );
+      );
     console.log("pssss22222", this.cartProducts);
     this.detail = [];
     (this.workOrders = []), (this.detailSo = []), (this.it = null);
@@ -1220,6 +1617,8 @@ export class PosComponent implements OnInit {
     this.cart.products = [];
     this.showPrice = false;
     this.disable = false;
+    this.modif = false;
+    this.modifproduct = [];
   }
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
@@ -1244,6 +1643,13 @@ export class PosComponent implements OnInit {
     this.dataView18 = angularGrid.dataView;
     this.grid18 = angularGrid.slickGrid;
     this.gridService18 = angularGrid.gridService;
+  }
+
+  gridReady6(angularGrid: AngularGridInstance) {
+    this.angularGrid6 = angularGrid;
+    this.dataView6 = angularGrid.dataView;
+    this.grid6 = angularGrid.slickGrid;
+    this.gridService6 = angularGrid.gridService;
   }
   initGrid() {
     this.columnDefinitions = [
@@ -1305,6 +1711,90 @@ export class PosComponent implements OnInit {
       })
       .subscribe(
         (response: any) => (this.dataset = response.data),
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
+  }
+  initGrid6() {
+    this.columnDefinitions6 = [
+      {
+        id: "po_nbr",
+        name: "Numéro bon de commande",
+        field: "po_nbr",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "po_vend",
+        name: "Fournisseur",
+        field: "po_vend",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "po_amt",
+        name: "Montant total",
+        field: "po_amt",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "po_pai",
+        name: "Montant à payer",
+        field: "po_pai",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+        },
+      },
+    ];
+
+    this.gridOptions6 = {
+      asyncEditorLoading: false,
+
+      editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      formatterOptions: {
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: true,
+
+        // Defaults to undefined, minimum number of decimals
+        minDecimal: 2,
+
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: " ", // can be any of ',' | '_' | ' ' | ''
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    this.dataset = [];
+    this.posCategoryService
+      .getAllPo({
+        po_site: this.user.usrd_site,
+        po_stat: "r",
+      })
+      .subscribe(
+        (response: any) => {
+          (this.dataset6 = response.data), console.log(this.dataset6);
+        },
         (error) => {
           this.dataset = [];
         },
@@ -1400,7 +1890,10 @@ export class PosComponent implements OnInit {
     this.posCategoryService
       .getPoRec({ pod_site: this.user.usrd_site })
       .subscribe(
-        (response: any) => (this.datasetRec = response.detail),
+        (response: any) => {
+          this.datasetRec = response.detail;
+          console.log(this.datasetRec);
+        },
         (error) => {
           this.dataset = [];
         },
@@ -1777,11 +2270,13 @@ export class PosComponent implements OnInit {
   }
 
   onSubmitCaisseInventory() {
+    console.log(this.user);
     this.posCategoryService
       .createBkBkh({
         detail: this.bank,
         type: "O",
-        user: this.user.usrd_user_name,
+        user: this.user.usrd_profile,
+        user_site: this.user.usrd_site,
       })
       .subscribe(
         (reponse) => console.log("response", Response),
@@ -1816,7 +2311,7 @@ export class PosComponent implements OnInit {
       .createBkBkh({
         detail: this.bank,
         type: "C",
-        user: this.user.usrd_user_name,
+        user: this.user.usrd_profile,
       })
       .subscribe(
         (reponse) => console.log("response", Response),
@@ -1859,16 +2354,7 @@ export class PosComponent implements OnInit {
       mv_amt: "",
     });
   }
-  createCustomerForm() {
-    this.customerForm = this.customerFb.group({
-      customer_code: "",
-      customer_name: "",
-      customer_addr: "",
-      customer_phone_one: 0,
-      customer_birthday: "",
-      customer_gender: "",
-    });
-  }
+
   mouvementCaisse(content) {
     this.modalService.open(content, { size: "xl" });
     this.initGrid5();
@@ -1922,6 +2408,37 @@ export class PosComponent implements OnInit {
         }
       );
   }
+
+  payPO() {
+    this.posCategoryService
+      .payPo({
+        Site: this.user.usrd_site,
+        details: this.dataset6,
+      })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        }
+      );
+  }
   mvBank(content) {
     this.modalService.open(content, { size: "xl" });
   }
@@ -1940,23 +2457,43 @@ export class PosComponent implements OnInit {
 
     return _mv;
   }
+  createCustomerForm() {
+    this.customer = new Customer();
+    this.customerForm = this.customerFb.group({
+      customer_phone_one: [this.customer.cm_addr, Validators.required],
+      customer_gender: [this.customer.cm_ar_acct, Validators.required],
+      customer_mail: [
+        { value: this.customer.cm_rmks, disabled: !this.isExist },
+        Validators.required,
+      ],
+      customer_name: [
+        { value: this.customer.cm_sort, disabled: !this.isExist },
+        Validators.required,
+      ],
+      customer_birthday: [
+        { value: this.customer.cm_high_cr, disabled: !this.isExist },
+        Validators.required,
+      ],
+      customer_addr: [
+        { value: this.customer.cm_ar_sub, disabled: !this.isExist },
+        Validators.required,
+      ],
+    });
+  }
 
   prepareCustomer(): any {
     const controls = this.customerForm.controls;
-    const _customer = {
-      customer_code: "",
-      customer_name: "",
-      customer_addr: "",
-      customer_phone_one: 0,
-      customer_birthday: "",
-      customer_gender: "",
-    };
-    _customer.customer_code = controls.customer_code.value;
-    _customer.customer_name = controls.customer_name.value;
-    _customer.customer_addr = controls.customer_addr.value;
-    _customer.customer_phone_one = controls.customer_phone_one.value;
-    _customer.customer_birthday = controls.customer_birthday.value;
-    _customer.customer_gender = controls.customer_gender.value;
+    const _customer = new Customer();
+
+    _customer.cm_sort = controls.customer_name.value;
+    _customer.cm_ar_sub = controls.customer_addr.value;
+    _customer.cm_addr = controls.customer_phone_one.value;
+    var number = _customer.cm_addr.split(" ").join("");
+    console.log(number);
+    _customer.cm_addr = number;
+    _customer.cm_high_cr = controls.customer_birthday.value;
+    _customer.cm_ar_acct = controls.customer_gender.value;
+    _customer.cm_rmks = controls.customer_mail.value;
 
     return _customer;
   }
@@ -2162,27 +2699,47 @@ export class PosComponent implements OnInit {
   }
 
   onChangeDiscount(discount) {
-    console.log(discount);
-
     if (discount) {
       this.loy_num = discount;
-      const elem = this.discountTable.find((item) => item.cm_addr === discount);
+      const elem = this.discountTable.find(
+        (item) =>
+          item.cm_addr === discount ||
+          item.cm_sort === discount ||
+          item.cm_rmks === discount
+      );
       if (elem) {
-        // console.log(elem.cm_disc_pct);
-        console.log(this.cart.total_price);
-
         this.cart.total_price =
           this.cartAmount * (1 - Number(elem.cm_disc_pct) / 100);
 
         this.remisePrice = this.cartAmount * (Number(elem.cm_disc_pct) / 100);
         this.cartAmount = this.cart.total_price;
       }
-      console.log(this.remisePrice);
     }
   }
+  onChangeCode() {
+    const controls = this.customerForm.controls;
 
+    this.posCategoryService
+      .getByPhone({ cm_addr: controls.customer_phone_one.value })
+      .subscribe((res: any) => {
+        console.log("aa", res.data);
+
+        if (res.data) {
+          this.isExist = true;
+          document.getElementById("phone").focus();
+        } else {
+          this.isExist = false;
+          controls.customer_gender.enable();
+          controls.customer_mail.enable();
+          controls.customer_addr.enable();
+          controls.customer_name.enable();
+          controls.customer_birthday.enable();
+        }
+      });
+  }
   pArticle(content) {
     this.modalService.open(content, { size: "xl" });
+    this.initGrid6();
   }
   onSelectServiceBuy() {
     this.RequestBuyingArticle = true;
@@ -2221,7 +2778,7 @@ export class PosComponent implements OnInit {
       item.del_code === p.del_code ? (item.actif = true) : (item.actif = false);
     });
     this.currentOffer = p;
-
+    this.deliveryName = p.del_desc;
     if (p.del_cndt === "A") {
       this.remisePrice = this.cartAmount * (Number(p.del_pct_disc) / 100);
       this.cartAmount =

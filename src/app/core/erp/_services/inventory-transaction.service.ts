@@ -77,6 +77,11 @@ export class InventoryTransactionService {
         return this.http.post(`${API_URL}/dayly`,data, { headers: httpHeaders })
  
     }
+    public getDayly1(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/dayly1`,data, { headers: httpHeaders })
+ 
+    }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

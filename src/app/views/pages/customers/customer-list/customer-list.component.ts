@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit } from "@angular/core";
 import {
   Formatter,
   Editor,
@@ -18,85 +18,88 @@ import {
   GroupTotalFormatters,
   SortDirectionNumber,
   Sorters,
-} from "angular-slickgrid"
+} from "angular-slickgrid";
 
-import { FormGroup, FormBuilder, Validators } from "@angular/forms"
-import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
-import { ActivatedRoute, Router } from "@angular/router"
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
 // Layout
 import {
-    SubheaderService,
-    LayoutConfigService,
-} from "../../../../core/_base/layout"
+  SubheaderService,
+  LayoutConfigService,
+} from "../../../../core/_base/layout";
 // CRUD
 import {
-    LayoutUtilsService,
-    TypesUtilsService,
-    MessageType,
-} from "../../../../core/_base/crud"
-import { MatDialog } from "@angular/material/dialog"
+  LayoutUtilsService,
+  TypesUtilsService,
+  MessageType,
+} from "../../../../core/_base/crud";
+import { MatDialog } from "@angular/material/dialog";
 
-import { Customer, CustomerService,Address , AddressService} from "../../../../core/erp"
+import {
+  Customer,
+  CustomerService,
+  Address,
+  AddressService,
+} from "../../../../core/erp";
 
-
-const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
-  value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
+const myCustomCheckboxFormatter: Formatter = (
+  row: number,
+  cell: number,
+  value: any,
+  columnDef: Column,
+  dataContext: any,
+  grid?: any
+) =>
+  value
+    ? `<div class="text"  aria-hidden="true">Oui</div>`
+    : '<div class="text"  aria-hidden="true">Non</div>';
 
 @Component({
-  selector: 'kt-customer-list',
-  templateUrl: './customer-list.component.html',
-  styleUrls: ['./customer-list.component.scss']
+  selector: "kt-customer-list",
+  templateUrl: "./customer-list.component.html",
+  styleUrls: ["./customer-list.component.scss"],
 })
- 
-
-
-
 export class CustomerListComponent implements OnInit {
-  
-  columnDefinitions: Column[] = []
-  gridOptions: GridOption = {}
-  dataset: any[] = []
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {};
+  dataset: any[] = [];
   draggableGroupingPlugin: any;
   angularGrid: AngularGridInstance;
 
-  selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  selectedGroupingFields: Array<string | GroupingGetterFunction> = ["", "", ""];
   gridObj: any;
   dataviewObj: any;
 
-  
   constructor(
-      private activatedRoute: ActivatedRoute,
-      private router: Router,
-      public dialog: MatDialog,
-      private layoutUtilsService: LayoutUtilsService,
-      private addressService: AddressService,
-      private customerService: CustomerService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    public dialog: MatDialog,
+    private layoutUtilsService: LayoutUtilsService,
+    private addressService: AddressService,
+    private customerService: CustomerService
   ) {
-      this.prepareGrid()
+    this.prepareGrid();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  
-  
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
   }
   prepareGrid() {
-
-      this.columnDefinitions = [
-          {
-              id: "edit",
-              field: "id",
-              excludeFromColumnPicker: true,
-              excludeFromGridMenu: true,
-              excludeFromHeaderMenu: true,
-              formatter: (row, cell, value, columnDef, dataContext) => {
-                  // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-                  return `
+    this.columnDefinitions = [
+      {
+        id: "edit",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
               <span class="svg-icon svg-icon-md">
                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
@@ -113,296 +116,309 @@ export class CustomerListComponent implements OnInit {
                   </svg>
               </span>
           </a>
-          `
-              },
-              minWidth: 50,
-              maxWidth: 50,
-              // use onCellClick OR grid.onClick.subscribe which you can see down below
-              onCellClick: (e: Event, args: OnEventArgs) => {
-                  const id = args.dataContext.id
-                  this.router.navigateByUrl(`/customers/edit/${id}`)
-              },
-          },
-          {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
-    
-            minWidth: 50,
-            maxWidth: 50,
-          },
-          {
-            id: "cm_addr",
-            name: "code",
-            field: "cm_addr",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "ad_name",
-            name: "Client",
-            field: "address.ad_name",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "ad_line1",
-            name: "Adresse",
-            field: "address.ad_line1",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "ad_line2",
-            name: "Adresse",
-            field: "address.ad_line2",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-
-          {
-            id: "ad_city",
-            name: "City",
-            field: "address.ad_city",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "ad_ctry",
-            name: "Pays",
-            field: "address.ad_country",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "ad_format",
-            name: "Age",
-            field: "address.ad_format",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'ad_format',
-              formatter: (g) => `Age: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          
-          {
-            id: "ad_ref",
-            name: "Sexe",
-            field: "address.ad_ref",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'ad_ref',
-              formatter: (g) => `Sexe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          {
-            id: "ad_ext",
-            name: "Email",
-            field: "address.ad_ext",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string, 
-          },
-          {
-            id: "cm_db",
-            name: "Promo",
-            field: "cm_db",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'cm_db',
-              formatter: (g) => `Promo: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          {
-            id: "cm_type",
-            name: "Type",
-            field: "cm_type",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'cm_type',
-              formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          }, 
-          {
-            id: "cm_class",
-            name: "Classe",
-            field: "cm_class",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'cm_class',
-              formatter: (g) => `Classe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          }, 
-          {
-            id: "cm_hold",
-            name: "Bloc",
-            field: "cm_hold",
-            sortable: true,
-            filterable: true,
-            formatter: myCustomCheckboxFormatter,
-            
-            type: FieldType.boolean,
-            grouping: {
-              getter: 'cm_hold',
-              formatter: (g) => `Bloc: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          {
-            id: "ad_misc2_id",
-            name: "Matricule Fiscal",
-            field: "cm_rmks",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "cm_curr",
-            name: "Devise",
-            field: "cm_curr",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          
-          {
-            id: "ad_pst_id",
-            name: "Article Imposition",
-            field: "address.ad_pst_id",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          
-          {
-            id: "ad_gst_id",
-            name: "Registre Commerce",
-            field: "address.ad_gst_id",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          
-
-      ]
-
-      this.gridOptions = {
-          // autoResize: {
-          //   containerId: 'demo-container',
-          //   sidePadding: 10
-          // },
-          autoHeight:true,
-          enableAutoResize:true,
-          enableDraggableGrouping: true,
-          createPreHeaderPanel: true,
-          showPreHeaderPanel: true,
-          preHeaderPanelHeight: 40,
-          enableFiltering: true,
-          enableSorting: true,
-          exportOptions: {
-            sanitizeDataExport: true
-          },
-          gridMenu: {
-            onCommand: (e, args) => {
-              if (args.command === 'toggle-preheader') {
-                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-                this.clearGrouping();
-              }
-            },
-          },
-          draggableGrouping: {
-            dropPlaceHolderText: 'Drop a column header here to group by the column',
-            // groupIconCssClass: 'fa fa-outdent',
-            deleteIconCssClass: 'fa fa-times',
-            onGroupChanged: (e, args) => this.onGroupChanged(args),
-            onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-        
+          `;
         },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id;
+          this.router.navigateByUrl(`/customers/edit/${id}`);
+        },
+      },
+      {
+        id: "id",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
 
-    
-          dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
-            var val = undefined;
-            try {
-              val = eval("item." + column.field);
-            } catch (e) {
-              // ignore
-            }
-            return val;
-          },
+        minWidth: 50,
+        maxWidth: 50,
+      },
+      {
+        id: "cm_addr",
+        name: "code",
+        field: "cm_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_name",
+        name: "Client",
+        field: "address.ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_line1",
+        name: "Adresse",
+        field: "address.ad_line1",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_line2",
+        name: "Adresse",
+        field: "address.ad_line2",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
 
+      {
+        id: "ad_city",
+        name: "City",
+        field: "address.ad_city",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_ctry",
+        name: "Pays",
+        field: "address.ad_country",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_format",
+        name: "Age",
+        field: "address.ad_format",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        grouping: {
+          getter: "ad_format",
+          formatter: (g) =>
+            `Age: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
 
-      }
+      {
+        id: "ad_ref",
+        name: "Sexe",
+        field: "address.ad_ref",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        grouping: {
+          getter: "ad_ref",
+          formatter: (g) =>
+            `Sexe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
+      {
+        id: "ad_ext",
+        name: "Email",
+        field: "address.ad_ext",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "cm_db",
+        name: "Promo",
+        field: "cm_db",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        grouping: {
+          getter: "cm_db",
+          formatter: (g) =>
+            `Promo: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
+      {
+        id: "cm_type",
+        name: "Type",
+        field: "cm_type",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        grouping: {
+          getter: "cm_type",
+          formatter: (g) =>
+            `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
+      {
+        id: "cm_class",
+        name: "Classe",
+        field: "cm_class",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        grouping: {
+          getter: "cm_class",
+          formatter: (g) =>
+            `Classe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
+      {
+        id: "cm_hold",
+        name: "Bloc",
+        field: "cm_hold",
+        sortable: true,
+        filterable: true,
+        formatter: myCustomCheckboxFormatter,
 
-      // fill the dataset with your data
-      this.dataset = []
-      this.customerService.getAll().subscribe(
-          (response: any) => {this.dataset = response.data
-          this.dataviewObj.setItems(this.dataset)
-          },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
+        type: FieldType.boolean,
+        grouping: {
+          getter: "cm_hold",
+          formatter: (g) =>
+            `Bloc: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
+      {
+        id: "ad_misc2_id",
+        name: "Matricule Fiscal",
+        field: "cm_rmks",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "cm_curr",
+        name: "Devise",
+        field: "cm_curr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+
+      {
+        id: "ad_pst_id",
+        name: "Article Imposition",
+        field: "address.ad_pst_id",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+
+      {
+        id: "ad_gst_id",
+        name: "Registre Commerce",
+        field: "address.ad_gst_id",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions = {
+      // autoResize: {
+      //   containerId: 'demo-container',
+      //   sidePadding: 10
+      // },
+      autoHeight: true,
+      enableAutoResize: true,
+      enableDraggableGrouping: true,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 40,
+      enableFiltering: true,
+      enableSorting: true,
+      exportOptions: {
+        sanitizeDataExport: true,
+      },
+      gridMenu: {
+        onCommand: (e, args) => {
+          if (args.command === "toggle-preheader") {
+            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+            this.clearGrouping();
+          }
+        },
+      },
+      draggableGrouping: {
+        dropPlaceHolderText: "Drop a column header here to group by the column",
+        // groupIconCssClass: 'fa fa-outdent',
+        deleteIconCssClass: "fa fa-times",
+        onGroupChanged: (e, args) => this.onGroupChanged(args),
+        onExtensionRegistered: (extension) =>
+          (this.draggableGroupingPlugin = extension),
+      },
+
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    // fill the dataset with your data
+    this.dataset = [];
+    this.customerService.getAll().subscribe(
+      (response: any) => {
+        this.dataset = response.data;
+        this.dataviewObj.setItems(this.dataset);
+      },
+      (error) => {
+        this.dataset = [];
+      },
+      () => {}
+    );
   }
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
-      // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
-      const caller = change && change.caller || [];
-      const groups = change && change.groupColumns || [];
+    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+    const caller = (change && change.caller) || [];
+    const groups = (change && change.groupColumns) || [];
 
-      if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
-        // update all Group By select dropdown
-        this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
-      } else if (groups.length === 0 && caller === 'remove-group') {
-        this.clearGroupingSelects();
-      }
+    if (
+      Array.isArray(this.selectedGroupingFields) &&
+      Array.isArray(groups) &&
+      groups.length > 0
+    ) {
+      // update all Group By select dropdown
+      this.selectedGroupingFields.forEach(
+        (g, i) =>
+          (this.selectedGroupingFields[i] =
+            (groups[i] && groups[i].getter) || "")
+      );
+    } else if (groups.length === 0 && caller === "remove-group") {
+      this.clearGroupingSelects();
     }
-    clearGroupingSelects() {
-      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
-    }
-    
-    collapseAllGroups() {
-      this.dataviewObj.collapseAllGroups();
-    }
-  
-    expandAllGroups() {
-      this.dataviewObj.expandAllGroups();
-    }
-    clearGrouping() {
-      if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
-        this.draggableGroupingPlugin.clearDroppedGroups();
-      }
-      this.gridObj.invalidate(); // invalidate all rows and re-render
-    }
+  }
+  clearGroupingSelects() {
+    this.selectedGroupingFields.forEach(
+      (g, i) => (this.selectedGroupingFields[i] = "")
+    );
+  }
 
-  
+  collapseAllGroups() {
+    this.dataviewObj.collapseAllGroups();
+  }
+
+  expandAllGroups() {
+    this.dataviewObj.expandAllGroups();
+  }
+  clearGrouping() {
+    if (
+      this.draggableGroupingPlugin &&
+      this.draggableGroupingPlugin.setDroppedGroups
+    ) {
+      this.draggableGroupingPlugin.clearDroppedGroups();
+    }
+    this.gridObj.invalidate(); // invalidate all rows and re-render
+  }
 }

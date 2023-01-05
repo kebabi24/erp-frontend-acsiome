@@ -212,6 +212,9 @@ export class CreateBankComponent implements OnInit {
      this.codeService
         .getBy({ code_fldname: "check_form" })
           .subscribe((response: any) => (this.cm_pay_method = response.data))   
+     this.codeService
+        .getBy({ code_fldname: "bk_type" })
+          .subscribe((response: any) => (this.bk_type = response.data))       
           
      
       
@@ -583,6 +586,7 @@ export class CreateBankComponent implements OnInit {
         
         bk_check: [{ value: this.bank.bk_check, disabled: !this.isExist }],
         bk_curr: [{ value: this.bank.bk_curr, disabled: !this.isExist }],
+        bk_type: [{ value: this.bank.bk_type, disabled: !this.isExist },Validators.required],
         bk_entity: [{ value: this.bank.bk_entity, disabled: !this.isExist }],
       
         bk_bk_acct1: [{ value: this.bank.bk_bk_acct1, disabled: !this.isExist }],
@@ -684,6 +688,7 @@ export class CreateBankComponent implements OnInit {
                   controls1.bk_curr.enable()
                   controls1.bk_entity.enable()
                   controls1.bk_check.enable()
+                  controls1.bk_type.enable()
                   controls1.bk_bk_acct1.enable()
                   controls1.bk_bk_acct2.enable()
                   controls1.bk_acct.enable()
@@ -853,6 +858,7 @@ export class CreateBankComponent implements OnInit {
       _bank.bk_code = controls1.ad_addr.value
       _bank.bk_desc = controls1.ad_name.value
       _bank.bk_curr = controls.bk_curr.value
+      _bank.bk_type = controls.bk_type.value
       _bank.bk_entity = controls.bk_entity.value
       _bank.bk_check = controls.bk_check.value
       

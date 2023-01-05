@@ -209,7 +209,9 @@ useredit:any
    //   this.codeService
      //     .getBy({ code_fldname: "ad_city" })
        //   .subscribe((response: any) => (this.ad_city = response.data))    
-          
+       this.codeService
+        .getBy({ code_fldname: "bk_type" })
+          .subscribe((response: any) => (this.bk_type = response.data))           
       
      
   }
@@ -541,6 +543,7 @@ createBankForm() {
     
     bk_check: [ this.bankEdit.bk_check ],
     bk_curr: [ this.bankEdit.bk_curr ],
+    bk_type: [ this.bankEdit.bk_type ],
     bk_entity: [ this.bankEdit.bk_entity ],
   
     bk_bk_acct1: [ this.bankEdit.bk_bk_acct1 ],
@@ -744,6 +747,7 @@ prepareBank(): Bank {
   const _bank = new Bank()
   _bank.bk_code = controls1.ad_addr.value
   _bank.bk_desc = controls1.ad_name.value
+  _bank.bk_type = controls.bk_type.value
   _bank.bk_curr = controls.bk_curr.value
   _bank.bk_entity = controls.bk_entity.value
   _bank.bk_check = controls.bk_check.value

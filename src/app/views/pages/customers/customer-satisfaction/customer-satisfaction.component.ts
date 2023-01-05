@@ -38,6 +38,7 @@ export class CustomerSatisfactionComponent implements OnInit {
   isExist = false
   loadingSubject = new BehaviorSubject<boolean>(true)
   loading$: Observable<boolean>
+  orderNotExist: Boolean = false;
 
   order_code : String;
   status : String ;
@@ -114,7 +115,11 @@ getReclamationCauses(){
   )
 }
 
-
+time = new Observable<string>((observer: Observer<string>) => {
+  setInterval(() => {
+    observer.next("");
+  }, 1000);
+});
 
 
 
@@ -144,8 +149,8 @@ updateStatus(s){
   
 }
 
-open(content) {
-  this.updateStatus('angry')
+open(content,val) {
+  this.updateStatus(val)
   this.modalService.open(content, { size: "lg" })
 }
 
@@ -154,6 +159,32 @@ open(content) {
 reset() {
   this.createForm()
   this.hasFormErrors = false
+}
+
+getOrder() {
+  const controls = this.satisfactionForm.controls;
+  this.order_code = controls.order_code.value;
+  console.log('code : '+this.order_code)
+  this.customerService.getOrder(this.order_code).subscribe(
+    (reponse) => {
+      if (reponse["data"] == null) {
+        this.orderNotExist = true;
+        console.log("null");
+      } else {
+        console.log(reponse["data"]);
+      }
+    },
+    (error) => {
+      this.layoutUtilsService.showActionNotification(
+        "Erreur verifier les informations",
+        MessageType.Create,
+        10000,
+        true,
+        true
+      );
+      this.loadingSubject.next(false);
+    }
+  );
 }
 
 
@@ -178,7 +209,7 @@ onSubmit() {
   }
   var complaintDetails = []
 
-  if(this.status ==='angry'){
+  if(this.status ==='angry'||'okay'){
     
     const controlsReclamation = this.reclamationForm.controls
     this.reclamation_causes.forEach(cause => {
@@ -189,9 +220,6 @@ onSubmit() {
           code_value:code_value,
           observation:observation
         })
-        // console.log(cause.code_value+'\t')
-        // console.log(controls[cause.code_value].value) // this is true if selected
-        // console.log(controls[cause.code_value+'text-area'].value)
       }
     });
     console.log(complaintDetails)
@@ -248,6 +276,16 @@ goBack() {
 
 saveComplaint(){
     document.getElementById('closeForm').click()
+}
+
+onAlertClose($event) {
+  this.orderNotExist = false
+  this.customeControls["order_code"] = new FormControl("");
+
+        this.satisfactionForm = this.tagFB.group({
+          order_code: new FormControl(""),
+          ...this.customeControls,
+        });
 }
 
 }

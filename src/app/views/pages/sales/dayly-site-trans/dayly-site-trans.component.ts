@@ -238,6 +238,8 @@ error = false;
         minWidth: 100,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
        
       
       },
@@ -249,6 +251,8 @@ error = false;
         minWidth: 100,
         filterable: false,
         type: FieldType.float,     
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyrec",
@@ -258,6 +262,8 @@ error = false;
         minWidth: 100,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyiss",
@@ -267,6 +273,8 @@ error = false;
         minWidth: 100,
         filterable: true,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyrest",
@@ -276,6 +284,8 @@ error = false;
         minWidth: 100,
         filterable: true,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
         id: "qtyinvfin",
@@ -285,6 +295,8 @@ error = false;
         minWidth: 100,
         filterable: true,
         type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       
     ];
@@ -301,10 +313,11 @@ error = false;
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-        displayNegativeNumberWithParentheses: true,
+        displayNegativeNumberWithParentheses: false,
   
         // Defaults to undefined, minimum number of decimals
-        minDecimal: 2,
+        minDecimal:2,
+        maxDecimal:2,
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
@@ -312,14 +325,12 @@ error = false;
     };
 
     this.dataset = [];
-    console.log(this.user)
     const controls = this.poForm.controls
     const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
-    console.log(date,controls.calc_date.value)
-    this.inventoryTransactionService.getDayly({tr_site: this.user.usrd_site, tr_effdate: date}).subscribe(
+    this.inventoryTransactionService.getDayly1({tr_site: this.user.usrd_site, tr_effdate: date}).subscribe(
       (response: any) => {   
         this.dataset = response.data
-       console.log(this.dataset)
+        console.log(response.data)
        this.dataView.setItems(this.dataset);
         
          },
@@ -333,7 +344,7 @@ error = false;
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
-    console.log(this.user)
+   
     this.createForm();
     this.initGrid();
     this.initmvGrid();
@@ -376,10 +387,8 @@ error = false;
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.float,
-        editor: {
-          model: Editors.text,
-        },
+        type: FieldType.string,
+       
       },
       {
         id: "desc1",
@@ -388,7 +397,7 @@ error = false;
         sortable: true,
         width: 80,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.string,
        
       },
       {
@@ -430,7 +439,6 @@ error = false;
 
     this.mvdataset = [];
     
-    console.log(this.user)
     const controls = this.poForm.controls
     const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
     console.log(date,controls.calc_date.value)

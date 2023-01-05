@@ -16,3 +16,99 @@
   .selected {
     background:#9e110d;
   }
+
+
+  .feeedback-btn{
+    display: flex;
+  justify-content: center;
+    width: 250px;
+    height: 140px;
+
+    // background-color: red;
+    box-shadow: rgba(0, 0, 0, 0) 0px 5px 15px;
+    border-radius: 5px;
+
+
+}
+.selected1 {
+  background:#9e110d;
+}
+.selected2 {
+  background:beige;
+}
+.selected3 {
+  background:red;
+}
+
+.btn-emp{
+background-color: beige;
+}
+
+.button{
+    cursor:pointer;
+    user-select:none;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    -webkit-transition-duration: 0.4s; /* Safari */
+  }
+  
+  .button:hover {
+    transition-duration: 0.1s;
+    background-color: #c92323;
+  }
+
+  .button:focus {
+    background-color: #c92323;
+  }
+  
+  .button:after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 4em;
+    left: 0;
+    top:0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.5s;
+    box-shadow: 0 0 10px 40px white;
+  }
+  
+  .button:active:after {
+    box-shadow: 0 0 0 0 white;
+    position: absolute;
+    border-radius: 4em;
+    left: 0;
+    top:0;
+    opacity: 1;
+    transition: 0s;
+  }
+  
+  .button:active {
+    top: 1px;
+  }
+
+
+
+  .btn-abracadabra{
+    background-color: #9e110d;
+    color:white;
+}
+
+.btn-abracadabra:hover{
+    background-color: #ffb701;
+    color:#9e110d;
+}
+
+.main-container{
+    background-color: beige;
+}
+
+.section-title{
+    color:#ffb701 ;
+}

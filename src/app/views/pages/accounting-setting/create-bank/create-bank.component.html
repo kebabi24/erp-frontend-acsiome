@@ -200,6 +200,50 @@
                                 </kt-alert>
 
                                 <div class="row">
+                                    <div class="form-group col-2">
+                                       
+                                        <label class="form-group "> Utilisateur:</label>
+                                        
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid" (change)="changeuser()"
+                                                aria-describedby="basic-addon2" formControlName="bk_userid">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="openuser(contentuser)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                       
+                                        <label class="form-group "> Nom:</label>
+                                        
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" formControlName="user_name">
+                                           
+                                        </div>        
+                                    </div>
+                                        
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Type:</label>
+                                        <select
+                                            [className]="bankForm.controls['bk_type'].errors && (bankForm.controls['bk_type'].dirty || bankForm.controls['bk_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                            formControlName="bk_type" id="exampleSelects1">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of bk_type" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                        </select>
+                                        <div *ngIf="bankForm.controls['bk_type'].errors && (bankForm.controls['bk_type'].dirty || bankForm.controls['bk_type'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                                    </div>
+                                    
+                                
+                                </div>
+                                <div class="row">
                                     
                                     <div class="form-group col-2">
                                         <label class="form-group ">Cheque Suivant:</label>
@@ -679,35 +723,7 @@
 
                                 </div>
                                 
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                       
-                                        <label class="form-group "> Utilisateur:</label>
-                                        
-                                        <div class="input-group input-group-sm">
-
-                                            <input type="text" class="form-control form-control-solid" (change)="changeuser()"
-                                                aria-describedby="basic-addon2" formControlName="bk_userid">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" (click)="openuser(contentuser)">
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="form-group col-2">
-                                       
-                                        <label class="form-group "> Nom:</label>
-                                        
-                                        <div class="input-group input-group-sm">
-
-                                            <input type="text" class="form-control form-control-solid"
-                                                aria-describedby="basic-addon2" formControlName="user_name">
-                                           
-                                        </div>        
-                                    </div>
-                                    
-                                </div>
+                                
                             </form>
                         </ng-template>
                     </ngb-tab>

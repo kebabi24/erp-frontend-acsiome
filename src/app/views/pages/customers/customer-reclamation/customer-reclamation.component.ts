@@ -66,6 +66,7 @@ export class CustomerReclamationComponent implements OnInit {
   gender: String;
   email: String;
   createdCustomer: Boolean = false;
+  orderNotExist: Boolean = false;
   customerNotExist: Boolean;
 
   order_code: String;
@@ -99,17 +100,19 @@ export class CustomerReclamationComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.getReclamationCauses();
-    this.prepareDataOnLoad();
+    // this.prepareDataOnLoad();
     this.initCustomerForm();
     this.createForm();
-    this.openCallAlert();
+    // this.openCallAlert();
   }
+
   getOrder() {
     const controls = this.reclamationForm.controls;
     this.order_code = controls.order_code.value;
     this.customerService.getOrder(this.order_code).subscribe(
       (reponse) => {
         if (reponse["data"] == null) {
+          this.orderNotExist = true;
           console.log("null");
         } else {
           this.order_site = reponse["data"].usrd_site;
@@ -131,10 +134,46 @@ export class CustomerReclamationComponent implements OnInit {
     );
   }
 
+  getCustomerData(){
+    const controls = this.reclamationForm.controls;
+    console.log(controls)
+    this.phone_number = controls.phonee.value
+    console.log('phone'+this.phone_number)
+
+    this.customerService.getCustomer(this.phone_number).subscribe(
+      (reponse) => {
+        if (reponse["data"] == null) {
+          console.log("null");
+          this.customerNotExist = true;
+        } else {
+          this.customerNotExist = false;
+          this.name = reponse["data"].ad_name;
+          this.adress = reponse["data"].ad_line1;
+          this.age = reponse["data"].ad_format;
+          this.gender = reponse["data"].ad_ref;
+          this.router.navigated = false;
+          // window.location.reload()
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+
   prepareDataOnLoad() {
-    this.activatedRoute.params.subscribe((params) => {
-      this.phone_number = params["phone"];
-    });
+    // this.activatedRoute.params.subscribe((params) => {
+    //   this.phone_number = params["phone"];
+    // });
+
+    this.phone_number = '0699061833'
 
     this.customerService.getCustomer(this.phone_number).subscribe(
       (reponse) => {
@@ -176,12 +215,12 @@ export class CustomerReclamationComponent implements OnInit {
             this.customeControls[cause.code_value + "text-area"] =
               new FormControl("");
           });
-          this.customeControls["rec_details"] = new FormControl("");
-          this.customeControls["cause"] = new FormControl("");
           this.customeControls["order_code"] = new FormControl("");
+          this.customeControls["phonee"]= new FormControl("");
 
           this.reclamationForm = this.tagFB.group({
             order_code: new FormControl(""),
+            phonee :  new FormControl(""),
             ...this.customeControls,
           });
         }
@@ -198,6 +237,7 @@ export class CustomerReclamationComponent implements OnInit {
       }
     );
   }
+
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
       observer.next("");
@@ -215,6 +255,7 @@ export class CustomerReclamationComponent implements OnInit {
     // })
     this.reclamationForm = this.tagFB.group({
       order_code: new FormControl(""),
+      phonee : new FormControl(""),
       ...this.customeControls,
     });
   }
@@ -325,12 +366,12 @@ export class CustomerReclamationComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
-  open2(content) {
-    this.modalService.open(content, { size: "lg" });
-  }
-  openCallAlert() {
-    document.getElementById("call-alert").click();
-  }
+  // open2(content) {
+  //   this.modalService.open(content, { size: "lg" });
+  // }
+  // openCallAlert() {
+  //   document.getElementById("call-alert").click();
+  // }
 
   initCustomerForm() {
     // demo message to show
@@ -345,7 +386,7 @@ export class CustomerReclamationComponent implements OnInit {
       ],
       phone: [
         "",
-        Validators.compose([Validators.required, Validators.maxLength(100)]),
+        Validators.compose([Validators.required, Validators.maxLength(10)]),
       ],
       age: [
         "",
@@ -356,6 +397,8 @@ export class CustomerReclamationComponent implements OnInit {
       email: [""],
     });
   }
+
+  
 
   saveCustomer() {
     const controls = this.customerForm.controls;
@@ -368,7 +411,18 @@ export class CustomerReclamationComponent implements OnInit {
     document.getElementById("closeForm").click();
   }
 
-  test() {
-    window.alert("hey");
+  // test() {
+  //   window.alert("hey");
+  // }
+
+  onAlertClose($event) {
+    this.orderNotExist = false
+    this.customeControls["order_code"] = new FormControl("");
+    this.customeControls["phonee"]= new FormControl("");
+
+          this.reclamationForm = this.tagFB.group({
+            order_code: new FormControl(""),
+            ...this.customeControls,
+          });
   }
 }

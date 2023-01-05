@@ -168,6 +168,7 @@
                       data-bs-toggle="pill"
                       (click)="initializeProduct(productOnlist)"
                       style="background-color: #ffb701"
+                      [disabled]="chooseLoc"
                     >
                       <div class="card-body text-center" type="button">
                         <div class="mb-2">
@@ -175,10 +176,6 @@
                             <span
                               class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
                               >{{ productOnlist.code_desc }}</span
-                            >
-                            <span
-                              class="text-gray-900 fw-semibold d-block fs-6 mt-n1"
-                              >16 mins to cook</span
                             >
                           </div>
                         </div>
@@ -256,7 +253,7 @@
 
                     <!--end::Tap pane-->
                   </div>
-                  <div class="tab-content" *ngIf="showSupp">
+                  <!-- <div class="tab-content" *ngIf="showSupp">
                     <div id="kt_pos_food_content_1">
                       <div
                         class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
@@ -281,13 +278,13 @@
                           </div>
                         </button>
 
-                        <!--end::Card-->
+                        
                       </div>
-                      <!--end::Wrapper-->
+                      
                     </div>
 
-                    <!--end::Tap pane-->
-                  </div>
+                    
+                  </div> -->
                   <div class="tab-content" *ngIf="showSoda">
                     <div id="kt_pos_food_content_1">
                       <div
@@ -457,7 +454,6 @@
                               type="email"
                               class="form-control text-gray-900"
                               placeholder="00.0"
-                              id="floatingInputValue"
                               #discount
                               id="discount"
                               name="discount"
@@ -562,7 +558,14 @@
                             Vider le panier
                           </button>
                         </div>
-
+                        <div
+                          *ngIf="modif"
+                          class="d-flex-column align-items-center"
+                        >
+                          <h2 class="">
+                            Numéro commande {{ cart.order_code }}
+                          </h2>
+                        </div>
                         <!--end::Toolbar-->
                       </div>
                       <!--end::Header-->
@@ -579,30 +582,25 @@
                             <tr *ngIf="inShop">
                               <td class="pe-0">
                                 <div class="d-flex-column align-items-center">
-                                  <span
-                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                    >Commande table {{ currentTable }}
-                                  </span>
+                                  <h2 class="">
+                                    Commande table {{ currentTable }}
+                                  </h2>
                                 </div>
                               </td>
                             </tr>
                             <tr *ngIf="showStatusOut">
                               <td class="pe-0">
                                 <div class="d-flex-column align-items-center">
-                                  <span
-                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                    >Commande à emporter
-                                  </span>
+                                  <h2 class="">Commande à emporter</h2>
                                 </div>
                               </td>
                             </tr>
                             <tr *ngIf="showStatusDelivery">
                               <td class="pe-0">
                                 <div class="d-flex-column align-items-center">
-                                  <span
-                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                    >Livraison avec {{ deliveryOption }}
-                                  </span>
+                                  <h2 class="">
+                                    Livraison avec {{ deliveryOption }}
+                                  </h2>
                                 </div>
                               </td>
                             </tr>
@@ -615,31 +613,39 @@
                                         class="w-50px h-50px rounded-3 me-3"
                                         alt=""
                                       /> -->
-                                    <span
-                                      class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >{{ elem.pt_desc1 }}
-                                    </span>
+                                    <h2 class="">
+                                      {{ elem.pt_desc1 }}
+                                    </h2>
                                   </div>
                                   <div>
-                                    <span
+                                    <h3
                                       *ngFor="let item of elem.suppliments"
-                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >{{ item.pt_desc1 }},
-                                    </span>
+                                      class=""
+                                    >
+                                      {{ item.pt_desc1 }},
+                                    </h3>
                                   </div>
+                                  <!-- <div>
+                                    <h3 *ngIf="nothing" class="">
+                                      Sans garniture
+                                    </h3>
+                                  </div> -->
                                   <div>
-                                    <span
+                                    <h3
                                       *ngFor="let item of elem.ingredients"
-                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >Sans {{ item.pt_desc1 }},
-                                    </span>
+                                      class=""
+                                    >
+                                      Sans {{ item.pt_desc1 }},
+                                    </h3>
                                   </div>
+
                                   <div>
-                                    <span
+                                    <h3
                                       *ngFor="let item of elem.sauces"
-                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >{{ item.pt_desc1 }},
-                                    </span>
+                                      class=""
+                                    >
+                                      {{ item.pt_desc1 }},
+                                    </h3>
                                   </div>
                                 </td>
                                 <td class="pe-0">
@@ -652,7 +658,6 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onDecreaseQty(elem)"
-                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -693,7 +698,6 @@
                                       type="button"
                                       class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
                                       (click)="onIncreaseQty(elem)"
-                                      [disabled]="disable"
                                     >
                                       <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
                                       <span class="svg-icon svg-icon-3x">
@@ -797,7 +801,7 @@
                         <div class="m-0">
                           <!--begin::Title-->
                           <h1 class="fw-bold text-gray-900 mb-5">
-                            Moyens de paiements
+                            Moyens de paiement
                           </h1>
                           <!--end::Title-->
                           <!--begin::Radio group-->
@@ -832,7 +836,6 @@
                               class="btn btn-primary fs-1 w-50 py-4"
                               style="background-color: #9e110d; margin-top: 5px"
                               [disabled]="globalState"
-                              [disabled]="disable"
                             >
                               Lancer
                             </button>
@@ -952,13 +955,13 @@
           <h4 class="modal-title">Saisir votre inventaire d'ouverture</h4>
         </div>
         <div class="modal-body" style="background-color: #f5f5dc">
-          <button
+          <!-- <button
             style="background-color: #9e110d"
             class="btn btn-primary fs-2 w-100 mt-2 mb-2"
             (click)="addNewItemInventory()"
           >
             Ajouter un Article
-          </button>
+          </button> -->
 
           <div class="row">
             <angular-slickgrid
@@ -1139,9 +1142,7 @@
               <div class="card-header pt-7">
                 <!--begin::Title-->
                 <h3 class="card-title align-items-start flex-column">
-                  <span class="card-label fw-bold text-gray-900"
-                    >Liste des commandes</span
-                  >
+                  <h1>Liste des commandes</h1>
                   <span class="text-gray-900 mt-1 fw-semibold fs-6"
                     >Nombre de commandes : {{ ordersHistory.length }}</span
                   >
@@ -1162,20 +1163,22 @@
                       class="text-start text-gray-900 fw-bold fs-7 text-uppercase gs-0"
                     >
                       <th class="text-gray-900 min-w-100px">Numéro commande</th>
-                      <th class="text-start text-gray-900 min-w-100px">
-                        Client
-                      </th>
-                      <th class="text-start text-gray-900 min-w-125px">
+                      <th class="text-start text-gray-900 min-w-150">Client</th>
+                      <th class="text-start text-gray-900 min-w-150">
                         Type de consommation
                       </th>
-                      <th class="text-start text-gray-900 min-w-100px">
+                      <th class="text-start text-gray-900 min-w-50px">Table</th>
+                      <th class="text-start text-gray-900 min-w-150px">
                         Date et heure
                       </th>
-                      <th class="text-start text-gray-900 min-w-100px">
+                      <th class="text-start text-gray-900 min-w-150px">
                         Total
                       </th>
-                      <th class="text-start text-gray-900 min-w-50px">
+                      <th class="text-start text-gray-900 min-w-100px">
                         Status
+                      </th>
+                      <th class="text-start text-gray-900 min-w-100px">
+                        Platforme
                       </th>
                       <th class="text-start"></th>
                     </tr>
@@ -1186,31 +1189,37 @@
                   <tbody class="fw-bold text-gray-900">
                     <tr *ngFor="let order of ordersHistory">
                       <td>
-                        <a class="text-gray-900 text-hover-primary">{{
-                          order.order_code
-                        }}</a>
-                      </td>
-                      <td class="text-start">{{ order.customer }}</td>
-                      <td class="text-start">
-                        <a href="#" class="text-gray-900 text-hover-primary">{{
-                          order.order_emp
-                        }}</a>
-                      </td>
-                      <td class="text-start">{{ order.created_date }}</td>
-                      <td class="text-start">
-                        <span class="text-gray-900 fw-bolder"
-                          >{{ order.total_price }} DA</span
-                        >
+                        <h1>{{ order.order_code }}</h1>
                       </td>
                       <td class="text-start">
-                        <span class="badge py-3 px-4 fs-7 badge-light-warning"
-                          >Non payé</span
-                        >
+                        <h1>{{ order.customer }}</h1>
+                      </td>
+                      <td class="text-start">
+                        <h1 href="#" class="text-gray-900 text-hover-primary">
+                          {{ order.order_emp }}
+                        </h1>
+                      </td>
+                      <td class="text-start">
+                        <h1>{{ order.site_loc }}</h1>
+                      </td>
+                      <td class="text-start">
+                        <h1>{{ order.created_date }}</h1>
+                      </td>
+                      <td class="text-start">
+                        <h1>{{ order.total_price }} DA</h1>
+                      </td>
+                      <td class="text-start">
+                        <h1>Non payé</h1>
+                      </td>
+                      <td class="text-start">
+                        <h1 class="badge py-3 px-4 fs-7 badge-light-warning">
+                          {{ order.from }}
+                        </h1>
                       </td>
                       <td class="text-start">
                         <button
                           type="button"
-                          class="btn btn-sm btn-icon btn-light btn-active-light-primary toggle h-25px w-25px"
+                          class="btn btn-sm btn-icon btn-light btn-active-light-primary toggle h-50px w-50px"
                           data-kt-table-widget-4="expand_row"
                           (click)="getItemFromHistory(order)"
                           (click)="c('Close click')"
@@ -1218,8 +1227,8 @@
                           <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
                           <span class="svg-icon svg-icon-3 m-0 toggle-off">
                             <svg
-                              width="24"
-                              height="24"
+                              width="48"
+                              height="48"
                               viewBox="0 0 24 24"
                               fill="none"
                               xmlns="http://www.w3.org/2000/svg"
@@ -1248,8 +1257,8 @@
                           <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
                           <span class="svg-icon svg-icon-3 m-0 toggle-on">
                             <svg
-                              width="24"
-                              height="24"
+                              width="48"
+                              height="48"
                               viewBox="0 0 24 24"
                               fill="none"
                               xmlns="http://www.w3.org/2000/svg"
@@ -2511,6 +2520,45 @@
       <div class="modal-body" style="background-color: #f5f5dc">
         <form class="form" [formGroup]="customerForm">
           <div class="row">
+            <div class="form-group col-12">
+              <kt-alert
+                *ngIf="isExist"
+                type="warn"
+                [showCloseButton]="true"
+                [duration]="10000"
+                (close)="onAlertClose($event)"
+              >
+                Ce numéro de téléphone existe déjà
+              </kt-alert>
+            </div>
+            <div class="form-group col-4">
+              <label class="form-group" id="code">Numéro de téléphone :</label>
+              <input
+                type="text"
+                (change)="onChangeCode()"
+                id="phone"
+                [className]="
+                  customerForm.controls['customer_phone_one'].errors &&
+                  (customerForm.controls['customer_phone_one'].dirty ||
+                    customerForm.controls['customer_phone_one'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="customer_phone_one"
+              />
+              <div
+                *ngIf="
+                  customerForm.controls['customer_phone_one'].errors &&
+                  (customerForm.controls['customer_phone_one'].dirty ||
+                    customerForm.controls['customer_phone_one'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Sexe: *</label>
               <select
@@ -2576,25 +2624,26 @@
               </div>
             </div>
           </div>
+
           <div class="row">
             <div class="form-group col-4">
-              <label class="form-group" id="code">Numéro de téléphone :</label>
+              <label class="form-group" id="code">Age :</label>
               <input
                 type="text"
                 [className]="
-                  customerForm.controls['customer_phone_one'].errors &&
-                  (customerForm.controls['customer_phone_one'].dirty ||
-                    customerForm.controls['customer_phone_one'].touched)
+                  customerForm.controls['customer_birthday'].errors &&
+                  (customerForm.controls['customer_birthday'].dirty ||
+                    customerForm.controls['customer_birthday'].touched)
                     ? 'form-control form-control-sm form-control-solid is-invalid'
                     : 'form-control form-control-sm form-control-solid'
                 "
-                formControlName="customer_phone_one"
+                formControlName="customer_birthday"
               />
               <div
                 *ngIf="
-                  customerForm.controls['customer_phone_one'].errors &&
-                  (customerForm.controls['customer_phone_one'].dirty ||
-                    customerForm.controls['customer_phone_one'].touched)
+                  customerForm.controls['customer_birthday'].errors &&
+                  (customerForm.controls['customer_birthday'].dirty ||
+                    customerForm.controls['customer_birthday'].touched)
                 "
                 class="invalid-feedback"
               >
@@ -2602,29 +2651,29 @@
               </div>
             </div>
           </div>
-
           <div class="row">
-            <div class="form-group col-3">
-              <label class="form-group">Age: </label>
-
-              <div class="input-group input-group-sm">
-                <input
-                  class="form-control form-control-solid"
-                  placeholder="jj-mm-aaaa"
-                  name="customer_birthday"
-                  formControlName="customer_birthday"
-                  ngbDatepicker
-                  #customer_birthday="ngbDatepicker"
-                />
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-primary"
-                    (click)="customer_birthday.toggle()"
-                    type="button"
-                  >
-                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                  </button>
-                </div>
+            <div class="form-group col-4">
+              <label class="form-group" id="code">Adresse email :</label>
+              <input
+                type="text"
+                [className]="
+                  customerForm.controls['customer_mail'].errors &&
+                  (customerForm.controls['customer_mail'].dirty ||
+                    customerForm.controls['customer_mail'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="customer_mail"
+              />
+              <div
+                *ngIf="
+                  customerForm.controls['customer_mail'].errors &&
+                  (customerForm.controls['customer_mail'].dirty ||
+                    customerForm.controls['customer_mail'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
               </div>
             </div>
           </div>
@@ -2689,7 +2738,7 @@
           <div class="card card-flush card-p-0 bg-transparent border-0">
             <div>
               <ul
-                class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                class="nav nav-pills flex-wrap btn-outline nav-pills-custom gap-2 pb-2 pt-2"
               >
                 <li
                   *ngFor="let platforme of platformes"
@@ -2782,7 +2831,20 @@
       <div class="modal-header" style="background-color: #f5f5dc">
         <h4 class="modal-title">Paiement des articles receptionnés</h4>
       </div>
-      <div class="modal-body" style="background-color: #f5f5dc"></div>
+      <div class="modal-body" style="background-color: #f5f5dc">
+        <div class="row">
+          <angular-slickgrid
+            class="col-12"
+            gridHeight="500"
+            gridId="mGrid"
+            [columnDefinitions]="columnDefinitions6"
+            [gridOptions]="gridOptions6"
+            [dataset]="dataset6"
+            (onAngularGridCreated)="gridReady6($event)"
+          >
+          </angular-slickgrid>
+        </div>
+      </div>
       <div class="modal-footer" style="background-color: #f5f5dc">
         <button
           type="button"
@@ -2795,8 +2857,9 @@
           type="button"
           class="btn btn-primary"
           (click)="c('Close click')"
+          (click)="payPO()"
         >
-          Ok
+          Payer
         </button>
       </div>
     </ng-template>

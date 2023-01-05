@@ -7,6 +7,8 @@ import {
     Formatters,
     Editor,
     Editors,
+    AngularGridInstance,
+    GridService,
     FieldType,
     OnEventArgs,
 } from "angular-slickgrid"
@@ -35,6 +37,10 @@ import { Code, CodeService } from "../../../../core/erp"
 })
 export class ListComponent implements OnInit {
     // slick grid
+    gridObj: any;
+    gridService: GridService;
+    dataviewObj: any;
+    angularGrid: AngularGridInstance;
     columnDefinitions: Column[] = []
     gridOptions: GridOption = {}
     dataset: any[] = []
@@ -51,9 +57,12 @@ export class ListComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    createCode() {
-        this.router.navigateByUrl("code-mstr/create-code")
-    }
+    angularGridReady(angularGrid: AngularGridInstance) {
+        this.angularGrid = angularGrid;
+        this.gridObj = angularGrid.slickGrid; // grid object
+        this.dataviewObj = angularGrid.dataView;
+        this.gridService = angularGrid.gridService;
+      }
     prepareGrid() {
         this.columnDefinitions = [
             {
@@ -117,8 +126,17 @@ export class ListComponent implements OnInit {
             },
             {
                 id: "code_cmmt",
-                name: "Description",
+                name: "CMMT",
                 field: "code_cmmt",
+                sortable: true,
+                width: 200,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "code_desc",
+                name: "Description",
+                field: "code_desc",
                 sortable: true,
                 width: 200,
                 filterable: true,
@@ -196,7 +214,10 @@ export class ListComponent implements OnInit {
         // fill the dataset with your data
         this.dataset = []
         this.codeService.getAll().subscribe(
-            (response: any) => (this.dataset = response.data),
+            (response: any) => {
+                this.dataset = response.data
+                this.dataviewObj.setItems(this.dataset)
+            },
             (error) => {
                 this.dataset = []
             },

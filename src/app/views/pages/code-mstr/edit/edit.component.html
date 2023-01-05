@@ -23,54 +23,58 @@
             <form class="form" [formGroup]="codeForm">
 
                 <div class="row">
-                    <div class="form-group col-12 row">
-                        <label class="col-2 col-form-label">Champs: *</label>
-                        <div class="col-6">
-                            <input type="text" formControlName="code_fldname" [(ngModel)]="codeEdit.code_fldname"
-                                [className]="codeForm.controls['code_fldname'].errors && (codeForm.controls['code_fldname'].dirty || codeForm.controls['code_fldname'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" disabled>
-                            <div *ngIf="codeForm.controls['code_fldname'].errors && (codeForm.controls['code_fldname'].dirty || codeForm.controls['code_fldname'].touched) "
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                        </div>
+                    <div class="form-group col-2">
+                        <label class="form-group" id = "fld">Champs: *</label>
+                        <input type="text" formControlName="code_fldname"   [(ngModel)]="codeEdit.code_fldname"
+                        class='form-control form-control-sm form-control-solid' disabled>
+                        
+                    </div>
+                </div>
+                <div class='row'>    
+                    <div class="form-group col-2">
+                        <label class="form-group">Code: *</label>
+                        <input type="text" formControlName="code_value" 
+                            [className]="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
 
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">CMMT: *</label>
+                        <input type="text" formControlName="code_cmmt" 
+                            [className]="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
                     </div>
-                    <div class="form-group col-12 row">
-                        <label class="col-2 col-form-label">Code: *</label>
-                        <div class="col-8">
-                            <input type="text" formControlName="code_value"
-                                [className]="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" disabled>
-                            <div *ngIf="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) "
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                        </div>
-                    </div>
-                    <div class="form-group col-12 row">
-                        <label class="col-2 col-form-label">Description: *</label>
-                        <div class="col-8">
-                            <input type="text" formControlName="code_cmmt"
-                                [className]="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                            <div *ngIf="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) "
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="code_desc" class='form-control form-control-sm form-control-solid'>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-3">
                         <label class="form-group">champ text: </label>
-                        <input type="text" formControlName="chr01" class='form-control form-control-sm form-control-solid' >
+                        <input type="text" formControlName="code_chr01" class='form-control form-control-sm form-control-solid' >
                     </div>
                     <div class="form-group col-3">
                         <label class="form-group">champ text: </label>
-                        <input type="text" formControlName="chr02" class='form-control form-control-sm form-control-solid'>
+                        <input type="text" formControlName="code_chr02" class='form-control form-control-sm form-control-solid'>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="form-group col-3">
                         <label class="form-group">champ dec: </label>
-                        <input type="number" formControlName="dec01" class='form-control form-control-sm form-control-solid' >
+                        <input type="number" formControlName="code_dec01" class='form-control form-control-sm form-control-solid' >
                     </div>
                     <div class="form-group col-3">
                         <label class="form-group">champ dec: </label>
-                        <input type="number" formControlName="dec02" class='form-control form-control-sm form-control-solid'>
+                        <input type="number" formControlName="code_dec02" class='form-control form-control-sm form-control-solid'>
                     </div>
 
                 </div>
@@ -80,12 +84,12 @@
                         
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
-                                       name="date01"
-                                       formControlName="date01"
+                                       name="code_date01"
+                                       formControlName="code_date01"
                                        ngbDatepicker
-                                       #date01="ngbDatepicker">
+                                       #code_date01="ngbDatepicker">
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" (click)="date01.toggle()" type="button">
+                                    <button class="btn btn-primary" (click)="code_date01.toggle()" type="button">
                                         <i class="flaticon-calendar-with-a-clock-time-tools"></i>
                                     </button>
                                 </div>
@@ -98,12 +102,12 @@
                         
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
-                                   name="date02"
+                                   name="code_date02"
                                    ngbDatepicker
-                                   formControlName="date02"
-                                   #date02="ngbDatepicker">
+                                   formControlName="code_date02"
+                                   #code_date02="ngbDatepicker">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" (click)="date02.toggle()" type="button">
+                                <button class="btn btn-primary" (click)="code_date02.toggle()" type="button">
                                     <i class="flaticon-calendar-with-a-clock-time-tools"></i>
                                 </button>
                             </div>
@@ -123,7 +127,7 @@
                                 <label>
                                     <input type="checkbox"
                                         class="form-control form-control-sm form-control-solid"
-                                        formControlName="bool01" name="select" />
+                                        formControlName="code_bool01" name="select" />
                                     <span></span>
                                 </label>
                             </span>
@@ -137,7 +141,7 @@
                                 <label>
                                     <input type="checkbox"
                                         class="form-control form-control-sm form-control-solid"
-                                        formControlName="bool02" name="select" />
+                                        formControlName="code_bool02" name="select" />
                                     <span></span>
                                 </label>
                             </span>

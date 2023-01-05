@@ -470,9 +470,9 @@ console.log(resp.data)
         
       },*/
       {
-        id: "part",
+        id: "pt_part",
         name: "Code Produit",
-        field: "part",
+        field: "pt_part",
         sortable: true,
         width: 50,
         filterable: false,
@@ -482,9 +482,9 @@ console.log(resp.data)
         },
       },
       {
-        id: "desc1",
+        id: "pt_desc1",
         name: "Description",
-        field: "desc1",
+        field: "pt_desc1",
         sortable: true,
         width: 80,
         filterable: false,
@@ -563,7 +563,7 @@ console.log(resp.data)
     const controls = this.poForm.controls
     const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
     console.log(date,controls.calc_date.value)
-    this.posCategoryService.getSumeQty({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
+    this.posCategoryService.getSumeQtyPs({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -582,7 +582,7 @@ console.log(resp.data)
     const controls = this.poForm.controls
     const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
     console.log(date,controls.calc_date.value)
-    this.posCategoryService.getSumeQty({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
+    this.posCategoryService.getSumeQtyPs({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)

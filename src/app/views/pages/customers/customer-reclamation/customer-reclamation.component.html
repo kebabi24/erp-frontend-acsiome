@@ -22,7 +22,7 @@
       >
         Sauvgarder
       </button>
-      <button
+      <!-- <button
         hidden
         id="call-alert"
         type="button"
@@ -30,7 +30,7 @@
         class="btn btn-sm mr-2 btn-abracadabra"
       >
         Alert
-      </button>
+      </button> -->
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body class="main-container">
@@ -69,10 +69,32 @@
               <div class="col-4 align-middle">
                 <label class="align-middle">Numéro de téléphone:</label>
               </div>
+              <div class="col-4">
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    class="form-control form-control-solid"
+                    formControlName="phonee"
+                    (change)="getCustomerData()"
+                    aria-describedby="basic-addon2"
+                  />
+                </div>
+              </div>
+              <!-- <div class="col-8">
+                <h3>{{ phone_number }}</h3>
+              </div> -->
+            </div>
+            <!-- PHONE -->
+
+            <!-- PHONE  -->
+            <!-- <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Téléphone:</label>
+              </div>
               <div class="col-8">
                 <h3>{{ phone_number }}</h3>
               </div>
-            </div>
+            </div> -->
             <!-- PHONE -->
 
             <!-- NAME -->
@@ -178,7 +200,11 @@
           </div>
           <div class="card-body">
             <!-- FORM INPUTS -->
-
+            <!-- *ngIf="isExist" -->
+            <kt-alert  *ngIf="orderNotExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Aucune commande n'existe avec ce code
+            </kt-alert>
             <!-- ORDER NUMBER -->
             <div>
               {{ time | async }}
@@ -387,7 +413,7 @@
     <!-- MODAL END -->
 
     <!-- MODAL 2 -->
-    <div class="row shake-modal">
+    <!-- <div class="row shake-modal">
       <ng-template #content2 let-c="close" let-d="dismiss">
         <div class="modal-header">
           <h4 class="modal-title" style="color: #ffb701">Nouvel appel !</h4>
@@ -431,7 +457,7 @@
           </button>
         </div>
       </ng-template>
-    </div>
+    </div> -->
     <!-- MODAL END 2-->
   </kt-portlet-body>
 </kt-portlet>
