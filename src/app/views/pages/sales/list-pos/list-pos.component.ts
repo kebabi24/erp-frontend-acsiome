@@ -284,15 +284,18 @@ export class ListPosComponent implements OnInit {
 
       },
       {
-        id: "disc_amt",
+        id: "Remise",
         name: "Remise",
-        field: "disc_amt",
+        field: "Remise",
         sortable: true,
         width: 50,
         filterable: false,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+        formatter: Formatters.decimal,
+        params: { decimalPlaces: 2 },
+
       },
       
       
@@ -309,14 +312,18 @@ export class ListPosComponent implements OnInit {
         exportOptions: {
           sanitizeDataExport: true
         },
-        presets: {
+        formatterOptions: {
         
-          // sorters: [
-          //   { columnId: 'duration', direction: 'DESC' },
-          //   { columnId: 'complete', direction: 'ASC' }
-          // ],
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+          maxDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
         },
-       
      
         gridMenu: {
           onCommand: (e, args) => {
