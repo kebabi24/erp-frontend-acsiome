@@ -69,6 +69,7 @@ import {PurchaseOrderService,
         ItemService} from '../../../core/erp';
 import { TransactionListComponent } from './transaction-list/transaction-list.component';
 import { EditStatusComponent } from './edit-status/edit-status.component';
+import { TransListGrpComponent } from './trans-list-grp/trans-list-grp.component';
 
 const routes: Routes = [
   {
@@ -92,6 +93,10 @@ const routes: Routes = [
     component: TransactionListComponent
   },
   {
+    path: 'trans-list-grp',
+    component: TransListGrpComponent
+  },
+  {
     path: 'po-receip',
     component: PoReceipComponent
   },
@@ -104,7 +109,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent],
   imports: [
     CommonModule,
     HttpClientModule,

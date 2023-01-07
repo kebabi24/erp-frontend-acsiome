@@ -139,11 +139,7 @@ export class ListSalesComponent implements OnInit {
   gridOptionssite: GridOption = {};
   gridObjsite: any;
   angularGridsite: AngularGridInstance;
-  dataloc: [];
-  columnDefinitionsloc: Column[] = [];
-  gridOptionsloc: GridOption = {};
-  gridObjloc: any;
-  angularGridloc: AngularGridInstance;
+  
   seq;
   user;
   row_number;
@@ -156,6 +152,8 @@ export class ListSalesComponent implements OnInit {
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
+  
+
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -185,6 +183,7 @@ export class ListSalesComponent implements OnInit {
     console.log(this.user)
     this.createForm();
     this.initmvGrid();
+    this.solist();
    
   }
 
@@ -430,13 +429,15 @@ export class ListSalesComponent implements OnInit {
       () => {}
   )
   }
-  change() {
+  solist() {
     this.mvdataset = []
    
     const controls = this.soForm.controls
     const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
-    console.log(date,controls.calc_date.value)
-    this.posCategoryService.getSumAmt({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
+    const date1 = new Date(`${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`)
+    const site = this.user.usrd_site
+    let obj= {date,date1,site}
+    this.posCategoryService.getSumAmt(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -456,13 +457,18 @@ export class ListSalesComponent implements OnInit {
     
     this.soForm = this.soFB.group({
      // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
-      qty: [70],
+     
+     
       calc_date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      calc_date1: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
         day: date.getDate()
       }],
-      
     });
 
     const controls = this.soForm.controls
@@ -507,4 +513,6 @@ export class ListSalesComponent implements OnInit {
     this.mvgrid.invalidate(); // invalidate all rows and re-render
   }
   
+   
+
 }
