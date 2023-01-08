@@ -72,6 +72,14 @@ export class InventoryTransactionService {
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
  
     }
+    public getByDate(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findtrdate', data, { headers: httpHeaders })
+    }
+    public getGrpType(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findtrtype', data, { headers: httpHeaders })
+    }
     public getDayly(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/dayly`,data, { headers: httpHeaders })

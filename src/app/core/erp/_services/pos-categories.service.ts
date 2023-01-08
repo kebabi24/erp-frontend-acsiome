@@ -137,7 +137,11 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL_ORDER}/findw`, { headers: httpHeaders });
   }
-
+  public getAllPosGrp(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.post(`${API_URL_ORDER}/findposgrp`, data, {
+      headers: httpHeaders,});
+}
   public getOneOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findorder`, data, {

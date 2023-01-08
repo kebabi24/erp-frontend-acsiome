@@ -63,11 +63,12 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
   const API_URL = environment.apiUrl + "/codes"
 
 @Component({
-  selector: 'kt-transaction-list',
-  templateUrl: './transaction-list.component.html',
-  styleUrls: ['./transaction-list.component.scss']
+  selector: 'kt-trans-list-grp',
+  templateUrl: './trans-list-grp.component.html',
+  styleUrls: ['./trans-list-grp.component.scss']
 })
-export class TransactionListComponent implements OnInit {
+export class TransListGrpComponent implements OnInit {
+
   loadingSubject = new BehaviorSubject<boolean>(true);
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
@@ -172,24 +173,15 @@ export class TransactionListComponent implements OnInit {
             grouping: {
               getter: 'tr_site',
               formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                new Aggregators.Sum('qty'),
+                new Aggregators.Sum('amt'),
+                ],
               aggregateCollapsed: false,
               collapsed: false,
             }
           }, 
-          {
-            id: "tr_loc",
-            name: "Emplacement",
-            field: "tr_loc",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_loc',
-              formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          }, 
+          
           {
             id: "tr_part",
             name: "Article",
@@ -202,10 +194,9 @@ export class TransactionListComponent implements OnInit {
               getter: 'tr_part',
               formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('tr_qty_loc')
-              ],
+                new Aggregators.Sum('qty'),
+                new Aggregators.Sum('amt'),
+                ],
               aggregateCollapsed: false,
           
               collapsed: false,
@@ -214,7 +205,7 @@ export class TransactionListComponent implements OnInit {
           {
             id: "item.pt_desc1",
             name: "Description",
-            field: "item.pt_desc1",
+            field: "desc",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -232,10 +223,9 @@ export class TransactionListComponent implements OnInit {
               getter: 'tr_serial',
               formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('tr_qty_loc')
-              ],
+                new Aggregators.Sum('qty'),
+                new Aggregators.Sum('amt'),
+                ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -243,116 +233,66 @@ export class TransactionListComponent implements OnInit {
           {
             id: "item.pt_um",
             name: "UM",
-            field: "item.pt_um",
+            field: "um",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
           }, 
           {
-            id: "tr_qty_loc",
+            id: "qty",
             name: "Quantite",
-            field: "tr_qty_loc",
+            field: "qty",
             sortable: true,
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             type: FieldType.float,
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
           },
-            {
-            id: "tr_status",
-            name: "Status",
-            field: "tr_status",
+          {
+            id: "amt",
+            name: "Cout",
+            field: "amt",
             sortable: true,
             filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_status',
-              formatter: (g) => `Status: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          }, 
-
-
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+          },
           {
-            id: "tr_ref",
-            name: "Reference",
-            field: "tr_ref",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_ref',
-              formatter: (g) => `Reference: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          }, 
-          // {
-          //   id: 'finish', name: 'Finish', field: 'tr_effdate', nameKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
-          //   type: FieldType.date,
-          //   filterable: true,
-          //   filter: {
-          //     model: Filters.dateRange,
-    
-          //     // override any of the Flatpickr options through "filterOptions"
-          //    // editorOptions: { minDate: 'today' } as FlatpickrOption
-          //   }
-          // },
-          {
-            id: "tr_effdate",
-            name: "Date Effet",
-            field: "tr_effdate",
-            nameKey: 'DATE EFFET',
-            sortable: true,
+          id: "tr_effdate",
+          name: "Date Effet",
+          field: "tr_effdate",
+          nameKey: 'DATE EFFET',
+          sortable: true,
+        
+
+          formatter: Formatters.dateIso, 
+          minWidth: 75,
+          width: 120,
+          exportWithFormatter: true,
+
+          type: FieldType.date,
+          filterable: true,
+          filter: {
+            model: Filters.dateRange,
+            operator: 'RangeInclusive',
+            // override any of the Flatpickr options through "filterOptions"
+            //editorOptions: { minDate: 'today' } as FlatpickrOption
+          },
+            
+          grouping: {
+            getter: 'tr_effdate',
+            formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+            aggregators: [
+              new Aggregators.Sum('qty'),
+              new Aggregators.Sum('amt'),
+              ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          }
+          },
           
-
-            formatter: Formatters.dateIso, 
-            minWidth: 75,
-            width: 120,
-            exportWithFormatter: true,
-
-            type: FieldType.date,
-            filterable: true,
-            filter: {
-              model: Filters.dateRange,
-              operator: 'RangeInclusive',
-              // override any of the Flatpickr options through "filterOptions"
-              //editorOptions: { minDate: 'today' } as FlatpickrOption
-            },
-              
-            grouping: {
-              getter: 'tr_effdate',
-              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          {
-            id: "tr_date",
-            name: "Date Saisie",
-            field: "tr_date",
-            sortable: true,
-            filterable: true,
-            type: FieldType.date,
-            formatter: Formatters.dateIso,
-//            filter: { model: Filters.dateRange },
-  //          type: FieldType.date,
-    //        filterable: true,
-            filter: {
-              model: Filters.dateRange,
-             
-              // override any of the Flatpickr options through "filterOptions"
-          //    editorOptions: { minDate: 'today' } as FlatpickrOption
-            },
-            grouping: {
-              getter: 'tr_date',
-              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
           {
             id: "tr_expire",
             name: "Expire Le",
@@ -363,6 +303,10 @@ export class TransactionListComponent implements OnInit {
             grouping: {
               getter: 'tr_expire',
               formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+              new Aggregators.Sum('qty'),
+              new Aggregators.Sum('amt'),
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -405,40 +349,14 @@ export class TransactionListComponent implements OnInit {
             grouping: {
               getter: 'tr_type',
               formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                new Aggregators.Sum('qty'),
+                new Aggregators.Sum('amt'),
+                ],
               aggregateCollapsed: false,
               collapsed: false,
             }
           },
-          {
-            id: "tr_nbr",
-            name: "N° Bon",
-            field: "tr_nbr",
-            sortable: true,
-            filterable: true,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_nbr',
-              formatter: (g) => `N° Bon: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          {
-            id: "tr_lot",
-            name: "N° ",
-            field: "tr_lot",
-            sortable: true,
-            filterable: true,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_lot',
-              formatter: (g) => `N° : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          }, 
           
 
       ]
@@ -490,33 +408,24 @@ export class TransactionListComponent implements OnInit {
       },
 
   
-        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
-          var val = undefined;
-          try {
-            val = eval("item." + column.field);
-          } catch (e) {
-            // ignore
-          }
-          return val;
-        },
-
+      
 
     }
 
     // fill the dataset with your data
     this.dataset = []
-    this.inventoryTransactionService.getAll().subscribe(
+    // this.inventoryTransactionService.getAll().subscribe(
       
-        (response: any) => {this.dataset = response.data
-          this.dataview.setItems(this.dataset)},
+    //     (response: any) => {this.dataset = response.data
+    //       this.dataview.setItems(this.dataset)},
         
-        (error) => {
-            this.dataset = []
-        },
-        () => {}
+    //     (error) => {
+    //         this.dataset = []
+    //     },
+    //     () => {}
         
-    )
-    console.log(this.dataset)
+    // )
+    // console.log(this.dataset)
 }
 onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
@@ -565,7 +474,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     console.log(date)
     console.log(date1)
     let obj= {date,date1}
-    this.inventoryTransactionService.getByDate(obj).subscribe(
+    this.inventoryTransactionService.getGrpType(obj).subscribe(
       (res: any) => {
     
       //(response: any) => (this.dataset = response.data),

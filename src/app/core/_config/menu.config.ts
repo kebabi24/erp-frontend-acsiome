@@ -432,6 +432,10 @@ export class MenuConfig {
               page: "/inventory-transaction/transaction-list",
             },
             {
+              title: "Consultation des Transactions Groupées ",
+              page: "/inventory-transaction/trans-list-grp",
+            },
+            {
               title: "Etat du Stock A date",
               page: "/inventory-management/inventory-of-date",
             },
