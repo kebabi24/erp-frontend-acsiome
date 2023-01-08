@@ -29,7 +29,6 @@ import { AuthNoticeService, AuthService, Login } from "../../../../core/auth";
  * ! Just example => Should be removed in development
  */
 
-
 @Component({
   selector: "kt-login",
   templateUrl: "./new_shop.component.html",
@@ -42,21 +41,18 @@ export class NewShop implements OnInit, OnDestroy {
   loading = false;
   isLoggedIn$: Observable<boolean>;
   errors: any = [];
-  
+
   promo_code: any;
   isExist = false;
 
-  promoExist : Boolean  = true;
+  promoExist: Boolean = true;
 
-  wilayas_communes_data : any = []
-  wilayas : any = [];
-  communes : any = [];
-  promo : any = {};
-  
-  
+  wilayas_communes_data: any = [];
+  wilayas: any = [];
+  communes: any = [];
+  promo: any = {};
+
   private unsubscribe: Subject<any>;
-
- 
 
   // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
 
@@ -128,13 +124,10 @@ export class NewShop implements OnInit, OnDestroy {
         "",
         Validators.compose([Validators.required, Validators.maxLength(10)]),
       ],
-      age: [
-        "",
-        Validators.compose([Validators.required, Validators.maxLength(2)]),
-      ],
-      gender: ["", Validators.compose([Validators.required])],
-      wilaya: ["", Validators.compose([Validators.required])],
-      commune: ["", Validators.compose([Validators.required])],
+      age: ["", Validators.compose([Validators.maxLength(2)])],
+      gender: ["", Validators.compose([])],
+      wilaya: ["", Validators.compose([])],
+      commune: ["", Validators.compose([])],
       email: [""],
     });
   }
@@ -233,56 +226,59 @@ export class NewShop implements OnInit, OnDestroy {
     });
   }
 
-  getWilayasCommunes(){
+  getWilayasCommunes() {
     this.auth
       .getWilayasCommunes()
 
       .subscribe(
         (res: any) => {
-          this.wilayas_communes_data = res.data
-          this.wilayas_communes_data.forEach(wilaya => {
-            this.wilayas.push(wilaya.wilaya)
+          this.wilayas_communes_data = res.data;
+          this.wilayas_communes_data.forEach((wilaya) => {
+            this.wilayas.push(wilaya.wilaya);
           });
         },
         (err) =>
           this.authNoticeService.setNotice(
-            this.translate.instant("Erreur lors de la récupération des données"),
+            this.translate.instant(
+              "Erreur lors de la récupération des données"
+            ),
             "danger"
-          ),
-        
+          )
       );
   }
 
-  getValidePromo(){
+  getValidePromo() {
     this.auth
       .getValidePromo()
 
       .subscribe(
         (res: any) => {
-          if(res.data != null){
-            console.log('promo exist')
-            this.promoExist = true
-            this.promo = res.data
-            console.log(this.promo)
-          }else{
-            console.log('promo do not exist')
-            this.promoExist = false
+          if (res.data != null) {
+            console.log("promo exist");
+            this.promoExist = true;
+            this.promo = res.data;
+            console.log(this.promo);
+          } else {
+            console.log("promo do not exist");
+            this.promoExist = false;
           }
         },
         (err) =>
           this.authNoticeService.setNotice(
-            this.translate.instant("Erreur lors de la récupération des données"),
+            this.translate.instant(
+              "Erreur lors de la récupération des données"
+            ),
             "danger"
-          ),
+          )
       );
   }
 
-  onWilayaSelect(){
+  onWilayaSelect() {
     const controls = this.loginForm.controls;
     const wilaya_code = controls.wilaya.value;
-    const wilayaIndex = this.wilayas_communes_data.findIndex(wilaya =>{
-      return wilaya.wilaya.code_value == wilaya_code
-   })
-     this.communes = this.wilayas_communes_data[wilayaIndex].communes
+    const wilayaIndex = this.wilayas_communes_data.findIndex((wilaya) => {
+      return wilaya.wilaya.code_value == wilaya_code;
+    });
+    this.communes = this.wilayas_communes_data[wilayaIndex].communes;
   }
 }
