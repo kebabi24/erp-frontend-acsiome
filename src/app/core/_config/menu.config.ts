@@ -63,6 +63,14 @@ export class MenuConfig {
               title: "Ajouter une Plateforme",
               page: "/pos-settings/create-delivery",
             },
+            {
+              title: "Ajouter une catégorie",
+              page: "/pos-settings/create-category",
+            },
+            {
+              title: "Liste des catégories",
+              page: "/pos-settings/list-category",
+            },
           ],
         },
         {
