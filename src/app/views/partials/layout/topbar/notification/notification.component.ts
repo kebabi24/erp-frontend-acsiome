@@ -1,6 +1,11 @@
 // Angular
 import { Component, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Observable, Observer } from 'rxjs';
+import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
+
+import {AuthService,
+} from "../../../../../core/auth"
 
 @Component({
   selector: 'kt-notification',
@@ -37,8 +42,33 @@ export class NotificationComponent {
    *
    * @param sanitizer: DomSanitizer
    */
-  constructor(private sanitizer: DomSanitizer) {
-  }
+
+
+  notifications : any = [];
+  orders : any = []
+
+  notifications_nb : any = 0
+  notificationExist : Boolean = false;
+
+  time = new Observable<string>((observer: Observer<string>) => {
+    setInterval(() => {
+      observer.next("");
+    }, 1000);
+  });
+
+  constructor(
+    private sanitizer: DomSanitizer,
+    private authService : AuthService,
+    private layoutUtilsService: LayoutUtilsService,
+  ) {
+      setInterval(()=> { this.updateNotifications() }, 1000000);
+    }
+
+    ngOnInit(): void {
+      this.updateNotifications();
+    
+    }
+
 
   backGroundStyle(): string {
     if (!this.bgImage) {
@@ -47,4 +77,38 @@ export class NotificationComponent {
 
     return 'url(' + this.bgImage + ')';
   }
+
+  updateNotifications(){
+    this.authService.getNewNotifications().subscribe(
+      (response) => {
+        if (response["data"].length != 0) {
+          this.notifications = response["data"].purchase_orders
+          this.orders = response["data"].orders
+          this.notifications_nb = response["data"].purchase_orders.length + response["data"].orders.length 
+          this.notificationExist = true
+        }else{
+          this.notifications_nb = 0
+          this.notificationExist = false
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur lors de la récupération des données du backend",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+      }
+    );
+  }
+  
+
+
+
+
+ 
+  
+
+
 }

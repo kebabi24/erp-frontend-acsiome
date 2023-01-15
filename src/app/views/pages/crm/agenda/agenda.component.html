@@ -1,0 +1,512 @@
+
+<kt-portlet class="main-container">
+    <kt-portlet-header [sticky]="true" [title]="'Agenda'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" style="background-color:beige">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
+            <button type="button" (click)="refresh()" class="btn btn-abracadabra btn-sm mr-2">Rafraîchir </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body class="main-container">
+        <div>
+          {{ time | async }}
+        </div>
+        <div class="example-preview">
+            
+           
+            
+            <div>
+                <full-calendar 
+                    [options]="calendarOptions"
+                    
+                ></full-calendar>
+            </div>
+        </div>  
+
+        <!-- BUTTON TO OPEN MODAL 1 -->
+        <button
+                hidden
+                id="modalButton"
+                class="btn btn-primary"
+                (click)="open(content)"
+        ></button>
+
+         <!-- BUTTON TO OPEN MODAL 2 -->
+         <button
+         hidden
+         id="modal2Button"
+         class="btn btn-primary"
+         (click)="open2(content2)"
+         ></button>
+
+          <!-- BUTTON TO OPEN MODAL 3 -->
+          <button
+          hidden
+          id="modal3Button"
+          class="btn btn-primary"
+          (click)="open3(content3)"
+          ></button>
+
+
+          <!-- MODAL -->
+          <div class="row">
+              <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                  <h4 class="modal-title">Informations sur l'événement et le client</h4>
+                  <button
+                    type="button"
+                    class="close"
+                    aria-label="Close"
+                    (click)="d('Cross click')"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+
+                  
+                  <button
+                    *ngIf="eventIsComplaint" 
+                    type="button"
+                    class="btn btn-abracadabra"
+                    (click)="openComplaintModal()"
+                  >
+                    Données de réclamation
+                  </button>
+
+                  
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <!--begin::Form-->
+                    <form
+                      class="form"
+                      [formGroup]="eventForm"
+                      autocomplete="off"
+                      novalidate="novalidate"
+                      class="pl-5 pr-5"
+                    >
+
+                    <!-- PHONE AND CATEGORIE -->
+                    <div class="row align-middle form-group-bg">
+                      
+                        <!-- PHONE -->
+                        <div class="col-3 align-middle mt-2">
+                          <label class="align-middle">Numéro de téléphone:</label>
+                        </div>
+                        <div class="col-3 mt-2" >{{selectedEvent.phone_to_call}}</div>
+                        <!-- PHONE END  -->
+                        
+                        <!-- CATEGORY -->
+                        <div class="col-3 align-middle mt-2">
+                          <label class="align-middle">Catégorie:</label>
+                        </div>
+                        <div class="col-3 mt-2">{{selectedEvent.category_display}}</div>
+                        <!-- CATEGORY END -->
+                    
+                    </div>
+                    <!-- PHONE AND CATEGORIE -->
+
+                    <!-- TIMES -->
+                    <div class="row align-middle form-group-bg">
+                      
+                      <!-- START -->
+                      <div class="col-3 align-middle mt-2">
+                        <label class="align-middle">Heure de début d'appel:</label>
+                      </div>
+                      <div class="col-3 mt-2" ><h5>{{selectedEvent.call_start_time}}</h5></div>
+                      <!-- START END  -->
+                      
+                      <!-- END -->
+                      <div class="col-3 align-middle mt-2">
+                        <label class="align-middle">Heure de fin d'appel:</label>
+                      </div>
+                      <div class="col-3 mt-2"><h5>{{selectedEvent.call_end_time}}</h5></div>
+                    
+                      <!-- END END -->
+                  
+                    </div>
+                    <!-- TIMES -->
+
+                    <!-- CLIENT DATA -->
+                    <div class="row align-middle form-group-bg">
+                      
+                      <div class="row mt-2">
+                        <!-- NAME -->
+                        <div class="col-3 align-middle mt-2">
+                          <label class="align-middle">Nom du client:</label>
+                        </div>
+                        <div class="col-3 mt-2" >{{clientData.ad_name}}</div>
+                        <!-- NAME END  -->
+                        
+                        <!-- AGE -->
+                        <div class="col-3 align-middle mt-2">
+                          <label class="align-middle">Age:</label>
+                        </div>
+                        <div class="col-3 mt-2">{{clientData.ad_format}}</div>
+                        <!-- AGE END -->
+                    </div>
+
+                    <div class="row mt-2">
+                      <!-- ADR -->
+                      <div class="col-3 align-middle mt-2">
+                        <label class="align-middle">Adresse du client:</label>
+                      </div>
+                      <div class="col-3 mt-2" >{{clientData.ad_line1}}</div>
+                      <!-- ADR END  -->
+                      
+                      <!-- EMAIL -->
+                      <div class="col-3 align-middle mt-2">
+                        <label class="align-middle">Email:</label>
+                      </div>
+                      <div class="col-3 mt-2 text-wrap">{{clientData.ad_ext}}</div>
+                      <!-- AGE END -->
+                  </div>
+
+                    </div>
+                    <!-- CLIENT DATA END  -->
+                    
+                    <!-- ACTIONS AND METHODS  -->
+                    <div class="row align-middle form-group-bg">
+                      <div class="row align-middle mt-5">
+
+                        <!-- ACTION -->
+                        <div class="col-3 align-middle mt-2">
+                          <label class="align-middle">Action proposée:</label>
+                        </div>
+                        <div class="col-3 mt-2">{{selectedEvent.action_display}}</div>
+                        <!-- ACTION END -->
+
+                        <!-- ACTION EXECUTED -->
+                        <div class="col-3 align-middle">
+                          <label class="align-middle mt-2">Action exécutée:</label>
+                        </div>
+                        <div class="col-3">
+                          <select
+                            class="form-control form-control-solid"
+                            formControlName="selectedAction"
+                          >
+                            <option *ngFor="let action of action_types" [value]="action.code_value" class="mt-1">{{action.code_desc}}</option>
+                          </select>
+                        </div>
+                        <!-- ACTION EXECUTED -->
+
+                      </div>
+
+                      <div class="row align-middle mt-5">
+
+                        <!-- Method -->
+                        <div class="col-3 align-middle">
+                          <label class="align-middle mt-2">Méthode proposée:</label>
+                        </div>
+                        <div class="col-3 mt-2">{{selectedEvent.method_display}}</div>
+                        <!-- Method END -->
+
+                        <!-- METHOD 0 -->
+                        <div class="col-3 align-middle">
+                          <label class="align-middle mt-2 ">Méthode exécutée:</label>
+                        </div>
+                        <div class="col-3">
+                          <select
+                            class="form-control form-control-solid"
+                            formControlName="selectedMethod"
+                          >
+                            <option *ngFor="let method of methods" [value]="method.code_value" class="mt-1">{{method.code_desc}}</option>
+                          </select>
+                        </div>
+                        <!-- METHOD 0 -->
+
+                      </div>
+                    </div>
+                    <!-- ACTIONS AND METHODS  -->
+        
+                      
+
+    
+                    </form>
+                    <!--end::Form-->
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    hidden
+                    id="closeForm1"
+                    class="btn btn-primary"
+                    (click)="c('Close click')"
+                  ></button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    (click)="close()"
+                  >
+                    Annuller
+                  </button>
+
+                  <button
+                    *ngIf="ableToSave"
+                    type="button"
+                    class="btn btn-abracadabra"
+                    (click)="submitExuctionLine()"
+                  >
+                    Sauvegarder
+                  </button>
+
+                  <button
+                    *ngIf="!ableToSave"
+                    type="button"
+                    class="btn btn-abracadabra"
+                    (click)="executeEvent()"
+                  >
+                      Exécuter
+                  </button>
+                </div>
+              </ng-template>
+          </div>
+          <!-- MODAL END -->
+
+         <!-- MODAL  2-->
+         <div class="row">
+          <ng-template #content2 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">L'execution</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="d('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <!--begin::Form-->
+                <form
+                  class="form"
+                  [formGroup]="executionForm"
+                  autocomplete="off"
+                  novalidate="novalidate"
+                  class="pl-5 pr-5"
+                >
+
+                <!-- PHONE AND CATEGORIE -->
+                <div class="row align-middle form-group-bg">
+                  
+                    <!-- PHONE -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Numéro de téléphone:</label>
+                    </div>
+                    <div class="col-3 mt-2" >{{selectedEvent.phone_to_call}}</div>
+                    <!-- PHONE END  -->
+                    
+                    <!-- CATEGORY -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Catégorie:</label>
+                    </div>
+                    <div class="col-3 mt-2">{{selectedEvent.category_display}}</div>
+                  
+                    <!-- CATEGORY END -->
+                 
+                </div>
+                <!-- PHONE AND CATEGORIE -->
+
+                <!-- TIMES -->
+                <div class="row align-middle form-group-bg">
+                  
+                  <!-- START -->
+                  <div class="col-3 align-middle mt-2">
+                    <label class="align-middle">Heure de début d'appel:</label>
+                  </div>
+                  <div class="col-3 mt-2" ><h5>{{selectedEvent.call_start_time}}</h5></div>
+                  <!-- START END  -->
+                  
+                  <!-- END -->
+                  <div class="col-3 align-middle mt-2">
+                    <label class="align-middle">Heure de fin d'appel:</label>
+                  </div>
+                  <div class="col-3 mt-2"><h5>{{selectedEvent.call_end_time}}</h5></div>
+                
+                  <!-- END END -->
+               
+              </div>
+              <!-- TIMES -->
+                
+                <!-- ACTIONS AND METHODS  -->
+                <div class="row align-middle form-group-bg">
+                  <div
+                  class="col-12"
+                  
+                >
+                  <div class="row mt-5">
+                    <!-- SELECT -->
+                    <fieldset class="col-6" >
+                      <div *ngFor="let cause of event_Results; let i = index">
+                        <input
+                        type="checkbox"
+                        formControlName="{{ cause.code_value }}"
+                        />
+                        <label for="coding" class="ml-2">{{
+                          cause.code_desc
+                        }}</label>
+                      </div>
+                     
+                    </fieldset>
+                    <!-- SELECT END -->
+                    <!-- TEXT AREA -->
+                    <div class="col-6"> 
+                      <textarea
+                        rows="2"
+                        type="text"
+                        class="mt-1 form-control form-control-solid"
+                        formControlName="observation"
+                      >
+                      </textarea>
+                    </div>
+                    <!-- TEXT AREA END -->
+
+                  </div>
+                </div>
+
+                 
+                </div>
+                <!-- ACTIONS AND METHODS  -->
+    
+                  
+
+
+                </form>
+                <!--end::Form-->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                hidden
+                id="closeForm2"
+                class="btn btn-primary"
+                (click)="c('Close click')"
+              ></button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="c('Close click')"
+              >
+                Annuller
+              </button>
+              <button
+                type="button"
+                class="btn btn-abracadabra"
+                (click)="saveExecutionLine()"
+              >
+                Terminer
+              </button>
+            </div>
+          </ng-template>
+         </div>
+         <!-- MODAL END 2 -->
+
+         <!-- MODAL 3 -->
+         <div class="row">
+          <ng-template #content3 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Données de réclamation</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="d('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <!--begin::Form-->
+                <form
+                  class="form"
+                  [formGroup]="complaintForm"
+                  autocomplete="off"
+                  novalidate="novalidate"
+                  class="pl-5 pr-5"
+                >
+
+  
+                <!-- COMPLAINT DATA -->
+                <div class="row align-middle form-group-bg">
+                  
+                  <div class="row mt-2">
+                    <!-- CODE -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Code de reclamation:</label>
+                    </div>
+                    <div class="col-3 mt-2" >{{complaintData.complaint_code}}</div>
+                    <!-- CODE END  -->
+                    
+                    <!-- ORDER CODE -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Code de commande:</label>
+                    </div>
+                    <div class="col-3 mt-2">{{complaintData.order_code}}</div>
+                    <!-- ORDER CODE END -->
+                  </div>
+
+                  <div class="row mt-2">
+                    <!-- ADR -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Site:</label>
+                    </div>
+                    <div class="col-3 mt-2" >{{complaintData.site_loc}}</div>
+                    <!-- ADR END  -->
+                    
+                    <!-- EMAIL -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Emplacement:</label>
+                    </div>
+                    <div class="col-3 mt-2">{{complaintData.order_emp}}</div>
+                    <!-- AGE END -->
+                  </div>
+
+                  <div class="row mt-2">
+                    <!-- ADR -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Date de commande:</label>
+                    </div>
+                    <div class="col-3 mt-2" >{{complaintData.created_date}}</div>
+                    <!-- ADR END  -->
+                    
+                    <!-- EMAIL -->
+                    <!-- <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Emplacement:</label>
+                    </div>
+                    <div class="col-3 mt-2">{{complaintData.order_emp}}</div> -->
+                    <!-- AGE END -->
+                  </div>
+
+                </div>
+                <!-- COMPLAINT DATA END  -->
+                
+                
+                </form>
+                <!--end::Form-->
+              </div>
+            </div>
+            <div class="modal-footer">
+              
+              <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="c('Close click')"
+            >
+                Annuller
+              </button>
+
+              
+
+            </div>
+          </ng-template>
+         </div>
+         <!-- MODAL 3 END -->
+
+         
+
+
+    </kt-portlet-body>

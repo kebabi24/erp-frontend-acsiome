@@ -145,6 +145,7 @@ export { BomPartService } from "./_services/bom-part.service";
 export { WoroutingService } from "./_services/worouting.service";
 export { GeneralLedgerService } from "./_services/general-ledger.service";
 export { PosCategoryService } from "./_services/pos-categories.service";
+export { CRMService } from "./_services/crm.service";
 
 export {
   printBc,

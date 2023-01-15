@@ -114,6 +114,14 @@ const routes: Routes = [
         loadChildren: () => import('./views/pages/pos/pos.module').then(m => m.PosModule),
       },
       {
+        path: 'pos-config',
+        loadChildren: () => import('./views/pages/pos-config/pos-config.module').then(m => m.PosConfigurationModule),
+      },
+      {
+        path: 'crm',
+        loadChildren: () => import('./views/pages/crm/crm.module').then(m => m.CRMModule),
+      },
+      {
         path: 'price-setting',
         loadChildren: () => import('./views/pages/price-setting/price-setting.module').then(m => m.PriceSettingModule),
       },

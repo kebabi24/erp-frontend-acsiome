@@ -11,9 +11,12 @@ import { HttpUtilsService } from "../../_base/crud"
 
 const API_USERS_URL = environment.apiUrl + "/auth/login";
 const API_CREATE_CUSTOMER_URL = environment.apiUrl + "/auth/createCustomer";
+const API_NOTIFICATIONS = environment.apiUrl + "/auth/getNotifications";
 const API_GET_PHONE = environment.apiUrl + "/auth/getPhone";
+const API_GET_WILAYAS_COMMUNES= environment.apiUrl + "/auth/getWilayasCommunes";
 const API_PERMISSION_URL = 'api/permissions';
 const API_ROLES_URL = 'api/roles';
+const API_GET_PROMO = environment.apiUrl + "/auth/getValidePromo";
 
 @Injectable()
 export class AuthService {
@@ -37,11 +40,28 @@ export class AuthService {
     return this.http.post(API_CREATE_CUSTOMER_URL, {data},{ headers: httpHeaders });
   }
 
- 
   getCustomerPhone(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders()
     console.log(API_USERS_URL)
     return this.http.get(`${API_GET_PHONE}/${data}`,{ headers: httpHeaders });
+  }
+
+  getValidePromo() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    console.log(API_USERS_URL)
+    return this.http.get(`${API_GET_PROMO}/`,{ headers: httpHeaders });
+  }
+
+  getWilayasCommunes() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    console.log(API_USERS_URL)
+    return this.http.get(`${API_GET_WILAYAS_COMMUNES}/`,{ headers: httpHeaders });
+  }
+
+  // getNewNotifications
+  getNewNotifications() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.get(`${API_NOTIFICATIONS}/`,{ headers: httpHeaders });
   }
 
   verifypwd(userName: string, password: string) {

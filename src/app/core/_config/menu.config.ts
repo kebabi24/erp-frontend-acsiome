@@ -41,8 +41,52 @@ export class MenuConfig {
                     bullet: "dot",
                     icon: "flaticon2-shopping-cart",
                     root: true,
-                    page: "/pos",
+                    
                 },
+
+                // POS CONFIGURATION
+                {
+                    title: "Configuration de Pos",
+                    bullet: "dot",
+                    icon: "flaticon2-gear",
+                    root: true,
+                    submenu: [
+                        {
+                            title: "Ajouter une catégorie",
+                            page: "/pos-config/create-category",
+                        },
+                        {
+                            title: "Liste des catégories",
+                            page: "/pos-config/list-category",
+                        },
+                        
+                    ],
+                },
+
+                // CRM
+                {
+                    title: "CRM",
+                    bullet: "dot",
+                    icon: "flaticon2-gear",
+                    root: true,
+                    submenu: [
+                        
+                        {
+                            title: "Agenda",
+                            page: "/crm/agenda",
+                        },
+                        {
+                            title: "Ajouter un paramètre CRM",
+                            page: "/crm/param-add",
+                        },
+                        {
+                            title: "Ajouter une population",
+                            page: "/crm/population-add",
+                        },
+                        
+                    ],
+                },
+
                 {
                     title: "Paramétrages",
                     root: true,

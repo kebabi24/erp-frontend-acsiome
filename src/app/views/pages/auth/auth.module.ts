@@ -25,6 +25,7 @@ import { AuthNoticeComponent } from './auth-notice/auth-notice.component';
 // Auth
 import { AuthEffects, AuthGuard, authReducer, AuthService } from '../../../core/auth';
 import { NewCustomerComponent } from './new-customer/new_customer.component';
+import { NewShop } from './new-shop/new_shop.component';
 
 const routes: Routes = [
 	{
@@ -52,6 +53,10 @@ const routes: Routes = [
 			{
 				path: 'new-customer/:promo_code',
 				component: NewCustomerComponent,
+			},
+			{
+				path: 'new-shop',
+				component: NewShop,
 			}
 		]
 	}
@@ -87,7 +92,8 @@ const routes: Routes = [
 		RegisterComponent,
 		ForgotPasswordComponent,
 		AuthNoticeComponent,
-		NewCustomerComponent
+		NewCustomerComponent,
+		NewShop
 	]
 })
 
