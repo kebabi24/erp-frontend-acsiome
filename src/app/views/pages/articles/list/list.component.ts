@@ -3,6 +3,8 @@ import { Component, OnInit } from "@angular/core"
 import {
     Column,
     GridOption,
+    AngularGridInstance,
+    GridService,
     Formatter,
     Formatters,
     Editor,
@@ -35,9 +37,14 @@ import { Item, ItemService } from "../../../../core/erp"
 })
 export class ListComponent implements OnInit {
 
-  columnDefinitions: Column[] = []
-  gridOptions: GridOption = {}
-  dataset: any[] = []
+  angularGrid: AngularGridInstance
+  grid: any
+  gridService: GridService
+  dataView: any
+  columnDefinitions: Column[]
+  gridOptions: GridOption
+  dataset: any[]
+
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -51,9 +58,13 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createCode() {
-      this.router.navigateByUrl("articles/add")
-  }
+  gridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid
+    this.dataView = angularGrid.dataView
+    this.grid = angularGrid.slickGrid
+    this.gridService = angularGrid.gridService
+}
+
   prepareGrid() {
       this.columnDefinitions = [
           {
@@ -116,6 +127,15 @@ export class ListComponent implements OnInit {
               width: 200,
               type: FieldType.string,
           },
+          {
+            id: "pt_desc2",
+            name: "Deescription",
+            field: "pt_desc2",
+            sortable: true,
+            filterable: true,
+            width: 150,
+            type: FieldType.string,
+        },
           {
               id: "pt_um",
               name: "UM",
@@ -239,7 +259,10 @@ export class ListComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       this.itemService.getAll().subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {this.dataset = response.data
+            this.dataView.setItems(this.dataset)},
+   
+          
           (error) => {
               this.dataset = []
           },

@@ -406,6 +406,7 @@ export class EditComponent implements OnInit {
   
         pt_part: [this.itemEdit.pt_part,Validators.required],
         pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
+        pt_desc2: [this.itemEdit.pt_desc2],
         pt_um: [this.itemEdit.pt_um,Validators.required],
         pt_prod_line: [this.itemEdit.pt_prod_line,Validators.required],
         pt_part_type: [this.itemEdit.pt_part_type,Validators.required],
@@ -610,6 +611,7 @@ prepareItem(): Item {
     _item.id = this.itemEdit.id;
     _item.pt_part = controls1.pt_part.value;
     _item.pt_desc1 = controls1.pt_desc1.value;
+    _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls1.pt_um.value;
     _item.pt_prod_line = controls1.pt_prod_line.value;
     _item.pt_part_type = controls1.pt_part_type.value;

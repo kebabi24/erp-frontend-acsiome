@@ -400,7 +400,8 @@ export class CreateComponent implements OnInit {
     this.form1 = this.formBuilder.group({
       pt_part: [this.item.pt_part,Validators.required],
       pt_desc1: [{ value: this.item.pt_desc1, disabled: !this.isExist },Validators.required],
-      pt_um: [{ value: this.item.pt_desc1, disabled: !this.isExist },Validators.required],
+      pt_um: [{ value: this.item.pt_um, disabled: !this.isExist },Validators.required],
+      pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
       pt_draw: [{ value: this.item.pt_draw, disabled: !this.isExist },Validators.required],
@@ -530,6 +531,7 @@ export class CreateComponent implements OnInit {
              
               controls1.pt_desc1.enable()
               controls1.pt_um.enable()
+              controls1.pt_desc2.enable()
               controls1.pt_prod_line.enable()
               controls1.pt_part_type.enable()
               controls1.pt_draw.enable()
@@ -684,6 +686,7 @@ export class CreateComponent implements OnInit {
     const _item = new Item();
     _item.pt_part = controls1.pt_part.value;
     _item.pt_desc1 = controls1.pt_desc1.value;
+    _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls1.pt_um.value;
     _item.pt_prod_line = controls1.pt_prod_line.value;
     _item.pt_part_type = controls1.pt_part_type.value;

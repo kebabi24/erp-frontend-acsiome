@@ -68,7 +68,7 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
   styleUrls: ['./transaction-list.component.scss']
 })
 export class TransactionListComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true);
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
@@ -80,13 +80,14 @@ export class TransactionListComponent implements OnInit {
   gridService: GridService;
   dataview: any;
   tr_type: any[] = [];
-  
+  trForm: FormGroup;
   elem: any[] = [];
   tab: any[] = [] ;
   datefilter: any;
   constructor(
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
+      private trFB: FormBuilder,
       config: NgbDropdownConfig,
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -103,17 +104,37 @@ export class TransactionListComponent implements OnInit {
    //this.elem = [{value: '', label: ''},{value: 'ISS-SO', label: 'ISS-SO'}];
     
   
-    this.prepareGrid() 
+  //  this.prepareGrid() 
 
   }
 
   ngOnInit(): void {
-  
+    this.createForm();
+    this.prepareGrid();
+    this.trlist();
    
   }
 
-  
-  
+  createForm() {
+    const date = new Date ;
+    date.setDate(date.getDate() - 2);
+    const date1 = new Date;
+    this.trForm = this.trFB.group({
+    
+      date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      date1: [{
+        year:date1.getFullYear(),
+        month: date1.getMonth()+1,
+        day: date1.getDate()
+      }],
+      
+    
+    });
+  }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.grid = angularGrid.slickGrid; // grid object
@@ -220,9 +241,9 @@ export class TransactionListComponent implements OnInit {
             }
           },
           {
-            id: "tr_um",
+            id: "item.pt_um",
             name: "UM",
-            field: "tr_um",
+            field: "item.pt_um",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -437,18 +458,18 @@ export class TransactionListComponent implements OnInit {
         exportOptions: {
           sanitizeDataExport: true
         },
-        presets: {
-          filters: [
+        // presets: {
+        //   filters: [
            
-            // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
-            { columnId: 'tr_effdate', operator: '>=', searchTerms: [this.datefilter] },
-            // { columnId: 'effort-driven', searchTerms: [true] },
-          ],
-          // sorters: [
-          //   { columnId: 'duration', direction: 'DESC' },
-          //   { columnId: 'complete', direction: 'ASC' }
-          // ],
-        },
+        //     // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
+        //     { columnId: 'tr_effdate', operator: '>=', searchTerms: [this.datefilter] },
+        //     // { columnId: 'effort-driven', searchTerms: [true] },
+        //   ],
+        //   // sorters: [
+        //   //   { columnId: 'duration', direction: 'DESC' },
+        //   //   { columnId: 'complete', direction: 'ASC' }
+        //   // ],
+        // },
        
      
         gridMenu: {
@@ -527,5 +548,36 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     this.grid.invalidate(); // invalidate all rows and re-render
   }
 
+
+
+
+  trlist(){
+    const controls = this.trForm.controls
+    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+    this.dataset = []
+    const date = controls.date.value
+    ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+    : null;
+  
+    const date1 = controls.date1.value
+    ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+    : null;
+    console.log(date)
+    console.log(date1)
+    let obj= {date,date1}
+    this.inventoryTransactionService.getByDate(obj).subscribe(
+      (res: any) => {
+    
+      //(response: any) => (this.dataset = response.data),
+      console.log(res.data)
+      this.dataset  = res.data;
+      this.dataview.setItems(this.dataset)
+        
+    //this.dataset = res.data
+    this.loadingSubject.next(false) 
+  })
+  
+  }
+  
 
 }

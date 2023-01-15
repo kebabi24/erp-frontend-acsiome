@@ -33,6 +33,7 @@ const API_URL_PR = environment.apiUrl + "/purchase-receives";
 const API_URL_BK = environment.apiUrl + "/banks";
 const API_URL_CUSTOMER = environment.apiUrl + "/customers";
 const API_URL_DELIVERY = environment.apiUrl + "/delivery";
+const API_URL_SITE = environment.apiUrl + "/sites";
 
 @Injectable()
 export class PosCategoryService {
@@ -50,10 +51,22 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(API_URL_ORDER, data, { headers: httpHeaders });
   }
+  public addCallCenterOrder(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/createCallCenterOrder`, data, {
+      headers: httpHeaders,
+    });
+  }
 
   public addPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/createposunpp`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public payPo(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_PO}/payPo`, data, {
       headers: httpHeaders,
     });
   }
@@ -79,6 +92,11 @@ export class PosCategoryService {
     return this.http.post(`${API_URL_BK}/findBk`, data, {
       headers: httpHeaders,
     });
+  }
+
+  public getAllSite() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_SITE, { headers: httpHeaders });
   }
   public getAllPlatformesOffers() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
@@ -119,7 +137,12 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL_ORDER}/findw`, { headers: httpHeaders });
   }
-
+  public getAllPosGrp(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findposgrp`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getOneOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findorder`, data, {
@@ -212,6 +235,12 @@ export class PosCategoryService {
   public getByOne(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/findOne`, data, { headers: httpHeaders });
+  }
+  public getByPhone(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_CUSTOMER}/find`, data, {
+      headers: httpHeaders,
+    });
   }
 
   public getByOneBom(data: any) {
@@ -355,11 +384,35 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getAllPo(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_PO}/findAllpo`, data, {
+      headers: httpHeaders,
+    });
+  }
+
+  public sendOrderFromCC(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL_ORDER, data, { headers: httpHeaders });
+  }
+  public setLoyCart(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_CUSTOMER}/setloy`, data, {
+      headers: httpHeaders,
+    });
+  }
 
   search(data: any): Observable<Object> {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     let apiURL = `${API_URL_CODE}/find`;
     return this.http.post(apiURL, data, {
+      headers: httpHeaders,
+    });
+  }
+  // FIND CATEGORY BY CODE
+  public getOnByCode(code: String) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/findCategoryByCode/${code}`, {
       headers: httpHeaders,
     });
   }

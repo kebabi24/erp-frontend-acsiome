@@ -80,6 +80,7 @@ export class CreateComponent implements OnInit {
                 { value: this.code.code_cmmt, disabled: !this.isExist },
                 Validators.required,
             ],
+            code_desc: [{ value: this.code.code_cmmt, disabled: !this.isExist }],
             code_chr01: [{ value: this.code.chr01, disabled: !this.isExist }],
             code_chr02: [{ value: this.code.chr02, disabled: !this.isExist }],
             code_dec01: [{ value: this.code.dec01, disabled: !this.isExist }],
@@ -104,6 +105,7 @@ export class CreateComponent implements OnInit {
                 } else {
                     controls.code_value.enable()
                     controls.code_cmmt.enable()
+                    controls.code_desc.enable()
                     controls.code_chr01.enable()
                     controls.code_chr02.enable()
                     controls.code_dec01.enable()
@@ -149,6 +151,8 @@ export class CreateComponent implements OnInit {
         _code.code_value = controls.code_value.value
        
         _code.code_cmmt = controls.code_cmmt.value
+        _code.code_desc = controls.code_desc.value
+        
         _code.chr01 = controls.code_chr01.value
         _code.chr02 = controls.code_chr02.value
         _code.dec01 = controls.code_dec01.value

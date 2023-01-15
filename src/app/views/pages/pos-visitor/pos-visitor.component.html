@@ -1,0 +1,1086 @@
+<body>
+  <div
+    style="background-color: beige"
+    [ngClass]="{ disableDiv: false }"
+    class="d-flex flex-column flex-root app-root"
+    id="kt_app_root"
+  >
+    <!--begin::Page-->
+    <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
+      <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
+        <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+          <div class="d-flex flex-column flex-column-fluid">
+            <div id="kt_app_content_container">
+              <div class="d-flex flex-column flex-xl-row">
+                <div style="margin-top: 10px">
+                  <div class="card card-flush card-p-0 bg-transparent border-0">
+                    <div>
+                      <ul
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                      >
+                        <li
+                          *ngFor="let category of categories"
+                          style="width: 240px; height: 65px"
+                        >
+                          <button
+                            class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                            data-bs-toggle="pill"
+                            type="button"
+                            (click)="onSelect(category)"
+                            style="
+                              width: 240px;
+                              height: 65px;
+                              background-color: #ffb701;
+                            "
+                            [disabled]="globalState"
+                          >
+                            <div class="">
+                              <img src="{{ category.category_img }}" alt="" />
+                            </div>
+
+                            <div class="">
+                              <span
+                                class="text-gray-900 fw-bold fs-2 d-block"
+                                style="margin-left: 5px"
+                                >{{ category.category_name }}</span
+                              >
+                            </div>
+                          </button>
+                        </li>
+                      </ul>
+
+                      <!--end::Tab Content-->
+                    </div>
+                    <!--end: Card Body-->
+                  </div>
+                  <!--end::Pos food-->
+                </div>
+                <div class="col-6" style="margin-top: 15px">
+                  <div
+                    class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                  >
+                    <button
+                      class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                      *ngFor="let productOnlist of selectedProducts"
+                      type="button"
+                      data-bs-toggle="pill"
+                      (click)="initializeProduct(productOnlist)"
+                      style="background-color: #ffb701"
+                    >
+                      <div class="card-body text-center" type="button">
+                        <div class="mb-2">
+                          <div class="text-center">
+                            <span
+                              class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                              >{{ productOnlist.code_desc }}</span
+                            >
+                            <span
+                              class="text-gray-900 fw-semibold d-block fs-6 mt-n1"
+                              >16 mins to cook</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+
+                    <!--end::Card-->
+                  </div>
+                  <!--end::Wrapper-->
+
+                  <!--end::Tap pane-->
+
+                  <div class="tab-content" *ngIf="showSize">
+                    <div id="kt_pos_food_content_1">
+                      <div
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                      >
+                        <button
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          type="button"
+                          *ngFor="let size of sizeOfProduct"
+                          data-bs-toggle="pill"
+                          (click)="prepareProduct(size, content2)"
+                          style="background-color: #ffb701"
+                        >
+                          <div class="card-body text-center" type="button">
+                            <div class="mb-2">
+                              <div class="text-center">
+                                <span
+                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                  >{{ size.pt_group }}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+
+                        <!--end::Card-->
+                      </div>
+                      <!--end::Wrapper-->
+                    </div>
+
+                    <!--end::Tap pane-->
+                  </div>
+
+                  <div class="tab-content" *ngIf="showSauces">
+                    <div id="kt_pos_food_content_1">
+                      <div
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                      >
+                        <button
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          type="button"
+                          *ngFor="let sauce of sauces"
+                          data-bs-toggle="pill"
+                          (click)="setSauce(sauce)"
+                          style="background-color: #ffb701"
+                        >
+                          <div class="card-body text-center" type="button">
+                            <div class="mb-2">
+                              <div class="text-center">
+                                <span
+                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                  >{{ sauce.pt_desc1 }}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+
+                        <!--end::Card-->
+                      </div>
+                      <!--end::Wrapper-->
+                    </div>
+
+                    <!--end::Tap pane-->
+                  </div>
+                  <div class="tab-content" *ngIf="showSupp">
+                    <div id="kt_pos_food_content_1">
+                      <div
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                      >
+                        <button
+                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          *ngFor="let suppliment of suppliments"
+                          type="button"
+                          data-bs-toggle="pill"
+                          (click)="setSupplement(suppliment)"
+                          style="background-color: #ffb701"
+                        >
+                          <div class="card-body text-center" type="button">
+                            <div class="mb-2">
+                              <div class="text-center">
+                                <span
+                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                  >{{ suppliment.pt_desc1 }}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+
+                        <!--end::Card-->
+                      </div>
+                      <!--end::Wrapper-->
+                    </div>
+
+                    <!--end::Tap pane-->
+                  </div>
+                  <div class="tab-content" *ngIf="showSoda">
+                    <div id="kt_pos_food_content_1">
+                      <div
+                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                      >
+                        <button
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          type="button"
+                          *ngFor="let so of soda"
+                          data-bs-toggle="pill"
+                          (click)="setListOfBrands(so)"
+                          style="background-color: #ffb701"
+                        >
+                          <div class="card-body text-center" type="button">
+                            <div class="mb-2">
+                              <div class="text-center">
+                                <span
+                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                  >{{ so.code_desc }}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-content" *ngIf="showListOfBrands">
+                    <div id="kt_pos_food_content_1">
+                      <div
+                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                      >
+                        <button
+                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                          type="button"
+                          *ngFor="let drinks of elem"
+                          data-bs-toggle="pill"
+                          (click)="prepareAnotherProduct(drinks)"
+                          style="background-color: #ffb701"
+                        >
+                          <div class="card-body text-center" type="button">
+                            <div class="mb-2">
+                              <div class="text-center">
+                                <span
+                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                  >{{ drinks.pt_desc1 }}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="tab-content" *ngIf="showSupp">
+                        <div id="kt_pos_food_content_1">
+                          <div class="d-flex tab-pane fade show active">
+                            <button
+                              class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
+                              *ngFor="let boisson of boissons"
+                              type="button"
+                              data-bs-toggle="pill"
+                            >
+                              <div class="card-body text-center" type="button">
+                                <div class="mb-2">
+                                  <div class="text-center">
+                                    <span
+                                      class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                      >{{ boisson.pt_desc1 }}</span
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+                      </div> -->
+                  <!-- <button
+                      *ngIf="addProductBtn"
+                      (click)="customizeProduct(content2)"
+                      class="btn btn-primary fs-1 w-100 py-4"
+                      style="margin-top: 15px; background-color: #9e110d"
+                    >
+                      Ajouter au panier
+                    </button> -->
+                </div>
+
+                <!--end::Content-->
+                <!--begin::Sidebar-->
+                <div class="flex-column">
+                  <div
+                    class="flex-row-auto w-xl-475px"
+                    style="margin-top: 17px"
+                  >
+                    <!--begin::Pos order-->
+                    <div
+                      class="card card-flush"
+                      style="background-color: #ffb701"
+                    >
+                      <div class="flex-row" style="margin-top: 20px">
+                        <span
+                          class="switch switch-icon"
+                          style="margin-left: 45px"
+                        >
+                          <label
+                            class="fw-bold text-gray-900 fs-1"
+                            style="margin-right: 25px"
+                            >Entreprise:</label
+                          >
+                          <label>
+                            <input
+                              type="checkbox"
+                              class="form-control form-control-sm form-control-solid"
+                              formControlName="usrd_active"
+                              name="select"
+                            />
+                            <span style="margin-right: 50px"></span>
+                          </label>
+                          <button
+                            (click)="addClientModal(content17)"
+                            class="btn fw-bold btn-primary"
+                            style="background-color: #9e110d; font-size: large"
+                            [disabled]="globalState"
+                          >
+                            Ajouter client
+                          </button>
+                        </span>
+                      </div>
+                      <!-- <div class="flex-row" style="margin-top: 20px">
+                          <div class="form-floating" style="width: 200px">
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                              #discount
+                              id="discount"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro carte de fidélité
+                            </label>
+                          </div>
+                          <button
+                            (click)="onChangeDiscount(discount.value)"
+                            class="btn fw-bold btn-primary"
+                            style="background-color: #9e110d; font-size: large"
+                            [disabled]="globalState"
+                          >
+                            Vérifier
+                          </button>
+                        </div> -->
+                      <div class="flex card-header">
+                        <div class="card-toolbar">
+                          <div
+                            class="form-floating"
+                            style="
+                              width: 200px;
+                              margin-left: 15px;
+                              margin-right: 47px;
+                            "
+                          >
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                              #discount
+                              id="discount"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro carte de fidélité
+                            </label>
+                          </div>
+                          <button
+                            (click)="onChangeDiscount(discount.value)"
+                            class="btn fw-bold btn-primary"
+                            style="
+                              background-color: #9e110d;
+                              font-size: large;
+                              width: 157px;
+                            "
+                            [disabled]="globalState"
+                          >
+                            Vérifier
+                          </button>
+                        </div>
+                        <div class="card-toolbar">
+                          <div
+                            class="form-floating"
+                            style="
+                              width: 200px;
+                              margin-left: 15px;
+                              margin-right: 47px;
+                            "
+                          >
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              #discount
+                              id="phone_number"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro de téléphone
+                            </label>
+                          </div>
+                          <button
+                            (click)="onCheckCustomer(discount.value, content17)"
+                            class="btn fw-bold btn-primary"
+                            style="
+                              background-color: #9e110d;
+                              font-size: large;
+                              width: 157px;
+                            "
+                            [disabled]="globalState"
+                          >
+                            Vérifier
+                          </button>
+                        </div>
+
+                        <!--end::Toolbar-->
+                      </div>
+
+                      <!--begin::Header-->
+                      <!-- <div class="form-floating">
+                            <input
+                              style="
+                                margin-top: 10px;
+                                background-color: beige;
+                                width: 440px;
+                                margin-left: 15px;
+                              "
+                              type="email"
+                              class="form-control text-gray-800 fw-bold"
+                              placeholder="N° carte"
+                            />
+                          </div> -->
+
+                      <!-- <div class="form-floating">
+                            <input
+                              style="
+                                margin-top: 10px;
+                                background-color: beige;
+                                width: 440px;
+                                margin-left: 15px;
+                              "
+                              type="email"
+                              class="form-control text-gray-800 fw-bold"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                            />
+                            <label for="floatingInputValue">Numéro carte </label>
+                          </div> -->
+                      <div class="flex card-header">
+                        <div class="card-toolbar">
+                          <!-- <button
+                            id="btn1"
+                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                            (click)="locOrderS(content)"
+                            style="margin-left: 35px"
+                            [disabled]="globalState"
+                          >
+                           Sur place
+                          </button> -->
+                          <button
+                            id="btn2"
+                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                            (click)="locOrderE()"
+                            style="margin-left: 5px"
+                            [disabled]="globalState"
+                          >
+                            A Emporter</button
+                          ><button
+                            id="btn3"
+                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                            (click)="locOrderL(content19)"
+                            style="margin-left: 5px"
+                            [disabled]="globalState"
+                          >
+                            Livraison
+                          </button>
+                          <button
+                            style="
+                              background-color: beige;
+                              width: 240px;
+                              margin-top: 5px;
+                              margin-left: 85px;
+                            "
+                            (click)="clearCurrentCart()"
+                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                            [disabled]="globalState"
+                          >
+                            Vider le panier
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="card-body pt-0">
+                        <!--begin::Table container-->
+                        <div class="table-responsive mb-8">
+                          <!--begin::Table-->
+                          <table class="table align-middle">
+                            <!--begin::Table head-->
+
+                            <!--end::Table head-->
+                            <!--begin::Table body-->
+                            <tr *ngIf="inShop">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Commande table {{ currentTable }}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="showStatusOut">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Commande à emporter
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr *ngIf="showStatusDelivery">
+                              <td class="pe-0">
+                                <div class="d-flex-column align-items-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                    >Livraison avec {{ deliveryOption }}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tbody *ngFor="let elem of cartProducts">
+                              <tr>
+                                <td class="pe-0">
+                                  <div class="d-flex-column align-items-center">
+                                    <!-- <img
+                                          src="{{ elem.pt_article }}"
+                                          class="w-50px h-50px rounded-3 me-3"
+                                          alt=""
+                                        /> -->
+                                    <span
+                                      class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                      >{{ elem.pt_desc1 }}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <span
+                                      *ngFor="let item of elem.suppliments"
+                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                      >{{ item.pt_desc1 }},
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <span
+                                      *ngFor="let item of elem.ingredients"
+                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                      >Sans {{ item.pt_desc1 }},
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <span
+                                      *ngFor="let item of elem.sauces"
+                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                                      >{{ item.pt_desc1 }},
+                                    </span>
+                                  </div>
+                                </td>
+                                <td class="pe-0">
+                                  <!--begin::Dialer-->
+                                  <div
+                                    class="position-relative d-flex align-items-center"
+                                  >
+                                    <!--begin::Decrease control-->
+                                    <button
+                                      type="button"
+                                      class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
+                                      (click)="onDecreaseQty(elem)"
+                                      [disabled]="disable"
+                                    >
+                                      <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
+                                      <span class="svg-icon svg-icon-3x">
+                                        <svg
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <rect
+                                            x="6"
+                                            y="11"
+                                            width="12"
+                                            height="2"
+                                            rx="1"
+                                            fill="currentColor"
+                                          />
+                                        </svg>
+                                      </span>
+                                      <!--end::Svg Icon-->
+                                    </button>
+                                    <!--end::Decrease control-->
+                                    <!--begin::Input control-->
+                                    <input
+                                      type="text"
+                                      class="form-control border-0 text-center px-0 fs-3 fw-bold text-gray-800 w-30px"
+                                      data-kt-dialer-control="input"
+                                      placeholder="Amount"
+                                      name="manageBudget"
+                                      readonly="readonly"
+                                      value="{{ elem.pt_qty }}"
+                                      style="background-color: #ffb701"
+                                    />
+                                    <!--end::Input control-->
+                                    <!--begin::Increase control-->
+                                    <button
+                                      type="button"
+                                      class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
+                                      (click)="onIncreaseQty(elem)"
+                                      [disabled]="disable"
+                                    >
+                                      <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
+                                      <span class="svg-icon svg-icon-3x">
+                                        <svg
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <rect
+                                            opacity="0.5"
+                                            x="11"
+                                            y="18"
+                                            width="12"
+                                            height="2"
+                                            rx="1"
+                                            transform="rotate(-90 11 18)"
+                                            fill="currentColor"
+                                          />
+                                          <rect
+                                            x="6"
+                                            y="11"
+                                            width="12"
+                                            height="2"
+                                            rx="1"
+                                            fill="currentColor"
+                                          />
+                                        </svg>
+                                      </span>
+                                      <!--end::Svg Icon-->
+                                    </button>
+                                    <!--end::Increase control-->
+                                  </div>
+                                  <!--end::Dialer-->
+                                </td>
+                                <td class="text-start">
+                                  <span
+                                    class="fw text-gray-900 fs-1"
+                                    data-kt-pos-element="item-total"
+                                    >{{ elem.pt_price }} DA</span
+                                  >
+                                </td>
+                              </tr>
+                            </tbody>
+                            <!--end::Table body-->
+                          </table>
+                          <!--end::Table-->
+                        </div>
+                        <!--end::Table container-->
+                        <!--begin::Summary-->
+                        <div
+                          class="d-flex flex-stack rounded-3 p-6 mb-11"
+                          *ngIf="showPrice"
+                          style="background-color: #9e110d"
+                        >
+                          <!--begin::Content-->
+                          <div class="fs-6 fw-bold text-white">
+                            <span class="d-block lh-1 mb-2">Sous totale</span>
+                            <span *ngIf="currentOffer" class="d-block mb-2"
+                              >Pourcentage de remise</span
+                            >
+                            <span class="d-block mb-2">Montant remise</span>
+
+                            <span class="d-block fs-2qx lh-1">Net à payer</span>
+                          </div>
+                          <!--end::Content-->
+                          <!--begin::Content-->
+
+                          <div class="fs-6 fw-bold text-white text-end">
+                            <span
+                              class="d-block lh-1 mb-2"
+                              data-kt-pos-element="total"
+                              >{{ cartAmount + remisePrice }} DA</span
+                            >
+
+                            <span
+                              *ngIf="currentOffer"
+                              class="d-block mb-2"
+                              data-kt-pos-element="discount"
+                              >({{ currentOffer.del_pct_disc }} %)
+                            </span>
+                            <span
+                              class="d-block mb-2"
+                              data-kt-pos-element="discount"
+                              >{{ remisePrice }} DA
+                            </span>
+
+                            <span
+                              class="d-block fs-2qx lh-1"
+                              data-kt-pos-element="grant-total"
+                              >{{ cartAmount }} DA</span
+                            >
+                          </div>
+                          <!--end::Content-->
+                        </div>
+                        <!--end::Summary-->
+                        <div>
+                          {{ time | async }}
+                        </div>
+                        <div class="m-0">
+                          <!--begin::Title-->
+                          <h1 class="fw-bold text-gray-900 mb-5">
+                            Moyens de paiements
+                          </h1>
+                          <!--end::Title-->
+                          <!--begin::Radio group-->
+
+                          <!--begin::Radio-->
+                          <label
+                            class="btn btn-active-text-gray-900 border border-3 border-gray-100 border-active-primary btn-active-light-primary w-100 px-4"
+                            data-kt-button="true"
+                            style="background-color: beige"
+                          >
+                            <!--begin::Input-->
+                            <input
+                              class="btn-check"
+                              type="radio"
+                              name="method"
+                              value="0"
+                              style="background-color: beige"
+                            />
+                            <!--end::Input-->
+                            <!--begin::Icon-->
+                            <i
+                              class="fonticon-cash-payment fs-2hx mb-2 pe-0"
+                            ></i>
+                            <!--end::Icon-->
+                            <!--begin::Title-->
+                            <span class="fs-7 fw-bold d-block">Cash</span>
+                            <!--end::Title-->
+                          </label>
+                          <button
+                            (click)="getSite(content19)"
+                            class="btn btn-primary fs-1 w-100 py-4"
+                            style="background-color: #9e110d; margin-top: 5px"
+                          >
+                            Choisir une boutique
+                          </button>
+                          <button
+                            (click)="prepareCart()"
+                            class="btn btn-primary fs-1 w-100 py-4"
+                            style="background-color: #9e110d; margin-top: 5px"
+                            [disabled]="globalState"
+                          >
+                            Commander
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <ng-template #content2 let-c="close" let-d="dismiss">
+      <div class="modal-body" style="background-color: beige">
+        <!--begin::Card header-->
+
+        <!--begin::Card header-->
+        <!--begin::Content-->
+        <div id="kt_account_settings_notifications" class="collapse show">
+          <!--begin::Form-->
+          <form class="form">
+            <!--begin::Card body-->
+            <div
+              class="justify-content-center py-6 px-48"
+              style="background-color: beige"
+            >
+              <!--begin::Table-->
+
+              <!--begin::Table row-->
+
+              <div class="min-w-250px fs-1 fw-bold text-gray-900">
+                Spécifications
+              </div>
+
+              <div>
+                <ul
+                  class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+                >
+                  <li
+                    *ngFor="let ingredient of ingredients; let i = index"
+                    style="width: 240px; height: 65px; margin-top: 10px"
+                  >
+                    <button
+                      id="{{ i }}"
+                      class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                      (click)="setIngredient(ingredient, i)"
+                      style="width: 240px; height: 65px"
+                      [disabled]="disableIng"
+                    >
+                      <div class="">
+                        <span
+                          class="text-gray-900 fw-bold fs-2 d-block"
+                          style="margin-left: 5px"
+                          >{{ ingredient.pt_desc1 }}</span
+                        >
+                      </div>
+                    </button>
+                  </li>
+                  <li style="width: 240px; height: 65px; margin-top: 10px">
+                    <button
+                      id="ing"
+                      class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                      (click)="setAllIngredient(ingredients)"
+                      style="width: 240px; height: 65px"
+                    >
+                      <div class="">
+                        <span
+                          class="text-gray-900 fw-bold fs-2 d-block"
+                          style="margin-left: 5px"
+                          >Sans garniture</span
+                        >
+                      </div>
+                    </button>
+                  </li>
+                </ul>
+
+                <!--end::Tab Content-->
+              </div>
+              <!-- <tr *ngIf="currentItem.pt_formule">
+                        <td class="min-w-250px fs-4 fw-bold">Boissons</td>
+                        <td class="w-125px" *ngFor="let boisson of boissons">
+                          <div class="form-check form-check-solid">
+                            <input
+                              (click)="setSoda(boisson)"
+                              class="form-check-input"
+                              type="checkbox"
+                              value=""
+                            />
+                            <label
+                              style="margin-top: 5px"
+                              class="form-check-label ps-2"
+                              >{{ boisson.pt_desc1 }}</label
+                            >
+                          </div>
+                        </td>
+                      </tr> -->
+
+              <!--end::Table-->
+            </div>
+            <!--end::Card body-->
+            <!--begin::Card footer-->
+            <div
+              class="card-footer d-flex justify-content-center py-6 px-9"
+              style="background-color: beige"
+            >
+              <button
+                style="background-color: #9e110d"
+                class="btn btn-primary fs-1 w-100 py-4"
+                (click)="addProductToCart()"
+                (click)="c('Close click')"
+              >
+                Personnaliser le produit
+              </button>
+            </div>
+            <!--end::Card footer-->
+          </form>
+          <!--end::Form-->
+        </div>
+        <!--end::Content-->
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content19 let-c="close" let-d="dismiss">
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <h4 class="modal-title">Choisir la boutique</h4>
+      </div>
+      <div class="modal-body" style="background-color: #f5f5dc">
+        <div style="margin-top: 10px">
+          <div class="card card-flush card-p-0 bg-transparent border-0">
+            <div>
+              <ul
+                class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+              >
+                <li
+                  *ngFor="let s of sites; let index = index"
+                  style="width: 200px; height: 150px"
+                >
+                  <button
+                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                    data-bs-toggle="pill"
+                    type="button"
+                    (click)="setSite(s)"
+                    (click)="c('Close click')"
+                    style="
+                      width: 200px;
+                      height: 150px;
+                      background-color: #ffb701;
+                    "
+                  >
+                    <div class="">
+                      <span
+                        class="text-gray-900 fw-bold fs-2 d-block"
+                        style="margin-left: 5px"
+                        >Boutique {{ s.si_desc }}
+                      </span>
+                    </div>
+                  </button>
+                </li>
+              </ul>
+
+              <!--end::Tab Content-->
+            </div>
+            <!--end: Card Body-->
+          </div>
+          <!--end::Pos food-->
+        </div>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content17 let-c="close" let-d="dismiss">
+      <div class="modal-header" style="background-color: #f5f5dc">
+        <h4 class="modal-title">Ajout d'un nouveau client</h4>
+      </div>
+      <div class="modal-body" style="background-color: #f5f5dc">
+        <form class="form" [formGroup]="customerForm">
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Sexe: *</label>
+              <select
+                class="form-control form-control-sm form-control-solid"
+                id="exampleSelects1"
+                (change)="selectOption($event.target.value)"
+              >
+                <option value=""></option>
+                <option>Homme</option>
+                <option>Femme</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-4">
+              <label class="form-group" id="code">Nom :</label>
+              <input
+                type="text"
+                [className]="
+                  customerForm.controls['customer_name'].errors &&
+                  (customerForm.controls['customer_name'].dirty ||
+                    customerForm.controls['customer_name'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="customer_name"
+              />
+              <div
+                *ngIf="
+                  customerForm.controls['customer_name'].errors &&
+                  (customerForm.controls['customer_name'].dirty ||
+                    customerForm.controls['customer_name'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-4">
+              <label class="form-group" id="code">Address :</label>
+              <input
+                type="text"
+                [className]="
+                  customerForm.controls['customer_addr'].errors &&
+                  (customerForm.controls['customer_addr'].dirty ||
+                    customerForm.controls['customer_addr'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="customer_addr"
+              />
+              <div
+                *ngIf="
+                  customerForm.controls['customer_addr'].errors &&
+                  (customerForm.controls['customer_addr'].dirty ||
+                    customerForm.controls['customer_addr'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-4">
+              <label class="form-group" id="code">Numéro de téléphone :</label>
+              <input
+                type="text"
+                [className]="
+                  customerForm.controls['customer_phone_one'].errors &&
+                  (customerForm.controls['customer_phone_one'].dirty ||
+                    customerForm.controls['customer_phone_one'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="customer_phone_one"
+              />
+              <div
+                *ngIf="
+                  customerForm.controls['customer_phone_one'].errors &&
+                  (customerForm.controls['customer_phone_one'].dirty ||
+                    customerForm.controls['customer_phone_one'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Age: </label>
+
+              <div class="input-group input-group-sm">
+                <input
+                  class="form-control form-control-solid"
+                  placeholder="jj-mm-aaaa"
+                  name="customer_birthday"
+                  formControlName="customer_birthday"
+                  ngbDatepicker
+                  #customer_birthday="ngbDatepicker"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    (click)="customer_birthday.toggle()"
+                    type="button"
+                  >
+                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="background-color: #f5f5dc">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="c('Close click')"
+        >
+          Annuller
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="c('Close click')"
+          (click)="onSubmitCustomer()"
+        >
+          Ok
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</body>

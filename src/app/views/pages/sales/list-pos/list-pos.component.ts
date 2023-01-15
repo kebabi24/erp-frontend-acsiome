@@ -90,78 +90,18 @@ export class ListPosComponent implements OnInit {
   mvgridOptions: GridOption;
   mvdataset: any[];
 
-  providers: [];
-  columnDefinitions2: Column[] = [];
-  gridOptions2: GridOption = {};
-  gridObj2: any;
-  angularGrid2: AngularGridInstance;
-
-  users: [];
-  columnDefinitions3: Column[] = [];
-  gridOptions3: GridOption = {};
-  gridObj3: any;
-  angularGrid3: AngularGridInstance;
-
-  requisitions: [];
-  columnDefinitions5: Column[] = [];
-  gridOptions5: GridOption = {};
-  gridObj5: any;
-  angularGrid5: AngularGridInstance;
-
-  items: [];
-  columnDefinitions4: Column[] = [];
-  gridOptions4: GridOption = {};
-  gridObj4: any;
-  angularGrid4: AngularGridInstance;
-
-  ums: [];
-  columnDefinitionsum: Column[] = [];
-  gridOptionsum: GridOption = {};
-  gridObjum: any;
-  angularGridum: AngularGridInstance;
-
-
-  datatax: [];
-  columnDefinitionstax: Column[] = [];
-  gridOptionstax: GridOption = {};
-  gridObjtax: any;
-  angularGridtax: AngularGridInstance;
-
-
-  devises: [];
-  columnDefinitionscurr: Column[] = [];
-  gridOptionscurr: GridOption = {};
-  gridObjcurr: any;
-  angularGridcurr: AngularGridInstance;
-
-  datasite: [];
-  columnDefinitionssite: Column[] = [];
-  gridOptionssite: GridOption = {};
-  gridObjsite: any;
-  angularGridsite: AngularGridInstance;
-  dataloc: [];
-  columnDefinitionsloc: Column[] = [];
-  gridOptionsloc: GridOption = {};
-  gridObjloc: any;
-  angularGridloc: AngularGridInstance;
-  seq;
   user;
   row_number;
   message = "";
-  requistionServer;
-  vpServer;
-  provider;
-  curr
-  details : any [];
-  datasetPrint = [];
   date: String;
-  po_cr_terms: any[] = [];
+  posForm: FormGroup;
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
    
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private posFB: FormBuilder,
     public dialog: MatDialog,
     private modalService: NgbModal,
     private layoutUtilsService: LayoutUtilsService,
@@ -184,10 +124,31 @@ export class ListPosComponent implements OnInit {
     this.user =  JSON.parse(localStorage.getItem('user'))
     console.log(this.user)
     this.initmvGrid();
+    this.createForm();
+    this.poslist();
    
   }
 
-  
+  createForm() {
+    const date = new Date ;
+    date.setDate(date.getDate() - 2);
+    const date1 = new Date;
+    this.posForm = this.posFB.group({
+    
+      date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      date1: [{
+        year:date1.getFullYear(),
+        month: date1.getMonth()+1,
+        day: date1.getDate()
+      }],
+      
+    
+    });
+  }
  
   initmvGrid() {
     this.mvcolumnDefinitions = [
@@ -323,15 +284,18 @@ export class ListPosComponent implements OnInit {
 
       },
       {
-        id: "disc_amt",
+        id: "Remise",
         name: "Remise",
-        field: "disc_amt",
+        field: "Remise",
         sortable: true,
         width: 50,
         filterable: false,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+        formatter: Formatters.decimal,
+        params: { decimalPlaces: 2 },
+
       },
       
       
@@ -348,14 +312,18 @@ export class ListPosComponent implements OnInit {
         exportOptions: {
           sanitizeDataExport: true
         },
-        presets: {
+        formatterOptions: {
         
-          // sorters: [
-          //   { columnId: 'duration', direction: 'DESC' },
-          //   { columnId: 'complete', direction: 'ASC' }
-          // ],
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+          maxDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
         },
-       
      
         gridMenu: {
           onCommand: (e, args) => {
@@ -377,18 +345,18 @@ export class ListPosComponent implements OnInit {
     }
     this.mvdataset = [];
     
-    this.posCategoryService.getAllOrderss().subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-       console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
+  //   `this.posCategoryService.getAllOrderss().subscribe(
+  //     (response: any) => {   
+  //       this.mvdataset = response.data
+  //      console.log(this.mvdataset)
+  //      this.mvdataView.setItems(this.mvdataset);
         
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+  //        },
+  //     (error) => {
+  //         this.mvdataset = []
+  //     },
+  //     () => {}
+  // )`
   }
     //reste form
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
@@ -419,6 +387,33 @@ export class ListPosComponent implements OnInit {
       this.draggableGroupingPlugin.clearDroppedGroups();
     }
     this.mvgrid.invalidate(); // invalidate all rows and re-render
+  }
+  
+  poslist(){
+    const controls = this.posForm.controls
+    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+    this.mvdataset = []
+    const date = controls.date.value
+    ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+    : null;
+  
+    const date1 = controls.date1.value
+    ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+    : null;
+    const site = this.user.usrd_site
+    let obj= {date,date1,site}
+    this.posCategoryService.getAllPosGrp(obj).subscribe(
+      (res: any) => {
+    
+      //(response: any) => (this.dataset = response.data),
+      console.log(res.data)
+      this.mvdataset  = res.data;
+      this.mvdataView.setItems(this.mvdataset)
+        
+    //this.dataset = res.data
+    this.loadingSubject.next(false) 
+  })
+  
   }
   
 }
