@@ -307,7 +307,7 @@ error = false;
       enableFiltering: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
-      enableRowSelection: true,
+      enableRowSelection: false,
       autoHeight: true,
       enableAutoResize:true,
       formatterOptions: {
@@ -659,16 +659,7 @@ error = false;
 
   prepareGridsite() {
     this.columnDefinitionssite = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromColumnPicker: true,
-        excludeFromGridMenu: true,
-        excludeFromHeaderMenu: true,
-
-        minWidth: 50,
-        maxWidth: 50,
-      },
+      
       {
         id: "id",
         name: "id",

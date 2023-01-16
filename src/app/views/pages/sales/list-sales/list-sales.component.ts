@@ -261,7 +261,7 @@ export class ListSalesComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.string,
       
       },
       {
@@ -329,47 +329,8 @@ export class ListSalesComponent implements OnInit {
         }
        
       },
-      {
-        id: "promo",
-        name: "Promo",
-        field: "promo",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.float,
-        grouping: {
-          getter: 'promo',
-          formatter: (g) => `Promo : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
-      },
-      {
-        id: "size",
-        name: "Size",
-        field: "size",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.float,
-        grouping: {
-          getter: 'size',
-          formatter: (g) => `size : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
-      },
-
+      
+      
     ];
 
     this.mvgridOptions = {

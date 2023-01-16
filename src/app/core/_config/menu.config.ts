@@ -626,6 +626,24 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion des Prévisions",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon-cart",
+          submenu: [
+            {
+              title: "Maint Prévision",
+              page: "/forcast/create-forcast",
+            },
+
+            {
+              title: "Liste des Prévisions",
+              page: "/forcast/list-forcast",
+            },
+          ],
+        },
+        
+        {
           title: "Comptabilité Client",
           root: true,
           bullet: "dot",
