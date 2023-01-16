@@ -73,24 +73,7 @@ export class MenuConfig {
             },
           ],
         },
-        // POS CONFIGURATION
-        {
-          title: "Configuration de Pos",
-          bullet: "dot",
-          icon: "flaticon2-gear",
-          root: true,
-          submenu: [
-              {
-                  title: "Ajouter une catégorie",
-                  page: "/pos-config/create-category",
-              },
-              {
-                  title: "Liste des catégories",
-                    page: "/pos-config/list-category",
-                },
-                
-            ],
-        },
+        
         // CRM
         {
           title: "CRM",
@@ -111,6 +94,15 @@ export class MenuConfig {
                   title: "Ajouter une population",
                   page: "/crm/population-add",
               },
+              {
+                title: "Ajouter une réclamation",
+                page: "/customers/customer-reclamation",
+              },
+              {
+                title: "Ajouter une satisfaction",
+                page: "/customers/customer-satisfaction",
+              },
+              
               
           ],
       },

@@ -132,9 +132,6 @@ export class CustomerReclamationComponent implements OnInit {
   getCustomerData(){
     const controls = this.reclamationForm.controls;
     this.phone_number = controls.phonee.value
-    console.log(controls)
-    this.phone_number = controls.phonee.value
-    console.log('phone'+this.phone_number)
 
     this.customerService.getCustomer(this.phone_number).subscribe(
       (reponse) => {
@@ -204,6 +201,7 @@ export class CustomerReclamationComponent implements OnInit {
       (reponse) => {
         if (reponse["data"] != null) {
           this.reclamation_causes = reponse["data"];
+          console.log( reponse)
           this.filtered_causes = reponse["filtered_causes"];
           console.log(this.filtered_causes)
 
