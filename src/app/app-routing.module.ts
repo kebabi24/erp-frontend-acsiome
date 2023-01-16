@@ -265,15 +265,15 @@ const routes: Routes = [
             (m) => m.ProjectModule
           ),
       },
-      {
-        path: 'config',
-        loadChildren: () => import('./views/pages/config/config.module').then(m => m.ConfigModule),
-        path: "code-mstr",
-        loadChildren: () =>
-          import("./views/pages/code-mstr/code-mstr.module").then(
-            (m) => m.CodeMstrModule
-          ),
-      },
+      // {
+      //   path: 'config',
+      //   loadChildren: () => import('./views/pages/config/config.module').then(m => m.ConfigModule),
+      //   path: "code-mstr",
+      //   loadChildren: () =>
+      //     import("./views/pages/code-mstr/code-mstr.module").then(
+      //       (m) => m.CodeMstrModule
+      //     ),
+      // },
 
       {
         path: "unit-mesure",

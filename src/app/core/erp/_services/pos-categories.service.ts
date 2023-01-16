@@ -179,13 +179,7 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders });
   }
-
-  // FIND CATEGORY BY CODE
-  public getOnByCode(code: String) {
-    const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.get(`${API_URL}/findCategoryByCode/${code}`, { headers: httpHeaders });
-  }
-
+  
   public getLastOneSeq(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_SEQ}/findone`, data, {

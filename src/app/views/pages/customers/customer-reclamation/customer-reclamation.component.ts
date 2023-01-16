@@ -131,13 +131,10 @@ export class CustomerReclamationComponent implements OnInit {
 
   getCustomerData(){
     const controls = this.reclamationForm.controls;
-<<<<<<< HEAD
     this.phone_number = controls.phonee.value
-=======
     console.log(controls)
     this.phone_number = controls.phonee.value
     console.log('phone'+this.phone_number)
->>>>>>> 1b19ac9d40659e0a4b015f746d00df9fbfae12cf
 
     this.customerService.getCustomer(this.phone_number).subscribe(
       (reponse) => {

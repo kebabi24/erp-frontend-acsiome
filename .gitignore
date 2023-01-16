@@ -50,3 +50,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+tsconfig.json
+package.json
+package.json

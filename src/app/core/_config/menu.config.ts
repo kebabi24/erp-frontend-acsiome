@@ -627,6 +627,8 @@ export class MenuConfig {
                             page: "/purchasing/purchase-list",
                         }, 
                     ],
+                  },
+                {
                   title: "List des Sites",
                   page: "/inventory-settings/list-site",
                 },
