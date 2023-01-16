@@ -138,10 +138,11 @@ export class PosCategoryService {
     return this.http.get(`${API_URL_ORDER}/findw`, { headers: httpHeaders });
   }
   public getAllPosGrp(data: any) {
-    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findposgrp`, data, {
-      headers: httpHeaders,});
-}
+      headers: httpHeaders,
+    });
+  }
   public getOneOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findorder`, data, {
@@ -178,7 +179,7 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders });
   }
-
+  
   public getLastOneSeq(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_SEQ}/findone`, data, {
@@ -399,6 +400,13 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     let apiURL = `${API_URL_CODE}/find`;
     return this.http.post(apiURL, data, {
+      headers: httpHeaders,
+    });
+  }
+  // FIND CATEGORY BY CODE
+  public getOnByCode(code: String) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/findCategoryByCode/${code}`, {
       headers: httpHeaders,
     });
   }

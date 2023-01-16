@@ -122,7 +122,7 @@ export class NewCustomerComponent implements OnInit, OnDestroy {
       ],
       phone: [
         "",
-        Validators.compose([Validators.required, Validators.maxLength(100)]),
+        Validators.compose([Validators.required, Validators.maxLength(10)]),
       ],
       age: [
         "",
@@ -161,7 +161,7 @@ export class NewCustomerComponent implements OnInit, OnDestroy {
       commune: controls.commune.value,
       email: controls.email.value,
       promo_code: this.promo_code,
-      discount_pct: 0.15,
+      discount_pct: 0,
     };
     console.log(newClientData);
     this.auth

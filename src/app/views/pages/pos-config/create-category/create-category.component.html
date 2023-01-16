@@ -1,0 +1,80 @@
+
+<kt-portlet class="main-container">
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une catégorie Pos'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" style="background-color:beige">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body class="main-container">
+        <div class="example-preview">
+            <div>
+                <form [formGroup]="categoryForm" class="form">
+
+                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce code customer existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeProfile()" class="btn">Cliquez ici</button>
+                    </kt-alert>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label class="form-group " id="code" >Code:</label>
+                            <input type="text" (change)="onChangeCode()"
+                                [className]="categoryForm.controls['category_code'].errors && (categoryForm.controls['category_code'].dirty || categoryForm.controls['category_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="category_code">
+                            <div *ngIf="categoryForm.controls['category_code'].errors && (categoryForm.controls['category_code'].dirty || categoryForm.controls['category_code'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label class="form-group " >Nom:</label>
+                            <input type="text"
+                                [className]="categoryForm.controls['category_name'].errors && (categoryForm.controls['category_name'].dirty || categoryForm.controls['category_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="category_name">
+                            <div *ngIf="categoryForm.controls['category_name'].errors && (categoryForm.controls['category_name'].dirty || categoryForm.controls['category_name'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label class="form-group ">chemin de l'image:</label>
+                                <input type="text"
+                                    [className]="categoryForm.controls['image_path'].errors && (categoryForm.controls['image_path'].dirty || categoryForm.controls['image_path'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="image_path">
+                                <div *ngIf="categoryForm.controls['image_path'].errors && (categoryForm.controls['image_path'].dirty || categoryForm.controls['image_path'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                    
+                
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Ordre:</label>
+                            
+                                <input type="number"
+                                    [className]="categoryForm.controls['order'].errors && (categoryForm.controls['order'].dirty || categoryForm.controls['order'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="order">
+                                <div *ngIf="categoryForm.controls['order'].errors && (categoryForm.controls['order'].dirty || categoryForm.controls['order'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Direct:</label>
+                            <div class="input-group input-group-sm">
+    
+                                <span class="switch switch-icon">
+                                    <label>
+                                        <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="direct"/>
+                                        <span></span>
+                                    </label>
+                                </span>
+                            </div>
+    
+                        </div>
+                    </div>
+                </form>   
+            </div>
+
+        </div>
+    </kt-portlet-body>

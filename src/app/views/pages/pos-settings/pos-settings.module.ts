@@ -1,75 +1,97 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PosSettingsComponent } from './pos-settings.component';
-import { CreateDeliveryComponent } from './create-delivery/create-delivery.component';
-import { ListDeliveryComponent } from './list-delivery/list-delivery.component';
-import { EditDeliveryComponent } from './edit-delivery/edit-delivery.component';
-import { RouterModule, Routes } from "@angular/router"
-import { FormsModule, ReactiveFormsModule } from "@angular/forms"
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http"
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { PosSettingsComponent } from "./pos-settings.component";
+import { CreateDeliveryComponent } from "./create-delivery/create-delivery.component";
+import { ListDeliveryComponent } from "./list-delivery/list-delivery.component";
+import { EditDeliveryComponent } from "./edit-delivery/edit-delivery.component";
+import { RouterModule, Routes } from "@angular/router";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 // Fake API Angular-in-memory
-import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api"
+import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
 // Translate Module
-import { TranslateModule } from "@ngx-translate/core"
+import { TranslateModule } from "@ngx-translate/core";
 // NGRX
-import { StoreModule } from "@ngrx/store"
-import { EffectsModule } from "@ngrx/effects"
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
 // UI
-import { PartialsModule } from "../../partials/partials.module"
+import { PartialsModule } from "../../partials/partials.module";
 // Core
-import { FakeApiService } from "../../../core/_base/layout"
+import { FakeApiService } from "../../../core/_base/layout";
 // Auth
-import { ModuleGuard } from "../../../core/auth"
+import { ModuleGuard } from "../../../core/auth";
 
 // Core => Utils
 import {
-    HttpUtilsService,
-    TypesUtilsService,
-    InterceptService,
-    LayoutUtilsService,
-} from "../../../core/_base/crud"
+  HttpUtilsService,
+  TypesUtilsService,
+  InterceptService,
+  LayoutUtilsService,
+} from "../../../core/_base/crud";
 // Shared
 import {
-    ActionNotificationComponent,
-    DeleteEntityDialogComponent,
-    FetchEntityDialogComponent,
-    UpdateStatusDialogComponent,
-} from "../../partials/content/crud"
+  ActionNotificationComponent,
+  DeleteEntityDialogComponent,
+  FetchEntityDialogComponent,
+  UpdateStatusDialogComponent,
+} from "../../partials/content/crud";
 
 // Material
-import { MatMenuModule } from "@angular/material/menu"
-import { MatButtonModule } from "@angular/material/button"
-import { MatTabsModule } from "@angular/material/tabs"
+import { MatMenuModule } from "@angular/material/menu";
+import { MatButtonModule } from "@angular/material/button";
+import { MatTabsModule } from "@angular/material/tabs";
 //bootsrap
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
-import { environment } from "../../../../environments/environment"
+import { environment } from "../../../../environments/environment";
 import {
-    NgbProgressbarModule,
-    NgbProgressbarConfig,
-} from "@ng-bootstrap/ng-bootstrap"
-import { NgxPermissionsModule } from "ngx-permissions"
-import { AngularSlickgridModule } from "angular-slickgrid"
-import { DeliveryService,ItemService } from "../../../core/erp"
-import { TreeModule } from '@circlon/angular-tree-component';
+  NgbProgressbarModule,
+  NgbProgressbarConfig,
+} from "@ng-bootstrap/ng-bootstrap";
+import { NgxPermissionsModule } from "ngx-permissions";
+import { AngularSlickgridModule } from "angular-slickgrid";
+import { DeliveryService, ItemService } from "../../../core/erp";
+import { TreeModule } from "@circlon/angular-tree-component";
+import { CreateCategoryComponent } from "./create-category/create-category.component";
+import { CategoryListComponent } from "./list-category/list-category.component";
+import {
+  AddresseMobileService,
+  CustomerMobileService,
+  PosCategoryService,
+} from "../../../core/erp";
 
 const routes: Routes = [
   {
-      path: "create-delivery",
-      component: CreateDeliveryComponent,
+    path: "create-delivery",
+    component: CreateDeliveryComponent,
   },
   {
-      path: "list-delivery",
-      component: ListDeliveryComponent,
+    path: "list-delivery",
+    component: ListDeliveryComponent,
   },
   {
-      path: "edit-delivery/:id",
-      component: EditDeliveryComponent,
+    path: "edit-delivery/:id",
+    component: EditDeliveryComponent,
   },
-]
+  {
+    path: "create-category",
+    component: CreateCategoryComponent,
+  },
+  {
+    path: "list-category",
+    component: CategoryListComponent,
+  },
+];
 
 @NgModule({
-  declarations: [PosSettingsComponent, CreateDeliveryComponent, ListDeliveryComponent, EditDeliveryComponent],
+  declarations: [
+    PosSettingsComponent,
+    CreateDeliveryComponent,
+    ListDeliveryComponent,
+    EditDeliveryComponent,
+    CreateCategoryComponent,
+    CategoryListComponent,
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -86,19 +108,19 @@ const routes: Routes = [
     NgbModule,
     TreeModule,
     environment.isMockEnabled
-        ? HttpClientInMemoryWebApiModule.forFeature(FakeApiService, {
-              passThruUnknownUrl: true,
-              dataEncapsulation: false,
-          })
-        : [],
-],
-providers: [
+      ? HttpClientInMemoryWebApiModule.forFeature(FakeApiService, {
+          passThruUnknownUrl: true,
+          dataEncapsulation: false,
+        })
+      : [],
+  ],
+  providers: [
     ModuleGuard,
     InterceptService,
     {
-        provide: HTTP_INTERCEPTORS,
-        useClass: InterceptService,
-        multi: true,
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptService,
+      multi: true,
     },
 
     TypesUtilsService,
@@ -108,13 +130,15 @@ providers: [
     ItemService,
     TypesUtilsService,
     LayoutUtilsService,
-],
-entryComponents: [
+    CustomerMobileService,
+    AddresseMobileService,
+    PosCategoryService,
+  ],
+  entryComponents: [
     ActionNotificationComponent,
     DeleteEntityDialogComponent,
     FetchEntityDialogComponent,
     UpdateStatusDialogComponent,
-],
+  ],
 })
-
-export class PosSettingsModule { }
+export class PosSettingsModule {}

@@ -54,12 +54,6 @@ export class CustomerReclamationComponent implements OnInit {
   loading$: Observable<boolean>;
 
   name: String;
-  // name = new Observable<string>((observer: Observer<string>) => {
-  //   setInterval(() => {
-  //     observer.next("");
-
-  //   }, 10);
-  // });
   phone_number: String;
   adress: String;
   age: Number;
@@ -75,6 +69,7 @@ export class CustomerReclamationComponent implements OnInit {
   order_date: String;
 
   reclamation_causes: any = [];
+  filtered_causes: any = [];
 
   customeControls: Object = {};
 
@@ -136,6 +131,7 @@ export class CustomerReclamationComponent implements OnInit {
 
   getCustomerData(){
     const controls = this.reclamationForm.controls;
+    this.phone_number = controls.phonee.value
     console.log(controls)
     this.phone_number = controls.phonee.value
     console.log('phone'+this.phone_number)
@@ -208,6 +204,8 @@ export class CustomerReclamationComponent implements OnInit {
       (reponse) => {
         if (reponse["data"] != null) {
           this.reclamation_causes = reponse["data"];
+          this.filtered_causes = reponse["filtered_causes"];
+          console.log(this.filtered_causes)
 
           this.reclamation_causes.forEach((cause) => {
             this.customeControls[cause.code_value] = new FormControl("");
@@ -280,9 +278,9 @@ export class CustomerReclamationComponent implements OnInit {
     //     return
     // }
 
-    const complaintData = {
-      user_code: "for later", // backend
+    const complaintData = { 
       customer_phone: this.phone_number,
+      priority: 1,
       order_code: this.order_code,
       site_loc: this.order_site,
       order_emp: this.order_emp,
@@ -321,6 +319,7 @@ export class CustomerReclamationComponent implements OnInit {
       .subscribe(
         (reponse) => {
           console.log(reponse);
+          
         },
         (error) => {
           this.layoutUtilsService.showActionNotification(
@@ -333,6 +332,8 @@ export class CustomerReclamationComponent implements OnInit {
           this.loadingSubject.next(false);
         },
         () => {
+          this.initCustomerForm();
+          this.createForm();
           this.layoutUtilsService.showActionNotification(
             "Réclamation enregistr avec succès",
             MessageType.Create,

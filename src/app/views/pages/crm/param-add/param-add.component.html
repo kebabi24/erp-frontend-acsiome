@@ -1,0 +1,564 @@
+
+<kt-portlet class="main-container">
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une paramètre'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" style="background-color:beige">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
+            <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body class="main-container">
+        <div class="example-preview">
+            <div>
+                <div>
+                    {{ time | async }}
+                </div>
+
+                <form [formGroup]="paramForm" class="form">
+
+                    <!-- <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce code customer existe deja - Si vous voulez le mettre à jour<button type="warn" class="btn">Cliquez ici</button>
+                    </kt-alert>   (change)="onChangeCode()" -->
+
+                    <!-- HEADET TITLE -->
+                    <div class="row">
+                        <h4>Données d'en-tête de paramètre</h4>
+                    </div>
+                    <!-- HEADET TITLE END -->
+
+                    <!-- ROW 1  -->
+                    <div class="row">
+
+                      <!-- CODE PARAM -->
+                      <div class=" form-group col-4">
+                        <!-- <span >Code paramètre:</span> -->
+                            <label class="form-group " >Code paramètre:</label>
+                            <input type="text"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="param_code">
+                      </div>
+                      <!-- CODE PARAM END  -->
+                      
+                      <!-- CATEGORY -->
+                      <div class=" form-group col-4">
+                        <!-- <span >Code paramètre:</span> -->
+                        <label class="form-group " >Catégorie de paramètre:</label>
+                        <select formControlName="category" 
+                        class=" form-control form-control-sm form-control-solid ">
+                        
+                            <option *ngFor="let category of categories" [value]="category.code_value" class="mt-2 mb-2 dropdown-item">{{category.code_desc}}</option>
+                            
+                          </select>
+                      </div>
+                      <!-- CATEGORY END  -->
+
+                      <!-- DESC -->
+                      <div class="form-group col-4">
+                            <label class="form-group " >Description:</label>
+                            <input type="text"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="description">
+                            <!-- <div *ngIf="paramFrom.controls['description'].errors && (paramFrom.controls['description'].dirty || paramFrom.controls['description'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire
+                          </div>
+                          [className]="paramFrom.controls['description'].errors && (paramFrom.controls['description'].dirty || paramFrom.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" -->
+                      </div>
+                      <!-- DESC END -->
+
+                    </div>
+                    <!-- ROW 1 END -->
+
+                    <!-- ROW 2 -->
+                    <div class="row">
+
+                        <!-- START DATE -->
+                        <div class="form-group col-4">
+                          <label class="form-group"> Date de début: </label>
+                      
+                          <div class="input-group input-group-sm">
+                              <input class="form-control form-control-sm form-control-solid" formControlName="start_date"
+                                  placeholder="jj-mm-aaaa" name="tr_rcp_date1" ngbDatepicker f
+                                  #tr_rcp_date1="ngbDatepicker">
+                              <div class="input-group-append">
+                                  <button class="btn btn-abracadabra" (click)="tr_rcp_date1.toggle()" type="button">
+                                      <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                  </button>
+                              </div>
+                              
+                          </div>
+                        </div>
+                        <!-- START DATE END -->
+
+                        <!-- End DATE -->
+                        <div class="form-group col-4">
+                          <label class="form-group"> Date de fin: </label>
+                      
+                          <div class="input-group input-group-sm">
+                              <input class="form-control form-control-sm form-control-solid" formControlName="end_date"
+                                  placeholder="jj-mm-aaaa" name="tr_rcp_date" ngbDatepicker f
+                                  #tr_rcp_date="ngbDatepicker">
+                              <div class="input-group-append">
+                                  <button class="btn btn-abracadabra" (click)="tr_rcp_date.toggle()" type="button">
+                                      <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                  </button>
+                              </div>
+                              
+                          </div>
+                        </div>
+                        <!-- START DATE END -->
+
+                        <!-- DURATION -->
+                        <div class="form-group col-2">
+                              <label class="form-group ">Durée:</label>
+                                  <input type="number"
+                                  class="form-control form-control-sm form-control-solid"
+                                  formControlName="duration">
+                                  <!-- <div *ngIf="paramFrom.controls['duration'].errors && (paramFrom.controls['duration'].dirty || paramFrom.controls['duration'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                  </div>
+                                  [className]="paramFrom.controls['duration'].errors && (paramFrom.controls['duration'].dirty || paramFrom.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" -->
+                        </div>
+                        <!-- DURATION END -->
+
+                        <!-- TIME UNIT -->
+                        <div class=" form-group col-2">
+                          <!-- <span >Code paramètre:</span> -->
+                          <label class="form-group " >Unité de temps:</label>
+                          <select 
+                            formControlName="time_unit" 
+                            class=" form-control form-control-sm form-control-solid ">
+                          
+                              <option *ngFor="let unit of time_units" [value]="unit.code_value" class="mt-2 mb-2 dropdown-item">{{unit.code_desc}}</option>
+                              
+                            </select>
+                        </div>
+                        <!-- TIME UNIT END  -->
+
+                    </div>
+                    <!-- ROW 2 END -->
+
+
+                </form> 
+                
+                <!-- DETAILS TITLE  -->
+                <div class="row mt-7 mb-7">
+                    <h4>Données détaillées  de paramètre</h4>
+                </div>
+                <!-- DETAILS TITLE END -->
+
+                <!-- ADD DETAIL BUTTON -->
+                <div class="row col-lg-12 mb-7">
+                    <button class="btn btn-abracadabra btn-elevate col-lg-2" (click)="open(content)">Ajouter </button>
+                </div>
+                <!-- ADD DETAIL BUTTON END -->
+
+                <!-- GRID -->
+                <div class="row"> 
+                        <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
+                            gridId="grid" 
+                            [columnDefinitions]="columnDefinitions"
+                            (onAngularGridCreated)="angularGridReady($event)"
+                            [gridOptions]="gridOptions" 
+                            [dataset]="param_details"
+                            >
+                        </angular-slickgrid>
+                </div>
+                <!-- GRID END -->
+            
+               
+            </div>
+        </div>
+
+
+
+        <!-- MODAL -->
+        <div class="row">
+          <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Ajouter détail du paramètre</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="d('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <!--begin::Form-->
+                <form
+                  class="form"
+                  [formGroup]="paramDetailsForm"
+                  autocomplete="off"
+                  novalidate="novalidate"
+                > 
+
+
+                   <!-- ********************************* 2 ******************************  -->
+                  <div class="form-group-bg align-middle">
+
+                    
+                    <div class="row align-middle mt-5">
+
+                      <!-- ACTION 0 -->
+                      <div class="col-3 align-middle">
+                        <label class="align-middle mt-2">Action 0:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="action_0"
+                        >
+                          <option *ngFor="let action of action_types" [value]="action.code_value" class="mt-1">{{action.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- ACTION 0 -->
+
+                      <!-- METHOD 0 -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">Méthode  0:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="method_0"
+                        >
+                          <option *ngFor="let method of methods" [value]="method.code_value" class="mt-1">{{method.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- METHOD 0 -->
+
+
+                    </div>
+                
+                    <!-- EXECUTION MOMENT -->
+                    <div class="row align-middle mt-5 mb-2">
+
+                      <div class="col-3 align-middle">
+                        <label class="align-middle">Instant d'exécution:</label>
+                      </div>
+                      <div class="col-3">
+                        <div class="input-group input-group-sm">
+                          <input
+                            formControlName="execution_moment"
+                            type="number"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                          />
+                        </div>
+                      </div>
+                      
+                      <!-- INNER TIME UNIT -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">Unité de temps:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="time_unit_0"
+                        >
+                          <option *ngFor="let unit of time_units" [value]="unit.code_value" class="mt-1">{{unit.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- INNER TIME UNIT END -->
+
+
+                    </div>
+                    <!-- EXECUTION MOMENT END  -->
+                  </div>
+                  <!-- ********************************* 1 ******************************  -->
+                  
+                  <div class="form-group-bg align-middle">
+                    <div class="row align-middle mt-5">
+                      <!-- ACTION 1 -->
+                      <div class="col-3 align-middle">
+                        <label class="align-middle mt-2">Action 1:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="action_1"
+                        >
+                          <option *ngFor="let action of action_types" [value]="action.code_value" class="mt-1">{{action.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- ACTION 1 -->
+
+                      <!-- METHOD 1 -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">Méthode  1:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="method_1"
+                        >
+                          <option *ngFor="let method of methods" [value]="method.code_value" class="mt-1">{{method.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- METHOD 1 -->
+                    </div>
+
+                
+                    <!-- RELANCE 1 -->
+                    <div class="row align-middle mt-5 mb-2">
+                      <div class="col-3 align-middle">
+                        <label class="align-middle">Relance 1:</label>
+                      </div>
+                      <div class="col-3">
+
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="number"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="rel_1"
+                          />
+                        </div>
+
+                      </div>
+
+                      <!-- INNER TIME UNIT -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">Unité de temps:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="time_unit_1"
+                        >
+                          <option *ngFor="let unit of time_units" [value]="unit.code_value" class="mt-1">{{unit.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- INNER TIME UNIT END -->
+                    </div>
+
+                    <!-- RELANCE 1 END -->
+                  </div>
+                  
+
+                  <!-- ********************************* 2 ******************************  -->
+                  
+                  <div class="form-group-bg align-middle">
+                    <div class="row align-middle mt-5">
+
+                      <!-- ACTION 2 -->
+                      <div class="col-3 align-middle">
+                        <label class="align-middle mt-2">Action 2:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="action_2"
+                        >
+                          <option *ngFor="let action of action_types" [value]="action.code_value" class="mt-1">{{action.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- ACTION 2 -->
+
+                      <!-- METHOD 2 -->
+                        <div class="col-2 align-middle">
+                          <label class="align-middle mt-2">Méthode  2:</label>
+                        </div>
+                        <div class="col-3">
+                          <select
+                            class="form-control form-control-solid"
+                            formControlName="method_2"
+                          >
+                            <option *ngFor="let method of methods" [value]="method.code_value" class="mt-1">{{method.code_desc}}</option>
+                          </select>
+                        </div>
+                      <!-- METHOD 2 -->
+
+
+                    </div>
+                    
+
+                  
+
+                    <!-- RELANCE 2 -->
+                    <div class="row align-middle mt-5 mb-2">
+                      <div class="col-3 align-middle">
+                        <label class="align-middle">Relance 2:</label>
+                      </div>
+                      <div class="col-3">
+
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="number"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="rel_2"
+                          />
+                        </div>
+
+                      </div>
+
+                      <!-- INNER TIME UNIT -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">Unité de temps:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="time_unit_2"
+                        >
+                          <option *ngFor="let unit of time_units" [value]="unit.code_value" class="mt-1">{{unit.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- INNER TIME UNIT END -->
+                    </div>
+                    <!-- RELANCE 2 END -->
+                  </div>
+                  
+
+                  <!-- ********************************* 3 ******************************  -->
+                  <div class="form-group-bg align-middle">    
+                    <div class="row align-middle mt-5">
+
+                      <!-- ACTION 3 -->
+                      <div class="col-3 align-middle">
+                        <label class="align-middle mt-2">Action 3:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="action_3"
+                        >
+                          <option *ngFor="let action of action_types" [value]="action.code_value" class="mt-1">{{action.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- ACTION 3 -->
+
+                      <!-- METHOD 3 -->
+                      
+                        <div class="col-2 align-middle">
+                          <label class="align-middle mt-2">Méthode  3:</label>
+                        </div>
+                        <div class="col-3">
+                          <select
+                            class="form-control form-control-solid"
+                            formControlName="method_3"
+                          >
+                            <option *ngFor="let method of methods" [value]="method.code_value" class="mt-1">{{method.code_desc}}</option>
+                          </select>
+                        </div>
+                      
+                      <!-- METHOD 3 -->
+
+
+                    </div>
+                    
+
+                    
+
+                    <!-- RELANCE 3 -->
+                    <div class="row align-middle mt-5 mb-2">
+                      <div class="col-3 align-middle">
+                        <label class="align-middle">Relance 3:</label>
+                      </div>
+                      <div class="col-3">
+
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="number"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="rel_3"
+                          />
+                        </div>
+
+                      </div>
+
+                      <!-- INNER TIME UNIT -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">Unité de temps:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="time_unit_3"
+                        >
+                          <option *ngFor="let unit of time_units" [value]="unit.code_value" class="mt-1">{{unit.code_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- INNER TIME UNIT END -->
+                    </div>
+                    <!-- RELANCE 3 END -->  
+                  </div> 
+                  
+                  <div class="form-group-bg align-middle">
+                    <!-- POPULATION -->
+                    <div class="row align-middle mt-5 mb-2">
+                      <!-- POPULATION DESC -->
+                      <div class="col-3 align-middle">
+                        <label class="align-middle mt-5">Population:</label>
+                      </div>
+                      <div class="col-3">
+                        <select
+                          class="form-control form-control-solid"
+                          formControlName="population_code"
+                        >
+                          <option *ngFor="let pop of populations" [value]="pop.population_code" class="mt-1">{{pop.population_desc}}</option>
+                        </select>
+                      </div>
+                      <!-- POPULATION DESC END -->
+
+                      <!-- NB -->
+                      <div class="col-2 align-middle">
+                        <label class="align-middle mt-2">NB:</label>
+                      </div>
+                      <div class="col-3">
+
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="number"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="population_nb"
+                          />
+                        </div>
+
+                      </div>
+                      <!-- NB END -->
+
+                    </div>
+                    <!-- POPULATION -->
+                  </div>
+    
+                  
+
+                </form>
+                <!--end::Form-->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                hidden
+                id="closeForm"
+                class="btn btn-primary"
+                (click)="c('Close click')"
+              ></button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="c('Close click')"
+              >
+                Annuller
+              </button>
+              <button
+                type="button"
+                class="btn btn-abracadabra"
+                (click)="saveDetail()"
+              >
+                Ajouter
+              </button>
+            </div>
+          </ng-template>
+        </div>
+        <!-- MODAL END -->
+    </kt-portlet-body>
+ 
