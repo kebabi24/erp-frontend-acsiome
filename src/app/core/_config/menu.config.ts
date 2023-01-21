@@ -73,6 +73,39 @@ export class MenuConfig {
             },
           ],
         },
+        
+        // CRM
+        {
+          title: "CRM",
+          bullet: "dot",
+          icon: "flaticon2-gear",
+          root: true,
+          submenu: [
+              
+              {
+                  title: "Agenda",
+                  page: "/crm/agenda",
+              },
+              {
+                  title: "Ajouter un paramètre CRM",
+                  page: "/crm/param-add",
+              },
+              {
+                  title: "Ajouter une population",
+                  page: "/crm/population-add",
+              },
+              {
+                title: "Ajouter une réclamation",
+                page: "/customers/customer-reclamation",
+              },
+              {
+                title: "Ajouter une satisfaction",
+                page: "/customers/customer-satisfaction",
+              },
+              
+              
+          ],
+      },
         {
           title: "Paramétrages",
           root: true,

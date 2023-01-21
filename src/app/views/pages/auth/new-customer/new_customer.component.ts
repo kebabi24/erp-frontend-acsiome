@@ -122,7 +122,7 @@ export class NewCustomerComponent implements OnInit, OnDestroy {
       ],
       phone: [
         "",
-        Validators.compose([Validators.required, Validators.maxLength(100)]),
+        Validators.compose([Validators.required, Validators.maxLength(10)]),
       ],
       age: [
         "",

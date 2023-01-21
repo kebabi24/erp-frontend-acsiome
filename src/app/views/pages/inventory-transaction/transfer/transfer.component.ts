@@ -231,6 +231,7 @@ export class TransferComponent implements OnInit {
       
         
       }
+      
       //reste form
       reset() {
         this.inventoryTransaction = new InventoryTransaction();

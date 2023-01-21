@@ -96,7 +96,7 @@ const routes: Routes = [
               component: CustomerSoldelistComponent,
           },
           { 
-            path: "customer-reclamation/:phone",
+            path: "customer-reclamation",
             component: CustomerReclamationComponent,
           },
           { 

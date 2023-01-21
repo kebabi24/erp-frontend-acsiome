@@ -24,10 +24,13 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../../../../core/reducers";
 // Auth
 import { AuthNoticeService, AuthService, Login } from "../../../../core/auth";
+import { disableCursor } from "@fullcalendar/angular";
+
 
 /**
  * ! Just example => Should be removed in development
  */
+
 
 @Component({
   selector: "kt-login",
@@ -51,6 +54,9 @@ export class NewShop implements OnInit, OnDestroy {
   wilayas: any = [];
   communes: any = [];
   promo: any = {};
+  existed_customer : any = {};
+  forbidFromPromo : Boolean = false ;
+  
 
   private unsubscribe: Subject<any>;
 
@@ -105,6 +111,8 @@ export class NewShop implements OnInit, OnDestroy {
     this.loading = false;
   }
 
+ 
+
   /**
    * Form initalization
    * Default params, validators
@@ -122,13 +130,18 @@ export class NewShop implements OnInit, OnDestroy {
       ],
       phone: [
         "",
-        Validators.compose([Validators.required, Validators.maxLength(10)]),
+        Validators.compose([
+          Validators.required, 
+          // Validators.maxLength(10),
+          Validators.pattern("[0][567][0-9]{8}"),
+        ]),
       ],
       age: ["", Validators.compose([Validators.maxLength(2)])],
       gender: ["", Validators.compose([])],
       wilaya: ["", Validators.compose([])],
       commune: ["", Validators.compose([])],
       email: [""],
+      birthdate: [""],
     });
   }
 
@@ -151,13 +164,15 @@ export class NewShop implements OnInit, OnDestroy {
       name: controls.name.value,
       phone: controls.phone.value,
       age: controls.age.value,
+      birthdate : controls.birthdate.value,
       gender: controls.gender.value,
       wilaya: controls.wilaya.value,
       commune: controls.commune.value,
       email: controls.email.value,
-      promo_code: this.promo.code_fldname,
+      promo_code: this.promo.code_value ,
       discount_pct: this.promo.dec01,
     };
+    console.log(newClientData)
     this.auth
       .createNewCustomer(newClientData)
 
@@ -212,11 +227,36 @@ export class NewShop implements OnInit, OnDestroy {
   onChangePhone() {
     const controls = this.loginForm.controls;
     const phone = controls.phone.value;
+    this.forbidFromPromo = false
     this.auth.getCustomerPhone(phone).subscribe((res: any) => {
-      console.log(res);
       if (res.data) {
-        alert("Ce numéro de téléphone existe deja");
-        this.isExist = true;
+        this.existed_customer = res.data
+        if(this.existed_customer.cm_promo === this.promo.code_value){
+          this.loginForm.patchValue({
+            name : '',
+            gender :'',
+            birthdate : '',
+            wilaya : '',
+            commune : '',
+            email : '',
+          })
+          alert("vous avez déjà profité de cette promo")
+          this.forbidFromPromo = true
+        }else{
+          this.forbidFromPromo = false
+          this.loginForm.patchValue({
+            name : this.existed_customer.cm_sort,
+            gender : this.existed_customer.gender,
+            birthdate : this.existed_customer.cm_high_date,
+            wilaya : this.existed_customer.wilaya,
+            commune : this.existed_customer.commune,
+            email : this.existed_customer.email,
+            
+          })
+        }
+        
+        // alert("Ce numéro de téléphone existe deja");
+        // this.isExist = true;
         document.getElementById("phoneN").focus();
         //  controls.phone.disable()
       } else {
@@ -282,3 +322,6 @@ export class NewShop implements OnInit, OnDestroy {
     this.communes = this.wilayas_communes_data[wilayaIndex].communes;
   }
 }
+
+
+
