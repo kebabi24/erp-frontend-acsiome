@@ -81,6 +81,7 @@ import { AngularSlickgridModule } from "angular-slickgrid";
 // tree view
 import { TreeModule } from "@circlon/angular-tree-component";
 import { MobileMenuComponent } from "./mobile-menu/mobile-menu.component";
+import { PosCategoryService } from "./core/erp";
 
 // tslint:disable-next-line:class-name
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -120,6 +121,7 @@ export function getHighlightLanguages() {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forRoot(FakeApiService, {
           passThruUnknownUrl: true,
@@ -156,6 +158,7 @@ export function getHighlightLanguages() {
     KtDialogService,
     DataTableService,
     SplashScreenService,
+    PosCategoryService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
@@ -184,6 +187,7 @@ export function getHighlightLanguages() {
     HttpUtilsService,
     TypesUtilsService,
     LayoutUtilsService,
+    PosCategoryService,
   ],
   bootstrap: [AppComponent],
 })

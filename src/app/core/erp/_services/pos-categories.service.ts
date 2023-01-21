@@ -34,6 +34,7 @@ const API_URL_BK = environment.apiUrl + "/banks";
 const API_URL_CUSTOMER = environment.apiUrl + "/customers";
 const API_URL_DELIVERY = environment.apiUrl + "/delivery";
 const API_URL_SITE = environment.apiUrl + "/sites";
+const API_URL_SYNCHRO = environment.apiUrl + "/synchro";
 
 @Injectable()
 export class PosCategoryService {
@@ -360,6 +361,12 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
 
     return this.http.post(`${API_URL_BK}/prP`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public synchro() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_SYNCHRO, {
       headers: httpHeaders,
     });
   }
