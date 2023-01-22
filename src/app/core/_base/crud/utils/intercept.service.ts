@@ -20,13 +20,15 @@ export class InterceptService implements HttpInterceptor {
     console.log(user)
     request = request.clone({
     	setHeaders: {
-       USER_CODE:user ? user.usrd_code : ''
+       USER_CODE:user ? user.usrd_code : '',
+       USER_DOMAIN:user ? user.usrd_domain : '',
+
         
     	}
     });
     
-   // console.log('----request----');
-   // console.log(request);
+    // console.log('----request----');
+    // console.log(request);
    // console.log('--- end of request---');
 
    
