@@ -82,6 +82,13 @@ export class CRMService {
     return this.http.get(`${API_URL}/getPopulations`, {headers: httpHeaders});
   }
 
+  public getPopulation(code: String) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/getPopulation/${code}`, {
+      headers: httpHeaders,
+    });
+  }
+
   public getComplaintData(phone : any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${COMPLAINT_DATA_URL}/${phone}`, {headers: httpHeaders});

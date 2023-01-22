@@ -58,9 +58,8 @@ export class PopulationAddComponent implements OnInit {
   populationForm: FormGroup;
 
   customers: any = [];
-  // time_units : any = []
-  // action_types : any = []
-  // methods : any = []
+  isExist = false ;
+  cantSearch = true ;
   
   // GRID 
   columnDefinitions: Column[] = []
@@ -121,11 +120,11 @@ export class PopulationAddComponent implements OnInit {
     this.loadingSubject.next(false);
     this.populationForm = this.formBuilder.group({
       code_population: [ '', Validators.required],
-      desc_population: [ '', Validators.required],
-      client_type: [ '', Validators.required],
-      client_class: [ '', Validators.required],
-      client_region: [ '', Validators.required],
-      cm_db: [ '', Validators.required],
+      desc_population: [ {value : '',disabled : !this.isExist}, Validators.required],
+      client_type: [ {value : '',disabled : !this.isExist}],
+      client_class: [ {value : '',disabled : !this.isExist}],
+      client_region: [ {value : '',disabled : !this.isExist}],
+      cm_db: [ {value : '',disabled : !this.isExist}],
       start_date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
@@ -139,6 +138,34 @@ export class PopulationAddComponent implements OnInit {
    })
      
   }
+
+  onChangeCode() {
+    const controls = this.populationForm.controls
+    const population_code = controls.code_population.value
+    if(population_code === "") { 
+      this.cantSearch = true 
+      this.selectedCustomers = []
+    }
+    this.crmService.getPopulation(population_code).subscribe(
+        (res: any) => {
+          if (res.data) {
+            alert("Ce code de population exist déja")
+            document.getElementById("code").focus(); 
+            controls.desc_population.disable()
+            controls.client_type.disable()
+            controls.client_region.disable()
+            controls.cm_db.disable()      
+          } else { 
+            this.isExist = true
+            this.cantSearch = false
+            controls.desc_population.enable()
+            controls.client_type.enable()
+            controls.client_region.enable()
+            controls.cm_db.enable()      
+        }
+               
+    })
+  } 
 
   
   goBack() {
@@ -154,9 +181,20 @@ export class PopulationAddComponent implements OnInit {
       * @param withBack: boolean
       */
    onSubmit() {
-    // this.hasFormErrors = false
-    const controls = this.populationForm.controls
-    console.log(this.selectedCustomers)
+     this.hasFormErrors = false
+     const controls = this.populationForm.controls
+    if (this.populationForm.invalid) {
+      Object.keys(controls).forEach((controlName) =>
+          controls[controlName].markAsTouched()
+      )
+
+        this.hasFormErrors = true
+        return
+      }
+    if(this.selectedCustomers.length == 0){
+      alert("Sélectionner au moins un client à ajouter dans la population")
+      return 
+    }
     const population_code = controls.code_population.value
     const population_desc = controls.desc_population.value
 
@@ -190,14 +228,7 @@ export class PopulationAddComponent implements OnInit {
       })
     }
 
-    /** check form */
-    // if (this.categoryForm.invalid) {
-    //   Object.keys(controls).forEach((controlName) =>
-    //       controls[controlName].markAsTouched()
-    //   )
-
-
-
+   
     this.crmService
       .createPopulation(populationData)
 

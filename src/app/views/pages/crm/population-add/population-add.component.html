@@ -25,10 +25,18 @@
                       <!-- CODE POPULATION -->
                       <div class=" form-group col-4">
                         <!-- <span >Code paramètre:</span> -->
-                            <label class="form-group " >code de la population:</label>
-                            <input type="text"
+                            <label class="form-group " id="code" >code de la population:</label>
+                            <input 
+                            
+                            type="text"
                             class="form-control form-control-sm form-control-solid"
-                            formControlName="code_population">
+                            formControlName="code_population"
+                            (change) = "onChangeCode()"
+                            >
+                            
+                            <div *ngIf="populationForm.controls['code_population'].errors && (populationForm.controls['code_population'].dirty || populationForm.controls['code_population'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
                       </div>
                       <!-- CODE POPULATION END  -->
 
@@ -166,7 +174,12 @@
                     <div class="row mt-5"> 
                       <!-- ADD DETAIL BUTTON -->
                         <div class="form-group">
-                            <button class="btn btn-abracadabra btn-elevate col-lg-2" (click)="getCustomers()">Rechercher </button>
+                            <button 
+                                [disabled]="cantSearch"
+                                class="btn btn-abracadabra btn-elevate col-lg-2" 
+                                (click)="getCustomers()">
+                                Rechercher 
+                            </button>
                         </div>
                       <!-- ADD DETAIL BUTTON END -->
                     </div>

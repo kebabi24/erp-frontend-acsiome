@@ -330,7 +330,7 @@ export class PosComponent implements OnInit {
       usrd_profile: this.user.usrd_profile,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
-      from: "BOUTIQUE",
+      plateforme: "BOUTIQUE",
     };
     this.posCategoryService
       .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
@@ -1054,7 +1054,7 @@ export class PosComponent implements OnInit {
       disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
       del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
       site_loc: this.currentTable ? this.currentTable : null,
-      from: this.currentOffer ? this.currentOffer.del_desc : null,
+      plateforme: this.currentOffer ? this.currentOffer.del_desc : null,
     };
     console.log(cart);
     const site = this.sites.find(
@@ -1377,7 +1377,7 @@ export class PosComponent implements OnInit {
       },
     ];
     if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
-      // electronPrinter.print(data, data2);
+      electronPrinter.print(data, data2);
     }
 
     if (this.cart.products.length != 0 || this.modifproduct.length != 0) {

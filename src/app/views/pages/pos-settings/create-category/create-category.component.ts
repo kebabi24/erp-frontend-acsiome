@@ -98,7 +98,6 @@ export class CreateCategoryComponent implements OnInit {
             alert("Ce code catégorie  exist déja")
             document.getElementById("code").focus(); 
           } else { 
-            console.log('code do not exist ')
             controls.category_name.enable()
             controls.image_path.enable()
             controls.order.enable()
