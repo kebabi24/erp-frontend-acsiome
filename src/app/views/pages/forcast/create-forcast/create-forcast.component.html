@@ -1,1 +1,278 @@
-<p>create-forcast works!</p>
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Maint des Objectifs'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="forcastForm">
+
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                                    (close)="onAlertClose($event)">
+                                    Ce Code existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Année:</label>
+
+                        <select formControlName="frc_year" 
+                            [className]="forcastForm.controls['frc_year'].errors && (forcastForm.controls['frc_year'].dirty || forcastForm.controls['frc_year'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            
+                            <option *ngFor="let elem of year" [value]="elem.y">
+                                 {{elem.y}}</option>
+                        </select>
+                        <div *ngIf="forcastForm.controls['frc_year'].errors && (forcastForm.controls['frc_year'].dirty || forcastForm.controls['frc_year'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Mois:</label>
+
+                        <select  formControlName="frc_month"   
+                            [className]="forcastForm.controls['frc_month'].errors && (forcastForm.controls['frc_month'].dirty || forcastForm.controls['frc_month'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <option value=""></option>
+                            <option value="01">Jan</option>
+                            <option value="02">Fev</option>
+                            <option value="03">Mar</option>
+                            <option value="04">Avr</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Jun</option>
+                            <option value="07">Jui</option>
+                            <option value="08">Aou</option>
+                            <option value="09">Sep</option>
+                            <option value="10">Oct</option>
+                            <option value="11">Nov</option>
+                            <option value="12">Dec</option>
+                        </select>    
+                        <div *ngIf="forcastForm.controls['frc_month'].errors && (forcastForm.controls['frc_month'].dirty || forcastForm.controls['frc_month'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Site:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"
+                                [className]="forcastForm.controls['frc_site'].errors && (forcastForm.controls['frc_site'].dirty || forcastForm.controls['frc_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                (change)="changeSite()" formControlName="frc_site"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"
+                                    (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="forcastForm.controls['frc_site'].errors && (forcastForm.controls['frc_site'].dirty || forcastForm.controls['frc_site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Type Objectif:</label>
+
+                        <select
+                            [className]="forcastForm.controls['frc_type'].errors && (forcastForm.controls['frc_type'].dirty || forcastForm.controls['frc_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="frc_type" id="exampleSelects1">
+                            
+                            <option *ngFor="let elem of frc_type" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                        <div *ngIf="forcastForm.controls['frc_type'].errors && (forcastForm.controls['frc_type'].dirty || forcastForm.controls['frc_type'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Client :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="frc_cust"  (change)="onChangeCust()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open2(content2)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group ">Article:</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="frc_part" 
+                                [className]="forcastForm.controls['frc_part'].errors && (forcastForm.controls['frc_part'].dirty || forcastForm.controls['frc_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                (change)="onChangePart()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openpart(contentpart)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="forcastForm.controls['frc_part'].errors && (forcastForm.controls['frc_part'].dirty || forcastForm.controls['frc_part'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">Description:</label>
+                        <input type="text" class="form-control form-control-sm form-control-solid"   formControlName="desc" disabled>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Promo Article:</label>
+
+                        <select
+                            [className]="forcastForm.controls['frc_promo'].errors && (forcastForm.controls['frc_promo'].dirty || forcastForm.controls['frc_promo'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="frc_promo" id="exampleSelects1">
+                            
+                            <option *ngFor="let elem of frc_promo" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                        <div *ngIf="forcastForm.controls['frc_promo'].errors && (forcastForm.controls['frc_promo'].dirty || forcastForm.controls['frc_promo'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Type Article:</label>
+
+                        <select
+                            [className]="forcastForm.controls['frc_part_type'].errors && (forcastForm.controls['frc_part_type'].dirty || forcastForm.controls['frc_part_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="frc_part_type" id="exampleSelects1">
+                            
+                            <option *ngFor="let elem of frc_part_type" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                        <div *ngIf="forcastForm.controls['frc_part_type'].errors && (forcastForm.controls['frc_part_type'].dirty || forcastForm.controls['frc_part_type'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Groupe Etude Article:</label>
+
+                        <select
+                            [className]="forcastForm.controls['frc_dsgn_grp'].errors && (forcastForm.controls['frc_dsgn_grp'].dirty || forcastForm.controls['frc_dsgn_grp'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="frc_dsgn_grp" id="exampleSelects1">
+                            
+                            <option *ngFor="let elem of frc_dsgn_grp" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                        <div *ngIf="forcastForm.controls['frc_dsgn_grp'].errors && (forcastForm.controls['frc_dsgn_grp'].dirty || forcastForm.controls['frc_dsgn_grp'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                   
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group ">Groupe Article:</label>
+
+                        <select
+                            [className]="forcastForm.controls['frc_part_group'].errors && (forcastForm.controls['frc_part_group'].dirty || forcastForm.controls['frc_part_group'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="frc_part_group" id="frc_part_group">
+                            
+                            <option *ngFor="let elem of frc_part_group" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                        <div *ngIf="forcastForm.controls['frc_part_group'].errors && (forcastForm.controls['frc_part_group'].dirty || forcastForm.controls['frc_part_group'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+               
+                    
+                </div>
+                <div class="row">
+                        <button type="button" class="btn btn-primary btn-sm mr-2 col-lg-2" (click)="onChangeCode()">créer un calendrier</button>
+                </div>
+                <div class="form-group col-12 row">
+                    <label class="col-2 col-form-label text-right">Détails: </label>
+                </div>
+
+
+                
+                <br>
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                    [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                </angular-slickgrid>
+                </div>
+
+
+            </form>
+        </div>
+
+    </kt-portlet-body>
+    <div>
+        <ng-template #contentsite let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Site </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionssite"
+                        (onAngularGridCreated)="angularGridReadysite($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionssite" [dataset]="datasite">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+    <div>
+        <ng-template #contentpart let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir l'article</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions4" [dataset]="items">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+        <button hidden id="openItemsGrid" class="btn btn-primary" (click)="openpart(contentpart)">Launch demo modal</button>
+
+    </div>
+    <div>
+        <ng-template #content2 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir le Client</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                        [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions2" [dataset]="customers">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+
+</kt-portlet>
+

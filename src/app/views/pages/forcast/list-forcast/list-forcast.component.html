@@ -1,1 +1,33 @@
-<p>list-forcast works!</p>
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'La liste des Objectifs'" [class]="'card-head-lg'">  
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row mt-2">
+                <div class="col-sm-12">
+                  <div class="form-row">
+                    <div class="row form-group">
+                      <label for="field1" class="col-sm-1 mb-2">Groupe Par</label>
+                      <div class="form-group col-md-1 grouping-selects"
+                           *ngFor="let groupField of selectedGroupingFields; let i = index; trackBy: selectTrackByFn">
+                        <select class="form-select" name="group-field-{{i}}" [(ngModel)]="selectedGroupingFields[i]"
+                                (ngModelChange)="groupByFieldName($event, i)">
+                          <option value=""></option>
+                          <option [ngValue]="field.id" *ngFor="let field of columnDefinitions">{{field.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>  
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridDevise" [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="mvGridReady($event)"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

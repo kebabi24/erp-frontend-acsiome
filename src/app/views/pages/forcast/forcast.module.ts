@@ -49,7 +49,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
-import {SiteService,ItemService} from '../../../core/erp';
+import {SiteService,ItemService, ForcastService, CodeService,CustomerService} from '../../../core/erp';
 
 const routes: Routes = [
   {
@@ -105,6 +105,9 @@ providers: [
   LayoutUtilsService,
   ItemService,
   SiteService,
+  ForcastService,
+  CodeService,
+  CustomerService,
   
 ],
 })

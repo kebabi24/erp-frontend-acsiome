@@ -421,7 +421,7 @@ error = false;
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
-      enableAutoResize: false,
+      enableAutoResize: true,
       autoHeight: true,
       formatterOptions: {
         

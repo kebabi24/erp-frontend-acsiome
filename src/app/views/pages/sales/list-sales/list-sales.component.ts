@@ -290,7 +290,7 @@ export class ListSalesComponent implements OnInit {
       },
       
       {
-        id: "parttupe",
+        id: "parttype",
         name: "Type",
         field: "parttype",
         sortable: true,
