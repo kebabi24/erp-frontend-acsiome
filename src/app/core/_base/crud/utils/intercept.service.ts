@@ -27,6 +27,7 @@ export class InterceptService implements HttpInterceptor {
     request = request.clone({
       setHeaders: {
         USER_CODE: user ? user.usrd_code : "",
+        USER_DOMAIN: user ? user.usrd_domain : "",
       },
     });
 
