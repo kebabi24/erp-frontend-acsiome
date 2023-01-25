@@ -56,7 +56,7 @@ import {
 import {
   SiteService,
   LocationService,
-  PosCategoryService,
+  BankService,
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -65,12 +65,12 @@ import thId from "src/assets/plugins/formvalidation/src/js/validators/id/thId";
 
 
 @Component({
-  selector: 'kt-list-pos',
-  templateUrl: './list-pos.component.html',
-  styleUrls: ['./list-pos.component.scss']
+  selector: 'kt-list-caisse',
+  templateUrl: './list-caisse.component.html',
+  styleUrls: ['./list-caisse.component.scss']
 })
-export class ListPosComponent implements OnInit {
-  posForm: FormGroup;
+export class ListCaisseComponent implements OnInit {
+  soForm: FormGroup;
   totForm: FormGroup;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
@@ -89,6 +89,7 @@ export class ListPosComponent implements OnInit {
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
   mvdataset: any[];
+
   datasite: [];
   columnDefinitionssite: Column[] = [];
   gridOptionssite: GridOption = {};
@@ -99,7 +100,7 @@ export class ListPosComponent implements OnInit {
   row_number;
   message = "";
   date: String;
-
+  posForm: FormGroup;
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -111,7 +112,7 @@ export class ListPosComponent implements OnInit {
     private modalService: NgbModal,
     private layoutUtilsService: LayoutUtilsService,
     private siteService: SiteService,
-    private posCategoryService: PosCategoryService,
+    private bankService: BankService,
   ) {
     config.autoClose = true;
 
@@ -139,7 +140,7 @@ export class ListPosComponent implements OnInit {
     date.setDate(date.getDate() - 2);
     const date1 = new Date;
     this.posForm = this.posFB.group({
-      site:[this.user.usrd_site,Validators.required],
+    
       date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
@@ -151,7 +152,7 @@ export class ListPosComponent implements OnInit {
         day: date1.getDate()
       }],
       
-    
+      tr_site:[this.user.usrd_site,Validators.required],
     });
   }
  
@@ -181,10 +182,10 @@ export class ListPosComponent implements OnInit {
         
       },*/
       {
-        id: "created_date",
+        id: "effdate",
         name: "Date Effet",
-        field: "created_date",
-        nameKey: 'created_date',
+        field: "effdate",
+        nameKey: 'effdate',
         sortable: true,
       
 
@@ -203,32 +204,56 @@ export class ListPosComponent implements OnInit {
         },
           
         grouping: {
-          getter: 'created_date',
-          formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          getter: 'effdate',
+          formatter: (g) => `Date Effet: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('Remise')
+            new Aggregators.Sum('balance'),
+            new Aggregators.Sum('O'),
+            new Aggregators.Sum('C'),
+            new Aggregators.Sum('R'),
+            new Aggregators.Sum('D'),
           ],
             aggregateCollapsed: false,
             collapsed: false,
           
         }
       },
+      {
+        id: "date",
+        name: "Date Saisie",
+        field: "date",
+        nameKey: 'date',
+        sortable: true,
+      
+
+        formatter: Formatters.dateTimeIso, 
+        minWidth: 75,
+        width: 120,
+        exportWithFormatter: true,
+
+        type: FieldType.date,
+        filterable: true,
+       
+        
+      },
 
       {
-        id: "usrd_site",
-        name: "Site",
-        field: "usrd_site",
+        id: "code",
+        name: "Code",
+        field: "code",
         sortable: true,
         width: 50,
         filterable: false,
         type: FieldType.float,
         grouping: {
-          getter: 'usrd_site',
-          formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          getter: 'code',
+          formatter: (g) => `Code: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('Remise')
+            new Aggregators.Sum('balance'),
+            new Aggregators.Sum('O'),
+            new Aggregators.Sum('C'),
+            new Aggregators.Sum('R'),
+            new Aggregators.Sum('D'),
           ],
             aggregateCollapsed: false,
             collapsed: false,
@@ -236,7 +261,30 @@ export class ListPosComponent implements OnInit {
 
       },
       {
-        id: "order_emp",
+        id: "site",
+        name: "Site",
+        field: "site",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+        grouping: {
+          getter: 'site',
+          formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('balance'),
+            new Aggregators.Sum('O'),
+            new Aggregators.Sum('C'),
+            new Aggregators.Sum('R'),
+            new Aggregators.Sum('D'),
+          ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          }
+
+      },
+      /*{
+        id: "bkh_emp",
         name: "Type",
         field: "order_emp",
         sortable: true,
@@ -248,7 +296,7 @@ export class ListPosComponent implements OnInit {
           formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('Remise')
+            new Aggregators.Sum('disc_amt')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -268,17 +316,17 @@ export class ListPosComponent implements OnInit {
           formatter: (g) => `Plateforme: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('Remise')
+            new Aggregators.Sum('disc_amt')
         ],
           aggregateCollapsed: false,
           collapsed: false,
         }
        
-      },
+      },*/
       {
-        id: "total_price",
-        name: "Montant",
-        field: "total_price",
+        id: "balance",
+        name: "Balance",
+        field: "balance",
         sortable: true,
         width: 50,
         filterable: false,
@@ -289,9 +337,9 @@ export class ListPosComponent implements OnInit {
 
       },
       {
-        id: "Remise",
-        name: "Remise",
-        field: "Remise",
+        id: "O",
+        name: "Ouverture",
+        field: "O",
         sortable: true,
         width: 50,
         filterable: false,
@@ -302,8 +350,48 @@ export class ListPosComponent implements OnInit {
         params: { decimalPlaces: 2 },
 
       },
-      
-      
+      {
+        id: "D",
+        name: "Depense",
+        field: "D",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+        formatter: Formatters.decimal,
+        params: { decimalPlaces: 2 },
+
+      },
+      {
+        id: "R",
+        name: "Recette",
+        field: "R",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+        formatter: Formatters.decimal,
+        params: { decimalPlaces: 2 },
+
+      },
+      {
+        id: "C",
+        name: "Cloture",
+        field: "C",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+        formatter: Formatters.decimal,
+        params: { decimalPlaces: 2 },
+
+      },
     ];
 
     this.mvgridOptions = {
@@ -405,9 +493,9 @@ export class ListPosComponent implements OnInit {
     const date1 = controls.date1.value
     ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
     : null;
-    const site = controls.site.value
+    const site = controls.tr_site.value
     let obj= {date,date1,site}
-    this.posCategoryService.getAllPosGrp(obj).subscribe(
+    this.bankService.getAllGrp(obj).subscribe(
       (res: any) => {
     
       //(response: any) => (this.dataset = response.data),
@@ -420,9 +508,10 @@ export class ListPosComponent implements OnInit {
   })
   
   }
+
   onChangesite() {
     const controls = this.posForm.controls;
-    const si_site = controls.site.value;
+    const si_site = controls.tr_site.value;
     
     this.siteService.getByOne({ si_site }).subscribe(
       (res: any) => {
@@ -430,13 +519,13 @@ export class ListPosComponent implements OnInit {
         if (!res.data) {
   
             alert("Site n'existe pas  ")
-            controls.site.setValue(null);
-            document.getElementById("site").focus();
+            controls.tr_site.setValue(null);
+            document.getElementById("tr_site").focus();
           } else {
            if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
             alert("Site n'est pas autorisé pour cet utilisateur ")
-            controls.site.setValue(null);
-            document.getElementById("site").focus();
+            controls.tr_site.setValue(null);
+            document.getElementById("tr_site").focus();
              
 
 
@@ -445,6 +534,8 @@ export class ListPosComponent implements OnInit {
       
       });
   }
+  
+ 
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.posForm.controls;
       if (Array.isArray(args.rows) && this.gridObjsite) {
@@ -452,7 +543,7 @@ export class ListPosComponent implements OnInit {
         const item = this.gridObjsite.getDataItem(idx);
         console.log(item);
         
-       controls.site.setValue(item.si_site);
+       controls.tr_site.setValue(item.si_site);
         
     
      
@@ -540,5 +631,4 @@ export class ListPosComponent implements OnInit {
     this.modalService.open(contentsite, { size: "lg" });
   }
 
- 
 }

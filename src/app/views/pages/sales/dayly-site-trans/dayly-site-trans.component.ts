@@ -621,12 +621,12 @@ error = false;
         if (!res.data) {
   
             alert("Site n'existe pas  ")
-            controls.prh_site.setValue(null);
+            controls.tr_site.setValue(null);
             document.getElementById("tr_site").focus();
           } else {
            if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
             alert("Site n'est pas autorisé pour cet utilisateur ")
-            controls.prh_site.setValue(null);
+            controls.tr_site.setValue(null);
             document.getElementById("tr_site").focus();
              
 

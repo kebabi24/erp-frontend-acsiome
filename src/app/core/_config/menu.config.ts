@@ -74,6 +74,36 @@ export class MenuConfig {
           ],
         },
         
+        {
+          title: "Rapports",
+          bullet: "dot",
+          icon: "flaticon2-gear",
+          root: true,
+          submenu: [
+              
+            {
+              title: "Rapport Journalier",
+              page: "/sales/dayly-site-trans",
+            },
+            {
+              title: "Consultation des Ventes",
+              page: "/sales/list-sales",
+            },
+            {
+              title: "Consultation des Commandes",
+              page: "/sales/list-pos",
+            },
+            {
+              title: "Consultation des Caisses",
+              page: "/sales/list-caisse",
+            },
+            {
+              title: "Consultation des Transactions Grp ",
+              page: "/inventory-transaction/trans-list-grp",
+            },
+              
+          ],
+      },
         // CRM
         {
           title: "CRM",
@@ -591,10 +621,7 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon-cart",
           submenu: [
-            {
-              title: "Rapport Journalier",
-              page: "/sales/dayly-site-trans",
-            },
+           
 
             {
               title: "Offres Commerciales",
@@ -656,14 +683,7 @@ export class MenuConfig {
               title: "Liste des Factures",
               page: "/sales/invoice-list",
             },
-            {
-              title: "Consultation des Ventes",
-              page: "/sales/list-sales",
-            },
-            {
-              title: "Consultation des Commandes",
-              page: "/sales/list-pos",
-            },
+           
           ],
         },
         {

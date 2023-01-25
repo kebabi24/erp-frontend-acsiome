@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Consultation des Ventes" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Consultation des Caisses" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
        
     </kt-portlet-header>
@@ -14,14 +14,14 @@
                     
                         <div class="input-group input-group-sm">
 
-                            <input type="text" formControlName="site" (change)="onChangesite()" id="site"
-                                [className]="posForm.controls['site'].errors && (posForm.controls['site'].dirty || posForm.controls['site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            <input type="text" formControlName="tr_site" (change)="onChangesite()" id="tr_site"
+                                [className]="posForm.controls['tr_site'].errors && (posForm.controls['tr_site'].dirty || posForm.controls['tr_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="opensite(contentsite)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
-                            <div *ngIf="posForm.controls['site'].errors && (posForm.controls['site'].dirty || posForm.controls['site'].touched)"
+                            <div *ngIf="posForm.controls['tr_site'].errors && (posForm.controls['tr_site'].dirty || posForm.controls['tr_site'].touched)"
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                     </div>
                
                     <div class="form-group col-4">
-                  
+                        <label class="form-group">Valider: *</label>
                         <div class="input-group input-group-sm">
 
                         <button type="button"  (click)="poslist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
@@ -102,7 +102,6 @@
             <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
                 modal</button>
         </div>
-        
         
     </kt-portlet-body>
 </kt-portlet>

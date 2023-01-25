@@ -23,7 +23,7 @@ export class InterceptService implements HttpInterceptor {
     // tslint:disable-next-line:no-debugger
     // modify request
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
+  // console.log(user);
     request = request.clone({
       setHeaders: {
         USER_CODE: user ? user.usrd_code : "",
