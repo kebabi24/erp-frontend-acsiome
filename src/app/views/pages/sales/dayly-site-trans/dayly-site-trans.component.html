@@ -18,7 +18,7 @@
                     
                         <div class="input-group input-group-sm">
 
-                            <input type="text" formControlName="tr_site" (change)="onChangesite()" id="tr_site"
+                            <input type="text" formControlName="tr_site" (change)="onChangesite()" id="tr_site" (change)="change()"
                                 [className]="poForm.controls['tr_site'].errors && (poForm.controls['tr_site'].dirty || poForm.controls['tr_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">

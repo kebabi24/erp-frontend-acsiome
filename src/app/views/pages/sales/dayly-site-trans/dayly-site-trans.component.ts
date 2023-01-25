@@ -326,7 +326,10 @@ error = false;
 
     this.dataset = [];
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    //const date = `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     this.inventoryTransactionService.getDayly1({tr_site: controls.tr_site.value, tr_effdate: date}).subscribe(
       (response: any) => {   
         this.dataset = response.data
@@ -646,7 +649,7 @@ error = false;
         
        controls.tr_site.setValue(item.si_site);
         
-    
+    this.change()
      
   });
 
