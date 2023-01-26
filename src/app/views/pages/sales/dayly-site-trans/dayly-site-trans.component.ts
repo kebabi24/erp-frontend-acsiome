@@ -303,7 +303,7 @@ error = false;
 
     this.gridOptions = {
       asyncEditorLoading: false,
-      editable: true,
+      editable: false,
       enableFiltering: true,
       enableColumnPicker: false,
       enableCellNavigation: false,
@@ -421,9 +421,9 @@ error = false;
       asyncEditorLoading: false,
       editable: true,
       enableFiltering: true,
-      enableColumnPicker: true,
-      enableCellNavigation: true,
-      enableRowSelection: true,
+      enableColumnPicker: false,
+      enableCellNavigation: false,
+      enableRowSelection: false,
       enableAutoResize: true,
       autoHeight: true,
       formatterOptions: {

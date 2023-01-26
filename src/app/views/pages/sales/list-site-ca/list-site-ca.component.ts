@@ -63,7 +63,25 @@ import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import thId from "src/assets/plugins/formvalidation/src/js/validators/id/thId";
 
-
+const myCustomPersentFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) => {
+  if (value == null || value === "") {
+    return "0";
+  } else if (value >= 100) {
+    return "<span style='color:green;font-weight:bold;'>" + value + "%</span>";
+  } else {
+    return "<span style='color:red'>" + value + "%</span>";
+  }
+  }
+  const myCustomEcartFormatter: Formatter = (row: number, cell: number, value: Number, columnDef: Column, dataContext: any, grid?: any) => {
+    if (value == null || value === 0) {
+      return "0";
+    } else if (value > 0) {
+      return "<span step='0.01' style='color:red;font-weight:bold;'>" + value + "</span>";
+    } 
+    // else {
+    //   return "<span style='color:red'>" + value + "%</span>";
+    // }
+    }
 @Component({
   selector: 'kt-list-site-ca',
   templateUrl: './list-site-ca.component.html',
@@ -280,7 +298,7 @@ export class ListSiteCaComponent implements OnInit {
         name: "CA",
         field: "amt",
         sortable: true,
-       
+        formatter: Formatters.decimal,
         filterable: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
@@ -291,7 +309,7 @@ export class ListSiteCaComponent implements OnInit {
         name: "Recette",
         field: "rec",
         sortable: true,
-       
+        formatter: Formatters.decimal,
         filterable: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
@@ -303,10 +321,10 @@ export class ListSiteCaComponent implements OnInit {
         name: "Ecart",
         field: "ecart",
         sortable: true,
-       
+        formatter:myCustomEcartFormatter,       
         filterable: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
+        type: FieldType.number,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       {
@@ -314,7 +332,7 @@ export class ListSiteCaComponent implements OnInit {
         name: "Objectif",
         field: "obj",
         sortable: true,
-       
+        formatter: Formatters.decimal,
         filterable: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
@@ -325,7 +343,7 @@ export class ListSiteCaComponent implements OnInit {
         name: "% Réalisation",
         field: "cavsobj",
         sortable: true,
-        formatter: Formatters.percent,
+        formatter: myCustomPersentFormatter,
         filterable: true,
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
@@ -352,6 +370,23 @@ export class ListSiteCaComponent implements OnInit {
           ],
         },
        
+        formatterOptions: {
+        
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+        },
+       /* presets: {
+          sorters: [
+            { columnId: 'prh_line', direction: 'ASC' }
+          ],
+        },*/
+      
      
         gridMenu: {
           onCommand: (e, args) => {
