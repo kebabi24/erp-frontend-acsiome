@@ -320,7 +320,16 @@ export class ListSiteCaComponent implements OnInit {
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
-      
+      {
+        id: "cavsobj",
+        name: "% Réalisation",
+        field: "cavsobj",
+        sortable: true,
+        formatter: Formatters.percent,
+        filterable: true,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
       
     ];
 
