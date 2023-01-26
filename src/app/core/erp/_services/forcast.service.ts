@@ -8,10 +8,10 @@ import { environment } from "../../../../environments/environment"
 
 // model
 
-const API_URL = environment.apiUrl + "/banks"
+const API_URL = environment.apiUrl + "/forcasts"
 
 @Injectable()
-export class BankService {
+export class ForcastService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -21,22 +21,13 @@ export class BankService {
 
     // CREATE
     public add(data: any) {
+        console.log("hnhnhnhnhnn")
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, data, { headers: httpHeaders })
+        console.log(API_URL)
+        return this.http.post(API_URL,data, { headers: httpHeaders })
     }
 
-    // READ
-    
-    public getAR(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/ar`,data, { headers: httpHeaders })
- 
-    }
-    public getAP(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/ap`,data, { headers: httpHeaders })
- 
-    }
+   
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -57,20 +48,9 @@ export class BankService {
  
     }
     // UPDATE
-    public update(data: any, id:any) {
+    public update(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
+        return this.http.put(`${API_URL}`, data, { headers: httpHeaders })
     }
-    public updatedet(data: any, id:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL}/P${id}`, data, { headers: httpHeaders })
-    }
-    public getAllGrp(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders();
-        return this.http.post(`${API_URL}/findbankgrp`, data, {
-          headers: httpHeaders,
-        });
-      }
     // DELETE
-
 }

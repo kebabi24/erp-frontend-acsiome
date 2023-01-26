@@ -307,7 +307,7 @@ error = false;
       enableFiltering: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
-      enableRowSelection: true,
+      enableRowSelection: false,
       autoHeight: true,
       enableAutoResize:true,
       formatterOptions: {
@@ -326,7 +326,10 @@ error = false;
 
     this.dataset = [];
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    //const date = `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     this.inventoryTransactionService.getDayly1({tr_site: controls.tr_site.value, tr_effdate: date}).subscribe(
       (response: any) => {   
         this.dataset = response.data
@@ -421,7 +424,7 @@ error = false;
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
-      enableAutoResize: false,
+      enableAutoResize: true,
       autoHeight: true,
       formatterOptions: {
         
@@ -621,12 +624,12 @@ error = false;
         if (!res.data) {
   
             alert("Site n'existe pas  ")
-            controls.prh_site.setValue(null);
+            controls.tr_site.setValue(null);
             document.getElementById("tr_site").focus();
           } else {
            if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
             alert("Site n'est pas autorisé pour cet utilisateur ")
-            controls.prh_site.setValue(null);
+            controls.tr_site.setValue(null);
             document.getElementById("tr_site").focus();
              
 
@@ -646,7 +649,7 @@ error = false;
         
        controls.tr_site.setValue(item.si_site);
         
-    
+    this.change()
      
   });
 
@@ -659,16 +662,7 @@ error = false;
 
   prepareGridsite() {
     this.columnDefinitionssite = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromColumnPicker: true,
-        excludeFromGridMenu: true,
-        excludeFromHeaderMenu: true,
-
-        minWidth: 50,
-        maxWidth: 50,
-      },
+      
       {
         id: "id",
         name: "id",

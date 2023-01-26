@@ -504,6 +504,13 @@ const routes: Routes = [
             (m) => m.ConfigModule
           ),
       },
+      {
+        path: "forcast",
+        loadChildren: () =>
+          import(
+            "./views/pages/forcast/forcast.module"
+          ).then((m) => m.ForcastModule),
+      },
 
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },

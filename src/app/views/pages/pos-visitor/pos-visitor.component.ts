@@ -304,7 +304,7 @@ export class PosVisitorComponent implements OnInit {
       usrd_profile: this.user.usrd_profile,
       usrd_name: this.user.usrd_user_name,
       usrd_site: this.user.usrd_site,
-      from: "CALL CENTER",
+      plateforme: "CALL CENTER",
     };
 
     this.createCustomerForm();
@@ -918,7 +918,7 @@ export class PosVisitorComponent implements OnInit {
       disc_amt: this.currentOffer ? this.currentOffer.del_pct_disc : null,
       del_comp: this.currentOffer ? this.currentOffer.del_desc : null,
       site_loc: this.currentTable ? this.currentTable : null,
-      from: "CALL CENTER",
+      plateforme: "CALL CENTER",
     };
     console.log(cart.products);
     this.posCategoryService

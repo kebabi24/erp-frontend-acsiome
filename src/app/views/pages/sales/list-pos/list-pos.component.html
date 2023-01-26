@@ -9,9 +9,24 @@
             <form class="form" [formGroup]="posForm">
                 
                 <div class="row">
+                    <div class="form-group col-2" >
+                        <label class="form-group">Site: *</label>
                     
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="site" (change)="onChangesite()" id="site"
+                                [className]="posForm.controls['site'].errors && (posForm.controls['site'].dirty || posForm.controls['site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="posForm.controls['site'].errors && (posForm.controls['site'].dirty || posForm.controls['site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
                     <div class="form-group col-3">
-                       
+                        <label class="form-group">Date: *</label>
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-sm form-control-solid"  formControlName="date" 
                                  placeholder="jj-mm-aaaa" name="date" ngbDatepicker f
@@ -26,7 +41,7 @@
 
                     </div>
                     <div class="form-group col-3">
-                       
+                        <label class="form-group">A: *</label>
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-sm form-control-solid"  formControlName="date1" 
                                  placeholder="jj-mm-aaaa" name="date1" ngbDatepicker f
@@ -61,7 +76,33 @@
 
        
 
-       
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Site </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
+                            [columnDefinitions]="columnDefinitionssite"
+                            (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="datasite">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
+                modal</button>
+        </div>
+        
         
     </kt-portlet-body>
 </kt-portlet>

@@ -148,6 +148,7 @@ export { GeneralLedgerService } from "./_services/general-ledger.service";
 export { PosCategoryService } from "./_services/pos-categories.service";
 export { CRMService } from "./_services/crm.service";
 export { DeliveryService } from "./_services/delivery.service";
+export { ForcastService } from "./_services/forcast.service";
 
 export {
   printBc,
