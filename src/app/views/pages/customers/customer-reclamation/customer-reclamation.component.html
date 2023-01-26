@@ -234,88 +234,133 @@
       </form>
       <!-- RECLAMATION FORM -->
 
-      <!-- ORDER FORM -->
-      <form class="form col-6" [formGroup]="reclamationForm">
-        <!-- CARD -->
-        <div class="card card-custom gutter-b">
-          <div class="card-header">
-            <div class="card-title mt-2 mb-2 p-3">
-              <span class="card-icon section-title">
-                <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
-              </span>
-              <h3 class="card-label section-title" style="color: #ffb701">
-                Détails de la commande
-              </h3>
-            </div>
-          </div>
-          <div class="card-body">
-            <!-- FORM INPUTS -->
-            <!-- *ngIf="isExist" -->
-            <kt-alert  *ngIf="orderNotExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                    (close)="onAlertClose($event)">
-                    Aucune commande n'existe avec ce code
-            </kt-alert>
-            <!-- ORDER NUMBER -->
-            <div>
-              {{ time | async }}
-            </div>
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Numéro de commande:</label>
+      <div class="col-6">
+        <!-- ORDER FORM -->
+        <form class="form" [formGroup]="reclamationForm">
+          <!-- CARD -->
+          <div class="card card-custom gutter-b">
+            <div class="card-header">
+              <div class="card-title mt-2 mb-2 p-3">
+                <span class="card-icon section-title">
+                  <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
+                </span>
+                <h3 class="card-label section-title" style="color: #ffb701">
+                  Détails de la commande
+                </h3>
               </div>
-              <div class="col-4">
-                <div class="input-group input-group-sm">
-                  <input
-                    type="text"
-                    class="form-control form-control-solid"
-                    formControlName="order_code"
-                    (change)="getOrder()"
-                    aria-describedby="basic-addon2"
-                  />
+            </div>
+            <div class="card-body">
+              <!-- FORM INPUTS -->
+              <!-- *ngIf="isExist" -->
+              <kt-alert  *ngIf="orderNotExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                      (close)="onAlertClose($event)">
+                      Aucune commande n'existe avec ce code
+              </kt-alert>
+              <!-- ORDER NUMBER -->
+              <div>
+                {{ time | async }}
+              </div>
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Numéro de commande:</label>
+                </div>
+                <div class="col-4">
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="text"
+                      class="form-control form-control-solid"
+                      formControlName="order_code"
+                      (change)="getOrder()"
+                      aria-describedby="basic-addon2"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- ORDER NUMBER -->
+              <!-- ORDER NUMBER -->
 
-            <!-- SITE -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Site de la boutique:</label>
+              <!-- SITE -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Site de la boutique:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ order_site }}</h3>
+                </div>
               </div>
-              <div class="col-8">
-                <h3>{{ order_site }}</h3>
-              </div>
-            </div>
-            <!-- SITE -->
+              <!-- SITE -->
 
-            <!-- SITE -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Date de commande:</label>
+              <!-- SITE -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Date de commande:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ order_date }}</h3>
+                </div>
               </div>
-              <div class="col-8">
-                <h3>{{ order_date }}</h3>
-              </div>
-            </div>
-            <!-- SITE -->
+              <!-- SITE -->
 
-            <!-- EMP ORDER -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">EMP de commande:</label>
+              <!-- EMP ORDER -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">EMP de commande:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ order_emp }}</h3>
+                </div>
               </div>
-              <div class="col-8">
-                <h3>{{ order_emp }}</h3>
-              </div>
-            </div>
-            <!-- EMP ORDER -->
+              <!-- EMP ORDER -->
 
-            <!-- FORM INPUTS -->
+              <!-- FORM INPUTS -->
+            </div>
           </div>
-        </div>
-        <!-- CARD END  -->
-      </form>
-      <!-- ORDER FORM -->
+          <!-- CARD END  -->
+        </form>
+      
+        <!-- ORDER FORM -->
+      
+          <!-- COMPLAINT AUTO TREAT FORM -->
+         <div class="card card-custom gutter-b">
+            <div class="card-header">
+              <div class="card-title mt-2 mb-2 p-3">
+                <span class="card-icon section-title">
+                  <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
+                </span>
+                <h3 class="card-label section-title" style="color: #ffb701">
+                  Traitement automatique de réclamation
+                </h3>
+              </div>
+            </div>
+          <div class="card-body">
+            <!-- CAUSE -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">La cause:</label>
+              </div>
+              <div class="col-8">
+                <h5>cause_1</h5>
+              </div>
+            </div>
+            <!-- CAUSE -->
+
+            <!-- CAUSE -->
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Méthode de traitement:</label>
+              </div>
+              <div class="col-8">
+                <h5>method_1</h5>
+              </div>
+            </div>
+            <!-- CAUSE -->
+            
+
+            
+
+          </div>
+         </div>
+         <!-- COMPLAINT AUTO TREAT FORM -->
+      </div>
     </div>
 
     <!-- MODAL -->

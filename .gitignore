@@ -53,3 +53,4 @@ Thumbs.db
 tsconfig.json
 package.json
 package.json
+src/environments/environment.ts

@@ -75,7 +75,7 @@ const routes: Routes = [
         CRMComponent,  
         AgendaComponent,
         CategoryAddComponent,
-        PopulationAddComponent
+        PopulationAddComponent,
   ],
   imports: [
         CommonModule,

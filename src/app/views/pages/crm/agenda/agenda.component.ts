@@ -1,6 +1,6 @@
 
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
-import { NgbDropdownConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDropdownConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarOptions, FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 import listPlugin from '@fullcalendar/daygrid';
@@ -10,11 +10,14 @@ import interactionPlugin from '@fullcalendar/interaction';
 import {Column, GridOption, AngularGridInstance, FieldType} from "angular-slickgrid"
 import { ActivatedRoute, Router } from "@angular/router"
 import { Form, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
-import { MatDialog } from "@angular/material/dialog"
+import { MatDialog ,MatDialogRef} from "@angular/material/dialog"
 import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs"
 import { OnEventArgs, GridService, Editors, thousandSeparatorFormatted, Formatters } from 'angular-slickgrid';
 import frLocale from '@fullcalendar/core/locales/fr';
-
+// import {AngularDateTimePickerModule} from 'angular2-datetimepicker'
+import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {  NgbCalendar, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {  EventInput } from '@fullcalendar/core';
 
 
 import { Category } from "../../../../core/erp/_models/pos-categories.model";
@@ -45,7 +48,8 @@ export type ControlPosition = keyof typeof google.maps.ControlPosition;
 @Component({
   selector: 'kt-agenda',
   templateUrl: './agenda.component.html',
-  styleUrls: ['./agenda.component.scss']
+  styleUrls: ['./agenda.component.scss'],
+  
 })
 export class AgendaComponent implements OnInit {
   posCategory : Category  
@@ -59,6 +63,9 @@ export class AgendaComponent implements OnInit {
 
   ableToSave : Boolean = false; // TRUE => SHOW SAVE BUTTON IN MODAL 1 ELSE DON'T SHOW IT
   eventIsComplaint : Boolean = false; // TRUE => SHOW REC DETAILS BUTTON IN MODAL 1 ELSE DON'T SHOW IT
+  canAddNewEvent : Boolean = false; // TRUE => SHOW ADD EVENT BUTTON ; ELSE HIDE IT
+  recreate_event : Boolean = false; // TRUE => RECREATE EVENT ; ELSE DON'T
+  can_submit_line : Boolean = false; // TRUE => SEND TO BACKEND ; ELSE DON'T
 
   calendarOptions: CalendarOptions = {};
   events: any = [];  // for calendar 
@@ -73,8 +80,9 @@ export class AgendaComponent implements OnInit {
   event_Results: any = [];
   customeControls: Object = {};
   executionLine: Object = {};
-  eventHeader : Object = {}
-  complaintData : Object = {}
+  eventHeader : Object = {};
+  complaintData : Object = {};
+  
 
 
 
@@ -86,6 +94,7 @@ export class AgendaComponent implements OnInit {
     private modalService: NgbModal,
     private crmService : CRMService,
     private layoutUtilsService: LayoutUtilsService,
+    private calendar: NgbCalendar,
     config: NgbDropdownConfig
   
   ) {
@@ -114,6 +123,11 @@ export class AgendaComponent implements OnInit {
     this.loadingSubject.next(false)
   }
 
+  model: NgbDateStruct;
+  new_event_date: { year: number; month: number };
+  new_even_time = { hour: 13, minute: 30 };
+  
+
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
       observer.next("");
@@ -128,6 +142,7 @@ export class AgendaComponent implements OnInit {
   }
 
   createExecutionForm(){
+    console.log("createExecutionForm called")
     this.executionForm = this.formBuilder.group({ 
       ...this.customeControls,
       observation :  new FormControl("")
@@ -167,6 +182,106 @@ export class AgendaComponent implements OnInit {
 
   open3(content) {
     this.modalService.open(content, { size: "lg" });
+  }
+
+  open4(content) {
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open5(content) {
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  openDateTimePicker(event :any){
+    // document.getElementById("6")
+    console.log(event)
+    const controls = this.executionForm.controls
+
+    let selected_event_code = ""
+    
+    // get selected event results
+    this.event_Results.forEach((event) => {
+      if (controls[event.code_value].value === true) {
+        if(event.code_desc === "Nouveau RDV") {
+          this.canAddNewEvent = true
+        }
+        else{
+          this.canAddNewEvent = false
+        }
+        selected_event_code = event.code_value;
+        event.checked = true
+      }else{
+        event.checked = false
+        controls[event.code_value].setValue(false)
+      }
+    });
+
+    // select just one 
+    this.event_Results.forEach(event => {
+      if(event.code_value != selected_event_code ){
+         console.log(event.code_value + "\t - \t  " +controls[event.code_value].value)
+         event.checked = false
+      }
+      else{
+        console.log(event.code_value + "\t - \t  " +controls[event.code_value].value)
+        event.checked = true
+      }
+    });
+
+    // console.log(this.event_Results)
+  }
+
+  opeNewRDVPopup(){
+   document.getElementById("modal4Button").click(); 
+  }
+
+  saveNewEvent(){
+    let newEvent = {}
+    newEvent['code_event'] = this.selectedEvent.code_event 
+    newEvent['order'] = 5
+    newEvent['code_client'] = this.selectedEvent.code_client 
+    newEvent['category'] = this.selectedEvent.category 
+    newEvent['phone_to_call'] = this.selectedEvent.phone_to_call 
+    newEvent['status'] = this.selectedEvent.status 
+    newEvent['visibility'] = true
+    newEvent['duration'] = this.selectedEvent.duration
+    newEvent['action'] = this.selectedEvent.action
+    newEvent['method'] = this.selectedEvent.method
+    newEvent['event_day'] = this.model.year+'-'+this.model.month+'-'+this.model.day
+    newEvent['hh'] = this.new_even_time.hour 
+    newEvent['mn'] = this.new_even_time.minute 
+    newEvent['ss'] = 0  
+
+    this.crmService
+      .createAgendaLine(newEvent)
+
+      .subscribe(
+        (res: any) => {
+          console.log(res);
+          document.getElementById("closeModal4").click(); 
+        },
+        (err) =>
+          this.layoutUtilsService.showActionNotification(
+            "Erreur lors de l'ajout de le event",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          ),
+        () => {
+          this.createFrom()
+          this.layoutUtilsService.showActionNotification(
+            "event créée avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          // this.router.navigateByUrl("/auth/new-customer/");
+        }
+      );
+
+    console.log(newEvent)
   }
 
   openComplaintModal(){
@@ -243,13 +358,13 @@ export class AgendaComponent implements OnInit {
     }
     this.eventHeader['code_event'] = this.selectedEvent.code_event , 
     this.eventHeader['order'] = this.selectedEvent.order , 
+    this.eventHeader['param_code'] = this.selectedEvent.param_code , 
     document.getElementById("modalButton").click();
-    console.log(this.selectedEvent)
-    console.log(this.eventHeader)
   }
 
   // START EVENT EXECUTION : PRESS EXECUTE IN MODAL 1 (EVENT INFO)
   executeEvent(){
+    this.createExecutionForm()
     this.selectedEvent.call_start_time = this.getCurrentTime()
     document.getElementById("modal2Button").click();
   }
@@ -275,6 +390,12 @@ export class AgendaComponent implements OnInit {
     var state = "O";
     if(results[0].recall === false) state = "T" 
 
+    if(state !=="T" && this.selectedEvent.order == 4 && this.can_submit_line == false){
+      this.openRenewPopup()
+      this.can_submit_line = true
+      return
+    }
+
     this.executionLine = {
       event_day:this.selectedEvent.event_day,
       phone_to_call: this.selectedEvent.phone_to_call,
@@ -285,8 +406,9 @@ export class AgendaComponent implements OnInit {
       call_hour:this.selectedEvent.call_start_time,
       call_end_hour:this.selectedEvent.call_end_time,
       observation:controls.observation.value,
+      event_code : this.selectedEvent.code_event,
+      event_result : results[0].code_value,
     }
-    console.log('Execution line updated:'+ this.executionLine)
     this.ableToSave = true
     this.eventIsComplaint = false
     document.getElementById("closeForm2").click();  
@@ -297,16 +419,15 @@ export class AgendaComponent implements OnInit {
     const controls = this.eventForm.controls
     const selectedAction = controls.selectedAction.value
     const selectedMethod =  controls.selectedMethod.value
-    console.log('selectedAction :\t'+selectedAction )
-    console.log('selectedMethod :\t'+selectedMethod )
-    if(selectedAction ===""){
-      console.log('if(selectedAction)')
+    if(selectedMethod ===""){     
+      this.executionLine['method'] = selectedMethod
     }
     if(selectedAction !== ""){
-      console.log('if(!selectedAction)')
+      this.executionLine['action'] = selectedAction
     }
+
     this.crmService
-      .createExecutionLine(this.executionLine, this.eventHeader)
+      .createExecutionLine(this.executionLine, this.eventHeader,this.recreate_event)
 
       .subscribe(
         (res: any) => {
@@ -348,7 +469,8 @@ export class AgendaComponent implements OnInit {
       .subscribe(
         (res: any) => {
           this.eventsData = res.data
-          
+          this.calendarOptions.events = this.eventsData
+          console.log("refreshed")
         },
         (err) =>
           this.layoutUtilsService.showActionNotification(
@@ -359,23 +481,63 @@ export class AgendaComponent implements OnInit {
             true
           ),
           ()=>{
-            console.log('hey')
             this.eventsData.forEach(event => {
               this.events.push({ 
                 id: event.id,
                 date:event.event_day,
-                title:event.category_display , 
+                title:  event.category_display +'  '+ event.code_client +  ' ('+  event.order +' action)' , 
                 start: event.event_day+'T'+event.hh.toString().padStart(2,"0")+':'+event.mn.toString().padStart(2,"0")+':'+event.ss.toString().padStart(2,"0") ,  
                 end : event.event_day+'T'+event.hh.toString().padStart(2,"0")+':'+event.mn.toString().padStart(2,"0")+':'+55 ,
-                color:"yellow"
+                color:event.color,
               })
 
              });
+
+            this.calendarOptions= {
+              
+              plugins: [ dayGridPlugin,listPlugin ,timeGrigPlugin ,interactionPlugin],
+              height : "auto" ,
+              locales: [frLocale ],
+              locale:'fr',
+              themeSystem: 'bootstrap5',
+              headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,dayGridDay'
+              },
+
+              eventTimeFormat:{
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              },
+              displayEventEnd:false,
+              // initialView: 'dayGridMonth',
+              initialView: 'dayGridDay',
+              events: this.events,
+              eventClick : (calDate) =>{
+                this.eventClickHandler(calDate)
+              }
+            };
 
             
           }
         
       );
+  } 
+
+  openRenewPopup(){
+    document.getElementById("modal5Button").click(); 
+  }
+
+  renew(val){
+    if(val == true){
+      console.log("recreate event : " + this.recreate_event)
+      this.recreate_event = true
+    }
+    this.can_submit_line= true
+    document.getElementById("closeModal5").click();
   }
 
   // ***********************************************************
@@ -390,6 +552,7 @@ export class AgendaComponent implements OnInit {
 
           this.event_Results.forEach((result) => {
             this.customeControls[result.code_value] = new FormControl("");
+            result['checked'] = false
           });
 
           this.executionForm = this.formBuilder.group({ 
@@ -478,7 +641,6 @@ export class AgendaComponent implements OnInit {
       (response) => {
         if (response["data"] != null) {
           this.clientData = response["data"]
-          console.log(this.clientData)
         }
       },
       (error) => {

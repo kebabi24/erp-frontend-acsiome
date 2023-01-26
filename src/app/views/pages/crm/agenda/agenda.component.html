@@ -48,8 +48,24 @@
           (click)="open3(content3)"
           ></button>
 
+          <!-- BUTTON TO OPEN MODAL 4 -->
+          <button
+          hidden
+          id="modal4Button"
+          class="btn btn-primary"
+          (click)="open4(content4)"
+          ></button>
 
-          <!-- MODAL -->
+          <!-- BUTTON TO OPEN MODAL 5 -->
+          <button
+          hidden
+          id="modal5Button"
+          class="btn btn-primary"
+          (click)="open5(content5)"
+          ></button>
+
+
+          <!-- MODAL : EVENT INFO-->
           <div class="row">
               <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
@@ -227,12 +243,15 @@
                   </div>
                 </div>
                 <div class="modal-footer">
+
+                  <!-- BUTTON TO CLOSE THE MODAL FROM CODE -->
                   <button
                     hidden
                     id="closeForm1"
                     class="btn btn-primary"
                     (click)="c('Close click')"
                   ></button>
+
                   <button
                     type="button"
                     class="btn btn-secondary"
@@ -258,14 +277,16 @@
                   >
                       Exécuter
                   </button>
+
                 </div>
               </ng-template>
           </div>
           <!-- MODAL END -->
 
-         <!-- MODAL  2-->
+         <!-- MODAL  2 : EXECUTION-->
          <div class="row">
           <ng-template #content2 let-c="close" let-d="dismiss">
+
             <div class="modal-header">
               <h4 class="modal-title">L'execution</h4>
               <button
@@ -276,7 +297,19 @@
               >
                 <span aria-hidden="true">&times;</span>
               </button>
+
+              
+              <button
+              *ngIf="canAddNewEvent"
+              type="button"
+              class="btn btn-abracadabra"
+              (click)="opeNewRDVPopup()"
+            >
+              Créer un évènement
+            </button>
+
             </div>
+
             <div class="modal-body">
               <div class="row">
                 <!--begin::Form-->
@@ -327,10 +360,10 @@
                 
                   <!-- END END -->
                
-              </div>
-              <!-- TIMES -->
+                </div>
+                <!-- TIMES -->
                 
-                <!-- ACTIONS AND METHODS  -->
+                <!-- EXECUTION RESULTS  -->
                 <div class="row align-middle form-group-bg">
                   <div
                   class="col-12"
@@ -338,11 +371,14 @@
                 >
                   <div class="row mt-5">
                     <!-- SELECT -->
-                    <fieldset class="col-6" >
+                    <fieldset class="col-6"  >
                       <div *ngFor="let cause of event_Results; let i = index">
                         <input
                         type="checkbox"
+                        attr.id="{{i}}"
                         formControlName="{{ cause.code_value }}"
+                        (change)="openDateTimePicker(i)"
+                        [checked] = "cause.checked"
                         />
                         <label for="coding" class="ml-2">{{
                           cause.code_desc
@@ -368,7 +404,7 @@
 
                  
                 </div>
-                <!-- ACTIONS AND METHODS  -->
+                <!-- EXECUTION RESULTS  -->
     
                   
 
@@ -377,13 +413,18 @@
                 <!--end::Form-->
               </div>
             </div>
+
+
             <div class="modal-footer">
+
+              <!-- BUTTON TO CLOSE THE MODAL FROM CODE -->
               <button
                 hidden
                 id="closeForm2"
                 class="btn btn-primary"
                 (click)="c('Close click')"
               ></button>
+
               <button
                 type="button"
                 class="btn btn-secondary"
@@ -391,6 +432,7 @@
               >
                 Annuller
               </button>
+
               <button
                 type="button"
                 class="btn btn-abracadabra"
@@ -398,12 +440,14 @@
               >
                 Terminer
               </button>
+
             </div>
+
           </ng-template>
          </div>
          <!-- MODAL END 2 -->
 
-         <!-- MODAL 3 -->
+         <!-- MODAL 3 : COMPLAINT DATA   -->
          <div class="row">
           <ng-template #content3 let-c="close" let-d="dismiss">
             <div class="modal-header">
@@ -505,6 +549,128 @@
           </ng-template>
          </div>
          <!-- MODAL 3 END -->
+
+          <!-- MODAL 4 : DATE AND TIME PICKER-->
+          <div class="row">
+            <ng-template #content4 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Création d'un événement</h4>
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="d('Cross click')"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <!--begin::Form-->
+                  <!-- <form
+                    class="form"
+                    [formGroup]="complaintForm"
+                    autocomplete="off"
+                    novalidate="novalidate"
+                    class="pl-5 pr-5"
+                  >
+
+                  </form> -->
+                  <div class="col-6">
+                    <h5>Sélectionner la date : </h5>
+                    <ngb-datepicker #dp [(ngModel)]="model" ></ngb-datepicker>
+                  </div>
+                  <div class="col-6">
+                    <h5>Sélectionner l'heure : </h5>
+                    <ngb-timepicker [(ngModel)]="new_even_time "></ngb-timepicker>
+                  </div>
+                  <!--end::Form-->
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button
+                  hidden
+                  id="closeModal4"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                ></button>
+                  
+                  <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="c('Close click')"
+                >
+                    Annuller
+                  </button>
+
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="saveNewEvent()"
+                >
+                  Ajouter
+                </button>
+  
+                
+  
+              </div>
+            </ng-template>
+          </div>
+          <!-- MODAL 4 END -->
+
+          <!-- MODAL 5 : RECREATE EVENT-->
+          <div class="row">
+            <ng-template #content5 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Renouvellement de l'événement</h4>
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="d('Cross click')"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                 
+                  <div class="col-12">
+                    <h5>cet événement a atteint et se termine sans être terminé, aimeriez-vous le renouveler ? </h5> 
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button
+                  hidden
+                  id="closeModal5"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                  >
+                  </button>
+                  
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="renew(false)"
+                  >
+                  NON
+                  </button>
+
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="renew(true)"
+                  >
+                  OUI
+                  </button>
+  
+              </div>
+            </ng-template>
+          </div>
+          <!-- MODAL 5 : RECREATE EVENT END -->
 
          
 

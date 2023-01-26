@@ -51,9 +51,14 @@ export class CRMService {
     return this.http.post(`${API_URL}/createParam`, {paramHeaderData,paramDetails}, {headers: httpHeaders});
   }
 
-  public createExecutionLine(executionLine, eventHeader) {
+  public createExecutionLine(executionLine, eventHeader, recreateEvent) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.post(`${API_URL}/createExecutionLine`, {executionLine,eventHeader}, {headers: httpHeaders});
+    return this.http.post(`${API_URL}/createExecutionLine`, {executionLine,eventHeader,recreateEvent}, {headers: httpHeaders});
+  }
+
+  public createAgendaLine(newEventData) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/createOneAgendaLine`, {newEventData}, {headers: httpHeaders});
   }
 
   public createPopulation(populationData: any) {
