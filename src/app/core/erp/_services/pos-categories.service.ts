@@ -144,6 +144,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getAllBySite(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findbysite`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getOneOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findorder`, data, {

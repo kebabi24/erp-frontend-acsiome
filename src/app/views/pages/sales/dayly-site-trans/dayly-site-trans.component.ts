@@ -443,7 +443,9 @@ error = false;
     this.mvdataset = [];
     
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     console.log(date,controls.calc_date.value)
     this.posCategoryService.getSumeQty({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
       (response: any) => {   
@@ -462,7 +464,10 @@ error = false;
     this.mvdataset = []
     this.dataset = []
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+   // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     console.log(date,controls.tr_site.value)
     this.posCategoryService.getSumeQty({usrd_site: controls.tr_site.value, created_date: date}).subscribe(
       (response: any) => {   
