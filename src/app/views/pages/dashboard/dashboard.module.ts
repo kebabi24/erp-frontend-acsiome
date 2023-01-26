@@ -58,6 +58,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
+import { CRMDashboardComponent } from './crm-dashboard/crm-dashboard.component';
 
 
 
@@ -66,10 +67,18 @@ const routes: Routes = [
     path: 'manager-dashboard',
     component: ManagerDashboardComponent
   },
+  {
+    path: 'crm-dashboard',
+    component: CRMDashboardComponent
+  },
   
 ] 
 @NgModule({
-  declarations: [DashboardComponent, ManagerDashboardComponent],
+  declarations: [
+    DashboardComponent, 
+    ManagerDashboardComponent,
+    CRMDashboardComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
