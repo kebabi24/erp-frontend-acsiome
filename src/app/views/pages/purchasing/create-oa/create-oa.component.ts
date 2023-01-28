@@ -674,7 +674,7 @@ console.log(resp.data)
     }, {});
     console.log("array",result)
     
-    this.addPo( this.user.usrd_site,result,this.dataset);
+    this.addPo( controls.site.value,result,this.dataset);
   }
 
   /**
