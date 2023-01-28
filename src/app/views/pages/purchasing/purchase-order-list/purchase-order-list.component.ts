@@ -132,6 +132,7 @@ export class PurchaseOrderListComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: false,
+        type: FieldType.dateIso,
       },
       {
         id: "po_stat",
@@ -211,7 +212,7 @@ export class PurchaseOrderListComponent implements OnInit {
       },
       presets: {
         sorters: [
-          { columnId: 'po_nbr', direction: 'DESC' },
+          { columnId: 'po_ord_date', direction: 'DESC' },
          ],
       },
     };
