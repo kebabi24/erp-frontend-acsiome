@@ -359,6 +359,7 @@ export class AgendaComponent implements OnInit {
     this.eventHeader['code_event'] = this.selectedEvent.code_event , 
     this.eventHeader['order'] = this.selectedEvent.order , 
     this.eventHeader['param_code'] = this.selectedEvent.param_code , 
+    console.log(this.selectedEvent)
     document.getElementById("modalButton").click();
   }
 
@@ -408,6 +409,7 @@ export class AgendaComponent implements OnInit {
       observation:controls.observation.value,
       event_code : this.selectedEvent.code_event,
       event_result : results[0].code_value,
+      category : this.selectedEvent.category
     }
     this.ableToSave = true
     this.eventIsComplaint = false
@@ -419,7 +421,7 @@ export class AgendaComponent implements OnInit {
     const controls = this.eventForm.controls
     const selectedAction = controls.selectedAction.value
     const selectedMethod =  controls.selectedMethod.value
-    if(selectedMethod ===""){     
+    if(selectedMethod !==""){     
       this.executionLine['method'] = selectedMethod
     }
     if(selectedAction !== ""){
