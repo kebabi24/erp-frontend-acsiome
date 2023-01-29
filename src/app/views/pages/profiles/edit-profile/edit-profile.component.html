@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="form-group col-4">
                                 <label class="form-group">code profile: *</label>
-                                <input type="text" formControlName="usrg_code"
+                                <input type="text" formControlName="usrg_code" 
                                     [className]="profileForm.controls['usrg_code'].errors && (profileForm.controls['usrg_code'].dirty || profileForm.controls['usrg_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                 <div *ngIf="profileForm.controls['usrg_code'].errors && (profileForm.controls['usrg_code'].dirty || profileForm.controls['usrg_code'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>

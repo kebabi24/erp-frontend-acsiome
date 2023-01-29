@@ -116,8 +116,20 @@ export class EditProfileComponent implements OnInit {
             d1.setDate(d1.getDate() )
             const d2 = new Date(this.prf.usrg_val_en_date)
             d2.setDate(d2.getDate() )
-            controls.usrg_val_st_date.setValue({year: d1.getFullYear, month: d1.getMonth()+1, day: d1.getDate()})
-            controls.usrg_val_en_date.setValue({year: d2.getFullYear, month: d2.getMonth()+1, day: d2.getDate()})
+            controls.usrg_val_st_date.setValue({
+              year: new Date(d1).getFullYear(),
+              month: new Date(d1).getMonth() + 1,
+              day: new Date(d1).getDate(),
+    
+                 
+          })
+            controls.usrg_val_en_date.setValue({
+              year: new Date(d2).getFullYear(),
+              month: new Date(d2).getMonth() + 1,
+              day: new Date(d2).getDate(),
+    
+                 
+          })
             this.roles = JSON.parse(res.data.usrg_menus)
             const menus = new MenuConfig().defaults;
            this.selectedMenus = this.roles
@@ -143,9 +155,9 @@ export class EditProfileComponent implements OnInit {
     
   }
   onInitTree(event){
-    while (this.roles == null){
-      console.log('aaa')
-    }
+    // while (this.roles == null){
+    //   console.log('aaa')
+    // }
     event.treeModel.nodes.map(node=>{
       if(this.roles.filter(elem=>elem==node.name)[0]){
         const node_ = event.treeModel.getNodeById(node.id)
