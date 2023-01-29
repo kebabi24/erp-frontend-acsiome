@@ -326,7 +326,7 @@ export class PrintPoComponent implements OnInit {
     //printBc(this.prov, this.dataset, this.prhServer, this.curr);
     this.printpdf(controls.po_nbr.value)
     this.purchaseOrderService
-        .update({ po_stat: "I" }, this.prhServer.id)
+        .update({ po_stat: "V" }, this.prhServer.id)
         .subscribe( //(res) => {
 
           (reponse) => console.log("response", Response),
