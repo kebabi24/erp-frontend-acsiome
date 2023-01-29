@@ -60,6 +60,8 @@ import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 import { CRMDashboardComponent } from './crm-dashboard/crm-dashboard.component';
 
+import { CRMService } from '../../../core/erp';
+
 
 
 const routes: Routes = [
@@ -114,6 +116,7 @@ const routes: Routes = [
     HttpUtilsService,
     TypesUtilsService,
     LayoutUtilsService,
+    CRMService,
 ],
  
 })
