@@ -102,9 +102,14 @@ export class MenuConfig {
               page: "/sales/list-caisse",
             },
             {
+              title: "Consultation des CA par Boutique",
+              page: "/sales/list-site-ca",
+            },
+            {
               title: "Consultation des Transactions Grp ",
               page: "/inventory-transaction/trans-list-grp",
             },
+
               
           ],
       },
