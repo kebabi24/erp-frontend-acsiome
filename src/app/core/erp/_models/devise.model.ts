@@ -1,7 +1,7 @@
 import { BaseModel } from "./base.model"
 
 export class Devise extends BaseModel {
-    id = 0
+    id : Number
     cu_curr = ''
     cu_desc = ''
     cu_rnd_mthd = ''
