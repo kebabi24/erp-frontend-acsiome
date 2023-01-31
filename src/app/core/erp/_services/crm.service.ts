@@ -98,6 +98,11 @@ export class CRMService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${COMPLAINT_DATA_URL}/${phone}`, {headers: httpHeaders});
   }
+
+  public getCRMDashboardData() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/getCRMDashboardData`, {headers: httpHeaders});
+  }
  
 
   
