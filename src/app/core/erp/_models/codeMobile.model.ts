@@ -1,7 +1,7 @@
 import { BaseModel } from "./base.model"
 
 export class CodeMobile extends BaseModel {
-    id = 0
+    id : Number
     code_name = ''
     code_value = ''
     date01: String

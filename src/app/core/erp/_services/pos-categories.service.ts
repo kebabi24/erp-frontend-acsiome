@@ -186,7 +186,7 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders });
   }
-  
+
   public getLastOneSeq(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_SEQ}/findone`, data, {
@@ -405,6 +405,12 @@ export class PosCategoryService {
   public setLoyCart(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_CUSTOMER}/setloy`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public getByOneInV(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_INV}/findByOneinv`, data, {
       headers: httpHeaders,
     });
   }

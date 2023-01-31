@@ -1,7 +1,7 @@
 import { BaseModel } from "./base.model"
 
 export class Mesure extends BaseModel {
-    id = 0
+    id : Number
     um_um = ''
     um_alt_um = ''
     um_part = ''

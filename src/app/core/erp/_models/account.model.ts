@@ -1,7 +1,7 @@
 import { BaseModel } from "./base.model"
 
 export class Account extends BaseModel {
-    id = 0
+    id : Number
     ac_code = ''
     ac_desc = ''
     ac_type = ''
