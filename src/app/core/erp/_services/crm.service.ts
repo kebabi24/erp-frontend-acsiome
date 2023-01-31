@@ -11,7 +11,7 @@ import { environment } from "../../../../environments/environment";
 
 const API_URL = environment.apiUrl + "/crm";
 const COMPLAINT_DATA_URL = environment.apiUrl + "/customers/getComplaintData";
-
+const API_GET_PHONE = environment.apiUrl + "/auth/getPhone";
 
 @Injectable()
 export class CRMService {
@@ -104,7 +104,15 @@ export class CRMService {
     return this.http.get(`${API_URL}/getCRMDashboardData`, {headers: httpHeaders});
   }
  
+  getCustomerPhone(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.get(`${API_GET_PHONE}/${data}`,{ headers: httpHeaders });
+  }
 
+  public createAgendaEventOrderZero(category_code: any,phone:any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/createEventOrderZero`, {category_code,phone}, {headers: httpHeaders});
+  }
   
 
   

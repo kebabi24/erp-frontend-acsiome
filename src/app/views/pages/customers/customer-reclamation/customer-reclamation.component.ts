@@ -62,6 +62,7 @@ export class CustomerReclamationComponent implements OnInit {
   createdCustomer: Boolean = false;
   orderNotExist: Boolean = false;
   customerNotExist: Boolean;
+  automaticCauseExist : Boolean = false;
 
   order_code: String;
   order_site: String;
@@ -70,6 +71,8 @@ export class CustomerReclamationComponent implements OnInit {
 
   reclamation_causes: any = [];
   filtered_causes: any = [];
+
+  automatic_treat: any = [];
 
   customeControls: Object = {};
 
@@ -83,15 +86,17 @@ export class CustomerReclamationComponent implements OnInit {
     private customerService: CustomerService,
     private layoutUtilsService: LayoutUtilsService,
     private modalService: NgbModal,
-    private saleorderService: SaleOrderService
+    private saleorderService: SaleOrderService,
   ) {
     config.autoClose = true;
   }
 
   ngOnInit(): void {
+
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
+
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.getReclamationCauses();
@@ -99,6 +104,12 @@ export class CustomerReclamationComponent implements OnInit {
     this.initCustomerForm();
     this.createForm();
     // this.openCallAlert();
+    this.activatedRoute.params.subscribe(params => {
+      this.phone_number = params['phone']
+      if(this.phone_number){
+        this.getCustomerDataV2(this.phone_number)
+      }
+    });
   }
 
   getOrder() {
@@ -134,6 +145,36 @@ export class CustomerReclamationComponent implements OnInit {
     this.phone_number = controls.phonee.value
 
     this.customerService.getCustomer(this.phone_number).subscribe(
+      (reponse) => {
+        if (reponse["data"] == null) {
+          console.log("null");
+          this.customerNotExist = true;
+        } else {
+          this.customerNotExist = false;
+          this.name = reponse["data"].ad_name;
+          this.adress = reponse["data"].ad_line1;
+          this.age = reponse["data"].ad_format;
+          this.gender = reponse["data"].ad_ref;
+          this.router.navigated = false;
+          // window.location.reload()
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+
+  getCustomerDataV2(phone){
+
+    this.customerService.getCustomer(phone).subscribe(
       (reponse) => {
         if (reponse["data"] == null) {
           console.log("null");
@@ -423,5 +464,32 @@ export class CustomerReclamationComponent implements OnInit {
             order_code: new FormControl(""),
             ...this.customeControls,
           });
+  }
+
+  onCauseSelect(val){
+    const indexInReasons = this.reclamation_causes.findIndex(cause=>{
+       return cause.code_value === val
+    })
+    console.log(this.reclamation_causes[indexInReasons])
+    if(this.reclamation_causes[indexInReasons].bool01){
+      const index = this.automatic_treat.findIndex(code =>{
+        return code ==  val
+      })
+      if(index === -1){
+        this.automatic_treat.push(val)
+      }
+      else{ 
+        this.automatic_treat.splice(index, 1);
+      }
+      
+      if(this.automatic_treat.length>0 ){
+        this.automaticCauseExist = true
+      }else{
+        this.automaticCauseExist= false
+      }
+      console.log(this.automatic_treat)
+      console.log(this.automatic_treat.length)
+
+    }
   }
 }

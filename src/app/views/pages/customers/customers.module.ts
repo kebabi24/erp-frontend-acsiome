@@ -100,6 +100,10 @@ const routes: Routes = [
             component: CustomerReclamationComponent,
           },
           { 
+            path: "customer-reclamation/:phone",
+            component: CustomerReclamationComponent,
+          },
+          { 
             path: "customer-satisfaction",
             component: CustomerSatisfactionComponent,
           },
