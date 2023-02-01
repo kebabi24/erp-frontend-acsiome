@@ -303,13 +303,13 @@ error = false;
 
     this.gridOptions = {
       asyncEditorLoading: false,
-      editable: false,
+      editable: true,
       enableFiltering: true,
       enableColumnPicker: false,
       enableCellNavigation: false,
       enableRowSelection: false,
+      enableAutoResize: true,
       autoHeight: true,
-      enableAutoResize:true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)

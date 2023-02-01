@@ -87,13 +87,13 @@ export class AppComponent implements OnInit, OnDestroy {
         // setTimeout(() => {
         //   document.body.classList.add("page-loaded");
         // }, 500);
-        this.posCategoryService.synchro().subscribe((res: any) => {
-          if (res.data) {
+        //this.posCategoryService.synchro().subscribe((res: any) => {
+        //  if (res.data) {
             document.body.classList.add("page-loaded");
-          } else {
-            console.log("data is not synchronized yet! please wait");
-          }
-        });
+        //  } else {
+        //    console.log("data is not synchronized yet! please wait");
+        //  }
+       // });
         this.splashScreenService.hide();
       }
     });
