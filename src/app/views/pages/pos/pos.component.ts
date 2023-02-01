@@ -354,11 +354,24 @@ export class PosComponent implements OnInit {
         if (service) {
           this.globalState = false;
           this.stateCaisse = true;
-          this.stateInventory = true;
+          this.posCategoryService
+            .getByOneInV({ role_code: this.user.usrd_code, type: "CYC-RCNT" })
+            .subscribe((res: any) => {
+              let data = res.data;
+              if (data) {
+                this.stateInventory = true;
+                this.globalState = false;
+                this.stateCaisse = true;
+              } else {
+                this.stateCaisse = false;
+                this.stateInventory = false;
+                this.globalState = true;
+              }
+            });
         } else {
           this.globalState = true;
           this.stateCaisse = false;
-          this.stateInventory = true;
+          this.stateInventory = false;
         }
       });
   }
@@ -1377,36 +1390,34 @@ export class PosComponent implements OnInit {
       },
     ];
     if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
-      electronPrinter.print(data, data2);
+      // electronPrinter.print(data, data2);
     }
 
-    if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
-      this.posCategoryService.addOrder({ cart, modif: this.modif }).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.offer === true && (this.offer = false);
-          this.currentOffer = null;
-          this.loadingSubject.next(false);
-        }
-      );
-    }
+    this.posCategoryService.addOrder({ cart, modif: this.modif }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.offer === true && (this.offer = false);
+        this.currentOffer = null;
+        this.loadingSubject.next(false);
+      }
+    );
     //console.log(this.currentTicketNumber);
 
     // this.posCategoryService
@@ -1527,31 +1538,37 @@ export class PosComponent implements OnInit {
     this.dataset.map((item) => {
       return (item.tag_cnt_qty = item.tag_cnt_qty);
     });
-    this.posCategoryService.checkInventory({ detail: this.dataset }).subscribe(
-      (reponse) => console.log("response", Response),
-      (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.loadingSubject.next(false);
-      },
-      () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
-        this.stateInventory = true;
-        this.globalState = false;
-        this.loadingSubject.next(false);
-      }
-    );
+    this.posCategoryService
+      .checkInventory({
+        detail: this.dataset,
+        user: this.user.usrd_profile,
+        user_site: this.user.usrd_site,
+      })
+      .subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.stateInventory = true;
+          this.globalState = false;
+          this.loadingSubject.next(false);
+        }
+      );
   }
   handleSelectedRowsChanged(e, args) {}
 
