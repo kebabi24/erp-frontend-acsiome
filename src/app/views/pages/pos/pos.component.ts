@@ -989,6 +989,7 @@ export class PosComponent implements OnInit {
     let val = this.cartProducts.reduce((acc, cur) => {
       return acc + Number(cur.pt_price);
     }, 0);
+
     return val;
   }
   getItemFromHistory(order) {
@@ -1021,6 +1022,7 @@ export class PosComponent implements OnInit {
     const loy = this.cart.products.find(
       (item) => item.pt_part_type === "STD" || item.pt_part_type === "PRM"
     );
+    console.log(loy);
     if (loy && this.loy_num) {
       this.posCategoryService
         .setLoyCart({ customer_number: this.loy_num, type: loy.pt_part_type })
@@ -1465,6 +1467,7 @@ export class PosComponent implements OnInit {
     // this.currentSeq = Number(this.currentSeq) + 1;
     this.chooseLoc = true;
     this.inputName.nativeElement.value = "";
+    this.loy_num = null;
   }
 
   changeSelection(event, index) {
@@ -2722,7 +2725,8 @@ export class PosComponent implements OnInit {
         (item) =>
           item.cm_addr === discount ||
           item.cm_sort === discount ||
-          item.cm_rmks === discount
+          item.cm_rmks === discount ||
+          item.cm_db === discount
       );
       if (elem) {
         this.cart.total_price =
