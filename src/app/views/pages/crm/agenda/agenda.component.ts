@@ -60,6 +60,7 @@ export class AgendaComponent implements OnInit {
   eventForm: FormGroup;
   executionForm: FormGroup;
   complaintForm : FormGroup;
+  newEventForm : FormGroup;
 
   ableToSave : Boolean = false; // TRUE => SHOW SAVE BUTTON IN MODAL 1 ELSE DON'T SHOW IT
   eventIsComplaint : Boolean = false; // TRUE => SHOW REC DETAILS BUTTON IN MODAL 1 ELSE DON'T SHOW IT
@@ -82,6 +83,11 @@ export class AgendaComponent implements OnInit {
   executionLine: Object = {};
   eventHeader : Object = {};
   complaintData : Object = {};
+
+  // FOR NEW EVENT POPUP
+  filtered_categories :any = [];
+  can_select_call : Boolean = false;
+  result_string : String = "";
   
 
 
@@ -114,6 +120,7 @@ export class AgendaComponent implements OnInit {
     this.getMethods()
     this.createFrom()
     this.createComplaintForm()
+    this.createNewEventForm()
     this.init()
   }
   
@@ -155,6 +162,19 @@ export class AgendaComponent implements OnInit {
     });
   }
 
+  createNewEventForm(){
+    this.newEventForm = this.formBuilder.group({ 
+      phone: [
+        "",
+        Validators.compose([
+          Validators.required, 
+          // Validators.maxLength(10),
+          Validators.pattern("[0][567][0-9]{8}"),
+        ]),
+      ],
+    });
+  }
+
   goBack() {
     //this.loadingSubject.next(false)
     const url = `/customers-mobile`
@@ -189,6 +209,10 @@ export class AgendaComponent implements OnInit {
   }
 
   open5(content) {
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open6(content) {
     this.modalService.open(content, { size: "lg" });
   }
 
@@ -542,6 +566,115 @@ export class AgendaComponent implements OnInit {
     document.getElementById("closeModal5").click();
   }
 
+  // ******************** NEW EVENT*****************************
+  newEvent(){
+    document.getElementById("modal6Button").click(); 
+  }
+
+  onChangePhone(){
+    const controls = this.newEventForm.controls;
+    const phone = controls.phone.value;
+    this.crmService.getCustomerPhone(phone).subscribe((res: any) => {
+      if (res.data) {
+        console.log(res.data)
+        this.can_select_call = true
+        this.result_string="client existe"
+        
+        document.getElementById("phoneN").focus();
+      } else {
+        this.can_select_call = true
+        this.result_string="client n'existe pas"
+
+      }
+    });
+  }
+
+  changeRoute(category_code){
+    const controls = this.newEventForm.controls;
+    const phone = controls.phone.value;
+    if(category_code === "complaint"){
+      
+      this.crmService.createAgendaEventOrderZero(category_code,phone).subscribe(
+        (res: any) => {
+          window.open("/customers/customer-reclamation/"+phone)
+        },
+        (err) =>
+          this.layoutUtilsService.showActionNotification(
+            "Erreur lors de l'ajout de l'evenement'",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          ),
+        () => {
+          this.createFrom()
+          this.layoutUtilsService.showActionNotification(
+            "Ligne créée avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          // this.router.navigateByUrl("/auth/new-customer/");
+        
+      });
+      
+      
+    }else if(category_code === "pos_call_order"){
+      this.crmService.createAgendaEventOrderZero(category_code,phone).subscribe(
+        (res: any) => {
+          window.open("/pos-visitor")
+        },
+        (err) =>
+          this.layoutUtilsService.showActionNotification(
+            "Erreur lors de l'ajout de l'evenement'",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          ),
+        () => {
+          this.createFrom()
+          this.layoutUtilsService.showActionNotification(
+            "Ligne créée avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          // this.router.navigateByUrl("/auth/new-customer/");
+        
+      });
+      
+    }else{
+      this.crmService.createAgendaEventOrderZero(category_code,phone).subscribe(
+        (res: any) => {
+          window.open("http://localhost:4200/customers/customer-reclamation")
+        },
+        (err) =>
+          this.layoutUtilsService.showActionNotification(
+            "Erreur lors de l'ajout de l'evenement'",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          ),
+        () => {
+          this.createFrom()
+          this.layoutUtilsService.showActionNotification(
+            "Ligne créée avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          // this.router.navigateByUrl("/auth/new-customer/");
+        
+      });
+    }
+    this.can_select_call = false
+  }
+
   // ***********************************************************
   // *******************  GETTERS ******************************
   // ***********************************************************
@@ -621,6 +754,11 @@ export class AgendaComponent implements OnInit {
       (response) => {
         if (response["data"] != null) {
           this.categories = response["data"]
+          this.categories.forEach(category=>{
+            if (category.bool01){
+              this.filtered_categories.push(category)
+            }
+          })
           this.getTodayEvents()
         }
       },

@@ -16,11 +16,20 @@
         Annuler
       </button>
       <button
+        *ngIf="!automaticCauseExist"
         type="button"
         (click)="onSubmit()"
         class="btn btn-sm mr-2 btn-abracadabra"
       >
         Sauvgarder
+      </button>
+      <button
+        *ngIf="automaticCauseExist"
+        type="button"
+        (click)="onSubmit()"
+        class="btn btn-sm mr-2 btn-abracadabra"
+      >
+      valider
       </button>
       <!-- <button
         hidden
@@ -159,10 +168,11 @@
                                     <input
                                       type="checkbox"
                                       formControlName="{{ cause.code_value }}"
+                                      (change)="onCauseSelect(cause.code_value)"
                                     />
-                                    <label for="coding" class="ml-2">{{
-                                      cause.code_desc
-                                    }}</label>
+                                    <label for="coding" class="ml-2">
+                                      {{cause.code_desc}}
+                                  </label>
                                   </fieldset>
 
                                   <div class="input-group input-group-sm col-6">

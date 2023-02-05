@@ -92,11 +92,7 @@ error = false;
   mvgridOptions: GridOption;
   mvdataset: any[];
 
-  providers: [];
-  columnDefinitions2: Column[] = [];
-  gridOptions2: GridOption = {};
-  gridObj2: any;
-  angularGrid2: AngularGridInstance;
+  
 
   users: [];
   columnDefinitions3: Column[] = [];
@@ -115,6 +111,12 @@ error = false;
   gridOptions4: GridOption = {};
   gridObj4: any;
   angularGrid4: AngularGridInstance;
+
+  providers: [];
+  columnDefinitionsvend: Column[] = [];
+  gridOptionsvend: GridOption = {};
+  gridObjvend: any;
+  angularGridvend: AngularGridInstance;
 
   ums: [];
   columnDefinitionsum: Column[] = [];
@@ -168,7 +170,7 @@ error = false;
     private modalService: NgbModal,
     private layoutUtilsService: LayoutUtilsService,
     private requisitonService: RequisitionService,
-    private providersService: ProviderService,
+    private providerService: ProviderService,
     private userService: UsersService,
     private requisitionService: RequisitionService,
     private sequenceService: SequenceService,
@@ -237,38 +239,7 @@ error = false;
         editor: {
           model: Editors.text,
         },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.pod_part)
-          const controls = this.poForm.controls 
-          this.itemsService.getByOne({pt_part: args.dataContext.pod_part }).subscribe((resp:any)=>{
-console.log(resp.data)
-            if (resp.data) {
-        console.log(resp.data.pt_plan_ord,controls.po_req_id.value)
-
-              if (resp.data.pt_plan_ord && controls.po_req_id.value == null) {
-                alert("Article Doit passer par une demande d Achat")
-                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_part: null })
-
-
-              } else {
-
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , pod_site:resp.data.pt_site, pod_loc: resp.data.pt_loc,
-                pod_um:resp.data.pt_um, pod_tax_code: resp.data.pt_taxc, pod_taxc: resp.data.taxe.tx2_tax_pct, pod_taxable: resp.data.pt_taxable})
-
-              }
-      
-      
-         }  else {
-            alert("Article Nexiste pas")
-            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_part: null })
-         }
-          
-          });
-
-           
-         
-         
-        }
+        
       },
       {
         id: "desc",
@@ -277,55 +248,6 @@ console.log(resp.data)
         sortable: true,
         width: 80,
         filterable: false,
-      },
-      {
-        id: "qty",
-        name: "QTE Demandée",
-        field: "qty",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.float,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 }
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-  
-        
-
-      }
-      
-      },
-      {
-        id: "qtyoh",
-        name: "Qte Stock",
-        field: "qtyoh",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        
-      },
-      {
-        id: "sftystk",
-        name: "Stock Sécurité",
-        field: "sftystk",
-        sortable: true,
-        width: 80,
-        filterable: false,
-       
-      },
-      {
-        id: "qtycom",
-        name: "Qte à Commander",
-        field: "qtycom",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 }
-        },
       },
       {
         id: "um",
@@ -338,35 +260,116 @@ console.log(resp.data)
       },
       
       {
+        id: "qty",
+        name: "QTE Demandée",
+        field: "qty",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 }
+        },
+        
+      
+      },
+      {
+        id: "qtyoh",
+        name: "Qte Stock",
+        field: "qtyoh",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "sftystk",
+        name: "Stock Sécurité",
+        field: "sftystk",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "qtycom1",
+        name: "Qte à Commander",
+        field: "qtycom",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+       
+       
+      },
+      {
+        id: "qtyval",
+        name: "Qte Validée",
+        field: "qtyval",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        //type: FieldType.float,
+        formatter: Formatters.decimal,
+        type: FieldType.integer,
+        editor: {
+          model: Editors.integer,
+          //params: { minDecimal: 0, maxDecimal: 0 },
+        },
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      
+      {
         id: "vend",
         name: "Fournisseur",
         field: "vend",
         sortable: true,
         width: 80,
         filterable: false,
-        
+        type: FieldType.string,
         editor: {
           model: Editors.text,
         },
       },
-      
+      {
+        id: "mvid",
+        field: "cmvid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          let element: HTMLElement = document.getElementById(
+            "openVendsGrid"
+          ) as HTMLElement;
+          element.click();
+        },
+      },
     ];
 
     this.gridOptions = {
       asyncEditorLoading: false,
       editable: true,
-      enableColumnPicker: true,
+      //autoEdit:true,
+      enableColumnPicker: false,
       enableCellNavigation: true,
       enableAutoResize: true,
-      enableRowSelection: true,
+      enableRowSelection: false,
       autoHeight: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-        displayNegativeNumberWithParentheses: true,
+        displayNegativeNumberWithParentheses: false,
   
         // Defaults to undefined, minimum number of decimals
         minDecimal: 2,
+        maxDecimal:2,
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
@@ -861,4 +864,126 @@ console.log(resp.data)
     this.modalService.open(contentsite, { size: "lg" });
   }
 
+
+  /*vendor*/
+  handleSelectedRowsChangedvend(e, args) {
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    
+    if (Array.isArray(args.rows) && this.gridObjvend) {
+      args.rows.map((idx) => {
+  
+            
+        const item = this.gridObjvend.getDataItem(idx);
+              updateItem.vend = item.vd_addr;
+              this.gridService.updateItem(updateItem);
+           
+      })   
+    }
+  }
+  
+  angularGridReadyvend(angularGrid: AngularGridInstance) {
+    this.angularGridvend = angularGrid;
+    this.gridObjvend = (angularGrid && angularGrid.slickGrid) || {};
+  }
+  
+  prepareGridvend() {
+    this.columnDefinitionsvend = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "vd_addr",
+        name: "code",
+        field: "vd_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_name",
+        name: "Fournisseur",
+        field: "address.ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_phone",
+        name: "Numero telephone",
+        field: "address.ad_phone",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxable",
+        name: "A Taxer",
+        field: "address.ad_taxable",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxc",
+        name: "Taxe",
+        field: "address.ad_taxc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsvend = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+  
+    // fill the dataset with your data
+    this.providerService
+      .getAll()
+      .subscribe((response: any) => (this.providers = response.data));
+  }
+  openvend(contentvend) {
+    this.prepareGridvend();
+    this.modalService.open(contentvend, { size: "lg" });
+  }
+  
 }

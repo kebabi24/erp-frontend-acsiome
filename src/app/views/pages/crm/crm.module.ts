@@ -18,6 +18,11 @@ import { FakeApiService } from "../../../core/_base/layout"
 import { ModuleGuard } from "../../../core/auth"
 import { AngularSlickgridModule } from 'angular-slickgrid';
 
+// Material
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+
 // Core => Utils
 import {
     HttpUtilsService,
@@ -90,6 +95,11 @@ const routes: Routes = [
         MatMenuModule,
         MatTabsModule,
         MatButtonModule,
+        MatButtonModule,
+        RouterModule.forChild(routes),
+        MatInputModule,
+        MatFormFieldModule,
+        MatCheckboxModule,
         FullCalendarModule,
         NgbModule,
         environment.isMockEnabled

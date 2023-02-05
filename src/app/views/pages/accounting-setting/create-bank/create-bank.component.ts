@@ -636,7 +636,7 @@ export class CreateBankComponent implements OnInit {
         bk_edft_sub: [{ value: this.bank.bk_edft_sub, disabled: !this.isExist }],
         bk_edft_cc: [{ value: this.bank.bk_edft_cc, disabled: !this.isExist }],
         
-        bk_userid: [{ value: this.bank.bk_userid, disabled: !this.isExist }],
+        bk_user1: [{ value: this.bank.bk_user1, disabled: !this.isExist }],
         user_name: [{ value: null, disabled: true }],
         
 
@@ -721,7 +721,7 @@ export class CreateBankComponent implements OnInit {
                   controls1.bk_edft_acct.enable()
                   controls1.bk_edft_sub.enable()
                   controls1.bk_edft_cc.enable()
-                  controls1.bk_userid.enable()
+                  controls1.bk_user1.enable()
                  
                 }
               
@@ -897,7 +897,8 @@ export class CreateBankComponent implements OnInit {
       _bank.bk_edft_acct = controls.bk_edft_acct.value
       _bank.bk_edft_sub = controls.bk_edft_sub.value
       _bank.bk_edft_cc = controls.bk_edft_cc.value
-      _bank.bk_userid = controls.bk_userid.value
+      _bank.bk_user1 = controls.bk_user1.value
+      _bank.bk_userid = controls.bk_user1.value
       return _bank
   }
 
@@ -1540,7 +1541,7 @@ export class CreateBankComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObjuser) {
         args.rows.map((idx) => {
             const item = this.gridObjuser.getDataItem(idx)
-              controls.bk_userid.setValue(item.usrd_code || "")
+              controls.bk_user1.setValue(item.usrd_code || "")
               controls.user_name.setValue(item.usrd_name || "")
               
             })
@@ -1555,7 +1556,7 @@ changeuser(){
 
   const controls1 = this.bankForm.controls 
   let usrd_code : any
-      usrd_code  = controls1.bk_userid.value
+      usrd_code  = controls1.bk_user1.value
   
   
 this.usersService.getByOne({usrd_code}).subscribe((res:any)=>{
