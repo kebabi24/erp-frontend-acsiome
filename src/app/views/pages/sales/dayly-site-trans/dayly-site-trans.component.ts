@@ -203,7 +203,6 @@ error = false;
         field: "id",
         minWidth: 50,
         maxWidth: 50,
-        selectable: true,
       },
       {
         id: "part",
@@ -255,6 +254,17 @@ error = false;
         params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
+        id: "ecartdeb",
+        name: "Ecart",
+        field: "ecartdeb",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
         id: "qtyrec",
         name: "Réception",
         field: "qtyrec",
@@ -298,12 +308,23 @@ error = false;
         formatter: Formatters.decimal,
         params: { minDecimal: 2, maxDecimal: 2 }, 
       },
+      {
+        id: "ecartfin",
+        name: "Ecart",
+        field: "ecartfin",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
       
     ];
 
     this.gridOptions = {
       asyncEditorLoading: false,
-      editable: true,
+      editable: false,
       enableFiltering: true,
       enableColumnPicker: false,
       enableCellNavigation: false,

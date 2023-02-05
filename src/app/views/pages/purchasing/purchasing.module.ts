@@ -84,6 +84,7 @@ import { EditRequisitionComponent } from './edit-requisition/edit-requisition.co
 import { ListSequenceComponent } from './list-sequence/list-sequence.component';
 import { EditSequenceComponent } from './edit-sequence/edit-sequence.component';
 import { CreateOaComponent } from './create-oa/create-oa.component';
+import { EditPoComponent } from './edit-po/edit-po.component';
 
 const routes: Routes = [
   {
@@ -165,6 +166,10 @@ const routes: Routes = [
         component: EditStatusPoComponent,
       },
       {
+        path: "edit-po/:id",
+        component: EditPoComponent,
+      },
+      {
         path: "purchase-list",
         component: PurchaseListComponent,
       },
@@ -198,7 +203,8 @@ const routes: Routes = [
     EditRequisitionComponent,
     ListSequenceComponent,
     EditSequenceComponent,
-    CreateOaComponent
+    CreateOaComponent,
+    EditPoComponent
   ],
   imports: [
     CommonModule,
