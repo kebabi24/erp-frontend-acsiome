@@ -105,7 +105,16 @@ export class PurchaseOrderListComponent implements OnInit {
         minWidth: 50,
         maxWidth: 50,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
-        onCellClick: (e: Event, args: OnEventArgs) => {},
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id
+          console.log(args.dataContext.po.po_stat)
+          if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
+          this.router.navigateByUrl(`/purchasing/edit-po/${id}`)
+          }
+          else {
+            alert("Modification Impossible pour ce Status")
+          }
+        },
       },
 
       {

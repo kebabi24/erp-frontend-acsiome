@@ -5,13 +5,15 @@
     "main": "app.js",
     "scripts": {
         "ng": "ng",
-        "start": "node --max-old-space-size=8192 node_modules/@angular/cli/bin/ng serve",
+        "start": "electron .",
         "build": "ng build --prod",
+        "electron": "ng build && electron .",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
         "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-        "rtl": "webpack"
+        "rtl": "webpack",
+        "pack": "electron-packager . abracadabra --platform=win32 --arch=ia32"
     },
     "private": true,
     "dependencies": {

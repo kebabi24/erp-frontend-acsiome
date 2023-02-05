@@ -203,7 +203,6 @@ error = false;
         field: "id",
         minWidth: 50,
         maxWidth: 50,
-        selectable: true,
       },
       {
         id: "part",
@@ -255,6 +254,17 @@ error = false;
         params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
+        id: "ecartdeb",
+        name: "Ecart",
+        field: "ecartdeb",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
         id: "qtyrec",
         name: "Réception",
         field: "qtyrec",
@@ -298,6 +308,17 @@ error = false;
         formatter: Formatters.decimal,
         params: { minDecimal: 2, maxDecimal: 2 }, 
       },
+      {
+        id: "ecartfin",
+        name: "Ecart",
+        field: "ecartfin",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
       
     ];
 
@@ -308,8 +329,8 @@ error = false;
       enableColumnPicker: false,
       enableCellNavigation: false,
       enableRowSelection: false,
+      enableAutoResize: true,
       autoHeight: true,
-      enableAutoResize:true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
