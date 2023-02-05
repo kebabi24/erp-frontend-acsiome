@@ -44,209 +44,124 @@
   </kt-portlet-header>
   <kt-portlet-body class="main-container">
     <div class="example-preview row">
+
       <!-- RECLAMATION FORM -->
       <form class="form col-6" [formGroup]="reclamationForm">
         <!-- CARD -->
         <div class="card card-custom gutter-b">
-          <div class="card-header">
-            <!-- TITLE  -->
-            <div class="card-title mt-2 mb-2 p-3">
-              <span class="card-icon">
-                <!-- text-warning -->
-                <i class="flaticon-user icon-xl" style="color: #ffb701"></i>
-              </span>
-              <h3 class="card-label section-title" style="color: #ffb701">
-                Données personnelles du client
-              </h3>
-            </div>
-
-            <!-- BUTTON -->
-            <!-- <div> -->
-            <div *ngIf="customerNotExist">
-              <button
-                type="button"
-                (click)="open(content)"
-                class="btn btn-sm mr-2 mt-3 btn-abracadabra"
-              >
-                Créer un client
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <!-- PHONE -->
-            <div class="row align-middle">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Numéro de téléphone:</label>
-              </div>
-              <div class="col-4">
-                <div class="input-group input-group-sm">
-                  <input
-                    type="text"
-                    class="form-control form-control-solid"
-                    formControlName="phonee"
-                    (change)="getCustomerData()"
-                    aria-describedby="basic-addon2"
-                  />
-                </div>
-              </div>
-              <!-- <div class="col-8">
-                <h3>{{ phone_number }}</h3>
-              </div> -->
-            </div>
-            <!-- PHONE -->
-
-            <!-- NAME -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Nom et prénom:</label>
-              </div>
-              <div class="col-8">
-                <h3>{{ name }}</h3>
-              </div>
-            </div>
-            <!-- NAME -->
-
-            <!-- ADR -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Address:</label>
-              </div>
-              <div class="col-8">
-                <h3>{{ adress }}</h3>
-              </div>
-            </div>
-            <!-- ADR -->
-
-            <!-- AGE -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Age:</label>
-              </div>
-              <div class="col-8">
-                <h3>{{ age }}</h3>
-              </div>
-            </div>
-            <!-- AGE -->
-
-            <!-- GENDER -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Gender:</label>
-              </div>
-              <div class="col-8">
-                <h3>{{ gender }}</h3>
-              </div>
-            </div>
-            <!-- GENDER -->
-
-            <!-- SELECT -->
-            <div class="row mt-5">
-              <div class="col-4">
-                <label>Choisir les causes:</label>
-              </div>
-            </div>
-            <div class="row mt-5 ml-2">
-
-              <div class="row">
-                <div class="accordion accordion-toggle-arrow" id="accordionExample1">
-
-                  <div class="card" *ngFor="let cause of filtered_causes; let i = index">
-                      <div class="card-header">
-                          <div class="card-title" data-toggle="collapse" attr.data-target="#collapse-{{i}}">
-                              {{cause.groupe_titel}}
-                          </div>
-                      </div>
-                      <div attr.id="collapse-{{i}}"  class="collapse show" data-parent="#accordionExample1">
-                          <div class="card-body">
-
-                            <div
-                                class="col-12"
-                                *ngFor="let cause of cause.causes_group; let j = index"
-                              >
-                                <div class="row mt-5">
-                                  <fieldset class="col-6">
-                                    <input
-                                      type="checkbox"
-                                      formControlName="{{ cause.code_value }}"
-                                      (change)="onCauseSelect(cause.code_value)"
-                                    />
-                                    <label for="coding" class="ml-2">
-                                      {{cause.code_desc}}
-                                  </label>
-                                  </fieldset>
-
-                                  <div class="input-group input-group-sm col-6">
-                                    <textarea
-                                      rows="2"
-                                      type="text"
-                                      class="mt-1 form-control form-control-solid"
-                                      formControlName="{{ cause.code_value }}text-area"
-                                    >
-                                    </textarea>
-                                  </div>
-                                </div>
-                            </div>
-                            <!-- end of body -->
-                              
-                          </div>
-                      </div>
-                  </div>
-
-                </div>
-
-                <!-- <div
-                  class="col-12"
-                  *ngFor="let cause of filtered_causes; let i = index"
-                > 
-                    <p>{{cause.groupe_titel}}</p>
-                </div> -->
-
+            <div class="card-header">
+              <!-- TITLE  -->
+              <div class="card-title mt-2 mb-2 p-3">
+                <span class="card-icon">
+                  <!-- text-warning -->
+                  <i class="flaticon-user icon-xl" style="color: #ffb701"></i>
+                </span>
+                <h3 class="card-label section-title" style="color: #ffb701">
+                  Données personnelles du client
+                </h3>
               </div>
 
-
-              <!-- old causes -->
-              <!-- <div class="row">
-                <div
-                  class="col-12"
-                  *ngFor="let cause of reclamation_causes; let i = index"
+              <!-- BUTTON -->
+              <!-- <div> -->
+              <div *ngIf="customerNotExist">
+                <button
+                  type="button"
+                  (click)="open(content)"
+                  class="btn btn-sm mr-2 mt-3 btn-abracadabra"
                 >
-                  <div class="row mt-5">
-                    <fieldset class="col-6">
-                      <input
-                        type="checkbox"
-                        formControlName="{{ cause.code_value }}"
-                      />
-                      <label for="coding" class="ml-2">{{
-                        cause.code_desc
-                      }}</label>
-                    </fieldset>
-
-                    <div class="input-group input-group-sm col-6">
-                      <textarea
-                        rows="2"
-                        type="text"
-                        class="mt-1 form-control form-control-solid"
-                        formControlName="{{ cause.code_value }}text-area"
-                      >
-                      </textarea>
-                    </div>
+                  Créer un client
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- PHONE -->
+              <div class="row align-middle">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Numéro de téléphone:</label>
+                </div>
+                <div class="col-4">
+                  <div class="input-group input-group-sm">
+                    <input
+                      value="phone_number"
+                      type="text"
+                      class="form-control form-control-solid"
+                      formControlName="phonee"
+                      (change)="getCustomerData()"
+                      aria-describedby="basic-addon2"
+                    />
                   </div>
                 </div>
-              </div> -->
-              <!-- old causes end -->
+                <!-- <div class="col-8">
+                  <h3>{{ phone_number }}</h3>
+                </div> -->
+              </div>
+              <!-- PHONE -->
+
+              <!-- PHONE NUMBER -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Numéro de téléphone:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ phone_number }}</h3>
+                </div>
+              </div>
+              <!-- PHONE NUMBER -->
+
+              <!-- NAME -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Nom et prénom:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ name }}</h3>
+                </div>
+              </div>
+              <!-- NAME -->
+
+              <!-- ADR -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Address:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ adress }}</h3>
+                </div>
+              </div>
+              <!-- ADR -->
+
+              <!-- AGE -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Age:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ age }}</h3>
+                </div>
+              </div>
+              <!-- AGE -->
+
+              <!-- GENDER -->
+              <div class="row align-middle mt-5">
+                <div class="col-4 align-middle">
+                  <label class="align-middle">Gender:</label>
+                </div>
+                <div class="col-8">
+                  <h3>{{ gender }}</h3>
+                </div>
+              </div>
+              <!-- GENDER -->
+
+              <!-- SELECT -->
+              <!-- SELECT -->
 
 
             </div>
-            <!-- SELECT -->
-          </div>
         </div>
         <!-- CARD END  -->
-      </form>
-      <!-- RECLAMATION FORM -->
 
-      <div class="col-6">
-        <!-- ORDER FORM -->
-        <form class="form" [formGroup]="reclamationForm">
+         <!-- ORDER FORM -->
+         <form class="form" [formGroup]="reclamationForm">
           <!-- CARD -->
           <div class="card card-custom gutter-b">
             <div class="card-header">
@@ -328,49 +243,107 @@
         </form>
       
         <!-- ORDER FORM -->
-      
-          <!-- COMPLAINT AUTO TREAT FORM -->
-         <div class="card card-custom gutter-b">
+      </form>
+      <!-- RECLAMATION FORM -->
+
+      <div class="col-6">
+        <!-- CAUSES FORM -->
+        <form class="form" [formGroup]="reclamationForm">
+          <!-- CARD -->
+          <div class="card card-custom gutter-b">
             <div class="card-header">
               <div class="card-title mt-2 mb-2 p-3">
                 <span class="card-icon section-title">
                   <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
                 </span>
                 <h3 class="card-label section-title" style="color: #ffb701">
-                  Traitement automatique de réclamation
+                  Les causes
                 </h3>
               </div>
             </div>
-          <div class="card-body">
-            <!-- CAUSE -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">La cause:</label>
-              </div>
-              <div class="col-8">
-                <h5>cause_1</h5>
-              </div>
+            <div class="card-body">
+              <!-- FORM INPUTS -->
+              <!-- *ngIf="isExist" -->
+              <kt-alert  *ngIf="orderNotExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                      (close)="onAlertClose($event)">
+                      Aucune commande n'existe avec ce code
+              </kt-alert>
+              
+
+            <!-- CAUSES -->
+            <div class="row mt-5 ml-2">
+
+            <div class="row">
+                <div class="accordion accordion-toggle-arrow" id="accordionExample1">
+
+                  <div class="card" *ngFor="let cause of filtered_causes; let i = index">
+                      <div class="card-header">
+                          <div class="card-title" data-toggle="collapse" attr.data-target="#collapse-{{i}}">
+                              {{cause.groupe_titel}}
+                          </div>
+                      </div>
+                      <div attr.id="collapse-{{i}}"  class="collapse show" data-parent="#accordionExample1">
+                          <div class="card-body">
+
+                            <div
+                                class="col-12"
+                                *ngFor="let cause of cause.causes_group; let j = index"
+                              >
+                                <div class="row mt-5">
+                                  <fieldset class="col-6">
+                                    <input
+                                      type="checkbox"
+                                      formControlName="{{ cause.code_value }}"
+                                      (change)="onCauseSelect(cause.code_value)"
+                                    />
+                                    <label for="coding" class="ml-2">
+                                      {{cause.code_desc}}
+                                  </label>
+                                  </fieldset>
+
+                                  <div class="input-group input-group-sm col-6">
+                                    <textarea
+                                      rows="2"
+                                      type="text"
+                                      class="mt-1 form-control form-control-solid"
+                                      formControlName="{{ cause.code_value }}text-area"
+                                    >
+                                    </textarea>
+                                  </div>
+                                </div>
+                            </div>
+                            <!-- end of body -->
+                              
+                          </div>
+                      </div>
+                  </div>
+
+                </div>
+
+                <!-- <div
+                  class="col-12"
+                  *ngFor="let cause of filtered_causes; let i = index"
+                > 
+                    <p>{{cause.groupe_titel}}</p>
+                </div> -->
+
             </div>
-            <!-- CAUSE -->
 
-            <!-- CAUSE -->
-            <div class="row align-middle mt-5">
-              <div class="col-4 align-middle">
-                <label class="align-middle">Méthode de traitement:</label>
-              </div>
-              <div class="col-8">
-                <h5>method_1</h5>
-              </div>
+
             </div>
-            <!-- CAUSE -->
-            
 
-            
+             
 
+
+
+              <!-- FORM INPUTS -->
+            </div>
           </div>
-         </div>
-         <!-- COMPLAINT AUTO TREAT FORM -->
-      </div>
+          <!-- CARD END  -->
+        </form>
+      
+        <!-- CAUSES FORM -->
+     </div>
     </div>
 
     <!-- MODAL -->
@@ -520,3 +493,39 @@
    
   </kt-portlet-body>
 </kt-portlet>
+
+
+
+  <!-- COMPLAINT AUTO TREAT FORM -->
+         <!-- <div class="card card-custom gutter-b">
+            <div class="card-header">
+              <div class="card-title mt-2 mb-2 p-3">
+                <span class="card-icon section-title">
+                  <i class="flaticon-list icon-xl" style="color: #ffb701"></i>
+                </span>
+                <h3 class="card-label section-title" style="color: #ffb701">
+                  Traitement automatique de réclamation
+                </h3>
+              </div>
+            </div>
+          <div class="card-body">
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">La cause:</label>
+              </div>
+              <div class="col-8">
+                <h5>cause_1</h5>
+              </div>
+            </div>
+            <div class="row align-middle mt-5">
+              <div class="col-4 align-middle">
+                <label class="align-middle">Méthode de traitement:</label>
+              </div>
+              <div class="col-8">
+                <h5>method_1</h5>
+              </div>
+            </div>
+            
+          </div>
+         </div> -->
+         <!-- COMPLAINT AUTO TREAT FORM -->
