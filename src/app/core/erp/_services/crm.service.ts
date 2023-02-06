@@ -113,6 +113,11 @@ export class CRMService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/createEventOrderZero`, {category_code,phone}, {headers: httpHeaders});
   }
+
+  public createAgendaExecutionLineDetail(agendaExecutionLineDetail: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/createExecutionLineDetail`, {agendaExecutionLineDetail}, {headers: httpHeaders});
+  }
   
 
   

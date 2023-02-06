@@ -108,6 +108,7 @@ export class CustomerReclamationComponent implements OnInit {
       this.phone_number = params['phone']
       if(this.phone_number){
         this.getCustomerDataV2(this.phone_number)
+        
       }
     });
   }
