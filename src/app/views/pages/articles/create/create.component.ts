@@ -477,6 +477,7 @@ export class CreateComponent implements OnInit {
       pt_bom_code: [{ value: this.item.pt_bom_code, disabled: !this.isExist }],
     });
     this.form4 = this.formBuilder.group({
+      pt_pur_price: [{ value: this.item.pt_pur_price, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price, disabled: !this.isExist }],
       pt_taxable: [{ value: this.item.pt_taxable, disabled: !this.isExist }],
       pt_taxc: [{ value: this.item.pt_taxc, disabled: !this.isExist },Validators.required],
@@ -600,6 +601,7 @@ export class CreateComponent implements OnInit {
               controls3.pt_iss_pol.enable()
               controls3.pt_run_seq2.enable()
               controls3.pt_bom_code.enable()
+              controls4.pt_pur_price.enable()
               controls4.pt_price.enable()
               controls4.pt_taxable.enable()
               controls4.pt_taxc.enable()
@@ -760,6 +762,7 @@ export class CreateComponent implements OnInit {
     _item.pt_run_seq2 = controls3.pt_run_seq2.value;
     _item.pt_bom_code = controls3.pt_bom_code.value;
 
+    _item.pt_pur_price = controls4.pt_pur_price.value;
     _item.pt_price = controls4.pt_price.value;
     _item.pt_taxable = controls4.pt_taxable.value;
     _item.pt_taxc = controls4.pt_taxc.value;

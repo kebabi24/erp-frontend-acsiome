@@ -109,6 +109,14 @@ export class MenuConfig {
               title: "Consultation des Transactions Grp ",
               page: "/inventory-transaction/trans-list-grp",
             },
+            {
+              title: "Consultation des Inventaires ",
+              page: "/inventory-transaction/list-inv",
+            },
+            {
+              title: "Consultation des Récéption ",
+              page: "/inventory-transaction/list-rct",
+            },
 
               
           ],

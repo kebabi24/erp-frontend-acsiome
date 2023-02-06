@@ -70,6 +70,8 @@ import {PurchaseOrderService,
 import { TransactionListComponent } from './transaction-list/transaction-list.component';
 import { EditStatusComponent } from './edit-status/edit-status.component';
 import { TransListGrpComponent } from './trans-list-grp/trans-list-grp.component';
+import { ListInvComponent } from './list-inv/list-inv.component';
+import { ListRctComponent } from './list-rct/list-rct.component';
 
 const routes: Routes = [
   {
@@ -104,12 +106,20 @@ const routes: Routes = [
     path: 'edit-status',
     component: EditStatusComponent
   },
+  {
+    path: 'list-inv',
+    component: ListInvComponent
+  },
+  {
+    path: 'list-rct',
+    component: ListRctComponent
+  },
 ] 
 
 
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent],
   imports: [
     CommonModule,
     HttpClientModule,

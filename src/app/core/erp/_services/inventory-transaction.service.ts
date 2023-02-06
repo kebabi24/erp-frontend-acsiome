@@ -80,6 +80,14 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findtrtype', data, { headers: httpHeaders })
     }
+    public getInv(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findinv', data, { headers: httpHeaders })
+    }
+    public getRct(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findrct', data, { headers: httpHeaders })
+    }
     public getDayly(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/dayly`,data, { headers: httpHeaders })

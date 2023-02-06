@@ -496,6 +496,7 @@ export class EditComponent implements OnInit {
 
 
       this.form4 = this.form4FB.group({
+        pt_pur_price: [this.itemEdit.pt_pur_price],
         pt_price: [this.itemEdit.pt_price],
         pt_taxable: [this.itemEdit.pt_taxable],
         pt_taxc: [this.itemEdit.pt_taxc],
@@ -685,6 +686,7 @@ prepareItem(): Item {
     _item.pt_run_seq2 = controls3.pt_run_seq2.value;
     _item.pt_bom_code = controls3.pt_bom_code.value;
 
+    _item.pt_pur_price = controls4.pt_pur_price.value;
     _item.pt_price = controls4.pt_price.value;
     _item.pt_taxable = controls4.pt_taxable.value;
     _item.pt_taxc = controls4.pt_taxc.value;
