@@ -391,6 +391,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getWeekProductInventory(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_LD}/findWeekProduct`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getAllPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/findAllpo`, data, {
