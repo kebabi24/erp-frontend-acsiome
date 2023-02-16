@@ -274,6 +274,7 @@ export class ListInvComponent implements OnInit {
             formatter: Formatters.decimal,
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
           },
+         
           
 
       ]

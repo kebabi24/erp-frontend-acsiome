@@ -36,7 +36,7 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-declare var electronPrinter: any;
+//declare var electronPrinter: any;
 import {
   Column,
   GridOption,
@@ -2005,9 +2005,9 @@ export class PosComponent implements OnInit {
         },
       },
       {
-        id: "pt_price",
+        id: "pt_pur_price",
         name: "Prix d'achat",
-        field: "pt_price",
+        field: "pt_pur_price",
         sortable: true,
         width: 50,
         filterable: false,

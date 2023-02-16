@@ -2,18 +2,38 @@ import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
+// Angular slickgrid
 import {
-  Column,
-  GridOption,
   Formatter,
   Editor,
   Editors,
-  AngularGridInstance,
-  GridService,
-  Formatters,
-  FieldType,
   OnEventArgs,
-} from "angular-slickgrid";
+  AngularGridInstance,
+  Aggregators,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  FlatpickrOption,
+  GridService,
+  GridOption,
+  Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  MultipleSelectOption,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+} from "angular-slickgrid"
+
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -185,11 +205,12 @@ error = false;
     private posCategoryService: PosCategoryService,
   ) {
     config.autoClose = true;
+    
     this.codeService
       .getBy({ code_fldname: "vd_cr_terms" })
       .subscribe((response: any) => (this.po_cr_terms = response.data));
-    // this.initGrid();
-    // this.initmvGrid();
+    //  this.initGrid();
+    //  this.initmvGrid();
 
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -199,11 +220,11 @@ error = false;
     this.gridService = angularGrid.gridService;
   }
 
-  mvGridReady(angularGrid: AngularGridInstance) {
-    this.mvangularGrid = angularGrid;
-    this.mvdataView = angularGrid.dataView;
-    this.mvgrid = angularGrid.slickGrid;
-    this.mvgridService = angularGrid.gridService;
+  mvGridReady(mvangularGrid: AngularGridInstance) {
+    this.mvangularGrid = mvangularGrid;
+    this.mvdataView = mvangularGrid.dataView;
+    this.mvgrid = mvangularGrid.slickGrid;
+    this.mvgridService = mvangularGrid.gridService;
   }
   initGrid() {
     this.columnDefinitions = [
@@ -227,7 +248,7 @@ error = false;
         field: "id",
         minWidth: 50,
         maxWidth: 50,
-        selectable: true,
+       
       },
       {
         id: "part",
@@ -236,9 +257,7 @@ error = false;
         sortable: true,
         width: 50,
         filterable: false,
-        editor: {
-          model: Editors.text,
-        },
+       
         
       },
       {
@@ -248,6 +267,7 @@ error = false;
         sortable: true,
         width: 80,
         filterable: false,
+       
       },
       {
         id: "um",
@@ -268,12 +288,7 @@ error = false;
         filterable: false,
         type: FieldType.float,
         formatter: Formatters.decimal,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 }
-        },
-        
-      
+       
       },
       {
         id: "qtyoh",
@@ -283,7 +298,7 @@ error = false;
         width: 80,
         filterable: false,
         formatter: Formatters.decimal,
-        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
       },
       {
         id: "sftystk",
@@ -293,10 +308,10 @@ error = false;
         width: 80,
         filterable: false,
         formatter: Formatters.decimal,
-        params: { minDecimal: 2, maxDecimal: 2 }, 
+        
       },
       {
-        id: "qtycom1",
+        id: "qtycom",
         name: "Qte à Commander",
         field: "qtycom",
         sortable: true,
@@ -316,12 +331,12 @@ error = false;
         filterable: true,
         //type: FieldType.float,
         formatter: Formatters.decimal,
-        type: FieldType.integer,
+        type: FieldType.float,
         editor: {
-          model: Editors.integer,
-          //params: { minDecimal: 0, maxDecimal: 0 },
+          model: Editors.float,
+          params: { minDecimal: 0, maxDecimal: 0 },
         },
-        params: { minDecimal: 2, maxDecimal: 2 }, 
+               //params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       
       {
@@ -352,16 +367,23 @@ error = false;
         },
       },
     ];
-
     this.gridOptions = {
-      asyncEditorLoading: false,
+      // if you want to disable autoResize and use a fixed width which requires horizontal scrolling
+      // it's advised to disable the autoFitColumnsOnFirstLoad as well
+      // enableAutoResize: false,
+      // autoFitColumnsOnFirstLoad: false,
+      autoFitColumnsOnFirstLoad: false,
+     
+      //fullWidthRows:false,
+      
+      // enable the filtering but hide the user filter row since we use our own single filter
+      enableFiltering: false,
+      showHeaderRow: false, // hide the filter row (header row)
+
+      autoEdit:true,
       editable: true,
-      //autoEdit:true,
-      enableColumnPicker: false,
+      autoCommitEdit:true,
       enableCellNavigation: true,
-      enableAutoResize: true,
-      enableRowSelection: false,
-      autoHeight: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -374,18 +396,45 @@ error = false;
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
       },
+    
     };
+    // this.gridOptions = {
+    //   enableAutoResize: false,
+    //   // autoResize: {
+    //   //   containerId: 'demo-container',
+    //   //   bottomPadding:10,
+        
+    //   // },
+    //   autoEdit:true,
+    //   editable: true,
+    //   autoCommitEdit:true,
+    //   enableFiltering: false,
+    //   enableCellNavigation: true,
+    //   formatterOptions: {
+        
+    //     // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+    //     displayNegativeNumberWithParentheses: false,
+  
+    //     // Defaults to undefined, minimum number of decimals
+    //     minDecimal: 2,
+    //     maxDecimal:2,
+  
+    //     // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+    //     thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+    //   },
+    // };
 
     this.dataset = [];
   }
   ngOnInit(): void {
+    
     this.loading$ = this.loadingSubject.asObservable();
-    this.loadingSubject.next(false);
+    this.loadingSubject.next(true);
     this.user =  JSON.parse(localStorage.getItem('user'))
     console.log(this.user)
     this.createForm();
-    this.initGrid();
     this.initmvGrid();
+    this.initGrid();
    
   }
 
@@ -403,8 +452,7 @@ error = false;
         
         this.dataset = response.data;
         this.dataView.setItems(this.dataset);
-        console.log(this.dataset);
-
+        
         // for (let data of this.dataset) {
 
         //   this.gridService.addItem(
@@ -463,10 +511,10 @@ error = false;
             this.mvangularGrid.gridService.deleteItem(args.dataContext);
           }
         },
-      },
-      {
-        id: "id",
-        name: "id",
+      },*/
+     /* {
+        id: "ids",
+        name: "ids",
         field: "id",
         excludeFromHeaderMenu: true,
       
@@ -482,9 +530,6 @@ error = false;
         width: 50,
         filterable: false,
         type: FieldType.float,
-        editor: {
-          model: Editors.text,
-        },
       },
       {
         id: "desc1",
@@ -494,9 +539,6 @@ error = false;
         width: 80,
         filterable: false,
         type: FieldType.float,
-        editor: {
-          model: Editors.text,
-        },
       },
       {
         id: "ord_qty",
@@ -506,9 +548,6 @@ error = false;
         width: 50,
         filterable: false,
         type: FieldType.float,
-        editor: {
-          model: Editors.float,
-        },
       },
       {
         id: "add_qty",
@@ -521,10 +560,10 @@ error = false;
         editor: {
           model: Editors.float,
         },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , prod_qty: Number(args.dataContext.ord_qty) + Number(args.dataContext.add_qty) })
+        // onCellChange: (e: Event, args: OnEventArgs) => {
+        //   this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , prod_qty: Number(args.dataContext.ord_qty) + Number(args.dataContext.add_qty) })
 
-        }
+        // }
       },
       {
         id: "prod_qty",
@@ -541,30 +580,39 @@ error = false;
     ];
 
     this.mvgridOptions = {
-      asyncEditorLoading: false,
-      editable: true,
-      enableColumnPicker: true,
+           // if you want to disable autoResize and use a fixed width which requires horizontal scrolling
+      // it's advised to disable the autoFitColumnsOnFirstLoad as well
+      // enableAutoResize: false,
+      // autoFitColumnsOnFirstLoad: false,
+      
+  
+      //fullWidthRows:false,
+      
+      // enable the filtering but hide the user filter row since we use our own single filter
+      enableFiltering: false,
+      showHeaderRow: false, // hide the filter row (header row)
+      autoFitColumnsOnFirstLoad: false,
+     
       enableCellNavigation: true,
-      enableRowSelection: true,
-      enableAutoResize: true,
-      autoHeight: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-        displayNegativeNumberWithParentheses: true,
+        displayNegativeNumberWithParentheses: false,
   
         // Defaults to undefined, minimum number of decimals
         minDecimal: 2,
+        maxDecimal:2,
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
       },
-  
+    
     };
+    
 
     this.mvdataset = [];
     
-    console.log(this.user)
+   /* console.log(this.user)
     const controls = this.poForm.controls
     
     const date = controls.calc_date.value
@@ -583,7 +631,7 @@ error = false;
           this.mvdataset = []
       },
       () => {}
-  )
+  )*/
   }
   change() {
     this.mvdataset = []
@@ -595,7 +643,6 @@ error = false;
     this.posCategoryService.getSumeQtyPs({usrd_site: controls.site.value, created_date: date}).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
-       console.log(this.mvdataset)
        this.mvdataView.setItems(this.mvdataset);
         
          },
@@ -605,6 +652,8 @@ error = false;
       () => {}
   )
   }
+  
+ 
   //create form
   createForm() {
     this.loadingSubject.next(false);
@@ -613,7 +662,6 @@ error = false;
     
     this.poForm = this.poFB.group({
      // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
-      qty: [70],
       site:[this.user.usrd_site,Validators.required],
       calc_date: [{
         year:date.getFullYear(),
@@ -623,7 +671,6 @@ error = false;
       
     });
 
-    const controls = this.poForm.controls
    /* this.sequenceService.getBy({ seq_type: "PO", seq_profile: this.user.usrd_profile }).subscribe(
       (res: any) => {
         this.seq = res.data[0].seq_seq
@@ -780,7 +827,7 @@ error = false;
         
     
      
-  });
+      });
 
     }
   }

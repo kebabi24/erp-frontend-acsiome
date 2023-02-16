@@ -197,13 +197,13 @@ error = false;
   initGrid() {
     this.columnDefinitions = [
       
-      {
+     /* {
         id: "id",
         name: "Ligne",
         field: "id",
         minWidth: 50,
         maxWidth: 50,
-      },
+      },*/
       {
         id: "part",
         name: "Article",
@@ -221,14 +221,14 @@ error = false;
         width: 150,
         filterable: true,
       },
-      {
+    /*  {
         id: "serial",
         name: "Lot Série",
         field: "serial",
         sortable: true,
         width: 150,
         filterable: true,
-      },
+      },*/
       {
         id: "qtyinvbeg",
         name: "Inventaire Hier",
@@ -277,8 +277,19 @@ error = false;
       },
       {
         id: "qtyiss",
-        name: "Qte Consomée",
+        name: "Qte Nomenclature",
         field: "qtyiss",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "qtyissr",
+        name: "Qte Consomée Physiquement",
+        field: "qtyissr",
         sortable: true,
         minWidth: 100,
         filterable: true,
@@ -326,11 +337,10 @@ error = false;
       asyncEditorLoading: false,
       editable: false,
       enableFiltering: true,
-      enableColumnPicker: false,
+      enableColumnPicker: true,
       enableCellNavigation: false,
       enableRowSelection: false,
       enableAutoResize: true,
-      autoHeight: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -439,14 +449,13 @@ error = false;
     ];
 
     this.mvgridOptions = {
-      asyncEditorLoading: false,
-      editable: true,
+      asyncEditorLoading: true,
+      editable: false,
       enableFiltering: true,
       enableColumnPicker: false,
-      enableCellNavigation: false,
+      enableCellNavigation: true,
       enableRowSelection: false,
       enableAutoResize: true,
-      autoHeight: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)

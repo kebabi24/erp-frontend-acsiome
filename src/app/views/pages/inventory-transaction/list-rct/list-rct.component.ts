@@ -240,6 +240,26 @@ export class ListRctComponent implements OnInit {
             }
           }, 
           {
+            id: "tr_addr",
+            name: "Fournisseur",
+            field: "tr_addr",
+            sortable: true,
+            filterable: true,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            type: FieldType.string,
+            grouping: {
+              getter: 'tr_addr',
+              formatter: (g) => `Fournisseur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                new Aggregators.Sum('qty'),
+                new Aggregators.Sum('amt'),
+                ],
+              aggregateCollapsed: false,
+          
+              collapsed: false,
+            }
+          }, 
+          {
             id: "tr_desc",
             name: "Description",
             field: "tr_desc",

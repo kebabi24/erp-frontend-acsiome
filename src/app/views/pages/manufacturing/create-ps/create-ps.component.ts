@@ -326,8 +326,8 @@ export class CreatePsComponent implements OnInit {
         filterable: false,
         formatter: Formatters.percentComplete,
         editor: {
-          model: Editors.text,
-          formatter: Formatters.percentComplete,
+          model: Editors.float,
+         
         },
        
       },
@@ -368,6 +368,7 @@ export class CreatePsComponent implements OnInit {
     ];
 
     this.gridOptions = {
+      enableAutoResize:true,
       asyncEditorLoading: false,
       editable: true,
       enableColumnPicker: true,
