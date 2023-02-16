@@ -73,6 +73,14 @@
            (click)="open6(content6)"
            ></button>
 
+           <!-- BUTTON TO OPEN MODAL 7 -->
+           <button
+           hidden
+           id="modal7Button"
+           class="btn btn-primary"
+           (click)="open7(content7)"
+           ></button>
+
 
           <!-- MODAL : EVENT INFO-->
           <div class="row">
@@ -773,6 +781,14 @@
                 >
                   Annuller
                 </button>
+
+                <button
+                  hidden
+                  id="closeModal6"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                  >
+                  </button>
                 
               
                
@@ -781,6 +797,177 @@
           </ng-template>
           </div>
           <!-- MODAL 6 : NEW EVENT END -->   
+
+          <!-- MODAL 7 : SPEACIAL EVENT CASE-->
+         <div class="row">
+          <ng-template #content7 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">{{special_event_category_display}} : Creation</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="d('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <form
+                  class="form"
+                  [formGroup]="specialEventForm"
+                  autocomplete="off"
+                  novalidate="novalidate"
+                  id="kt_login_form"
+                > 
+
+                <!-- SIZE & SITE -->
+                <div class="row">
+                  <!-- SITE -->
+                  <div class="form-group col-6">
+                    <mat-form-field >
+                      <mat-label>Site:</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Site"
+                        formControlName="site"
+                        autocomplete="off"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <!-- SITE-->  
+
+                  <!-- TAILLE -->
+                  <div class="form-group col-6">
+                  <mat-form-field>
+                    <mat-label>Taille:</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      placeholder="Taille"
+                      formControlName="size"
+                      autocomplete="off"
+                    />
+                      </mat-form-field>
+                  </div>
+                  <!-- TAILLE--> 
+                </div>
+                <!-- SIZE & SITE END -->
+
+                <!-- TYPE-->
+                <div class="row">
+                  <!-- TYPE -->
+                  <div class="form-group col-6">
+                    <mat-form-field >
+                      <mat-label>Type:</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Type"
+                        formControlName="type"
+                        autocomplete="off"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <!-- SITE-->  
+
+                
+                </div>
+                <!-- TYPE END -->
+
+                <!-- OBS 1 & OBS2  -->
+                <div class="row">
+                  <!-- OBS1 -->
+                  <div class="form-group col-6">
+                    <mat-form-field >
+                      <mat-label>Observation 1:</mat-label>
+                      <textarea
+                      matInput
+                      rows="2"
+                      type="text"
+                      class="mt-1 form-control form-control-solid"
+                      formControlName="obs1">
+                      </textarea> 
+                    </mat-form-field>
+                  </div>
+                  <!-- OBS1-->  
+
+                  <!-- OB2 -->
+                  <div class="form-group col-6">
+                  <mat-form-field>
+                    <mat-label>Oservation 2 </mat-label>
+                     <textarea
+                        matInput
+                        rows="2"
+                        type="text"
+                        class="mt-1 form-control form-control-solid"
+                        formControlName="obs2">
+                     </textarea> 
+                      </mat-form-field>
+                  </div>
+                  <!-- TAILLE--> 
+                </div>
+                <!-- OBS 1 & OBS2 -->
+                
+                   
+                <!-- TIME AND DATE PICKER -->
+                <div class="row">
+                <div class="form-group col-6">
+                  <h5>La date : </h5>
+                  <ngb-datepicker #dp [(ngModel)]="model1" ></ngb-datepicker>
+                </div>
+                <div class="form-group col-6">
+                  <h5>L'heure : </h5>
+                  <ngb-timepicker [(ngModel)]="special_even_time"></ngb-timepicker>
+                </div>
+                </div>
+                <!-- TIME AND DATE PICKER END -->
+
+
+                </form>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                hidden
+                id="closeModal7"
+                class="btn btn-primary"
+                (click)="c('Close click')"
+                >
+                </button>
+
+                <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="c('Close click')"
+                >
+                  Annuller
+                </button>
+
+                <button
+                  hidden
+                  id="closeModal7"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                  >
+                  </button>
+
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="saveSpecialEvent()"
+                  >
+                  Sauvgarder
+                  </button>
+            </div>
+          </ng-template>
+          </div>
+          <!-- MODAL 7 :  SPEACIAL EVENT CASE END -->   
 
 
          

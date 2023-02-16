@@ -61,6 +61,7 @@ export class AgendaComponent implements OnInit {
   executionForm: FormGroup;
   complaintForm : FormGroup;
   newEventForm : FormGroup;
+  specialEventForm : FormGroup;
 
   ableToSave : Boolean = false; // TRUE => SHOW SAVE BUTTON IN MODAL 1 ELSE DON'T SHOW IT
   eventIsComplaint : Boolean = false; // TRUE => SHOW REC DETAILS BUTTON IN MODAL 1 ELSE DON'T SHOW IT
@@ -88,6 +89,9 @@ export class AgendaComponent implements OnInit {
   filtered_categories :any = [];
   can_select_call : Boolean = false;
   result_string : String = "";
+  special_event_category_display : String = "";
+  special_event_category : String = "";
+  
   
 
 
@@ -131,8 +135,11 @@ export class AgendaComponent implements OnInit {
   }
 
   model: NgbDateStruct;
+  model1: NgbDateStruct;
   new_event_date: { year: number; month: number };
+
   new_even_time = { hour: 13, minute: 30 };
+  special_even_time = { hour: 13, minute: 30 };
   
 
   time = new Observable<string>((observer: Observer<string>) => {
@@ -145,6 +152,18 @@ export class AgendaComponent implements OnInit {
     this.eventForm = this.formBuilder.group({
       selectedAction: [ '', Validators.required],
       selectedMethod: [ '', Validators.required],
+   })
+  }
+
+  createSpecialEventForm(){
+    this.specialEventForm = this.formBuilder.group({
+      site: [ '', Validators.required], // done
+      size: [ '', Validators.required], // done
+      date: [ '', Validators.required], // done
+      time: [ '', Validators.required], // done
+      type: [ '', Validators.required],
+      obs1: [ '', Validators.required],
+      obs2: [ '', Validators.required],
    })
   }
 
@@ -213,6 +232,10 @@ export class AgendaComponent implements OnInit {
   }
 
   open6(content) {
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open7(content) {
     this.modalService.open(content, { size: "lg" });
   }
 
@@ -359,6 +382,14 @@ export class AgendaComponent implements OnInit {
     })
   }
 
+  getSpecialEventDisplay(category_code){
+    const indexCategory = this.categories.findIndex(category =>{
+      return category.code_value == category_code
+   })
+   this.special_event_category = category_code
+   this.special_event_category_display = this.categories[indexCategory].code_desc
+  }
+
   getCurrentTime(){
     const current = Date.now()
     const now  = new Date(current)
@@ -485,6 +516,52 @@ export class AgendaComponent implements OnInit {
       this.executionLine = {}
       this.createExecutionForm()
       document.getElementById("closeForm1").click();
+  }
+
+  saveSpecialEvent(){
+    const controls = this.newEventForm.controls;
+    const site = controls.site.value 
+    const size = controls.size.value 
+    const type = controls.type.value 
+    const obs1 = controls.obs1.value 
+    const obs2 = controls.obs2.value 
+    const date = this.model1.year+'-'+this.model1.month+'-'+this.model1.day
+    let specialEventData = {
+      site : site,
+      size: size, 
+      date: date,
+      obs1:obs1,
+      obs2:obs2,
+      type:type,
+      time: this.special_even_time,
+      category : this.special_event_category,
+    }
+
+    this.crmService.createAgendaExecutionLineDetail(specialEventData).subscribe(
+      (res: any) => {
+        document.getElementById("closeModal7").click();
+      },
+      (err) =>
+        this.layoutUtilsService.showActionNotification(
+          "Erreur lors de l'ajout de l'evenement'",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        ),
+      () => {
+        this.createFrom()
+        this.layoutUtilsService.showActionNotification(
+          "Ligne créée avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        // this.router.navigateByUrl("/auth/new-customer/");
+      
+    });
+
   }
 
   refresh(){
@@ -649,7 +726,7 @@ export class AgendaComponent implements OnInit {
     }else{
       this.crmService.createAgendaEventOrderZero(category_code,phone).subscribe(
         (res: any) => {
-          window.open("http://localhost:4200/customers/customer-reclamation")
+            this.initSpecialEventPopup(category_code)
         },
         (err) =>
           this.layoutUtilsService.showActionNotification(
@@ -673,6 +750,15 @@ export class AgendaComponent implements OnInit {
       });
     }
     this.can_select_call = false
+    this.createNewEventForm()
+    this.result_string=""
+    document.getElementById("closeModal6").click();
+  }
+
+  initSpecialEventPopup(category_code){
+    this.createSpecialEventForm()
+    this.getSpecialEventDisplay(category_code) 
+    document.getElementById("modal7Button").click();
   }
 
   // ***********************************************************

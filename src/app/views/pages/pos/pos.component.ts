@@ -167,6 +167,7 @@ export class PosComponent implements OnInit {
   it: any;
   detailSo: any[] = [];
   itSo: any;
+  currentservice: any;
   salesOrder: any[] = [];
   user;
   inventoryData: any[] = [];
@@ -336,10 +337,10 @@ export class PosComponent implements OnInit {
       .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
       .subscribe((res: any) => {
         this.currentSeq = res.data.seq_curr_val;
-        this.currentTicketNumber = Number(this.currentSeq);
+        // this.currentTicketNumber = Number(this.currentSeq);
       });
     console.log(this.currentSeq);
-    this.initGrid();
+
     this.initGrid3();
     this.initGrid4();
     // this.initGrid6();
@@ -350,8 +351,8 @@ export class PosComponent implements OnInit {
     this.mobileService
       .getByOne({ role_code: this.user.usrd_code, service_open: "true" })
       .subscribe((res: any) => {
-        let service = res.data;
-        if (service) {
+        this.currentservice = res.data;
+        if (this.currentservice) {
           this.globalState = false;
           this.stateCaisse = true;
           this.posCategoryService
@@ -390,7 +391,6 @@ export class PosComponent implements OnInit {
       (item) => item.code_cmmt === category.category_code
     );
 
-    console.log(this.currentSeq);
     this.productInCartPrice = 0;
     this.currentItem = undefined;
 
@@ -414,8 +414,15 @@ export class PosComponent implements OnInit {
   }
 
   initializeProduct(productOnlist) {
+    console.log("here initialized");
+    this.posCategoryService
+      .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
+      .subscribe((res: any) => {
+        this.currentSeq = res.data.seq_curr_val;
+        // this.currentTicketNumber = Number(this.currentSeq);
+      });
     this.productId = this.productId + 1;
-    console.log(productOnlist);
+
     let test: boolean = false;
     this.sizeOfProduct = this.AllProducts.filter(
       (item) => item.pt_draw === productOnlist.code_value
@@ -448,18 +455,17 @@ export class PosComponent implements OnInit {
         (item) => item.pt_group === size.pt_group
       );
       this.showListOfBrands = true;
-      console.log(size.pt_group);
     } else {
       this.productInCartPrice = 0;
       this.currentItem = this.sizeOfProduct.find(
         (item) => item.pt_group === size.pt_group
       );
-      console.log(this.currentItem);
+
       this.sizeProduct = this.currentItem.pt_group;
       this.currentCategory.direct === true
         ? (this.showSauces = false)
         : (this.showSauces = true);
-      console.log("test", this.currentItem.pt_loc);
+
       this.currentItem = {
         id: this.productId,
         pt_part: this.currentItem.pt_part,
@@ -472,6 +478,9 @@ export class PosComponent implements OnInit {
         pt_bom_code: this.currentItem.pt_bom_code,
         pt_qty: 1,
         pt_part_type: this.currentItem.pt_part_type,
+        pt_group: this.currentItem.pt_group,
+        pt_promo: null,
+        pt_dsgn_grp: null,
         comment: this.currentItem.pt_group,
         suppliments: [],
         ingredients: [],
@@ -514,6 +523,9 @@ export class PosComponent implements OnInit {
         sauces: checkItemExist.sauces,
         comment: this.sizeProduct,
         pt_part_type: checkItemExist.pt_part_type,
+        pt_group: checkItemExist.pt_group,
+        pt_promo: null,
+        pt_dsgn_grp: null,
         pt_loc: checkItemExist.pt_loc,
         pt_qty: 1,
         line: this.cartProducts.length.toString(),
@@ -583,6 +595,9 @@ export class PosComponent implements OnInit {
       pt_bom_code: this.currentItem.pt_bom_code,
       pt_qty: 1,
       pt_part_type: this.currentItem.pt_part_type,
+      pt_group: this.currentItem.pt_group,
+      pt_promo: null,
+      pt_dsgn_grp: null,
       comment: this.currentItem.pt_group,
       suppliments: [],
       ingredients: [],
@@ -637,6 +652,9 @@ export class PosComponent implements OnInit {
       sauces: checkItemExist.sauces,
       comment: this.sizeProduct,
       pt_part_type: checkItemExist.pt_part_type,
+      pt_group: checkItemExist.pt_group,
+      pt_promo: null,
+      pt_dsgn_grp: null,
       pt_loc: checkItemExist.pt_loc,
       pt_qty: 1,
       line: this.cartProducts.length.toString(),
@@ -874,7 +892,7 @@ export class PosComponent implements OnInit {
   locOrderE() {
     this.chooseLoc = false;
     this.loclocOrder = "Emporté";
-    console.log(this.loclocOrder);
+
     this.currentTable = null;
     this.cartProducts != null && this.setBomCode();
     this.showStatusOut = true;
@@ -898,7 +916,7 @@ export class PosComponent implements OnInit {
     this.chooseLoc = false;
     this.currentTable = null;
     this.loclocOrder = "Livraison";
-    console.log(this.loclocOrder);
+
     this.cartProducts != null && this.setBomCode();
     this.modalService.open(content, { size: "xl" });
     this.inShop = false;
@@ -915,7 +933,6 @@ export class PosComponent implements OnInit {
   }
 
   setBomCode() {
-    console.log("bom code qui change");
     this.cartProducts.map((product) => {
       this.loclocOrder === "Emporté" || this.loclocOrder === "Livraison"
         ? this.posCategoryService
@@ -976,7 +993,6 @@ export class PosComponent implements OnInit {
   }
 
   onIncreaseQty(product: Product): void {
-    console.log(product);
     const pt = this.cartProducts.find((item) => item.id === product.id);
     pt.pt_price =
       Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
@@ -1010,8 +1026,7 @@ export class PosComponent implements OnInit {
         this.cartProducts = res.data.products.map((item) => {
           return item;
         });
-        console.log(this.cart.order_code);
-        console.log(this.cartProducts);
+
         this.cartAmount = Number(res.data.total_price);
         this.cart.products = this.cartProducts;
       });
@@ -1019,10 +1034,11 @@ export class PosComponent implements OnInit {
   }
 
   prepareCart(content): void {
+    console.log("prepare cart", this.currentSeq);
     const loy = this.cart.products.find(
       (item) => item.pt_part_type === "STD" || item.pt_part_type === "PRM"
     );
-    console.log(loy);
+
     if (loy && this.loy_num) {
       this.posCategoryService
         .setLoyCart({ customer_number: this.loy_num, type: loy.pt_part_type })
@@ -1050,7 +1066,7 @@ export class PosComponent implements OnInit {
           }
         );
     }
-    console.log(this.currentSeq);
+
     // console.log(this.cart.products);
     let cart: Cart = {
       // id: Math.floor(Math.random() * 101) + 1,
@@ -1071,7 +1087,7 @@ export class PosComponent implements OnInit {
       site_loc: this.currentTable ? this.currentTable : null,
       plateforme: this.currentOffer ? this.currentOffer.del_desc : null,
     };
-    console.log(cart);
+
     const site = this.sites.find(
       (item) => item.si_site === this.user.usrd_site
     );
@@ -1081,7 +1097,7 @@ export class PosComponent implements OnInit {
       type: string;
       value: string;
     };
-    console.log(this.cart.products);
+
     this.cart.products.map((item) => {
       let t = [
         { type: "text", value: item.pt_desc2 },
@@ -1391,10 +1407,11 @@ export class PosComponent implements OnInit {
         value: this.loclocOrder,
       },
     ];
-    if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
-      // electronPrinter.print(data, data2);
-    }
-
+    // if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
+    //   electronPrinter.print(data, data2);
+    // }
+    console.log("caisse", data);
+    console.log("cuisine", data2);
     this.posCategoryService.addOrder({ cart, modif: this.modif }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
@@ -1415,8 +1432,26 @@ export class PosComponent implements OnInit {
           true,
           true
         );
+        if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
+          electronPrinter.print(data, data2);
+        }
         this.offer === true && (this.offer = false);
         this.currentOffer = null;
+        this.cartAmount = 0;
+        this.remisePrice = 0;
+        this.cart.products = [];
+        this.cartProducts = [];
+        this.showPrice = false;
+        this.inShop = false;
+        this.showSize = false;
+        this.showSauces = false;
+        this.showSoda = false;
+        this.showListOfBrands = false;
+        this.showListOfSoda = false;
+        this.showStatusDelivery = false;
+        this.showStatusOut = false;
+        this.offer = false;
+        this.cart.order_code = null;
         this.loadingSubject.next(false);
       }
     );
@@ -1447,21 +1482,18 @@ export class PosComponent implements OnInit {
     //       this.loadingSubject.next(false);
     //     }
     //   );
-    this.cartAmount = 0;
-    this.remisePrice = 0;
-    this.cart.products = [];
-    this.cartProducts = [];
-    this.showPrice = false;
-    this.inShop = false;
-    this.showSize = false;
-    this.showSauces = false;
-    this.showStatusDelivery = false;
-    this.showStatusOut = false;
-    this.offer = false;
-    this.cart.order_code = null;
-    !this.modif &&
-      (this.currentTicketNumber = Number(this.currentTicketNumber) + 1);
-    !this.modif && (this.currentSeq = Number(this.currentSeq) + 1);
+
+    // !this.modif &&
+    //   (this.currentTicketNumber = Number(this.currentTicketNumber) + 1);
+    // !this.modif && (this.currentSeq = Number(this.currentSeq) + 1);
+    // console.log(this.currentSeq);
+    // this.posCategoryService
+    //   .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
+    //   .subscribe((res: any) => {
+    //     this.currentSeq = res.data.seq_curr_val;
+    //     // this.currentTicketNumber = Number(this.currentSeq);
+    //   });
+
     this.modif = false;
     this.modifproduct = [];
     // this.currentSeq = Number(this.currentSeq) + 1;
@@ -1491,6 +1523,7 @@ export class PosComponent implements OnInit {
   }
 
   checkCloseInventory(content) {
+    this.initGrid();
     this.modalService.open(content, { size: "xl" });
     this.dataset.map((item) => {
       item.tag_cnt_qty = 0;
@@ -1526,6 +1559,7 @@ export class PosComponent implements OnInit {
     );
   }
   checkOpenInventory2(content) {
+    this.initGrid();
     this.modalService.open(content, { size: "xl" });
     this.dataset.map((item) => {
       item.tag_cnt_qty = 0;
@@ -1639,6 +1673,19 @@ export class PosComponent implements OnInit {
     this.disable = false;
     this.modif = false;
     this.modifproduct = [];
+    this.cartAmount = 0;
+    this.remisePrice = 0;
+
+    this.inShop = false;
+    this.showSize = false;
+    this.showSauces = false;
+    this.showSoda = false;
+    this.showListOfBrands = false;
+    this.showListOfSoda = false;
+    this.showStatusDelivery = false;
+    this.showStatusOut = false;
+    this.offer = false;
+    this.cart.order_code = null;
   }
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
@@ -1677,6 +1724,14 @@ export class PosComponent implements OnInit {
         id: "description",
         name: "Description",
         field: "item.pt_desc1",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
+        id: "item.pt_um",
+        name: "Unité de mesure",
+        field: "item.pt_um",
         sortable: true,
         width: 80,
         filterable: false,
@@ -1730,7 +1785,9 @@ export class PosComponent implements OnInit {
         ld_status: "CONFORME",
       })
       .subscribe(
-        (response: any) => (this.dataset = response.data),
+        (response: any) => (
+          (this.dataset = response.data), console.log(response.data)
+        ),
         (error) => {
           this.dataset = [];
         },
@@ -1833,6 +1890,14 @@ export class PosComponent implements OnInit {
         filterable: false,
       },
       {
+        id: "item.pt_um",
+        name: "Unité de mesure",
+        field: "item.pt_um",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      },
+      {
         id: "pod_qty_ord",
         name: "Qte Commandée",
         field: "pod_qty_ord",
@@ -1922,6 +1987,7 @@ export class PosComponent implements OnInit {
   }
 
   initGrid5() {
+    this.dataset5 = [];
     this.columnDefinitions5 = [
       {
         id: "id",
@@ -1945,6 +2011,14 @@ export class PosComponent implements OnInit {
         filterable: false,
       },
       {
+        id: "pt_um",
+        name: "Unité de mesure",
+        field: "pt_um",
+        sortable: true,
+        width: 50,
+        filterable: false,
+      },
+      {
         id: "pt_desc",
         name: "Article",
         field: "pt_desc",
@@ -1957,11 +2031,13 @@ export class PosComponent implements OnInit {
             .getItem({ pt_part: args.dataContext.pt_part })
             .subscribe((resp: any) => {
               if (resp.data) {
+                console.log(resp.data);
                 this.gridService.updateItemById(args.dataContext.id, {
                   ...args.dataContext,
                   pt_part: resp.data.pt_part,
-                  pt_price: resp.data.pt_price,
+                  pt_pur_price: resp.data.pt_pur_price,
                   pt_vend: resp.data.pt_vend,
+                  pt_um: resp.data.pt_um,
                 });
               } else {
                 alert("Article Nexiste pas");
@@ -2005,9 +2081,9 @@ export class PosComponent implements OnInit {
         },
       },
       {
-        id: "pt_price",
+        id: "pt_pur_price",
         name: "Prix d'achat",
-        field: "pt_price",
+        field: "pt_pur_price",
         sortable: true,
         width: 50,
         filterable: false,
@@ -2199,9 +2275,9 @@ export class PosComponent implements OnInit {
         filterable: true,
       },
       {
-        id: "pt_price",
+        id: "pt_pur_price",
         name: "prix d'achat",
-        field: "pt_price",
+        field: "pt_pur_price",
         sortable: true,
         width: 80,
         filterable: true,
@@ -2255,13 +2331,11 @@ export class PosComponent implements OnInit {
   }
 
   handleSelectedRowsChanged4(e, args) {
-    console.log(args.rows);
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
-    console.log(updateItem);
+
     if (Array.isArray(args.rows) && this.gridObj4) {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
-        console.log(item);
 
         this.posCategoryService
           .getItem({ pt_part: item.pt_part, pt_site: item.pt_site })
@@ -2269,10 +2343,10 @@ export class PosComponent implements OnInit {
             this.item = response.data;
             updateItem.pt_part = item.pt_part;
             updateItem.pt_desc = item.pt_desc1;
-            updateItem.pt_price = item.pt_price;
+            updateItem.pt_pur_price = item.pt_pur_price;
             updateItem.pt_vend = item.pt_vend;
+            updateItem.pt_um = item.pt_um;
             this.gridService.updateItem(updateItem);
-            console.log(response.data);
           });
       });
     }
@@ -2382,6 +2456,7 @@ export class PosComponent implements OnInit {
 
   addNewItem(elem) {
     console.log(elem);
+    console.log(this.dataset5);
     this.gridService.addItem(
       {
         id: this.dataset5.length + 1,
@@ -2427,6 +2502,7 @@ export class PosComponent implements OnInit {
           this.loadingSubject.next(false);
         }
       );
+    this.dataset5 = [];
   }
 
   payPO() {
@@ -2759,6 +2835,7 @@ export class PosComponent implements OnInit {
       });
   }
   pArticle(content) {
+    console.log(this.dataset5);
     this.modalService.open(content, { size: "xl" });
     this.initGrid6();
   }
@@ -2815,5 +2892,81 @@ export class PosComponent implements OnInit {
         p.del_cndt = "A";
       }
     }
+  }
+
+  printZstate() {
+    let ChangedFormat = this.pipe.transform(
+      this.currentservice.service_period_activate_date,
+      "yyyy-MM-dd"
+    );
+    console.log(ChangedFormat);
+    this.posCategoryService
+      .getSumAmt({
+        date: ChangedFormat,
+        date1: ChangedFormat,
+        site: this.user.usrd_site,
+      })
+      .subscribe(
+        (response: any) => {
+          let etatZ = [];
+          var total = 0;
+          const site = this.sites.find(
+            (item) => item.si_site === this.user.usrd_site
+          );
+          let data = response.data;
+          console.log(data);
+          data.map((items) => {
+            let item = [
+              {
+                type: "text",
+                value: items.desc1,
+              },
+              {
+                type: "text",
+                value: items.ord_qty,
+              },
+              {
+                type: "text",
+                value: items.amt,
+              },
+            ];
+            etatZ.push(item);
+            total = total + items.amt;
+          });
+
+          const data2 = [
+            {
+              type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+              value: site.si_desc,
+            },
+            {
+              type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+              value: new Date(),
+            },
+            {
+              type: "table",
+              style: { border: "1px solid #ddd" }, // style the table
+              // list of the columns to be rendered in the table header
+              tableHeader: [
+                { type: "text", value: "Description" },
+                { type: "text", value: "Qté Vendu" },
+                { type: "text", value: "Prix" },
+              ],
+              // multi-dimensional array depicting the rows and columns of the table body
+              tableBody: etatZ,
+              tableBodyStyle: { border: "0.5px solid #ddd" },
+            },
+            {
+              type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+              value: "Total Net : " + " " + total + ".00",
+            },
+          ];
+          console.log(data2);
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {}
+      );
   }
 }

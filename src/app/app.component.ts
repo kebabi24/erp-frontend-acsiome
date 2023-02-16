@@ -84,16 +84,16 @@ export class AppComponent implements OnInit, OnDestroy {
         // scroll to top on every route change
         window.scrollTo(0, 0);
         // to display back the body content
-        // setTimeout(() => {
-        //   document.body.classList.add("page-loaded");
-        // }, 500);
-        //this.posCategoryService.synchro().subscribe((res: any) => {
-        //  if (res.data) {
-            document.body.classList.add("page-loaded");
-        //  } else {
-        //    console.log("data is not synchronized yet! please wait");
-        //  }
-       // });
+        setTimeout(() => {
+          document.body.classList.add("page-loaded");
+        }, 500);
+        // this.posCategoryService.synchro().subscribe((res: any) => {
+        //   if (res.data) {
+        //     document.body.classList.add("page-loaded");
+        //   } else {
+        //     console.log("data is not synchronized yet! please wait");
+        //   }
+        // });
         this.splashScreenService.hide();
       }
     });
