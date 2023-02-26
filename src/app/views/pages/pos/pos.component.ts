@@ -1433,7 +1433,7 @@ export class PosComponent implements OnInit {
           true
         );
         if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
-          electronPrinter.print(data, data2);
+         // electronPrinter.print(data, data2);
         }
         this.offer === true && (this.offer = false);
         this.currentOffer = null;

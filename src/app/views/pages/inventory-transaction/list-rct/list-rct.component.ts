@@ -219,26 +219,26 @@ export class ListRctComponent implements OnInit {
               collapsed: false,
             }
             },
-          {
-            id: "tr_part",
-            name: "Article",
-            field: "tr_part",
-            sortable: true,
-            filterable: true,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_part',
-              formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                new Aggregators.Sum('qty'),
-                new Aggregators.Sum('amt'),
-                ],
-              aggregateCollapsed: false,
+          // {
+          //   id: "tr_part",
+          //   name: "Article",
+          //   field: "tr_part",
+          //   sortable: true,
+          //   filterable: true,
+          //   filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+          //   type: FieldType.string,
+          //   grouping: {
+          //     getter: 'tr_part',
+          //     formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       new Aggregators.Sum('qty'),
+          //       new Aggregators.Sum('amt'),
+          //       ],
+          //     aggregateCollapsed: false,
           
-              collapsed: false,
-            }
-          }, 
+          //     collapsed: false,
+          //   }
+          // }, 
           {
             id: "tr_addr",
             name: "Fournisseur",
@@ -268,25 +268,25 @@ export class ListRctComponent implements OnInit {
             type: FieldType.string,
             
           }, 
-          {
-            id: "tr_serial",
-            name: "Lot",
-            field: "tr_serial",
-            sortable: true,
-            filterable: true,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-            type: FieldType.string,
-            grouping: {
-              getter: 'tr_serial',
-              formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                new Aggregators.Sum('qty'),
-                new Aggregators.Sum('amt'),
-                ],
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
+          // {
+          //   id: "tr_serial",
+          //   name: "Lot",
+          //   field: "tr_serial",
+          //   sortable: true,
+          //   filterable: true,
+          //   filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+          //   type: FieldType.string,
+          //   grouping: {
+          //     getter: 'tr_serial',
+          //     formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       new Aggregators.Sum('qty'),
+          //       new Aggregators.Sum('amt'),
+          //       ],
+          //     aggregateCollapsed: false,
+          //     collapsed: false,
+          //   }
+          // },
           {
             id: "tr_um",
             name: "UM",

@@ -435,4 +435,10 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getGlobAmt(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findglobamt`, data, {
+      headers: httpHeaders,
+    });
+  }
 }

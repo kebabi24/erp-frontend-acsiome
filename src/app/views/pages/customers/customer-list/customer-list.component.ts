@@ -87,7 +87,7 @@ export class CustomerListComponent implements OnInit {
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataview = angularGrid.dataView;;
+    this.dataview = angularGrid.dataView;
   }
   prepareGrid() {
     this.columnDefinitions = [
@@ -330,8 +330,7 @@ export class CustomerListComponent implements OnInit {
       preHeaderPanelHeight: 40,
       enableFiltering: true,
       enableAutoResize: true,
-      enableRowSelection:true,
-      enableCheckboxSelector: true,
+     
       enableSorting: true,
       exportOptions: {
         sanitizeDataExport: true

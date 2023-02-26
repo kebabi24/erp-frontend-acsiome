@@ -285,7 +285,7 @@ export class ListPosComponent implements OnInit {
        
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+       // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
 
       },
       {
@@ -297,7 +297,7 @@ export class ListPosComponent implements OnInit {
         filterable: false,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+       // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
         formatter: Formatters.decimal,
         params: { decimalPlaces: 2 },
 
@@ -315,7 +315,7 @@ export class ListPosComponent implements OnInit {
         autoHeight: false,
         enableSorting: true,
         exportOptions: {
-          sanitizeDataExport: true
+          sanitizeDataExport: false
         },
         formatterOptions: {
         
