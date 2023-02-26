@@ -107,8 +107,7 @@ export class ListComponent implements OnInit {
               name: "id",
               field: "id",
               sortable: true,
-              minWidth: 80,
-              maxWidth: 80,
+            minWidth:50,   
           },
           {
               id: "pt_part",
@@ -117,23 +116,24 @@ export class ListComponent implements OnInit {
               sortable: true,
               filterable: true,
               type: FieldType.string,
+              minWidth: 100,
           },
           {
               id: "pt_desc1",
-              name: "Deescription",
+              name: "Description",
               field: "pt_desc1",
               sortable: true,
               filterable: true,
-              width: 200,
+              minWidth: 250,
               type: FieldType.string,
           },
           {
             id: "pt_desc2",
-            name: "Deescription",
+            name: "Description",
             field: "pt_desc2",
             sortable: true,
             filterable: true,
-            width: 150,
+            minWidth: 150,
             type: FieldType.string,
         },
           {
@@ -143,6 +143,7 @@ export class ListComponent implements OnInit {
               sortable: true,
               filterable: true,
               type: FieldType.string,
+              minWidth: 80,
           },
           {
             id: "pt_prod_line",
@@ -151,6 +152,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 100,
           },
           {
             id: "pt_part_type",
@@ -159,6 +161,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 100,
           },
           {
             id: "pt_draw",
@@ -167,6 +170,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 100,
           },
           
           {
@@ -176,6 +180,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 100,
           },
           {
             id: "pt_promo",
@@ -184,6 +189,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 100,
           },
           {
             id: "pt_dsgn_grp",
@@ -192,6 +198,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 80,
           },
           {
             id: "pt_site",
@@ -200,6 +207,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 80,
           },
           {
             id: "pt_loc",
@@ -208,6 +216,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            minWidth: 80,
           },
           {
             id: "pt_insp_lead",
@@ -216,6 +225,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.number,
+            minWidth: 80,
           },
           {
             id: "pt_pur_lead",
@@ -224,6 +234,7 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.number,
+            minWidth: 80,
           },
           {
             id: "pt_sfty_stk",
@@ -232,17 +243,119 @@ export class ListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.number,
+            minWidth: 80,
+          },
+          // {
+          //   id: "pt_rop",
+          //   name: "Stock Securite",
+          //   field: "pt_rop",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.number,
+          //   minWidth: 150,
+          // },
+          {
+            id: "pt_iss_pol",
+            name: "Scan",
+            field: "pt_iss_pol",
+            sortable: true,
+            filterable: true,
+            type: FieldType.boolean,
+            minWidth: 80,
           },
           {
-            id: "pt_rop",
-            name: "Stock Securite",
-            field: "pt_rop",
+            id: "pt_length",
+            name: "Longuer",
+            field: "pt_length",
             sortable: true,
             filterable: true,
             type: FieldType.number,
+            minWidth: 80,
+          },
+          {
+            id: "pt_height",
+            name: "Hauteur",
+            field: "pt_height",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            minWidth: 80,
+          },
+          {
+            id: "pt_width",
+            name: "Largeur",
+            field: "pt_width",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            minWidth: 80,
           },
 
+          {
+            id: "pt_origin",
+            name: "Origin",
+            field: "pt_origin",
+            sortable: true,
+            filterable: true,
+            type: FieldType.text,
+            minWidth: 80,
+          },
+          {
+            id: "pt_drwg_loc",
+            name: "Source",
+            field: "pt_drwg_loc",
+            sortable: true,
+            filterable: true,
+            type: FieldType.text,
+            minWidth: 80,
+          },
+          {
+            id: "pt_drwg_size",
+            name: "Unité/Sachet",
+            field: "pt_drwg_size",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            minWidth: 80,
+          },
+          {
+            id: "pt_model",
+            name: "Modéle",
+            field: "pt_model",
+            sortable: true,
+            filterable: true,
+            type: FieldType.text,
+            minWidth: 80,
+          },
 
+          {
+            id: "pt_break_cat",
+            name: "Couleur",
+            field: "pt_break_cat",
+            sortable: true,
+            filterable: true,
+            type: FieldType.text,
+            resizeAlwaysRecalculateWidth:true
+          },
+          {
+            id: "int01",
+            name: "Laize",
+            field: "int01",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            minWidth: 80,
+          },
+          {
+            id: "int02",
+            name: "Micronage",
+            field: "int02",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            minWidth: 80,
+            
+          },
       ]
 
       this.gridOptions = {
@@ -251,9 +364,20 @@ export class ListComponent implements OnInit {
           enableExcelCopyBuffer: true,
           enableFiltering: true,
           autoEdit: false,
-          autoHeight: false,
-          frozenColumn: 0,
-          frozenBottom: true,
+          enableAutoResize:true,
+          
+          autoFitColumnsOnFirstLoad:true,
+          autosizeColumnsByCellContentOnFirstLoad: true,
+          enableAutoSizeColumns:true,
+          syncColumnCellResize:true,
+          
+          presets: {
+            sorters: [
+              { columnId: 'id', direction: 'ASC' }
+            ],
+          },
+          
+        
       }
 
       // fill the dataset with your data

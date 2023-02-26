@@ -263,6 +263,9 @@ export class EditPoComponent implements OnInit {
                 
         
          this.createForm()
+         const controls = this.poForm.controls
+     
+         controls.po_nbr.setValue(this.poEdit.po_nbr)
    
          for(var i=0; i< this.dataset.length; i++) {
 
@@ -283,7 +286,7 @@ export class EditPoComponent implements OnInit {
       
       this.poForm = this.poFB.group({
           po_nbr:  [{ value: this.poEdit.po_nbr,  disabled: true }],
-          po_vend: [{ value: this.poEdit.po_vend, disabled: true }],
+          po_vend: [{ value:  this.addressEdit.ad_addr, disabled: true }],
           name: [{value: this.addressEdit.ad_name, disabled: true}],
           po_ord_date:[{
             year: this.orddate.getFullYear(),

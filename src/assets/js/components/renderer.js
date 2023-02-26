@@ -1,4 +1,4 @@
-let { remote } = require("electron");
+//let { remote } = require("electron");
 // console.log(process.versions.electron);
 
 const { PosPrinter } = remote.require("electron-pos-printer");

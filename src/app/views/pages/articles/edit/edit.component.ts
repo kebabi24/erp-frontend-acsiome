@@ -84,6 +84,7 @@ export class EditComponent implements OnInit {
   hasFormErrors2 = false;
   hasFormErrors3 = false;
   hasFormErrors4 = false;
+  hasFormErrors5 = false;
   hasFormErrors = false
   itemEdit: any
   
@@ -93,6 +94,7 @@ export class EditComponent implements OnInit {
   form2: FormGroup;
   form3: FormGroup;
   form4: FormGroup;
+  form5: FormGroup;
   title: String = 'Modifier Article - '
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -191,6 +193,7 @@ export class EditComponent implements OnInit {
     private form2FB: FormBuilder,
     private form3FB: FormBuilder,
     private form4FB: FormBuilder,
+    private form5FB: FormBuilder,
     private layoutUtilsService: LayoutUtilsService,
     private codeService: CodeService,
     private sctService: CostSimulationService,
@@ -495,6 +498,20 @@ export class EditComponent implements OnInit {
       })
 
 
+      this.form5 = this.form5FB.group({
+        pt_iss_pol: [this.itemEdit.pt_iss_pol],
+        pt_length: [this.itemEdit.pt_length],
+        pt_height: [this.itemEdit.pt_height],
+        pt_width: [this.itemEdit.pt_width],
+        pt_origin: [this.itemEdit.pt_origin],
+        pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
+        pt_drwg_size: [this.itemEdit.pt_drwg_size],
+        pt_model: [this.itemEdit.pt_model],
+        pt_break_cat: [this.itemEdit.pt_break_cat],
+        int01: [this.itemEdit.int01 ],
+        int02: [this.itemEdit.int02 ],
+      });
+
       this.form4 = this.form4FB.group({
         pt_pur_price: [this.itemEdit.pt_pur_price],
         pt_price: [this.itemEdit.pt_price],
@@ -502,6 +519,8 @@ export class EditComponent implements OnInit {
         pt_taxc: [this.itemEdit.pt_taxc],
 
       })
+
+
   //    console.log(this.sct1Edit)
     //  console.log(this.sct2Edit)
                 
@@ -607,6 +626,7 @@ prepareItem(): Item {
   const controls2 = this.form2.controls;
   const controls3 = this.form3.controls;
   const controls4 = this.form4.controls;
+  const controls5 = this.form5.controls;
 
   const _item = new Item();
     _item.id = this.itemEdit.id;
@@ -691,6 +711,17 @@ prepareItem(): Item {
     _item.pt_taxable = controls4.pt_taxable.value;
     _item.pt_taxc = controls4.pt_taxc.value;
 
+    _item.pt_iss_pol   = controls5.pt_iss_pol.value;
+    _item.pt_length    = controls5.pt_length.value;
+    _item.pt_height    = controls5.pt_height.value;
+    _item.pt_width     = controls5.pt_width.value;
+    _item.pt_origin    = controls5.pt_origin.value;
+    _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
+    _item.pt_drwg_size = controls5.pt_drwg_size.value; 
+    _item.pt_model     = controls5.pt_model.value;
+    _item.pt_break_cat = controls5.pt_break_cat.value;
+    _item.int01        = controls5.int01.value;
+    _item.int02        = controls5.int02.value;
     return _item;
   }
 

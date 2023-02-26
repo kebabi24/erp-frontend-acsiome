@@ -130,6 +130,10 @@ export class MenuConfig {
               title: "Consultation des Récéption ",
               page: "/inventory-transaction/list-rct",
             },
+            {
+              title: "Rapports detaillé par site ",
+              page: "/inventory-transaction/conso-report",
+            },
           ],
         },
         // CRM
@@ -618,8 +622,12 @@ export class MenuConfig {
               page: "/purchasing/create-po",
             },
             {
-              title: "Calcule des commandes",
+              title: "Simulateur des commandes",
               page: "/purchasing/create-oa",
+            },
+            {
+              title: "Simulateur des commandes Embalage",
+              page: "/purchasing/create-oa-em",
             },
             {
               title: "Impression Bon de commande",

@@ -66,12 +66,14 @@ import {PurchaseOrderService,
         InventoryStatusService,
         RequisitionService,
         MesureService,
+        UsersService,
         ItemService} from '../../../core/erp';
 import { TransactionListComponent } from './transaction-list/transaction-list.component';
 import { EditStatusComponent } from './edit-status/edit-status.component';
 import { TransListGrpComponent } from './trans-list-grp/trans-list-grp.component';
 import { ListInvComponent } from './list-inv/list-inv.component';
 import { ListRctComponent } from './list-rct/list-rct.component';
+import { ConsoReportComponent } from './conso-report/conso-report.component';
 
 const routes: Routes = [
   {
@@ -93,6 +95,10 @@ const routes: Routes = [
   {
     path: 'transaction-list',
     component: TransactionListComponent
+  },
+  {
+    path: 'conso-report',
+    component: ConsoReportComponent
   },
   {
     path: 'trans-list-grp',
@@ -119,7 +125,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -174,6 +180,7 @@ providers: [
   LocationDetailService,
   InventoryStatusService,
   RequisitionService,
+  UsersService,
 ],
 })
 export class InventoryTransactionModule { }
