@@ -615,11 +615,11 @@ export class MenuConfig {
               page: "/purchasing/create-po",
             },
             {
-              title: "Calcule des commandes",
+              title: "Simulateur des commandes",
               page: "/purchasing/create-oa",
             },
             {
-              title: "Calcule des commandes Embalage",
+              title: "Simulateur des commandes Embalage",
               page: "/purchasing/create-oa-em",
             },
             {
