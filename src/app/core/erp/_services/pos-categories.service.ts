@@ -65,6 +65,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public addBkhTransfert(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_BK}/addbkhtransfert`, data, {
+      headers: httpHeaders,
+    });
+  }
   public payPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/payPo`, data, {

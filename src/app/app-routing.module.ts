@@ -269,6 +269,13 @@ const routes: Routes = [
             (m) => m.WeeklyInventoryModule
           ),
       },
+      {
+        path: "revenue-transfer",
+        loadChildren: () =>
+          import("./views/pages/revenue-transfer/revenue-transfer.module").then(
+            (m) => m.RevenueTransferModule
+          ),
+      },
       // {
       //   path: 'config',
       //   loadChildren: () => import('./views/pages/config/config.module').then(m => m.ConfigModule),

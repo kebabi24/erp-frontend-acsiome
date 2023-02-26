@@ -103,7 +103,14 @@
                 <!-- <button class="btn btn-sm fw-bold btn-primary">
                       Réception autres
                     </button> -->
-
+                <button
+                  (click)="synchro()"
+                  class="btn fw-bold btn-primary"
+                  style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
+                >
+                  Synchroniser
+                </button>
                 <button
                   (click)="getHistory(content4)"
                   class="btn fw-bold btn-primary"
@@ -1542,7 +1549,7 @@
               </div>
             </button>
           </li>
-          <li style="width: 260px; height: 65px">
+          <!-- <li style="width: 260px; height: 65px">
             <button
               class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
               data-bs-toggle="pill"
@@ -1558,8 +1565,8 @@
                 >
               </div>
             </button>
-          </li>
-          <li style="width: 260px; height: 65px">
+          </li> -->
+          <!-- <li style="width: 260px; height: 65px">
             <button
               class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
               data-bs-toggle="pill"
@@ -1575,8 +1582,8 @@
                 >
               </div>
             </button>
-          </li>
-          <li style="width: 260px; height: 65px">
+          </li> -->
+          <!-- <li style="width: 260px; height: 65px">
             <button
               class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
               data-bs-toggle="pill"
@@ -1592,7 +1599,7 @@
                 >
               </div>
             </button>
-          </li>
+          </li> -->
         </ul>
       </div>
 
