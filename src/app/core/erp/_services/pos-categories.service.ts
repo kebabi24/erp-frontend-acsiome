@@ -65,6 +65,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public addBkhTransfert(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_BK}/addbkhtransfert`, data, {
+      headers: httpHeaders,
+    });
+  }
   public payPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/payPo`, data, {
@@ -391,6 +397,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getWeekProductInventory(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_LD}/findWeekProduct`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getAllPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/findAllpo`, data, {
@@ -426,6 +438,12 @@ export class PosCategoryService {
   public getOnByCode(code: String) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/findCategoryByCode/${code}`, {
+      headers: httpHeaders,
+    });
+  }
+  public getGlobAmt(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findglobamt`, data, {
       headers: httpHeaders,
     });
   }

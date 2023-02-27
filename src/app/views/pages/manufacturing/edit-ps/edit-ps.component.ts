@@ -443,7 +443,7 @@ addPs(_ps: Ps, details: any) {
       formatter: Formatters.percentComplete,
       editor: {
         model: Editors.text,
-        formatter: Formatters.percentComplete,
+        
       },
      
     },
@@ -484,6 +484,7 @@ addPs(_ps: Ps, details: any) {
   ];
 
   this.gridOptions = {
+    enableAutoResize:true,
     asyncEditorLoading: false,
     editable: true,
     enableColumnPicker: true,

@@ -1,15 +1,25 @@
 import { Component, OnInit } from "@angular/core"
 import {
-  Column,
-  GridOption,
   Formatter,
-  Formatters,
   Editor,
   Editors,
-  FieldType,
   OnEventArgs,
-} from "angular-slickgrid"
-
+  AngularGridInstance,
+  Aggregators,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  GridOption,
+  GridService,
+  Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+} from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -38,10 +48,14 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
 export class ProvidersListComponent implements OnInit {
 
 
-  columnDefinitions: Column[] = []
-  gridOptions: GridOption = {}
-  dataset: any[] = []
-  
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {};
+  dataset: any[] = [];
+  draggableGroupingPlugin: any;
+  angularGrid: AngularGridInstance;
+  grid: any
+  gridService: GridService
+  dataview: any;
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -55,10 +69,13 @@ export class ProvidersListComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  createProvider() {
-      this.router.navigateByUrl("providers/add")
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid
+    this.dataview = angularGrid.dataView
+    this.grid = angularGrid.slickGrid
+    this.gridService = angularGrid.gridService
   }
+  
   prepareGrid() {
 
       this.columnDefinitions = [
@@ -200,6 +217,7 @@ export class ProvidersListComponent implements OnInit {
           enableFiltering: true,
           autoEdit: false,
           autoHeight: false,
+          enableAutoResize:true,
          
 
           multiSelect: false,
@@ -238,7 +256,9 @@ export class ProvidersListComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       this.providerService.getAll().subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {this.dataset = response.data
+            this.dataview.setItems(this.dataset);
+          },
           (error) => {
               this.dataset = []
           },

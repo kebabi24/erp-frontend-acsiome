@@ -1,4 +1,4 @@
-let { remote } = require("electron");
+//let { remote } = require("electron");
 // console.log(process.versions.electron);
 
 const { PosPrinter } = remote.require("electron-pos-printer");
@@ -20,8 +20,8 @@ var electronPrinter = (function (data) {
 
 
 
-            printerName = 'POS-80C'
-            printerName2 = 'XP-80C'
+            printerName = 'Microsoft Print to PDF'
+            printerName2 = 'Microsoft Print to PDF'
             widthPage = '300px'
 
 
@@ -72,6 +72,108 @@ var electronPrinter = (function (data) {
     }
 
 })(electronPrinter || {})
+
+var etatzPrinter = (function (data) {
+
+
+
+    return {
+        printEtatZ: function (data2) {
+            console.log(data)
+            let printerName;
+
+            let widthPage;
+
+
+
+
+            printerName = 'Microsoft Print to PDF'
+
+            widthPage = '300px'
+
+
+
+            const options = {
+                preview: false, // Preview in window or print
+                width: widthPage, //  width of content body
+                margin: "0 0 0 0", // margin of content body
+                copies: 1, // Number of copies to print
+                printerName: printerName, // printerName: string, check it at webContent.getPrinters()
+                timeOutPerLine: 400,
+                silent: true,
+            };
+
+
+
+
+
+
+            if (printerName && widthPage) {
+                PosPrinter.print(data2, options)
+                    .then(() => { })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+                alert("Select the printer and the width");
+            }
+
+        },
+
+    }
+
+})(etatzPrinter || {})
+
+var printTransfert = (function (data) {
+
+
+
+    return {
+        printT: function (data2) {
+            console.log(data)
+            let printerName;
+
+            let widthPage;
+
+
+
+
+            printerName = 'POS-80C'
+
+            widthPage = '300px'
+
+
+
+            const options = {
+                preview: false, // Preview in window or print
+                width: widthPage, //  width of content body
+                margin: "0 0 0 0", // margin of content body
+                copies: 1, // Number of copies to print
+                printerName: printerName, // printerName: string, check it at webContent.getPrinters()
+                timeOutPerLine: 400,
+                silent: true,
+            };
+
+
+
+
+
+
+            if (printerName && widthPage) {
+                PosPrinter.print(data2, options)
+                    .then(() => { })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            } else {
+                alert("Select the printer and the width");
+            }
+
+        },
+
+    }
+
+})(printTransfert || {})
 
 
 

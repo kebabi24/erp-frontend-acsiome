@@ -37,6 +37,7 @@ import {
   ModalDismissReasons,
   NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
+import { round } from 'lodash';
 import {
   PurchaseOrderService,
   ProviderService,
@@ -255,7 +256,7 @@ export class PrintPoComponent implements OnInit {
     this.reset();
     this.createForm();
     this.createtotForm();
-    
+    this.calculatetot();
   }
 
   //create form
@@ -289,10 +290,38 @@ export class PrintPoComponent implements OnInit {
       ttc: [{value: 0.00 , disabled: true}],
     });
 
-    
-    
-
   }
+  calculatetot(){
+    console.log("here")
+    const controls = this.totForm.controls 
+     const controlsso = this.poForm.controls 
+     let tht = 0
+     let tva = 0
+     let timbre = 0
+     let ttc = 0
+     for (var i = 0; i < this.dataset.length; i++) {
+       console.log(this.dataset[i]  )
+       tht += round((this.dataset[i].pod_price * ((100 - this.dataset[i].pod_disc_pct) / 100 ) *  this.dataset[i].pod_qty_ord),2)
+        tva += round((this.dataset[i].pod_price * ((100 - this.dataset[i].pod_disc_pct) / 100 ) *  this.dataset[i].pod_qty_ord) * (this.dataset[i].pod_taxc ? this.dataset[i].pod_taxc / 100 : 0),2)
+      
+    
+       
+  
+       console.log(tva)
+         timbre = round((tht + tva) / 100,2);
+         if (timbre > 2500) { timbre = 2500}  
+    
+     }
+   ttc = round(tht + tva + timbre,2)
+  console.log(tht,tva,timbre,ttc)
+  controls.tht.setValue(tht.toFixed(2));
+  controls.tva.setValue(tva.toFixed(2));
+  controls.timbre.setValue(timbre.toFixed(2));
+  controls.ttc.setValue(ttc.toFixed(2));
+  
+  } 
+  
+
   //reste form
   reset() {
     this.createForm();
@@ -381,8 +410,8 @@ export class PrintPoComponent implements OnInit {
 
         controls.po_vend.setValue(this.prhServer.po_vend);
         controls.po_curr.setValue(this.prhServer.po_curr);
-        controls.po_ex_rate.setValue(this.prhServer.po_ex_rate);
-        controls.po_ex_rate2.setValue(this.prhServer.po_ex_rate2);
+        controls.po_ex_rate.setValue(1);
+        controls.po_ex_rate2.setValue(1);
         controls.po_ord_date.setValue({
           year: new Date(purchaseOrder.po_ord_date).getFullYear(),
           month: new Date(purchaseOrder.po_ord_date).getMonth() + 1,
@@ -392,10 +421,10 @@ export class PrintPoComponent implements OnInit {
       })
 
       
-      controlstot.tht.setValue(this.prhServer.po_amt);
-      controlstot.tva.setValue(this.prhServer.po_tax_amt);
-      controlstot.timbre.setValue(this.prhServer.po_trl1_amt);
-      controlstot.ttc.setValue(Number(this.prhServer.po_amt) + Number(this.prhServer.po_tax_amt) + Number(this.prhServer.po_trl1_amt));
+      // controlstot.tht.setValue(this.prhServer.po_amt);
+      // controlstot.tva.setValue(this.prhServer.po_tax_amt);
+      // controlstot.timbre.setValue(this.prhServer.po_trl1_amt);
+      // controlstot.ttc.setValue(Number(this.prhServer.po_amt) + Number(this.prhServer.po_tax_amt) + Number(this.prhServer.po_trl1_amt));
       this.deviseService.getBy({cu_curr: this.prhServer.po_curr}).subscribe((resc:any)=>{  
         this.curr = resc.data
      })
@@ -453,12 +482,16 @@ export class PrintPoComponent implements OnInit {
         });
      
         }
+        this.calculatetot();
       })
      
-      }
+      
+  console.log("hehre")
+    }
 
-        
+     
     );
+  
   }
 
   

@@ -80,6 +80,14 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findtrtype', data, { headers: httpHeaders })
     }
+    public getInv(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findinv', data, { headers: httpHeaders })
+    }
+    public getRct(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findrct', data, { headers: httpHeaders })
+    }
     public getDayly(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/dayly`,data, { headers: httpHeaders })
@@ -89,6 +97,23 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/dayly1`,data, { headers: httpHeaders })
  
+    }
+    public getConsoReport(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/consoreport`,data, { headers: httpHeaders })
+ 
+    }
+    public getConsoRange(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/consorange`,data, { headers: httpHeaders })
+ 
+    }
+    public getBySpec(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findoa`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
     }
     // UPDATE
     public update(data: any, id:any) {

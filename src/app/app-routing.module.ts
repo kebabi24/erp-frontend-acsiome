@@ -200,8 +200,9 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'crm',
-        loadChildren: () => import('./views/pages/crm/crm.module').then(m => m.CRMModule),
+        path: "crm",
+        loadChildren: () =>
+          import("./views/pages/crm/crm.module").then((m) => m.CRMModule),
       },
       {
         path: "price-setting",
@@ -259,6 +260,20 @@ const routes: Routes = [
         loadChildren: () =>
           import("./views/pages/project/project.module").then(
             (m) => m.ProjectModule
+          ),
+      },
+      {
+        path: "weekly-inventory",
+        loadChildren: () =>
+          import("./views/pages/weekly-inventory/weekly-inventory.module").then(
+            (m) => m.WeeklyInventoryModule
+          ),
+      },
+      {
+        path: "revenue-transfer",
+        loadChildren: () =>
+          import("./views/pages/revenue-transfer/revenue-transfer.module").then(
+            (m) => m.RevenueTransferModule
           ),
       },
       // {
@@ -507,9 +522,9 @@ const routes: Routes = [
       {
         path: "forcast",
         loadChildren: () =>
-          import(
-            "./views/pages/forcast/forcast.module"
-          ).then((m) => m.ForcastModule),
+          import("./views/pages/forcast/forcast.module").then(
+            (m) => m.ForcastModule
+          ),
       },
 
       { path: "", redirectTo: "dashboard", pathMatch: "full" },

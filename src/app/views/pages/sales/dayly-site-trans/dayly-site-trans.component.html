@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Rapport Journalier" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="false" title="Rapport Journalier" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <!--ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -48,7 +48,7 @@
                    
                 </div> 
                 <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                    <angular-slickgrid class="col-12"  gridHeight="200" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
                           [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
                     </angular-slickgrid>
                 </div>

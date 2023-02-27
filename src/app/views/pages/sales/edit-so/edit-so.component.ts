@@ -56,7 +56,6 @@ import {
   printSO,
   ConfigService,
 } from "../../../../core/erp";
-import { numberFilterCondition } from "angular-slickgrid/app/modules/angular-slickgrid/filter-conditions/numberFilterCondition";
 
 @Component({
   selector: 'kt-edit-so',

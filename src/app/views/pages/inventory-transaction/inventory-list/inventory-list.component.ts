@@ -327,6 +327,7 @@ export class InventoryListComponent implements OnInit {
       this.locationDetailService.getAll().subscribe(
         
           (response: any) => {this.dataset = response.data
+            console.log(this.dataset)
             this.dataview.setItems(this.dataset)},
           
           (error) => {

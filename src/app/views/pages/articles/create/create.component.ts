@@ -111,11 +111,13 @@ export class CreateComponent implements OnInit {
   hasFormErrors2 = false;
   hasFormErrors3 = false;
   hasFormErrors4 = false;
+  hasFormErrors5 = false;
 
   form1: FormGroup;
   form2: FormGroup;
   form3: FormGroup;
   form4: FormGroup;
+  form5: FormGroup;
 
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -477,11 +479,26 @@ export class CreateComponent implements OnInit {
       pt_bom_code: [{ value: this.item.pt_bom_code, disabled: !this.isExist }],
     });
     this.form4 = this.formBuilder.group({
+      pt_pur_price: [{ value: this.item.pt_pur_price, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price, disabled: !this.isExist }],
       pt_taxable: [{ value: this.item.pt_taxable, disabled: !this.isExist }],
       pt_taxc: [{ value: this.item.pt_taxc, disabled: !this.isExist },Validators.required],
     });
 
+    this.form5 = this.formBuilder.group({
+      pt_iss_pol: [{ value: this.item.pt_iss_pol, disabled: !this.isExist }],
+      pt_length: [{ value: this.item.pt_length, disabled: !this.isExist }],
+      pt_height: [{ value: this.item.pt_height, disabled: !this.isExist }],
+      pt_width: [{ value: this.item.pt_width, disabled: !this.isExist }],
+      pt_origin: [{ value: this.item.pt_origin, disabled: !this.isExist }],
+      pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
+      pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
+      pt_model: [{ value: this.item.pt_model, disabled: !this.isExist }],
+      pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
+      int01: [{ value: this.item.int01, disabled: !this.isExist }],
+      int02: [{ value: this.item.int02, disabled: !this.isExist }],
+    });
+    
     this.sct1 = new CostSimulation();
     this.sctForm = this.formBuilder.group({
       sct_mtl_tl: [0],
@@ -517,6 +534,7 @@ export class CreateComponent implements OnInit {
     const controls2 = this.form2.controls
     const controls3 = this.form3.controls
     const controls4 = this.form4.controls
+    const controls5 = this.form5.controls
 
     this.itemService
         .getByOne({
@@ -600,9 +618,22 @@ export class CreateComponent implements OnInit {
               controls3.pt_iss_pol.enable()
               controls3.pt_run_seq2.enable()
               controls3.pt_bom_code.enable()
+              controls4.pt_pur_price.enable()
               controls4.pt_price.enable()
               controls4.pt_taxable.enable()
               controls4.pt_taxc.enable()
+
+              controls5.pt_iss_pol.enable()
+              controls5.pt_length.enable()
+              controls5.pt_height.enable()
+              controls5.pt_width.enable()
+              controls5.pt_origin.enable()
+              controls5.pt_drwg_loc.enable()
+              controls5.pt_drwg_size.enable()
+              controls5.pt_model.enable()
+              controls5.pt_break_cat.enable()
+              controls5.int01.enable()
+              controls5.int02.enable()
         
 
             }
@@ -682,6 +713,7 @@ export class CreateComponent implements OnInit {
     const controls2 = this.form2.controls;
     const controls3 = this.form3.controls;
     const controls4 = this.form4.controls;
+    const controls5 = this.form5.controls;
 
     const _item = new Item();
     _item.pt_part = controls1.pt_part.value;
@@ -760,9 +792,27 @@ export class CreateComponent implements OnInit {
     _item.pt_run_seq2 = controls3.pt_run_seq2.value;
     _item.pt_bom_code = controls3.pt_bom_code.value;
 
+    _item.pt_pur_price = controls4.pt_pur_price.value;
     _item.pt_price = controls4.pt_price.value;
     _item.pt_taxable = controls4.pt_taxable.value;
     _item.pt_taxc = controls4.pt_taxc.value;
+
+
+    _item.pt_iss_pol   = controls5.pt_iss_pol.value;
+    _item.pt_length    = controls5.pt_length.value;
+    _item.pt_height    = controls5.pt_height.value;
+    _item.pt_width     = controls5.pt_width.value;
+    _item.pt_origin    = controls5.pt_origin.value;
+    _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
+    _item.pt_drwg_size = controls5.pt_drwg_size.value; 
+    _item.pt_model     = controls5.pt_model.value;
+    _item.pt_break_cat = controls5.pt_break_cat.value;
+    _item.int01        = controls5.int01.value;
+    _item.int02        = controls5.int02.value;
+
+
+
+
 
     return _item;
   }

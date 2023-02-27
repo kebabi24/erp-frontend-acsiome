@@ -222,7 +222,8 @@ export class ListSiteCaComponent implements OnInit {
             this.mvangularGrid.gridService.deleteItem(args.dataContext);
           }
         },
-      },
+      },ng serve
+      
       {
         id: "id",
         name: "id",
@@ -260,6 +261,7 @@ export class ListSiteCaComponent implements OnInit {
           formatter: (g) => `Date Effet: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('amt'),
+            new Aggregators.Sum('N_amt'),
             new Aggregators.Sum('rec'),
             new Aggregators.Sum('ecart'),
             new Aggregators.Sum('obj')
@@ -283,6 +285,7 @@ export class ListSiteCaComponent implements OnInit {
           aggregators: [
             
             new Aggregators.Sum('amt'),
+            new Aggregators.Sum('N_amt'),
             new Aggregators.Sum('rec'),
             new Aggregators.Sum('ecart'),
             new Aggregators.Sum('obj')
@@ -297,6 +300,17 @@ export class ListSiteCaComponent implements OnInit {
         id: "amt",
         name: "CA",
         field: "amt",
+        sortable: true,
+        formatter: Formatters.decimal,
+        filterable: true,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
+      {
+        id: "N_amt",
+        name: "Non Payé",
+        field: "N_amt",
         sortable: true,
         formatter: Formatters.decimal,
         filterable: true,

@@ -103,7 +103,14 @@
                 <!-- <button class="btn btn-sm fw-bold btn-primary">
                       Réception autres
                     </button> -->
-
+                <button
+                  (click)="synchro()"
+                  class="btn fw-bold btn-primary"
+                  style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
+                >
+                  Synchroniser
+                </button>
                 <button
                   (click)="getHistory(content4)"
                   class="btn fw-bold btn-primary"
@@ -857,7 +864,7 @@
                               class="btn btn-primary fs-1 w-50 py-4"
                               (click)="paiement()"
                               style="margin-top: 5px; background-color: #9e110d"
-                              [disabled]="globalState"
+                              [disabled]="!modif"
                             >
                               Payer
                             </button>
@@ -934,7 +941,14 @@
                           >
                             Payer
                           </button> -->
-
+                          <button
+                            (click)="printZstate()"
+                            class="btn btn-primary fs-1 w-100 py-4"
+                            style="background-color: #9e110d; margin-top: 5px"
+                            [disabled]="globalState"
+                          >
+                            Imprimer etat Z
+                          </button>
                           <!--end::Actions-->
                         </div>
                         <!--end::Payment Method-->
@@ -1142,6 +1156,59 @@
       </ng-template>
     </kt-portlet-body>
   </div>
+  <!-- <div>
+    <kt-portlet-body>
+      <ng-template #content25 let-c="close" let-d="dismiss">
+        <div class="modal-body" style="background-color: #f5f5dc">
+          <div class="form-group col-12">
+            <kt-alert
+              type="warn"
+              [showCloseButton]="true"
+              [duration]="10000"
+              (close)="onAlertClose($event)"
+            >
+              Attention vous avez modifier la commande !
+            </kt-alert>
+          </div>
+          <div class="row">
+            <div class="card card-flush card-p-0 bg-transparent border-0">
+              <div style="display: flex; justify-content: space-between">
+                <button
+                  class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                  data-bs-toggle="pill"
+                  type="button"
+                  (click)="onSelectDelivery(platforme)"
+                  style="width: 500px; height: 100px; background-color: #ffb701"
+                >
+                  <div class="">
+                    <span class="text-gray-900 fw-bold fs-2 d-block"
+                      >Oui, je veux plutôt relancer la commande</span
+                    >
+                  </div>
+                </button>
+                <button
+                  class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                  data-bs-toggle="pill"
+                  type="button"
+                  (click)="onSelectDelivery(platforme)"
+                  style="width: 500px; height: 100px; background-color: #ffb701"
+                >
+                  <div class="">
+                    <span class="text-gray-900 fw-bold fs-2 d-block"
+                      >Procéder au paiement</span
+                    >
+                  </div>
+                </button>
+
+          
+              </div>
+        
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </kt-portlet-body>
+  </div> -->
   <div>
     <kt-portlet-body>
       <ng-template #content4 let-c="close" let-d="dismiss">
@@ -1482,7 +1549,7 @@
               </div>
             </button>
           </li>
-          <li style="width: 260px; height: 65px">
+          <!-- <li style="width: 260px; height: 65px">
             <button
               class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
               data-bs-toggle="pill"
@@ -1498,8 +1565,8 @@
                 >
               </div>
             </button>
-          </li>
-          <li style="width: 260px; height: 65px">
+          </li> -->
+          <!-- <li style="width: 260px; height: 65px">
             <button
               class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
               data-bs-toggle="pill"
@@ -1515,8 +1582,8 @@
                 >
               </div>
             </button>
-          </li>
-          <li style="width: 260px; height: 65px">
+          </li> -->
+          <!-- <li style="width: 260px; height: 65px">
             <button
               class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
               data-bs-toggle="pill"
@@ -1532,7 +1599,7 @@
                 >
               </div>
             </button>
-          </li>
+          </li> -->
         </ul>
       </div>
 
