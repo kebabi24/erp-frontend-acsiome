@@ -43,7 +43,8 @@ import {CRMService,
 import { config } from 'process';
 import * as moment from 'moment';
 import { templateJitUrl } from '@angular/compiler';
-import { K } from '@angular/cdk/keycodes';
+import { K, N } from '@angular/cdk/keycodes';
+import { start } from 'repl';
 export type ControlPosition = keyof typeof google.maps.ControlPosition;
 @Component({
   selector: 'kt-agenda',
@@ -62,6 +63,7 @@ export class AgendaComponent implements OnInit {
   complaintForm : FormGroup;
   newEventForm : FormGroup;
   specialEventForm : FormGroup;
+  customerForm : FormGroup;
 
   ableToSave : Boolean = false; // TRUE => SHOW SAVE BUTTON IN MODAL 1 ELSE DON'T SHOW IT
   eventIsComplaint : Boolean = false; // TRUE => SHOW REC DETAILS BUTTON IN MODAL 1 ELSE DON'T SHOW IT
@@ -73,7 +75,8 @@ export class AgendaComponent implements OnInit {
   events: any = [];  // for calendar 
   eventsData : any = []; // full data of events : stored here from database
   selectedEvent : any = {}  // the clicked event
-  clientData : any = {};  // to store selected cliend data from database
+  clientData : any = {};  // to store selected client data from database
+  clientDataNewEvent : any = {};  // to store selected cliend data from database for new event popup
 
   action_types : any = [];
   methods : any = [];
@@ -88,9 +91,16 @@ export class AgendaComponent implements OnInit {
   // FOR NEW EVENT POPUP
   filtered_categories :any = [];
   can_select_call : Boolean = false;
+  newEventClientExist : Boolean = false;
+  addNewEventClient : Boolean = false;
   result_string : String = "";
   special_event_category_display : String = "";
   special_event_category : String = "";
+
+
+  wilayas_communes_data: any = [];
+  wilayas: any = [];
+  communes: any = [];
   
   
 
@@ -125,6 +135,8 @@ export class AgendaComponent implements OnInit {
     this.createFrom()
     this.createComplaintForm()
     this.createNewEventForm()
+    this.initCustomerForm()
+    this.getWilayasCommunes()
     this.init()
   }
   
@@ -239,6 +251,10 @@ export class AgendaComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
+  open8(content) {
+    this.modalService.open(content, { size: "lg" });
+  }
+
   openDateTimePicker(event :any){
     // document.getElementById("6")
     console.log(event)
@@ -298,6 +314,7 @@ export class AgendaComponent implements OnInit {
     newEvent['hh'] = this.new_even_time.hour 
     newEvent['mn'] = this.new_even_time.minute 
     newEvent['ss'] = 0  
+    newEvent['profile_code'] = this.selectedEvent.profile_code
 
     this.crmService
       .createAgendaLine(newEvent)
@@ -408,13 +425,14 @@ export class AgendaComponent implements OnInit {
     this.selectedEvent.call_start_time = "00:00:00"
     this.selectedEvent.call_end_time = "00:00:00"
     this.getCustomerData(this.selectedEvent.phone_to_call)
+    //this.getNewClientDataV2(this.selectedEvent.phone_to_call)    
     if(this.selectedEvent.category === "complaint"){
       this.eventIsComplaint = true
     }
     this.eventHeader['code_event'] = this.selectedEvent.code_event , 
     this.eventHeader['order'] = this.selectedEvent.order , 
     this.eventHeader['param_code'] = this.selectedEvent.param_code , 
-    console.log(this.selectedEvent)
+    console.log(this.clientData)
     document.getElementById("modalButton").click();
   }
 
@@ -429,7 +447,7 @@ export class AgendaComponent implements OnInit {
   saveExecutionLine(){
     let results = []
 
-    // GET THE INFO OF THE SELECTED EVENT RESULT
+    // GET THE INFO OF THE SELECTED EVENT RESULT + CALCULATE DURATION
     const controls = this.executionForm.controls
     this.event_Results.forEach((event) => {
       if (controls[event.code_value].value) {
@@ -452,11 +470,30 @@ export class AgendaComponent implements OnInit {
       return
     }
 
+    const current = Date.now()
+    const time1  = new Date(current) 
+    const time2  = new Date(current) 
+    const start_time = this.selectedEvent.call_start_time 
+    const end_time   = this.selectedEvent.call_end_time
+    let elements1  = start_time.split(":")
+    let elements2  = end_time.split(":")
+    time1.setHours(Number(elements1[0]))
+    time1.setMinutes(Number(elements1[1]))
+    time1.setSeconds(Number(elements1[2]))
+    time2.setHours(Number(elements2[0]))
+    time2.setMinutes(Number(elements2[1]))
+    time2.setSeconds(Number(elements2[2]))
+    const timestamp1 = new Date(time2).getTime()
+    const timestamp2 = new Date(time1).getTime()
+    const duration = (timestamp1 - timestamp2)/1000
+
+    
+
     this.executionLine = {
       event_day:this.selectedEvent.event_day,
       phone_to_call: this.selectedEvent.phone_to_call,
       status:state,
-      duration:"not yet",
+      duration:duration,
       action:this.selectedEvent.action,
       method:this.selectedEvent.method,
       call_hour:this.selectedEvent.call_start_time,
@@ -654,16 +691,87 @@ export class AgendaComponent implements OnInit {
     this.crmService.getCustomerPhone(phone).subscribe((res: any) => {
       if (res.data) {
         console.log(res.data)
+        this.clientDataNewEvent = res.data
         this.can_select_call = true
         this.result_string="client existe"
-        
+        this.newEventClientExist = true
+        this.addNewEventClient = false
         document.getElementById("phoneN").focus();
       } else {
+        this.addNewEventClient = true
+        this.newEventClientExist = false
         this.can_select_call = true
         this.result_string="client n'existe pas"
 
       }
     });
+  }
+
+  // After the client is saved , we make a request to get his data to display (not an optimal solution)
+  // later retured the needed data in the creation response body 
+  getNewClientData(phone){
+    this.crmService.getCustomerPhone(phone).subscribe((res: any) => {
+      if (res.data) {
+        this.clientDataNewEvent = res.data
+        this.can_select_call = true
+        this.result_string="client existe"
+        this.newEventClientExist = true
+        this.addNewEventClient = false
+
+      //   eventsData.forEach(event =>{
+      //     const indexMethod = this.methods.findIndex(method =>{
+      //        return method.code_value == event.method
+      //     })
+
+        // GET INDEX OF WILAYA 
+        const wilayaIndex = this.wilayas_communes_data.findIndex(element =>{
+          return element.wilaya.code_value == this.clientDataNewEvent.wilaya
+        })
+
+        const communeIndex = this.wilayas_communes_data[wilayaIndex].communes.findIndex(element =>{
+          
+          return element.code_value == this.clientDataNewEvent.commune
+        })
+        this.clientDataNewEvent.adressDisplay = this.wilayas_communes_data[wilayaIndex].wilaya.code_cmmt + ' - ' +this.wilayas_communes_data[wilayaIndex].communes[communeIndex].code_cmmt
+        
+
+        // CALCULATE BIRTHDAY 
+        var ageDifMs = Date.now() -  new Date(this.clientDataNewEvent.cm_high_date).getTime();
+        var ageDate = new Date(ageDifMs);
+        const age =  Math.abs(ageDate.getUTCFullYear() - 1970);
+        this.clientDataNewEvent.ageDisplay = age
+
+
+       } 
+     });
+  }
+
+  getNewClientDataV2(phone){
+    this.crmService.getCustomerPhone(phone).subscribe((res: any) => {
+      if (res.data) {
+        this.clientData = res["data"]
+      
+        // GET INDEX OF WILAYA 
+        const wilayaIndex = this.wilayas_communes_data.findIndex(element =>{
+          return element.wilaya.code_value == this.clientData.wilaya
+        })
+
+        const communeIndex = this.wilayas_communes_data[wilayaIndex].communes.findIndex(element =>{
+          
+          return element.code_value == this.clientData.commune
+        })
+        this.clientData.adressDisplay = this.wilayas_communes_data[wilayaIndex].wilaya.code_cmmt + ' - ' +this.wilayas_communes_data[wilayaIndex].communes[communeIndex].code_cmmt
+        
+
+        // CALCULATE BIRTHDAY 
+        var ageDifMs = Date.now() -  new Date(this.clientData.cm_high_date).getTime();
+        var ageDate = new Date(ageDifMs);
+        const age =  Math.abs(ageDate.getUTCFullYear() - 1970);
+        this.clientData.ageDisplay = age
+
+
+       } 
+     });
   }
 
   changeRoute(category_code){
@@ -863,10 +971,34 @@ export class AgendaComponent implements OnInit {
 
   // GET CUSTOMER DATA BY PHONE 
   getCustomerData(phone : any) {
-    this.crmService.getCustomerData(phone).subscribe(
+    console.log("calling getCustomerData")
+    // this.crmService.getCustomerData(phone).subscribe(
+      this.crmService.getCustomerPhone(phone).subscribe(
       (response) => {
         if (response["data"] != null) {
           this.clientData = response["data"]
+          
+          console.log(this.wilayas_communes_data)
+          // GET INDEX OF WILAYA 
+          const wilayaIndex = this.wilayas_communes_data.findIndex(element =>{
+            return element.wilaya.code_value == this.clientData.wilaya
+          })
+
+          // console.log(wilayaIndex)
+
+          const communeIndex = this.wilayas_communes_data[wilayaIndex].communes.findIndex(element =>{
+            
+            return element.code_value == this.clientData.commune
+          })
+          this.clientData.adressDisplay = this.wilayas_communes_data[wilayaIndex].wilaya.code_cmmt + ' - ' +this.wilayas_communes_data[wilayaIndex].communes[communeIndex].code_cmmt
+          
+
+          // CALCULATE BIRTHDAY 
+          var ageDifMs = Date.now() -  new Date(this.clientData.cm_high_date).getTime();
+          var ageDate = new Date(ageDifMs);
+          const age =  Math.abs(ageDate.getUTCFullYear() - 1970);
+          this.clientData.ageDisplay = age
+
         }
       },
       (error) => {
@@ -947,6 +1079,97 @@ export class AgendaComponent implements OnInit {
 
   getComplaintData(){
 
+  }
+
+  initCustomerForm() {
+    // demo message to show
+
+    this.customerForm = this.formBuilder.group({
+      name: ["",Validators.compose([Validators.required,Validators.maxLength(320),]),],
+      phone: ["", Validators.compose([Validators.required, Validators.maxLength(10)]), ],
+      age: ["",Validators.compose([Validators.required, Validators.maxLength(2)]),],
+      gender: ["", Validators.compose([])],
+      commune: ["", Validators.compose([])],
+      wilaya: ["", Validators.compose([])],
+      email: [""],
+      birthdate: [""],
+    });
+  }
+
+  getWilayasCommunes() {
+    this.crmService
+      .getWilayasCommunes()
+
+      .subscribe(
+        (res: any) => {
+          this.wilayas_communes_data = res.data;
+          this.wilayas_communes_data.forEach((wilaya) => {
+            this.wilayas.push(wilaya.wilaya);
+          });
+        },
+        (err) =>
+          console.log("error")
+      );
+  }
+
+  onWilayaSelect() {
+    const controls = this.customerForm.controls;
+    const wilaya_code = controls.wilaya.value;
+    const wilayaIndex = this.wilayas_communes_data.findIndex((wilaya) => {
+      return wilaya.wilaya.code_value == wilaya_code;
+    });
+    this.communes = this.wilayas_communes_data[wilayaIndex].communes;
+  }
+
+  saveCustomer(){
+    const controls = this.customerForm.controls;
+    const controls2 = this.newEventForm.controls;
+    /** check form */
+    // if (this.customerForm.invalid) {
+    //   Object.keys(controls).forEach((controlName) =>
+    //     controls[controlName].markAsTouched()
+    //   );
+    //   return;
+    // }
+
+
+    const newClientData = {
+      name: controls.name.value,
+      phone: controls2.phone.value,
+      age: controls.age.value,
+      birthdate : controls.birthdate.value,
+      gender: controls.gender.value,
+      wilaya: controls.wilaya.value,
+      commune: controls.commune.value,
+      email: controls.email.value
+    };
+    this.crmService
+      .createNewCustomer(newClientData)
+
+      .subscribe(
+        (res: any) => {
+          console.log(res);
+          this.getNewClientData(controls2.phone.value)
+          this.initCustomerForm()
+        },
+        (err) =>
+          this.layoutUtilsService.showActionNotification(
+            "Erreur creation customer",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          ),
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Données enregistrées avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+        }
+      );
   }
 
 }

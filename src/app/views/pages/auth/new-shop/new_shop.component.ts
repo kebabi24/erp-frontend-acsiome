@@ -172,7 +172,6 @@ export class NewShop implements OnInit, OnDestroy {
       promo_code: this.promo.code_value ,
       discount_pct: this.promo.dec01,
     };
-    console.log(newClientData)
     this.auth
       .createNewCustomer(newClientData)
 

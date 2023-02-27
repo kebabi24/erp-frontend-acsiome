@@ -88,6 +88,10 @@ export class CustomerListComponent implements OnInit {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
+     this.dataviewObj.onRowCountChanged.subscribe((e, args)=>{
+          this.gridObj.invalidateRows(args.rows);
+          this.gridObj.render();
+        })
   }
   prepareGrid() {
     this.columnDefinitions = [
@@ -327,7 +331,7 @@ export class CustomerListComponent implements OnInit {
       //   containerId: 'demo-container',
       //   sidePadding: 10
       // },
-      autoHeight: true,
+      // autoHeight: true,
       enableAutoResize: true,
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
@@ -365,6 +369,7 @@ export class CustomerListComponent implements OnInit {
         return val;
       },
     };
+    
 
     // fill the dataset with your data
     this.dataset = [];
@@ -372,12 +377,17 @@ export class CustomerListComponent implements OnInit {
       (response: any) => {
         this.dataset = response.data;
         this.dataviewObj.setItems(this.dataset);
+        this.dataviewObj.onRowCountChanged.subscribe((e, args)=>{
+          this.gridObj.invalidateRows(args.rows);
+          this.gridObj.render();
+        })
       },
       (error) => {
         this.dataset = [];
       },
       () => {}
     );
+    
   }
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
@@ -421,4 +431,6 @@ export class CustomerListComponent implements OnInit {
     }
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
+
+  
 }
