@@ -4,8 +4,9 @@
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
-            <button type="button" (click)="refresh()" class="btn btn-abracadabra btn-sm mr-2">Rafraîchir </button>
-            <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+            <!-- <button type="button" (click)="refresh()" class="btn btn-abracadabra btn-sm mr-2">Rafraîchir </button> -->
+            <!-- <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button> -->
+             <button type="button" (click)="newEvent()" class="btn btn-abracadabra btn-sm mr-2">Nouvel événement </button> 
         </ng-container>
     </kt-portlet-header>
     <kt-portlet-body class="main-container">
@@ -48,8 +49,40 @@
           (click)="open3(content3)"
           ></button>
 
+          <!-- BUTTON TO OPEN MODAL 4 -->
+          <button
+          hidden
+          id="modal4Button"
+          class="btn btn-primary"
+          (click)="open4(content4)"
+          ></button>
 
-          <!-- MODAL -->
+          <!-- BUTTON TO OPEN MODAL 5 -->
+          <button
+          hidden
+          id="modal5Button"
+          class="btn btn-primary"
+          (click)="open5(content5)"
+          ></button>
+
+           <!-- BUTTON TO OPEN MODAL 6 -->
+           <button
+           hidden
+           id="modal6Button"
+           class="btn btn-primary"
+           (click)="open6(content6)"
+           ></button>
+
+           <!-- BUTTON TO OPEN MODAL 7 -->
+           <button
+           hidden
+           id="modal7Button"
+           class="btn btn-primary"
+           (click)="open7(content7)"
+           ></button>
+
+
+          <!-- MODAL : EVENT INFO-->
           <div class="row">
               <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
@@ -135,14 +168,14 @@
                         <div class="col-3 align-middle mt-2">
                           <label class="align-middle">Nom du client:</label>
                         </div>
-                        <div class="col-3 mt-2" >{{clientData.ad_name}}</div>
+                        <div class="col-3 mt-2" >{{clientData.cm_sort}}</div>
                         <!-- NAME END  -->
                         
                         <!-- AGE -->
                         <div class="col-3 align-middle mt-2">
                           <label class="align-middle">Age:</label>
                         </div>
-                        <div class="col-3 mt-2">{{clientData.ad_format}}</div>
+                        <div class="col-3 mt-2">{{clientData.ageDisplay}} ans  ({{clientData.cm_high_date}})</div>
                         <!-- AGE END -->
                     </div>
 
@@ -151,14 +184,14 @@
                       <div class="col-3 align-middle mt-2">
                         <label class="align-middle">Adresse du client:</label>
                       </div>
-                      <div class="col-3 mt-2" >{{clientData.ad_line1}}</div>
+                      <div class="col-3 mt-2" >{{clientData.adressDisplay}}</div>
                       <!-- ADR END  -->
                       
                       <!-- EMAIL -->
                       <div class="col-3 align-middle mt-2">
                         <label class="align-middle">Email:</label>
                       </div>
-                      <div class="col-3 mt-2 text-wrap">{{clientData.ad_ext}}</div>
+                      <div class="col-3 mt-2 text-wrap">{{clientData.email}}</div>
                       <!-- AGE END -->
                   </div>
 
@@ -227,12 +260,15 @@
                   </div>
                 </div>
                 <div class="modal-footer">
+
+                  <!-- BUTTON TO CLOSE THE MODAL FROM CODE -->
                   <button
                     hidden
                     id="closeForm1"
                     class="btn btn-primary"
                     (click)="c('Close click')"
                   ></button>
+
                   <button
                     type="button"
                     class="btn btn-secondary"
@@ -258,14 +294,16 @@
                   >
                       Exécuter
                   </button>
+
                 </div>
               </ng-template>
           </div>
           <!-- MODAL END -->
 
-         <!-- MODAL  2-->
+         <!-- MODAL  2 : EXECUTION-->
          <div class="row">
           <ng-template #content2 let-c="close" let-d="dismiss">
+
             <div class="modal-header">
               <h4 class="modal-title">L'execution</h4>
               <button
@@ -276,7 +314,19 @@
               >
                 <span aria-hidden="true">&times;</span>
               </button>
+
+              
+              <button
+              *ngIf="canAddNewEvent"
+              type="button"
+              class="btn btn-abracadabra"
+              (click)="opeNewRDVPopup()"
+            >
+              Créer un évènement
+            </button>
+
             </div>
+
             <div class="modal-body">
               <div class="row">
                 <!--begin::Form-->
@@ -327,10 +377,10 @@
                 
                   <!-- END END -->
                
-              </div>
-              <!-- TIMES -->
+                </div>
+                <!-- TIMES -->
                 
-                <!-- ACTIONS AND METHODS  -->
+                <!-- EXECUTION RESULTS  -->
                 <div class="row align-middle form-group-bg">
                   <div
                   class="col-12"
@@ -338,11 +388,14 @@
                 >
                   <div class="row mt-5">
                     <!-- SELECT -->
-                    <fieldset class="col-6" >
+                    <fieldset class="col-6"  >
                       <div *ngFor="let cause of event_Results; let i = index">
                         <input
                         type="checkbox"
+                        attr.id="{{i}}"
                         formControlName="{{ cause.code_value }}"
+                        (change)="openDateTimePicker(i)"
+                        [checked] = "cause.checked"
                         />
                         <label for="coding" class="ml-2">{{
                           cause.code_desc
@@ -368,7 +421,7 @@
 
                  
                 </div>
-                <!-- ACTIONS AND METHODS  -->
+                <!-- EXECUTION RESULTS  -->
     
                   
 
@@ -377,13 +430,18 @@
                 <!--end::Form-->
               </div>
             </div>
+
+
             <div class="modal-footer">
+
+              <!-- BUTTON TO CLOSE THE MODAL FROM CODE -->
               <button
                 hidden
                 id="closeForm2"
                 class="btn btn-primary"
                 (click)="c('Close click')"
               ></button>
+
               <button
                 type="button"
                 class="btn btn-secondary"
@@ -391,6 +449,7 @@
               >
                 Annuller
               </button>
+
               <button
                 type="button"
                 class="btn btn-abracadabra"
@@ -398,12 +457,14 @@
               >
                 Terminer
               </button>
+
             </div>
+
           </ng-template>
          </div>
          <!-- MODAL END 2 -->
 
-         <!-- MODAL 3 -->
+         <!-- MODAL 3 : COMPLAINT DATA   -->
          <div class="row">
           <ng-template #content3 let-c="close" let-d="dismiss">
             <div class="modal-header">
@@ -505,6 +566,637 @@
           </ng-template>
          </div>
          <!-- MODAL 3 END -->
+
+          <!-- MODAL 4 : DATE AND TIME PICKER-->
+          <div class="row">
+            <ng-template #content4 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Création d'un événement</h4>
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="d('Cross click')"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <!--begin::Form-->
+                  <!-- <form
+                    class="form"
+                    [formGroup]="complaintForm"
+                    autocomplete="off"
+                    novalidate="novalidate"
+                    class="pl-5 pr-5"
+                  >
+
+                  </form> -->
+                  <div class="col-6">
+                    <h5>Sélectionner la date : </h5>
+                    <ngb-datepicker #dp [(ngModel)]="model" ></ngb-datepicker>
+                  </div>
+                  <div class="col-6">
+                    <h5>Sélectionner l'heure : </h5>
+                    <ngb-timepicker [(ngModel)]="new_even_time "></ngb-timepicker>
+                  </div>
+                  <!--end::Form-->
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button
+                  hidden
+                  id="closeModal4"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                ></button>
+                  
+                  <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="c('Close click')"
+                >
+                    Annuller
+                  </button>
+
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="saveNewEvent()"
+                >
+                  Ajouter
+                </button>
+  
+                
+  
+              </div>
+            </ng-template>
+          </div>
+          <!-- MODAL 4 END -->
+
+          <!-- MODAL 5 : RECREATE EVENT-->
+          <div class="row">
+            <ng-template #content5 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Renouvellement de l'événement</h4>
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="d('Cross click')"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                 
+                  <div class="col-12">
+                    <h5>cet événement a atteint et se termine sans être terminé, aimeriez-vous le renouveler ? </h5> 
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button
+                  hidden
+                  id="closeModal5"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                  >
+                  </button>
+                  
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="renew(false)"
+                  >
+                  NON
+                  </button>
+
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="renew(true)"
+                  >
+                  OUI
+                  </button>
+  
+              </div>
+            </ng-template>
+          </div>
+          <!-- MODAL 5 : RECREATE EVENT END -->
+
+         <!-- MODAL 6 : NEW EVENT-->
+         <div class="row">
+          <ng-template #content6 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Nouvel événement</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="d('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+
+              <div *ngIf="addNewEventClient">
+                <button
+                  type="button"
+                  (click)="open8(content8)"
+                  class="btn btn-sm mr-2 mt-3 btn-abracadabra"
+                >
+                  Créer un client
+                </button>
+              </div>
+              
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <form
+                  class="form"
+                  [formGroup]="newEventForm"
+                  autocomplete="off"
+                  novalidate="novalidate"
+                  id="kt_login_form"
+                  class="pl-5 pr-5"
+                > 
+
+                <!-- PHONE -->
+                <div class="form-group row">
+
+                  <!-- PHONE NUMBER -->
+                  <mat-form-field class="col-4">
+                    <mat-label>Numéro de téléphone:</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      placeholder="Numéro de téléphone"
+                      (change)="onChangePhone()"
+                      id="phoneN"
+                      formControlName="phone"
+                      autocomplete="off"
+                    />
+                    <!-- <mat-error *ngIf="isControlHasError('phoneN', 'required')">
+                      <strong>{{ "AUTH.VALIDATION.REQUIRED_FIELD" | translate }}</strong>
+                    </mat-error>
+                    <mat-error *ngIf="isControlHasError('phoneN', 'pattern')">
+                      <strong>wrong pattern</strong>
+                    </mat-error> -->
+                  </mat-form-field>
+                  <!-- PHONE NUMBER END  -->
+
+                  <div class="col-4 mt-4">{{result_string}}</div>
+                  
+
+                </div>
+                <!-- PHONE-->
+
+                <!-- CLIENT DATA -->
+                <div *ngIf="newEventClientExist">
+                  <div class="row ">
+                    <h6>Informations du client</h6>
+                  </div>  
+                  <div class="row align-middle form-group-bg mt-2"  >
+                      
+                    <div class="row mt-2">
+                      <!-- NAME -->
+                      <div class="col-3 align-middle mt-2">
+                        <label class="align-middle">Nom du client:</label>
+                      </div>
+                      <div class="col-3 mt-2" >{{clientDataNewEvent.cm_sort}}</div>
+                      <!-- NAME END  -->
+                      
+                      <!-- AGE -->
+                      <div class="col-3 align-middle mt-2">
+                        <label class="align-middle">Age:</label>
+                      </div>
+                      <div class="col-3 mt-2"> {{clientDataNewEvent.ageDisplay}} ans  ({{clientDataNewEvent.cm_high_date}})</div>
+                      <!-- AGE END -->
+                  </div>
+  
+                  <div class="row mt-2">
+                    <!-- ADR -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Adresse du client:</label>
+                    </div>
+                    <div class="col-3 mt-2" >{{clientDataNewEvent.adressDisplay}}</div>
+                    <!-- ADR END  -->
+                    
+                    <!-- EMAIL -->
+                    <div class="col-3 align-middle mt-2">
+                      <label class="align-middle">Email:</label>
+                    </div>
+                    <div class="col-3 mt-2 text-wrap">{{clientDataNewEvent.email}}</div>
+                    <!-- AGE END -->
+                </div>
+  
+                  </div>
+                </div>
+               
+                <!-- CLIENT DATA END  -->
+
+                <div *ngIf="can_select_call">
+                  <div class="row">
+                    <h6>Sélectionner un motif d'appel</h6>
+                  </div>
+                  <div class="row  mt-5 ml-10 mr-10" >
+                    <div *ngFor="let category of filtered_categories" 
+                          class="  mb-5 feeedback-btn button" 
+                          (click)="changeRoute(category.code_value)">
+                        <div class="button_text">{{category.code_desc}}</div> 
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- class=" image_div"  -->
+                <!-- <h1 *ngFor="let category of filtered_categories">{{category.code_desc}}</h1> -->
+              
+                </form>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                hidden
+                id="closeModal5"
+                class="btn btn-primary"
+                (click)="c('Close click')"
+                >
+                </button>
+
+                <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="c('Close click')"
+                >
+                  Annuller
+                </button>
+
+                <button
+                  hidden
+                  id="closeModal6"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                  >
+                  </button>
+                
+              
+               
+
+            </div>
+          </ng-template>
+          </div>
+          <!-- MODAL 6 : NEW EVENT END -->   
+
+          <!-- MODAL 7 : SPEACIAL EVENT CASE-->
+         <div class="row">
+          <ng-template #content7 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">{{special_event_category_display}} : Creation</h4>
+              <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="d('Cross click')"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+              
+            </div>
+
+            <div class="modal-body">
+              <div class="row">
+                <form
+                  class="form"
+                  [formGroup]="specialEventForm"
+                  autocomplete="off"
+                  novalidate="novalidate"
+                  id="kt_login_form"
+                > 
+
+                <!-- SIZE & SITE -->
+                <div class="row">
+                  <!-- SITE -->
+                  <div class="form-group col-6">
+                    <mat-form-field >
+                      <mat-label>Site:</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Site"
+                        formControlName="site"
+                        autocomplete="off"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <!-- SITE-->  
+
+                  <!-- TAILLE -->
+                  <div class="form-group col-6">
+                  <mat-form-field>
+                    <mat-label>Taille:</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      placeholder="Taille"
+                      formControlName="size"
+                      autocomplete="off"
+                    />
+                      </mat-form-field>
+                  </div>
+                  <!-- TAILLE--> 
+                </div>
+                <!-- SIZE & SITE END -->
+
+                <!-- TYPE-->
+                <div class="row">
+                  <!-- TYPE -->
+                  <div class="form-group col-6">
+                    <mat-form-field >
+                      <mat-label>Type:</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        placeholder="Type"
+                        formControlName="type"
+                        autocomplete="off"
+                      />
+                    </mat-form-field>
+                  </div>
+                  <!-- SITE-->  
+
+                
+                </div>
+                <!-- TYPE END -->
+
+                <!-- OBS 1 & OBS2  -->
+                <div class="row">
+                  <!-- OBS1 -->
+                  <div class="form-group col-6">
+                    <mat-form-field >
+                      <mat-label>Observation 1:</mat-label>
+                      <textarea
+                      matInput
+                      rows="2"
+                      type="text"
+                      class="mt-1 form-control form-control-solid"
+                      formControlName="obs1">
+                      </textarea> 
+                    </mat-form-field>
+                  </div>
+                  <!-- OBS1-->  
+
+                  <!-- OB2 -->
+                  <div class="form-group col-6">
+                  <mat-form-field>
+                    <mat-label>Oservation 2 </mat-label>
+                     <textarea
+                        matInput
+                        rows="2"
+                        type="text"
+                        class="mt-1 form-control form-control-solid"
+                        formControlName="obs2">
+                     </textarea> 
+                      </mat-form-field>
+                  </div>
+                  <!-- TAILLE--> 
+                </div>
+                <!-- OBS 1 & OBS2 -->
+                
+                   
+                <!-- TIME AND DATE PICKER -->
+                <div class="row">
+                <div class="form-group col-6">
+                  <h5>La date : </h5>
+                  <ngb-datepicker #dp [(ngModel)]="model1" ></ngb-datepicker>
+                </div>
+                <div class="form-group col-6">
+                  <h5>L'heure : </h5>
+                  <ngb-timepicker [(ngModel)]="special_even_time"></ngb-timepicker>
+                </div>
+                </div>
+                <!-- TIME AND DATE PICKER END -->
+
+
+                </form>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+                <button
+                hidden
+                id="closeModal7"
+                class="btn btn-primary"
+                (click)="c('Close click')"
+                >
+                </button>
+
+                <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="c('Close click')"
+                >
+                  Annuller
+                </button>
+
+                <button
+                  hidden
+                  id="closeModal7"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                  >
+                  </button>
+
+                  <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="saveSpecialEvent()"
+                  >
+                  Sauvgarder
+                  </button>
+            </div>
+          </ng-template>
+          </div>
+          <!-- MODAL 7 :  SPEACIAL EVENT CASE END -->   
+
+
+          <!-- MODAL 8 : SPECIAL EVENT ADD CLIENT -->
+          <div class="row">
+            <ng-template #content8 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Nouveau Client</h4>
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="d('Cross click')"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <!--begin::Form-->
+                  <form
+                    class="form"
+                    [formGroup]="customerForm"
+                    autocomplete="off"
+                    novalidate="novalidate"
+                    class="ml-5"
+                  >
+                    <!-- NAME -->
+                    <div class="row align-middle mt-5">
+                      <div class="col-4 align-middle">
+                        <label class="align-middle">Nom et prénom:</label>
+                      </div>
+                      <div class="col-6">
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="text"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="name"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- NAME -->
+
+                    
+                    <!-- AGE -->
+                    <div class="row align-middle mt-5">
+                      <div class="col-4 align-middle">
+                        <label class="align-middle">Date de naissance:</label>
+                      </div>
+                      <div class="col-6">
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="date"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="birthdate"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <!-- AGE -->
+
+                    <!-- SEXE -->
+                    <div class="row align-middle mt-5">
+                      <div class="col-4 align-middle">
+                        <label class="align-middle mt-2">Gender:</label>
+                      </div>
+                      <div class="col-6">
+                        <select
+                          formControlName="gender"
+                          class="form-control form-control-solid"
+                        >
+                          <option value="homme" class="mt-1">Homme</option>
+                          <option value="femme">Femme</option>
+                        </select>
+                      </div>
+                    </div>
+                    <!-- SEXE -->
+
+                    <!-- WILAYA -->
+                    <div class="row align-middle mt-5">
+                      <div class="col-4 align-middle">
+                        <label class="align-middle mt-2">Wilaya:</label>
+                      </div>
+                      <div class="col-6">
+                        <select
+                          formControlName="wilaya"
+                          class="form-control form-control-solid"
+                          (change)="onWilayaSelect()"
+                        >
+                        <option
+                        *ngFor="let wilaya of wilayas"
+                        [value]="wilaya.code_value"
+                        class="mt-1"
+                      >
+                        {{ wilaya.code_cmmt }}
+                      </option>
+                        </select>
+                      </div>
+                    </div>
+                    <!-- WILAYA -->
+
+                    <!-- COMMUNE -->
+                    <div class="row align-middle mt-5">
+                    <div class="col-4 align-middle">
+                      <label class="align-middle mt-2">Commune:</label>
+                    </div>
+                    <div class="col-6">
+                      <select
+                        formControlName="commune"
+                        class="form-control form-control-solid"
+                      >
+                          <option
+                          *ngFor="let commune of communes"
+                          [value]="commune.code_value"
+                          class="mt-1"
+                        >
+                          {{ commune.code_cmmt }}
+                        </option>
+                      </select>
+                    </div>
+                    </div>
+                    <!-- COMMUNE -->
+
+                    <!-- EMAIL -->
+                    <div class="row align-middle mt-5">
+                      <div class="col-4 align-middle">
+                        <label class="align-middle">Email:</label>
+                      </div>
+                      <div class="col-6">
+                        <div class="input-group input-group-sm">
+                          <input
+                            type="text"
+                            class="form-control form-control-solid"
+                            aria-describedby="basic-addon2"
+                            formControlName="email"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- EMAIL -->
+                  </form>
+                  <!--end::Form-->
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  hidden
+                  id="closeForm"
+                  class="btn btn-primary"
+                  (click)="c('Close click')"
+                ></button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="c('Close click')"
+                >
+                  Annuller
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-abracadabra"
+                  (click)="saveCustomer()"
+                >
+                  Ajouter
+                </button>
+              </div>
+            </ng-template>
+          </div>
+          <!-- MODAL 8 END -->
+
 
          
 

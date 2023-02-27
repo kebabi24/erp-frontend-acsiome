@@ -1,7 +1,7 @@
 import { BaseModel } from "./base.model"
 
 export class Transfer extends BaseModel {
-    id = 0
+    id : Number
     tr_nbr = ''
     tr_so_job = ''
     tr_effdate = ''

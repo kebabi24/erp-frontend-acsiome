@@ -56,7 +56,6 @@ import {
   ConfigService,
   PayMethService,
 } from "../../../../core/erp";
-import { numberFilterCondition } from "angular-slickgrid/app/modules/angular-slickgrid/filter-conditions/numberFilterCondition";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 

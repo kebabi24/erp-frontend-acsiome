@@ -197,14 +197,13 @@ error = false;
   initGrid() {
     this.columnDefinitions = [
       
-      {
+     /* {
         id: "id",
         name: "Ligne",
         field: "id",
         minWidth: 50,
         maxWidth: 50,
-        selectable: true,
-      },
+      },*/
       {
         id: "part",
         name: "Article",
@@ -222,14 +221,14 @@ error = false;
         width: 150,
         filterable: true,
       },
-      {
+    /*  {
         id: "serial",
         name: "Lot Série",
         field: "serial",
         sortable: true,
         width: 150,
         filterable: true,
-      },
+      },*/
       {
         id: "qtyinvbeg",
         name: "Inventaire Hier",
@@ -255,6 +254,17 @@ error = false;
         params: { minDecimal: 2, maxDecimal: 2 }, 
       },
       {
+        id: "ecartdeb",
+        name: "Ecart",
+        field: "ecartdeb",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
         id: "qtyrec",
         name: "Réception",
         field: "qtyrec",
@@ -267,8 +277,19 @@ error = false;
       },
       {
         id: "qtyiss",
-        name: "Qte Consomée",
+        name: "Qte Nomenclature",
         field: "qtyiss",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "qtyissr",
+        name: "Qte Consomée Physiquement",
+        field: "qtyissr",
         sortable: true,
         minWidth: 100,
         filterable: true,
@@ -298,18 +319,28 @@ error = false;
         formatter: Formatters.decimal,
         params: { minDecimal: 2, maxDecimal: 2 }, 
       },
+      {
+        id: "ecartfin",
+        name: "Ecart",
+        field: "ecartfin",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
       
     ];
 
     this.gridOptions = {
       asyncEditorLoading: false,
-      editable: true,
+      editable: false,
       enableFiltering: true,
       enableColumnPicker: true,
-      enableCellNavigation: true,
-      enableRowSelection: true,
-      autoHeight: true,
-      enableAutoResize:true,
+      enableCellNavigation: false,
+      enableRowSelection: false,
+      enableAutoResize: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -326,7 +357,10 @@ error = false;
 
     this.dataset = [];
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    //const date = `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     this.inventoryTransactionService.getDayly1({tr_site: controls.tr_site.value, tr_effdate: date}).subscribe(
       (response: any) => {   
         this.dataset = response.data
@@ -415,14 +449,13 @@ error = false;
     ];
 
     this.mvgridOptions = {
-      asyncEditorLoading: false,
-      editable: true,
+      asyncEditorLoading: true,
+      editable: false,
       enableFiltering: true,
-      enableColumnPicker: true,
+      enableColumnPicker: false,
       enableCellNavigation: true,
-      enableRowSelection: true,
-      enableAutoResize: false,
-      autoHeight: true,
+      enableRowSelection: false,
+      enableAutoResize: true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -440,7 +473,9 @@ error = false;
     this.mvdataset = [];
     
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     console.log(date,controls.calc_date.value)
     this.posCategoryService.getSumeQty({usrd_site: this.user.usrd_site, created_date: date}).subscribe(
       (response: any) => {   
@@ -459,7 +494,10 @@ error = false;
     this.mvdataset = []
     this.dataset = []
     const controls = this.poForm.controls
-    const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+   // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
     console.log(date,controls.tr_site.value)
     this.posCategoryService.getSumeQty({usrd_site: controls.tr_site.value, created_date: date}).subscribe(
       (response: any) => {   
@@ -621,12 +659,12 @@ error = false;
         if (!res.data) {
   
             alert("Site n'existe pas  ")
-            controls.prh_site.setValue(null);
+            controls.tr_site.setValue(null);
             document.getElementById("tr_site").focus();
           } else {
            if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
             alert("Site n'est pas autorisé pour cet utilisateur ")
-            controls.prh_site.setValue(null);
+            controls.tr_site.setValue(null);
             document.getElementById("tr_site").focus();
              
 
@@ -646,7 +684,7 @@ error = false;
         
        controls.tr_site.setValue(item.si_site);
         
-    
+    this.change()
      
   });
 
@@ -659,16 +697,7 @@ error = false;
 
   prepareGridsite() {
     this.columnDefinitionssite = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromColumnPicker: true,
-        excludeFromGridMenu: true,
-        excludeFromHeaderMenu: true,
-
-        minWidth: 50,
-        maxWidth: 50,
-      },
+      
       {
         id: "id",
         name: "id",

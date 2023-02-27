@@ -362,7 +362,7 @@ export class EditStatusPoComponent implements OnInit {
               const item = this.gridObj5.getDataItem(idx)
               
               
-              controls.po_nbr.setValue(item.po.po_nbr || "")
+              controls.po_nbr.setValue(item.po_nbr || "")
 
               //const controls = this.poForm.controls
               const po_nbr = controls.po_nbr.value
@@ -448,9 +448,17 @@ export class EditStatusPoComponent implements OnInit {
         maxWidth: 80,
       },
       {
+        id: "po_site",
+        name: "Site",
+        field: "po_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
         id: "po_nbr",
         name: "N° BC",
-        field: "po.po_nbr",
+        field: "po_nbr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -458,7 +466,7 @@ export class EditStatusPoComponent implements OnInit {
       {
         id: "po_ord_date",
         name: "Date",
-        field: "po.po_ord_date",
+        field: "po_ord_date",
         sortable: true,
         filterable: true,
         type: FieldType.date,
@@ -466,7 +474,7 @@ export class EditStatusPoComponent implements OnInit {
       {
         id: "po_vend",
         name: "Fournisseur",
-        field: "po.po_vend",
+        field: "po_vend",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -521,7 +529,7 @@ export class EditStatusPoComponent implements OnInit {
 
     // fill the dataset with your data
     this.purchaseOrderService
-      .getAll()
+      .getByStat({po_stat: "p"})
       .subscribe((response: any) => {
         console.log(response.data)
         this.pos = response.data });

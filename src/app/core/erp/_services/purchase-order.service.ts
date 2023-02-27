@@ -34,6 +34,10 @@ export class PurchaseOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
     }
+    public getOne(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
     public getByStat(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findstat', data, { headers: httpHeaders })
@@ -81,6 +85,10 @@ export class PurchaseOrderService {
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
+    }
+    public updatedet(data: any, id:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/up/${id}`, data, { headers: httpHeaders })
     }
     // DELETE
 }

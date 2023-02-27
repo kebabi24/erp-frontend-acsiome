@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Rapport Journalier" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="false" title="Rapport Journalier" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <!--ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -12,13 +12,13 @@
         <div class="example-preview">
 
             <form class="form" [formGroup]="poForm">
-                <div class="row">
-                    <div class="form-group col-2">
+                <div class="row" style="display: flex; justify-content:center" >
+                    <div class="form-group col-2" >
                         <label class="form-group">Site: *</label>
                     
                         <div class="input-group input-group-sm">
 
-                            <input type="text" formControlName="tr_site" (change)="onChangesite()" id="tr_site"
+                            <input type="text" formControlName="tr_site" (change)="onChangesite()" id="tr_site" (change)="change()"
                                 [className]="poForm.controls['tr_site'].errors && (poForm.controls['tr_site'].dirty || poForm.controls['tr_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
@@ -29,9 +29,9 @@
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
                     </div>
-                    <div class="form-group col-2" align="right" >
+                    <div class="form-group col-2" >
                         <label class="form-group">Date de Calcul:</label>
-                        <div class="input-group input-group-sm" align="right" >
+                        <div class="input-group input-group-sm"  >
                             <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" (change)="change()"
                                  placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f
                                 #calc_date="ngbDatepicker"  (ngModelChange)= "change()" >
@@ -48,7 +48,7 @@
                    
                 </div> 
                 <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                    <angular-slickgrid class="col-12"  gridHeight="200" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
                           [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
                     </angular-slickgrid>
                 </div>

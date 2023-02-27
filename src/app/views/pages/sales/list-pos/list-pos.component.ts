@@ -70,7 +70,7 @@ import thId from "src/assets/plugins/formvalidation/src/js/validators/id/thId";
   styleUrls: ['./list-pos.component.scss']
 })
 export class ListPosComponent implements OnInit {
-  soForm: FormGroup;
+  posForm: FormGroup;
   totForm: FormGroup;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
@@ -89,12 +89,17 @@ export class ListPosComponent implements OnInit {
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
   mvdataset: any[];
-
+  datasite: [];
+  columnDefinitionssite: Column[] = [];
+  gridOptionssite: GridOption = {};
+  gridObjsite: any;
+  angularGridsite: AngularGridInstance;
+  
   user;
   row_number;
   message = "";
   date: String;
-  posForm: FormGroup;
+
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -134,7 +139,7 @@ export class ListPosComponent implements OnInit {
     date.setDate(date.getDate() - 2);
     const date1 = new Date;
     this.posForm = this.posFB.group({
-    
+      site:[this.user.usrd_site,Validators.required],
       date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
@@ -202,7 +207,7 @@ export class ListPosComponent implements OnInit {
           formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('disc_amt')
+            new Aggregators.Sum('Remise')
           ],
             aggregateCollapsed: false,
             collapsed: false,
@@ -223,7 +228,7 @@ export class ListPosComponent implements OnInit {
           formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('disc_amt')
+            new Aggregators.Sum('Remise')
           ],
             aggregateCollapsed: false,
             collapsed: false,
@@ -243,7 +248,7 @@ export class ListPosComponent implements OnInit {
           formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('disc_amt')
+            new Aggregators.Sum('Remise')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -263,7 +268,7 @@ export class ListPosComponent implements OnInit {
           formatter: (g) => `Plateforme: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('total_price'),
-            new Aggregators.Sum('disc_amt')
+            new Aggregators.Sum('Remise')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -280,7 +285,7 @@ export class ListPosComponent implements OnInit {
        
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+       // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
 
       },
       {
@@ -292,7 +297,7 @@ export class ListPosComponent implements OnInit {
         filterable: false,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+       // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
         formatter: Formatters.decimal,
         params: { decimalPlaces: 2 },
 
@@ -310,7 +315,7 @@ export class ListPosComponent implements OnInit {
         autoHeight: false,
         enableSorting: true,
         exportOptions: {
-          sanitizeDataExport: true
+          sanitizeDataExport: false
         },
         formatterOptions: {
         
@@ -400,7 +405,7 @@ export class ListPosComponent implements OnInit {
     const date1 = controls.date1.value
     ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
     : null;
-    const site = this.user.usrd_site
+    const site = controls.site.value
     let obj= {date,date1,site}
     this.posCategoryService.getAllPosGrp(obj).subscribe(
       (res: any) => {
@@ -415,5 +420,125 @@ export class ListPosComponent implements OnInit {
   })
   
   }
+  onChangesite() {
+    const controls = this.posForm.controls;
+    const si_site = controls.site.value;
+    
+    this.siteService.getByOne({ si_site }).subscribe(
+      (res: any) => {
   
+        if (!res.data) {
+  
+            alert("Site n'existe pas  ")
+            controls.site.setValue(null);
+            document.getElementById("site").focus();
+          } else {
+           if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
+            alert("Site n'est pas autorisé pour cet utilisateur ")
+            controls.site.setValue(null);
+            document.getElementById("site").focus();
+             
+
+
+           } 
+          }
+      
+      });
+  }
+  handleSelectedRowsChangedsite(e, args) {
+    const controls = this.posForm.controls;
+      if (Array.isArray(args.rows) && this.gridObjsite) {
+      args.rows.map((idx) => {
+        const item = this.gridObjsite.getDataItem(idx);
+        console.log(item);
+        
+       controls.site.setValue(item.si_site);
+        
+    
+     
+  });
+
+    }
+  }
+  angularGridReadysite(angularGrid: AngularGridInstance) {
+    this.angularGridsite = angularGrid;
+    this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridsite() {
+    this.columnDefinitionssite = [
+      
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "si_site",
+        name: "Site",
+        field: "si_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "si_desc",
+        name: "Designation",
+        field: "si_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionssite = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
+      };
+    // fill the dataset with your data
+    if(this.user.usrd_site == "*") {
+    this.siteService
+      .getAll()
+      .subscribe((response: any) => (this.datasite = response.data));
+    }
+    else {
+      this.siteService
+      .getBy({si_site : this.user.usrd_site})
+      .subscribe((response: any) => (this.datasite = response.data));
+  
+    }
+  }
+  opensite(contentsite) {
+    this.prepareGridsite();
+    this.modalService.open(contentsite, { size: "lg" });
+  }
+
+ 
 }

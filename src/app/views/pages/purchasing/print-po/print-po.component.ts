@@ -37,6 +37,7 @@ import {
   ModalDismissReasons,
   NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
+import { round } from 'lodash';
 import {
   PurchaseOrderService,
   ProviderService,
@@ -215,6 +216,15 @@ export class PrintPoComponent implements OnInit {
         filterable: false,
       
       },
+      {
+        id: "pod_disc_pct",
+        name: "Remise",
+        field: "pod_disc_pct",
+        sortable: true,
+        width: 80,
+        filterable: false,
+      
+      },
       
     ];
 
@@ -246,7 +256,7 @@ export class PrintPoComponent implements OnInit {
     this.reset();
     this.createForm();
     this.createtotForm();
-    
+    this.calculatetot();
   }
 
   //create form
@@ -280,10 +290,38 @@ export class PrintPoComponent implements OnInit {
       ttc: [{value: 0.00 , disabled: true}],
     });
 
-    
-    
-
   }
+  calculatetot(){
+    console.log("here")
+    const controls = this.totForm.controls 
+     const controlsso = this.poForm.controls 
+     let tht = 0
+     let tva = 0
+     let timbre = 0
+     let ttc = 0
+     for (var i = 0; i < this.dataset.length; i++) {
+       console.log(this.dataset[i]  )
+       tht += round((this.dataset[i].pod_price * ((100 - this.dataset[i].pod_disc_pct) / 100 ) *  this.dataset[i].pod_qty_ord),2)
+        tva += round((this.dataset[i].pod_price * ((100 - this.dataset[i].pod_disc_pct) / 100 ) *  this.dataset[i].pod_qty_ord) * (this.dataset[i].pod_taxc ? this.dataset[i].pod_taxc / 100 : 0),2)
+      
+    
+       
+  
+       console.log(tva)
+         timbre = round((tht + tva) / 100,2);
+         if (timbre > 2500) { timbre = 2500}  
+    
+     }
+   ttc = round(tht + tva + timbre,2)
+  console.log(tht,tva,timbre,ttc)
+  controls.tht.setValue(tht.toFixed(2));
+  controls.tva.setValue(tva.toFixed(2));
+  controls.timbre.setValue(timbre.toFixed(2));
+  controls.ttc.setValue(ttc.toFixed(2));
+  
+  } 
+  
+
   //reste form
   reset() {
     this.createForm();
@@ -317,7 +355,7 @@ export class PrintPoComponent implements OnInit {
     //printBc(this.prov, this.dataset, this.prhServer, this.curr);
     this.printpdf(controls.po_nbr.value)
     this.purchaseOrderService
-        .update({ po_stat: "I" }, this.prhServer.id)
+        .update({ po_stat: "V" }, this.prhServer.id)
         .subscribe( //(res) => {
 
           (reponse) => console.log("response", Response),
@@ -372,8 +410,8 @@ export class PrintPoComponent implements OnInit {
 
         controls.po_vend.setValue(this.prhServer.po_vend);
         controls.po_curr.setValue(this.prhServer.po_curr);
-        controls.po_ex_rate.setValue(this.prhServer.po_ex_rate);
-        controls.po_ex_rate2.setValue(this.prhServer.po_ex_rate2);
+        controls.po_ex_rate.setValue(1);
+        controls.po_ex_rate2.setValue(1);
         controls.po_ord_date.setValue({
           year: new Date(purchaseOrder.po_ord_date).getFullYear(),
           month: new Date(purchaseOrder.po_ord_date).getMonth() + 1,
@@ -383,10 +421,10 @@ export class PrintPoComponent implements OnInit {
       })
 
       
-      controlstot.tht.setValue(this.prhServer.po_amt);
-      controlstot.tva.setValue(this.prhServer.po_tax_amt);
-      controlstot.timbre.setValue(this.prhServer.po_trl1_amt);
-      controlstot.ttc.setValue(Number(this.prhServer.po_amt) + Number(this.prhServer.po_tax_amt) + Number(this.prhServer.po_trl1_amt));
+      // controlstot.tht.setValue(this.prhServer.po_amt);
+      // controlstot.tva.setValue(this.prhServer.po_tax_amt);
+      // controlstot.timbre.setValue(this.prhServer.po_trl1_amt);
+      // controlstot.ttc.setValue(Number(this.prhServer.po_amt) + Number(this.prhServer.po_tax_amt) + Number(this.prhServer.po_trl1_amt));
       this.deviseService.getBy({cu_curr: this.prhServer.po_curr}).subscribe((resc:any)=>{  
         this.curr = resc.data
      })
@@ -423,6 +461,7 @@ export class PrintPoComponent implements OnInit {
               pod_price: detail.pod_price,
               pod_taxable: detail.pod_taxable,
               pod_taxc: detail.pod_taxc,
+              pod_disc_pct: detail.pod_disc_pct,
              
             },
             { position: "bottom" }
@@ -438,16 +477,21 @@ export class PrintPoComponent implements OnInit {
             pod_price: detail.pod_price,
             pod_taxable: detail.pod_taxable,
             pod_taxc: detail.pod_taxc,
+            pod_disc_pct: detail.pod_disc_pct,
            
         });
      
         }
+        this.calculatetot();
       })
      
-      }
+      
+  console.log("hehre")
+    }
 
-        
+     
     );
+  
   }
 
   
@@ -530,6 +574,7 @@ export class PrintPoComponent implements OnInit {
                   pod_price: detail.pod_price,
                   pod_taxable: detail.pod_taxable,
                   pod_taxc: detail.pod_taxc,
+                  pod_disc_pct: detail.pod_disc_pct,
                  
                 },
                 { position: "bottom" }
@@ -545,6 +590,7 @@ export class PrintPoComponent implements OnInit {
                 pod_price: detail.pod_price,
                 pod_taxable: detail.pod_taxable,
                 pod_taxc: detail.pod_taxc,
+                pod_disc_pct: detail.pod_disc_pct,
                
             });
         
@@ -683,7 +729,9 @@ export class PrintPoComponent implements OnInit {
         if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
         if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
         if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
-      
+    
+    doc.text('Site       : ' + this.prhServer.po_site, 120 , 50)
+        
     doc.line(10, 85, 200, 85);
     doc.line(10, 90, 200, 90);
     doc.line(10, 85, 10, 90);
@@ -723,6 +771,7 @@ export class PrintPoComponent implements OnInit {
         if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
         if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
         if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
+        doc.text('Site       : ' + this.prhServer.po_site, 120 , 50)
       
         doc.line(10, 85, 200, 85);
         doc.line(10, 90, 200, 90);
@@ -773,10 +822,10 @@ export class PrintPoComponent implements OnInit {
         doc.line(150, i - 5, 150, i );
         doc.text(String(this.dataset[j].pod_taxc) + "%" , 153 , i  - 1);
         doc.line(160, i - 5 , 160, i );
-        doc.text(String(this.dataset[j].pod_disc_pct) + "%" , 163 , i  - 1);
+        doc.text(String(Number(this.dataset[j].pod_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
         doc.line(170, i - 5 , 170, i );
         doc.text(String((this.dataset[j].pod_price *
-                ((100 - this.dataset[j].pod_disc_pct) / 100) *
+                ((100 - Number(this.dataset[j].pod_disc_pct)) / 100) *
                 this.dataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
         doc.line(200, i-5 , 200, i );
        // doc.line(10, i, 200, i );
@@ -818,10 +867,10 @@ export class PrintPoComponent implements OnInit {
       doc.line(150, i - 5, 150, i );
       doc.text(String(this.dataset[j].pod_taxc) + "%" , 153 , i  - 1);
       doc.line(160, i - 5 , 160, i );
-      doc.text(String(this.dataset[j].pod_disc_pct) + "%" , 163 , i  - 1);
+      doc.text(String(Number(this.dataset[j].pod_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
       doc.line(170, i - 5 , 170, i );
       doc.text(String((this.dataset[j].pod_price *
-        ((100 - this.dataset[j].pod_disc_pct) / 100) *
+        ((100 - Number(this.dataset[j].pod_disc_pct)) / 100) *
         this.dataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
       doc.line(200, i-5 , 200, i );
       doc.line(10, i, 200, i );

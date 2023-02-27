@@ -44,6 +44,7 @@ export class Item extends BaseModel{
     pt_run_ll: Number
     pt_run: Number
     pt_price: Number
+    pt_pur_price: Number
     pt_xmtl_tl: Number
     pt_xlbr_tl: Number
     pt_xbdn_tl: Number

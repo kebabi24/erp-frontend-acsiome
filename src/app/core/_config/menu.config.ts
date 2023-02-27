@@ -33,6 +33,10 @@ export class MenuConfig {
               title: "Dashboard",
               page: "/dashboard/manager-dashboard",
             },
+            {
+              title: "Dashboard CRM",
+              page: "/dashboard/crm-dashboard",
+            },
           ],
         },
         {
@@ -41,6 +45,20 @@ export class MenuConfig {
           icon: "flaticon2-shopping-cart",
           root: true,
           page: "/pos",
+        },
+        {
+          title: "Weekly inventory",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          page: "/weekly-inventory",
+        },
+        {
+          title: "Transfert des recettes",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          page: "/revenue-transfer",
         },
         {
           title: "Pos call center",
@@ -73,7 +91,51 @@ export class MenuConfig {
             },
           ],
         },
-        
+
+        {
+          title: "Rapports",
+          bullet: "dot",
+          icon: "flaticon2-gear",
+          root: true,
+          submenu: [
+            {
+              title: "Rapport Journalier",
+              page: "/sales/dayly-site-trans",
+            },
+            {
+              title: "Consultation des Ventes",
+              page: "/sales/list-sales",
+            },
+            {
+              title: "Consultation des Commandes",
+              page: "/sales/list-pos",
+            },
+            {
+              title: "Consultation des Caisses",
+              page: "/sales/list-caisse",
+            },
+            {
+              title: "Consultation des CA par Boutique",
+              page: "/sales/list-site-ca",
+            },
+            {
+              title: "Consultation des Transactions Grp ",
+              page: "/inventory-transaction/trans-list-grp",
+            },
+            {
+              title: "Consultation des Inventaires ",
+              page: "/inventory-transaction/list-inv",
+            },
+            {
+              title: "Consultation des Récéption ",
+              page: "/inventory-transaction/list-rct",
+            },
+            {
+              title: "Rapports detaillé par site ",
+              page: "/inventory-transaction/conso-report",
+            },
+          ],
+        },
         // CRM
         {
           title: "CRM",
@@ -81,31 +143,28 @@ export class MenuConfig {
           icon: "flaticon2-gear",
           root: true,
           submenu: [
-              
-              {
-                  title: "Agenda",
-                  page: "/crm/agenda",
-              },
-              {
-                  title: "Ajouter un paramètre CRM",
-                  page: "/crm/param-add",
-              },
-              {
-                  title: "Ajouter une population",
-                  page: "/crm/population-add",
-              },
-              {
-                title: "Ajouter une réclamation",
-                page: "/customers/customer-reclamation",
-              },
-              {
-                title: "Ajouter une satisfaction",
-                page: "/customers/customer-satisfaction",
-              },
-              
-              
+            {
+              title: "Agenda",
+              page: "/crm/agenda",
+            },
+            {
+              title: "Ajouter un paramètre CRM",
+              page: "/crm/param-add",
+            },
+            {
+              title: "Ajouter une population",
+              page: "/crm/population-add",
+            },
+            {
+              title: "Ajouter une réclamation",
+              page: "/customers/customer-reclamation",
+            },
+            {
+              title: "Ajouter une satisfaction",
+              page: "/customers/customer-satisfaction",
+            },
           ],
-      },
+        },
         {
           title: "Paramétrages",
           root: true,
@@ -563,8 +622,12 @@ export class MenuConfig {
               page: "/purchasing/create-po",
             },
             {
-              title: "Calcule des commandes",
+              title: "Simulateur des commandes",
               page: "/purchasing/create-oa",
+            },
+            {
+              title: "Simulateur des commandes Embalage",
+              page: "/purchasing/create-oa-em",
             },
             {
               title: "Impression Bon de commande",
@@ -591,11 +654,6 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon-cart",
           submenu: [
-            {
-              title: "Rapport Journalier",
-              page: "/sales/dayly-site-trans",
-            },
-
             {
               title: "Offres Commerciales",
               page: "/sales/create-quote",
@@ -656,16 +714,26 @@ export class MenuConfig {
               title: "Liste des Factures",
               page: "/sales/invoice-list",
             },
+          ],
+        },
+        {
+          title: "Gestion des Prévisions",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon-cart",
+          submenu: [
             {
-              title: "Consultation des Ventes",
-              page: "/sales/list-sales",
+              title: "Maint Prévision",
+              page: "/forcast/create-forcast",
             },
+
             {
-              title: "Consultation des Commandes",
-              page: "/sales/list-pos",
+              title: "Liste des Prévisions",
+              page: "/forcast/list-forcast",
             },
           ],
         },
+
         {
           title: "Comptabilité Client",
           root: true,

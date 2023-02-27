@@ -57,11 +57,16 @@ export class CustomerReclamationComponent implements OnInit {
   phone_number: String;
   adress: String;
   age: Number;
+  ageDisplay : String ;
   gender: String;
   email: String;
+  wilaya : String;
+  commune : String;
+  adressDisplay: String;
   createdCustomer: Boolean = false;
   orderNotExist: Boolean = false;
   customerNotExist: Boolean;
+  automaticCauseExist : Boolean = false;
 
   order_code: String;
   order_site: String;
@@ -70,8 +75,17 @@ export class CustomerReclamationComponent implements OnInit {
 
   reclamation_causes: any = [];
   filtered_causes: any = [];
+  methods : any = [];
+
+  automatic_treat: any = [];
+  reclamation_details : any = [];
+  automatic_treat_data : any = [];
 
   customeControls: Object = {};
+
+  wilayas_communes_data: any = [];
+  wilayas: any = [];
+  communes: any = [];
 
   constructor(
     config: NgbDropdownConfig,
@@ -83,22 +97,33 @@ export class CustomerReclamationComponent implements OnInit {
     private customerService: CustomerService,
     private layoutUtilsService: LayoutUtilsService,
     private modalService: NgbModal,
-    private saleorderService: SaleOrderService
+    private saleorderService: SaleOrderService,
   ) {
     config.autoClose = true;
   }
 
   ngOnInit(): void {
+
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
+
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.getReclamationCauses();
+    this.getMethods();
+    this.getWilayasCommunes()
     // this.prepareDataOnLoad();
     this.initCustomerForm();
     this.createForm();
     // this.openCallAlert();
+    this.activatedRoute.params.subscribe(params => {
+      this.phone_number = params['phone']
+      if(this.phone_number){
+        this.getCustomerDataV2(this.phone_number)
+        
+      }
+    });
   }
 
   getOrder() {
@@ -108,12 +133,10 @@ export class CustomerReclamationComponent implements OnInit {
       (reponse) => {
         if (reponse["data"] == null) {
           this.orderNotExist = true;
-          console.log("null");
         } else {
           this.order_site = reponse["data"].usrd_site;
           this.order_emp = reponse["data"].order_emp;
           this.order_date = reponse["data"].created_date;
-          console.log(reponse["data"]);
         }
       },
       (error) => {
@@ -133,10 +156,61 @@ export class CustomerReclamationComponent implements OnInit {
     const controls = this.reclamationForm.controls;
     this.phone_number = controls.phonee.value
 
-    this.customerService.getCustomer(this.phone_number).subscribe(
+    this.customerService.getCustomerPhone(this.phone_number).subscribe(
       (reponse) => {
         if (reponse["data"] == null) {
-          console.log("null");
+          this.customerNotExist = true;
+        } else {
+          this.customerNotExist = false;
+          this.name = reponse["data"].cm_sort;
+          this.adress = reponse["data"].wilaya;
+          this.wilaya = reponse["data"].wilaya;
+          this.commune = reponse["data"].commune;
+          this.age = reponse["data"].cm_high_date;
+          this.gender = reponse["data"].gender;
+
+          // GET INDEX OF WILAYA 
+          const wilayaIndex = this.wilayas_communes_data.findIndex(element =>{
+            return element.wilaya.code_value == this.wilaya
+          })
+          
+          console.log(this.wilayas_communes_data[wilayaIndex])
+
+          const communeIndex = this.wilayas_communes_data[wilayaIndex].communes.findIndex(element =>{
+          
+             return element.code_value == this.commune
+          })
+
+           this.adressDisplay = this.wilayas_communes_data[wilayaIndex].wilaya.code_cmmt + ' - ' +this.wilayas_communes_data[wilayaIndex].communes[communeIndex].code_cmmt
+
+          
+          // CALCULATE BIRTHDAY 
+          var ageDifMs = Date.now() -  new Date(reponse["data"].cm_high_date).getTime();
+          var ageDate = new Date(ageDifMs);
+          const age =  Math.abs(ageDate.getUTCFullYear() - 1970);
+          this.age = age 
+          this.ageDisplay = this.age.toString() + ' ans'
+
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+
+  getCustomerDataV2(phone){
+
+    this.customerService.getCustomer(phone).subscribe(
+      (reponse) => {
+        if (reponse["data"] == null) {
           this.customerNotExist = true;
         } else {
           this.customerNotExist = false;
@@ -171,7 +245,6 @@ export class CustomerReclamationComponent implements OnInit {
     this.customerService.getCustomer(this.phone_number).subscribe(
       (reponse) => {
         if (reponse["data"] == null) {
-          console.log("null");
           this.customerNotExist = true;
         } else {
           this.customerNotExist = false;
@@ -201,13 +274,10 @@ export class CustomerReclamationComponent implements OnInit {
       (reponse) => {
         if (reponse["data"] != null) {
           this.reclamation_causes = reponse["data"];
-          console.log( reponse)
           this.filtered_causes = reponse["filtered_causes"];
-          console.log(this.filtered_causes)
 
           this.reclamation_causes.forEach((cause) => {
             this.customeControls[cause.code_value] = new FormControl("");
-            console.log(cause.code_value + "text-area");
             this.customeControls[cause.code_value + "text-area"] =
               new FormControl("");
           });
@@ -242,13 +312,6 @@ export class CustomerReclamationComponent implements OnInit {
 
   createForm() {
     this.loadingSubject.next(false);
-
-    // this.reclamationForm = this.tagFB.group({
-    //   // rec_details:[''],
-    //   // cause:[''],
-    //   // order_code:[''],
-    //   // ...this.customeControls
-    // })
     this.reclamationForm = this.tagFB.group({
       order_code: new FormControl(""),
       phonee : new FormControl(""),
@@ -302,21 +365,57 @@ export class CustomerReclamationComponent implements OnInit {
       if (controls[cause.code_value].value) {
         const code_value = cause.code_value;
         const observation = controls[cause.code_value + "text-area"].value;
-        complaintDetails.push({
-          code_value: code_value,
-          observation: observation,
-        });
-        // console.log(cause.code_value+'\t')
-        // console.log(controls[cause.code_value].value) // this is true if selected
-        // console.log(controls[cause.code_value+'text-area'].value)
+
+        const indexInReasons = this.reclamation_causes.findIndex(cause=>{
+          return cause.code_value === code_value
+        })
+
+        if(this.reclamation_causes[indexInReasons].bool01 == false){
+          complaintDetails.push({
+            code_value: code_value,
+            observation: observation,
+            method:""
+          });
+        }
       }
     });
+
+    if(this.automatic_treat_data.length>0){
+      this.automatic_treat_data.forEach(cause => {
+        complaintDetails.push({
+          code_value: cause.code_value,
+          observation: cause.observation,
+          method :cause.method
+        });
+      });
+    }
 
     this.customerService
       .createComplaint(complaintData, complaintDetails, customerData)
       .subscribe(
         (reponse) => {
-          console.log(reponse);
+
+          this.automatic_treat = []
+          this.reclamation_details  = []
+          this.automatic_treat_data  = []
+          this.name = "";
+          this.phone_number = "";
+          this.adress = "";
+          this.age = null;
+          this.gender = "";
+          this.email = "";
+          this.createdCustomer  = false;
+          this.orderNotExist = false;
+          this.customerNotExist = false;
+          this.automaticCauseExist   = false;
+
+          this.order_code = "";
+          this.order_site = "";
+          this.order_emp = "";
+          this.order_date = "";
+
+          this.createForm();
+          this.initCustomerForm();
           
         },
         (error) => {
@@ -365,9 +464,11 @@ export class CustomerReclamationComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
-  // open2(content) {
-  //   this.modalService.open(content, { size: "lg" });
-  // }
+  open1(content1){
+    this.modalService.open(content1, { size: "lg" });
+  }
+
+  
   // openCallAlert() {
   //   document.getElementById("call-alert").click();
   // }
@@ -380,7 +481,7 @@ export class CustomerReclamationComponent implements OnInit {
         "",
         Validators.compose([
           Validators.required,
-          Validators.maxLength(320), // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+          Validators.maxLength(320),
         ]),
       ],
       phone: [
@@ -424,4 +525,108 @@ export class CustomerReclamationComponent implements OnInit {
             ...this.customeControls,
           });
   }
+
+  onCauseSelect(val){
+    
+
+    // INDEX OF SELECTED CAUSE IN reclamation_causes
+    const indexInReasons = this.reclamation_causes.findIndex(cause=>{
+       return cause.code_value === val
+    })
+
+    // CHECK IF THE CAUSE REQUIRE AUTOMATIC TREATMENT
+    if(this.reclamation_causes[indexInReasons].bool01){
+      const index = this.automatic_treat.findIndex(code =>{
+        return code ==  val
+      })
+      if(index === -1){
+        this.automatic_treat.push(val)
+      }
+      else{ 
+        this.automatic_treat.splice(index, 1);
+      }
+      
+      if(this.automatic_treat.length>0 ){
+        this.automaticCauseExist = true
+      }else{
+        this.automaticCauseExist= false
+      }
+      // console.log(this.automatic_treat)
+      // console.log(this.automatic_treat.length)
+
+    }
+  }
+
+
+  validateAutomaticComplaints(){
+    const controls = this.reclamationForm.controls;
+    this.automatic_treat_data = []
+    this.reclamation_causes.forEach((cause) => {
+      if (controls[cause.code_value].value) {
+        if(cause.bool01){
+          const code_value = cause.code_value;
+          const observation = controls[cause.code_value + "text-area"].value;
+
+          // GET METHOD DISPLAY 
+          const method_index = this.methods.findIndex(method => {
+            
+            return method.code_value == cause.chr01
+          });
+
+          this.automatic_treat_data.push({
+            code_value: code_value,
+            observation: observation,
+            method : cause.chr01,
+            cause_display : cause.code_desc,
+            method_display : this.methods[method_index].code_desc
+          });
+        }
+      }
+    });
+    console.log(this.automatic_treat_data)
+    document.getElementById("modal2Button").click(); 
+  }
+
+  getMethods() {
+    this.customerService.getMethods().subscribe(
+      (response) => {
+        if (response["data"] != null) {
+          this.methods = response["data"]
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur lors de la récupération des données du backend",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+
+  confirmAutomatic(){
+    this.automaticCauseExist = false
+    document.getElementById("closeForm1").click(); 
+  }
+
+  getWilayasCommunes() {
+    this.customerService
+      .getWilayasCommunes()
+
+      .subscribe(
+        (res: any) => {
+          this.wilayas_communes_data = res.data;
+          this.wilayas_communes_data.forEach((wilaya) => {
+            this.wilayas.push(wilaya.wilaya);
+          });
+          console.log(this.wilayas_communes_data)
+        },
+        (err) =>
+          console.log("error")
+      );
+  }
+
 }

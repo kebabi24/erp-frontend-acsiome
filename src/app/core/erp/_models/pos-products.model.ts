@@ -16,6 +16,8 @@ export class Product {
   soda?: Array<any>;
   pt_draw?: string;
   pt_group?: string;
+  pt_promo?: string;
+  pt_dsgn_grp?: string;
   comment: string;
   pt_part_type: string;
   line: string;

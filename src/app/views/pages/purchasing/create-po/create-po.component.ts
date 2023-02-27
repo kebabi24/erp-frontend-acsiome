@@ -1904,23 +1904,23 @@ changeTax(){
       args.rows.map((idx) => {
         const item = this.gridObjcurr.getDataItem(idx);
         controls.po_curr.setValue(item.cu_curr || "");
-        if(item.cu_curr != 'DA'){
-          const date = new Date()
-          this.date = controls.po_ord_date.value
-          ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
-          : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-          if (item.cu_curr == 'DA'){
+        if(item.cu_curr == 'DA'){
             controls.po_ex_rate.setValue(1)
             controls.po_ex_rate2.setValue(1)
 
           } else {
-          this.deviseService.getExRate({exr_curr1:item.cu_curr,exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{
+            const date = new Date()
+            this.date = controls.po_ord_date.value
+            ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
+            : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+          
+            this.deviseService.getExRate({exr_curr1:item.cu_curr,exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{
             
              controls.po_ex_rate.setValue(res.data.exr_rate)
              controls.po_ex_rate2.setValue(res.data.exr_rate2)
             
           })
-        }
+        
         }
       });
     }

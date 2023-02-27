@@ -34,6 +34,7 @@ const API_URL_BK = environment.apiUrl + "/banks";
 const API_URL_CUSTOMER = environment.apiUrl + "/customers";
 const API_URL_DELIVERY = environment.apiUrl + "/delivery";
 const API_URL_SITE = environment.apiUrl + "/sites";
+const API_URL_SYNCHRO = environment.apiUrl + "/synchro";
 
 @Injectable()
 export class PosCategoryService {
@@ -61,6 +62,12 @@ export class PosCategoryService {
   public addPo(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_PO}/createposunpp`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public addBkhTransfert(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_BK}/addbkhtransfert`, data, {
       headers: httpHeaders,
     });
   }
@@ -143,6 +150,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getAllBySite(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findbysite`, data, {
+      headers: httpHeaders,
+    });
+  }
   public getOneOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ORDER}/findorder`, data, {
@@ -179,7 +192,7 @@ export class PosCategoryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders });
   }
-  
+
   public getLastOneSeq(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_SEQ}/findone`, data, {
@@ -363,6 +376,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public synchro() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_SYNCHRO, {
+      headers: httpHeaders,
+    });
+  }
 
   public getOneWorkOrder(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
@@ -375,6 +394,12 @@ export class PosCategoryService {
   public getAllProductInventory(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_LD}/find`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public getWeekProductInventory(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_LD}/findWeekProduct`, data, {
       headers: httpHeaders,
     });
   }
@@ -395,6 +420,12 @@ export class PosCategoryService {
       headers: httpHeaders,
     });
   }
+  public getByOneInV(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_INV}/findByOneinv`, data, {
+      headers: httpHeaders,
+    });
+  }
 
   search(data: any): Observable<Object> {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
@@ -407,6 +438,12 @@ export class PosCategoryService {
   public getOnByCode(code: String) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/findCategoryByCode/${code}`, {
+      headers: httpHeaders,
+    });
+  }
+  public getGlobAmt(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ORDER}/findglobamt`, data, {
       headers: httpHeaders,
     });
   }

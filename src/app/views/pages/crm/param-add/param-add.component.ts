@@ -56,6 +56,7 @@ export class CategoryAddComponent implements OnInit {
   action_types : any = []
   methods : any = []
   populations : any = []
+  profiles : any = []
 
   paramDetailsToSend : any = []
   
@@ -101,6 +102,7 @@ export class CategoryAddComponent implements OnInit {
     this.getActionTypes()
     this.getMethods()
     this.getPopulations()
+    this.getAllProfiles()
     this.createParamForm()
     this.createParamDetailsForm()
     this.init()
@@ -137,6 +139,7 @@ export class CategoryAddComponent implements OnInit {
       }],
       duration: ['', Validators.required], 
       time_unit: [ '', Validators.required],
+      profile_code: [ '', Validators.required],
    })
      
   }
@@ -221,6 +224,7 @@ export class CategoryAddComponent implements OnInit {
       call_duration : controls.duration.value * factor,
       validity_date_start: d1,
       validity_date_end : d2,
+      profile_code : controls.profile_code.value
     }
 
     this.crmService
@@ -323,7 +327,26 @@ export class CategoryAddComponent implements OnInit {
       (response) => {
         if (response["data"] != null) {
           this.methods = response["data"]
-          console.log(this.methods)
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur lors de la récupération des données du backend",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+
+  getAllProfiles() {
+    this.crmService.getAllProfiles().subscribe(
+      (response) => {
+        if (response["data"] != null) {
+          this.profiles = response["data"]
         }
       },
       (error) => {

@@ -66,7 +66,7 @@ export class CustomerListComponent implements OnInit {
   dataset: any[] = [];
   draggableGroupingPlugin: any;
   angularGrid: AngularGridInstance;
-
+  dataview: any;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ["", "", ""];
   gridObj: any;
   dataviewObj: any;
@@ -87,7 +87,7 @@ export class CustomerListComponent implements OnInit {
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataviewObj = angularGrid.dataView;
+    this.dataview = angularGrid.dataView;
   }
   prepareGrid() {
     this.columnDefinitions = [
@@ -323,37 +323,35 @@ export class CustomerListComponent implements OnInit {
     ];
 
     this.gridOptions = {
-      // autoResize: {
-      //   containerId: 'demo-container',
-      //   sidePadding: 10
-      // },
-      autoHeight: true,
-      enableAutoResize: true,
+      
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
       showPreHeaderPanel: true,
       preHeaderPanelHeight: 40,
       enableFiltering: true,
+      enableAutoResize: true,
+     
       enableSorting: true,
       exportOptions: {
-        sanitizeDataExport: true,
+        sanitizeDataExport: true
       },
       gridMenu: {
         onCommand: (e, args) => {
-          if (args.command === "toggle-preheader") {
+          if (args.command === 'toggle-preheader') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
             this.clearGrouping();
           }
         },
       },
       draggableGrouping: {
-        dropPlaceHolderText: "Drop a column header here to group by the column",
+        dropPlaceHolderText: 'Drop a column header here to group by the column',
         // groupIconCssClass: 'fa fa-outdent',
-        deleteIconCssClass: "fa fa-times",
+        deleteIconCssClass: 'fa fa-times',
         onGroupChanged: (e, args) => this.onGroupChanged(args),
-        onExtensionRegistered: (extension) =>
-          (this.draggableGroupingPlugin = extension),
-      },
+        onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+    
+    },
+
 
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;
@@ -364,14 +362,17 @@ export class CustomerListComponent implements OnInit {
         }
         return val;
       },
-    };
+
+
+  }
+
 
     // fill the dataset with your data
     this.dataset = [];
     this.customerService.getAll().subscribe(
       (response: any) => {
         this.dataset = response.data;
-        this.dataviewObj.setItems(this.dataset);
+        this.dataview.setItems(this.dataset);
       },
       (error) => {
         this.dataset = [];
@@ -381,30 +382,20 @@ export class CustomerListComponent implements OnInit {
   }
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
-    const caller = (change && change.caller) || [];
-    const groups = (change && change.groupColumns) || [];
+    const caller = change && change.caller || [];
+    const groups = change && change.groupColumns || [];
 
-    if (
-      Array.isArray(this.selectedGroupingFields) &&
-      Array.isArray(groups) &&
-      groups.length > 0
-    ) {
+    if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
       // update all Group By select dropdown
-      this.selectedGroupingFields.forEach(
-        (g, i) =>
-          (this.selectedGroupingFields[i] =
-            (groups[i] && groups[i].getter) || "")
-      );
-    } else if (groups.length === 0 && caller === "remove-group") {
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+    } else if (groups.length === 0 && caller === 'remove-group') {
       this.clearGroupingSelects();
     }
   }
   clearGroupingSelects() {
-    this.selectedGroupingFields.forEach(
-      (g, i) => (this.selectedGroupingFields[i] = "")
-    );
+    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
   }
-
+  
   collapseAllGroups() {
     this.dataviewObj.collapseAllGroups();
   }
@@ -413,12 +404,11 @@ export class CustomerListComponent implements OnInit {
     this.dataviewObj.expandAllGroups();
   }
   clearGrouping() {
-    if (
-      this.draggableGroupingPlugin &&
-      this.draggableGroupingPlugin.setDroppedGroups
-    ) {
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
       this.draggableGroupingPlugin.clearDroppedGroups();
     }
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
+
+
 }

@@ -138,7 +138,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Revison:</label>
+                                        <label class="form-group ">Qualité:</label>
 
                                         <select class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_rev" id="exampleSelects3">
@@ -560,6 +560,129 @@
                             </form>
                         </ng-template>
                     </ngb-tab>
+                    <!--add new tab-->
+                    <ngb-tab>
+                        <ng-template ngbTabTitle>
+                            Données personnalisation
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasFormErrors5"
+                                class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <form [formGroup]="form5" class="form">
+                    
+                                <!--kt-alert *ngIf="hasFormErrors1" type="warn" [showCloseButton]="true" [duration]="10000"
+                                    (close)="onAlertClose($event)">
+                                    Modifiez quelques éléments et réessayez de soumettre.
+                                </kt-alert-->
+                               
+                    
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Scan:</label>
+                    
+                                        <span class="switch switch-icon">
+                                            <label>
+                                                <input type="checkbox"
+                                                    class="form-control form-control-sm form-control-solid"
+                                                    formControlName="pt_iss_pol" name="select" />
+                                                <span></span>
+                                            </label>
+                                        </span>
+                    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Longueur:</label>
+                    
+                                        <input type="number" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_length" step="0.01">
+                    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Height:</label>
+                    
+                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_height">
+                    
+                                    </div>
+                                   
+                                   
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">width:</label>
+                    
+                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_width">
+                    
+                                    </div>
+                                   
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Origine:</label>
+                    
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_origin">
+                    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Source:</label>
+                    
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_drwg_loc">
+                    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Unité/Sachet:</label>
+                    
+                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_drwg_size">
+                    
+                                    </div>
+                                   
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Modéle:</label>
+                    
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_model">
+                    
+                                    </div>
+                                   
+                    
+                                </div>
+                                <div class="row">
+                                    
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Couleur:</label>
+                    
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_break_cat">
+                    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Laize:</label>
+                    
+                                        <input type="number" class="form-control form-control-sm form-control-solid"
+                                            formControlName="int01">
+                    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Micronage:</label>
+                    
+                                        <input type="number" class="form-control form-control-sm form-control-solid"
+                                            formControlName="int02">
+                    
+                                    </div>
+                                   
+                                </div>
+                    
+                            </form>
+                        </ng-template>
+                    </ngb-tab>
+                    
+                    <!--add new tab-->
                     <ngb-tab>
                         <ng-template ngbTabTitle>
                             Données planification Article
@@ -1009,6 +1132,14 @@
                                 </kt-alert>
 
                                 <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Prix d'Achat:</label>
+                                        <div class="col-lg-8">
+                                            <input type="text" class="form-control form-control-sm form-control-solid"
+                                                formControlName="pt_pur_price">
+                                        </div>
+                                    </div>
+                                    
                                     <div class="form-group col-2">
                                         <label class="form-group ">Prix:</label>
                                         <div class="col-lg-8">

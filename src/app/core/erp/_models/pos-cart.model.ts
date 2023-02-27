@@ -15,5 +15,5 @@ export class Cart {
   disc_amt?: number;
   del_comp?: string;
   site_loc?: string;
-  from: string;
+  plateforme: string;
 }

@@ -18,6 +18,7 @@ import { ServicesComponent } from "./services/services.component";
 import { MobileMenuComponent } from "./mobile-menu/mobile-menu.component";
 import { PosComponent } from "./pos/pos.component";
 import { PosVisitorComponent } from "./pos-visitor/pos-visitor.component";
+import { RevenueTransferComponent } from "./revenue-transfer/revenue-transfer.component";
 
 @NgModule({
   declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent],
