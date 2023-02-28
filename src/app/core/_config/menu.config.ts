@@ -54,6 +54,13 @@ export class MenuConfig {
           page: "/weekly-inventory",
         },
         {
+          title: "Transfert des recettes",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          page: "/revenue-transfer",
+        },
+        {
           title: "Pos call center",
           bullet: "dot",
           icon: "flaticon2-shopping-cart",

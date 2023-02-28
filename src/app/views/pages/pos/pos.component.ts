@@ -37,6 +37,7 @@ import {
   Validators,
 } from "@angular/forms";
 declare var electronPrinter: any;
+declare var etatzPrinter: any;
 import {
   Column,
   GridOption,
@@ -352,7 +353,9 @@ export class PosComponent implements OnInit {
       .getByOne({ role_code: this.user.usrd_code, service_open: "true" })
       .subscribe((res: any) => {
         this.currentservice = res.data;
+
         if (this.currentservice) {
+          console.log(this.currentservice);
           this.globalState = false;
           this.stateCaisse = true;
           this.posCategoryService
@@ -479,8 +482,8 @@ export class PosComponent implements OnInit {
         pt_qty: 1,
         pt_part_type: this.currentItem.pt_part_type,
         pt_group: this.currentItem.pt_group,
-        pt_promo: null,
-        pt_dsgn_grp: null,
+        pt_promo: this.currentItem.pt_promo,
+        pt_dsgn_grp: this.currentItem.pt_dsgn_grp,
         comment: this.currentItem.pt_group,
         suppliments: [],
         ingredients: [],
@@ -524,10 +527,31 @@ export class PosComponent implements OnInit {
         comment: this.sizeProduct,
         pt_part_type: checkItemExist.pt_part_type,
         pt_group: checkItemExist.pt_group,
-        pt_promo: null,
-        pt_dsgn_grp: null,
+        pt_promo: checkItemExist.pt_promo,
+        pt_dsgn_grp: checkItemExist.pt_dsgn_grp,
         pt_loc: checkItemExist.pt_loc,
         pt_qty: 1,
+        line: this.cartProducts.length.toString(),
+      };
+      const i = {
+        id: this.productId,
+        pt_part: checkItemExist.pt_part,
+        pt_desc1: checkItemExist.pt_desc1,
+        pt_desc2: checkItemExist.pt_desc2,
+        pt_article: checkItemExist.pt_article,
+        pt_price: checkItemExist.pt_price,
+        pt_formule: checkItemExist.pt_formule,
+        pt_bom_code: checkItemExist.pt_bom_code,
+        suppliments: checkItemExist.suppliments,
+        ingredients: checkItemExist.ingredients,
+        sauces: checkItemExist.sauces,
+        comment: this.sizeProduct,
+        pt_part_type: checkItemExist.pt_part_type,
+        pt_group: checkItemExist.pt_group,
+        pt_promo: checkItemExist.pt_promo,
+        pt_dsgn_grp: checkItemExist.pt_dsgn_grp,
+        pt_loc: checkItemExist.pt_loc,
+        qty: 1,
         line: this.cartProducts.length.toString(),
       };
       // checkItemExist.size != undefined ? this.sizeOfProduct : null;
@@ -548,7 +572,7 @@ export class PosComponent implements OnInit {
       //   );
       // });
       if (this.modif) {
-        this.modifproduct.push(this.itemToAdd);
+        this.modifproduct.push(i);
       }
       this.cart.products.push(this.itemToAdd);
       this.showPrice = true;
@@ -596,8 +620,8 @@ export class PosComponent implements OnInit {
       pt_qty: 1,
       pt_part_type: this.currentItem.pt_part_type,
       pt_group: this.currentItem.pt_group,
-      pt_promo: null,
-      pt_dsgn_grp: null,
+      pt_promo: this.currentItem.pt_promo,
+      pt_dsgn_grp: this.currentItem.pt_dsgn_grp,
       comment: this.currentItem.pt_group,
       suppliments: [],
       ingredients: [],
@@ -653,14 +677,35 @@ export class PosComponent implements OnInit {
       comment: this.sizeProduct,
       pt_part_type: checkItemExist.pt_part_type,
       pt_group: checkItemExist.pt_group,
-      pt_promo: null,
-      pt_dsgn_grp: null,
+      pt_promo: checkItemExist.pt_promo,
+      pt_dsgn_grp: checkItemExist.pt_dsgn_grp,
       pt_loc: checkItemExist.pt_loc,
       pt_qty: 1,
       line: this.cartProducts.length.toString(),
     };
+    const i = {
+      id: this.productId,
+      pt_part: checkItemExist.pt_part,
+      pt_desc1: checkItemExist.pt_desc1,
+      pt_desc2: checkItemExist.pt_desc2,
+      pt_article: checkItemExist.pt_article,
+      pt_price: checkItemExist.pt_price,
+      pt_formule: checkItemExist.pt_formule,
+      pt_bom_code: checkItemExist.pt_bom_code,
+      suppliments: checkItemExist.suppliments,
+      ingredients: checkItemExist.ingredients,
+      sauces: checkItemExist.sauces,
+      comment: this.sizeProduct,
+      pt_part_type: checkItemExist.pt_part_type,
+      pt_group: checkItemExist.pt_group,
+      pt_promo: checkItemExist.pt_promo,
+      pt_dsgn_grp: checkItemExist.pt_dsgn_grp,
+      pt_loc: checkItemExist.pt_loc,
+      qty: 1,
+      line: this.cartProducts.length.toString(),
+    };
     if (this.modif) {
-      this.modifproduct.push(this.itemToAdd);
+      this.modifproduct.push(i);
     }
     this.cart.products.push(this.itemToAdd);
     this.showPrice = true;
@@ -691,12 +736,24 @@ export class PosComponent implements OnInit {
     this.formule = false;
   }
   setSauce(sauce: any) {
+    console.log(sauce);
     this.currentItem.pt_formule == false && (this.showSupp = true);
     this.currentItem &&
       this.currentItem.pt_formule == true &&
       (this.showSoda = true) &&
       (this.showSupp = false);
-    this.currentItem && this.currentItem.sauces.push(sauce);
+    const saucee = {
+      pt_pt_part: sauce.pt_part,
+      pt_desc1: sauce.pt_desc1,
+      pt_desc2: sauce.pt_desc2,
+      pt_loc: sauce.pt_loc,
+      pt_bom_code: sauce.pt_bom_code,
+      pt_ord_qty: 1,
+      pt_price: sauce.pt_price,
+      pt_net_wt: sauce.pt_net_wt,
+    };
+    console.log(saucee);
+    this.currentItem && this.currentItem.sauces.push(saucee);
     // console.log(this.currentItem);
   }
   setSupplement(suppliment: any) {
@@ -875,6 +932,8 @@ export class PosComponent implements OnInit {
     this.inShop = true;
     this.showStatusDelivery = false;
     this.showStatusOut = false;
+    this.offer = false;
+    this.currentOffer = null;
     const s = document.getElementById("btn1");
     const e = document.getElementById("btn2");
     const l = document.getElementById("btn3");
@@ -892,7 +951,8 @@ export class PosComponent implements OnInit {
   locOrderE() {
     this.chooseLoc = false;
     this.loclocOrder = "Emporté";
-
+    this.offer = false;
+    this.currentOffer = null;
     this.currentTable = null;
     this.cartProducts != null && this.setBomCode();
     this.showStatusOut = true;
@@ -975,11 +1035,16 @@ export class PosComponent implements OnInit {
     this.showStatusOut = false;
     this.inShop = false;
     this.showStatusDelivery = false;
+    this.offer = false;
+    this.currentOffer = null;
   }
 
   onDecreaseQty(product: Product): void {
+    console.log(this.modifproduct);
+
     if (product.pt_qty == 1) {
       this.cartProducts = this.cartProducts.filter((s) => s !== product);
+
       this.cart.products = this.cartProducts;
     } else {
       product.pt_price =
@@ -990,21 +1055,84 @@ export class PosComponent implements OnInit {
     this.cartAmount = this.calculateSubTotal();
     this.cart.total_price = this.cartAmount;
     this.cart.products.length === 0 && (this.showPrice = false);
+    if (this.modif) {
+      var mff = this.modifproduct.find((item) => item.id === product.id);
+
+      if (mff) {
+        if (mff.qty == 1) {
+          console.log("de");
+          this.modifproduct = this.modifproduct.filter((sp) => sp !== mff);
+          console.log(this.modifproduct);
+        } else {
+          mff.qty = mff.qty - 1;
+        }
+      }
+    }
   }
 
   onIncreaseQty(product: Product): void {
-    const pt = this.cartProducts.find((item) => item.id === product.id);
+    console.log(this.modifproduct);
+
+    var pt = this.cartProducts.find((item) => item.id === product.id);
     pt.pt_price =
       Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
+
     pt.pt_qty = product.pt_qty + 1;
     this.cartAmount = this.calculateSubTotal();
     this.cart.total_price = this.cartAmount;
+
+    if (this.modif) {
+      var mff = this.modifproduct.find((item) => item.id === product.id);
+      if (mff) {
+        mff.qty = mff.qty + 1;
+      } else {
+        const itemToAdd = {
+          id: product.id,
+          pt_part: product.pt_part,
+          pt_desc1: product.pt_desc1,
+          pt_desc2: product.pt_desc2,
+          pt_article: product.pt_article,
+          pt_formule: product.pt_formule,
+          pt_bom_code: product.pt_bom_code,
+          suppliments: product.suppliments,
+          ingredients: product.ingredients,
+          sauces: product.sauces,
+          comment: this.sizeProduct,
+          pt_part_type: product.pt_part_type,
+          pt_group: product.pt_group,
+          pt_promo: product.pt_promo,
+          pt_dsgn_grp: product.pt_dsgn_grp,
+          pt_loc: product.pt_loc,
+          qty: 1,
+          line: this.cartProducts.length.toString(),
+        };
+        this.modifproduct.push(itemToAdd);
+      }
+      console.log(this.modifproduct);
+    }
   }
 
   calculateSubTotal() {
     let val = this.cartProducts.reduce((acc, cur) => {
-      return acc + Number(cur.pt_price);
+      return (
+        acc +
+        (this.offer
+          ? Number(cur.pt_price) *
+            (1 - Number(this.currentOffer.del_pct_disc) / 100)
+          : Number(cur.pt_price))
+      );
     }, 0);
+    if (this.offer) {
+      this.remisePrice = this.cartProducts.reduce((acc, cur) => {
+        return (
+          acc +
+          (this.offer
+            ? Number(cur.pt_price) *
+              (Number(this.currentOffer.del_pct_disc) / 100)
+            : Number(cur.pt_price))
+        );
+      }, 0);
+    }
 
     return val;
   }
@@ -1115,7 +1243,7 @@ export class PosComponent implements OnInit {
         let c = [
           {
             type: "text",
-            value: item.pt_qty,
+            value: item.qty,
           },
           {
             type: "text",
@@ -1268,10 +1396,10 @@ export class PosComponent implements OnInit {
     const data = [
       {
         type: "image",
-        path: "./assets/logo.png", // file path
+        path: "src/app/views/pages/pos/logo.png", // file path
         position: "center", // position of image: 'left' | 'center' | 'right'
-        width: "160px", // width of image in px; default: auto
-        height: "60px", // width of image in px; default: 50 or '50px'
+        width: "140px", // width of image in px; default: auto
+        height: "80px", // width of image in px; default: 50 or '50px'
       },
       {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
@@ -1432,9 +1560,9 @@ export class PosComponent implements OnInit {
           true,
           true
         );
-        if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
-         // electronPrinter.print(data, data2);
-        }
+        // if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
+        //   electronPrinter.print(data, data2);
+        // }
         this.offer === true && (this.offer = false);
         this.currentOffer = null;
         this.cartAmount = 0;
@@ -1453,6 +1581,12 @@ export class PosComponent implements OnInit {
         this.offer = false;
         this.cart.order_code = null;
         this.loadingSubject.next(false);
+        this.modif = false;
+        this.modifproduct = [];
+        // this.currentSeq = Number(this.currentSeq) + 1;
+        this.chooseLoc = true;
+        this.inputName.nativeElement.value = "";
+        this.loy_num = null;
       }
     );
     //console.log(this.currentTicketNumber);
@@ -1493,13 +1627,6 @@ export class PosComponent implements OnInit {
     //     this.currentSeq = res.data.seq_curr_val;
     //     // this.currentTicketNumber = Number(this.currentSeq);
     //   });
-
-    this.modif = false;
-    this.modifproduct = [];
-    // this.currentSeq = Number(this.currentSeq) + 1;
-    this.chooseLoc = true;
-    this.inputName.nativeElement.value = "";
-    this.loy_num = null;
   }
 
   changeSelection(event, index) {
@@ -2895,6 +3022,7 @@ export class PosComponent implements OnInit {
   }
 
   printZstate() {
+    console.log(this.currentservice);
     let ChangedFormat = this.pipe.transform(
       this.currentservice.service_period_activate_date,
       "yyyy-MM-dd"
@@ -2931,7 +3059,7 @@ export class PosComponent implements OnInit {
               },
             ];
             etatZ.push(item);
-            total = total + items.amt;
+            total = Number(total) + Number(items.amt);
           });
 
           const data2 = [
@@ -2958,15 +3086,43 @@ export class PosComponent implements OnInit {
             },
             {
               type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-              value: "Total Net : " + " " + total + ".00",
+              value: "Total Net : " + " " + total + ".00 DA",
             },
           ];
           console.log(data2);
+          // etatzPrinter.printEtatZ(data2);
         },
         (error) => {
           console.log(error);
         },
         () => {}
       );
+  }
+  synchro() {
+    this.globalState = true;
+    this.posCategoryService.synchro().subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+        this.globalState = false;
+      }
+    );
   }
 }

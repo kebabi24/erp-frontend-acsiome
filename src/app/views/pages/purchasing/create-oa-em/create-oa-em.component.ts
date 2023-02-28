@@ -32,7 +32,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
-} from "angular-slickgrid"
+} from "angular-slickgrid";
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
@@ -75,16 +75,15 @@ import {
   InventoryTransactionService,
   printBc,
 } from "../../../../core/erp";
-import { round } from 'lodash';
+import { round } from "lodash";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import thId from "src/assets/plugins/formvalidation/src/js/validators/id/thId";
 
-
 @Component({
-  selector: 'kt-create-oa-em',
-  templateUrl: './create-oa-em.component.html',
-  styleUrls: ['./create-oa-em.component.scss']
+  selector: "kt-create-oa-em",
+  templateUrl: "./create-oa-em.component.html",
+  styleUrls: ["./create-oa-em.component.scss"],
 })
 export class CreateOaEmComponent implements OnInit {
   purchaseOrder: PurchaseOrder;
@@ -93,7 +92,7 @@ export class CreateOaEmComponent implements OnInit {
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
-error = false;
+  error = false;
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
@@ -112,8 +111,6 @@ error = false;
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
   mvdataset: any[];
-
-  
 
   users: [];
   columnDefinitions3: Column[] = [];
@@ -145,13 +142,11 @@ error = false;
   gridObjum: any;
   angularGridum: AngularGridInstance;
 
-
   datatax: [];
   columnDefinitionstax: Column[] = [];
   gridOptionstax: GridOption = {};
   gridObjtax: any;
   angularGridtax: AngularGridInstance;
-
 
   devises: [];
   columnDefinitionscurr: Column[] = [];
@@ -176,8 +171,8 @@ error = false;
   requistionServer;
   vpServer;
   provider;
-  curr
-  details : any [];
+  curr;
+  details: any[];
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
@@ -204,16 +199,15 @@ error = false;
     private psService: PsService,
     private taxService: TaxeService,
     private posCategoryService: PosCategoryService,
-    private inventoryTransactionService :InventoryTransactionService,
+    private inventoryTransactionService: InventoryTransactionService
   ) {
     config.autoClose = true;
-    
+
     this.codeService
       .getBy({ code_fldname: "vd_cr_terms" })
       .subscribe((response: any) => (this.po_cr_terms = response.data));
     //  this.initGrid();
     //  this.initmvGrid();
-
   }
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -250,7 +244,6 @@ error = false;
         field: "id",
         minWidth: 50,
         maxWidth: 50,
-       
       },
       {
         id: "part",
@@ -259,8 +252,6 @@ error = false;
         sortable: true,
         width: 50,
         filterable: false,
-       
-        
       },
       {
         id: "desc",
@@ -269,7 +260,6 @@ error = false;
         sortable: true,
         width: 80,
         filterable: false,
-       
       },
       {
         id: "um",
@@ -278,9 +268,8 @@ error = false;
         sortable: true,
         width: 80,
         filterable: false,
-       
       },
-      
+
       {
         id: "qty",
         name: "QTE Demandée",
@@ -290,7 +279,6 @@ error = false;
         filterable: false,
         type: FieldType.float,
         formatter: Formatters.decimal,
-       
       },
       {
         id: "qtyoh",
@@ -300,7 +288,6 @@ error = false;
         width: 80,
         filterable: false,
         formatter: Formatters.decimal,
-       
       },
       {
         id: "sftystk",
@@ -310,7 +297,6 @@ error = false;
         width: 80,
         filterable: false,
         formatter: Formatters.decimal,
-        
       },
       {
         id: "qtycom",
@@ -321,8 +307,6 @@ error = false;
         filterable: true,
         type: FieldType.float,
         formatter: Formatters.decimal,
-       
-       
       },
       {
         id: "qtyval",
@@ -338,9 +322,9 @@ error = false;
           model: Editors.float,
           params: { minDecimal: 0, maxDecimal: 0 },
         },
-               //params: { minDecimal: 2, maxDecimal: 2 }, 
+        //params: { minDecimal: 2, maxDecimal: 2 },
       },
-      
+
       {
         id: "vend",
         name: "Fournisseur",
@@ -375,37 +359,35 @@ error = false;
       // enableAutoResize: false,
       // autoFitColumnsOnFirstLoad: false,
       autoFitColumnsOnFirstLoad: false,
-     
+
       //fullWidthRows:false,
-      
+
       // enable the filtering but hide the user filter row since we use our own single filter
       enableFiltering: false,
       showHeaderRow: false, // hide the filter row (header row)
 
-      autoEdit:true,
+      autoEdit: true,
       editable: true,
-      autoCommitEdit:true,
+      autoCommitEdit: true,
       enableCellNavigation: true,
       formatterOptions: {
-        
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: false,
-  
+
         // Defaults to undefined, minimum number of decimals
         minDecimal: 2,
-        maxDecimal:2,
-  
+        maxDecimal: 2,
+
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
-        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+        thousandSeparator: " ", // can be any of ',' | '_' | ' ' | ''
       },
-    
     };
     // this.gridOptions = {
     //   enableAutoResize: false,
     //   // autoResize: {
     //   //   containerId: 'demo-container',
     //   //   bottomPadding:10,
-        
+
     //   // },
     //   autoEdit:true,
     //   editable: true,
@@ -413,14 +395,14 @@ error = false;
     //   enableFiltering: false,
     //   enableCellNavigation: true,
     //   formatterOptions: {
-        
+
     //     // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
     //     displayNegativeNumberWithParentheses: false,
-  
+
     //     // Defaults to undefined, minimum number of decimals
     //     minDecimal: 2,
     //     maxDecimal:2,
-  
+
     //     // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
     //     thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
     //   },
@@ -429,32 +411,31 @@ error = false;
     this.dataset = [];
   }
   ngOnInit(): void {
-    
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(true);
-    this.user =  JSON.parse(localStorage.getItem('user'))
-    console.log(this.user)
+    this.user = JSON.parse(localStorage.getItem("user"));
+    console.log(this.user);
     this.createForm();
     this.initmvGrid();
     this.initGrid();
-   
   }
 
   addNewItem() {
-    const controls = this.poForm.controls
- this.dataset = []
-    
- for(let data of this.mvdataset) {
-   console.log(data)
- }
- console.log("allllo")
- var site = controls.site.value 
- var detail = this.mvdataset
-      this.inventoryTransactionService.getBySpec({site,detail}).subscribe((response: any)=>{
-        
+    const controls = this.poForm.controls;
+    this.dataset = [];
+
+    for (let data of this.mvdataset) {
+      console.log(data);
+    }
+    console.log("allllo");
+    var site = controls.site.value;
+    var detail = this.mvdataset;
+    this.inventoryTransactionService
+      .getBySpec({ site, detail })
+      .subscribe((response: any) => {
         this.dataset = response.data;
         this.dataView.setItems(this.dataset);
-        
+
         // for (let data of this.dataset) {
 
         //   this.gridService.addItem(
@@ -471,17 +452,11 @@ error = false;
         //     { position: "bottom" }
         //   );
 
+        //   }
+      });
+  }
 
-     //   }
-      })
-
-
-    
-      
-    }
-    
-
- /*for (var i= 0; i < this.dataset.length ; i++){
+  /*for (var i= 0; i < this.dataset.length ; i++){
    console.log("here")
     this.gridService.addItem(
       {
@@ -495,13 +470,10 @@ error = false;
       { position: "bottom" }
     );
  }*/
- 
 
-  
- 
   initmvGrid() {
     this.mvcolumnDefinitions = [
-  /*    {
+      /*    {
         id: "id",
         field: "id",
         excludeFromHeaderMenu: true,
@@ -514,7 +486,7 @@ error = false;
           }
         },
       },*/
-     /* {
+      /* {
         id: "ids",
         name: "ids",
         field: "id",
@@ -549,7 +521,7 @@ error = false;
         sortable: true,
         width: 50,
         filterable: false,
-        type: FieldType.text,
+        // type: FieldType.text,
       },
       {
         id: "qty",
@@ -559,7 +531,6 @@ error = false;
         width: 50,
         filterable: false,
         type: FieldType.float,
-       
       },
       {
         id: "add_qty",
@@ -585,46 +556,39 @@ error = false;
         width: 50,
         filterable: false,
         type: FieldType.float,
-       
       },
-      
-      
     ];
 
     this.mvgridOptions = {
-           // if you want to disable autoResize and use a fixed width which requires horizontal scrolling
+      // if you want to disable autoResize and use a fixed width which requires horizontal scrolling
       // it's advised to disable the autoFitColumnsOnFirstLoad as well
       // enableAutoResize: false,
       // autoFitColumnsOnFirstLoad: false,
-      
-  
+
       //fullWidthRows:false,
-      
+
       // enable the filtering but hide the user filter row since we use our own single filter
       enableFiltering: false,
       showHeaderRow: false, // hide the filter row (header row)
       autoFitColumnsOnFirstLoad: false,
-     
+
       enableCellNavigation: true,
       formatterOptions: {
-        
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: false,
-  
+
         // Defaults to undefined, minimum number of decimals
         minDecimal: 2,
-        maxDecimal:2,
-  
+        maxDecimal: 2,
+
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
-        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+        thousandSeparator: " ", // can be any of ',' | '_' | ' ' | ''
       },
-    
     };
-    
 
     this.mvdataset = [];
-    
-   /* console.log(this.user)
+
+    /* console.log(this.user)
     const controls = this.poForm.controls
     
     const date = controls.calc_date.value
@@ -646,53 +610,61 @@ error = false;
   )*/
   }
   change() {
-    this.mvdataset = []
-    this.dataset = []
-    const controls = this.poForm.controls
+    this.mvdataset = [];
+    this.dataset = [];
+    const controls = this.poForm.controls;
     const date = controls.calc_date.value
-    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
-    : null;    
+      ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+      : null;
     const date1 = controls.calc_date1.value
-    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
-    : null;    
-    console.log(date,date1,controls.calc_date.value)
-    this.inventoryTransactionService.getConsoRange({usrd_site: controls.site.value, date: date,date1:date1}).subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-        console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
-        
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+      ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
+      : null;
+    console.log(date, date1, controls.calc_date.value);
+    this.inventoryTransactionService
+      .getConsoRange({
+        usrd_site: controls.site.value,
+        date: date,
+        date1: date1,
+      })
+      .subscribe(
+        (response: any) => {
+          this.mvdataset = response.data;
+          console.log(this.mvdataset);
+          this.mvdataView.setItems(this.mvdataset);
+        },
+        (error) => {
+          this.mvdataset = [];
+        },
+        () => {}
+      );
   }
-  
- 
+
   //create form
   createForm() {
     this.loadingSubject.next(false);
     this.purchaseOrder = new PurchaseOrder();
-    const date = new Date;
-    
+    const date = new Date();
+
     this.poForm = this.poFB.group({
-     // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
-      site:[this.user.usrd_site,Validators.required],
-      calc_date: [{
-        year:date.getFullYear(),
-        month: date.getMonth()+1,
-        day: date.getDate() - 7
-      }],
-      calc_date1: [{
-        year:date.getFullYear(),
-        month: date.getMonth()+1,
-        day: date.getDate()
-      }],
+      // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
+      site: [this.user.usrd_site, Validators.required],
+      calc_date: [
+        {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate() - 7,
+        },
+      ],
+      calc_date1: [
+        {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate(),
+        },
+      ],
     });
 
-   /* this.sequenceService.getBy({ seq_type: "PO", seq_profile: this.user.usrd_profile }).subscribe(
+    /* this.sequenceService.getBy({ seq_type: "PO", seq_profile: this.user.usrd_profile }).subscribe(
       (res: any) => {
         this.seq = res.data[0].seq_seq
         console.log(this.seq)
@@ -700,7 +672,6 @@ error = false;
     
     })
     */
-
   }
   //reste form
   reset() {
@@ -730,22 +701,22 @@ error = false;
       return;
     }
     // tslint:disable-next-line:prefer-const
-    var val = 0
+    var val = 0;
     var array = [];
     var result = [];
-    var array = this.dataset
-    array.reduce(function(res, value) {
-    //console.log('aaa',res[value.prod_line])
-    if (!res[value.vend]) {
-      res[value.vend] = { vend: value.vend, qty: 0 };
-      result.push(res[value.vend])
-    }
-    res[value.vend].qty += value.qty;
-    return res;
+    var array = this.dataset;
+    array.reduce(function (res, value) {
+      //console.log('aaa',res[value.prod_line])
+      if (!res[value.vend]) {
+        res[value.vend] = { vend: value.vend, qty: 0 };
+        result.push(res[value.vend]);
+      }
+      res[value.vend].qty += value.qty;
+      return res;
     }, {});
-    console.log("array",result)
-    
-    this.addPo( controls.site.value,result,this.dataset);
+    console.log("array", result);
+
+    this.addPo(controls.site.value, result, this.dataset);
   }
 
   /**
@@ -757,7 +728,7 @@ error = false;
    *
    * @param _po: po
    */
-  addPo(site:any, pos: any, detail: any) {
+  addPo(site: any, pos: any, detail: any) {
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -767,7 +738,7 @@ error = false;
     const controls = this.poForm.controls;
 
     this.purchaseOrderService
-      .addPos({ Site:site,purchaseOrder: pos, purchaseOrderDetail: detail })
+      .addPos({ Site: site, purchaseOrder: pos, purchaseOrderDetail: detail })
       .subscribe(
         (reponse: any) => (po = reponse.data),
         (error) => {
@@ -813,43 +784,31 @@ error = false;
   onChangesite() {
     const controls = this.poForm.controls;
     const si_site = controls.site.value;
-    
-    this.siteService.getByOne({ si_site }).subscribe(
-      (res: any) => {
-  
-        if (!res.data) {
-  
-            alert("Site n'existe pas  ")
-            controls.site.setValue(null);
-            document.getElementById("site").focus();
-          } else {
-           if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
-            alert("Site n'est pas autorisé pour cet utilisateur ")
-            controls.site.setValue(null);
-            document.getElementById("site").focus();
-             
 
-
-           } 
-          }
-      
-      });
+    this.siteService.getByOne({ si_site }).subscribe((res: any) => {
+      if (!res.data) {
+        alert("Site n'existe pas  ");
+        controls.site.setValue(null);
+        document.getElementById("site").focus();
+      } else {
+        if (this.user.usrd_site != "*" && si_site != this.user.usrd_site) {
+          alert("Site n'est pas autorisé pour cet utilisateur ");
+          controls.site.setValue(null);
+          document.getElementById("site").focus();
+        }
+      }
+    });
   }
-  
- 
+
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.poForm.controls;
-      if (Array.isArray(args.rows) && this.gridObjsite) {
+    if (Array.isArray(args.rows) && this.gridObjsite) {
       args.rows.map((idx) => {
         const item = this.gridObjsite.getDataItem(idx);
         console.log(item);
-        
-       controls.site.setValue(item.si_site);
-        
-    
-     
-      });
 
+        controls.site.setValue(item.si_site);
+      });
     }
   }
   angularGridReadysite(angularGrid: AngularGridInstance) {
@@ -859,7 +818,6 @@ error = false;
 
   prepareGridsite() {
     this.columnDefinitionssite = [
-      
       {
         id: "id",
         name: "id",
@@ -887,44 +845,42 @@ error = false;
     ];
 
     this.gridOptionssite = {
-        enableSorting: true,
-        enableCellNavigation: true,
-        enableExcelCopyBuffer: true,
-        enableFiltering: true,
-        autoEdit: false,
-        autoHeight: false,
-        frozenColumn: 0,
-        frozenBottom: true,
-        enableRowSelection: true,
-        enableCheckboxSelector: true,
-        checkboxSelector: {
-          // optionally change the column index position of the icon (defaults to 0)
-          // columnIndexPosition: 1,
-  
-          // remove the unnecessary "Select All" checkbox in header when in single selection mode
-          hideSelectAllCheckbox: true,
-  
-          // you can override the logic for showing (or not) the expand icon
-          // for example, display the expand icon only on every 2nd row
-          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
-        },
-        multiSelect: false,
-        rowSelectionOptions: {
-          // True (Single Selection), False (Multiple Selections)
-          selectActiveRow: true,
-        },
-      };
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
     // fill the dataset with your data
-    if(this.user.usrd_site == "*") {
-    this.siteService
-      .getAll()
-      .subscribe((response: any) => (this.datasite = response.data));
-    }
-    else {
+    if (this.user.usrd_site == "*") {
       this.siteService
-      .getBy({si_site : this.user.usrd_site})
-      .subscribe((response: any) => (this.datasite = response.data));
-  
+        .getAll()
+        .subscribe((response: any) => (this.datasite = response.data));
+    } else {
+      this.siteService
+        .getBy({ si_site: this.user.usrd_site })
+        .subscribe((response: any) => (this.datasite = response.data));
     }
   }
   opensite(contentsite) {
@@ -932,28 +888,24 @@ error = false;
     this.modalService.open(contentsite, { size: "lg" });
   }
 
-
   /*vendor*/
   handleSelectedRowsChangedvend(e, args) {
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
-    
+
     if (Array.isArray(args.rows) && this.gridObjvend) {
       args.rows.map((idx) => {
-  
-            
         const item = this.gridObjvend.getDataItem(idx);
-              updateItem.vend = item.vd_addr;
-              this.gridService.updateItem(updateItem);
-           
-      })   
+        updateItem.vend = item.vd_addr;
+        this.gridService.updateItem(updateItem);
+      });
     }
   }
-  
+
   angularGridReadyvend(angularGrid: AngularGridInstance) {
     this.angularGridvend = angularGrid;
     this.gridObjvend = (angularGrid && angularGrid.slickGrid) || {};
   }
-  
+
   prepareGridvend() {
     this.columnDefinitionsvend = [
       {
@@ -1005,7 +957,7 @@ error = false;
         type: FieldType.string,
       },
     ];
-  
+
     this.gridOptionsvend = {
       enableSorting: true,
       enableCellNavigation: true,
@@ -1020,10 +972,10 @@ error = false;
       checkboxSelector: {
         // optionally change the column index position of the icon (defaults to 0)
         // columnIndexPosition: 1,
-  
+
         // remove the unnecessary "Select All" checkbox in header when in single selection mode
         hideSelectAllCheckbox: true,
-  
+
         // you can override the logic for showing (or not) the expand icon
         // for example, display the expand icon only on every 2nd row
         // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
@@ -1043,7 +995,7 @@ error = false;
         return val;
       },
     };
-  
+
     // fill the dataset with your data
     this.providerService
       .getAll()
@@ -1053,5 +1005,4 @@ error = false;
     this.prepareGridvend();
     this.modalService.open(contentvend, { size: "lg" });
   }
-  
 }

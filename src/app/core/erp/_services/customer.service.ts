@@ -10,6 +10,9 @@ import { environment } from "../../../../environments/environment"
 import { Customer } from "../_models/customer.model"
 
 const API_URL = environment.apiUrl + "/customers"
+const CRM_URL = environment.apiUrl + "/crm";
+const API_GET_PHONE = environment.apiUrl + "/auth/getPhone";
+const API_GET_WILAYAS_COMMUNES= environment.apiUrl + "/auth/getWilayasCommunes";
 
 @Injectable()
 export class CustomerService {
@@ -37,6 +40,12 @@ export class CustomerService {
     public getCustomer(phone: String) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/getCustomer/${phone}`, { headers: httpHeaders })
+    }
+
+    // CORRECT ONE AT THE MOMENT 
+    public getCustomerPhone(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_GET_PHONE}/${data}`,{ headers: httpHeaders });
     }
 
     public getOrder(order_code: String) {
@@ -98,5 +107,15 @@ export class CustomerService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
     }
+
+    public getMethods() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${CRM_URL}/methods`, {headers: httpHeaders});
+      }
+
+      getWilayasCommunes() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_GET_WILAYAS_COMMUNES}/`,{ headers: httpHeaders });
+      }
     
 }
