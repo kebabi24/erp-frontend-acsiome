@@ -240,7 +240,7 @@ console.log(resp.data)
               } else {
 
               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , pod_site:resp.data.pt_site, pod_loc: resp.data.pt_loc,
-                pod_um:resp.data.pt_um, pod_tax_code: resp.data.pt_taxc, pod_taxc: resp.data.taxe.tx2_tax_pct, pod_taxable: resp.data.pt_taxable})
+                pod_um:resp.data.pt_um,pod_price:resp.data.pt_pur_price, pod_tax_code: resp.data.pt_taxc, pod_taxc: resp.data.taxe.tx2_tax_pct, pod_taxable: resp.data.pt_taxable})
 
               }
       
@@ -712,6 +712,7 @@ console.log(resp.data)
   reset() {
     this.purchaseOrder = new PurchaseOrder();
     this.createForm();
+    this.dataset=[];
     this.createtotForm();
     this.hasFormErrors = false;
   }
@@ -795,10 +796,10 @@ console.log(resp.data)
       .subscribe(
         (reponse: any) => {
           po = reponse.data
-          const arrayOctet = new Uint8Array(reponse.pdf.data)
-          const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-          const fileUrl = URL.createObjectURL(file);
-          window.open(fileUrl)
+        //  const arrayOctet = new Uint8Array(reponse.pdf.data)
+        //  const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        //  const fileUrl = URL.createObjectURL(file);
+        //  window.open(fileUrl)
         },
         (error) => {
           this.layoutUtilsService.showActionNotification(
@@ -820,8 +821,9 @@ console.log(resp.data)
           );
           this.loadingSubject.next(false);
           console.log(this.provider, po, this.dataset);
-          //if(controls.print.value == true) this.printpdf(po.po_nbr) //printBc(this.provider, this.dataset, po, this.curr);
-          this.router.navigateByUrl("/");
+          if(controls.print.value == true) this.printpdf(po.po_nbr) //printBc(this.provider, this.dataset, po, this.curr);
+         // this.router.navigateByUrl("/pusrchasing/create-po");
+          this.reset()
         }
       );
   }
@@ -1446,7 +1448,7 @@ changeTax(){
         updateItem.pod_loc = item.pt_loc
         updateItem.pod_taxable = item.pt_taxable
         updateItem.pod_tax_code = item.pt_taxc
-        
+        updateItem.pod_price = item.pt_pur_price
         updateItem.pod_taxc = item.taxe.tx2_tax_pct
         this.gridService.updateItem(updateItem);
       } 
@@ -2379,12 +2381,21 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  img.src = "./assets/media/logos/logoabr.png";
+  doc.addImage(img, 'png', 170, 5, 30, 30)
+  doc.setFontSize(9);
+  doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
+  doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
+  doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
+  doc.text('Alger. Algérie', 10 , 25 );
+  doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
+  doc.setFontSize(14);
+  doc.text('ABRACADABRA', 135 , 30 );
+  doc.line(10, 35, 200, 35);
   doc.setFontSize(12);
-  doc.text( 'Bon Commande N° : ' + nbr  , 70, 40);
+  doc.text( 'Bon Commande N° : ' + nbr  , 70, 45);
   doc.setFontSize(8);
-  console.log(this.provider.address.ad_misc2_id)
+  //console.log(this.provider.address.ad_misc2_id)
   doc.text('Code Fournisseur : ' + this.provider.vd_addr, 20 , 50 )
   doc.text('Nom             : ' + this.provider.address.ad_name, 20 , 55)
   doc.text('Adresse       : ' + this.provider.address.ad_line1, 20 , 60)
@@ -2420,7 +2431,18 @@ printpdf(nbr) {
     
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
+      img.src = "./assets/media/logos/logoabr.png";
+      doc.addImage(img, 'png', 170, 5, 30, 30)
+      doc.setFontSize(9);
+      doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
+      doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
+      doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
+      doc.text('Alger. Algérie', 10 , 25 );
+      doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
+      doc.setFontSize(14);
+      doc.text('ABRACADABRA', 135 , 30 );
+      doc.line(10, 35, 200, 35);
+
       doc.setFontSize(12);
       doc.text( 'Commande N° : ' + nbr  , 70, 40);
       doc.setFontSize(8);
