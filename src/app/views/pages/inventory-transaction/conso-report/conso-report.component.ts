@@ -122,7 +122,14 @@ error = false;
   
   initGrid() {
     this.columnDefinitions = [
-      
+      {
+        id: "rank",
+        name: "rank",
+        field: "rank",
+        sortable: true,
+        width: 150,
+        filterable: true,
+      },
      /* {
         id: "id",
         name: "Ligne",
@@ -294,9 +301,10 @@ error = false;
       },
       presets: {
         sorters: [
-          { columnId: 'famille', direction: 'DESC' }
+          { columnId: 'rank', direction: 'ASC' }
         ],
       },
+        
     };
 
     this.dataset = [];
