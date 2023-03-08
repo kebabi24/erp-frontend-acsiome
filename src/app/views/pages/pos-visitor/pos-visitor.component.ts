@@ -403,13 +403,17 @@ export class PosVisitorComponent implements OnInit {
         pt_bom_code: this.currentItem.pt_bom_code,
         pt_qty: 1,
         pt_part_type: this.currentItem.pt_part_type,
+        pt_group: this.currentItem.pt_group,
+        pt_promo: this.currentItem.pt_promo,
+        pt_dsgn_grp: this.currentItem.pt_dsgn_grp,
         comment: this.currentItem.pt_group,
         suppliments: [],
         ingredients: [],
         sauces: [],
       };
       if (this.currentCategory.direct === true) {
-        this.addProductToCart();
+        // this.addProductToCart();
+        console.log("nothing");
       } else {
         this.open2(content);
       }
@@ -460,6 +464,9 @@ export class PosVisitorComponent implements OnInit {
         sauces: checkItemExist.sauces,
         comment: this.sizeProduct,
         pt_part_type: checkItemExist.pt_part_type,
+        pt_group: checkItemExist.pt_group,
+        pt_promo: checkItemExist.pt_promo,
+        pt_dsgn_grp: checkItemExist.pt_dsgn_grp,
         pt_loc: checkItemExist.pt_loc,
         pt_qty: 1,
         line: this.cartProducts.length.toString(),
@@ -508,29 +515,16 @@ export class PosVisitorComponent implements OnInit {
       pt_bom_code: this.currentItem.pt_bom_code,
       pt_qty: 1,
       pt_part_type: this.currentItem.pt_part_type,
+
+      pt_group: this.currentItem.pt_group,
+      pt_promo: this.currentItem.pt_promo,
+      pt_dsgn_grp: this.currentItem.pt_dsgn_grp,
       comment: this.currentItem.pt_group,
       suppliments: [],
       ingredients: [],
       sauces: [],
     };
     const checkItemExist = this.currentItem;
-    // checkItemExist.size != undefined ? this.sizeOfProduct : null;
-
-    // const itemExist: Product = this.cartProducts.find((item) => {
-    //   return (
-    //     item.pt_part === checkItemExist.pt_part &&
-    //     item.suppliments.length === checkItemExist.suppliments.length &&
-    //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
-    //       .length === checkItemExist.suppliments.length &&
-    //     item.ingredients.length === checkItemExist.ingredients.length &&
-    //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
-    //       .length === checkItemExist.ingredients.length &&
-    //     item.sauces.length === checkItemExist.sauces.length &&
-    //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
-    //       checkItemExist.sauces.length &&
-    //     item.comment === checkItemExist.comment
-    //   );
-    // });
 
     checkItemExist.suppliments.map((item) => {
       this.productInCartPrice =
@@ -560,6 +554,9 @@ export class PosVisitorComponent implements OnInit {
       sauces: checkItemExist.sauces,
       comment: this.sizeProduct,
       pt_part_type: checkItemExist.pt_part_type,
+      pt_group: checkItemExist.pt_group,
+      pt_promo: checkItemExist.pt_promo,
+      pt_dsgn_grp: checkItemExist.pt_dsgn_grp,
       pt_loc: checkItemExist.pt_loc,
       pt_qty: 1,
       line: this.cartProducts.length.toString(),
@@ -662,97 +659,7 @@ export class PosVisitorComponent implements OnInit {
     this.modalService.open(content, { size: "md" });
   }
 
-  customizeProduct(content): void {
-    // if (this.currentCategory.direct === true) {
-    //   this.addProductToCart();
-    // } else {
-    //   this.open2(content);
-    // }
-  }
-
-  addProductToCart() {
-    // const checkItemExist = this.currentItem;
-    // // checkItemExist.size != undefined ? this.sizeOfProduct : null;
-    // const itemExist: Product = this.cartProducts.find((item) => {
-    //   return (
-    //     item.pt_part === checkItemExist.pt_part &&
-    //     item.suppliments.length === checkItemExist.suppliments.length &&
-    //     item.suppliments.filter((s) => checkItemExist.suppliments.includes(s))
-    //       .length === checkItemExist.suppliments.length &&
-    //     item.ingredients.length === checkItemExist.ingredients.length &&
-    //     item.ingredients.filter((s) => checkItemExist.ingredients.includes(s))
-    //       .length === checkItemExist.ingredients.length &&
-    //     item.sauces.length === checkItemExist.sauces.length &&
-    //     item.sauces.filter((s) => checkItemExist.sauces.includes(s)).length ===
-    //       checkItemExist.sauces.length &&
-    //     item.comment === checkItemExist.comment
-    //   );
-    // });
-    // if (itemExist) {
-    //   itemExist.pt_price =
-    //     Number(itemExist.pt_price) +
-    //     Number(itemExist.pt_price) / itemExist.pt_qty;
-    //   itemExist.pt_qty = itemExist.pt_qty + 1;
-    // } else {
-    //   checkItemExist.suppliments.map((item) => {
-    //     this.productInCartPrice =
-    //       Number(this.productInCartPrice) + Number(item.pt_price);
-    //   });
-    //   this.productInCartPrice =
-    //     Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
-    //   this.loclocOrder === "Emporté"
-    //     ? this.posCategoryService
-    //         .getByOneBom({ ptb_part: checkItemExist.pt_part })
-    //         .subscribe((res: any) => {
-    //           res.data.map((item) => {
-    //             checkItemExist.pt_bom_code = item.ptb_bom;
-    //           });
-    //         })
-    //     : null;
-    //   this.itemToAdd = {
-    //     id: Math.random(),
-    //     pt_part: checkItemExist.pt_part,
-    //     pt_desc1: checkItemExist.pt_desc1,
-    //     pt_article: checkItemExist.pt_article,
-    //     pt_price: this.offer
-    //       ? Number(this.productInCartPrice) *
-    //         (1 - Number(this.currentOffer.del_pct_disc) / 100)
-    //       : Number(this.productInCartPrice),
-    //     pt_formule: checkItemExist.pt_formule,
-    //     pt_bom_code: checkItemExist.pt_bom_code,
-    //     suppliments: checkItemExist.suppliments,
-    //     ingredients: checkItemExist.ingredients,
-    //     sauces: checkItemExist.sauces,
-    //     comment: this.sizeProduct,
-    //     pt_loc: checkItemExist.pt_loc,
-    //     pt_qty: 1,
-    //     line: this.cartProducts.length.toString(),
-    //   };
-    //   this.cart.products.push(this.itemToAdd);
-    //   this.showPrice = true;
-    // }
-    // this.cartProducts = this.cart.products;
-    // this.ingredients.map((item) => {
-    //   item.isChecked = true;
-    // });
-    // this.cartAmount = this.calculateSubTotal();
-    // // this.offer &&
-    // //   (this.cart.total_price =
-    // //     this.cartAmount * (1 - Number(this.currentOffer.del_pct_disc) / 100)) &&
-    // //   (this.remisePrice =
-    // //     this.cartAmount * (Number(this.currentOffer.del_pct_disc) / 100)) &&
-    // //   (this.cartAmount = this.cart.total_price);
-    // this.currentItem.suppliments = [];
-    // this.currentItem.ingredients = [];
-    // this.productInCartPrice = 0;
-    // this.selectedIndex = 0;
-    // this.showSize = false;
-    // this.showSoda = false;
-    // this.showSpec = false;
-    // this.showSupp = false;
-    // this.showSauces = false;
-    // this.currentItem = undefined;
-  }
+  customizeProduct(content): void {}
 
   locOrderS(content) {
     this.loclocOrder = "Sur place";
