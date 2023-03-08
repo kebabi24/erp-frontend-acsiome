@@ -264,6 +264,7 @@ export class ListSiteCaComponent implements OnInit {
             new Aggregators.Sum('N_amt'),
             new Aggregators.Sum('rec'),
             new Aggregators.Sum('ecart'),
+            new Aggregators.Sum('loyamt'),
             new Aggregators.Sum('obj')
           ],
             aggregateCollapsed: false,
@@ -288,6 +289,7 @@ export class ListSiteCaComponent implements OnInit {
             new Aggregators.Sum('N_amt'),
             new Aggregators.Sum('rec'),
             new Aggregators.Sum('ecart'),
+            new Aggregators.Sum('loyamt'),
             new Aggregators.Sum('obj')
           ],
             aggregateCollapsed: false,
@@ -342,6 +344,17 @@ export class ListSiteCaComponent implements OnInit {
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       {
+        id: "loyamt",
+        name: "Conso Personnel",
+        field: "loyamt",
+        sortable: true,
+        formatter:myCustomEcartFormatter,       
+        filterable: true,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.number,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
+      {
         id: "obj",
         name: "Objectif",
         field: "obj",
@@ -371,7 +384,7 @@ export class ListSiteCaComponent implements OnInit {
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
-        autoHeight: true,
+        enableAutoResize: true,
         enableSorting: true,
         exportOptions: {
           sanitizeDataExport: true

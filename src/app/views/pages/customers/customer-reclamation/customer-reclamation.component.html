@@ -26,7 +26,7 @@
       <button
         *ngIf="automaticCauseExist"
         type="button"
-        (click)="onSubmit()"
+        (click)="validateAutomaticComplaints()"
         class="btn btn-sm mr-2 btn-abracadabra"
       >
       valider
@@ -125,7 +125,7 @@
                   <label class="align-middle">Address:</label>
                 </div>
                 <div class="col-8">
-                  <h3>{{ adress }}</h3>
+                  <h3>{{ adressDisplay }}</h3>
                 </div>
               </div>
               <!-- ADR -->
@@ -136,7 +136,7 @@
                   <label class="align-middle">Age:</label>
                 </div>
                 <div class="col-8">
-                  <h3>{{ age }}</h3>
+                  <h3>{{ ageDisplay }}  </h3>
                 </div>
               </div>
               <!-- AGE -->
@@ -246,8 +246,8 @@
       </form>
       <!-- RECLAMATION FORM -->
 
+      <!-- CAUSES FORM -->
       <div class="col-6">
-        <!-- CAUSES FORM -->
         <form class="form" [formGroup]="reclamationForm">
           <!-- CARD -->
           <div class="card card-custom gutter-b">
@@ -273,63 +273,61 @@
             <!-- CAUSES -->
             <div class="row mt-5 ml-2">
 
-            <div class="row">
-                <div class="accordion accordion-toggle-arrow" id="accordionExample1">
+              <div class="row">
 
-                  <div class="card" *ngFor="let cause of filtered_causes; let i = index">
-                      <div class="card-header">
-                          <div class="card-title" data-toggle="collapse" attr.data-target="#collapse-{{i}}">
-                              {{cause.groupe_titel}}
-                          </div>
-                      </div>
-                      <div attr.id="collapse-{{i}}"  class="collapse show" data-parent="#accordionExample1">
-                          <div class="card-body">
+                  <!-- NEW ACCORDION -->
+                  <div class="accordion" id="accordionExample">
 
-                            <div
-                                class="col-12"
-                                *ngFor="let cause of cause.causes_group; let j = index"
+                    <div class="accordion-item" *ngFor="let cause of filtered_causes; let i = index">
+
+                      <h3 class="accordion-header" id="panelsStayOpen-headingOne-{{i}}">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#panelsStayOpen-collapseOne-{{i}}" aria-expanded="true" attr.aria-controls="panelsStayOpen-collapseOne-{{i}}">
+                          {{cause.groupe_titel}}
+                        </button>
+                      </h3>
+                      
+
+                      <div id="panelsStayOpen-collapseOne-{{i}}" class="accordion-collapse collapse " attr.aria-labelledby="panelsStayOpen-headingOne-{{i}}">
+                        <div class="accordion-body">
+
+                          <div
+                          class="col-12"
+                          *ngFor="let cause of cause.causes_group; let j = index"
+                        >
+                          <div class="row mt-5">
+                            <fieldset class="col-6">
+                              <input
+                                type="checkbox"
+                                formControlName="{{ cause.code_value }}"
+                                (change)="onCauseSelect(cause.code_value)"
+                              />
+                              <label for="coding" class="ml-2">
+                                {{cause.code_desc}}
+                            </label>
+                            </fieldset>
+
+                            <div class="input-group input-group-sm col-6">
+                              <textarea
+                                rows="2"
+                                type="text"
+                                class="mt-1 form-control form-control-solid"
+                                formControlName="{{ cause.code_value }}text-area"
                               >
-                                <div class="row mt-5">
-                                  <fieldset class="col-6">
-                                    <input
-                                      type="checkbox"
-                                      formControlName="{{ cause.code_value }}"
-                                      (change)="onCauseSelect(cause.code_value)"
-                                    />
-                                    <label for="coding" class="ml-2">
-                                      {{cause.code_desc}}
-                                  </label>
-                                  </fieldset>
-
-                                  <div class="input-group input-group-sm col-6">
-                                    <textarea
-                                      rows="2"
-                                      type="text"
-                                      class="mt-1 form-control form-control-solid"
-                                      formControlName="{{ cause.code_value }}text-area"
-                                    >
-                                    </textarea>
-                                  </div>
-                                </div>
+                              </textarea>
                             </div>
-                            <!-- end of body -->
-                              
                           </div>
                       </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    
                   </div>
+                  <!-- NEW ACCORDION -->
 
-                </div>
-
-                <!-- <div
-                  class="col-12"
-                  *ngFor="let cause of filtered_causes; let i = index"
-                > 
-                    <p>{{cause.groupe_titel}}</p>
-                </div> -->
-
-            </div>
-
-
+                  
+              </div>
             </div>
 
              
@@ -340,10 +338,16 @@
             </div>
           </div>
           <!-- CARD END  -->
+
         </form>
+
+        
       
-        <!-- CAUSES FORM -->
-     </div>
+      </div>
+      <!-- CAUSES FORM -->
+      
+
+    
     </div>
 
     <!-- MODAL -->
@@ -489,6 +493,90 @@
       </ng-template>
     </div>
     <!-- MODAL END -->
+
+
+    <!-- MODAL -->
+    <div class="row">
+      <ng-template #content1 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Traitement automatique des causes</h4>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="d('Cross click')"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!--begin::Form-->
+            <form
+              class="form"
+              [formGroup]="customerForm"
+              autocomplete="off"
+              novalidate="novalidate"
+              
+              class="pl-5 pr-5"
+            >
+            
+              <div class="row align-middle form-group-bg" *ngFor="let cause of automatic_treat_data; let i = index">
+                      
+                <!-- CAUSE -->
+                <div class="col-2 align-middle mt-2">
+                  <label class="align-middle">Cause:</label>
+                </div>
+                <div class="col-4 mt-2" >{{cause.cause_display}}</div>
+                <!-- CAUSE END  -->
+                
+                <!-- METHOD -->
+                <div class="col-2 align-middle mt-2">
+                  <label class="align-middle">Methode:</label>
+                </div>
+                <div class="col-4 mt-2">{{cause.method_display}}</div>
+                <!-- METHOD END -->
+            
+              </div>
+
+              
+            </form>
+            <!--end::Form-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            hidden
+            id="closeForm1"
+            class="btn btn-primary"
+            (click)="c('Close click')"
+          ></button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="c('Close click')"
+          >
+            Annuller
+          </button>
+          <button
+            type="button"
+            class="btn btn-abracadabra"
+            (click)="confirmAutomatic()"
+          >
+            Confirmer
+          </button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL END -->
+
+    <!-- BUTTON TO OPEN MODAL 2 : AUTOMATIC COMPLAINTS -->
+    <button
+    hidden
+    id="modal2Button"
+    class="btn btn-primary"
+    (click)="open1(content1)"
+    ></button>
 
    
   </kt-portlet-body>

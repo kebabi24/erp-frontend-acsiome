@@ -1,6 +1,6 @@
 
 <kt-portlet class="main-container">
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter une paramètre'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" style="background-color:beige">
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un paramètre'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" style="background-color:beige">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
@@ -137,6 +137,24 @@
 
                     </div>
                     <!-- ROW 2 END -->
+
+                    <!-- ROW 3 -->
+                    <div class="row">
+                      <!-- TIME UNIT -->
+                      <div class=" form-group col-2">
+                        <!-- <span >Code paramètre:</span> -->
+                        <label class="form-group " >Profil attribué:</label>
+                        <select 
+                          formControlName="profile_code" 
+                          class=" form-control form-control-sm form-control-solid ">
+                        
+                            <option *ngFor="let profile of profiles" [value]="profile.usrd_code" class="mt-2 mb-2 dropdown-item">{{profile.usrd_name}}</option>
+                            
+                          </select>
+                      </div>
+                      <!-- TIME UNIT END  -->
+                    </div>
+                    <!-- ROW 3 END  -->
 
 
                 </form> 

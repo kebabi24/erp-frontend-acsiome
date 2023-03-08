@@ -86,9 +86,9 @@ ngOnInit(): void {
 }
 angularGridReady(angularGrid: AngularGridInstance) {
   this.angularGrid = angularGrid;
-  this.gridObj = angularGrid.slickGrid; // grid object
-  this.dataviewObj = angularGrid.dataView;
-  this.gridService = angularGrid.gridService;
+  // this.gridObj = angularGrid.slickGrid; // grid object
+  // this.dataviewObj = angularGrid.dataView;
+  // this.gridService = angularGrid.gridService;
 }
 
 prepareGrid() {
@@ -294,7 +294,18 @@ prepareGrid() {
     exportOptions: {
       sanitizeDataExport: true
     },
-    
+    autoResize: {
+      containerId: '#demo-container',
+   
+    },
+
+    // enable the filtering but hide the user filter row since we use our own single filter
+    showHeaderRow: false, // hide the filter row (header row)
+
+    alwaysShowVerticalScroll: false,
+    enableColumnPicker: true,
+    enableCellNavigation: true,
+    enableRowSelection: true,
   
     gridMenu: {
       onCommand: (e, args) => {

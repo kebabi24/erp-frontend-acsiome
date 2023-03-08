@@ -169,7 +169,7 @@ export class PurchaseOrderListComponent implements OnInit {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       autoEdit: false,
-      autoHeight: true,
+      enableAutoResize:true,
       //rowHeight: 500,
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;

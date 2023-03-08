@@ -12,6 +12,8 @@ import { environment } from "../../../../environments/environment";
 const API_URL = environment.apiUrl + "/crm";
 const COMPLAINT_DATA_URL = environment.apiUrl + "/customers/getComplaintData";
 const API_GET_PHONE = environment.apiUrl + "/auth/getPhone";
+const API_GET_WILAYAS_COMMUNES= environment.apiUrl + "/auth/getWilayasCommunes";
+const API_CREATE_CUSTOMER_URL = environment.apiUrl + "/auth/createCustomer";
 
 @Injectable()
 export class CRMService {
@@ -44,6 +46,11 @@ export class CRMService {
   public getMethods() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/methods`, {headers: httpHeaders});
+  }
+
+  public getAllProfiles() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/allProfiles`, {headers: httpHeaders});
   }
 
   public createParam(paramHeaderData: any,paramDetails:any) {
@@ -119,6 +126,15 @@ export class CRMService {
     return this.http.post(`${API_URL}/createExecutionLineDetail`, {agendaExecutionLineDetail}, {headers: httpHeaders});
   }
   
+  getWilayasCommunes() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.get(`${API_GET_WILAYAS_COMMUNES}/`,{ headers: httpHeaders });
+  }
+
+  createNewCustomer(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.post(API_CREATE_CUSTOMER_URL, {data},{ headers: httpHeaders });
+  }
 
   
 }
