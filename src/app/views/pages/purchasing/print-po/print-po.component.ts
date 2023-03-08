@@ -256,7 +256,7 @@ export class PrintPoComponent implements OnInit {
     this.reset();
     this.createForm();
     this.createtotForm();
-    this.calculatetot();
+    //this.calculatetot();
   }
 
   //create form
@@ -482,7 +482,7 @@ export class PrintPoComponent implements OnInit {
         });
      
         }
-        this.calculatetot();
+        //this.calculatetot();
       })
      
       
@@ -664,6 +664,7 @@ export class PrintPoComponent implements OnInit {
       autoHeight: false,
       frozenColumn: 0,
       frozenBottom: true,
+
       enableRowSelection: true,
       enableCheckboxSelector: true,
       checkboxSelector: {
@@ -681,6 +682,13 @@ export class PrintPoComponent implements OnInit {
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true,
+      },
+      presets: {
+       
+        sorters: [
+          { columnId: 'po_nbr', direction: 'DESC' },
+          { columnId: 'po_ord_date', direction: 'DESC' }
+        ],
       },
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;

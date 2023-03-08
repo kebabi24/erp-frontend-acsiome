@@ -615,6 +615,8 @@ error = false;
       
       // enable the filtering but hide the user filter row since we use our own single filter
       enableFiltering: false,
+      editable: true,
+      autoCommitEdit: true,
       showHeaderRow: false, // hide the filter row (header row)
       autoFitColumnsOnFirstLoad: false,
      

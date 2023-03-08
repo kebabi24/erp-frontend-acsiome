@@ -1211,6 +1211,7 @@ changeTax(){
         controls.po_curr.setValue(item.vd_curr || "");
         controls.po_taxable.setValue(item.address.ad_taxable || "");
         controls.po_taxc.setValue(item.address.ad_taxc || "");
+        controls.po_cr_terms.setValue(item.vd_cr_terms || "");
         this.deviseService.getBy({cu_curr:item.vd_curr}).subscribe((res:any)=>{  
           this.curr = res.data
        })

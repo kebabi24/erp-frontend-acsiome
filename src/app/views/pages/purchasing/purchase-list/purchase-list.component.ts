@@ -282,8 +282,7 @@ prepareGrid() {
     //   sidePadding: 10
     // },
     
-    autoHeight:true,
-  
+   
     enableAutoResize:true,
     enableDraggableGrouping: true,
     createPreHeaderPanel: true,
@@ -294,11 +293,7 @@ prepareGrid() {
     exportOptions: {
       sanitizeDataExport: true
     },
-    autoResize: {
-      containerId: '#demo-container',
    
-    },
-
     // enable the filtering but hide the user filter row since we use our own single filter
     showHeaderRow: false, // hide the filter row (header row)
 
