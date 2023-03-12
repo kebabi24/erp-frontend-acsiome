@@ -11,7 +11,7 @@ import { Label } from "../_models/label.model"
 const API_URL = environment.apiUrl + "/labels"
 
 @Injectable()
-export class JobService {
+export class LabelService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
