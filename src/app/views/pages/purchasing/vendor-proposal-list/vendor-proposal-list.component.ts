@@ -149,7 +149,7 @@ export class VendorProposalListComponent implements OnInit {
            enableExcelCopyBuffer: true,
            enableFiltering: true,
            autoEdit: false,
-           autoHeight: false,
+           enableAutoResize: true,
 
            dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
              var val = undefined;

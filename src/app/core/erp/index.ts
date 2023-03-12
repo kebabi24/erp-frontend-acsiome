@@ -72,6 +72,7 @@ export { GeneralLedger } from "./_models/general-ledger.model";
 export { CategoryProduct } from "./_models/pos-category-product.model";
 export { PosInventory } from "./_models/pos-inventory.model";
 export { Delivery } from "./_models/delivery.model";
+export { Label } from "./_models/label.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -149,6 +150,7 @@ export { PosCategoryService } from "./_services/pos-categories.service";
 export { CRMService } from "./_services/crm.service";
 export { DeliveryService } from "./_services/delivery.service";
 export { ForcastService } from "./_services/forcast.service";
+export { LabelService } from "./_services/label.service";
 
 export {
   printBc,

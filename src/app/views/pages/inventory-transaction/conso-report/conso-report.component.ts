@@ -136,14 +136,14 @@ error = false;
 
   initGrid() {
     this.columnDefinitions = [
-      {
-        id: "rank",
-        name: "rank",
-        field: "rank",
-        sortable: true,
-        width: 150,
-        filterable: true,
-      },
+      // {
+      //   id: "rank",
+      //   name: "rank",
+      //   field: "rank",
+      //   sortable: true,
+      //   width: 150,
+      //   filterable: true,
+      // },
      /* {
         id: "id",
         name: "Ligne",
@@ -196,6 +196,23 @@ error = false;
         
       },
     
+     
+  
+     
+    
+      {
+        id: "inv",
+        name: "Inventaire",
+        field: "inv",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
       {
         id: "achat",
         name: "Achat",
@@ -209,11 +226,10 @@ error = false;
        
       
       },
-    
       {
-        id: "inv",
-        name: "Inventaire",
-        field: "inv",
+        id: "cnt",
+        name: "Inventaire Fin ",
+        field: "cnt",
         sortable: true,
         minWidth: 100,
         filterable: false,
@@ -313,11 +329,11 @@ error = false;
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
       },
-      presets: {
-        sorters: [
-          { columnId: 'rank', direction: 'ASC' }
-        ],
-      },
+      // presets: {
+      //   sorters: [
+      //     { columnId: 'rank', direction: 'ASC' }
+      //   ],
+      // },
         
     };
 
@@ -328,14 +344,14 @@ error = false;
 
   mvinitGrid() {
     this.mvcolumnDefinitions = [
-      {
-        id: "borank",
-        name: "rank",
-        field: "borank",
-        sortable: true,
-        width: 150,
-        filterable: true,
-      },
+      // {
+      //   id: "borank",
+      //   name: "rank",
+      //   field: "borank",
+      //   sortable: true,
+      //   width: 150,
+      //   filterable: true,
+      // },
      /* {
         id: "id",
         name: "Ligne",
@@ -387,7 +403,35 @@ error = false;
         filterable: false,
         
       },
-    
+      
+      
+      
+      {
+        id: "boinv",
+        name: "Inventaire",
+        field: "boinv",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
+      {
+        id: "bocnt",
+        name: "Inventaire Fin ",
+        field: "bocnt",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
       {
         id: "boachat",
         name: "Achat",
@@ -402,19 +446,6 @@ error = false;
       
       },
     
-      {
-        id: "boinv",
-        name: "Inventaire",
-        field: "boinv",
-        sortable: true,
-        minWidth: 100,
-        filterable: false,
-        type: FieldType.float,
-        formatter: Formatters.decimal,
-        params: { minDecimal: 2, maxDecimal: 2 }, 
-       
-      
-      },
       {
         id: "boavarie",
         name: "Avarie",

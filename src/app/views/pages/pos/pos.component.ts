@@ -36,8 +36,8 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-declare var electronPrinter: any;
-declare var etatzPrinter: any;
+// declare var electronPrinter: any;
+// declare var etatzPrinter: any;
 import {
   Column,
   GridOption,
