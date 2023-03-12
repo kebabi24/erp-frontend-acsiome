@@ -1249,9 +1249,7 @@
                         Type de consommation
                       </th>
                       <th class="text-start text-gray-900 min-w-50px">Table</th>
-                      <th class="text-start text-gray-900 min-w-150px">
-                        Date et heure
-                      </th>
+
                       <th class="text-start text-gray-900 min-w-150px">
                         Total
                       </th>
@@ -1269,35 +1267,96 @@
                   <!--begin::Table body-->
                   <tbody class="fw-bold text-gray-900">
                     <tr *ngFor="let order of ordersHistory">
-                      <td>
+                      <td
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <h1>{{ order.order_code }}</h1>
                       </td>
-                      <td class="text-start">
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <h1>{{ order.customer }}</h1>
                       </td>
-                      <td class="text-start">
-                        <h1 href="#" class="text-gray-900 text-hover-primary">
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
+                        <h1 class="text-gray-900 text-hover-primary">
                           {{ order.order_emp }}
                         </h1>
                       </td>
-                      <td class="text-start">
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <h1>{{ order.site_loc }}</h1>
                       </td>
-                      <td class="text-start">
-                        <h1>{{ order.created_date }}</h1>
-                      </td>
-                      <td class="text-start">
+
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <h1>{{ order.total_price }} DA</h1>
                       </td>
-                      <td class="text-start">
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <h1>Non payé</h1>
                       </td>
-                      <td class="text-start">
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <h1 class="badge py-3 px-4 fs-7 badge-light-warning">
                           {{ order.plateforme }}
                         </h1>
                       </td>
-                      <td class="text-start">
+                      <td
+                        class=""
+                        [ngStyle]="{
+                          backgroundColor:
+                            order.order_emp == 'Sur place'
+                              ? '#ffaa15'
+                              : '#ff903c'
+                        }"
+                      >
                         <button
                           type="button"
                           class="btn btn-sm btn-icon btn-light btn-active-light-primary toggle h-50px w-50px"

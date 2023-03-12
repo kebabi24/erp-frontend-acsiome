@@ -291,15 +291,15 @@ export class ListSalesComponent implements OnInit {
       
       {
         id: "parttype",
-        name: "Type",
+        name: "Pain",
         field: "parttype",
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.text,
         grouping: {
           getter: 'parttype',
-          formatter: (g) => `Type : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `Pain : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('ord_qty'),
           new Aggregators.Sum('amt')
@@ -311,15 +311,75 @@ export class ListSalesComponent implements OnInit {
       },
       {
         id: "group",
-        name: "Groupe",
+        name: "Viande",
         field: "group",
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.text,
         grouping: {
           getter: 'group',
-          formatter: (g) => `Groupe : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          formatter: (g) => `Viande : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      // {
+      //   id: "size",
+      //   name: "Viande",
+      //   field: "size",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: true,
+      //   type: FieldType.text,
+      //   grouping: {
+      //     getter: 'size',
+      //     formatter: (g) => `Size : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+      //     aggregators: [
+      //     new Aggregators.Sum('ord_qty'),
+      //     new Aggregators.Sum('amt')
+      //   ],
+      //     aggregateCollapsed: false,
+      //     collapsed: false,
+      //   }
+       
+      // },
+      {
+        id: "promo",
+        name: "Categorie",
+        field: "promo",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        grouping: {
+          getter: 'promo',
+          formatter: (g) => `Categorie : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('ord_qty'),
+          new Aggregators.Sum('amt')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "dsgn_grp",
+        name: "Forme",
+        field: "dsgn_grp",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        grouping: {
+          getter: 'dsgn_grp',
+          formatter: (g) => `Forme : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('ord_qty'),
           new Aggregators.Sum('amt')
@@ -330,7 +390,6 @@ export class ListSalesComponent implements OnInit {
        
       },
       
-      
     ];
 
     this.mvgridOptions = {
@@ -339,7 +398,7 @@ export class ListSalesComponent implements OnInit {
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
-        autoHeight: true,
+        enableAutoResize: true,
         enableSorting: true,
         exportOptions: {
           sanitizeDataExport: true
@@ -428,14 +487,16 @@ export class ListSalesComponent implements OnInit {
     const controls = this.soForm.controls;
     const si_site = controls.site.value;
     
+   
     this.siteService.getByOne({ si_site }).subscribe(
       (res: any) => {
   
         if (!res.data) {
-  
+          if( this.user.usrd_site != "*" ) {
             alert("Site n'existe pas  ")
             controls.site.setValue(null);
             document.getElementById("site").focus();
+          }
           } else {
            if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
             alert("Site n'est pas autorisé pour cet utilisateur ")
@@ -448,6 +509,7 @@ export class ListSalesComponent implements OnInit {
           }
       
       });
+   
   }
   
  

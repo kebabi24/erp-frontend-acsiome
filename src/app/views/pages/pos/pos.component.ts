@@ -124,6 +124,7 @@ export class PosComponent implements OnInit {
   grid18: any;
   gridService18: GridService;
   dataView6: any;
+  dataView4: any;
   angularGrid6: AngularGridInstance;
   grid6: any;
   gridService6: GridService;
@@ -809,9 +810,11 @@ export class PosComponent implements OnInit {
   }
 
   setListOfBrands(so: any) {
+    console.log(so);
     this.showListOfBrands = true;
     this.elem = this.AllProducts.filter(
-      (item) => item.pt_draw === so.code_value
+      (item) =>
+        item.pt_draw === so.code_value && item.pt_group !== "JUS PREPARE"
     );
     console.log(this.elem);
     this.formule = true;
@@ -1416,6 +1419,13 @@ export class PosComponent implements OnInit {
             ? "Table " + this.currentTable
             : null,
       },
+      this.loclocOrder !== "Sur place" && {
+        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+        value:
+          this.loclocOrder !== "Sur place"
+            ? "Numéro client " + this.loy_num
+            : "Numéro client " + 0,
+      },
       this.loclocOrder === "Emporté" && {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
         value: this.loclocOrder === "Emporté" ? "Emporté" : null,
@@ -1831,6 +1841,7 @@ export class PosComponent implements OnInit {
   gridReady4(angularGrid: AngularGridInstance) {
     this.angularGrid4 = angularGrid;
     this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
+    this.dataView4 = angularGrid.dataView;
   }
   gridReady18(angularGrid: AngularGridInstance) {
     this.angularGrid18 = angularGrid;
@@ -2788,6 +2799,7 @@ export class PosComponent implements OnInit {
   angularGridReady18(angularGrid: AngularGridInstance) {
     this.angularGrid18 = angularGrid;
     this.gridObj18 = (angularGrid && angularGrid.slickGrid) || {};
+    this.dataView18 = angularGrid.dataView;
   }
 
   initGrid18() {
