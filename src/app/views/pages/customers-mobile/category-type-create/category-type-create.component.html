@@ -1,0 +1,102 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Catégorie Type'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <div class="alert alert-warning" *ngIf="confirmDelete">
+                <strong>Confirm deleting:</strong> {{alertWarning}}
+                <button   class="btn">Delete</button>
+            </div>
+
+            <form class="form" [formGroup]="categoryTypeForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="5000"
+                >
+                <!-- (close)="onAlertClose($event)" -->
+                    Ce code catégorie type existe deja - ferme <button type="warn" (click)="showCloseButton = false" class="btn">Cliquez ici</button>
+                </kt-alert>
+                <div class="row">
+                    <div class="col-6">
+
+                       
+
+                        <!-- CODE SUB CLUSTER -->
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">Catégorie type code*</label>
+                                <input type="text" formControlName="category_type_code" (change)="onChangeCode()" id="categoryType"
+                                    [className]="categoryTypeForm.controls['category_type_code'].errors && (categoryTypeForm.controls['category_type_code'].dirty || categoryTypeForm.controls['category_type_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="categoryTypeForm.controls['category_type_code'].errors && (categoryTypeForm.controls['category_type_code'].dirty || categoryTypeForm.controls['category_type_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                </div>
+                            </div>  
+                        </div>
+                        <!-- CODE SUB CLUSTER -->
+
+
+                        <!-- DESC CATEGORY TYPE -->
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">Description du catégorie type: *</label>
+                                <input type="text" formControlName="description"
+                                    [className]="categoryTypeForm.controls['description'].errors && (categoryTypeForm.controls['description'].dirty || categoryTypeForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="categoryTypeForm.controls['description'].errors && (categoryTypeForm.controls['description'].dirty || categoryTypeForm.controls['description'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                </div>
+                            </div>
+                        </div>
+                        <!-- DESC CATEGORY TYPE -->
+
+                         <!--  CODE CLUSTER-->
+                         <div class="row">
+                            <div class="form-group col-4">
+                            <label class="form-group">Code du catégorie: *</label>
+                            
+                                <select
+                                    [className]="categoryTypeForm.controls['category_code'].errors && (categoryTypeForm.controls['category_code'].dirty || categoryTypeForm.controls['category_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="category_code"  id="categoryCode">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of categories" [value]="elem.category_code">
+                                        {{elem.category_code}} </option>
+                                    
+                                </select>
+                            
+                             </div> 
+                          </div> 
+                        <!--  CODE CLUSTER-->
+
+                        
+                    </div>
+                  
+                 </div> 
+            </form>
+
+            <br><br><br><br>
+            <div class="row">
+                <!-- <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter visitlist</button> -->
+                <br><br>
+                <span>List of Categories Types</span>
+                <angular-slickgrid class="col-12" 
+                    gridHeight="400" 
+                    gridWidth   ="900" 
+                    gridId="gridS" 
+                    [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    [gridOptions]="gridOptions" 
+                    [dataset]="dataset">
+                </angular-slickgrid>
+            
+            </div>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

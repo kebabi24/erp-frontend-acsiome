@@ -1,0 +1,451 @@
+import { Component, OnInit, OnChanges } from "@angular/core"
+import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
+
+// Angular slickgrid
+import {
+    Column,
+    GridOption,
+    Formatter,
+    Editor,
+    Editors,
+    AngularGridInstance,
+    GridService,
+    FieldType,
+    Formatters,
+    OnEventArgs,
+} from "angular-slickgrid"
+import { FormGroup, FormBuilder, Validators } from "@angular/forms"
+import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
+import { ActivatedRoute, Router } from "@angular/router"
+import { MenuMobileConfig } from '../../../../core/_config/menuMobile.config'
+
+// Layout
+import {
+    SubheaderService,
+    LayoutConfigService,
+} from "../../../../core/_base/layout"
+// CRUD
+import {
+    LayoutUtilsService,
+    TypesUtilsService,
+    MessageType,
+} from "../../../../core/_base/crud"
+import { MatDialog } from "@angular/material/dialog"
+import { IActionMapping, ITreeOptions, TREE_ACTIONS } from '@circlon/angular-tree-component';
+
+
+import { CustomerMobileService   , ItemService} from "../../../../core/erp"
+import { takeUntil } from "rxjs/operators"
+import { ProductPage } from "src/app/core/erp/_models/product-page.model"
+
+const actionMapping: IActionMapping = {
+    mouse: {
+      click: (tree, node, $event) => {
+        console.log(node);
+        $event.shiftKey
+          ? TREE_ACTIONS.TOGGLE_ACTIVE_MULTI(tree, node, $event)
+          : TREE_ACTIONS.TOGGLE_ACTIVE(tree, node, $event);
+      }
+    }
+  };
+@Component({
+    selector: "kt-product-page-create",
+    templateUrl: "./product-page-create.component.html",
+    styleUrls: ["./product-page-create.component.scss"],
+})
+export class ProductPageCreateComponent implements OnInit {
+    productPage: ProductPage
+    productPageForm: FormGroup
+    hasFormErrors = false
+    isExist = false
+    loadingSubject = new BehaviorSubject<boolean>(true)
+    loading$: Observable<boolean>
+    confirmDelete = false
+
+    // grid stuff
+    dataset: any[] = []
+    columnDefinitions: Column[] = []
+    gridOptions: GridOption = {}
+    gridObj: any
+    angularGrid: AngularGridInstance
+    gridService: GridService
+    message: any
+    column : Column
+    grid: any
+    dataView: any
+    selectedRow: any
+    isSelected = false
+    alertWarning: any
+    productCodes : any [] = []
+    
+   
+    constructor(
+        config: NgbDropdownConfig,
+        private profileFB: FormBuilder,
+        private activatedRoute: ActivatedRoute,
+        private router: Router,
+        public dialog: MatDialog,
+        private layoutUtilsService: LayoutUtilsService,
+        private itemService : ItemService,
+        private customerMobileService : CustomerMobileService
+    ) {
+        config.autoClose = true
+        this.prepareGrid() 
+       
+    }
+    gridReady(angularGrid: AngularGridInstance) {
+      this.angularGrid = angularGrid;
+      this.dataView = angularGrid.dataView;
+      this.grid = angularGrid.slickGrid;
+      this.gridService = angularGrid.gridService;
+    }
+    ngOnInit(): void {
+        this.loading$ = this.loadingSubject.asObservable()
+        this.loadingSubject.next(true)
+        this.createForm()
+    }
+ 
+
+    //create form
+    createForm() {
+        this.loadingSubject.next(false)
+
+        this.productPage = new ProductPage()
+        this.productPageForm = this.profileFB.group({
+          product_page_code: [this.productPage.product_page_code, Validators.required],
+          description: [this.productPage.description, Validators.required],
+        })
+    }
+  
+    reset() {
+        this.productPage = new ProductPage()
+        this.createForm()
+        this.hasFormErrors = false
+    }
+
+
+    onChangeCode() {
+        const controls = this.productPageForm.controls
+        const product_page_code = controls.product_page_code.value
+        this.itemService.getProductPageByCode({product_page_code : product_page_code}).subscribe(
+            (res: any) => {
+              console.log("response " + Object.keys(res.data));
+           
+              if (res.data.productPage) {
+                alert("Ce code cluster existe déjà")
+                this.isExist = true
+                document.getElementById("productPageCode").focus();
+                controls.description.disable()
+              } else {
+                controls.description.enable()
+              }
+                   
+        })
+    
+    }
+
+      angularGridReady(angularGrid: AngularGridInstance) {
+        this.angularGrid = angularGrid;
+          this.dataView = angularGrid.dataView;
+          this.grid = angularGrid.slickGrid;
+      
+          // if you want to change background color of Duration over 50 right after page load,
+          // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
+          this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
+          this.grid.invalidate();
+          this.grid.render();
+      }
+    
+
+    updateItemMetadata(previousItemMetadata: any) {
+        const newCssClass = 'highlight-bg';
+        return (rowNumber: number) => {
+          const item = this.dataView.getItem(rowNumber);
+          let meta = {
+            cssClasses: ''
+          };
+          if (typeof previousItemMetadata === 'object') {
+            meta = previousItemMetadata(rowNumber);
+          }
+      
+          if (meta && item && item.etat_service) {
+            const state = item.etat_service;
+            if (state === "true") {
+              meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
+            }
+          }
+      
+          return meta;
+        };
+    }
+
+    arrayRemove(arr, value) { 
+    
+        return arr.filter(function(ele){ 
+            return ele != value; 
+        });
+    }
+
+    prepareGrid() {
+        
+        this.itemService.getAll().subscribe(
+          (response: any) => {
+            this.dataset = response.data
+            this.dataView.setItems(this.dataset)
+          },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+        )
+
+
+        this.columnDefinitions = [
+          {
+            id: 'select',
+            field: "pt_part",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
+            formatter: Formatters.checkmark,
+            
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              // this.confirmDelete = true
+              // console.log(args.dataContext.pt_part)
+              const product_code = args.dataContext.pt_part
+              // this.alertWarning = `Clicked: ${args.dataContext.pt_part}`;
+              // this.deleteCluster(args.dataContext.id)
+              // this.dataset = this.dataset.filter(function(value, index, arr){ 
+              //   return value.id != args.dataContext.id;
+              // })
+              // this.dataView.setItems(this.dataset)
+              // this.addToDeletedIds(args.dataContext.id)
+              
+              if(!this.productCodes.includes(product_code)){
+               this.productCodes.push(product_code)
+              }else{
+                this.productCodes = this.arrayRemove(this.productCodes,product_code)
+              }
+              console.log(this.productCodes)
+            }
+            
+          },
+           
+            {
+                id: "id",
+                name: "id",
+                field: "id",
+                sortable: true,
+                minWidth: 80,
+                maxWidth: 80,
+            },
+            {
+                id: "pt_part",
+                name: "Code Produit",
+                field: "pt_part",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "pt_desc1",
+                name: "Deescription",
+                field: "pt_desc1",
+                sortable: true,
+                filterable: true,
+                width: 200,
+                type: FieldType.string,
+            },
+            {
+                id: "pt_um",
+                name: "UM",
+                field: "pt_um",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+              id: "pt_prod_line",
+              name: "Ligne Prod",
+              field: "pt_prod_line",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "pt_part_type",
+              name: "Type",
+              field: "pt_part_type",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "pt_draw",
+              name: "Classe",
+              field: "pt_draw",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            
+            {
+              id: "pt_group",
+              name: "Groupe",
+              field: "pt_group",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "pt_promo",
+              name: "Grp Promo",
+              field: "pt_promo",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "pt_dsgn_grp",
+              name: "Etude",
+              field: "pt_dsgn_grp",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "pt_site",
+              name: "Site",
+              field: "pt_site",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "pt_loc",
+              name: "Emplacement",
+              field: "pt_loc",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+        ]
+  
+        this.gridOptions = {
+            enableSorting: true,
+            enableCellNavigation: true,
+            enableExcelCopyBuffer: true,
+            enableFiltering: true,
+            autoEdit: false,
+            autoHeight: false,
+            frozenColumn: 0,
+            frozenBottom: true,
+            enableRowSelection: true,
+            enableCheckboxSelector: true,
+            // multiSelect: false,
+            rowSelectionOptions: {
+              // True (Single Selection), False (Multiple Selections)
+              selectActiveRow: false
+            },
+        }
+  
+        
+    }
+      
+
+    
+
+    // save data
+    onSubmit() {
+        this.hasFormErrors = false
+        const controls = this.productPageForm.controls
+
+        /** check form */
+        if (this.productPageForm.invalid) {
+            Object.keys(controls).forEach((controlName) =>
+                controls[controlName].markAsTouched()
+            )
+
+            this.hasFormErrors = true
+            return
+        }
+
+        // tslint:disable-next-line:prefer-const
+        let productPage = this.prepareProductPage()
+         this.addproductPage(productPage)
+    }
+
+
+    /**
+     * Returns object for saving
+     */
+
+
+    prepareProductPage(): ProductPage {
+        const controls = this.productPageForm.controls
+        const _product_page= new ProductPage()
+        _product_page.product_page_code = controls.product_page_code.value
+        _product_page.description = controls.description.value
+        
+
+        return _product_page
+    }
+
+
+
+    /**
+     * Add profile
+     *
+     * @param _productPage: ClusterModel
+     */
+    addproductPage(_productPage: ProductPage ) {
+        
+        this.loadingSubject.next(true)
+        this.itemService.createProductPage({ productPage:_productPage},{productCodes : this.productCodes}).subscribe(
+            (reponse) => {
+              // this.dataView.setItems(this.dataset)
+              this.reset()
+              this.productPage = new ProductPage()
+              this.createForm()
+              this.hasFormErrors = false
+            },
+            (error) => {
+                this.layoutUtilsService.showActionNotification(
+                    "Erreur verifier les informations",
+                    MessageType.Create,
+                    10000,
+                    true,
+                    true
+                )
+                this.loadingSubject.next(false)
+            },
+            () => {
+                this.layoutUtilsService.showActionNotification(
+                    "Page produits ajout avec succès",
+                    MessageType.Create,
+                    10000,
+                    true,
+                    true
+                )
+                this.loadingSubject.next(false)
+                this.router.navigateByUrl("/articles/page")
+            }
+        )
+    }
+
+ 
+
+    /**
+     * Go back to the list
+     *
+     */
+    goBack() {
+        this.loadingSubject.next(false)
+        const url = `/`
+        this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+    }
+    
+    
+}

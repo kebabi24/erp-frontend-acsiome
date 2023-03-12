@@ -1,0 +1,84 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'ajouter spécification standard'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="specificationForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce Code existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">code  document: *</label>
+                        <input type="text" (change)="onChangeCode()"
+                        [className]="specificationForm.controls['doc_code'].errors && (specificationForm.controls['doc_code'].dirty || specificationForm.controls['doc_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="doc_code">
+                            <div *ngIf="specificationForm.controls['doc_code'].errors && (specificationForm.controls['doc_code'].dirty || specificationForm.controls['doc_code'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                     </div>
+
+                     <div class="form-group col-6">
+                        <label class="form-group">description document:</label>
+                        <input type="text"
+                        [className]="specificationForm.controls['doc_desc'].errors && (specificationForm.controls['doc_desc'].dirty || specificationForm.controls['doc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="doc_desc">
+                    
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">date de validité: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input class="form-control form-control-sm form-control-solid" formControlName="validity_date"
+                                placeholder="jj-mm-aaaa" name="tr_rcp_date1" ngbDatepicker f
+                                #tr_rcp_date1="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-abracadabra" (click)="tr_rcp_date1.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+
+                
+
+
+             
+
+            </form>
+            <br>
+            <br>
+            <br>
+            <div class="row">
+                <button type="button" (click)="addNewItem()" class="btn btn-success btn-sm mr-2 col-3">ajouter un élément </button>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+                <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
+                            gridId="grid" 
+                            [columnDefinitions]="columnDefinitions"
+                            (onAngularGridCreated)="angularGridReady($event)"
+                            [gridOptions]="gridOptions" 
+                            [dataset]="details"
+                            >
+                </angular-slickgrid>
+            </div>
+
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

@@ -19,9 +19,13 @@ import { MobileMenuComponent } from "./mobile-menu/mobile-menu.component";
 import { PosComponent } from "./pos/pos.component";
 import { PosVisitorComponent } from "./pos-visitor/pos-visitor.component";
 import { RevenueTransferComponent } from "./revenue-transfer/revenue-transfer.component";
+import { MobileSettingsComponent } from './mobile-settings/mobile-settings.component';
+import { SupervisionComponent } from './supervision/supervision.component';
+
+
 
 @NgModule({
-  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent],
+  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent , MobileSettingsComponent,SupervisionComponent],
   exports: [],
   imports: [
     CommonModule,
@@ -35,6 +39,7 @@ import { RevenueTransferComponent } from "./revenue-transfer/revenue-transfer.co
     UserManagementModule,
     ProvidersModule,
     TreeModule,
+    
   ],
   providers: [],
 })

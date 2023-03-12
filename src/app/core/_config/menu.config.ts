@@ -91,6 +91,27 @@ export class MenuConfig {
             },
           ],
         },
+          {
+            title: "Paramétrages Mobile",
+            bullet: "dot",
+            icon: "flaticon2-shopping-cart",
+            root: true,
+            submenu: [
+                {
+                    title: "Résultat de la visite",
+                    page: "/mobile-settings/visit-result",
+                },
+                {
+                    title: "Méthode de paiement",
+                    page: "/mobile-settings/payment-method",
+                },
+                {
+                    title: "Motif d'annulation",
+                    page: "/mobile-settings/cancelation-reason",
+                },
+                
+            ],
+        },
 
         {
           title: "Rapports",
@@ -281,6 +302,21 @@ export class MenuConfig {
                 },
               ],
             },
+
+            // NEW
+            {
+              title: "Parametrage de Qualité",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-settings",
+              submenu: [
+                {
+                  title: "ajouter spécification standard",
+                  page: "/inventory-settings/create-standard-specification",
+                },   
+              ],
+            },
+
             {
               title: "Parametrage Comptabilite",
               root: true,
@@ -383,6 +419,10 @@ export class MenuConfig {
             },
           ],
         },
+
+
+
+
         {
           title: "Gestion des Fournisseurs",
           bullet: "dot",
@@ -457,6 +497,22 @@ export class MenuConfig {
               title: "Ajouter Clients",
               page: "/customers-mobile/create-customer-mobile",
             },
+            {
+                title: "Ajouter Cluster",
+                page: "/customers-mobile/cluster-create",
+             },
+            {
+                title: "Ajouter Category",
+                page: "/customers-mobile/category-create",
+            },
+            {
+                title: "Ajouter Sub Cluster",
+                page: "/customers-mobile/cluster-sub-create",
+            },
+            {
+                title: "Ajouter Category Type",
+                page: "/customers-mobile/category-type-create",
+           },
           ],
         },
         {
@@ -493,8 +549,30 @@ export class MenuConfig {
               title: "MAINT Cout Article",
               page: "/articles/edit-cost",
             },
+            {
+              title: "Créer une page de produits",
+              page: "/articles/page",
+          },
           ],
         },
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon2-box-1",
+          root: true,
+          submenu: [
+              {
+                  title: "Validation des demandes de chargement",
+                  page: "/supervision/validate-charge-demande",
+                },
+                {
+                    title: "Transfert demandes de chargement à la livraison",
+                    page: "/supervision/transfer-charge-demande-delivery",
+                },
+              
+            ],
+        },
+
 
         {
           title: "Gestion Stock",
@@ -502,6 +580,10 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon2-delivery-truck",
           submenu: [
+            {
+              title: "Chargement Des Vans",
+              page: "/inventory-management/loading-vans",
+            },
             {
               title: "Réception OA",
               page: "/inventory-transaction/po-receip",
@@ -1061,6 +1143,10 @@ export class MenuConfig {
                 {
                   title: "Ajouter un profil mobile",
                   page: "/profiles-mobile/create-profile-mobile",
+                },
+                {
+                   title: "Affection des pages produits",
+                   page: "/profiles-mobile/assign-profile-products-pages",
                 },
                 {
                   title: "liste des profiles mobile",

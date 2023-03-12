@@ -1,0 +1,96 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Cluster'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        
+        <div class="alert alert-warning" *ngIf="confirmDelete">
+            <strong>Confirm deleting:</strong> {{alertWarning}}
+            <button   class="btn">Delete</button>
+        </div>
+
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="clusterForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="5000"
+                >
+   
+                Ce code cluster existe deja - ferme <button type="warn" (click)="showCloseButton = false" class="btn">Cliquez ici</button>
+            </kt-alert>
+            <div class="row">
+                <div class="col-6">
+
+            
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="form-group">code cluster: *</label>
+                    <input type="text" formControlName="cluster_code" (change)="onChangeCode()" id="cluster"
+                        [className]="clusterForm.controls['cluster_code'].errors && (clusterForm.controls['cluster_code'].dirty || clusterForm.controls['cluster_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                    <div *ngIf="clusterForm.controls['cluster_code'].errors && (clusterForm.controls['cluster_code'].dirty || clusterForm.controls['cluster_code'].touched) "
+                        class="invalid-feedback">Ce Champs est obligatoire
+                    </div>
+                </div>  
+            </div>
+           
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="form-group">description du cluster: *</label>
+                    <input type="text" formControlName="description"
+                        [className]="clusterForm.controls['description'].errors && (clusterForm.controls['description'].dirty || clusterForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                    <div *ngIf="clusterForm.controls['description'].errors && (clusterForm.controls['description'].dirty || clusterForm.controls['description'].touched) "
+                        class="invalid-feedback">Ce Champs est obligatoire
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+      
+     </div> 
+            </form>
+            
+
+            <br><br>
+            <div class="row">
+
+                
+                <!-- <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter visitlist</button> -->
+                <br><br>
+                <span>List of Clusters</span>
+                <angular-slickgrid class="col-12" 
+                
+                    gridHeight="400" 
+                    gridWidth="900"
+                    gridId="gridS" 
+                    [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    [gridOptions]="gridOptions" 
+                    [dataset]="dataset">
+                </angular-slickgrid>
+            
+            </div>
+        </div>
+
+        
+        
+        
+    </kt-portlet-body>
+</kt-portlet>
+
+
