@@ -48,6 +48,10 @@ import { CustomersMobileComponent } from './customers-mobile.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { AddresseMobileService, CustomerMobileService } from '../../../core/erp';
 import { EditCustomerMobileComponent } from './edit-customer-mobile/edit-customer-mobile.component';
+import { ClusterCreateComponent } from './cluster-create/cluster-create.component';
+import { CategoryCreateComponent } from './category-create/category-create.component';
+import { SubClusterCreateComponent } from './cluster-sub-create/cluster-sub-create.component';
+import { CategoryTypeCreateComponent } from './category-type-create/category-type-create.component';
 
 const routes: Routes = [
           {
@@ -62,6 +66,22 @@ const routes: Routes = [
             path: "edit-customer-mobile/:id",
             component: EditCustomerMobileComponent,
         },
+        {
+            path :"cluster-create",
+            component : ClusterCreateComponent,
+          },
+          {
+            path :"category-create",
+            component : CategoryCreateComponent,
+          },
+          {
+            path :"cluster-sub-create",
+            component : SubClusterCreateComponent,
+          },
+          {
+            path :"category-type-create",
+            component : CategoryTypeCreateComponent,
+          }
 ]
 @NgModule({
   declarations: [
@@ -69,6 +89,10 @@ const routes: Routes = [
         ListCustomerMobileComponent,
         CreateCustomerMobileComponent,
         EditCustomerMobileComponent,
+        ClusterCreateComponent,
+        CategoryCreateComponent,
+        SubClusterCreateComponent,
+        CategoryTypeCreateComponent,
   ],
   imports: [
         CommonModule,

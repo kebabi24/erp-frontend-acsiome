@@ -296,7 +296,26 @@ export class ListRctComponent implements OnInit {
             type: FieldType.string,
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
           }, 
+          {
+            id: "chr01",
+            name: "Caisse",
+            field: "chr01",
+            sortable: true,
+            filterable: true,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            type: FieldType.string,
+            grouping: {
+              getter: 'chr01',
+              formatter: (g) => `Caisse: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                new Aggregators.Sum('qty'),
+                new Aggregators.Sum('amt'),
+                ],
+              aggregateCollapsed: false,
           
+              collapsed: false,
+            }
+          }, 
           {
             id: "tr_qty_loc",
             name: "Qte",

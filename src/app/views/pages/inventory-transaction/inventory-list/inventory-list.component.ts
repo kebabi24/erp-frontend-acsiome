@@ -100,16 +100,16 @@ export class InventoryListComponent implements OnInit {
 
       this.columnDefinitions = [
           
-          {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
+          // {
+          //   id: "id",
+          //   field: "id",
+          //   excludeFromColumnPicker: true,
+          //   excludeFromGridMenu: true,
+          //   excludeFromHeaderMenu: true,
     
-            minWidth: 50,
-            maxWidth: 50,
-          },
+          //   minWidth: 50,
+          //   maxWidth: 50,
+          // },
           {
             id: "ld_site",
             name: "Site",
@@ -217,22 +217,22 @@ export class InventoryListComponent implements OnInit {
               collapsed: false,
             }
           }, 
-          {
-            id: "ld_date",
-            name: "Date",
-            field: "ld_date",
-            sortable: true,
-            filterable: true,
-            type: FieldType.date,
-            formatter: Formatters.dateIso ,
-            filter: { model: Filters.compoundDate },
-            grouping: {
-              getter: 'ld_date',
-              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
+          // {
+          //   id: "ld_date",
+          //   name: "Date",
+          //   field: "ld_date",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.date,
+          //   formatter: Formatters.dateIso ,
+          //   filter: { model: Filters.compoundDate },
+          //   grouping: {
+          //     getter: 'ld_date',
+          //     formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregateCollapsed: false,
+          //     collapsed: false,
+          //   }
+          // },
           
           {
             id: "ld_expire",
@@ -287,7 +287,7 @@ export class InventoryListComponent implements OnInit {
           preHeaderPanelHeight: 40,
           enableFiltering: true,
           enableSorting: true,
-          autoHeight: true,
+          enableAutoResize: true,
           exportOptions: {
             sanitizeDataExport: true
           },

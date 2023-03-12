@@ -256,7 +256,7 @@ export class PrintPoComponent implements OnInit {
     this.reset();
     this.createForm();
     this.createtotForm();
-    this.calculatetot();
+    //this.calculatetot();
   }
 
   //create form
@@ -482,7 +482,7 @@ export class PrintPoComponent implements OnInit {
         });
      
         }
-        this.calculatetot();
+        //this.calculatetot();
       })
      
       
@@ -664,6 +664,7 @@ export class PrintPoComponent implements OnInit {
       autoHeight: false,
       frozenColumn: 0,
       frozenBottom: true,
+
       enableRowSelection: true,
       enableCheckboxSelector: true,
       checkboxSelector: {
@@ -681,6 +682,13 @@ export class PrintPoComponent implements OnInit {
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true,
+      },
+      presets: {
+       
+        sorters: [
+          { columnId: 'po_nbr', direction: 'DESC' },
+          { columnId: 'po_ord_date', direction: 'DESC' }
+        ],
       },
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;
@@ -713,11 +721,21 @@ export class PrintPoComponent implements OnInit {
     const controlss = this.poForm.controls 
     console.log("pdf")
     var doc = new jsPDF();
-   
+    var site = ( this.prhServer.po_site != null) ?  this.prhServer.po_site : ""
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
-    img.src = "./assets/media/logos/company.png";
-    doc.addImage(img, 'png', 5, 5, 210, 30)
+    img.src = "./assets/media/logos/logoabr.png";
+    doc.addImage(img, 'png', 170, 5, 30, 30)
+    doc.setFontSize(9);
+    doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
+    doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
+    doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
+    doc.text('Alger. Algérie', 10 , 25 );
+    doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
+    doc.setFontSize(14);
+    doc.text('ABRACADABRA', 135 , 30 );
+    doc.line(10, 35, 200, 35);
+
     doc.setFontSize(12);
     doc.text( 'Bon Commande N° : ' + nbr  , 70, 40);
     doc.setFontSize(8);
@@ -730,7 +748,7 @@ export class PrintPoComponent implements OnInit {
         if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
         if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
     
-    doc.text('Site       : ' + this.prhServer.po_site, 120 , 50)
+    doc.text('Site       : ' + site, 120 , 50)
         
     doc.line(10, 85, 200, 85);
     doc.line(10, 90, 200, 90);
@@ -759,8 +777,18 @@ export class PrintPoComponent implements OnInit {
       
       if ((j % 30 == 0) && (j != 0) ) {
   doc.addPage();
-        doc.addImage(img, 'png', 5, 5, 210, 30)
-        doc.setFontSize(12);
+  img.src = "./assets/media/logos/logoabr.png";
+  doc.addImage(img, 'png', 170, 5, 30, 30)
+  doc.setFontSize(9);
+  doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
+  doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
+  doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
+  doc.text('Alger. Algérie', 10 , 25 );
+  doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
+  doc.setFontSize(14);
+  doc.text('ABRACADABRA', 135 , 30 );
+  doc.line(10, 35, 200, 35);
+    doc.setFontSize(12);
         doc.text( 'Commande N° : ' + nbr  , 70, 40);
         doc.setFontSize(8);
         console.log(this.provider.ad_misc2_id)
@@ -771,7 +799,7 @@ export class PrintPoComponent implements OnInit {
         if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
         if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
         if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
-        doc.text('Site       : ' + this.prhServer.po_site, 120 , 50)
+        doc.text('Site       : ' + site, 120 , 50)
       
         doc.line(10, 85, 200, 85);
         doc.line(10, 90, 200, 90);

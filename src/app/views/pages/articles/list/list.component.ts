@@ -116,6 +116,7 @@ export class ListComponent implements OnInit {
         type: FieldType.string,
         minWidth: 100,
       },
+     
       {
         id: "pt_desc1",
         name: "Description",

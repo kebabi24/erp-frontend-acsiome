@@ -10,6 +10,7 @@ import { environment } from "../../../../environments/environment"
 
 const API_URL_TAG = environment.apiUrl + "/tags"
 const API_URL = environment.apiUrl + "/inventory-transactions"
+const API_URL_2 = environment.apiUrl + "/load-request"
 
 @Injectable()
 export class InventoryManagementService {
@@ -81,6 +82,36 @@ export class InventoryManagementService {
     public inventoryOfSecurity(data) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL +'/inventoryofsecurity',data, { headers: httpHeaders })
+    }
+
+    public getRoles(upper_role_code : any ) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/findAllRoles/${upper_role_code}`, { headers: httpHeaders })
+    }
+
+    public getProductLots(ld_loc : any , ld_site : any , product_code:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/findLostProduct/`, {ld_loc:ld_loc,ld_site:ld_site,product_code:product_code},{ headers: httpHeaders })
+    }
+
+    public getLoadRequests(role_code : any ) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/findAllLoadRequests10/${role_code}`, { headers: httpHeaders })
+    }
+
+    public findLoadRequestLines(load_request_code : any ) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/findLoadRequestLines/${load_request_code}`, { headers: httpHeaders })
+    }
+
+    public getLoadRequestData(load_request_code : any ) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/findLoadRequestDataV2/${load_request_code}`, { headers: httpHeaders })
+    }
+
+    public createLoadRequestDetails(details : any, lines:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createLoadRequestDetails/`, {load_request_details:details,load_request_lines:lines},{ headers: httpHeaders })
     }
 }
 

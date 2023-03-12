@@ -220,9 +220,10 @@ curr: String;
                     params:{decimalPlaces:2}
 
                 },
-                onCellChange : (e: Event, args: OnEventArgs)=>{
-                  this.total += (args.dataContext.vpd_q_qty * args.dataContext.vpd_q_price )
-                }
+                // onCellChange : (e: Event, args: OnEventArgs)=>{
+                // //   this.total += (args.dataContext.vpd_q_qty * args.dataContext.vpd_q_price )
+                // this.calculatetot()
+                // }
             },
             {
                 id: "vpd_um",
@@ -245,9 +246,9 @@ curr: String;
                     params:{decimalPlaces:2}
 
                 },
-                onCellChange : (e: Event, args: OnEventArgs)=>{
-                  this.total +=  (args.dataContext.vpd_q_qty * args.dataContext.vpd_q_price)
-                }
+                // onCellChange : (e: Event, args: OnEventArgs)=>{
+                //     this.calculatetot()
+                // }
             },
             {
                 id: "vpd_mfgr_part",
@@ -418,6 +419,7 @@ curr: String;
     prepareReq(): any {
         const controls = this.vpForm.controls
         const _vp = new VendorProposal()
+        this.calculatetot()
         _vp.vp_rqm_nbr = controls.vp_rqm_nbr.value
         _vp.vp_nbr = controls.vp_nbr.value
         _vp.vp_vend = controls.vp_vend.value
@@ -430,7 +432,7 @@ curr: String;
         _vp.vp_pay_meth = controls.vp_pay_meth.value
         _vp.vp_vend_lead = controls.vp_vend_lead.value
         _vp.vp_comment = controls.vp_comment.value
-        _vp.vp_total_price = round(this.total *  Number(controls.vp_ex_rate2.value) / Number(controls.vp_ex_rate.value),2)
+        _vp.vp_total_price = this.calculatetot()
         _vp.vp_curr = controls.vp_curr.value
         _vp.vp_ex_rate = controls.vp_ex_rate.value
         _vp.vp_ex_rate2 = controls.vp_ex_rate2.value
@@ -1083,4 +1085,17 @@ curr: String;
         this.prepareGridcurr();
         this.modalService.open(content, { size: "lg" });
       }
+    
+      calculatetot(){
+       
+         let ttc = 0
+         for (var i = 0; i < this.dataset.length; i++) {
+           console.log(this.dataset[i]  )
+           ttc += round((this.dataset[i].vpd_q_price  *  this.dataset[i].vpd_q_qty),2) 
+           return ttc
+         }
+      
+      }
+      
     }
+

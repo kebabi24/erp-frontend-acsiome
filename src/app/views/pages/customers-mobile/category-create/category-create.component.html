@@ -1,0 +1,81 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Catégorie'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        <div class="alert alert-warning" *ngIf="confirmDelete">
+            <strong>Confirm deleting:</strong> {{alertWarning}}
+            <button   class="btn">Delete</button>
+        </div>
+
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="categoryForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="5000"
+                >
+                <!-- (close)="onAlertClose($event)" -->
+                    Ce code catégorie existe deja - ferme <button type="warn" (click)="showCloseButton = false" class="btn">Cliquez ici</button>
+                </kt-alert>
+                <div class="row">
+                    <div class="col-6">
+
+                        <!-- CODE CLUSTER -->
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">Catégorie code: *</label>
+                                <input type="text" formControlName="category_code" (change)="onChangeCode()" id="category"
+                                    [className]="categoryForm.controls['category_code'].errors && (categoryForm.controls['category_code'].dirty || categoryForm.controls['category_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="categoryForm.controls['category_code'].errors && (categoryForm.controls['category_code'].dirty || categoryForm.controls['category_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                </div>
+                            </div>  
+                        </div>
+                        <!-- CODE CLUSTER -->
+
+
+                        <!-- NOM CLUSTER -->
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">Description du catégorie: *</label>
+                                <input type="text" formControlName="description"
+                                    [className]="categoryForm.controls['description'].errors && (categoryForm.controls['description'].dirty || categoryForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="categoryForm.controls['description'].errors && (categoryForm.controls['description'].dirty || categoryForm.controls['description'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                </div>
+                            </div>
+                        </div>
+                        <!-- NOM CLUSTER -->
+                    </div>
+                  
+                 </div> 
+            </form>
+
+            <br><br><br><br>
+            <div class="row">
+                <!-- <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter visitlist</button> -->
+                <br><br>
+                <span>Liste des catégories</span>
+                <angular-slickgrid class="col-12" 
+                    gridHeight="400" 
+                    gridWidth="900" 
+                    gridId="gridS" 
+                    [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    [gridOptions]="gridOptions" 
+                    [dataset]="dataset">
+                </angular-slickgrid>
+            
+            </div>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

@@ -74,7 +74,15 @@ error = false;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+  
+  mvangularGrid: AngularGridInstance;
+  mvgrid: any;
+  mvgridService: GridService;
+  mvdataView: any;
+  mvcolumnDefinitions: Column[];
+  mvgridOptions: GridOption;
   mvdataset: any[];
+
 
   // grid options
 
@@ -119,10 +127,23 @@ error = false;
     this.gridService = angularGrid.gridService;
   }
 
-  
+  mvgridReady(angularGrid: AngularGridInstance) {
+    this.mvangularGrid = angularGrid;
+    this.mvdataView = angularGrid.dataView;
+    this.mvgrid = angularGrid.slickGrid;
+    this.mvgridService = angularGrid.gridService;
+  }
+
   initGrid() {
     this.columnDefinitions = [
-      
+      // {
+      //   id: "rank",
+      //   name: "rank",
+      //   field: "rank",
+      //   sortable: true,
+      //   width: 150,
+      //   filterable: true,
+      // },
      /* {
         id: "id",
         name: "Ligne",
@@ -175,6 +196,23 @@ error = false;
         
       },
     
+     
+  
+     
+    
+      {
+        id: "inv",
+        name: "Inventaire",
+        field: "inv",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
       {
         id: "achat",
         name: "Achat",
@@ -188,11 +226,10 @@ error = false;
        
       
       },
-    
       {
-        id: "inv",
-        name: "Inventaire",
-        field: "inv",
+        id: "cnt",
+        name: "Inventaire Fin ",
+        field: "cnt",
         sortable: true,
         minWidth: 100,
         filterable: false,
@@ -292,14 +329,222 @@ error = false;
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
       },
-      presets: {
-        sorters: [
-          { columnId: 'famille', direction: 'DESC' }
-        ],
-      },
+      // presets: {
+      //   sorters: [
+      //     { columnId: 'rank', direction: 'ASC' }
+      //   ],
+      // },
+        
     };
 
     this.dataset = [];
+   
+  }
+
+
+  mvinitGrid() {
+    this.mvcolumnDefinitions = [
+      // {
+      //   id: "borank",
+      //   name: "rank",
+      //   field: "borank",
+      //   sortable: true,
+      //   width: 150,
+      //   filterable: true,
+      // },
+     /* {
+        id: "id",
+        name: "Ligne",
+        field: "id",
+        minWidth: 50,
+        maxWidth: 50,
+      },*/
+      {
+        id: "bofamille",
+        name: "Famille",
+        field: "bofamille",
+        sortable: true,
+        width: 100,
+        filterable: true,
+        
+      },
+      // {
+      //   id: "part",
+      //   name: "Article",
+      //   field: "part",
+      //   sortable: true,
+      //   width: 100,
+      //   filterable: true,
+        
+      // },
+      {
+        id: "bodesc",
+        name: "Description",
+        field: "bodesc",
+        sortable: true,
+        width: 150,
+        filterable: true,
+      },
+      {
+        id: "boum",
+        name: "UM",
+        field: "boum",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        
+      },
+      {
+        id: "bopu",
+        name: "PU",
+        field: "bopu",
+        sortable: true,
+        width: 100,
+        filterable: false,
+        
+      },
+      
+      
+      
+      {
+        id: "boinv",
+        name: "Inventaire",
+        field: "boinv",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
+      {
+        id: "bocnt",
+        name: "Inventaire Fin ",
+        field: "bocnt",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
+      {
+        id: "boachat",
+        name: "Achat",
+        field: "boachat",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+       
+      
+      },
+    
+      {
+        id: "boavarie",
+        name: "Avarie",
+        field: "boavarie",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,     
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "boconso",
+        name: "Consomation",
+        field: "boconso",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "bopercent",
+        name: "% Du CA",
+        field: "bopersent",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.percent,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "bovendue",
+        name: "Vendue",
+        field: "bovendue",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      {
+        id: "boecart",
+        name: "Ecart",
+        field: "boecart",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      
+      {
+        id: "bovecart",
+        name: "Valeur Ecart",
+        field: "bovecart",
+        sortable: true,
+        minWidth: 100,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+      },
+      
+    ];
+
+    this.mvgridOptions = {
+      asyncEditorLoading: false,
+      editable: false,
+      enableFiltering: true,
+      enableColumnPicker: true,
+      enableCellNavigation: false,
+      enableRowSelection: false,
+      enableAutoResize: true,
+      formatterOptions: {
+        
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: false,
+  
+        // Defaults to undefined, minimum number of decimals
+        minDecimal:2,
+        maxDecimal:2,
+  
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+      },
+      presets: {
+        sorters: [
+          { columnId: 'rank', direction: 'ASC' }
+        ],
+      },
+        
+    };
+
+    this.mvdataset = [];
    
   }
   ngOnInit(): void {
@@ -309,12 +554,13 @@ error = false;
    
     this.createForm();
     this.initGrid();
-   
+    this.mvinitGrid();
   }
 
   
 change() {
     this.dataset = []
+    this.mvdataset = []
     const controls = this.poForm.controls
    // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
     const date = controls.calc_date.value
@@ -326,19 +572,21 @@ change() {
     this.inventoryTransactionService.getConsoReport({tr_site: controls.tr_site.value, created_date: date}).subscribe(
       (respo: any) => {   
         this.dataset = respo.data.detail
+        this.mvdataset = respo.data.bodetail
         controls.casans.setValue(respo.data.casansbo)
         controls.caglob.setValue(respo.data.ca)
       
-       console.log(this.dataset)
+       
        this.dataView.setItems(this.dataset);
-        
+       this.mvdataView.setItems(this.mvdataset); 
          },
       (error) => {
           this.dataset = []
+          this.mvdataset= []
       },
       () => {}
   )
-
+  
   }
   //create form
   createForm() {

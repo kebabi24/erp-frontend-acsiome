@@ -48,6 +48,11 @@ export class CRMService {
     return this.http.get(`${API_URL}/methods`, {headers: httpHeaders});
   }
 
+  public getSpecialEventConfig() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/specialEventConfig`, {headers: httpHeaders});
+  }
+
   public getAllProfiles() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/allProfiles`, {headers: httpHeaders});

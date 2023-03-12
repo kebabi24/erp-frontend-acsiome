@@ -1,0 +1,113 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Transfert demandes de chargement à la livraison'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">transfert à la livraison</button>
+
+
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        <div class="example-preview">
+            
+            <!-- *************** FORM ******************* --> 
+            <!-- <div>
+                <form class="form" [formGroup]="validationForm">
+                    <div class="row ">
+                            <div class="col-3">
+                                <label class="form-group">Role Code:</label>
+                                <select 
+                                (change)="onSelectRole($event.target.value)"
+                                name="role_code"
+                                id="role_code"
+                                formControlName="role_code"
+                                class="form-control form-control-sm form-control-solid">
+                                <option value=""></option>
+                                <option *ngFor="let elem of roles" [value]="elem.role_code">
+                                    {{elem.role_code}} </option>
+                                
+                                </select> 
+                            </div>   
+                        </div>
+
+                    
+                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                               <h5>Selected Role : {{role_code}}</h5>
+                            </div>  
+                        </div>
+                    </form>
+                </div> -->
+            <!-- *************** FORM END ******************* -->
+            <!-- *************** RESULTS GRID END ******************* -->
+            <div class="row">
+                <angular-slickgrid class="col-12" 
+                    gridHeight="500" 
+                    gridWidth="1000"
+                    gridId="gridS" 
+                    [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    
+                    [gridOptions]="gridOptions" 
+                    [dataset]="loadRequestData">
+                </angular-slickgrid>
+            </div>
+
+            <!-- *************** RESULTS GRID END ******************* -->
+           
+
+            <!-- MODAL -->
+        <div class="row">
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Load Request Details</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row"> 
+                        <angular-slickgrid class="col-12" gridHeight="300" gridWidth="700"
+                            gridId="gridT" 
+                            [columnDefinitions]="columnDefinitions2"
+                            (onAngularGridCreated)="angularGridReady($event)"
+                            [gridOptions]="gridOptions2" 
+                            [dataset]="loadRequestDetails "
+                            >
+                        </angular-slickgrid>
+                    </div>
+            
+                </div>
+                <div class="modal-footer">
+                    <!-- <button hidden id="detailsGrid" class="btn btn-primary" (click)="open(contentum)"></button> -->
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                </div>
+            </ng-template>
+            <button hidden id="detailsGrid" class="btn btn-primary" (click)="open(content)">Launch demo
+                modal</button>
+        </div>
+        <!-- MODAL END -->
+     
+        </div>
+
+
+        
+
+       
+
+    
+
+  </kt-portlet-body>
+</kt-portlet>

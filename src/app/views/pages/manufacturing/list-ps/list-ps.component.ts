@@ -153,10 +153,8 @@ dataset: any[] = [];
           enableCellNavigation: true,
           enableExcelCopyBuffer: true,
           enableFiltering: true,
-          autoEdit: false,
-          autoHeight: true,
-          frozenColumn: 0,
-          frozenBottom: true,
+          enableAutoResize: true,
+        
           dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
             var val = undefined;
             try {

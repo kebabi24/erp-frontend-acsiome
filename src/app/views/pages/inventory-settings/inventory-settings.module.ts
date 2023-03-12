@@ -60,6 +60,7 @@ import {SiteService,
         InventoryStatusService,
         AccountService,
         ProjectService,
+        QualityControlService,
       EntityService} 
 from '../../../core/erp'
 import { ListLocComponent } from './list-loc/list-loc.component';
@@ -68,10 +69,15 @@ import { ListSiteComponent } from './list-site/list-site.component';
 import { EditSiteComponent } from './edit-site/edit-site.component';
 import { ListStatusComponent } from './list-status/list-status.component';
 import { EditStatusComponent } from './edit-status/edit-status.component'
+import { CreateStrandardSpecificationComponent } from "./create-standard-specification/create-standard-specification.component"
 const routes: Routes = [
   {
     path: 'create-site',
-    component: CreateSiteComponent
+    component:   CreateSiteComponent
+  },
+  {
+    path: 'create-standard-specification',
+    component: CreateStrandardSpecificationComponent
   },
   {
     path: 'list-site',
@@ -119,6 +125,7 @@ const routes: Routes = [
         EditSiteComponent,
         ListStatusComponent,
         EditStatusComponent,
+        CreateStrandardSpecificationComponent
     ],
     imports: [
         CommonModule,
@@ -161,7 +168,8 @@ const routes: Routes = [
         TypesUtilsService,
         LayoutUtilsService,
         InventoryStatusService,
-        ProjectService
+        ProjectService,
+        QualityControlService
     ],
     entryComponents: [
         ActionNotificationComponent,

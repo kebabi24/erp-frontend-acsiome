@@ -242,14 +242,23 @@ error = false;
         },
       },
 
+      // {
+      //   id: "id",
+      //   name: "Ligne",
+      //   field: "id",
+      //   minWidth: 50,
+      //   maxWidth: 50,
+       
+      // },
       {
-        id: "id",
-        name: "Ligne",
-        field: "id",
+        id: "rank",
+        name: "id",
+        field: "rank",
         minWidth: 50,
         maxWidth: 50,
        
       },
+     
       {
         id: "part",
         name: "Article",
@@ -395,6 +404,12 @@ error = false;
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+      },
+      presets: {
+       
+        sorters: [
+          { columnId: 'rank', direction: 'ASC' }
+        ],
       },
     
     };
@@ -576,6 +591,16 @@ error = false;
        
       },
       
+      // {
+      //   id: "type",
+      //   name: "Type",
+      //   field: "type",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   type: FieldType.text,
+       
+      // },
       
     ];
 
@@ -590,6 +615,8 @@ error = false;
       
       // enable the filtering but hide the user filter row since we use our own single filter
       enableFiltering: false,
+      editable: true,
+      autoCommitEdit: true,
       showHeaderRow: false, // hide the filter row (header row)
       autoFitColumnsOnFirstLoad: false,
      

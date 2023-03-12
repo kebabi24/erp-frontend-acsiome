@@ -96,11 +96,19 @@ export class AgendaComponent implements OnInit {
   result_string : String = "";
   special_event_category_display : String = "";
   special_event_category : String = "";
+  newEventIsInfo  : Boolean = false;
+  newEventIsShop  : Boolean = false;
+  newEventIsJob  : Boolean = false;
 
 
   wilayas_communes_data: any = [];
   wilayas: any = [];
   communes: any = [];
+  special_event_config: any = [];
+  info_type: any = [];
+  shop_type: any = [];
+  job_type: any = [];
+  
   
   
 
@@ -137,6 +145,7 @@ export class AgendaComponent implements OnInit {
     this.createNewEventForm()
     this.initCustomerForm()
     this.getWilayasCommunes()
+    //this.getSpecialEventConfig()
     this.init()
   }
   
@@ -864,6 +873,22 @@ export class AgendaComponent implements OnInit {
   }
 
   initSpecialEventPopup(category_code){
+    // info shop job
+    if(category_code == "info"){
+      this.newEventIsInfo = true 
+      this.newEventIsJob = false 
+      this.newEventIsShop = false 
+    }
+    if(category_code == "application"){
+      this.newEventIsInfo = false 
+      this.newEventIsJob = true 
+      this.newEventIsShop = false 
+    }
+    if(category_code == "franchise"){
+      this.newEventIsInfo = false 
+      this.newEventIsJob = false 
+      this.newEventIsShop = true 
+    }
     this.createSpecialEventForm()
     this.getSpecialEventDisplay(category_code) 
     document.getElementById("modal7Button").click();
@@ -1170,6 +1195,42 @@ export class AgendaComponent implements OnInit {
           );
         }
       );
+  }
+
+  getSpecialEventConfig() {
+    this.crmService.getSpecialEventConfig().subscribe(
+      (response) => {
+        if (response["data"] != null) {
+          this.special_event_config = response["data"]
+          this.special_event_config.forEach(config => {
+            console.log(config)
+            if(config.code_fldname =="crm_info_type" ){
+              this.info_type.push(config)
+            }
+            if(config.code_fldname =="crm_shop_type" ){
+              this.shop_type.push(config)
+            }
+            if(config.code_fldname =="crm_job" ){
+              this.job_type.push(config)
+            }
+          }
+          )
+        }
+        console.log(this.info_type)
+        console.log(this.shop_type)
+        console.log(this.job_type)
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification(
+          "Erreur lors de la récupération des données du backend",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+    );
   }
 
 }
