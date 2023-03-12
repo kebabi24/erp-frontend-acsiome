@@ -159,13 +159,10 @@ export { PosCategoryService } from "./_services/pos-categories.service";
 export { CRMService } from "./_services/crm.service";
 export { DeliveryService } from "./_services/delivery.service";
 export { ForcastService } from "./_services/forcast.service";
-<<<<<<< HEAD
 export { LabelService } from "./_services/label.service";
-=======
 export { MobileSettingsService } from "./_services/mobile-settings.service"
 export { LoadRequestService } from "./_services/load-request.service"
 export { QualityControlService } from "./_services/quality-control.service"
->>>>>>> 5f340f934d4e1a34c09c77a79fc84adaa20b423d
 
 export {
   printBc,
