@@ -61,9 +61,11 @@ import {CodeService,
          MesureService, 
          CostSimulationService, 
          InventoryStatusService,
-         TaxeService
+         TaxeService,
+         CustomerMobileService
         } from '../../../core/erp';
 import { EditCostComponent } from './edit-cost/edit-cost.component'
+import { ProductPageCreateComponent } from "./product-page-create/product-page-create.component"
 
 
 const routes: Routes = [
@@ -89,6 +91,10 @@ const routes: Routes = [
                 path: "edit-cost",
                 component: EditCostComponent,
             },
+            {
+                path: "page",
+                component: ProductPageCreateComponent,
+            },
         ],
     },
 ]
@@ -100,6 +106,7 @@ const routes: Routes = [
         CreateComponent,
         EditComponent,
         EditCostComponent,
+        ProductPageCreateComponent,
     ],
     imports: [
         CommonModule,
@@ -146,7 +153,8 @@ const routes: Routes = [
         MesureService,
         TaxeService,
         InventoryStatusService,
-        CostSimulationService
+        CostSimulationService,
+        CustomerMobileService
     ],
 
     entryComponents: [

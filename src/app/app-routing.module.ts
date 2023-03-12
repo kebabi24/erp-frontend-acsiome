@@ -526,6 +526,14 @@ const routes: Routes = [
             (m) => m.ForcastModule
           ),
       },
+      {
+        path: 'mobile-settings',
+        loadChildren: () => import('./views/pages/mobile-settings/mobile-settings.module').then(m => m.MobileSettingsModule),
+      },
+      {
+        path: 'supervision',
+        loadChildren: () => import('./views/pages/supervision/supervision.module').then(m => m.SupervisionModule),
+      },
 
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },

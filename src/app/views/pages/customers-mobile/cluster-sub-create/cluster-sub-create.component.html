@@ -1,0 +1,103 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Sub Cluster'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <div class="alert alert-warning" *ngIf="confirmDelete">
+                <strong>Confirm deleting:</strong> {{alertWarning}}
+                <button   class="btn">Delete</button>
+            </div>
+
+            <form class="form" [formGroup]="subClusterForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="5000"
+                >
+                <!-- (close)="onAlertClose($event)" -->
+                    Ce code sub cluster existe deja - ferme <button type="warn" (click)="showCloseButton = false" class="btn">Cliquez ici</button>
+                </kt-alert>
+                <div class="row">
+                    <div class="col-6">
+
+                       
+
+                        <!-- CODE SUB CLUSTER -->
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">code sub-cluster: *</label>
+                                <input type="text" formControlName="sub_cluster_code" (change)="onChangeCode()" id="subCluster"
+                                    [className]="subClusterForm.controls['sub_cluster_code'].errors && (subClusterForm.controls['sub_cluster_code'].dirty || subClusterForm.controls['sub_cluster_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="subClusterForm.controls['sub_cluster_code'].errors && (subClusterForm.controls['sub_cluster_code'].dirty || subClusterForm.controls['sub_cluster_code'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                </div>
+                            </div>  
+                        </div>
+                        <!-- CODE SUB CLUSTER -->
+
+
+                        <!-- DESC SUB CLUSTER -->
+                        <div class="row">
+                            <div class="form-group col-4">
+                                <label class="form-group">description du cluster: *</label>
+                                <input type="text" formControlName="description"
+                                    [className]="subClusterForm.controls['description'].errors && (subClusterForm.controls['description'].dirty || subClusterForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="subClusterForm.controls['description'].errors && (subClusterForm.controls['description'].dirty || subClusterForm.controls['description'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire
+                                </div>
+                            </div>
+                        </div>
+                        <!-- DESC SUB CLUSTER -->
+
+                         <!--  CODE CLUSTER-->
+                         <div class="row">
+                            <div class="form-group col-4">
+                            <label class="form-group">code du cluster: *</label>
+                            
+                                <select
+                                    [className]="subClusterForm.controls['cluster_code'].errors && (subClusterForm.controls['cluster_code'].dirty || subClusterForm.controls['cluster_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    class="form-control form-control-sm form-control-solid"
+                                    formControlName="cluster_code"  id="clusterCode">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of clusters" [value]="elem.cluster_code">
+                                        {{elem.cluster_code}} </option>
+                                    
+                                </select>
+                            
+                             </div> 
+                          </div> 
+                        <!--  CODE CLUSTER-->
+
+                        
+                    </div>
+                  
+                 </div> 
+            </form>
+
+            <br><br>
+            <div class="row">
+                <!-- <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter visitlist</button> -->
+                <br><br>
+                <span>List of Sub Clusters</span>
+                <angular-slickgrid class="col-12" 
+                    gridHeight="400" 
+                    gridWidth="900"
+                    gridId="gridS" 
+                    [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    [gridOptions]="gridOptions" 
+                    [dataset]="dataset">
+                </angular-slickgrid>
+            
+            </div>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

@@ -53,7 +53,8 @@ import { AngularSlickgridModule } from "angular-slickgrid"
 import { UsersMobileService } from "../../../core/erp"
 import { TreeModule } from '@circlon/angular-tree-component';
 import { EditProfileMobileComponent } from './edit-profile-mobile/edit-profile-mobile.component';
-import { MobileMenuService } from 'src/app/core/erp';
+import { MobileMenuService,ItemService } from 'src/app/core/erp';
+import { ProfileProductsPagesAssignComponent } from "./profile-ppage-assign/profile-ppages-assign.component"
 
 const routes: Routes = [
     {
@@ -68,6 +69,10 @@ const routes: Routes = [
         path: "edit-profile-mobile/:id",
         component: EditProfileMobileComponent,
     },
+    {
+        path: "assign-profile-products-pages",
+        component: ProfileProductsPagesAssignComponent,
+    },
 ]
 
 @NgModule({
@@ -76,6 +81,7 @@ const routes: Routes = [
         CreateProfileMobileComponent,
         ProfilesMobileListComponent,
         EditProfileMobileComponent,
+        ProfileProductsPagesAssignComponent
     ],
     imports: [
         CommonModule,
@@ -113,6 +119,7 @@ const routes: Routes = [
         HttpUtilsService,
         UsersMobileService,
         MobileMenuService,
+        ItemService,
         TypesUtilsService,
         LayoutUtilsService,
     ],
