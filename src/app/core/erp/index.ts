@@ -72,16 +72,13 @@ export { GeneralLedger } from "./_models/general-ledger.model";
 export { CategoryProduct } from "./_models/pos-category-product.model";
 export { PosInventory } from "./_models/pos-inventory.model";
 export { Delivery } from "./_models/delivery.model";
-<<<<<<< HEAD
 export { Label } from "./_models/label.model";
-=======
 export { Cluster } from "./_models/cluster.model"
 export { SubCluster } from "./_models/cluster-sub.model"
 export { Category } from "./_models/category.model"
 export { CategoryType } from "./_models/category-type.model"
 export { VisitResult } from "./_models/visit-result.model"
 export { ProductPage } from "./_models/product-page.model"
->>>>>>> 5f340f934d4e1a34c09c77a79fc84adaa20b423d
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
