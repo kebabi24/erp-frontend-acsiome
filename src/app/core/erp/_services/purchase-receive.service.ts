@@ -57,6 +57,10 @@ export class PurchaseReceiveService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/distinct`, { headers: httpHeaders })
     }
+    public getGroupRCP() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/grouprcp`, { headers: httpHeaders })
+    }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

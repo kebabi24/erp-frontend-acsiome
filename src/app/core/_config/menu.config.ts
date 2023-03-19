@@ -589,6 +589,10 @@ export class MenuConfig {
               page: "/inventory-transaction/po-receip",
             },
             {
+              title: "Etiquetage MP",
+              page: "/inventory-transaction/label-create",
+            },
+            {
               title: "Transfert Article",
               page: "/inventory-transaction/transfer",
             },
