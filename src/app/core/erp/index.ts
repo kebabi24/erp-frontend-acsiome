@@ -78,6 +78,7 @@ export { Category } from "./_models/category.model"
 export { CategoryType } from "./_models/category-type.model"
 export { VisitResult } from "./_models/visit-result.model"
 export { ProductPage } from "./_models/product-page.model"
+export { TokenSerie } from "./_models/token-serie.model"
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -158,6 +159,7 @@ export { ForcastService } from "./_services/forcast.service";
 export { MobileSettingsService } from "./_services/mobile-settings.service"
 export { LoadRequestService } from "./_services/load-request.service"
 export { QualityControlService } from "./_services/quality-control.service"
+export { TokenSerieService } from "./_services/token-serie.service"
 
 export {
   printBc,

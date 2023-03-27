@@ -47,7 +47,8 @@ export class CreateProjectComponent implements OnInit {
   isExist = false
 
   error = false;
-
+  specifications :[];
+  project_types :[];
   customers: [];
   columnDefinitions2: Column[] = [];
   gridOptions2: GridOption = {};
@@ -129,6 +130,8 @@ type: String;
     this.reset();
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.getSpecifications();
+    this.getProjectTypes();
     this.createForm();
     this.initmvGrid();
   }
@@ -150,6 +153,8 @@ type: String;
         month: date.getMonth()+1,
         day: date.getDate()
       }],
+      pm_type: [{ value: this.project.pm_type, disabled: !this.isExist }],
+      pm_doc_list_code: [{ value: this.project.pm_doc_list_code, disabled: !this.isExist }],
       
      
     });
@@ -173,6 +178,8 @@ type: String;
                 controls.pm_desc.enable()
                 controls.pm_cust.enable()
                 controls.pm_amt.enable()
+                controls.pm_type.enable()
+                controls.pm_doc_list_code.enable()
               
                 
             }
@@ -221,6 +228,8 @@ type: String;
     _project.pm_cust = controls.pm_cust.value;
     _project.pm_amt = controls.pm_amt.value;
     _project.pm_cost = controls.pm_cost.value;
+    _project.pm_type = controls.pm_type.value;
+    _project.pm_doc_list_code = controls.pm_doc_list_code.value;
     return _project;
   }
   /**
@@ -1409,4 +1418,50 @@ calculatetot(){
 }
 controls.pm_cost.setValue(tcost.toFixed(2));
 }
+
+getSpecifications() {
+  this.projectService.getSpecifications().subscribe(
+    (response) => {
+      if (response["data"] != null) {
+        this.specifications = response["data"]
+        console.log(this.specifications)
+        console.log(response["data"])
+      }
+    },
+    (error) => {
+      this.layoutUtilsService.showActionNotification(
+        "Erreur lors de la récupération des données du backend",
+        MessageType.Create,
+        10000,
+        true,
+        true
+      );
+      this.loadingSubject.next(false);
+    }
+  );
+}
+
+getProjectTypes() {
+  this.projectService.getProjectTypes().subscribe(
+    (response) => {
+      if (response["data"] != null) {
+        this.project_types = response["data"]
+        console.log(this.project_types)
+        console.log(response["data"])
+      }
+    },
+    (error) => {
+      this.layoutUtilsService.showActionNotification(
+        "Erreur lors de la récupération des données du backend",
+        MessageType.Create,
+        10000,
+        true,
+        true
+      );
+      this.loadingSubject.next(false);
+    }
+  );
+}
+
+
 }
