@@ -72,6 +72,7 @@ export { GeneralLedger } from "./_models/general-ledger.model";
 export { CategoryProduct } from "./_models/pos-category-product.model";
 export { PosInventory } from "./_models/pos-inventory.model";
 export { Delivery } from "./_models/delivery.model";
+export { Label } from "./_models/label.model";
 export { Cluster } from "./_models/cluster.model"
 export { SubCluster } from "./_models/cluster-sub.model"
 export { Category } from "./_models/category.model"
@@ -156,6 +157,7 @@ export { PosCategoryService } from "./_services/pos-categories.service";
 export { CRMService } from "./_services/crm.service";
 export { DeliveryService } from "./_services/delivery.service";
 export { ForcastService } from "./_services/forcast.service";
+export { LabelService } from "./_services/label.service";
 export { MobileSettingsService } from "./_services/mobile-settings.service"
 export { LoadRequestService } from "./_services/load-request.service"
 export { QualityControlService } from "./_services/quality-control.service"

@@ -7,11 +7,11 @@ import { HttpUtilsService } from "../../_base/crud"
 import { environment } from "../../../../environments/environment"
 
 // model
-
-const API_URL = environment.apiUrl + "/purchase-receives"
+import { Label } from "../_models/label.model"
+const API_URL = environment.apiUrl + "/labels"
 
 @Injectable()
-export class PurchaseReceiveService {
+export class LabelService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -20,16 +20,12 @@ export class PurchaseReceiveService {
     ) {}
 
     // CREATE
-    public add(data: any) {
+    public add(label: Label) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, data, { headers: httpHeaders })
+        return this.http.post(API_URL, location, { headers: httpHeaders })
     }
 
     // READ
-    public findBy(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
-    }
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -42,29 +38,15 @@ export class PurchaseReceiveService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
- 
-    }
-    public getGroup() {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL}/group`, { headers: httpHeaders })
-    }
-    public getAllDistinct(data: any, liste:any,distinct:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/${distinct}/${liste}`,data, { headers: httpHeaders })
- 
-    }
-    public getDistinct() {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/distinct`, { headers: httpHeaders })
-    }
-    public getGroupRCP() {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/grouprcp`, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
     }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
+    
     // DELETE
 }
