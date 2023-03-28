@@ -192,6 +192,12 @@ export class CreateSpecComponent implements OnInit {
     this.hasFormErrors1 = false;
   
   }
+  goBack() {
+    this.loadingSubject.next(false);
+    const url = `/articles/list`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  }
+  
   createForm() {
     this.loadingSubject.next(false);
     this.item = new Item();
@@ -361,6 +367,7 @@ export class CreateSpecComponent implements OnInit {
     let sct2 = this.prepareSct2()
     this.addItem(item, sct1, sct2);
   }
+  
   addItem(item: Item, sct1: CostSimulation, sct2: CostSimulation) {
     this.loadingSubject.next(true);
     this.itemService.add(item).subscribe(
