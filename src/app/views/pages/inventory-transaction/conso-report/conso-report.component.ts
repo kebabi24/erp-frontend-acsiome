@@ -157,7 +157,6 @@ error = false;
         field: "famille",
         sortable: true,
         width: 100,
-        filterable: true,
         
       },
       // {
@@ -175,7 +174,7 @@ error = false;
         field: "desc",
         sortable: true,
         width: 150,
-        filterable: true,
+      
       },
       {
         id: "um",
@@ -312,7 +311,7 @@ error = false;
     this.gridOptions = {
       asyncEditorLoading: false,
       editable: false,
-      enableFiltering: true,
+      enableFiltering: false,
       enableColumnPicker: true,
       enableCellNavigation: false,
       enableRowSelection: false,
@@ -365,7 +364,6 @@ error = false;
         field: "bofamille",
         sortable: true,
         width: 100,
-        filterable: true,
         
       },
       // {
@@ -383,7 +381,6 @@ error = false;
         field: "bodesc",
         sortable: true,
         width: 150,
-        filterable: true,
       },
       {
         id: "boum",
@@ -519,7 +516,7 @@ error = false;
     this.mvgridOptions = {
       asyncEditorLoading: false,
       editable: false,
-      enableFiltering: true,
+      enableFiltering: false,
       enableColumnPicker: true,
       enableCellNavigation: false,
       enableRowSelection: false,
@@ -535,11 +532,6 @@ error = false;
   
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
-      },
-      presets: {
-        sorters: [
-          { columnId: 'rank', direction: 'ASC' }
-        ],
       },
         
     };

@@ -73,12 +73,13 @@ const myCustomCheckmarkFormatter: Formatter = (
 };
 
 @Component({
-  selector: 'kt-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  selector: 'kt-update',
+  templateUrl: './update.component.html',
+  styleUrls: ['./update.component.scss']
 })
-export class EditComponent implements OnInit {
+export class UpdateComponent implements OnInit {
 
+ 
   item: Item;
   hasFormErrors1 = false;
   hasFormErrors2 = false;

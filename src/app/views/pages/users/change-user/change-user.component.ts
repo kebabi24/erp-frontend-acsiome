@@ -190,6 +190,7 @@ export class ChangeUserComponent implements OnInit {
             usrd_user_name: [{value: this.userEdit.usrd_user_name, disabled : true}],
             usrd_profile: [this.userEdit.usrd_profile, Validators.required],
             usrd_site: [this.userEdit.usrd_site, Validators.required],
+            usrd_domain: [this.userEdit.usrd_domain],
             usrd_email: [this.userEdit.usrd_email],
             usrd_phone: [this.userEdit.usrd_phone],
       /*      usrd_pwd: [{value: "", disabled: !this.isExist}],
@@ -250,6 +251,7 @@ export class ChangeUserComponent implements OnInit {
         _user.usrd_phone =   controls.usrd_phone.value
         _user.usrd_email =   controls.usrd_email.value 
         _user.usrd_site =   controls.usrd_site.value
+        
         _user.usrd_active =   controls.usrd_active.value
         if (controls.init.value == true ) {_user.usrd_pwd = this.userEdit.usrd_user_name}
         return _user

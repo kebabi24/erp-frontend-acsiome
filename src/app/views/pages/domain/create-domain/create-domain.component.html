@@ -1,0 +1,160 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Domaine'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="domForm">
+
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="3000"
+                                    (close)="onAlertClose($event)">
+                                    Ce Code existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Domaine: *</label>
+                        <input type="text" formControlName="dom_domain"  (change)="onChangeCode()"
+                            [className]="domForm.controls['dom_domain'].errors && (domForm.controls['dom_domain'].dirty || domForm.controls['dom_domain'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="domForm.controls['dom_domain'].errors && (domForm.controls['dom_domain'].dirty || domForm.controls['dom_domain'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="dom_name" 
+                            [className]="domForm.controls['dom_name'].errors && (domForm.controls['dom_name'].dirty || domForm.controls['dom_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="domForm.controls['dom_name'].errors && (domForm.controls['dom_name'].dirty || domForm.controls['dom_name'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+              
+                    <div class="form-group col-3">
+                        <label class="form-group">Description ABR: *</label>
+                        <input type="text" formControlName="dom_sname" 
+                            [className]="domForm.controls['dom_sname'].errors && (domForm.controls['dom_sname'].dirty || domForm.controls['dom_sname'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="domForm.controls['dom_sname'].errors && (domForm.controls['dom_sname'].dirty || domForm.controls['dom_sname'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">Addresse: </label>
+                        <input type="text" formControlName="dom_addr" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="form-group">Wilaya: </label>
+                        <input type="text" formControlName="dom_city" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+                
+               
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">RC: </label>
+                        <input type="text" formControlName="dom_rc" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="form-group">NIF: </label>
+                        <input type="text" formControlName="dom_nif" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">NIS: </label>
+                        <input type="text" formControlName="dom_nis" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="form-group">AI: </label>
+                        <input type="text" formControlName="dom_ai" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">Banque 1: </label>
+                        <input type="text" formControlName="dom_bank1" class='form-control form-control-sm form-control-solid'>
+                    </div> 
+                    <div class="form-group col-3">
+                        <label class="form-group">RIB 1: </label>
+                        <input type="text" formControlName="dom_rib1" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">Banque 2: </label>
+                        <input type="text" formControlName="dom_bank2" class='form-control form-control-sm form-control-solid'>
+                    </div> 
+                    <div class="form-group col-3">
+                        <label class="form-group">RIB 2: </label>
+                        <input type="text" formControlName="dom_rib2" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">Email: </label>
+                        <input type="text" formControlName="dom_email" class='form-control form-control-sm form-control-solid'>
+                    </div> 
+                    <div class="form-group col-3">
+                        <label class="form-group">WEB: </label>
+                        <input type="text" formControlName="dom_web" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">Tel 1: </label>
+                        <input type="text" formControlName="dom_tel2" class='form-control form-control-sm form-control-solid'>
+                    </div> 
+                    <div class="form-group col-3">
+                        <label class="form-group">Tel 2: </label>
+                        <input type="text" formControlName="dom_tel2" class='form-control form-control-sm form-control-solid'>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-3">
+                        <label class="form-group">Fax : </label>
+                        <input type="text" formControlName="dom_fax" class='form-control form-control-sm form-control-solid'>
+                    </div> 
+                    <div class="form-group col-3">
+                        <label class="form-group">Actif: </label>
+                        <div class="col-6">
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox"
+                                        class="form-control form-control-sm form-control-solid"
+                                        formControlName="dom_active" name="select" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+     
+                    </div>
+                </div>
+              
+
+            </form>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>
+

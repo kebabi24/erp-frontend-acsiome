@@ -79,6 +79,7 @@ export { Category } from "./_models/category.model"
 export { CategoryType } from "./_models/category-type.model"
 export { VisitResult } from "./_models/visit-result.model"
 export { ProductPage } from "./_models/product-page.model"
+export { Domain } from "./_models/domain.model"
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -160,6 +161,7 @@ export { LabelService } from "./_services/label.service";
 export { MobileSettingsService } from "./_services/mobile-settings.service"
 export { LoadRequestService } from "./_services/load-request.service"
 export { QualityControlService } from "./_services/quality-control.service"
+export { DomainService } from "./_services/domain.service";
 
 export {
   printBc,
