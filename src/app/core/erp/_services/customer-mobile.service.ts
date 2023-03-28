@@ -138,5 +138,11 @@ export class CustomerMobileService {
         return this.http.get(`${API_URL_2}/findAllCategoriesTypes/`, { headers: httpHeaders })
     }
 
+    // CREATE SALES CHANNELS
+    public createSalesChannels(sales_channels : any){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createSalesChannels`, {sales_channels}, { headers: httpHeaders })
+    }
+
  
 }

@@ -1,0 +1,222 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Lancer un projet'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <form class="kt-form" [formGroup]="empForm">
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                {{message}}
+            </kt-alert>
+
+                <div class="row">
+                    
+                    <!-- PROJECT CODE -->
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Projet:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"   id="pmr_pm_code"
+                                [className]="empForm.controls['pmr_pm_code'].errors && (empForm.controls['pmr_pm_code'].dirty || empForm.controls['pmr_pm_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="pmr_pm_code" (change)="onChangeCode()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=open(content)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+
+                            <div *ngIf="empForm.controls['pmr_pm_code'].errors && (empForm.controls['pmr_pm_code'].dirty || empForm.controls['pmr_pm_code'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                    <!-- PROJECT CODE END -->
+                    
+                    <!-- PROJECT DESC -->
+                    <div class="form-group col-4">
+                        <label class="form-group ">Designation:</label>
+                        
+                            <input type="text" class="form-control form-control-sm form-control-solid"
+                                formControlName="pmdesc">
+                    </div>
+                    <!-- PROJECT DESC END-->
+                </div>
+
+                <!-- BUTTON OF INSTRUCTIONS LIST -->
+                <div class="form-group col-12 row">
+                    <label class="col-2 col-form-label text-left"> Liste des instructions: </label>
+                </div>
+
+
+                <div class="row col-lg-12">
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="showInstructionsPopup(content101)">Instructions</button>
+                </div>
+                <!-- BUTTON OF INSTRUCTIONS LIST -->
+
+                
+                <!-- BUTTON OF DOCUMENT LIST -->
+                <div class="form-group col-12 row">
+                    <label class="col-2 col-form-label text-left"> Liste document: </label>
+                </div>
+
+
+                <div class="row col-lg-12">
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="openDocumentListPopup(content100)">Vérifier</button>
+                </div>
+                <!-- BUTTON OF DOCUMENT LIST -->
+               
+
+
+                <br><br><br>
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                    [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                </angular-slickgrid>
+                </div> 
+
+            </form>
+          
+        </div>
+
+        <!-- SELECT PROJECT POPUP -->
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Projet </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions" [dataset]="dataset">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- SELECT PROJECT POPUP END -->
+
+        
+
+
+        <!-- SELECT EMPLOYEE POPUP -->
+        <div>
+            <ng-template #contentemp let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Employé</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitionsemp" (onAngularGridCreated)="angularGridReadyemp($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsemp" [dataset]="emps">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openEmpsGrid" class="btn btn-primary" (click)="openemp(contentemp)">Launch demo
+                modal</button>
+    
+        </div>
+        <!-- SELECT EMPLOYEE POPUP END -->
+
+        
+        <!-- DOCUMENT LIST POPUP -->
+        <div>
+            <ng-template #content100 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Liste document : </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pl-10 pr-10">
+                    <div class="row">
+                        
+                        <h5 class="col-3">Code specification :</h5><span class="col-4">{{pm_doc_list_code}}</span> 
+                       
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <h5 class="col-3 mb-10">les tests:</h5>
+                       
+                    </div>
+
+                    <div class="row">
+                        <br>
+                        <div class="col-12" *ngFor="let detail of specificationDetails; let i = index">
+                            <label class="ml-5 mr-10 col-2">{{detail.mpd_label}}</label>
+                            <input
+                            type="checkbox"
+                            class="mb-5 mt-1"
+                            (change)="onCheckClick(detail.mpd_type)"
+                            />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- DOCUMENT LIST POPUP END -->
+
+        <!-- INSTRUCTIONS POPUP -->
+        <div>
+            <ng-template #content101 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Liste des instructions : </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pl-10 pr-10">
+                    
+                    <div class="col-12" *ngFor="let inst of mvdataset; let i = index">
+                        <div class="row">
+                            <h5 class="col-2">Code instruction : </h5> <span class="col-2">{{inst.pme_inst}}</span>
+                            <h5 class="col-2">Date Deb : </h5> <span class="col-2">{{inst.pme_start_date}}</span>
+                            <h5 class="col-2">Date Fin: </h5> <span class="col-2">{{inst.pme_end_date}}</span>
+                        </div>
+
+                    </div>
+                 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- INSTRUCTIONS POPUP END -->
+
+  
+
+      
+    </kt-portlet-body>
+</kt-portlet>
+

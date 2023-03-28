@@ -52,6 +52,7 @@ import { ClusterCreateComponent } from './cluster-create/cluster-create.componen
 import { CategoryCreateComponent } from './category-create/category-create.component';
 import { SubClusterCreateComponent } from './cluster-sub-create/cluster-sub-create.component';
 import { CategoryTypeCreateComponent } from './category-type-create/category-type-create.component';
+import { SalesChannelCreateComponent } from './sales-channel-create/sales-channel-create.component';
 
 const routes: Routes = [
           {
@@ -65,23 +66,27 @@ const routes: Routes = [
           {
             path: "edit-customer-mobile/:id",
             component: EditCustomerMobileComponent,
-        },
-        {
-            path :"cluster-create",
-            component : ClusterCreateComponent,
           },
           {
-            path :"category-create",
-            component : CategoryCreateComponent,
-          },
-          {
-            path :"cluster-sub-create",
-            component : SubClusterCreateComponent,
-          },
-          {
-            path :"category-type-create",
-            component : CategoryTypeCreateComponent,
-          }
+              path :"cluster-create",
+              component : ClusterCreateComponent,
+            },
+            {
+              path :"category-create",
+              component : CategoryCreateComponent,
+            },
+            {
+              path :"cluster-sub-create",
+              component : SubClusterCreateComponent,
+            },
+            {
+              path :"category-type-create",
+              component : CategoryTypeCreateComponent,
+            },
+            {
+              path :"sales-channels-create",
+              component : SalesChannelCreateComponent,
+            }
 ]
 @NgModule({
   declarations: [
@@ -93,6 +98,7 @@ const routes: Routes = [
         CategoryCreateComponent,
         SubClusterCreateComponent,
         CategoryTypeCreateComponent,
+        SalesChannelCreateComponent,
   ],
   imports: [
         CommonModule,

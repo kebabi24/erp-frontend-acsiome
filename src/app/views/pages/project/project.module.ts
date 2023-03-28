@@ -61,6 +61,8 @@ from '../../../core/erp';
 
 import { ListPmComponent } from './list-pm/list-pm.component';
 import { AddReportComponent } from './add-report/add-report.component';
+import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
+import { LaunchProjectComponent } from './launch-project/launch-project.component';
 
 const routes: Routes = [
   {
@@ -79,12 +81,19 @@ const routes: Routes = [
     path: 'add-report',
     component: AddReportComponent
   },
-  
+  {
+    path: 'assign-emp',
+    component: AssignEmployeeComponent
+  },
+  {
+    path: 'launch-project',
+    component: LaunchProjectComponent
+  }, 
 ] 
 
 
 @NgModule({
-  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, ListPmComponent, AddReportComponent],
+  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, ListPmComponent, AddReportComponent,AssignEmployeeComponent,LaunchProjectComponent],
   imports: [
     CommonModule,
     HttpClientModule,

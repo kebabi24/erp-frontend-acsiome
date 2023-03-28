@@ -87,10 +87,12 @@ export class MenuConfig {
             },
             {
               title: "Liste des catégories",
-              page: "/pos-settings/list-category",
+              page: "/pos-settings/list-category",  
             },
+            
           ],
         },
+        
           {
             title: "Paramétrages Mobile",
             bullet: "dot",
@@ -513,6 +515,10 @@ export class MenuConfig {
                 title: "Ajouter Category Type",
                 page: "/customers-mobile/category-type-create",
            },
+            {
+              title: "Ajouter canaux de vente",
+              page: "/customers-mobile/sales-channels-create",
+            },
           ],
         },
         {
@@ -975,8 +981,16 @@ export class MenuConfig {
               page: "/project/list-pm",
             },
             {
+              title: "Lancer un projet",
+              page: "/project/launch-project",
+            },
+            // {
+            //   title: "Affectation des Employés",
+            //   page: "/project/assign-emp",
+            // },
+            {
               title: "Affectation des Employés",
-              page: "/project/create-project",
+              page: "/accounting-setting/affect-emp",
             },
             {
               title: "Rapport des activités",
@@ -1180,6 +1194,24 @@ export class MenuConfig {
             },
           ],
         },
+        {
+          title: "Token Series",
+          bullet: "dot",
+          icon: "flaticon-profile",
+          root: true,
+          submenu: [
+            {
+              title: "Créer token serie",
+              page: "/token-serie/create-new-token",
+            },
+            {
+              title: "Liste des token",
+              page: "/token-serie/list-all-tokens",
+            },
+            
+          ],
+        },
+
         {
           title: "Gestion des services",
           bullet: "dot",

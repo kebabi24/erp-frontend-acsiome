@@ -158,7 +158,9 @@ export class CreateStrandardSpecificationComponent implements OnInit {
         // let site = this.prepareSite()
         let doc_code = controls.doc_code.value
         let doc_desc = controls.doc_desc.value
-        let validity_date = controls.validity_date.value
+        let date = controls.validity_date.value
+        const validity_date = date.year + '-' + date.month + '-' + date.day
+
         let specificationHeader = {
           mp_nbr : doc_code,
           mp_desc : doc_desc,
@@ -168,12 +170,15 @@ export class CreateStrandardSpecificationComponent implements OnInit {
         let specificationDetails = []
         this.details.forEach(element => {
           specificationDetails.push({
-            mpd_nbr : element.nb_line,
+            mpd_nbr : doc_code,
             mpd_label : element.code_param,
-            mpd_type :"",
-            mpd_tol:"",
-            mpd_tol_type : "",
-            mpd_cmtindx:1
+            mpd_type : element.nb_line,
+            mpd_tol:element.val,
+            mpd_tol_type : element.measure_unit,
+            mpd_chr01 : element.test_method ,
+            mpd_chr02 : element.val_type,
+            mpd_dec01: element.max,
+            mpd_dec02: element.min
           })
         });
 
@@ -311,7 +316,7 @@ export class CreateStrandardSpecificationComponent implements OnInit {
       this.columnDefinitions = [
                 {
                     id: "nb_line",
-                    name: "nombre de lignes",
+                    name: "Numero",
                     field: "nb_line",
                     sortable: true,
                     minWidth: 100,
@@ -384,6 +389,17 @@ export class CreateStrandardSpecificationComponent implements OnInit {
                   id: "min",
                   name: "Min",
                   field: "min",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.string, 
+                  editor: {model: Editors.text}
+                },
+                {
+                  id: "val",
+                  name: "Valeur",
+                  field: "val",
                   sortable: true,
                   minWidth: 100,
                   maxWidth: 300,
