@@ -127,6 +127,11 @@ const routes: Routes = [
           import("./views/pages/roles/roles.module").then((m) => m.RolesModule),
       },
       {
+        path: "token-serie",
+        loadChildren: () =>
+          import("./views/pages/token-serie/token-serie.module").then((m) => m.TokenSerieModule),
+      },
+      {
         path: "services",
         loadChildren: () =>
           import("./views/pages/services/service.module").then(

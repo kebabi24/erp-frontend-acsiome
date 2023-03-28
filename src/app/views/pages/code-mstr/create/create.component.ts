@@ -83,8 +83,12 @@ export class CreateComponent implements OnInit {
             code_desc: [{ value: this.code.code_cmmt, disabled: !this.isExist }],
             code_chr01: [{ value: this.code.chr01, disabled: !this.isExist }],
             code_chr02: [{ value: this.code.chr02, disabled: !this.isExist }],
+            code_chr03: [{ value: this.code.chr02, disabled: !this.isExist }],
+            code_chr04: [{ value: this.code.chr02, disabled: !this.isExist }],
             code_dec01: [{ value: this.code.dec01, disabled: !this.isExist }],
             code_dec02: [{ value: this.code.dec02, disabled: !this.isExist }],
+            code_dec03: [{ value: this.code.dec02, disabled: !this.isExist }],
+            code_dec04: [{ value: this.code.dec02, disabled: !this.isExist }],
             code_date01: [{ value: this.code.date01, disabled: !this.isExist }],
             code_date02: [{ value: this.code.date02, disabled: !this.isExist }],
             code_bool01: [{ value: this.code.bool01, disabled: !this.isExist }],
@@ -108,8 +112,12 @@ export class CreateComponent implements OnInit {
                     controls.code_desc.enable()
                     controls.code_chr01.enable()
                     controls.code_chr02.enable()
+                    controls.code_chr03.enable()
+                    controls.code_chr04.enable()
                     controls.code_dec01.enable()
                     controls.code_dec02.enable()
+                    controls.code_dec03.enable()
+                    controls.code_dec04.enable()
                     controls.code_date01.enable()
                     controls.code_date02.enable()
                     controls.code_bool01.enable()
@@ -155,8 +163,12 @@ export class CreateComponent implements OnInit {
         
         _code.chr01 = controls.code_chr01.value
         _code.chr02 = controls.code_chr02.value
+        _code.chr03 = controls.code_chr03.value
+        _code.chr04 = controls.code_chr04.value
         _code.dec01 = controls.code_dec01.value
         _code.dec02 = controls.code_dec02.value
+        _code.dec03 = controls.code_dec03.value
+        _code.dec04 = controls.code_dec04.value
         _code.date01 = controls.code_date01.value
             ? `${controls.code_date01.value.year}/${controls.code_date01.value.month}/${controls.code_date01.value.day}`
             : null

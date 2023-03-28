@@ -1,0 +1,47 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter canaux de vente'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+       
+
+        <div class="example-preview">
+
+            
+
+            <div class="row">
+                
+                <div class="row">
+                    <button type="button" (click)="addNewItem()" class="btn btn-success btn-sm mr-2 col-3">ajouter un élément </button>
+                </div>
+                <br><br>
+                
+                
+                <div class="row">
+                    <br><br>
+                    <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
+                                gridId="grid" 
+                                [columnDefinitions]="columnDefinitions"
+                                (onAngularGridCreated)="angularGridReady($event)"
+                                [gridOptions]="gridOptions" 
+                                [dataset]="sales_channels"
+                                >
+                    </angular-slickgrid>
+                </div>
+            
+            </div>
+        </div>
+
+        
+        
+        
+    </kt-portlet-body>
+</kt-portlet>
+
+

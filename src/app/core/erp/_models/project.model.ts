@@ -11,4 +11,6 @@ export class Project extends BaseModel {
     pm_amt: Number
     pm_cost: Number
     pm_ord_date: String
+    pm_type:String
+    pm_doc_list_code : String
 }
