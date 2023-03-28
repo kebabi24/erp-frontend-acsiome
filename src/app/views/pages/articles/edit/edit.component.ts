@@ -29,7 +29,7 @@ import {
   Editors,
   AngularGridInstance,
   FieldType, GridService
-} from "angular-slickgrid"
+} from 'angular-slickgrid'
 
 import {
   CodeService,
@@ -137,6 +137,9 @@ export class EditComponent implements OnInit {
   pt_run_seq1: any[] = [];
   pt_run_seq2: any[] = [];
   pt_promo: any[] = [];
+  int03: any[] = [];
+  int04: any[] = [];
+  int05: any[] = [];
 
   data: [];
   columnDefinitions3: Column[] = [];
@@ -260,6 +263,17 @@ export class EditComponent implements OnInit {
     this.codeService
       .getBy({ code_fldname: "pt_promo" })
       .subscribe((response: any) => (this.pt_promo = response.data));
+    this.codeService
+      .getBy({ code_fldname: "int03" })
+      .subscribe((response: any) => (this.int03 = response.data));    
+    this.codeService
+      .getBy({ code_fldname: "int04" })
+      .subscribe((response: any) => (this.int04 = response.data));
+    this.codeService
+      .getBy({ code_fldname: "int05" })
+      .subscribe((response: any) => (this.int05 = response.data));
+
+      
   }
 
   ngOnInit(): void {
@@ -281,7 +295,7 @@ export class EditComponent implements OnInit {
             
             this.initCode()
             this.loadingSubject.next(false)
-            this.title = this.title + this.itemEdit.pt_part
+            this.title = this.title + this.itemEdit.pt_part + " : "+ this.itemEdit.pt_desc1
             console.log(this.title)
           //  })
           //})
@@ -408,6 +422,7 @@ export class EditComponent implements OnInit {
       this.form1 = this.form1FB.group({
   
         pt_part: [this.itemEdit.pt_part,Validators.required],
+        pt_upc: [this.itemEdit.pt_upc],
         pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
         pt_desc2: [this.itemEdit.pt_desc2],
         pt_um: [this.itemEdit.pt_um,Validators.required],
@@ -415,13 +430,13 @@ export class EditComponent implements OnInit {
         pt_part_type: [this.itemEdit.pt_part_type,Validators.required],
         pt_draw: [this.itemEdit.pt_draw,Validators.required],
         pt_status: [this.itemEdit.pt_status,Validators.required],
-        pt_rev: [this.itemEdit.pt_rev],
-        pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
+        // pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
         pt_group: [this.itemEdit.pt_group],
         pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
-        pt_drwg_size: [this.itemEdit.pt_drwg_size],
-        pt_promo: [this.itemEdit.pt_promo],
-        pt_break_cat: [this.itemEdit.pt_break_cat],
+        // pt_drwg_size: [this.itemEdit.pt_drwg_size],
+        // pt_promo: [this.itemEdit.pt_promo],
+        // pt_break_cat: [this.itemEdit.pt_break_cat],
+        // pt_rev: [this.itemEdit.pt_rev],
         pt_abc: [this.itemEdit.pt_abc,Validators.required],
         pt_avg_int: [this.itemEdit.pt_avg_int],
         pt_lot_ser: [this.itemEdit.pt_lot_ser],
@@ -448,13 +463,15 @@ export class EditComponent implements OnInit {
       this.form2 = this.form2FB.group({
         pt_ship_wt: [this.itemEdit.pt_ship_wt],
         pt_ship_wt_um: [this.itemEdit.pt_ship_wt_um],
-        pt_net_wt: [this.itemEdit.pt_net_wt],
-        pt_net_wt_um: [this.itemEdit.pt_net_wt_um],
-        pt_fr_class: [this.itemEdit.pt_fr_class],
-        pt_size: [this.itemEdit.pt_size],
-        pt_size_um: [this.itemEdit.pt_size_um],
-
-
+        // pt_fr_class: [this.itemEdit.pt_fr_class],  removed from html
+        // pt_net_wt: [this.itemEdit.pt_net_wt],       switched to form5
+        // pt_net_wt_um: [this.itemEdit.pt_net_wt_um],  
+        // pt_size: [this.itemEdit.pt_size],
+        // pt_size_um: [this.itemEdit.pt_size_um],
+        // pt_drwg_size: [this.itemEdit.pt_drwg_size],
+        int03: [this.itemEdit.int03],
+        int04: [this.itemEdit.int04],
+        int05: [this.itemEdit.int05],
   
       })
 
@@ -505,11 +522,17 @@ export class EditComponent implements OnInit {
         pt_width: [this.itemEdit.pt_width],
         pt_origin: [this.itemEdit.pt_origin],
         pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
-        pt_drwg_size: [this.itemEdit.pt_drwg_size],
         pt_model: [this.itemEdit.pt_model],
         pt_break_cat: [this.itemEdit.pt_break_cat],
         int01: [this.itemEdit.int01 ],
         int02: [this.itemEdit.int02 ],
+        pt_promo: [this.itemEdit.pt_promo],
+        pt_rev: [this.itemEdit.pt_rev],
+        pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
+        pt_net_wt: [this.itemEdit.pt_net_wt],
+        pt_net_wt_um: [this.itemEdit.pt_net_wt_um],
+        pt_size: [this.itemEdit.pt_size],
+        pt_size_um: [this.itemEdit.pt_size_um]
       });
 
       this.form4 = this.form4FB.group({
@@ -631,6 +654,7 @@ prepareItem(): Item {
   const _item = new Item();
     _item.id = this.itemEdit.id;
     _item.pt_part = controls1.pt_part.value;
+    _item.pt_upc = controls1.pt_upc.value;
     _item.pt_desc1 = controls1.pt_desc1.value;
     _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls1.pt_um.value;
@@ -638,13 +662,13 @@ prepareItem(): Item {
     _item.pt_part_type = controls1.pt_part_type.value;
     _item.pt_draw = controls1.pt_draw.value;
     _item.pt_status = controls1.pt_status.value;
-    _item.pt_rev = controls1.pt_rev.value;
-    _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
+    // _item.pt_rev = controls1.pt_rev.value;
+    // _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
     _item.pt_group = controls1.pt_group.value;
     _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
-    _item.pt_drwg_size = controls1.pt_drwg_size.value;
-    _item.pt_promo = controls1.pt_promo.value;
-    _item.pt_break_cat = controls1.pt_break_cat.value;
+    // _item.pt_drwg_size = controls1.pt_drwg_size.value;
+    // _item.pt_promo = controls1.pt_promo.value;
+    // _item.pt_break_cat = controls1.pt_break_cat.value;
     _item.pt_abc = controls1.pt_abc.value;
     _item.pt_avg_int = controls1.pt_avg_int.value;
     _item.pt_lot_ser = controls1.pt_lot_ser.value;
@@ -665,11 +689,16 @@ prepareItem(): Item {
 
     _item.pt_ship_wt = controls2.pt_ship_wt.value;
     _item.pt_ship_wt_um = controls2.pt_ship_wt_um.value;
-    _item.pt_net_wt = controls2.pt_net_wt.value;
-    _item.pt_net_wt_um = controls2.pt_net_wt_um.value;
-    _item.pt_fr_class = controls2.pt_fr_class.value;
-    _item.pt_size = controls2.pt_size.value;
-    _item.pt_size_um = controls2.pt_size_um.value;
+    // _item.pt_fr_class = controls2.pt_fr_class.value; removed from html
+    // _item.pt_net_wt = controls2.pt_net_wt.value;     to controls5
+    // _item.pt_net_wt_um = controls2.pt_net_wt_um.value;  //
+    // _item.pt_size = controls2.pt_size.value;         //
+    // _item.pt_size_um = controls2.pt_size_um.value;   //
+    // _item.pt_drwg_size = controls2.pt_drwg_size.value; not used any more , changed with int03
+    _item.int03=controls2.int03.value;
+    _item.int04=controls2.int04.value;
+    _item.int05=controls2.int05.value;
+
 
     _item.pt_ms = controls3.pt_ms.value;
     _item.pt_buyer = controls3.pt_buyer.value;
@@ -717,11 +746,19 @@ prepareItem(): Item {
     _item.pt_width     = controls5.pt_width.value;
     _item.pt_origin    = controls5.pt_origin.value;
     _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
-    _item.pt_drwg_size = controls5.pt_drwg_size.value; 
     _item.pt_model     = controls5.pt_model.value;
     _item.pt_break_cat = controls5.pt_break_cat.value;
     _item.int01        = controls5.int01.value;
     _item.int02        = controls5.int02.value;
+    _item.pt_promo     = controls5.pt_promo.value;
+    _item.pt_break_cat = controls5.pt_break_cat.value;
+    _item.pt_rev       = controls5.pt_rev.value;
+    _item.pt_dsgn_grp  = controls5.pt_dsgn_grp.value;
+    _item.pt_net_wt    = controls5.pt_net_wt.value;
+    _item.pt_net_wt_um = controls5.pt_net_wt_um.value;
+    _item.pt_size      = controls5.pt_size.value;
+    _item.pt_size_um   = controls5.pt_size_um.value;
+
     return _item;
   }
 

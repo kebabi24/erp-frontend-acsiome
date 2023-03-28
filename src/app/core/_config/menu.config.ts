@@ -542,7 +542,7 @@ export class MenuConfig {
               page: "/articles/list",
             },
             {
-              title: "MAINT des Articles",
+              title: "Ajouter des Articles",
               page: "/articles/add",
             },
             {

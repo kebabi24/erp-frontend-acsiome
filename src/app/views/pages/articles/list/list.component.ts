@@ -119,7 +119,7 @@ export class ListComponent implements OnInit {
      
       {
         id: "pt_desc1",
-        name: "Description",
+        name: "Description Externe",
         field: "pt_desc1",
         sortable: true,
         filterable: true,
@@ -128,7 +128,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_desc2",
-        name: "Description",
+        name: "Description Interne",
         field: "pt_desc2",
         sortable: true,
         filterable: true,
@@ -146,7 +146,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_prod_line",
-        name: "Ligne Prod",
+        name: "Famille",
         field: "pt_prod_line",
         sortable: true,
         filterable: true,
@@ -155,7 +155,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_part_type",
-        name: "Type",
+        name: "Type Client",
         field: "pt_part_type",
         sortable: true,
         filterable: true,
@@ -164,7 +164,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_draw",
-        name: "Classe",
+        name: "Sous Famille",
         field: "pt_draw",
         sortable: true,
         filterable: true,
@@ -183,7 +183,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_promo",
-        name: "Grp Promo",
+        name: "Logo",
         field: "pt_promo",
         sortable: true,
         filterable: true,
@@ -192,7 +192,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_dsgn_grp",
-        name: "Etude",
+        name: "Forme Géometrique",
         field: "pt_dsgn_grp",
         sortable: true,
         filterable: true,
@@ -228,7 +228,7 @@ export class ListComponent implements OnInit {
       },
       {
         id: "pt_pur_lead",
-        name: "Delai Achat",
+        name: "Delai Production",
         field: "pt_pur_lead",
         sortable: true,
         filterable: true,
@@ -309,6 +309,24 @@ export class ListComponent implements OnInit {
         minWidth: 80,
       },
       {
+        id: "pt_status",
+        name: "Statut",
+        field: "pt_status",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.text,
+        minWidth: 80,
+      },
+      {
+        id: "pt_plan_ord",
+        name: "Demande Obligatoire",
+        field: "pt_plan_ord",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.text,
+        minWidth: 80,
+      },
+      {
         id: "pt_drwg_size",
         name: "Unité/Sachet",
         field: "pt_drwg_size",
@@ -318,8 +336,17 @@ export class ListComponent implements OnInit {
         minWidth: 80,
       },
       {
+        id: "pt_net_wt",
+        name: "Poids Net",
+        field: "pt_net_wt",
+        sortable: true,
+        filterable: true,
+        type: FieldType.number,
+        minWidth: 80,
+      },
+      {
         id: "pt_model",
-        name: "Modéle",
+        name: "Format",
         field: "pt_model",
         sortable: true,
         filterable: true,
@@ -333,6 +360,7 @@ export class ListComponent implements OnInit {
         field: "pt_break_cat",
         sortable: true,
         filterable: true,
+        minWidth: 80,
         // type: FieldType.text,
         // resizeAlwaysRecalculateWidth:true
       },
