@@ -23,7 +23,7 @@ import {
   OnEventArgs,
 } from "angular-slickgrid";
 import { BehaviorSubject, Observable } from "rxjs";
-import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
+import { FormGroup, FormBuilder, Validators, NgControlStatus, FormControl } from "@angular/forms"
 import { EmployeService, CodeService , ProjectService, TaskService,ProviderService,AddReportService,AddReport,SequenceService,ItemService, LocationService,
   CostSimulationService,LocationDetailService,InventoryStatusService,MesureService, SiteService,InventoryTransactionService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -145,11 +145,15 @@ export class LaunchProjectComponent implements OnInit {
     pm_doc_list_code : String;
     specificationHeader :any 
     specificationDetails :any 
+    validationForm: FormGroup;
+    customeControls: Object = {};
+    checkedValues = [];
 
   constructor(
     
     config: NgbDropdownConfig,
     private empFB: FormBuilder,
+    private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public  dialog: MatDialog,
@@ -237,13 +241,11 @@ prepareCode(): any {
          // console.log(response.data)
           if (response.data.length == 0) {
 
-            alert("Projet n'existe pas  ")
             controls.pmr_addr.setValue(null);
             document.getElementById("pmr_pm_code").focus();
           } else {
-
             controls.pmdesc.setValue(response.data[0].pm_desc || "");
-         
+            this.getProjectEmployees(controls.pmr_addr.value)
           }
       
      })
@@ -257,68 +259,57 @@ prepareCode(): any {
   }
   // save data
   onSubmit() {
-    console.log("haha")
-    this.hasFormErrors = false;
-    const controls = this.empForm.controls;
-    /** check form */
-    if (this.empForm.invalid) {
-      Object.keys(controls).forEach((controlName) =>
-        controls[controlName].markAsTouched()
-      );
-      this.message = "Modifiez quelques éléments et réessayez de soumettre.";
-      this.hasFormErrors = true;
-      return;
-    }
+    let testsHistory = []
+    this.specificationDetails.forEach(specDetail => {
+      const index = this.checkedValues.findIndex(detail=>{
+        return detail == specDetail.mpd_type
+     })
 
-    if (!this.mvdataset.length) {
-      this.message = "La liste des employés ne peut pas etre vide ";
-      this.hasFormErrors = true;
-
-      return;
-    }
-
-    for (var i = 0; i < this.mvdataset.length; i++) {
-      console.log(this.mvdataset[i]  )
-     if (this.mvdataset[i].pmr_employe == "" || this.mvdataset[i].pmr_employe == null  ) {
-      this.message = "L' employé ne peut pas etre vide";
-      this.hasFormErrors = true;
-      return;
- 
+     if(index == -1){
+       testsHistory.push({
+        mph_test : specDetail.mpd_label,
+        mph_rsult : "negative"
+       })
+     }else{
+      testsHistory.push({
+        mph_test : specDetail.mpd_label,
+        mph_rsult : "positive"
+       })
      }
-     
+    });
 
-    }
+    this.projectService
+      .createTestsHistory(testsHistory)
+      .subscribe(
+        (reponse) => {
 
-    this.sequenceService.getByOne({ seq_type: "PM", seq_profile: this.user.usrd_profile }).subscribe(
-      (response: any) => {
-    this.seq = response.data 
-        
-        if (this.seq) {
-         this.nbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
-
-         this.sequenceService.update(this.seq.id,{ seq_curr_val: Number(this.seq.seq_curr_val )+1 }).subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.message = "Erreur modification Sequence";
-            this.hasFormErrors = true;
-            return;
-       
+          this.createForm();
+          this.mvdataset = []
           
-          },
-          )
-          let pme = this.prepareCode()
-          console.log(pme)
-          this.addDet(pme, this.mvdataset, this.cnsdataset, this.nbr);
-        }else {
-          this.message = "Parametrage Monquant pour la sequence";
-          this.hasFormErrors = true;
-          return;
-     
-         }
-
-
-      })
-
+        },
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.createForm();
+          this.layoutUtilsService.showActionNotification(
+            "Réclamation enregistr avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+          // this.router.navigateByUrl("/customers-mobile/cluster-create")
+        }
+      );
 
   }
 
@@ -389,94 +380,40 @@ prepareCode(): any {
   }
   initmvGrid() {
     this.mvcolumnDefinitions = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.deleteIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.mvangularGrid.gridService.deleteItem(args.dataContext);
-          }
-        },
-      },
+    
       
 
       {
-        id: "pmr_internal",
-        name: "Interne",
-        field: "pmr_internal",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.checkbox
-        },
-        formatter: Formatters.checkmark,
-        cannotTriggerInsert: false,
-      },
-      {
-        id: "pmr_employe",
-        name: "Employé/Fournisseur",
-        field: "pmr_employe",
+        id: "pme_employe",
+        name: "Code employé",
+        field: "pme_employe",
         sortable: true,
         width: 80,
         filterable: false,
         type: FieldType.string,
-                editor: {
-          model: Editors.text,
-        },
       },
       {
-        id: "mvid",
-        field: "cmvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          if (args.dataContext.pmr_internal) {
-            this.row_number = args.row
-            let element: HTMLElement = document.getElementById(
-                "openEmpsGrid"
-            ) as HTMLElement
-            element.click()
-          }
-           else {
-
-         
-            this.row_number = args.row
-            let element: HTMLElement = document.getElementById(
-                "openProvsGrid"
-            ) as HTMLElement
-            element.click()
-            }  
-        },
-      },
-      {
-        id: "fname",
+        id: "emp_lname",
         name: "Nom",
-        field: "fname",
+        field: "emp_lname",
         sortable: true,
         width: 80,
         filterable: false,
         type: FieldType.string,
       },
       {
-        id: "lname",
+        id: "emp_fname",
         name: "Prénom",
-        field: "lname",
+        field: "emp_fname",
         sortable: true,
         width: 80,
         filterable: false,
         type: FieldType.string,
       },
       {
-        id: "pmr_start_date",
+        id: "pme_start_date",
         name: "Date Début",
-        field: "pmr_start_date",
+        field: "pme_start_date",
         sortable: true,
         width: 80,
         filterable: false,
@@ -486,9 +423,9 @@ prepareCode(): any {
         },
       },
       {
-        id: "pmr_end_date",
+        id: "pme_end_date",
         name: "Date Fin",
-        field: "pmr_end_date",
+        field: "pme_end_date",
         sortable: true,
         width: 80,
         filterable: false,
@@ -497,31 +434,25 @@ prepareCode(): any {
           model: Editors.date,
         },
       },
+    
       {
-        id: "pmr_duration",
-        name: "Durée",
-        field: "pmr_duration",
+        id: "pme_inst",
+        name: "Instruction",
+        field: "pme_inst",
         sortable: true,
         width: 80,
         filterable: false,
-        type: FieldType.float,
-                editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 }
-        },
-      },
-
-      {
-        id: "pmr_cmmt",
-        name: "Observation",
-        field: "pmr_cmmt",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-            model: Editors.longText,
-        },
+        
     },
+    {
+      id: "pme_task",
+      name: "Tâche",
+      field: "pme_task",
+      sortable: true,
+      width: 80,
+      filterable: false,
+      
+     },
 
 
      
@@ -916,6 +847,7 @@ handleSelectedRowsChanged(e, args) {
       controls.pmr_pm_code.setValue(item.pm_code || "");
       controls.pmdesc.setValue(item.pm_desc || "");
       this.pm_doc_list_code = item.pm_doc_list_code
+      this.getProjectEmployees(item.pm_code)
       this.siteService.getByOne({ si_default: true  }).subscribe(
         (res: any) => {
         this.site = res.data.si_site
@@ -1312,9 +1244,45 @@ openDocumentListPopup(content100){
       console.log(response.data)
       this.specificationHeader = response.data.specification
       this.specificationDetails = response.data.specificationDetails
+
+      this.specificationDetails.forEach((detail) => {
+        this.customeControls[detail.mpd_type] = new FormControl("");
+        this.customeControls[detail.mpd_type + "text-area"] =
+          new FormControl("");
+      });
+
+      // console.log(this.customeControls)
+
     })
     this.modalService.open(content100, { size: "lg" })
 
+}
+
+showInstructionsPopup(content101){
+  this.modalService.open(content101, { size: "lg" })
+}
+
+// mvdataset
+getProjectEmployees(project_code){
+  this.projectService
+      .getEmpProject(project_code)
+      .subscribe((response: any) =>{ 
+        console.log(response.data)
+        this.mvdataset = response.data
+        this.mvdataView.setItems(response.data)
+      })
+}
+
+onCheckClick(val){
+
+  const index = this.checkedValues.findIndex(detail=>{
+    return detail == val
+ })
+ if(index == -1){this.checkedValues.push(val)}
+ else{
+  this.checkedValues.splice(index, 1);
+ }
+  console.log(this.checkedValues)
 }
 
 }

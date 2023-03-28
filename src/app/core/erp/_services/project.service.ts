@@ -12,6 +12,7 @@ const API_URL = environment.apiUrl + "/projects"
 const API_URL_SPECIFICATIONS = environment.apiUrl + "/qualityControl/findSpecifications"
 const API_URL_SPECIFICATION_DATA = environment.apiUrl + "/qualityControl/findSpecificationWithDetails"
 const API_URL_PROJECT_TYPE = environment.apiUrl + "/projects/projectTypes"
+const API_URL_TESTS_HISTORY = environment.apiUrl + "/qualityControl/createTestsHistory"
 
 @Injectable()
 export class ProjectService {
@@ -104,5 +105,14 @@ export class ProjectService {
         return this.http.get(`${API_URL_SPECIFICATION_DATA}/${specification_code}`, { headers: httpHeaders })
     }
     
-    // DELETE
+
+    public getEmpProject(project_code: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findAssignedEmps/${project_code}`, { headers: httpHeaders })
+    }
+
+    public createTestsHistory(testsHistory: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL_TESTS_HISTORY, {testsHistory}, { headers: httpHeaders })
+    }
 }

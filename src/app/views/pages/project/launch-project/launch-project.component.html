@@ -47,6 +47,17 @@
                     <!-- PROJECT DESC END-->
                 </div>
 
+                <!-- BUTTON OF INSTRUCTIONS LIST -->
+                <div class="form-group col-12 row">
+                    <label class="col-2 col-form-label text-left"> Liste des instructions: </label>
+                </div>
+
+
+                <div class="row col-lg-12">
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="showInstructionsPopup(content101)">Instructions</button>
+                </div>
+                <!-- BUTTON OF INSTRUCTIONS LIST -->
+
                 
                 <!-- BUTTON OF DOCUMENT LIST -->
                 <div class="form-group col-12 row">
@@ -59,22 +70,15 @@
                 </div>
                 <!-- BUTTON OF DOCUMENT LIST -->
                
-<!-- 
-                <div class="form-group col-12 row">
-                    <label class="col-2 col-form-label text-left"> Affectation Employé: </label>
-                </div> -->
 
 
-                <!-- <div class="row col-lg-12">
-                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Affecter un
-                        Employé</button>
-                </div>
-                <br>
+                <br><br><br>
                 <div class="row">
                     <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
                     [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
                 </angular-slickgrid>
-                </div> -->
+                </div> 
+
             </form>
           
         </div>
@@ -149,6 +153,7 @@
                 </div>
                 <div class="modal-body pl-10 pr-10">
                     <div class="row">
+                        
                         <h5 class="col-3">Code specification :</h5><span class="col-4">{{pm_doc_list_code}}</span> 
                        
                     </div>
@@ -161,14 +166,13 @@
 
                     <div class="row">
                         <br>
-                        <div
-                          class="col-12"
-                          *ngFor="let detail of specificationDetails; let i = index">
-                          <input
-                          type="checkbox"
-                          class="mb-5"
-                        />
-                        <label class="ml-5">{{detail.mpd_label}}</label>
+                        <div class="col-12" *ngFor="let detail of specificationDetails; let i = index">
+                            <label class="ml-5 mr-10 col-2">{{detail.mpd_label}}</label>
+                            <input
+                            type="checkbox"
+                            class="mb-5 mt-1"
+                            (change)="onCheckClick(detail.mpd_type)"
+                            />
                         </div>
                     </div>
 
@@ -180,6 +184,35 @@
             </ng-template>
         </div>
         <!-- DOCUMENT LIST POPUP END -->
+
+        <!-- INSTRUCTIONS POPUP -->
+        <div>
+            <ng-template #content101 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Liste des instructions : </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pl-10 pr-10">
+                    
+                    <div class="col-12" *ngFor="let inst of mvdataset; let i = index">
+                        <div class="row">
+                            <h5 class="col-2">Code instruction : </h5> <span class="col-2">{{inst.pme_inst}}</span>
+                            <h5 class="col-2">Date Deb : </h5> <span class="col-2">{{inst.pme_start_date}}</span>
+                            <h5 class="col-2">Date Fin: </h5> <span class="col-2">{{inst.pme_end_date}}</span>
+                        </div>
+
+                    </div>
+                 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- INSTRUCTIONS POPUP END -->
 
   
 
