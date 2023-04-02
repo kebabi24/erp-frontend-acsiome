@@ -54,6 +54,7 @@ import {
   MesureService,
   printTR,
 } from "../../../../core/erp";
+import { exit } from "process";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -214,6 +215,7 @@ export class TransferComponent implements OnInit {
         tr_loc: [this.inventoryTransaction.tr_loc],
         tr_ref_site: [this.user.usrd_site],
         tr_ref_loc: [this.inventoryTransaction.tr_ref_loc],
+        ref: [null],
         print:[true],
        
       
@@ -426,7 +428,7 @@ export class TransferComponent implements OnInit {
             desc: "",
             tr_qty_loc: 0,
             tr_um: "",
-            tr_trice: 0,
+            tr_price: 0,
             cmvids: "",
             tr_serial: null,
             tr_status: null,
@@ -434,6 +436,113 @@ export class TransferComponent implements OnInit {
           },
           { position: "bottom" }
         );
+      }
+
+      onChangePal() {
+            /*kamel palette*/
+            const controls = this.trForm.controls
+            const ref = controls.ref.value
+          var bol = false
+            for(let ob of this.dataset) {
+
+              if(ob.tr_ref == ref) {
+                console.log("hnehnahna")
+                bol = true
+                break;
+               
+              }
+            }
+            if (!bol) {
+            this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
+              (response: any) => {
+                this.lddet = response.data
+                //console.log(this.lddet.ld_qty_oh)
+            if (this.lddet != null) {
+             
+              if(this.lddet.ld_site != controls.tr_site.value) {
+                alert("Palette N'existe pas dans Ce Site")
+   
+               } else {
+  
+                if (this.lddet.ld_loc != controls.tr_loc.value) {
+                  alert("Palette N'existe pas dans Cet Emplacement")
+                }
+                else {
+             
+             
+              this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "RCT-TR" }).subscribe((resstat:any)=>{
+                  console.log(resstat)
+                  const { data } = resstat;
+
+                  if (data) {
+                    this.stat = null
+                    alert("Status Interdit pour ce mouvement ")
+
+                  } else {
+                    this.stat = this.lddet.ld_status
+                  
+              // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+              //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+                   
+               
+             
+             
+             this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+              (respopart: any) => {
+                console.log(respopart)
+
+             this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+              (respo: any) => {
+                this.sct = respo.data
+                console.log(this.sct)
+            
+
+             this.gridService.addItem(
+              {
+                id: this.dataset.length + 1,
+                tr_line: this.dataset.length + 1,
+                tr_part: this.lddet.ld_part,
+                cmvid: "",
+                desc: respopart.data.pt_desc1,
+                tr_qty_loc: this.lddet.ld_qty_oh,
+                qty_oh: this.lddet.ld_qty_oh,
+                tr_um: respopart.data.pt_um,
+                tr_um_conv:1,
+                tr_price: this.sct.sct_mtl_tl,
+                cmvids: "",
+                tr_ref: ref,
+                tr_serial: this.lddet.ld_lot,
+                tr_status: this.lddet.ld_status,
+                tr_expire: this.lddet.ld_expire,
+              },
+              { position: "bottom" }
+            );
+         
+             });
+            }); 
+          }
+          }); 
+                }
+            }
+         
+
+
+          }
+
+
+
+            else {
+            alert("Palette Nexiste pas")
+          //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+            }
+
+            });
+
+          }
+          else {
+            alert ("Palette déja scannée")
+          }
+      controls.ref.setValue(null)
       }
       onChangeLoc() {
         const controls = this.trForm.controls;
@@ -936,6 +1045,23 @@ export class TransferComponent implements OnInit {
               
           },
                   
+          {
+            id: "tr_ref",
+            name: "Palette",
+            field: "tr_ref",
+            sortable: true,
+            width: 80,
+            filterable: false,
+            //type: FieldType.float,
+            editor: {
+              model: Editors.text,
+            },
+            onCellChange: (e: Event, args: OnEventArgs) => {
+            
+            }
+            
+        },
+             
           {
             id: "tr_status",
             name: "Status",

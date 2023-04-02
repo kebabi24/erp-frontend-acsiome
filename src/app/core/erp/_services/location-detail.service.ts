@@ -54,6 +54,11 @@ export class LocationDetailService {
         return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })
  
     }
+    public getByOneRef(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findoneref`,data, { headers: httpHeaders })
+ 
+    }
     public getByOneStatus(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findonestatus`,data, { headers: httpHeaders })

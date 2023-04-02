@@ -20,6 +20,8 @@ export class TopbarComponent {
   userDropdownStyle = "light";
   today: Date = new Date();
   todayString: string = "";
+  user:any;
+  domain: String= ""
 
   constructor(private layoutConfigService: LayoutConfigService) {
     this.searchDisplay = this.layoutConfigService.getConfig(
@@ -52,6 +54,8 @@ export class TopbarComponent {
     );
   }
   ngOnInit() {
+    this.user =  JSON.parse(localStorage.getItem('user'))
+this.domain = this.user.usrd_domain
     this.todayString = `${this.today.getDate()}/${
       this.today.getMonth() + 1
     }/${this.today.getFullYear()}`;

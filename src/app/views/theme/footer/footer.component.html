@@ -2,7 +2,7 @@
 <div class="footer bg-white d-flex flex-lg-column " id="kt_footer" [ngClass]="footerClasses">
 	<div [ngClass]="footerContainerClasses" class=" d-flex flex-column flex-md-row align-items-center justify-content-between">
     <!--begin::Copyright-->
-    <div class="text-dark order-2 order-md-1">
+	<div class="text-dark order-1 order-md-1">
 			<span class="text-muted font-weight-bold mr-2">{{today | date:'yyyy'}} &copy;</span>
       <a href="http://www.acsiome.tech" target="_blank" class="text-dark-75 text-hover-primary">Acsiome technologies</a>
 		</div>
@@ -15,5 +15,11 @@
 			<a href="http://keenthemes.com/metronic" target="_blank" class="nav-link pl-3 pr-0">Contact</a>
 		</div>
 	</div> -->
+	<div class="text-dark order-2 order-md-2">
+		<span class="text-dark-75 font-weight-bolder font-size-h5 d-none d-md-inline mr-3">
+			{{userd.usrd_domain}}
+		  </span>
+		</div>
+		
 </div>
 <!-- end:: Footer -->

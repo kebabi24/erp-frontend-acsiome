@@ -192,6 +192,7 @@ export class CreateNewServiceComponent implements OnInit {
         enableCheckboxSelector: true,
         autoEdit: false,
         autoHeight: false,
+        enableAutoResize:true,
         frozenColumn: 0,
         frozenBottom: true,
         checkboxSelector: {

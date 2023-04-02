@@ -33,7 +33,7 @@
 
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group">Code Article:</label>
+                                        <label class="form-group">Code Interne:</label>
 
                                         <input type="text" [(ngModel)]="itemEdit.pt_part" formControlName="pt_part" 
                                             [className]="form1.controls['pt_part'].errors && (form1.controls['pt_part'].dirty || form1.controls['pt_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
@@ -42,7 +42,7 @@
 
                                     </div>
                                     <div class="form-group col-6">
-                                        <label class="form-group">Description:</label>
+                                        <label class="form-group">Description Interne:</label>
                                         <input type="text"
                                             [className]="form1.controls['pt_desc1'].errors && (form1.controls['pt_desc1'].dirty || form1.controls['pt_desc1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="pt_desc1">
@@ -68,9 +68,22 @@
 
                                     </div>
                                 </div>
+
+
                                 <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Code Externe :</label>
+                                        <input type="text" class="form-control form-control-solid"
+                                        formControlName="pt_upc" aria-describedby="basic-addon2"
+                                        >
+                                        <!-- <input type="text" [(ngModel)]="itemEdit.pt_upc" formControlName="pt_upc" 
+                                            [className]="form1.controls['pt_upc'].errors && (form1.controls['pt_upc'].dirty || form1.controls['pt_upc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                        <div *ngIf="form1.controls['pt_upc'].errors && (form1.controls['pt_upc'].dirty || form1.controls['pt_upc'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div> -->
+
+                                    </div>
                                     <div class="form-group col-6">
-                                        <label class="form-group">Description ABR:</label>
+                                        <label class="form-group">Description Externe:</label>
                                         <input type="text" class="form-control form-control-solid"
                                         formControlName="pt_desc2" aria-describedby="basic-addon2"
                                         >
@@ -81,7 +94,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Ligne Prod:</label>
+                                        <label class="form-group ">Famille :</label>
 
                                         <div class="input-group input-group-sm">
 
@@ -133,34 +146,6 @@
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Revison:</label>
-
-                                        <select class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_rev" id="exampleSelects3">
-                                            <option *ngFor="let elem of pt_rev" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                        </select>
-
-                                    </div>
-
-
-
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Groupe d'etudes:</label>
-                                        <div class="input-group input-group-sm">
-
-                                            <input type="text" class="form-control form-control-solid"
-                                                formControlName="pt_dsgn_grp" aria-describedby="basic-addon2"
-                                                (change)="changeCode('pt_dsgn_grp')">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" (click)="open3(content,'pt_dsgn_grp')">
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     <div class="form-group col-2">
                                         <label class="form-group ">Status:</label>
@@ -181,52 +166,21 @@
 
                                     </div>
 
-
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Empl Plan:</label>
-                                        <select class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_drwg_loc" id="exampleSelects5">
-                                            
-                                            <option *ngFor="let elem of pt_drwg_loc" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Taill:</label>
-                                        <select class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_drwg_size" id="exampleSelects6">
-                                            
-                                            <option *ngFor="let elem of pt_drwg_size" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                        </select>
-                                    </div>
                                 </div>
+
                                 <div class="row">
-
-                                    <div class="form-group col-2">
-                                        <label class="form-group">Grp Promo:</label>
-                                        <select class="form-control form-control-sm form-control-solid"
-                                        id="exampleSelects1" formControlName="pt_promo">
-                                        
-                                        <option *ngFor="let elem of pt_promo" [value]="elem.code_value">
-                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                           
-
-                                    </select>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Categorie remise volume</label>
+                                    <div class="form-group col-4">
+                                        <label class="form-group">Code Modèle:</label>
 
                                         <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_break_cat">
+                                            formControlName="pt_article">
                                     </div>
-
-
                                 </div>
+
                                 <div class="row">
-                                    <div class="form-group col-2"> </div>
+                                <div class="form-group col-2"> </div>
                                 </div>
+
                                 <div class="separator separator-solid"></div>
                                 <div class="row">
                                     <div class="form-group col-2"></div>
@@ -417,12 +371,6 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-4">
-                                        <label class="form-group">Article:</label>
-
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_article">
-                                    </div>
 
                                     <div class="form-group col-2">
                                         <label class="form-group ">Group Lot:</label>
@@ -488,7 +436,7 @@
                                         </div>
 
                                     </div>
-
+<!-- 
                                     <div class="form-group col-2">
                                         <label class="form-group ">Classe frais:</label>
                                         <select class="form-control form-control-sm form-control-solid"
@@ -498,7 +446,7 @@
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
 
-                                    </div>
+                                    </div> -->
 
 
                                     <div class="form-group col-2">
@@ -518,49 +466,40 @@
                                     </div>
 
                                 </div>
-                                <div class="row">
-
+                                <div class="row">  
 
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Poids net</label>
-
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_net_wt">
-
+                                        <label class="form-group ">Unité/Sachet:</label>
+                    
+                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
+                                            formControlName="int03">
+                    
                                     </div>
+                                
                                     <div class="form-group col-2">
-                                        <label class="form-group "> UM Poids </label>
-                                        <select class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_net_wt_um" id="exampleSelects9">
-                                            
-                                            <option *ngFor="let elem of pt_net_wt_um" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                        </select>
+                                        <label class="form-group ">Sachet/Carton</label>
+                    
+                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
+                                            formControlName="int02">
+                    
                                     </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Volume:</label>
 
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_size">
-
-                                    </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group "> UM Volume </label>
-                                        <select class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_size_um" id="exampleSelects11">
-                                            
-                                            <option *ngFor="let elem of pt_size_um" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                        </select>
+                                        <label class="form-group ">Carton/Pallete</label>
+                    
+                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
+                                            formControlName="int03">
+                    
                                     </div>
                                 </div>
+
                             </form>
                         </ng-template>
                     </ngb-tab>
                     <!--add new tab-->
                     <ngb-tab>
                         <ng-template ngbTabTitle>
-                            Données personnalisation
+                            Fiche Article D'Unité
                             <div style="width: 10px;"></div>
                             <a *ngIf="hasFormErrors5"
                                 class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
@@ -576,7 +515,6 @@
                                     Modifiez quelques éléments et réessayez de soumettre.
                                 </kt-alert-->
                                
-                    
                                 <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group ">Scan:</label>
@@ -631,16 +569,20 @@
                                             formControlName="pt_drwg_loc">
                     
                                     </div>
+
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Unité/Sachet:</label>
-                    
-                                        <input type="number" step="0.01" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_drwg_size">
-                    
+                                        <label class="form-group ">Qualité:</label>
+
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_rev" id="exampleSelects3">
+                                            <option *ngFor="let elem of pt_rev" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                        </select>
+
                                     </div>
                                    
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Modéle:</label>
+                                        <label class="form-group ">Format :</label>
                     
                                         <input type="text" class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_model">
@@ -673,6 +615,70 @@
                     
                                     </div>
                                    
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Volume:</label>
+
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_size">
+
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group "> UM Volume </label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_size_um" id="exampleSelects11">
+                                            
+                                            <option *ngFor="let elem of pt_size_um" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Poids net</label>
+    
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_net_wt">
+    
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group "> UM Poids </label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_net_wt_um" id="exampleSelects9">
+                                            
+                                            <option *ngFor="let elem of pt_net_wt_um" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Frome Géometrique:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid"
+                                                formControlName="pt_dsgn_grp" aria-describedby="basic-addon2"
+                                                (change)="changeCode('pt_dsgn_grp')">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content,'pt_dsgn_grp')">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Logo :</label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                        id="exampleSelects1" formControlName="pt_promo">
+                                        
+                                        <option *ngFor="let elem of pt_promo" [value]="elem.code_value">
+                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                           
+
+                                    </select>
+                                    </div>
                                 </div>
                     
                             </form>
@@ -741,7 +747,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Proposition:</label>
+                                        <label class="form-group ">Demande obligatoire:</label>
                                         <span class="switch switch-icon">
                                             <label>
                                                 <input type="checkbox"
@@ -1001,8 +1007,6 @@
                                         </span>
                                     </div>
 
-
-
                                 </div>
                                 <div class="row">
 
@@ -1137,7 +1141,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Prix:</label>
+                                        <label class="form-group ">Prix De Vente:</label>
                                         <div class="col-lg-8">
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="pt_price">

@@ -539,7 +539,13 @@ const routes: Routes = [
         path: 'supervision',
         loadChildren: () => import('./views/pages/supervision/supervision.module').then(m => m.SupervisionModule),
       },
-
+      {
+        path: "domain",
+        loadChildren: () =>
+          import("./views/pages/domain/domain.module").then(
+            (m) => m.DomainModule
+          ),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },
     ],

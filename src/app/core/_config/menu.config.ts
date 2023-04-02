@@ -552,7 +552,16 @@ export class MenuConfig {
               page: "/articles/list",
             },
             {
-              title: "MAINT des Articles",
+              title: "Modification des articles",
+              page: "/articles/list-update",
+            },
+            {
+              title: "Génération Article",
+              page: "/articles/create-spec",
+            },
+            {
+              
+              title: "Ajouter des Articles",
               page: "/articles/add",
             },
             {

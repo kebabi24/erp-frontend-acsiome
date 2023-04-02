@@ -62,6 +62,7 @@ export class CreateUserComponent implements OnInit {
     gridObjsite: any;
     angularGridsite: AngularGridInstance;
     error = false;
+    userd: any;
     constructor(
         config: NgbDropdownConfig,
         private userFB: FormBuilder,
@@ -77,8 +78,10 @@ export class CreateUserComponent implements OnInit {
         console.log(new MenuConfig().defaults)
     }
     ngOnInit(): void {
+        
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
+        this.userd = JSON.parse(localStorage.getItem('user'))
         this.createForm()
     }
 
@@ -97,6 +100,7 @@ export class CreateUserComponent implements OnInit {
             usrd_phone: [{value: this.user.usrd_phone, disabled: !this.isExist}],
             usrd_profile: [{value: this.user.usrd_profile, disabled: !this.isExist}, Validators.required],
             usrd_site: [{value: this.user.usrd_site, disabled: !this.isExist}, Validators.required],
+            usrd_domain: [ this.userd.usrd_domain],
             usrd_active: [{value: this.user.usrd_active, disabled: !this.isExist}, Validators.required],
 
         })
@@ -301,7 +305,7 @@ export class CreateUserComponent implements OnInit {
         _user.usrd_profile = controls.usrd_profile.value
         _user.usrd_active = controls.usrd_active.value
         _user.usrd_site = controls.usrd_site.value
-
+        _user.usrd_domain = controls.usrd_domain.value
         return _user
     }
     /**
