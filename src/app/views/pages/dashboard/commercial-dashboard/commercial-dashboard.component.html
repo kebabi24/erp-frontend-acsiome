@@ -1,0 +1,40 @@
+<kt-portlet>
+  <kt-portlet-body [class]="'kt-portlet__body--fit'">
+   
+
+    <div class="row">
+      <div>
+        {{ time | async }}
+      </div>
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/Cout'">
+            <label >date</label>
+            <select 
+              class=" form-control form-control-sm form-control-solid ">
+              <option *ngFor="let date of orders_dates" [value]="date" class="mt-2 mb-2 dropdown-item">{{date}}</option>
+                              
+            </select>
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv10" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Type de viande '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN5" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+
+    </div>
+
+   
+  </kt-portlet-body>
+</kt-portlet>

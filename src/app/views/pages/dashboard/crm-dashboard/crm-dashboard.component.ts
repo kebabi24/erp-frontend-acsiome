@@ -66,24 +66,6 @@ export class CRMDashboardComponent implements OnInit {
  ngOnInit(): void {
   this.getCRMDashboarData()
 
-   
-       this.data1 = [
-         {
-           title: 'Nbre de vente Journalier',
-           desc: 'Nombre de Vente Ajourdhui',
-           value: "5",
-           valueClass: 'kt-font-brand'
-         },
-         {
-           title: 'Nbre Vente Mensuel',
-           desc: 'Nbre Vente Mensuel',
-           value: "129",
-           valueClass: 'kt-font-danger'
-         }
-       ];
-
-       
-
 am4core.useTheme(am4themes_animated);
 
 

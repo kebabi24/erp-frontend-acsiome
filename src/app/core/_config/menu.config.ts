@@ -34,6 +34,10 @@ export class MenuConfig {
               page: "/dashboard/manager-dashboard",
             },
             {
+              title: "Dashboard Commercial",
+              page: "/dashboard/commercial-dashboard",
+            },
+            {
               title: "Dashboard CRM",
               page: "/dashboard/crm-dashboard",
             },

@@ -162,6 +162,7 @@ export { MobileSettingsService } from "./_services/mobile-settings.service"
 export { LoadRequestService } from "./_services/load-request.service"
 export { QualityControlService } from "./_services/quality-control.service"
 export { TokenSerieService } from "./_services/token-serie.service"
+export { DashboardCommercialService } from "./_services/dashboard-commercial.service"
 
 export {
   printBc,
