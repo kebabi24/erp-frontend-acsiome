@@ -23,7 +23,9 @@ import {
 
 import am4themes_dataviz from "@amcharts/amcharts4/themes/dataviz";
 import * as _ from 'lodash';
-import { Observable, Observer } from 'rxjs';
+import { BehaviorSubject, Observable, Observer } from 'rxjs';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 am4core.useTheme(am4themes_animated);
 
@@ -34,7 +36,9 @@ am4core.useTheme(am4themes_animated);
 })
 
 export class CommercialDashboardComponent implements OnInit {
-
+  dashboardForm: FormGroup;
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
   
  dashbordReportsData: any;
 
@@ -46,6 +50,11 @@ export class CommercialDashboardComponent implements OnInit {
  data_01 = [] 
  orders_dates : any =[]
  meat_types : any = []
+ bread_types : any = []
+ sizes : any = []
+ form_types : any = []
+ platform_types : any = []
+ customer_types : any = []
  
 
  product_sorted_data;
@@ -56,6 +65,7 @@ export class CommercialDashboardComponent implements OnInit {
 
  constructor(
    private zone: NgZone,
+   private fb: FormBuilder,
    private layoutConfigService: LayoutConfigService,
    private dashboardComService : DashboardCommercialService,
    private layoutUtilsService: LayoutUtilsService,
@@ -63,7 +73,10 @@ export class CommercialDashboardComponent implements OnInit {
  }
 
  ngOnInit(): void {
-  this.getDashboarData()
+  this.loading$ = this.loadingSubject.asObservable();
+  this.loadingSubject.next(false);
+  this.createForm()
+  this.getDashboarData("2023-3-1","2023-3-31")
        
        
 
@@ -76,6 +89,80 @@ time = new Observable<string>((observer: Observer<string>) => {
     observer.next("");
   }, 1000);
 });
+
+createForm() {
+  this.loadingSubject.next(false);
+  const date = new Date;
+  
+  this.dashboardForm = this.fb.group({
+  
+  //  site:[this.user.usrd_site,Validators.required],
+   
+    start_date: [{
+      year:date.getFullYear(),
+      month: date.getMonth()+1,
+      day: 1
+    }],
+    end_date: [{
+      year:date.getFullYear(),
+      month: date.getMonth()+1,
+      day: date.getDate()
+    }],
+  });
+}
+
+updateData(){
+  
+  const controls = this.dashboardForm.controls
+  const date = controls.start_date.value
+  const date2 = controls.end_date.value
+  const startDate = date.year+'-'+date.month+'-'+date.day
+  const endDate = date2.year+'-'+date2.month+'-'+date2.day
+  console.log(startDate)
+  console.log(endDate)
+  this.dashboardComService
+    .getAllPosOrders(startDate,endDate)
+
+    .subscribe(
+      
+      (res: any) => {
+        this.orders = res.data.orders
+        this.order_by_shop = res.data.order_by_shop
+        this.meat_types = res.data.meat_types
+        this.bread_types = res.data.bread_types
+        this.sizes = res.data.sizes_types
+        this.form_types = res.data.form_types
+        this.platform_types  = res.data.platform_types
+        this.customer_types  = res.data.customer_types
+
+        let dates = _.mapValues(_.groupBy(this.orders, 'created_date'));
+        for(const key in dates){
+          this.orders_dates.push(key)
+        }
+        console.log(this.orders_dates)
+        const shops_groups = _.mapValues(_.groupBy(this.orders, 'usrd_site'));
+
+    
+        this.createChar1()
+        this.createMeatTypesChartPie()
+        this.createBreadTypesChartPie()
+        this.createSizesChartPie()
+        this.createFormChartPie()
+        this.createPaltformChartPie()
+        this.createPaltCustomerChartPie()
+      },
+      (err) =>
+        this.layoutUtilsService.showActionNotification(
+          err,
+          MessageType.Create,
+          10000,
+          true,
+          true
+        ),
+        ()=>{}
+    );
+}
+
 
 createChar1(){
 
@@ -116,10 +203,10 @@ createChar1(){
   am4core.useTheme(am4themes_animated);
 }
 
-getDashboarData(){
+getDashboarData(startDate: any , endDate:any){
   
   this.dashboardComService
-    .getAllPosOrders()
+    .getAllPosOrders(startDate,endDate)
 
     .subscribe(
       
@@ -127,25 +214,27 @@ getDashboarData(){
         this.orders = res.data.orders
         this.order_by_shop = res.data.order_by_shop
         this.meat_types = res.data.meat_types
+        this.bread_types = res.data.bread_types
+        this.sizes = res.data.sizes_types
+        this.form_types = res.data.form_types
+        this.platform_types  = res.data.platform_types
+        this.customer_types  = res.data.customer_types
+
         let dates = _.mapValues(_.groupBy(this.orders, 'created_date'));
         for(const key in dates){
           this.orders_dates.push(key)
         }
+        console.log(this.orders_dates)
         const shops_groups = _.mapValues(_.groupBy(this.orders, 'usrd_site'));
 
-        // for(const key in shops_groups){
-        //   let sum = 0 
-        //   shops_groups[key].forEach(order=>{
-        //     // console.log(parseFloat(order.total_price))
-        //     sum += parseFloat(order.total_price)
-        //   })
-        //   this.sum_by_shop.push({shop:key , CA:sum , Cout : 20000  })
-        //   console.log("key:\t"+key +"\t length:"+ shops_groups[key].length +"\t sum:"+ sum)
-        //   sum = 0
-        // }
-        
+    
         this.createChar1()
         this.createMeatTypesChartPie()
+        this.createBreadTypesChartPie()
+        this.createSizesChartPie()
+        this.createFormChartPie()
+        this.createPaltformChartPie()
+        this.createPaltCustomerChartPie()
       },
       (err) =>
         this.layoutUtilsService.showActionNotification(
@@ -163,6 +252,96 @@ getDashboarData(){
 createMeatTypesChartPie(){
   let chartr = am4core.create("chartdivN5", am4charts.PieChart);	
       chartr.data = this.meat_types ;
+ 
+      // Add and configure Series
+      let pieSeries = chartr.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "CA";
+      pieSeries.dataFields.category = "type";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeWidth = 2;
+      pieSeries.slices.template.strokeOpacity = 1;
+      
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+}
+
+createBreadTypesChartPie(){
+  let chartr = am4core.create("chartdivN6", am4charts.PieChart);	
+      chartr.data = this.bread_types ;
+ 
+      // Add and configure Series
+      let pieSeries = chartr.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "CA";
+      pieSeries.dataFields.category = "type";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeWidth = 2;
+      pieSeries.slices.template.strokeOpacity = 1;
+      
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+}
+
+createSizesChartPie(){
+  let chartr = am4core.create("chartdivN7", am4charts.PieChart);	
+      chartr.data = this.sizes ;
+ 
+      // Add and configure Series
+      let pieSeries = chartr.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "CA";
+      pieSeries.dataFields.category = "type";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeWidth = 2;
+      pieSeries.slices.template.strokeOpacity = 1;
+      
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+}
+
+createFormChartPie(){
+  let chartr = am4core.create("chartdivN8", am4charts.PieChart);	
+      chartr.data = this.form_types ;
+ 
+      // Add and configure Series
+      let pieSeries = chartr.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "CA";
+      pieSeries.dataFields.category = "type";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeWidth = 2;
+      pieSeries.slices.template.strokeOpacity = 1;
+      
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+}
+
+createPaltformChartPie(){
+  let chartr = am4core.create("chartdivN9", am4charts.PieChart);	
+      chartr.data = this.platform_types ;
+ 
+      // Add and configure Series
+      let pieSeries = chartr.series.push(new am4charts.PieSeries());
+      pieSeries.dataFields.value = "CA";
+      pieSeries.dataFields.category = "type";
+      pieSeries.slices.template.stroke = am4core.color("#fff");
+      pieSeries.slices.template.strokeWidth = 2;
+      pieSeries.slices.template.strokeOpacity = 1;
+      
+      // This creates initial animation
+      pieSeries.hiddenState.properties.opacity = 1;
+      pieSeries.hiddenState.properties.endAngle = -90;
+      pieSeries.hiddenState.properties.startAngle = -90;
+}
+
+createPaltCustomerChartPie(){
+  let chartr = am4core.create("chartdivN10", am4charts.PieChart);	
+      chartr.data = this.customer_types ;
  
       // Add and configure Series
       let pieSeries = chartr.series.push(new am4charts.PieSeries());

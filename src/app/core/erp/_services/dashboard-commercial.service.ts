@@ -20,9 +20,9 @@ export class DashboardCommercialService {
     ) {}
 
     // READ 
-    public getAllPosOrders() {
+    public getAllPosOrders(startDate: any , endDate:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(API_URL_POS_ORDERS, { headers: httpHeaders })
+        return this.http.post(API_URL_POS_ORDERS, {startDate , endDate},{ headers: httpHeaders })
     }
   
 }
