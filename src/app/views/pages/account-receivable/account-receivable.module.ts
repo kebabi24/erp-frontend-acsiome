@@ -51,11 +51,12 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import { UsersService, CodeService, TaxeService, CustomerService, SequenceService, 
-  DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,} from '../../../core/erp';
+  DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,ProjectService} from '../../../core/erp';
 import { CreateNoteComponent } from './create-note/create-note.component';
 import { EditPaymentComponent } from './edit-payment/edit-payment.component';
 import { ListPaymentRapComponent } from './list-payment-rap/list-payment-rap.component';
 import { ListPaymentComponent } from './list-payment/list-payment.component';
+import { CreateProjectPaymentComponent } from './create-project-payment/create-project-payment.component';
 
   const routes: Routes = [
     {
@@ -69,6 +70,10 @@ import { ListPaymentComponent } from './list-payment/list-payment.component';
                 path: "create-account-receivable",
                 component: CreateAccountReceivableComponent,
             },
+            {
+              path: "create-project-payment",
+              component: CreateProjectPaymentComponent,
+          },
             {
                 path: "create-note",
                 component: CreateNoteComponent,
@@ -91,7 +96,7 @@ import { ListPaymentComponent } from './list-payment/list-payment.component';
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -133,6 +138,7 @@ providers: [
     TaxeService,
     DeviseService,
     BankService,
+    ProjectService,
     AccountReceivableService,
     InvoiceOrderService,
 ],

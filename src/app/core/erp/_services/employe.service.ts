@@ -22,14 +22,18 @@ export class EmployeService {
     ) {}
 
     // CREATE
-    public add(employe: Employe) {
+ 
+    public add(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, employe, { headers: httpHeaders })
+        return this.http.post(API_URL, data, { headers: httpHeaders })
     }
-
     public addC(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/C`, data, { headers: httpHeaders })
+    }
+    public addPoint(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_EmpTime}/C`, data, { headers: httpHeaders })
     }
     // READ 
     public getAll() {
@@ -50,6 +54,13 @@ export class EmployeService {
     public getByTime(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findtime`,data, { headers: httpHeaders })
+
+        
+        
+    }
+    public getByTimeProject(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findtimeproject`,data, { headers: httpHeaders })
 
         
         

@@ -63,6 +63,7 @@ import { ListPmComponent } from './list-pm/list-pm.component';
 import { AddReportComponent } from './add-report/add-report.component';
 import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
 import { LaunchProjectComponent } from './launch-project/launch-project.component';
+import { EmpTempComponent } from './emp-temp/emp-temp.component';
 
 const routes: Routes = [
   {
@@ -89,11 +90,15 @@ const routes: Routes = [
     path: 'launch-project',
     component: LaunchProjectComponent
   }, 
+  {
+    path: 'emp-temp',
+    component: EmpTempComponent
+  }, 
 ] 
 
 
 @NgModule({
-  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, ListPmComponent, AddReportComponent,AssignEmployeeComponent,LaunchProjectComponent],
+  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, ListPmComponent, AddReportComponent,AssignEmployeeComponent,LaunchProjectComponent, EmpTempComponent],
   imports: [
     CommonModule,
     HttpClientModule,
