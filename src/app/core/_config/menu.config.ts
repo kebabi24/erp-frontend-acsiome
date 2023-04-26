@@ -1009,6 +1009,14 @@ export class MenuConfig {
               title: "Rapport des activités",
               page: "/project/add-report",
             },
+            {
+              title: "Déclaration de panne des équipements",
+              page: "/project/asset-down",
+            },
+            {
+              title: "Déclaration de accident/incident",
+              page: "/project/accident-incident",
+            },
 
             {
               title: "Gestion des Métier",

@@ -55,6 +55,7 @@ export class CommercialDashboardComponent implements OnInit {
  form_types : any = []
  platform_types : any = []
  customer_types : any = []
+ shops : any = []
  
 
  product_sorted_data;
@@ -76,8 +77,8 @@ export class CommercialDashboardComponent implements OnInit {
   this.loading$ = this.loadingSubject.asObservable();
   this.loadingSubject.next(false);
   this.createForm()
-  this.getDashboarData("2023-3-1","2023-3-31")
-       
+  this.getDashboarData("2023-3-1","2023-3-31","")
+    
        
 
 
@@ -97,7 +98,7 @@ createForm() {
   this.dashboardForm = this.fb.group({
   
   //  site:[this.user.usrd_site,Validators.required],
-   
+    selected_shop : [''],
     start_date: [{
       year:date.getFullYear(),
       month: date.getMonth()+1,
@@ -116,12 +117,13 @@ updateData(){
   const controls = this.dashboardForm.controls
   const date = controls.start_date.value
   const date2 = controls.end_date.value
+  const shop = controls.selected_shop.value
   const startDate = date.year+'-'+date.month+'-'+date.day
   const endDate = date2.year+'-'+date2.month+'-'+date2.day
-  console.log(startDate)
-  console.log(endDate)
+
+  console.log(shop)
   this.dashboardComService
-    .getAllPosOrders(startDate,endDate)
+    .getAllPosOrders(startDate,endDate,shop)
 
     .subscribe(
       
@@ -203,10 +205,10 @@ createChar1(){
   am4core.useTheme(am4themes_animated);
 }
 
-getDashboarData(startDate: any , endDate:any){
+getDashboarData(startDate: any , endDate:any , shop:any){
   
   this.dashboardComService
-    .getAllPosOrders(startDate,endDate)
+    .getAllPosOrders(startDate,endDate,shop)
 
     .subscribe(
       
@@ -220,11 +222,16 @@ getDashboarData(startDate: any , endDate:any){
         this.platform_types  = res.data.platform_types
         this.customer_types  = res.data.customer_types
 
+        this.order_by_shop.forEach(shop=>{
+          this.shops.push({code : shop.shop , label : shop.shop_name })
+        })
+        console.log(this.shops)   
+
         let dates = _.mapValues(_.groupBy(this.orders, 'created_date'));
         for(const key in dates){
           this.orders_dates.push(key)
         }
-        console.log(this.orders_dates)
+        
         const shops_groups = _.mapValues(_.groupBy(this.orders, 'usrd_site'));
 
     
