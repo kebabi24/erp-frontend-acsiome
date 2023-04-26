@@ -93,6 +93,12 @@ export class EmpTempComponent implements OnInit {
 
     alertWarning: any;
 
+    datasite: []
+    columnDefinitionssite: Column[] = []
+    gridOptionssite: GridOption = {}
+    gridObjsite: any
+    angularGridsite: AngularGridInstance
+
   columnDefinitions18: Column[];
   gridOptions18: GridOption;
   gridObj18: any;
@@ -141,6 +147,8 @@ export class EmpTempComponent implements OnInit {
 
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))       
+    
+    if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
     this.createForm();
     this.initGrid18();
    
@@ -260,7 +268,7 @@ export class EmpTempComponent implements OnInit {
   
   
    
-    this.employeService.getByTimeProject({emp_shift:controls.emp_shift.value,date:date}).subscribe(
+    this.employeService.getByTimeProject({emp_shift:controls.emp_shift.value,date:date, site:controls.site.value}).subscribe(
       (response: any) => {   
         this.emps = response.data
        console.log(this.emps)
@@ -316,22 +324,23 @@ export class EmpTempComponent implements OnInit {
       day: date.getUTCDate() 
     }],
       emp_shift :  [{value: ""}],
+      site: [ this.site]
   
   })
 }
 
-prepareCode(): any {
-  const controls = this.empForm.controls
-  const _addReport = new AddReport()
-  _addReport.pmr_pm_code = controls.pmr_pm_code.value
-  _addReport.pmr_inst = controls.pmr_inst.value
-  _addReport.pmr_task = controls.pmr_task.value
-  _addReport.pmr_task_status = controls.pmr_task_status.value
-  _addReport.pmr_close = controls.pmr_close.value
+// prepareCode(): any {
+//   const controls = this.empForm.controls
+//   const _addReport = new AddReport()
+//   _addReport.pmr_pm_code = controls.pmr_pm_code.value
+//   _addReport.pmr_inst = controls.pmr_inst.value
+//   _addReport.pmr_task = controls.pmr_task.value
+//   _addReport.pmr_task_status = controls.pmr_task_status.value
+//   _addReport.pmr_close = controls.pmr_close.value
  
   
-  return _addReport
-}
+//   return _addReport
+// }
 
 
   
@@ -404,5 +413,91 @@ prepareCode(): any {
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
   
-  
+  handleSelectedRowsChangedsite(e, args) {
+    const controls = this.empForm.controls
+   
+    if (Array.isArray(args.rows) && this.gridObjsite) {
+        args.rows.map((idx) => {
+            const item = this.gridObjsite.getDataItem(idx)
+            // TODO : HERE itterate on selected field and change the value of the selected field
+            
+                    controls.site.setValue(item.si_site || "")
+            
+        })
+    }
+}
+angularGridReadysite(angularGrid: AngularGridInstance) {
+    this.angularGridsite = angularGrid
+    this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridsite() {
+    this.columnDefinitionssite = [
+        {
+            id: "id",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
+
+            minWidth: 50,
+            maxWidth: 50,
+        },
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+        {
+            id: "si_site",
+            name: "Site",
+            field: "si_site",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "si_desc",
+            name: "Designation",
+            field: "si_desc",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        
+    ]
+
+    this.gridOptionssite = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+    this.siteService
+        .getAll()
+        .subscribe((response: any) => (this.datasite = response.data))
+}
+opensite(contentsite) {
+    
+    this.prepareGridsite()
+    this.modalService.open(contentsite, { size: "lg" })
+}
+ 
 }

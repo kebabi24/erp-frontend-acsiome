@@ -1412,11 +1412,14 @@ calculatetot(){
   const controls = this.projectForm.controls 
    let tcost = 0
    for (var i = 0; i < this.mvdataset.length; i++) {
-     tcost += round((this.mvdataset[i].pmd_cost +  this.mvdataset[i].bomcout),2)
+     tcost += Number(this.mvdataset[i].pmd_cost) +  Number(this.mvdataset[i].bomcout)
 
+     console.log("tcost",tcost)
+     console.log(this.mvdataset[i].pmd_cost,this.mvdataset[i].bomcout)
 
 }
-controls.pm_cost.setValue(tcost.toFixed(2));
+console.log(tcost)
+controls.pm_cost.setValue(Number(tcost.toFixed(2)));
 }
 
 getSpecifications() {

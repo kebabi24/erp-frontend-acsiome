@@ -69,7 +69,8 @@ import { ListSiteComponent } from './list-site/list-site.component';
 import { EditSiteComponent } from './edit-site/edit-site.component';
 import { ListStatusComponent } from './list-status/list-status.component';
 import { EditStatusComponent } from './edit-status/edit-status.component'
-import { CreateStrandardSpecificationComponent } from "./create-standard-specification/create-standard-specification.component"
+import { CreateStrandardSpecificationComponent } from "./create-standard-specification/create-standard-specification.component";
+import { StatusMouvementComponent } from './status-mouvement/status-mouvement.component'
 const routes: Routes = [
   {
     path: 'create-site',
@@ -111,6 +112,10 @@ const routes: Routes = [
     path: 'edit-status/:id',
     component: EditStatusComponent
   },
+  {
+    path: 'status-mouvement',
+    component: StatusMouvementComponent
+  },
 ] 
 
 @NgModule({
@@ -125,7 +130,8 @@ const routes: Routes = [
         EditSiteComponent,
         ListStatusComponent,
         EditStatusComponent,
-        CreateStrandardSpecificationComponent
+        CreateStrandardSpecificationComponent,
+        StatusMouvementComponent
     ],
     imports: [
         CommonModule,
