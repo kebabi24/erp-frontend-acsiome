@@ -34,6 +34,10 @@ export class MenuConfig {
               page: "/dashboard/manager-dashboard",
             },
             {
+              title: "Dashboard Commercial",
+              page: "/dashboard/commercial-dashboard",
+            },
+            {
               title: "Dashboard CRM",
               page: "/dashboard/crm-dashboard",
             },
@@ -846,6 +850,10 @@ export class MenuConfig {
               page: "/account-receivable/create-account-receivable",
             },
             {
+              title: "Paiement par Projet",
+              page: "/project/create-project-payment",
+            },
+            {
               title: "Liste des Paiement",
               page: "/account-receivable/list-payment",
             },
@@ -995,8 +1003,12 @@ export class MenuConfig {
             },
             // {
             //   title: "Affectation des Employés",
-            //   page: "/project/assign-emp",
+            //   page: "/project/create-project-payment",
             // },
+            {
+              title: "Pointage des Employés",
+              page: "/project/emp-temp",
+            },
             {
               title: "Affectation des Employés",
               page: "/accounting-setting/affect-emp",
@@ -1004,6 +1016,14 @@ export class MenuConfig {
             {
               title: "Rapport des activités",
               page: "/project/add-report",
+            },
+            {
+              title: "Déclaration de panne des équipements",
+              page: "/project/asset-down",
+            },
+            {
+              title: "Déclaration de accident/incident",
+              page: "/project/accident-incident",
             },
 
             {

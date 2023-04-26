@@ -2,18 +2,15 @@
     "name": "metronic-angular",
     "version": "7.0.5",
     "description": "Packages used by Angular",
-    "main": "app.js",
     "scripts": {
         "ng": "ng",
-        "start": "electron .",
+        "start": "node --max-old-space-size=8192 node_modules/@angular/cli/bin/ng serve",
         "build": "ng build --prod",
-        "electron": "ng build && electron .",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
         "bundle-report": "webpack-bundle-analyzer dist/stats.json",
-        "rtl": "webpack",
-        "pack": "electron-packager . abracadabra --platform=win32 --arch=ia32"
+        "rtl": "webpack"
     },
     "private": true,
     "dependencies": {
@@ -64,6 +61,7 @@
         "internal-ip": "^6.2.0",
         "jquery": "^3.5.1",
         "jspdf": "^2.5.0",
+        "jspdf-autotable": "^3.5.28",
         "lodash": "^4.17.21",
         "lodash.isequal": "^4.5.0",
         "material-design-icons": "3.0.1",

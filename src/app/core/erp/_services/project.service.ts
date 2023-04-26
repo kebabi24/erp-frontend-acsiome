@@ -115,4 +115,9 @@ export class ProjectService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL_TESTS_HISTORY, {testsHistory}, { headers: httpHeaders })
     }
+
+    public createAssetDown(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createAsset`, {data}, { headers: httpHeaders })
+    }
 }

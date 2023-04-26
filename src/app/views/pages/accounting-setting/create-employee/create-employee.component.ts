@@ -79,6 +79,15 @@ export class CreateEmployeeComponent implements OnInit {
   gridObj2: any;
   angularGrid2: AngularGridInstance;
 
+  // grid options
+  mvangularGrid: AngularGridInstance;
+  mvgrid: any;
+  mvgridService: GridService;
+  mvdataView: any;
+  mvcolumnDefinitions: Column[];
+  mvgridOptions: GridOption;
+  mvdataset: any[];
+
     emp_city: any[] = []
     emp_state: any[] = []
     emp_county: any[] = []
@@ -116,7 +125,71 @@ export class CreateEmployeeComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
     this.createForm()
+    this.initmvGrid();
 }
+initmvGrid() {
+  this.mvcolumnDefinitions = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30,
+    
+    },
+    {
+      id: "code_value",
+      name: "Type",
+      field: "code_value",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+    {
+      id: "code_cmmt",
+      name: "Designation",
+      field: "code_cmmt",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+    
+    {
+      id: "emps_amt",
+      name: "Montant",
+      field: "emps_amt",
+      sortable: true,
+      width: 80,
+      filterable: false,
+      type: FieldType.float,
+      editor: {
+        model: Editors.float,
+      },
+    },
+  ];
+
+  this.mvgridOptions = {
+    asyncEditorLoading: false,
+    editable: true,
+    enableColumnPicker: true,
+    enableCellNavigation: true,
+    enableRowSelection: true,
+  };
+  this.codeService.getBy({ code_fldname: "emp_type" })
+  .subscribe((response: any) => (this.mvdataset = response.data));
+  
+
+}
+
 //create form
 createForm() {
   this.loadingSubject.next(false)
@@ -298,7 +371,13 @@ onSubmit() {
 
   // tslint:disable-next-line:prefer-const
   let employe = this.prepareCode()
-  this.addEmploye(employe)
+  for (let data of this.mvdataset) {
+    delete data.id;
+    delete data.cmvid;
+  }
+  console.log(this.mvdataset)
+  
+  this.addEmploye(employe,this.mvdataset)
   
 }
 /**
@@ -365,10 +444,10 @@ onSubmit() {
      *
      * @param _employe: EmployeModel
      */
-    addEmploye(_employe: Employe) {
+    addEmploye(_employe: Employe, details: any) {
       const controls = this.empForm.controls
       this.loadingSubject.next(true)
-      this.employeService.add(_employe).subscribe(
+      this.employeService.add({ Employe: _employe, employeScoreDetail: details }).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
               this.layoutUtilsService.showActionNotification(
