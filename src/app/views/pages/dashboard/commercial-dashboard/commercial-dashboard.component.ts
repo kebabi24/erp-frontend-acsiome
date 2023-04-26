@@ -219,9 +219,18 @@ getDashboarData(startDate: any , endDate:any , shop:any){
         this.bread_types = res.data.bread_types
         this.sizes = res.data.sizes_types
         this.form_types = res.data.form_types
-        this.platform_types  = res.data.platform_types
-        this.customer_types  = res.data.customer_types
+       
 
+        this.platform_types  = res.data.platform_types
+        const  indexNullPlatform = res.data.platform_types.findIndex(platform =>{
+          return platform.type == "null"
+        })
+        
+        if (indexNullPlatform > -1) { // only splice array when item is found
+          this.platform_types.splice(indexNullPlatform, 1); // 2nd parameter means remove one item only
+        }
+
+        this.customer_types  = res.data.customer_types
         this.order_by_shop.forEach(shop=>{
           this.shops.push({code : shop.shop , label : shop.shop_name })
         })
