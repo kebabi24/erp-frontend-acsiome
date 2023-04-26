@@ -136,7 +136,7 @@ export class AffectEmpComponent implements OnInit {
   this.affectEmp = new AffectEmp()
   
   this.empForm = this.empFB.group({
-      pme_pm_code: [this.affectEmp.pme_pm_code, Validators.required],
+      pme_pm_code: [this.affectEmp.pme_pm_code],
       pme_site: [this.affectEmp.pme_site],
       pmdesc :  [{value: "", disabled: true}],
       pme_inst: [
@@ -144,8 +144,7 @@ export class AffectEmpComponent implements OnInit {
           Validators.required,
       ],
       pme_task: [
-        this.affectEmp.pme_task,
-        Validators.required,
+        this.affectEmp.pme_task
     ],
     taskdesc :  [{value: "", disabled: true}],
       

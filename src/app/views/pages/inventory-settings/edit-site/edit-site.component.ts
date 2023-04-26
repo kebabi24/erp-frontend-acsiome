@@ -30,7 +30,7 @@ import {
   AngularGridInstance,
   FieldType, GridService
 } from "angular-slickgrid"
-import { Site, SiteService, AccountService, InventoryStatusService, EntityService } from "../../../../core/erp"
+import { Site, SiteService, AccountService, InventoryStatusService, EntityService, CustomerService } from "../../../../core/erp"
 
 @Component({
   selector: 'kt-edit-site',
@@ -68,6 +68,11 @@ export class EditSiteComponent implements OnInit {
     gridObjentity: any;
     angularGridentity: AngularGridInstance;
 
+    customers: [];
+    columnDefinitions2: Column[] = [];
+    gridOptions2: GridOption = {};
+    gridObj2: any;
+    angularGrid2: AngularGridInstance;
 
   constructor(
       config: NgbDropdownConfig,
@@ -80,7 +85,8 @@ export class EditSiteComponent implements OnInit {
       private inventoryStatusService: InventoryStatusService,
       private modalService: NgbModal, 
       private layoutUtilsService: LayoutUtilsService,
-      private siteService: SiteService
+      private siteService: SiteService,
+      private customersService: CustomerService,
   ) {
       config.autoClose = true
   }
@@ -110,6 +116,7 @@ export class EditSiteComponent implements OnInit {
 
       si_site: [this.siteEdit.si_site, Validators.required],
       si_desc: [this.siteEdit.si_desc,  Validators.required ],
+      si_cust: [this.siteEdit.si_cust],
       si_entity: [this.siteEdit.si_entity],
       si_default: [this.siteEdit.si_default],
       si_status: [this.siteEdit.si_status],
@@ -158,7 +165,7 @@ prepareSite(): Site {
         _site.si_desc= controls.si_desc.value
         _site.si_entity= controls.si_entity.value
         _site.si_default= controls.si_default.value
-       
+        _site.si_cust= controls.si_cust.value
         _site.si_status= controls.si_status.value
         _site.si_xfer_cc= controls.si_xfer_cc.value
         _site.si_xfer_sub= controls.si_xfer_sub.value
@@ -662,5 +669,126 @@ openentity(content, field) {
   this.modalService.open(content, { size: "lg" })
 }
 
+
+handleSelectedRowsChanged2(e, args) {
+  const controls = this.siteForm.controls;
+  if (Array.isArray(args.rows) && this.gridObj2) {
+    args.rows.map((idx) => {
+      const item = this.gridObj2.getDataItem(idx);
+      console.log(item)
+      const date = new Date()
+
+      controls.si_cust.setValue(item.cm_addr || "");
+      
+     
+
+    });
+  }
+}
+
+angularGridReady2(angularGrid: AngularGridInstance) {
+  this.angularGrid2 = angularGrid;
+  this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGrid2() {
+  this.columnDefinitions2 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "cm_addr",
+      name: "code",
+      field: "cm_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_name",
+      name: "Client",
+      field: "address.ad_name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_phone",
+      name: "Numero telephone",
+      field: "address.ad_phone",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_taxable",
+      name: "A Taxer",
+      field: "address.ad_taxable",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_taxc",
+      name: "Taxe",
+      field: "address.ad_taxc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptions2 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+      var val = undefined;
+      try {
+        val = eval("item." + column.field);
+      } catch (e) {
+        // ignore
+      }
+      return val;
+    },
+  };
+
+  // fill the dataset with your data
+  this.customersService
+    .getByAll({ cm_hold: false })
+    .subscribe((response: any) => (this.customers = response.data));
+}
+open2(content) {
+  this.prepareGrid2();
+  this.modalService.open(content, { size: "lg" });
+}
 
 }

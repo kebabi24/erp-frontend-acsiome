@@ -62,7 +62,8 @@ import {SiteService,
         ProjectService,
         QualityControlService,
       EntityService,
-      ItemService} 
+      ItemService,
+      CustomerService} 
 from '../../../core/erp'
 import { ListLocComponent } from './list-loc/list-loc.component';
 import { EditLocComponent } from './edit-loc/edit-loc.component';
@@ -179,7 +180,8 @@ const routes: Routes = [
         ProjectService,
         QualityControlService,
         LocationFilterService,
-        ItemService
+        ItemService,
+        CustomerService
     ],
     entryComponents: [
         ActionNotificationComponent,

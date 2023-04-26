@@ -23,9 +23,9 @@ import {
 import { round } from 'lodash';
 
 import { BehaviorSubject, Observable } from "rxjs";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms"
+import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
 import { Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService , SaleOrderService, Requisition,
-         RequisitionService,SaleOrder, PurchaseOrder, DeviseService} from "../../../../core/erp";
+         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -102,6 +102,14 @@ export class CreateProjectComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
   saleOrder:  SaleOrder;
+
+  datasite: []
+  columnDefinitionssite: Column[] = []
+  gridOptionssite: GridOption = {}
+  gridObjsite: any
+  angularGridsite: AngularGridInstance
+
+
 date: String;
 customer: any;
 ex_rate1 : any;
@@ -125,6 +133,7 @@ type: String;
     private requisitonService: RequisitionService,
     private psService: PsService,
     private deviseService: DeviseService,
+    private siteService: SiteService,
     
   ) {
     config.autoClose = true;
@@ -154,6 +163,7 @@ type: String;
     this.projectForm = this.projectFB.group({
       pm_code: [this.project.pm_code, Validators.required],
       pm_desc: [{ value: this.project.pm_desc, disabled: !this.isExist },  Validators.required],
+      pm_site: [{ value: this.project.pm_site, disabled: !this.isExist },  Validators.required],
       pm_cust: [{ value: this.project.pm_cust, disabled: !this.isExist }],
       name: [{value:"", disabled: true}],
       pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
@@ -187,6 +197,7 @@ type: String;
             } else {
                 controls.pm_desc.enable()
                 controls.pm_cust.enable()
+                controls.pm_site.enable()
                 controls.pm_amt.enable()
                 controls.pm_type.enable()
                 controls.pm_doc_list_code.enable()
@@ -235,6 +246,7 @@ type: String;
     const _project = new Project();
     _project.pm_code = controls.pm_code.value;
     _project.pm_desc = controls.pm_desc.value;
+    _project.pm_site = controls.pm_site.value;
     _project.pm_cust = controls.pm_cust.value;
     _project.pm_amt = controls.pm_amt.value;
     _project.pm_cost = controls.pm_cost.value;
@@ -1560,5 +1572,93 @@ getProjectTypes() {
   );
 }
 
+
+handleSelectedRowsChangedsite(e, args) {
+  const controls = this.projectForm.controls
+ 
+  if (Array.isArray(args.rows) && this.gridObjsite) {
+      args.rows.map((idx) => {
+          const item = this.gridObjsite.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+          
+                  controls.pm_site.setValue(item.si_site || "")
+          
+      })
+  }
+}
+angularGridReadysite(angularGrid: AngularGridInstance) {
+  this.angularGridsite = angularGrid
+  this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridsite() {
+  this.columnDefinitionssite = [
+      {
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+
+          minWidth: 50,
+          maxWidth: 50,
+      },
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+      {
+          id: "si_site",
+          name: "Site",
+          field: "si_site",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "si_desc",
+          name: "Designation",
+          field: "si_desc",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+  ]
+
+  this.gridOptionssite = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  const controls = this.projectForm.controls
+  this.siteService
+      .getBy({si_cust: controls.pm_cust.value })
+      .subscribe((response: any) => (this.datasite = response.data))
+}
+opensite(contentsite) {
+  
+  this.prepareGridsite()
+  this.modalService.open(contentsite, { size: "lg" })
+}
 
 }
