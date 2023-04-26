@@ -16,5 +16,123 @@
             
         </div>
 
+        <div>
+            <ng-template #contentvend let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Changer Status</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form class="form row" [formGroup]="poForm">
+                            <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                                (close)="onAlertClose($event)">
+                                {{message}}
+                            </kt-alert>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Numero BC:</label>
+                                        <div class="input-group input-group-sm">
+            
+                                            <input type="text" class="form-control form-control-solid" formControlName="po_nbr"
+                                                aria-describedby="basic-addon2" >
+                                            <div class="input-group-append">
+                                                
+                                            </div>
+            
+            
+                                        </div>
+            
+            
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">FOURNISSEUR :</label>
+                                        <div class="input-group input-group-sm">
+            
+                                            <input type="text" class="form-control form-control-solid" formControlName="po_vend"
+                                                aria-describedby="basic-addon2">
+                                            
+                                        </div>
+            
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Nom :</label>
+                                        <div class="input-group input-group-sm">
+            
+                                            <input type="text" class="form-control form-control-solid" formControlName="name"
+                                                aria-describedby="basic-addon2">
+                                            
+                                        </div>
+            
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">    
+                                    <div class="form-group col-3">
+                                        <label class="form-group">Date :</label>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                [className]="poForm.controls['po_ord_date'].errors && (poForm.controls['po_ord_date'].dirty || poForm.controls['po_ord_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                formControlName="po_ord_date" placeholder="jj-mm-aaaa" name="dp" ngbDatepicker f
+                                                #dd="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="dd.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="poForm.controls['po_ord_date'].errors && (poForm.controls['po_ord_date'].dirty || poForm.controls['po_ord_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+            
+            
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-8">
+                                        <label class="form-group">Remarque:</label>
+                                        <textarea class="form-control form-control-sm form-control-solid" formControlName="po_rmks"
+                                            rows="2"></textarea>
+                                    </div>
+            
+                                   
+                                        <div class="form-group col-12">
+                                            <label class="form-group">Status:</label>
+                                            <select class="form-control form-control-sm form-control-solid"
+                                                    id="exampleSelects2" formControlName="po_stat">
+                                                    <option value=""></option>
+                                                    <option value="p">Planifier</option>
+                                                    <option value="V">Valider</option>
+                                                    <option value="I">Imprimer</option>
+                                                    <option value="E">Envoyer</option>
+                                                    <option value="X">Suprimer</option>
+                                                    <option value="C">Cloturer</option>
+            
+            
+                                                </select>
+                                        </div>
+                                   
+            
+                                </div>
+                                
+                            </div>
+                            
+                        </form>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-primary" (click)="onSubmit()" (click)="c('Close click')">Valider</button>
+                </div>
+            </ng-template>
+            <button hidden id="openVendsGrid" class="btn btn-primary" (click)="openchange(contentvend)">Launch demo
+                modal</button>
+
+        </div>
     </kt-portlet-body>
 </kt-portlet>

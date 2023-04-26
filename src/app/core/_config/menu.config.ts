@@ -1038,7 +1038,7 @@ export class MenuConfig {
                 },
                 {
                   title: "Ajouter un Code Métier",
-                  page: "/job/list-job",
+                  page: "/job/create-job",
                 },
               ],
             },

@@ -49,7 +49,7 @@ export class MaintConfigComponent implements OnInit {
   isExist = false
   pm_module = false
   pay_multiple = false  
-
+  crm= false
   error = false;
 
   constructor(
@@ -85,6 +85,7 @@ export class MaintConfigComponent implements OnInit {
       
         cfg_pm_module: [this.pm_module],
         cfg_pay_multiple: [this.pay_multiple],
+        cfg_crm: [this.crm]
        
     })
     let id = 1
@@ -95,12 +96,13 @@ export class MaintConfigComponent implements OnInit {
            
             this.pm_module = false
             this.pay_multiple = false
+            this.crm = false
           }
           else {
         //    console.log(this.conf.cfg_pm_module)
             this.pm_module = this.conf.cfg_pm_module
             this.pay_multiple = this.conf.cfg_pay_multiple
-
+             this.crm = this.conf.cfg_crm
             
           }
          
@@ -112,6 +114,7 @@ export class MaintConfigComponent implements OnInit {
       console.log(this.pay_multiple)
       controls.cfg_pm_module.setValue(this.pm_module);
       controls.cfg_pay_multiple.setValue(this.pay_multiple);
+      controls.cfg_crm.setValue(this.crm);
     })
   }
 
@@ -143,6 +146,7 @@ export class MaintConfigComponent implements OnInit {
       console.log(controls.cfg_pm_module.value)
       _config.cfg_pm_module = controls.cfg_pm_module.value
       _config.cfg_pay_multiple = controls.cfg_pay_multiple.value
+      _config.cfg_crm = controls.cfg_crm.value
       console.log(controls.cfg_pm_module.value)
       //console.log("hnahnahna",_config)
       return _config

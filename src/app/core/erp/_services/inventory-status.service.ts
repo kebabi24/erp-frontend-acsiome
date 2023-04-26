@@ -24,11 +24,18 @@ export class InventoryStatusService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
-
+    public addIsm(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/ism', data, { headers: httpHeaders })
+    }
     // READ
     public findBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
+    }
+    public getByIsm(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findism', data, { headers: httpHeaders })
     }
     // READ
     public getAll() {

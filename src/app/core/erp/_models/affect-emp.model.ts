@@ -7,7 +7,7 @@ export class AffectEmp extends BaseModel{
 
  id: Number
 pme_pm_code: String
-   
+pme_site : String   
 pme_inst: String
 pme_task: String
 pme_task_status: String

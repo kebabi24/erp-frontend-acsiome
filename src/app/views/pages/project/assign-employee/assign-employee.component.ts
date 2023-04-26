@@ -125,6 +125,12 @@ export class AssignEmployeeComponent implements OnInit {
     angularGridum: AngularGridInstance;
   
 
+    datasite: []
+    columnDefinitionssite: Column[] = []
+    gridOptionssite: GridOption = {}
+    gridObjsite: any
+    angularGridsite: AngularGridInstance
+
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -210,6 +216,7 @@ export class AssignEmployeeComponent implements OnInit {
   this.empForm = this.empFB.group({
       pmr_pm_code: [this.addReport.pmr_pm_code, Validators.required],
       pmdesc :  [{value: "", disabled: true}],
+     
       pmr_inst: [
           this.addReport.pmr_inst, 
           Validators.required,
@@ -2024,6 +2031,92 @@ prepareGridum() {
 openum(content) {
     this.prepareGridum()
     this.modalService.open(content, { size: "lg" })
+}
+handleSelectedRowsChangedsite(e, args) {
+  const controls = this.empForm.controls
+ 
+  if (Array.isArray(args.rows) && this.gridObjsite) {
+      args.rows.map((idx) => {
+          const item = this.gridObjsite.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+          
+                  controls.site.setValue(item.si_site || "")
+          
+      })
+  }
+}
+angularGridReadysite(angularGrid: AngularGridInstance) {
+  this.angularGridsite = angularGrid
+  this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridsite() {
+  this.columnDefinitionssite = [
+      {
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+
+          minWidth: 50,
+          maxWidth: 50,
+      },
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+      {
+          id: "si_site",
+          name: "Site",
+          field: "si_site",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "si_desc",
+          name: "Designation",
+          field: "si_desc",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+  ]
+
+  this.gridOptionssite = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  this.siteService
+      .getAll()
+      .subscribe((response: any) => (this.datasite = response.data))
+}
+opensite(contentsite) {
+  
+  this.prepareGridsite()
+  this.modalService.open(contentsite, { size: "lg" })
 }
 
 }
