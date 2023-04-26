@@ -33,6 +33,7 @@ import {
   TypesUtilsService,
   MessageType,
 } from "../../../../core/_base/crud"
+import { reverseString } from "@amcharts/amcharts4/.internal/core/utils/Utils";
 @Component({
   selector: 'kt-create-project',
   templateUrl: './create-project.component.html',
@@ -54,6 +55,13 @@ export class CreateProjectComponent implements OnInit {
   gridOptions2: GridOption = {};
   gridObj2: any;
   angularGrid2: AngularGridInstance;
+
+  columnDefinitions3: Column[] = [];
+  gridOptions3: GridOption = {};
+  gridObj3: any;
+  angularGrid3: AngularGridInstance;
+  selectedIndexes : any[]
+  docs_codess : any[]
   
   datatask: [];
   columnDefinitionstask: Column[] = [];
@@ -89,6 +97,7 @@ export class CreateProjectComponent implements OnInit {
   sodataset = [];
   reqdataset = [];
   project: Project;
+  gridService: GridService
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -116,6 +125,7 @@ type: String;
     private requisitonService: RequisitionService,
     private psService: PsService,
     private deviseService: DeviseService,
+    
   ) {
     config.autoClose = true;
   }
@@ -270,11 +280,16 @@ type: String;
       
     }
     
+    let l = []
+    this.selectedIndexes.forEach(index => {
+      l.push(this.specifications[index]['mp_nbr'])
+    });
+    console.log(l)
 
 
     this.loadingSubject.next(true);
     this.projectService
-      .add({ Project: _project, ProjectDetails: details })
+      .add({ Project: _project, ProjectDetails: details , docs_codes :l  })
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
@@ -852,9 +867,83 @@ handleSelectedRowsChanged2(e, args) {
   }
 }
 
+handleSelectedRowsChanged3(e, args) {
+  this.selectedIndexes =[]
+  this.selectedIndexes = args.rows;
+//   let a = []
+//   this.selectedIndexes.forEach(index => {
+//     a.push(this.specifications[index]['mp_nbr'])
+//  });
+//   console.log(a)
+}
+
 angularGridReady2(angularGrid: AngularGridInstance) {
   this.angularGrid2 = angularGrid;
   this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+angularGridReady3(angularGrid: AngularGridInstance) {
+  this.angularGrid3 = angularGrid;
+  this.gridService = angularGrid.gridService;
+  this.gridObj3 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+}
+
+prepareGrid3() {
+  this.columnDefinitions3 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "mp_nbr",
+      name: "code specification",
+      field: "mp_nbr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "mp_desc",
+      name: "description",
+      field: "mp_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "mp_expire",
+      name: "date expiration",
+      field: "mp_expire",
+      sortable: true,
+      filterable: true,
+      type: FieldType.date,
+    },
+    
+  ];
+
+  this.gridOptions3 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: true,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      multiSelect: true,
+      rowSelectionOptions: {selectActiveRow: false}
+  };
+
+  // fill the dataset with your data
+  this.projectService
+    .getSpecifications()
+    .subscribe((response: any) => (this.specifications = response.data));
 }
 
 prepareGrid2() {
@@ -954,6 +1043,11 @@ prepareGrid2() {
 }
 open2(content) {
   this.prepareGrid2();
+  this.modalService.open(content, { size: "lg" });
+}
+
+open3(content) {
+  this.prepareGrid3();
   this.modalService.open(content, { size: "lg" });
 }
 

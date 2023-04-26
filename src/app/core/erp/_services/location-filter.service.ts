@@ -7,13 +7,12 @@ import { HttpUtilsService } from "../../_base/crud"
 import { environment } from "../../../../environments/environment"
 
 // model
-import { Location } from "../_models/location.model"
+import { LocationFilter} from "../_models/location-filter.model"
 
-const API_URL = environment.apiUrl + "/locations"
-const API_URL2 = environment.apiUrl + "/location-filters"
+const API_URL = environment.apiUrl + "/location-filters"
 
 @Injectable()
-export class LocationService {
+export class LocationFilterService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -22,15 +21,9 @@ export class LocationService {
     ) {}
 
     // CREATE
-    public add(data:any) {
+    public add(locationfilter: LocationFilter) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, data, { headers: httpHeaders })
-    }
-
-     // CREATE
-     public addListPt(ptList:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL2}/createList`,ptList, { headers: httpHeaders })
+        return this.http.post(API_URL, locationfilter, { headers: httpHeaders })
     }
     // READ
     public getAll() {
@@ -65,10 +58,4 @@ export class LocationService {
         return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
     }
     // DELETE
-    // GET Products List for location
-    public getProducts(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/findProducts`,data, { headers: httpHeaders })
-    }
-
 }

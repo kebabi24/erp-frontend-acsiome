@@ -64,6 +64,8 @@ import { AddReportComponent } from './add-report/add-report.component';
 import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
 import { LaunchProjectComponent } from './launch-project/launch-project.component';
 import { EmpTempComponent } from './emp-temp/emp-temp.component';
+import { AssetDownComponent } from './asset-down/asset-down.component';
+import { AccidentIncidentComponent } from './accident-incident/accident-incident.component';
 
 const routes: Routes = [
   {
@@ -94,11 +96,19 @@ const routes: Routes = [
     path: 'emp-temp',
     component: EmpTempComponent
   }, 
+  {
+    path: 'asset-down',
+    component: AssetDownComponent
+  }, 
+  {
+    path: 'accident-incident',
+    component: AccidentIncidentComponent
+  }, 
 ] 
 
 
 @NgModule({
-  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, ListPmComponent, AddReportComponent,AssignEmployeeComponent,LaunchProjectComponent, EmpTempComponent],
+  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent,AccidentIncidentComponent,AssetDownComponent, ListPmComponent, AddReportComponent,AssignEmployeeComponent,LaunchProjectComponent, EmpTempComponent],
   imports: [
     CommonModule,
     HttpClientModule,

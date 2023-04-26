@@ -10,195 +10,263 @@
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview">
+         <div>
+          <ngb-tabset>
+             <ngb-tab>
+                <ng-template ngbTabTitle>
+                    <div style="width: 50px;"></div>
+                    Ajouter site
+                    <div style="width: 50px;"></div>
+                    <!-- <a *ngIf="hasFormErrors5"
+                        class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                        <i class="flaticon2-information"></i>
+                        <span class="pulse-ring"></span>
+                    </a> -->
+                </ng-template>
+                <ng-template ngbTabContent>
+                <form class="form" [formGroup]="locationForm">
 
-            <form class="form" [formGroup]="locationForm">
+                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                        (close)="onAlertClose($event)">
+                        Ce Code existe deja
+                    </kt-alert>
 
-                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                    (close)="onAlertClose($event)">
-                    Ce Code existe deja
-                </kt-alert>
-
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Site: *</label>
-                    
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" formControlName="loc_site"
-                                [className]="locationForm.controls['loc_site'].errors && (locationForm.controls['loc_site'].dirty || locationForm.controls['loc_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="opensite(contentsite,'loc_site')">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
-                            <div *ngIf="locationForm.controls['loc_site'].errors && (locationForm.controls['loc_site'].dirty || locationForm.controls['loc_site'].touched)"
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row">
-
-                    <div class="form-group col-2">
-                        <label class="form-group">Emplacement: *</label>
-                        <input type="text" (change)="onChangeCode()"
-                            [className]="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                            formControlName="loc_loc">
-                                <div *ngIf="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched)"
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-6">
-                        <label class="form-group">Description: *</label>
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Site: *</label>
                         
-                        <input type="text"
-                        [className]="locationForm.controls['loc_desc'].errors && (locationForm.controls['loc_desc'].dirty || locationForm.controls['loc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                        formControlName="loc_desc">
-                    <div *ngIf="locationForm.controls['loc_desc'].errors && (locationForm.controls['loc_desc'].dirty || locationForm.controls['loc_desc'].touched)"
-                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                            <div class="input-group input-group-sm">
 
-
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Status: *</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" formControlName="loc_status"  (change)="changeStatus('loc_status')"
-                                [className]="locationForm.controls['loc_status'].errors && (locationForm.controls['loc_status'].dirty || locationForm.controls['loc_status'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="openstatus(contentstatus,'loc_status')">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
-                            <div *ngIf="locationForm.controls['loc_status'].errors && (locationForm.controls['loc_status'].dirty || locationForm.controls['loc_status'].touched)"
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Projet: *</label>
-                    
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid" formControlName="loc_project"
-                                aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="openpm(contentpm)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                <input type="text" formControlName="loc_site"
+                                    [className]="locationForm.controls['loc_site'].errors && (locationForm.controls['loc_site'].dirty || locationForm.controls['loc_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="opensite(contentsite,'loc_site')">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                                <div *ngIf="locationForm.controls['loc_site'].errors && (locationForm.controls['loc_site'].dirty || locationForm.controls['loc_site'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-group col-2">
-
-                        <label class="form-group"> Permanent: *</label>
-                    
-                        <span class="switch switch-icon ">
-                            <label>
-                                <input type="checkbox" name="Permanent" formControlName="loc_perm"
-                                    class="form-control form-control-sm form-control-solid">
-                                <span></span>
-                            </label>
-                        </span>
-                    </div>
-
-
-
-                </div>
-
-                <div class="row">
-
-                    <div class="form-group col-2">
-                        <label class="form-group">Type: * </label>
-                            <select class="form-control form-control-sm form-control-solid" formControlName="loc_type" id="exampleSelects">
-                                <option value=""></option>
-                                <option *ngFor="let elem of loc_type" [value]="elem.code_value">
-                                    {{elem.code_cmmt}}</option>
-                            </select>
 
                     </div>
-  
-                    <div class="form-group col-2">
 
-                            <label class="form-group"> Article Unique: </label>
+                    <div class="row">
+
+                        <div class="form-group col-2">
+                            <label class="form-group">Dépot: </label>
+                            <input type="text" (change)="onChangeCode()"
+                                [className]="locationForm.controls['chr01'].errors && (locationForm.controls['chr01'].dirty || locationForm.controls['chr01'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="chr01">
+                                    <!-- <div *ngIf="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div> -->
+
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Magasin: </label>
+                            <input type="text" (change)="onChangeCode()"
+                                [className]="locationForm.controls['loc_phy_adr'].errors && (locationForm.controls['loc_phy_adr'].dirty || locationForm.controls['loc_phy_adr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="loc_phy_adr">
+                                    <!-- <div *ngIf="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div> -->
+
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Emplacement: *</label>
+                            <input type="text" (change)="onChangeCode()"
+                                [className]="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="loc_loc">
+                                    <div *ngIf="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-group">Description: *</label>
+                            
+                            <input type="text"
+                            [className]="locationForm.controls['loc_desc'].errors && (locationForm.controls['loc_desc'].dirty || locationForm.controls['loc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="loc_desc">
+                        <div *ngIf="locationForm.controls['loc_desc'].errors && (locationForm.controls['loc_desc'].dirty || locationForm.controls['loc_desc'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Status: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="loc_status"  (change)="changeStatus('loc_status')"
+                                    [className]="locationForm.controls['loc_status'].errors && (locationForm.controls['loc_status'].dirty || locationForm.controls['loc_status'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openstatus(contentstatus,'loc_status')">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                                <div *ngIf="locationForm.controls['loc_status'].errors && (locationForm.controls['loc_status'].dirty || locationForm.controls['loc_status'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Projet: *</label>
+                        
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" formControlName="loc_project"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openpm(contentpm)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-2">
+
+                            <label class="form-group"> Permanent: *</label>
                         
                             <span class="switch switch-icon ">
                                 <label>
-                                    <input type="checkbox" name="Unique" formControlName="loc_single"
+                                    <input type="checkbox" name="Permanent" formControlName="loc_perm"
                                         class="form-control form-control-sm form-control-solid">
                                     <span></span>
                                 </label>
                             </span>
-                    </div>
+                        </div>
 
 
-
-                </div>
-                <div class="row">
-                    <div class="form-group col-2">
-
-                        <label class="form-group"> Lot/Référence Unique: </label>
-                        
-                            <span class="switch switch-icon ">
-                                <label>
-                                    <input type="checkbox" name="ref_unique" formControlName="loc__qad01"
-                                        class="form-control form-control-sm form-control-solid">
-                                    <span></span>
-                                </label>
-                            </span>
 
                     </div>
 
-                    <div class="form-group col-2">
-                        <label class="form-group">Capacité: </label>
-                            <input type="number" class="form-control form-control-sm form-control-solid" formControlName="loc_cap"
-                                placeholder="0">
+                    <div class="row">
+
+                        <div class="form-group col-2">
+                            <label class="form-group">Type: * </label>
+                                <select class="form-control form-control-sm form-control-solid" formControlName="loc_type" id="exampleSelects">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of loc_type" [value]="elem.code_value">
+                                        {{elem.code_cmmt}}</option>
+                                </select>
+
+                        </div>
+    
+                        <div class="form-group col-2">
+
+                                <label class="form-group"> Article Unique: </label>
+                            
+                                <span class="switch switch-icon ">
+                                    <label>
+                                        <input type="checkbox" name="Unique" formControlName="loc_single"
+                                            class="form-control form-control-sm form-control-solid">
+                                        <span></span>
+                                    </label>
+                                </span>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-2">
+
+                            <label class="form-group"> Lot/Référence Unique: </label>
+                            
+                                <span class="switch switch-icon ">
+                                    <label>
+                                        <input type="checkbox" name="ref_unique" formControlName="loc__qad01"
+                                            class="form-control form-control-sm form-control-solid">
+                                        <span></span>
+                                    </label>
+                                </span>
+
+                        </div>
+
+                        <div class="form-group col-2">
+                            <label class="form-group">Capacité: </label>
+                                <input type="number" class="form-control form-control-sm form-control-solid" formControlName="loc_cap"
+                                    placeholder="0">
+
+                        </div>
 
                     </div>
 
-                </div>
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">UM: </label>
+                            <div class="input-group input-group-sm">
 
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">UM: </label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  (change)="changeUm()"
-                                formControlName="loc_cap_um" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="open3(content,'pt_um')">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                <input type="text" class="form-control form-control-solid"  (change)="changeUm()"
+                                    formControlName="loc_cap_um" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open3(content,'pt_um')">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
                             </div>
                         </div>
+
+
+                        <div class="form-group col-2">
+
+                            <label class="form-group"> Transfert de Propriété: </label>
+                                <span class="switch switch-icon ">
+                                    <label>
+                                        <input type="checkbox" name="prop" formControlName="loc_xfer_ownership"
+                                            class="form-control form-control-sm form-control-solid">
+                                        <span></span>
+                                    </label>
+                                </span>
+                        </div>
+
                     </div>
+                </form>
+                </ng-template>
+             </ngb-tab>
+           
+             
+             <!--add new tab-->
+             <ngb-tab>
+                <ng-template ngbTabTitle class="titletab">
+                    <div style="width: 50px;"></div>
+                    Filtrer Article
+                    <div style="width: 50px;"></div>
+                    <!-- <a *ngIf="hasFormErrors5"
+                        class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                        <i class="flaticon2-information"></i>
+                        <span class="pulse-ring"></span>
+                    </a> -->
+                </ng-template>
+                <ng-template ngbTabContent>
+                    
+                    <div class="row" style="height: 50px;"> </div>
+                    
+                    <div  style=" width: 80%; justify-items: center; margin-left: 10%;">
+                        <angular-slickgrid   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                        (onAngularGridCreated)="gridReady($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedFiltredProd($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions" [dataset]="dataset">
+                        </angular-slickgrid>
+                        <!-- <div class="row" style="height: 50px;"> <button></button> </div> -->
 
-
-                    <div class="form-group col-2">
-
-                        <label class="form-group"> Transfert de Propriété: </label>
-                            <span class="switch switch-icon ">
-                                <label>
-                                    <input type="checkbox" name="prop" formControlName="loc_xfer_ownership"
-                                        class="form-control form-control-sm form-control-solid">
-                                    <span></span>
-                                </label>
-                            </span>
                     </div>
+                
+                    
+                </ng-template>
 
-                </div>
-            </form>
-        </div>
+             </ngb-tab>
+           
+          </ngb-tabset>
 
+         </div>
+       </div>
     </kt-portlet-body>
 
     <div>
