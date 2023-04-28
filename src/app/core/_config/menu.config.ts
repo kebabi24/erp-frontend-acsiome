@@ -994,6 +994,10 @@ export class MenuConfig {
               page: "/project/create-project",
             },
             {
+              title: "mettre A jour Projet",
+              page: "/project/update-project",
+            },
+            {
               title: "La liste des Projets",
               page: "/project/list-pm",
             },
