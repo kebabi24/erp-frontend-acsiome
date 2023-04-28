@@ -821,20 +821,30 @@ handleSelectedRowsChangedemp(e, args) {
       args.rows.map((idx) => {
           const item = this.gridObjemp.getDataItem(idx)
           console.log(item)
-     if (item.emp_job != this.job || item.emp_level != this.level) {
 
-      alert("Métier ou Niveai de maitrise ne correspond pas a cet employé")
+
+          this.employeService
+          .getByJob({empj_addr: item.emp_addr, empj_job: this.job, empj_level :this.level })
+          .subscribe((response: any) => {
+         if (response.data.length = 0) 
+         
+{         
+     
+     
+      alert("Métier ou Niveau de maitrise ne correspond pas a cet employé")
       updateItem.pme_employe = null
       this.mvgridService.updateItem(updateItem)
     } else {   
           updateItem.pme_employe = item.emp_addr
           updateItem.fname = item.emp_fname
           updateItem.lname = item.emp_lname
-          updateItem.job = item.emp_job
-          updateItem.level = item.emp_level
+          updateItem.job = response.data[0].empj_job
+          updateItem.level = response.data[0].empj_level
           
           this.mvgridService.updateItem(updateItem)
      }
+    })
+
       })
   }
 }

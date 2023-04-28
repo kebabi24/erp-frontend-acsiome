@@ -669,6 +669,31 @@ openentity(content, field) {
   this.modalService.open(content, { size: "lg" })
 }
 
+onChangeCust() {
+  const controls = this.siteForm.controls; // chof le champs hada wesh men form rah
+  const cm_addr = controls.si_cust.value;
+  
+  this.customersService.getBy({ cm_addr, cm_hold: false }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
+
+      if (!data) {
+        this.layoutUtilsService.showActionNotification(
+          "ce client n'existe pas! ou bien bloqué",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.error = true;
+      } else {
+        this.error = false;
+        controls.si_cust.setValue(data.cm_addr || "");
+      }
+    })
+
+}
 
 handleSelectedRowsChanged2(e, args) {
   const controls = this.siteForm.controls;
