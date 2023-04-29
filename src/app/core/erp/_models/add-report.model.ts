@@ -7,7 +7,7 @@ export class AddReport extends BaseModel{
 
  id: Number
 pmr_pm_code: String
-   
+pmr_site: String   
 pmr_inst: String
 pmr_task: String
 pmr_task_status: String

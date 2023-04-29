@@ -70,6 +70,10 @@ export class EmployeService {
         return this.http.post(`${API_URL}/finddet`,data, { headers: httpHeaders })  
     }
     
+    public getByJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findjob`,data, { headers: httpHeaders })  
+    }
     // UPDATE
     public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
