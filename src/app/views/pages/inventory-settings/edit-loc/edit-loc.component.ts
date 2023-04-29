@@ -71,6 +71,7 @@ export class EditLocComponent implements OnInit {
 
    //for filter
    dataset: any[];
+   datasetSaved: any[];
    angularGrid: AngularGridInstance;
    grid: any;
    gridService: GridService;
@@ -80,7 +81,9 @@ export class EditLocComponent implements OnInit {
    filtredList: any[] = [];
    listprods: any[] = [];
    listprodIds: any[] = [];
-
+   public isChecked = false;
+   selectedList: any[]=[]
+   firstime:boolean=true;
 
   error = false;
   isExist = false
@@ -770,7 +773,6 @@ prepareGrid() {
     enableAutoResize: true,
 
     autoFitColumnsOnFirstLoad: true,
-    // autosizeColumnsByCellContentOnFirstLoad: true,
     enableAutoSizeColumns: true,
     syncColumnCellResize: true,
     rowSelectionOptions: {
@@ -785,40 +787,31 @@ prepareGrid() {
         dataContextIds: this.listprodIds  //[3,5, 12, 13,]  // (recommended) select by your data object IDs
       }
     },
-   
-    // rowSelectionOptions: {
-    //   // True (Single Selection), False (Multiple Selections)
-    //   selectActiveRow: false
-    // },
+
   };
 
+   
+  // console.log('we are hereeeeee ')
   // fill the dataset with your data
-  this.dataset = [];
+  this.dataset = []; this.datasetSaved=[]
   this.itemService.getAll().subscribe(
     (response: any) => {
       this.dataset = response.data;
+      this.datasetSaved=response.data;
       // this.dataView.setItems(this.dataset);
 
-
-      // console.log(' response list '+Object(response.data))
       let datatomap=[]
       this.dataset.map((item)=>{
         datatomap.push(item)
       })
       // this.dataView.setItems(datatomap);
-     
-      // console.log(' list to map lenght '+datatomap.length)
-      // console.log('first response.data'+response.data)
     
       this.listprods.map((code)=>{
-        // console.log('dataset size '+this.dataset.length)
-        //  console.log(' element of dataset '+this.dataset[2].pt_part)
          let exist=false;
          let i=0;
          while(!exist && i<datatomap.length){
-          // console.log('exist '+exist+' i '+i+' pt part '+datatomap[i].pt_part+' loc part '+code)
           if(code===datatomap[i].pt_part){
-            // console.log('exist '+code)
+            // console.log('exist '+code+' id '+this.dataset[i].id)
             this.listprodIds.push(this.dataset[i].id)
             exist=true
           }
@@ -826,27 +819,53 @@ prepareGrid() {
          }
         //  console.log(' ids '+this.listprodIds.length)
       })
+
     },
 
     (error) => {
       this.dataset = [];
+      this.datasetSaved== [];
     },
     () => {}
   );
+  // }
 
 }
+
+onChangeCheckbox(event: Event): void {
+  const checked: boolean = event.target['checked']; // or event.target.checked
+  this.isChecked=checked
+  // console.log('checkbox '+checked +' global variable '+this.isChecked)
+  if(checked){
+    //checked
+    this.dataset=[]
+    this.dataset=this.selectedList
+  }
+  else{
+      // not checked 
+      this.dataset=[]
+      this.dataset=this.datasetSaved
+  }
+ }
 
 handleSelectedRowsChangedFiltredProd(e, args) {
   // const controls1 = this.form1.controls;    
   this.filtredList=[];
+  this.listprodIds=[]
+  this.listprods=[]
+  this.selectedList=[]
   if (Array.isArray(args.rows) && this.grid) {
   //    this.filtredList=args.rows;
       // products: Array<Product>;
-
   //    console.log(" arg rows "+args.rows)
   //    console.log(" arg rows in list "+this.filtredList)
+
     args.rows.map((idx) => {
       const item = this.grid.getDataItem(idx);
+      // console.log(' selected id '+item.id)
+      this.listprodIds.push(item.id)
+      this.listprods.push(item.pt_part)
+      this.selectedList.push(item)
       // TODO : HERE itterate on selected field and change the value of the selected field
        let pt_fltr ={
            loc_loc: this.locationForm.controls.loc_loc.value,
@@ -862,12 +881,30 @@ handleSelectedRowsChangedFiltredProd(e, args) {
           // controls1.pt_site.setValue(item.si_site || "");
     });
 
-     
+     console.log(" list f "+this.filtredList)
+     console.log(" list ids2 "+this.listprodIds)
+    //  this.grid.setSelectedRows(this.listprodIds) 
+
     //  this.filtredList.map((item)=>{
-   
+    //   console.log(" item loc "+item.loc_loc)
+    //   console.log(" item code "+item.loc_part)
+    //   console.log(" item model "+item.model)
     //  })
 
   }
+}
+
+refresh(){
+  // console.log(' refresh test ')
+  // this.grid.setSelectedRows(this.listprodIds) 
+  // this.grid.cellSelectionModel(this.listprodIds)
+  this.prepareGrid()
+  // alert('teeest')
+  // this.grid.setActiveCell(this.listprodIds)
+  // this.angularGrid.slickGrid.setSelectedRows(this.listprodIds); 
+  // this.angularGrid.gridService.setSelectedRows(this.listprodIds); 
+  // this.angularGrid.slickGrid.render()
+  
 }
 
 }

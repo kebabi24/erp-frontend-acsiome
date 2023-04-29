@@ -226,14 +226,7 @@
                   <!--add new tab-->
              <ngb-tab>
                 <ng-template ngbTabTitle class="titletab">
-                    <div style="width: 50px;"></div>
-                    Filtrer Article
-                    <div style="width: 50px;"></div>
-                    <!-- <a *ngIf="hasFormErrors5"
-                        class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
-                        <i class="flaticon2-information"></i>
-                        <span class="pulse-ring"></span>
-                    </a> -->
+                    <span (click)="refresh()" style="margin-left: 50px; margin-right: 50px;">  Filtrer Article  </span>
                 </ng-template>
                 <ng-template #content let-c="close" let-d="dismiss">
                     <div class="modal-header">
@@ -255,7 +248,20 @@
                 <ng-template ngbTabContent>
                     
                     <div class="row" style="height: 50px;"> </div>
+                    <div class="row">
+
+                        <label class="form-group"> Selected Articles </label>
                     
+                        <span class="switch switch-icon ">
+                            <label>
+                                <input type="checkbox" name="mycheckbox" [(ngModel)]="isChecked"
+                                   (change)="onChangeCheckbox($event)"
+                                    class="form-control form-control-sm form-control-solid"> 
+                                    <!-- formControlName="pts_selected" -->
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
                     <!-- <div class="modal position-relative d-block" tabindex="-1" role="dialog"> -->
                         <!-- 
                             
