@@ -281,6 +281,7 @@ const routes: Routes = [
             (m) => m.RevenueTransferModule
           ),
       },
+      
       // {
       //   path: 'config',
       //   loadChildren: () => import('./views/pages/config/config.module').then(m => m.ConfigModule),
@@ -544,6 +545,13 @@ const routes: Routes = [
         loadChildren: () =>
           import("./views/pages/domain/domain.module").then(
             (m) => m.DomainModule
+          ),
+      },
+      {
+        path: "deal",
+        loadChildren: () =>
+          import("./views/pages/deal/deal.module").then(
+            (m) => m.DealModule
           ),
       },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },

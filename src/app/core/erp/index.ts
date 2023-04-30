@@ -81,6 +81,7 @@ export { VisitResult } from "./_models/visit-result.model"
 export { ProductPage } from "./_models/product-page.model"
 export { Domain } from "./_models/domain.model"
 export { TokenSerie } from "./_models/token-serie.model"
+export { Deal } from "./_models/deal.model"
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -165,7 +166,7 @@ export { QualityControlService } from "./_services/quality-control.service"
 export { DomainService } from "./_services/domain.service";
 export { TokenSerieService } from "./_services/token-serie.service"
 export { DashboardCommercialService } from "./_services/dashboard-commercial.service"
-
+export { DealService } from "./_services/deal.service";
 export {
   printBc,
   printTag,

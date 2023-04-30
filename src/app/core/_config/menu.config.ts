@@ -980,6 +980,22 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion des Contrats",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-delivery-truck",
+          submenu: [
+            {
+              title: "La liste des Contrats",
+              page: "/deal/list-deal",
+            },
+            {
+              title: "Ajouter un Contrat",
+              page: "/deal/create-deal",
+            },
+          ]
+        },
+        {
           title: "Gestion des projets",
           root: true,
           bullet: "dot",
