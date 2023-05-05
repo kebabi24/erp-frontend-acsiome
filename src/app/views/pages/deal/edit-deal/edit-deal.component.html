@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Contrat'" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -19,11 +19,11 @@
                 <div class="row">
                     <div class="form-group col-2">
                         <label class="form-group">Code Contrat: *</label>
-                        <input type="text" (change)="onChangeCode()"
-                        [className]="dealForm.controls['deal_code'].errors && (dealForm.controls['deal_code'].dirty || dealForm.controls['deal_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        <input type="text"  [(ngModel)]="dealEdit.deal_code"  disabled
+                        class="form-control form-control-solid"
+                                    aria-describedby="basic-addon2" 
                         formControlName="deal_code">
-                            <div *ngIf="dealForm.controls['deal_code'].errors && (dealForm.controls['deal_code'].dirty || dealForm.controls['deal_code'].touched)"
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                          
                      </div>
 
                 </div>

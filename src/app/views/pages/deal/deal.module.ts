@@ -53,6 +53,7 @@ import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 import {CodeService, DealService} from '../../../core/erp';
 import { ListDealComponent } from './list-deal/list-deal.component';
+import { EditDealComponent } from './edit-deal/edit-deal.component';
 
 
 
@@ -70,20 +71,17 @@ const routes: Routes = [
     path: 'list-deal',
     component: ListDealComponent
   },
-  // {
-  //   path: 'edit-devise/:id',
-  //   component: EditDeviseComponent
-  // },
-  // {
-  //   path: 'exchange-rate',
-  //   component: ExchangeRateComponent
-  // },
+  {
+    path: 'edit-deal/:id',
+    component: EditDealComponent
+  },
+  
   
 ] 
 
 
 @NgModule({
-  declarations: [DealComponent, CreateDealComponent, ListDealComponent],
+  declarations: [DealComponent, CreateDealComponent, ListDealComponent, EditDealComponent],
   imports: [
     CommonModule,
     HttpClientModule,

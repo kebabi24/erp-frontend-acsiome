@@ -89,7 +89,7 @@ export class ListDealComponent implements OnInit {
               // use onCellClick OR grid.onClick.subscribe which you can see down below
               onCellClick: (e: Event, args: OnEventArgs) => {
                   const id = args.dataContext.id
-                  this.router.navigateByUrl(`/devise/edit-devise/${id}`)
+                  this.router.navigateByUrl(`/deal/edit-deal/${id}`)
               },
           },
           {
@@ -118,32 +118,96 @@ export class ListDealComponent implements OnInit {
               filterable: true,
               type: FieldType.string,
           },
-          // {
-          //   id: "cu_rnd_mthd",
-          //   name: "Methode Arrondi",
-          //   field: "cu_rnd_mthd",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.float,
-          // },
-          
-          // {
-          //   id: "cu_active",
-          //   name: "Actif",
-          //   field: "cu_active",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-          // },
-          
-          // {
-          //   id: "cu_iso_curr",
-          //   name: "Devise Iso",
-          //   field: "cu_iso_curr",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-          // },
+          {
+            id: "deal_start_date",
+            name: "Date Début",
+            field: "deal_start_date",
+            sortable: true,
+            filterable: true,
+            type: FieldType.dateIso,
+           },
+           {
+            id: "deal_end_date",
+            name: "Date Fin",
+            field: "deal_end_date",
+            sortable: true,
+            filterable: true,
+            type: FieldType.dateIso,
+           },
+           {
+            id: "deal_amt",
+            name: "Montant",
+            field: "deal_amt",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+           },
+           {
+            id: "deal_inv_meth",
+            name: "Méthode de Facturaion",
+            field: "deal_inv_meth",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+           },
+           {
+            id: "deal_pay_meth",
+            name: "Méthode de Paiement",
+            field: "deal_pay_meth",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+           },
+           {
+            id: "deal_pen_cust",
+            name: "Pénalité Client",
+            field: "deal_pen_cust",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+           },
+           {
+            id: "deal_pen_prov",
+            name: "Pénalité Fournisseur",
+            field: "deal_pen_prov",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+           },
+           {
+            id: "deal_delai_cust",
+            name: "Délai Pénalité Client",
+            field: "deal_delai_cust",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+           },
+           {
+            id: "deal_delai_prov",
+            name: "Délai Pénalité Fournisseur",
+            field: "deal_delai_prov",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+           },
+           {
+            id: "deal_status",
+            name: "Status",
+            field: "deal_status",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+           },
+           {
+            id: "deal_open",
+            name: "Ouvert/Ferme",
+            field: "deal_open",
+            sortable: true,
+            filterable: true,
+            formatter:Formatters.checkmark,
+            type: FieldType.boolean,
+           },
+
           
           
       ]
