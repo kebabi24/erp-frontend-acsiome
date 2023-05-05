@@ -55,7 +55,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid'
 
 import {ProjectService, TaskService, ItemService,ProviderService, CustomerService,BomService, CostSimulationService,
   LocationDetailService,InventoryStatusService,MesureService, SiteService, LocationService, InventoryTransactionService,
-        PsService,SaleOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService} 
+        PsService,SaleOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, DealService} 
 from '../../../core/erp';
 
 
@@ -167,6 +167,7 @@ providers: [
   SiteService,
   DeviseService,
   InventoryTransactionService,
+  DealService,
   TypesUtilsService,
   LayoutUtilsService,
   

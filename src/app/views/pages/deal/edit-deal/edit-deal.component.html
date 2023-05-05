@@ -38,6 +38,22 @@
                     <div *ngIf="dealForm.controls['deal_desc'].errors && (dealForm.controls['deal_desc'].dirty || dealForm.controls['deal_desc'].touched)"
                         class="invalid-feedback">Ce Champs est obligatoire</div>
                     </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Client :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" (change)="onChangeCust()" id="cust"
+                        [className]="dealForm.controls['deal_cust'].errors && (dealForm.controls['deal_cust'].dirty || dealForm.controls['deal_cust'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="deal_cust">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open2(content2)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="dealForm.controls['deal_cust'].errors && (dealForm.controls['deal_cust'].dirty || dealForm.controls['deal_cust'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="row">
@@ -216,8 +232,29 @@
                
             </form>
         </div>
-
-
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Client</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="customers">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
         
     
     </kt-portlet-body>

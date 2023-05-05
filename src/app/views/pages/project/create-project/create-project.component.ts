@@ -25,7 +25,7 @@ import { round } from 'lodash';
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
 import { Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService , SaleOrderService, Requisition,
-         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService} from "../../../../core/erp";
+         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService,DealService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -109,6 +109,12 @@ export class CreateProjectComponent implements OnInit {
   gridObjsite: any
   angularGridsite: AngularGridInstance
 
+  datadeal: []
+  columnDefinitionsdeal: Column[] = []
+  gridOptionsdeal: GridOption = {}
+  gridObjdeal: any
+  angularGriddeal: AngularGridInstance
+
 
 date: String;
 customer: any;
@@ -134,7 +140,7 @@ type: String;
     private psService: PsService,
     private deviseService: DeviseService,
     private siteService: SiteService,
-    
+    private dealService: DealService,
   ) {
     config.autoClose = true;
   }
@@ -165,6 +171,7 @@ type: String;
       pm_desc: [{ value: this.project.pm_desc, disabled: !this.isExist },  Validators.required],
       pm_site: [{ value: this.project.pm_site, disabled: !this.isExist },  Validators.required],
       pm_cust: [{ value: this.project.pm_cust, disabled: !this.isExist }],
+      pm_deal: [{ value: this.project.pm_deal, disabled: !this.isExist }],
       name: [{value:"", disabled: true}],
       pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
       pm_cost: [{value:0, disabled: true}],
@@ -201,6 +208,7 @@ type: String;
                 controls.pm_amt.enable()
                 controls.pm_type.enable()
                 controls.pm_doc_list_code.enable()
+                controls.pm_deal.enable()
               
                 
             }
@@ -248,6 +256,7 @@ type: String;
     _project.pm_desc = controls.pm_desc.value;
     _project.pm_site = controls.pm_site.value;
     _project.pm_cust = controls.pm_cust.value;
+    _project.pm_deal = controls.pm_deal.value;
     _project.pm_amt = controls.pm_amt.value;
     _project.pm_cost = controls.pm_cost.value;
     _project.pm_type = controls.pm_type.value;
@@ -825,6 +834,41 @@ onChangeCust() {
           }
           
         );
+
+
+      }
+       
+    },
+    (error) => console.log(error)
+  );
+}
+
+onChangeDeal() {
+  const controls = this.projectForm.controls; // chof le champs hada wesh men form rah
+  const deal_code = controls.pm_deal.value;
+  
+  this.dealService.getByOne({ deal_code }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
+
+      if (!data) {
+        this.layoutUtilsService.showActionNotification(
+          "ce contrat n'existe pas!",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.error = true;
+        document.getElementById("deal").focus();
+        controls.pm_deal.setValue(null)
+      } else {
+        this.error = false;
+        controls.pm_deal.setValue(data.deal_code || "");
+             
+          
+      
 
 
       }
@@ -1661,4 +1705,146 @@ opensite(contentsite) {
   this.modalService.open(contentsite, { size: "lg" })
 }
 
+
+
+handleSelectedRowsChangeddeal(e, args) {
+  const controls = this.projectForm.controls
+ 
+  if (Array.isArray(args.rows) && this.gridObjdeal) {
+      args.rows.map((idx) => {
+          const item = this.gridObjdeal.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+          
+                  controls.pm_deal.setValue(item.deal_code || "")
+          
+      })
+  }
+}
+angularGridReadydeal(angularGrid: AngularGridInstance) {
+  this.angularGriddeal = angularGrid
+  this.gridObjdeal = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGriddeal() {
+  this.columnDefinitionsdeal = [
+      {
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+
+          minWidth: 50,
+          maxWidth: 50,
+      },
+     
+   
+    {
+        id: "deal_code",
+        name: "Code",
+        field: "deal_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+    },
+    {
+        id: "deal_desc",
+        name: "Designation",
+        field: "deal_desc",
+        sortable: true,
+        width: 200,
+        filterable: true,
+        type: FieldType.string,
+    },
+    {
+      id: "deal_start_date",
+      name: "Date Début",
+      field: "deal_start_date",
+      sortable: true,
+      filterable: true,
+      type: FieldType.dateIso,
+     },
+     {
+      id: "deal_end_date",
+      name: "Date Fin",
+      field: "deal_end_date",
+      sortable: true,
+      filterable: true,
+      type: FieldType.dateIso,
+     },
+     {
+      id: "deal_amt",
+      name: "Montant",
+      field: "deal_amt",
+      sortable: true,
+      filterable: true,
+      type: FieldType.float,
+     },
+     {
+      id: "deal_inv_meth",
+      name: "Méthode de Facturaion",
+      field: "deal_inv_meth",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     },
+     {
+      id: "deal_pay_meth",
+      name: "Méthode de Paiement",
+      field: "deal_pay_meth",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     },
+    
+     {
+      id: "deal_status",
+      name: "Status",
+      field: "deal_status",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     },
+     {
+      id: "deal_open",
+      name: "Ouvert/Ferme",
+      field: "deal_open",
+      sortable: true,
+      filterable: true,
+      formatter:Formatters.checkmark,
+      type: FieldType.boolean,
+     },
+      
+  ]
+
+  this.gridOptionsdeal = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  const controls = this.projectForm.controls
+  this.dealService
+      .getAll()
+      .subscribe((response: any) => (this.datadeal = response.data))
+}
+opendeal(content) {
+  
+  this.prepareGriddeal()
+  this.modalService.open(content, { size: "lg" })
+}
 }

@@ -119,6 +119,14 @@ export class ListDealComponent implements OnInit {
               type: FieldType.string,
           },
           {
+            id: "deal_cust",
+            name: "Client",
+            field: "deal_cust",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+          {
             id: "deal_start_date",
             name: "Date Début",
             field: "deal_start_date",

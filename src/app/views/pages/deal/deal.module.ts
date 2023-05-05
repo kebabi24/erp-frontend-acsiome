@@ -51,7 +51,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
-import {CodeService, DealService} from '../../../core/erp';
+import {CodeService, CustomerService, DealService} from '../../../core/erp';
 import { ListDealComponent } from './list-deal/list-deal.component';
 import { EditDealComponent } from './edit-deal/edit-deal.component';
 
@@ -117,6 +117,7 @@ providers: [
     HttpUtilsService,
     DealService,
     CodeService,
+    CustomerService,
     TypesUtilsService,
     LayoutUtilsService,
     ModuleGuard,

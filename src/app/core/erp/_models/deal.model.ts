@@ -19,6 +19,7 @@ export class Deal extends BaseModel{
     deal_attach: String
     deal_sign_cust: String
     deal_sign_prov: String
+    deal_cust: String
 
 
     deal_open: Boolean
