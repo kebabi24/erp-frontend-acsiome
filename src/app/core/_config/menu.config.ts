@@ -125,6 +125,27 @@ export class MenuConfig {
         },
 
         {
+          title: "Paramétrages Mobile",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          submenu: [
+            {
+              title: "Résultat de la visite",
+              page: "/mobile-settings/visit-result",
+            },
+            {
+              title: "Méthode de paiement",
+              page: "/mobile-settings/payment-method",
+            },
+            {
+              title: "Motif d'annulation",
+              page: "/mobile-settings/cancelation-reason",
+            },
+          ],
+        },
+
+        {
           title: "Rapports",
           bullet: "dot",
           icon: "flaticon2-gear",
@@ -572,6 +593,22 @@ export class MenuConfig {
             {
               title: "Créer une page de produits",
               page: "/articles/page",
+            },
+          ],
+        },
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon2-box-1",
+          root: true,
+          submenu: [
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
             },
           ],
         },

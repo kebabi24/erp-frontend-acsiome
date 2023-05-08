@@ -301,7 +301,6 @@ export class CreateDealComponent implements OnInit {
         type: FieldType.string,
       },
     ];
-
     this.gridOptions2 = {
       enableSorting: true,
       enableCellNavigation: true,
