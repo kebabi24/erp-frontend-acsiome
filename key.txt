@@ -1,0 +1,10 @@
+password root serveur abra hBbYuJiO78qzBrn163@
+password ubuntu serveur abra gYsxQSPfbE@2376sM
+port ssh serveur abra 48523
+password base01 serveur abra JsBnn43sLZxtr079mn
+
+sQyvd673bD9xm0e
+
+postgres port 8924
+
+password postgres : xd78TzzvBR9D74CF824mn

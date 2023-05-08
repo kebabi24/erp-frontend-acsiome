@@ -33,23 +33,23 @@
                 >
                   Ouverture caisse
                 </button>
-                <button
-                  (click)="checkOpenInventory2(content3)"
-                  class="fw-bold btn btn-primary"
-                  [disabled]="stateInventory"
-                  style="background-color: #9e110d; font-size: large"
-                >
-                  Inventaire d'ouverture
-                </button>
+                <!-- <button
+                    (click)="checkOpenInventory2(content3)"
+                    class="fw-bold btn btn-primary"
+                    [disabled]="stateInventory"
+                    style="background-color: #9e110d; font-size: large"
+                  >
+                    Inventaire d'ouverture
+                  </button> -->
 
-                <button
-                  (click)="checkCloseInventory(content11)"
-                  class="btn fw-bold btn-primary"
-                  style="background-color: #9e110d; font-size: large"
-                  [disabled]="globalState"
-                >
-                  Inventaire de clôture
-                </button>
+                <!-- <button
+                    (click)="checkCloseInventory(content11)"
+                    class="btn fw-bold btn-primary"
+                    style="background-color: #9e110d; font-size: large"
+                    [disabled]="globalState"
+                  >
+                    Inventaire de clôture
+                  </button> -->
 
                 <button
                   (click)="opBk(content10)"
@@ -68,13 +68,13 @@
                   Demande de service
                 </button>
                 <!-- <button
-                  (click)="mvBank(content16)"
-                  class="fw-bold btn btn-primary"
-                  [disabled]="value1"
-                  style="background-color: #9e110d; font-size: large"
-                >
-                  Demande de fonds
-                </button> -->
+                    (click)="mvBank(content16)"
+                    class="fw-bold btn btn-primary"
+                    [disabled]="value1"
+                    style="background-color: #9e110d; font-size: large"
+                  >
+                    Demande de fonds
+                  </button> -->
                 <button
                   (click)="pArticle(content20)"
                   class="btn fw-bold btn-primary"
@@ -101,8 +101,8 @@
                   Pointage des employés
                 </button>
                 <!-- <button class="btn btn-sm fw-bold btn-primary">
-                      Réception autres
-                    </button> -->
+                        Réception autres
+                      </button> -->
                 <button
                   (click)="synchro()"
                   class="btn fw-bold btn-primary"
@@ -261,37 +261,37 @@
                     <!--end::Tap pane-->
                   </div>
                   <!-- <div class="tab-content" *ngIf="showSupp">
-                    <div id="kt_pos_food_content_1">
-                      <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
-                      >
-                        <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                          *ngFor="let suppliment of suppliments"
-                          type="button"
-                          data-bs-toggle="pill"
-                          (click)="setSupplement(suppliment)"
-                          style="background-color: #ffb701"
+                      <div id="kt_pos_food_content_1">
+                        <div
+                          class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
                         >
-                          <div class="card-body text-center" type="button">
-                            <div class="mb-2">
-                              <div class="text-center">
-                                <span
-                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                  >{{ suppliment.pt_desc1 }}</span
-                                >
+                          <button
+                            class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                            *ngFor="let suppliment of suppliments"
+                            type="button"
+                            data-bs-toggle="pill"
+                            (click)="setSupplement(suppliment)"
+                            style="background-color: #ffb701"
+                          >
+                            <div class="card-body text-center" type="button">
+                              <div class="mb-2">
+                                <div class="text-center">
+                                  <span
+                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                    >{{ suppliment.pt_desc1 }}</span
+                                  >
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </button>
-
+                          </button>
+  
+                          
+                        </div>
                         
                       </div>
+  
                       
-                    </div>
-
-                    
-                  </div> -->
+                    </div> -->
                   <div class="tab-content" *ngIf="showSoda">
                     <div id="kt_pos_food_content_1">
                       <div
@@ -347,36 +347,36 @@
                     </div>
                   </div>
                   <!-- <div class="tab-content" *ngIf="showSupp">
-                      <div id="kt_pos_food_content_1">
-                        <div class="d-flex tab-pane fade show active">
-                          <button
-                            class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
-                            *ngFor="let boisson of boissons"
-                            type="button"
-                            data-bs-toggle="pill"
-                          >
-                            <div class="card-body text-center" type="button">
-                              <div class="mb-2">
-                                <div class="text-center">
-                                  <span
-                                    class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                    >{{ boisson.pt_desc1 }}</span
-                                  >
+                        <div id="kt_pos_food_content_1">
+                          <div class="d-flex tab-pane fade show active">
+                            <button
+                              class="card card-flush nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary flex-row-fluid align-items-center"
+                              *ngFor="let boisson of boissons"
+                              type="button"
+                              data-bs-toggle="pill"
+                            >
+                              <div class="card-body text-center" type="button">
+                                <div class="mb-2">
+                                  <div class="text-center">
+                                    <span
+                                      class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                                      >{{ boisson.pt_desc1 }}</span
+                                    >
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </button>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    </div> -->
+                      </div> -->
                   <!-- <button
-                    *ngIf="addProductBtn"
-                    (click)="customizeProduct(content2)"
-                    class="btn btn-primary fs-1 w-100 py-4"
-                    style="margin-top: 15px; background-color: #9e110d"
-                  >
-                    Ajouter au panier
-                  </button> -->
+                      *ngIf="addProductBtn"
+                      (click)="customizeProduct(content2)"
+                      class="btn btn-primary fs-1 w-100 py-4"
+                      style="margin-top: 15px; background-color: #9e110d"
+                    >
+                      Ajouter au panier
+                    </button> -->
                 </div>
 
                 <!--end::Content-->
@@ -421,31 +421,31 @@
                         </span>
                       </div>
                       <!-- <div class="flex-row" style="margin-top: 20px">
-                        <div class="form-floating" style="width: 200px">
-                          <input
-                            style="width: 200px; background-color: beige"
-                            type="email"
-                            class="form-control text-gray-900"
-                            placeholder="00.0"
-                            id="floatingInputValue"
-                            #discount
-                            id="discount"
-                            name="discount"
+                          <div class="form-floating" style="width: 200px">
+                            <input
+                              style="width: 200px; background-color: beige"
+                              type="email"
+                              class="form-control text-gray-900"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                              #discount
+                              id="discount"
+                              name="discount"
+                              [disabled]="globalState"
+                            />
+                            <label for="floatingInputValue"
+                              >Numéro carte de fidélité
+                            </label>
+                          </div>
+                          <button
+                            (click)="onChangeDiscount(discount.value)"
+                            class="btn fw-bold btn-primary"
+                            style="background-color: #9e110d; font-size: large"
                             [disabled]="globalState"
-                          />
-                          <label for="floatingInputValue"
-                            >Numéro carte de fidélité
-                          </label>
-                        </div>
-                        <button
-                          (click)="onChangeDiscount(discount.value)"
-                          class="btn fw-bold btn-primary"
-                          style="background-color: #9e110d; font-size: large"
-                          [disabled]="globalState"
-                        >
-                          Vérifier
-                        </button>
-                      </div> -->
+                          >
+                            Vérifier
+                          </button>
+                        </div> -->
                       <div class="flex card-header">
                         <div class="card-toolbar">
                           <div
@@ -489,34 +489,34 @@
 
                       <!--begin::Header-->
                       <!-- <div class="form-floating">
-                          <input
-                            style="
-                              margin-top: 10px;
-                              background-color: beige;
-                              width: 440px;
-                              margin-left: 15px;
-                            "
-                            type="email"
-                            class="form-control text-gray-800 fw-bold"
-                            placeholder="N° carte"
-                          />
-                        </div> -->
+                            <input
+                              style="
+                                margin-top: 10px;
+                                background-color: beige;
+                                width: 440px;
+                                margin-left: 15px;
+                              "
+                              type="email"
+                              class="form-control text-gray-800 fw-bold"
+                              placeholder="N° carte"
+                            />
+                          </div> -->
 
                       <!-- <div class="form-floating">
-                          <input
-                            style="
-                              margin-top: 10px;
-                              background-color: beige;
-                              width: 440px;
-                              margin-left: 15px;
-                            "
-                            type="email"
-                            class="form-control text-gray-800 fw-bold"
-                            placeholder="00.0"
-                            id="floatingInputValue"
-                          />
-                          <label for="floatingInputValue">Numéro carte </label>
-                        </div> -->
+                            <input
+                              style="
+                                margin-top: 10px;
+                                background-color: beige;
+                                width: 440px;
+                                margin-left: 15px;
+                              "
+                              type="email"
+                              class="form-control text-gray-800 fw-bold"
+                              placeholder="00.0"
+                              id="floatingInputValue"
+                            />
+                            <label for="floatingInputValue">Numéro carte </label>
+                          </div> -->
                       <div class="flex card-header">
                         <div class="card-toolbar">
                           <button
@@ -565,19 +565,19 @@
                             Vider le panier
                           </button>
                           <!-- <button
-                            *ngIf="modif"
-                            style="
-                              background-color: beige;
-                              width: 240px;
-                              margin-top: 5px;
-                              margin-left: 85px;
-                            "
-                            (click)="clearCurrentCart()"
-                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
-                            [disabled]="globalState"
-                          >
-                            Annuler la commande
-                          </button> -->
+                              *ngIf="modif"
+                              style="
+                                background-color: beige;
+                                width: 240px;
+                                margin-top: 5px;
+                                margin-left: 85px;
+                              "
+                              (click)="clearCurrentCart()"
+                              class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                              [disabled]="globalState"
+                            >
+                              Annuler la commande
+                            </button> -->
                         </div>
                         <div
                           *ngIf="modif"
@@ -630,10 +630,10 @@
                                 <td class="pe-0">
                                   <div class="d-flex-column align-items-center">
                                     <!-- <img
-                                        src="{{ elem.pt_article }}"
-                                        class="w-50px h-50px rounded-3 me-3"
-                                        alt=""
-                                      /> -->
+                                          src="{{ elem.pt_article }}"
+                                          class="w-50px h-50px rounded-3 me-3"
+                                          alt=""
+                                        /> -->
                                     <h2 class="">
                                       {{ elem.pt_desc1 }}
                                     </h2>
@@ -647,10 +647,10 @@
                                     </h3>
                                   </div>
                                   <!-- <div>
-                                    <h3 *ngIf="nothing" class="">
-                                      Sans garniture
-                                    </h3>
-                                  </div> -->
+                                      <h3 *ngIf="nothing" class="">
+                                        Sans garniture
+                                      </h3>
+                                    </div> -->
                                   <div>
                                     <h3
                                       *ngFor="let item of elem.ingredients"
@@ -871,16 +871,16 @@
                           </div>
 
                           <!-- <div class="form-floating">
-                              <input
-                                style="margin-top: 10px"
-                                type="email"
-                                class="form-control text-gray-800 fw-bold"
-                                placeholder="00.0"
-                                id="floatingInputValue"
-                                value=""
-                              />
-                              <label for="floatingInputValue">Montant </label>
-                            </div> -->
+                                <input
+                                  style="margin-top: 10px"
+                                  type="email"
+                                  class="form-control text-gray-800 fw-bold"
+                                  placeholder="00.0"
+                                  id="floatingInputValue"
+                                  value=""
+                                />
+                                <label for="floatingInputValue">Montant </label>
+                              </div> -->
                           <div class="form-floating">
                             <input
                               style="background-color: beige; margin-top: 10px"
@@ -898,15 +898,15 @@
                           </div>
 
                           <!-- 
-                            <button
-                              *ngFor="let b of bk"
-                              style="margin-top: 10px; margin-left: 15px"
-                              class="btn btn-light-primary fs-4 fw-bold py-4"
-                              click="getValue1(b.ticket)"
-                              (click)="getValue1(b.ticket)"
-                            >
-                              {{ b.ticket }}
-                            </button> -->
+                              <button
+                                *ngFor="let b of bk"
+                                style="margin-top: 10px; margin-left: 15px"
+                                class="btn btn-light-primary fs-4 fw-bold py-4"
+                                click="getValue1(b.ticket)"
+                                (click)="getValue1(b.ticket)"
+                              >
+                                {{ b.ticket }}
+                              </button> -->
 
                           <div class="form-floating">
                             <input
@@ -924,23 +924,23 @@
                             </label>
                           </div>
                           <!-- 
-                            <button
-                              *ngFor="let b of bk"
-                              style="margin-top: 10px; margin-left: 15px"
-                              class="btn btn-light-primary fs-4 fw-bold py-4"
-                              click="getValue2(b.ticket)"
-                              (click)="getValue2(b.ticket)"
-                            >
-                              {{ b.ticket }}
-                            </button> -->
+                              <button
+                                *ngFor="let b of bk"
+                                style="margin-top: 10px; margin-left: 15px"
+                                class="btn btn-light-primary fs-4 fw-bold py-4"
+                                click="getValue2(b.ticket)"
+                                (click)="getValue2(b.ticket)"
+                              >
+                                {{ b.ticket }}
+                              </button> -->
                           <!-- <button
-                            class="btn btn-primary fs-1 w-100 py-4"
-                            (click)="paiement()"
-                            style="margin-top: 10px; background-color: #9e110d"
-                            [disabled]="globalState"
-                          >
-                            Payer
-                          </button> -->
+                              class="btn btn-primary fs-1 w-100 py-4"
+                              (click)="paiement()"
+                              style="margin-top: 10px; background-color: #9e110d"
+                              [disabled]="globalState"
+                            >
+                              Payer
+                            </button> -->
                           <button
                             (click)="printZstate()"
                             class="btn btn-primary fs-1 w-100 py-4"
@@ -984,12 +984,12 @@
         </div>
         <div class="modal-body" style="background-color: #f5f5dc">
           <!-- <button
-            style="background-color: #9e110d"
-            class="btn btn-primary fs-2 w-100 mt-2 mb-2"
-            (click)="addNewItemInventory()"
-          >
-            Ajouter un Article
-          </button> -->
+              style="background-color: #9e110d"
+              class="btn btn-primary fs-2 w-100 mt-2 mb-2"
+              (click)="addNewItemInventory()"
+            >
+              Ajouter un Article
+            </button> -->
 
           <div class="row">
             <angular-slickgrid
@@ -1157,58 +1157,58 @@
     </kt-portlet-body>
   </div>
   <!-- <div>
-    <kt-portlet-body>
-      <ng-template #content25 let-c="close" let-d="dismiss">
-        <div class="modal-body" style="background-color: #f5f5dc">
-          <div class="form-group col-12">
-            <kt-alert
-              type="warn"
-              [showCloseButton]="true"
-              [duration]="10000"
-              (close)="onAlertClose($event)"
-            >
-              Attention vous avez modifier la commande !
-            </kt-alert>
-          </div>
-          <div class="row">
-            <div class="card card-flush card-p-0 bg-transparent border-0">
-              <div style="display: flex; justify-content: space-between">
-                <button
-                  class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                  data-bs-toggle="pill"
-                  type="button"
-                  (click)="onSelectDelivery(platforme)"
-                  style="width: 500px; height: 100px; background-color: #ffb701"
-                >
-                  <div class="">
-                    <span class="text-gray-900 fw-bold fs-2 d-block"
-                      >Oui, je veux plutôt relancer la commande</span
-                    >
-                  </div>
-                </button>
-                <button
-                  class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                  data-bs-toggle="pill"
-                  type="button"
-                  (click)="onSelectDelivery(platforme)"
-                  style="width: 500px; height: 100px; background-color: #ffb701"
-                >
-                  <div class="">
-                    <span class="text-gray-900 fw-bold fs-2 d-block"
-                      >Procéder au paiement</span
-                    >
-                  </div>
-                </button>
-
+      <kt-portlet-body>
+        <ng-template #content25 let-c="close" let-d="dismiss">
+          <div class="modal-body" style="background-color: #f5f5dc">
+            <div class="form-group col-12">
+              <kt-alert
+                type="warn"
+                [showCloseButton]="true"
+                [duration]="10000"
+                (close)="onAlertClose($event)"
+              >
+                Attention vous avez modifier la commande !
+              </kt-alert>
+            </div>
+            <div class="row">
+              <div class="card card-flush card-p-0 bg-transparent border-0">
+                <div style="display: flex; justify-content: space-between">
+                  <button
+                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                    data-bs-toggle="pill"
+                    type="button"
+                    (click)="onSelectDelivery(platforme)"
+                    style="width: 500px; height: 100px; background-color: #ffb701"
+                  >
+                    <div class="">
+                      <span class="text-gray-900 fw-bold fs-2 d-block"
+                        >Oui, je veux plutôt relancer la commande</span
+                      >
+                    </div>
+                  </button>
+                  <button
+                    class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                    data-bs-toggle="pill"
+                    type="button"
+                    (click)="onSelectDelivery(platforme)"
+                    style="width: 500px; height: 100px; background-color: #ffb701"
+                  >
+                    <div class="">
+                      <span class="text-gray-900 fw-bold fs-2 d-block"
+                        >Procéder au paiement</span
+                      >
+                    </div>
+                  </button>
+  
+            
+                </div>
           
               </div>
-        
             </div>
           </div>
-        </div>
-      </ng-template>
-    </kt-portlet-body>
-  </div> -->
+        </ng-template>
+      </kt-portlet-body>
+    </div> -->
   <div>
     <kt-portlet-body>
       <ng-template #content4 let-c="close" let-d="dismiss">
@@ -1541,23 +1541,23 @@
                 <!--end::Tab Content-->
               </div>
               <!-- <tr *ngIf="currentItem.pt_formule">
-                        <td class="min-w-250px fs-4 fw-bold">Boissons</td>
-                        <td class="w-125px" *ngFor="let boisson of boissons">
-                          <div class="form-check form-check-solid">
-                            <input
-                              (click)="setSoda(boisson)"
-                              class="form-check-input"
-                              type="checkbox"
-                              value=""
-                            />
-                            <label
-                              style="margin-top: 5px"
-                              class="form-check-label ps-2"
-                              >{{ boisson.pt_desc1 }}</label
-                            >
-                          </div>
-                        </td>
-                      </tr> -->
+                          <td class="min-w-250px fs-4 fw-bold">Boissons</td>
+                          <td class="w-125px" *ngFor="let boisson of boissons">
+                            <div class="form-check form-check-solid">
+                              <input
+                                (click)="setSoda(boisson)"
+                                class="form-check-input"
+                                type="checkbox"
+                                value=""
+                              />
+                              <label
+                                style="margin-top: 5px"
+                                class="form-check-label ps-2"
+                                >{{ boisson.pt_desc1 }}</label
+                              >
+                            </div>
+                          </td>
+                        </tr> -->
 
               <!--end::Table-->
             </div>
@@ -1609,56 +1609,56 @@
             </button>
           </li>
           <!-- <li style="width: 260px; height: 65px">
-            <button
-              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-              data-bs-toggle="pill"
-              type="button"
-              (click)="onSelectAutre()"
-              style="width: 260px; height: 65px; background-color: #ffb701"
-            >
-              <div class="">
-                <span
-                  class="text-gray-900 fw-bold fs-2 d-block"
-                  style="margin-left: 5px"
-                  >Service</span
-                >
-              </div>
-            </button>
-          </li> -->
+              <button
+                class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                data-bs-toggle="pill"
+                type="button"
+                (click)="onSelectAutre()"
+                style="width: 260px; height: 65px; background-color: #ffb701"
+              >
+                <div class="">
+                  <span
+                    class="text-gray-900 fw-bold fs-2 d-block"
+                    style="margin-left: 5px"
+                    >Service</span
+                  >
+                </div>
+              </button>
+            </li> -->
           <!-- <li style="width: 260px; height: 65px">
-            <button
-              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-              data-bs-toggle="pill"
-              type="button"
-              (click)="onSelectAutre()"
-              style="width: 260px; height: 65px; background-color: #ffb701"
-            >
-              <div class="">
-                <span
-                  class="text-gray-900 fw-bold fs-2 d-block"
-                  style="margin-left: 5px"
-                  >Investissement</span
-                >
-              </div>
-            </button>
-          </li> -->
+              <button
+                class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                data-bs-toggle="pill"
+                type="button"
+                (click)="onSelectAutre()"
+                style="width: 260px; height: 65px; background-color: #ffb701"
+              >
+                <div class="">
+                  <span
+                    class="text-gray-900 fw-bold fs-2 d-block"
+                    style="margin-left: 5px"
+                    >Investissement</span
+                  >
+                </div>
+              </button>
+            </li> -->
           <!-- <li style="width: 260px; height: 65px">
-            <button
-              class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-              data-bs-toggle="pill"
-              type="button"
-              (click)="onSelectAutre()"
-              style="width: 260px; height: 65px; background-color: #ffb701"
-            >
-              <div class="">
-                <span
-                  class="text-gray-900 fw-bold fs-2 d-block"
-                  style="margin-left: 5px"
-                  >Salaire</span
-                >
-              </div>
-            </button>
-          </li> -->
+              <button
+                class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                data-bs-toggle="pill"
+                type="button"
+                (click)="onSelectAutre()"
+                style="width: 260px; height: 65px; background-color: #ffb701"
+              >
+                <div class="">
+                  <span
+                    class="text-gray-900 fw-bold fs-2 d-block"
+                    style="margin-left: 5px"
+                    >Salaire</span
+                  >
+                </div>
+              </button>
+            </li> -->
         </ul>
       </div>
 
@@ -1670,35 +1670,35 @@
         <div class="row">
           <div class="form-group col-12">
             <!-- <label class="form-group">Choisir une caisse: *</label>
-              <div class="input-group input-group-sm">
-                <input
-                  type="text"
-                  formControlName="bk_code"
-                  [className]="
-                    bkForm.controls['bk_code'].errors &&
-                    (bkForm.controls['bk_code'].dirty ||
-                      bkForm.controls['bk_code'].touched)
-                      ? 'form-control form-control-sm form-control-solid is-invalid'
-                      : 'form-control form-control-sm form-control-solid'
-                  "
-                  aria-describedby="basic-addon2"
-                />
-                <div class="input-group-append">
-                  <span class="input-group-text" (click)="opBk(content6)">
-                    <i class="text-dark-50 flaticon2-search"></i>
-                  </span>
-                </div>
-                <div
-                  *ngIf="
-                    bkForm.controls['bk_code'].errors &&
-                    (bkForm.controls['bk_code'].dirty ||
-                      bkForm.controls['bk_code'].touched)
-                  "
-                  class="invalid-feedback"
-                >
-                  Ce Champs est obligatoire
-                </div>
-              </div> -->
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    formControlName="bk_code"
+                    [className]="
+                      bkForm.controls['bk_code'].errors &&
+                      (bkForm.controls['bk_code'].dirty ||
+                        bkForm.controls['bk_code'].touched)
+                        ? 'form-control form-control-sm form-control-solid is-invalid'
+                        : 'form-control form-control-sm form-control-solid'
+                    "
+                    aria-describedby="basic-addon2"
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text" (click)="opBk(content6)">
+                      <i class="text-dark-50 flaticon2-search"></i>
+                    </span>
+                  </div>
+                  <div
+                    *ngIf="
+                      bkForm.controls['bk_code'].errors &&
+                      (bkForm.controls['bk_code'].dirty ||
+                        bkForm.controls['bk_code'].touched)
+                    "
+                    class="invalid-feedback"
+                  >
+                    Ce Champs est obligatoire
+                  </div>
+                </div> -->
 
             <label class="form-group">Choisir une caisse: *</label>
             <select
@@ -1749,29 +1749,29 @@
           </button>
 
           <!-- <div class="form-group col-4">
-              <label class="form-group">Montant à réserver : *</label>
-              <input
-                type="text"
-                formControlName="bk_balance"
-                [className]="
-                  bkForm.controls['bk_balance'].errors &&
-                  (bkForm.controls['bk_balance'].dirty ||
-                    bkForm.controls['bk_balance'].touched)
-                    ? 'form-control form-control-sm form-control-solid is-invalid'
-                    : 'form-control form-control-sm form-control-solid'
-                "
-              />
-              <div
-                *ngIf="
-                  bkForm.controls['bk_balance'].errors &&
-                  (bkForm.controls['bk_balance'].dirty ||
-                    bkForm.controls['bk_balance'].touched)
-                "
-                class="invalid-feedback"
-              >
-                Ce Champs est obligatoire
-              </div>
-            </div> -->
+                <label class="form-group">Montant à réserver : *</label>
+                <input
+                  type="text"
+                  formControlName="bk_balance"
+                  [className]="
+                    bkForm.controls['bk_balance'].errors &&
+                    (bkForm.controls['bk_balance'].dirty ||
+                      bkForm.controls['bk_balance'].touched)
+                      ? 'form-control form-control-sm form-control-solid is-invalid'
+                      : 'form-control form-control-sm form-control-solid'
+                  "
+                />
+                <div
+                  *ngIf="
+                    bkForm.controls['bk_balance'].errors &&
+                    (bkForm.controls['bk_balance'].dirty ||
+                      bkForm.controls['bk_balance'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
+                </div>
+              </div> -->
         </div>
       </div>
       <div class="modal-footer" style="background-color: #f5f5dc">
@@ -1809,315 +1809,315 @@
             </angular-slickgrid>
           </div>
           <!-- <form [formGroup]="bkForm" class="form">
-              <div class="row">
-                <div class="form-group col-6">
-                  <label class="form-group">Code caisse:</label>
-                  <select
-                    (change)="onChangeCode()"
-                    class="form-control form-control-sm form-control-solid"
-                    id="exampleSelects1"
-                    formControlName="bk_code"
-                  >
-                    <option value=""></option>
-                    <option *ngFor="let elem of bank" [value]="elem.bk_desc">
-                      {{ elem.bk_desc }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group col-6">
-                  <label class="form-group" id="code">N° doc</label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_num_doc'].errors &&
-                      (bkForm.controls['bk_num_doc'].dirty ||
-                        bkForm.controls['bk_num_doc'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_num_doc"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_num_doc'].errors &&
-                      (bkForm.controls['bk_num_doc'].dirty ||
-                        bkForm.controls['bk_num_doc'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="form-group">Code caisse:</label>
+                    <select
+                      (change)="onChangeCode()"
+                      class="form-control form-control-sm form-control-solid"
+                      id="exampleSelects1"
+                      formControlName="bk_code"
+                    >
+                      <option value=""></option>
+                      <option *ngFor="let elem of bank" [value]="elem.bk_desc">
+                        {{ elem.bk_desc }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group col-6">
+                    <label class="form-group" id="code">N° doc</label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_num_doc'].errors &&
+                        (bkForm.controls['bk_num_doc'].dirty ||
+                          bkForm.controls['bk_num_doc'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_num_doc"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_num_doc'].errors &&
+                        (bkForm.controls['bk_num_doc'].dirty ||
+                          bkForm.controls['bk_num_doc'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-6">
-                  <label class="form-group" id="code">Montant: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_balance'].errors &&
-                      (bkForm.controls['bk_balance'].dirty ||
-                        bkForm.controls['bk_balance'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_balance"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_balance'].errors &&
-                      (bkForm.controls['bk_balance'].dirty ||
-                        bkForm.controls['bk_balance'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="form-group" id="code">Montant: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_balance'].errors &&
+                        (bkForm.controls['bk_balance'].dirty ||
+                          bkForm.controls['bk_balance'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_balance"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_balance'].errors &&
+                        (bkForm.controls['bk_balance'].dirty ||
+                          bkForm.controls['bk_balance'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">2000 DA: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_2000'].errors &&
-                      (bkForm.controls['bk_2000'].dirty ||
-                        bkForm.controls['bk_2000'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_2000"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_2000'].errors &&
-                      (bkForm.controls['bk_2000'].dirty ||
-                        bkForm.controls['bk_2000'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
+                <div class="row">
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">2000 DA: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_2000'].errors &&
+                        (bkForm.controls['bk_2000'].dirty ||
+                          bkForm.controls['bk_2000'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_2000"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_2000'].errors &&
+                        (bkForm.controls['bk_2000'].dirty ||
+                          bkForm.controls['bk_2000'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">1000: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_1000'].errors &&
+                        (bkForm.controls['bk_1000'].dirty ||
+                          bkForm.controls['bk_1000'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_1000"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_1000'].errors &&
+                        (bkForm.controls['bk_1000'].dirty ||
+                          bkForm.controls['bk_1000'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">500: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_0500'].errors &&
+                        (bkForm.controls['bk_0500'].dirty ||
+                          bkForm.controls['bk_0500'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_0500"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_0500'].errors &&
+                        (bkForm.controls['bk_0500'].dirty ||
+                          bkForm.controls['bk_0500'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">200: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_0200'].errors &&
+                        (bkForm.controls['bk_0200'].dirty ||
+                          bkForm.controls['bk_0200'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_0200"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_0200'].errors &&
+                        (bkForm.controls['bk_0200'].dirty ||
+                          bkForm.controls['bk_0200'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">200p: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p200'].errors &&
+                        (bkForm.controls['bk_p200'].dirty ||
+                          bkForm.controls['bk_p200'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p200"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p200'].errors &&
+                        (bkForm.controls['bk_p200'].dirty ||
+                          bkForm.controls['bk_p200'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">100: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p100'].errors &&
+                        (bkForm.controls['bk_p100'].dirty ||
+                          bkForm.controls['bk_p100'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p100"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p100'].errors &&
+                        (bkForm.controls['bk_p100'].dirty ||
+                          bkForm.controls['bk_p100'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">50: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p050'].errors &&
+                        (bkForm.controls['bk_p050'].dirty ||
+                          bkForm.controls['bk_p050'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p050"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p050'].errors &&
+                        (bkForm.controls['bk_p050'].dirty ||
+                          bkForm.controls['bk_p050'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">20: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p020'].errors &&
+                        (bkForm.controls['bk_p020'].dirty ||
+                          bkForm.controls['bk_p020'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p020"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p020'].errors &&
+                        (bkForm.controls['bk_p020'].dirty ||
+                          bkForm.controls['bk_p020'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">10: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p010'].errors &&
+                        (bkForm.controls['bk_p010'].dirty ||
+                          bkForm.controls['bk_p010'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p010"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p010'].errors &&
+                        (bkForm.controls['bk_p010'].dirty ||
+                          bkForm.controls['bk_p010'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">5: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p005'].errors &&
+                        (bkForm.controls['bk_p005'].dirty ||
+                          bkForm.controls['bk_p005'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p005"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p005'].errors &&
+                        (bkForm.controls['bk_p005'].dirty ||
+                          bkForm.controls['bk_p005'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
                   </div>
                 </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">1000: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_1000'].errors &&
-                      (bkForm.controls['bk_1000'].dirty ||
-                        bkForm.controls['bk_1000'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_1000"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_1000'].errors &&
-                      (bkForm.controls['bk_1000'].dirty ||
-                        bkForm.controls['bk_1000'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">500: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_0500'].errors &&
-                      (bkForm.controls['bk_0500'].dirty ||
-                        bkForm.controls['bk_0500'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_0500"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_0500'].errors &&
-                      (bkForm.controls['bk_0500'].dirty ||
-                        bkForm.controls['bk_0500'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">200: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_0200'].errors &&
-                      (bkForm.controls['bk_0200'].dirty ||
-                        bkForm.controls['bk_0200'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_0200"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_0200'].errors &&
-                      (bkForm.controls['bk_0200'].dirty ||
-                        bkForm.controls['bk_0200'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">200p: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p200'].errors &&
-                      (bkForm.controls['bk_p200'].dirty ||
-                        bkForm.controls['bk_p200'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p200"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p200'].errors &&
-                      (bkForm.controls['bk_p200'].dirty ||
-                        bkForm.controls['bk_p200'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">100: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p100'].errors &&
-                      (bkForm.controls['bk_p100'].dirty ||
-                        bkForm.controls['bk_p100'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p100"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p100'].errors &&
-                      (bkForm.controls['bk_p100'].dirty ||
-                        bkForm.controls['bk_p100'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">50: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p050'].errors &&
-                      (bkForm.controls['bk_p050'].dirty ||
-                        bkForm.controls['bk_p050'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p050"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p050'].errors &&
-                      (bkForm.controls['bk_p050'].dirty ||
-                        bkForm.controls['bk_p050'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">20: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p020'].errors &&
-                      (bkForm.controls['bk_p020'].dirty ||
-                        bkForm.controls['bk_p020'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p020"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p020'].errors &&
-                      (bkForm.controls['bk_p020'].dirty ||
-                        bkForm.controls['bk_p020'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">10: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p010'].errors &&
-                      (bkForm.controls['bk_p010'].dirty ||
-                        bkForm.controls['bk_p010'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p010"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p010'].errors &&
-                      (bkForm.controls['bk_p010'].dirty ||
-                        bkForm.controls['bk_p010'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">5: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p005'].errors &&
-                      (bkForm.controls['bk_p005'].dirty ||
-                        bkForm.controls['bk_p005'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p005"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p005'].errors &&
-                      (bkForm.controls['bk_p005'].dirty ||
-                        bkForm.controls['bk_p005'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-              </div>
-            </form> -->
+              </form> -->
         </div>
         <div
           class="card-footer d-flex justify-content-end py-6 px-9"
@@ -2191,315 +2191,315 @@
             </angular-slickgrid>
           </div>
           <!-- <form [formGroup]="bkForm" class="form">
-              <div class="row">
-                <div class="form-group col-6">
-                  <label class="form-group">Code caisse:</label>
-                  <select
-                    (change)="onChangeCode()"
-                    class="form-control form-control-sm form-control-solid"
-                    id="exampleSelects1"
-                    formControlName="bk_code"
-                  >
-                    <option value=""></option>
-                    <option *ngFor="let elem of bank" [value]="elem.bk_desc">
-                      {{ elem.bk_desc }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group col-6">
-                  <label class="form-group" id="code">N° doc</label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_num_doc'].errors &&
-                      (bkForm.controls['bk_num_doc'].dirty ||
-                        bkForm.controls['bk_num_doc'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_num_doc"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_num_doc'].errors &&
-                      (bkForm.controls['bk_num_doc'].dirty ||
-                        bkForm.controls['bk_num_doc'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="form-group">Code caisse:</label>
+                    <select
+                      (change)="onChangeCode()"
+                      class="form-control form-control-sm form-control-solid"
+                      id="exampleSelects1"
+                      formControlName="bk_code"
+                    >
+                      <option value=""></option>
+                      <option *ngFor="let elem of bank" [value]="elem.bk_desc">
+                        {{ elem.bk_desc }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group col-6">
+                    <label class="form-group" id="code">N° doc</label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_num_doc'].errors &&
+                        (bkForm.controls['bk_num_doc'].dirty ||
+                          bkForm.controls['bk_num_doc'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_num_doc"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_num_doc'].errors &&
+                        (bkForm.controls['bk_num_doc'].dirty ||
+                          bkForm.controls['bk_num_doc'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-6">
-                  <label class="form-group" id="code">Montant: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_balance'].errors &&
-                      (bkForm.controls['bk_balance'].dirty ||
-                        bkForm.controls['bk_balance'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_balance"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_balance'].errors &&
-                      (bkForm.controls['bk_balance'].dirty ||
-                        bkForm.controls['bk_balance'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="form-group" id="code">Montant: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_balance'].errors &&
+                        (bkForm.controls['bk_balance'].dirty ||
+                          bkForm.controls['bk_balance'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_balance"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_balance'].errors &&
+                        (bkForm.controls['bk_balance'].dirty ||
+                          bkForm.controls['bk_balance'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">2000 DA: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_2000'].errors &&
-                      (bkForm.controls['bk_2000'].dirty ||
-                        bkForm.controls['bk_2000'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_2000"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_2000'].errors &&
-                      (bkForm.controls['bk_2000'].dirty ||
-                        bkForm.controls['bk_2000'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
+                <div class="row">
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">2000 DA: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_2000'].errors &&
+                        (bkForm.controls['bk_2000'].dirty ||
+                          bkForm.controls['bk_2000'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_2000"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_2000'].errors &&
+                        (bkForm.controls['bk_2000'].dirty ||
+                          bkForm.controls['bk_2000'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">1000: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_1000'].errors &&
+                        (bkForm.controls['bk_1000'].dirty ||
+                          bkForm.controls['bk_1000'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_1000"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_1000'].errors &&
+                        (bkForm.controls['bk_1000'].dirty ||
+                          bkForm.controls['bk_1000'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">500: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_0500'].errors &&
+                        (bkForm.controls['bk_0500'].dirty ||
+                          bkForm.controls['bk_0500'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_0500"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_0500'].errors &&
+                        (bkForm.controls['bk_0500'].dirty ||
+                          bkForm.controls['bk_0500'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">200: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_0200'].errors &&
+                        (bkForm.controls['bk_0200'].dirty ||
+                          bkForm.controls['bk_0200'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_0200"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_0200'].errors &&
+                        (bkForm.controls['bk_0200'].dirty ||
+                          bkForm.controls['bk_0200'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">200p: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p200'].errors &&
+                        (bkForm.controls['bk_p200'].dirty ||
+                          bkForm.controls['bk_p200'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p200"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p200'].errors &&
+                        (bkForm.controls['bk_p200'].dirty ||
+                          bkForm.controls['bk_p200'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">100: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p100'].errors &&
+                        (bkForm.controls['bk_p100'].dirty ||
+                          bkForm.controls['bk_p100'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p100"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p100'].errors &&
+                        (bkForm.controls['bk_p100'].dirty ||
+                          bkForm.controls['bk_p100'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">50: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p050'].errors &&
+                        (bkForm.controls['bk_p050'].dirty ||
+                          bkForm.controls['bk_p050'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p050"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p050'].errors &&
+                        (bkForm.controls['bk_p050'].dirty ||
+                          bkForm.controls['bk_p050'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">20: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p020'].errors &&
+                        (bkForm.controls['bk_p020'].dirty ||
+                          bkForm.controls['bk_p020'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p020"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p020'].errors &&
+                        (bkForm.controls['bk_p020'].dirty ||
+                          bkForm.controls['bk_p020'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">10: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p010'].errors &&
+                        (bkForm.controls['bk_p010'].dirty ||
+                          bkForm.controls['bk_p010'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p010"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p010'].errors &&
+                        (bkForm.controls['bk_p010'].dirty ||
+                          bkForm.controls['bk_p010'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
+                  </div>
+                  <div class="form-group col-2">
+                    <label class="form-group" id="code">5: </label>
+                    <input
+                      type="text"
+                      [className]="
+                        bkForm.controls['bk_p005'].errors &&
+                        (bkForm.controls['bk_p005'].dirty ||
+                          bkForm.controls['bk_p005'].touched)
+                          ? 'form-control form-control-sm form-control-solid is-invalid'
+                          : 'form-control form-control-sm form-control-solid'
+                      "
+                      formControlName="bk_p005"
+                    />
+                    <div
+                      *ngIf="
+                        bkForm.controls['bk_p005'].errors &&
+                        (bkForm.controls['bk_p005'].dirty ||
+                          bkForm.controls['bk_p005'].touched)
+                      "
+                      class="invalid-feedback"
+                    >
+                      Ce Champs est obligatoire
+                    </div>
                   </div>
                 </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">1000: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_1000'].errors &&
-                      (bkForm.controls['bk_1000'].dirty ||
-                        bkForm.controls['bk_1000'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_1000"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_1000'].errors &&
-                      (bkForm.controls['bk_1000'].dirty ||
-                        bkForm.controls['bk_1000'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">500: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_0500'].errors &&
-                      (bkForm.controls['bk_0500'].dirty ||
-                        bkForm.controls['bk_0500'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_0500"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_0500'].errors &&
-                      (bkForm.controls['bk_0500'].dirty ||
-                        bkForm.controls['bk_0500'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">200: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_0200'].errors &&
-                      (bkForm.controls['bk_0200'].dirty ||
-                        bkForm.controls['bk_0200'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_0200"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_0200'].errors &&
-                      (bkForm.controls['bk_0200'].dirty ||
-                        bkForm.controls['bk_0200'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">200p: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p200'].errors &&
-                      (bkForm.controls['bk_p200'].dirty ||
-                        bkForm.controls['bk_p200'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p200"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p200'].errors &&
-                      (bkForm.controls['bk_p200'].dirty ||
-                        bkForm.controls['bk_p200'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">100: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p100'].errors &&
-                      (bkForm.controls['bk_p100'].dirty ||
-                        bkForm.controls['bk_p100'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p100"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p100'].errors &&
-                      (bkForm.controls['bk_p100'].dirty ||
-                        bkForm.controls['bk_p100'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">50: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p050'].errors &&
-                      (bkForm.controls['bk_p050'].dirty ||
-                        bkForm.controls['bk_p050'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p050"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p050'].errors &&
-                      (bkForm.controls['bk_p050'].dirty ||
-                        bkForm.controls['bk_p050'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">20: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p020'].errors &&
-                      (bkForm.controls['bk_p020'].dirty ||
-                        bkForm.controls['bk_p020'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p020"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p020'].errors &&
-                      (bkForm.controls['bk_p020'].dirty ||
-                        bkForm.controls['bk_p020'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">10: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p010'].errors &&
-                      (bkForm.controls['bk_p010'].dirty ||
-                        bkForm.controls['bk_p010'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p010"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p010'].errors &&
-                      (bkForm.controls['bk_p010'].dirty ||
-                        bkForm.controls['bk_p010'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-                <div class="form-group col-2">
-                  <label class="form-group" id="code">5: </label>
-                  <input
-                    type="text"
-                    [className]="
-                      bkForm.controls['bk_p005'].errors &&
-                      (bkForm.controls['bk_p005'].dirty ||
-                        bkForm.controls['bk_p005'].touched)
-                        ? 'form-control form-control-sm form-control-solid is-invalid'
-                        : 'form-control form-control-sm form-control-solid'
-                    "
-                    formControlName="bk_p005"
-                  />
-                  <div
-                    *ngIf="
-                      bkForm.controls['bk_p005'].errors &&
-                      (bkForm.controls['bk_p005'].dirty ||
-                        bkForm.controls['bk_p005'].touched)
-                    "
-                    class="invalid-feedback"
-                  >
-                    Ce Champs est obligatoire
-                  </div>
-                </div>
-              </div>
-            </form> -->
+              </form> -->
         </div>
         <div
           class="card-footer d-flex justify-content-end py-6 px-9"

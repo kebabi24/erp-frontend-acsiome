@@ -191,6 +191,13 @@ const routes: Routes = [
           import("./views/pages/pos/pos.module").then((m) => m.PosModule),
       },
       {
+        path: "pos-cafette",
+        loadChildren: () =>
+          import("./views/pages/pos-cafette/pos-cafette.module").then(
+            (m) => m.PosCafetteModule
+          ),
+      },
+      {
         path: "pos-visitor",
         loadChildren: () =>
           import("./views/pages/pos-visitor/pos-visitor.module").then(

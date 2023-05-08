@@ -35,6 +35,7 @@ const API_URL_CUSTOMER = environment.apiUrl + "/customers";
 const API_URL_DELIVERY = environment.apiUrl + "/delivery";
 const API_URL_SITE = environment.apiUrl + "/sites";
 const API_URL_SYNCHRO = environment.apiUrl + "/synchro";
+const API_URL_SERVICE = environment.apiUrl + "/service";
 
 @Injectable()
 export class PosCategoryService {
@@ -423,6 +424,12 @@ export class PosCategoryService {
   public getByOneInV(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_INV}/findByOneinv`, data, {
+      headers: httpHeaders,
+    });
+  }
+  public getOneService(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_SERVICE}/find`, data, {
       headers: httpHeaders,
     });
   }

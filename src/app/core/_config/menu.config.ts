@@ -51,6 +51,13 @@ export class MenuConfig {
           page: "/pos",
         },
         {
+          title: "Pos cafette",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          page: "/pos-cafette",
+        },
+        {
           title: "Weekly inventory",
           bullet: "dot",
           icon: "flaticon2-shopping-cart",
@@ -91,32 +98,51 @@ export class MenuConfig {
             },
             {
               title: "Liste des catégories",
-              page: "/pos-settings/list-category",  
+              page: "/pos-settings/list-category",
             },
-            
           ],
         },
-        
-          {
-            title: "Paramétrages Mobile",
-            bullet: "dot",
-            icon: "flaticon2-shopping-cart",
-            root: true,
-            submenu: [
-                {
-                    title: "Résultat de la visite",
-                    page: "/mobile-settings/visit-result",
-                },
-                {
-                    title: "Méthode de paiement",
-                    page: "/mobile-settings/payment-method",
-                },
-                {
-                    title: "Motif d'annulation",
-                    page: "/mobile-settings/cancelation-reason",
-                },
-                
-            ],
+
+        {
+          title: "Paramétrages Mobile",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          submenu: [
+            {
+              title: "Résultat de la visite",
+              page: "/mobile-settings/visit-result",
+            },
+            {
+              title: "Méthode de paiement",
+              page: "/mobile-settings/payment-method",
+            },
+            {
+              title: "Motif d'annulation",
+              page: "/mobile-settings/cancelation-reason",
+            },
+          ],
+        },
+
+        {
+          title: "Paramétrages Mobile",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          submenu: [
+            {
+              title: "Résultat de la visite",
+              page: "/mobile-settings/visit-result",
+            },
+            {
+              title: "Méthode de paiement",
+              page: "/mobile-settings/payment-method",
+            },
+            {
+              title: "Motif d'annulation",
+              page: "/mobile-settings/cancelation-reason",
+            },
+          ],
         },
 
         {
@@ -319,7 +345,7 @@ export class MenuConfig {
                 {
                   title: "ajouter spécification standard",
                   page: "/inventory-settings/create-standard-specification",
-                },   
+                },
               ],
             },
 
@@ -414,9 +440,6 @@ export class MenuConfig {
           ],
         },
 
-
-
-
         {
           title: "Gestion des Fournisseurs",
           bullet: "dot",
@@ -492,21 +515,21 @@ export class MenuConfig {
               page: "/customers-mobile/create-customer-mobile",
             },
             {
-                title: "Ajouter Cluster",
-                page: "/customers-mobile/cluster-create",
-             },
-            {
-                title: "Ajouter Category",
-                page: "/customers-mobile/category-create",
+              title: "Ajouter Cluster",
+              page: "/customers-mobile/cluster-create",
             },
             {
-                title: "Ajouter Sub Cluster",
-                page: "/customers-mobile/cluster-sub-create",
+              title: "Ajouter Category",
+              page: "/customers-mobile/category-create",
             },
             {
-                title: "Ajouter Category Type",
-                page: "/customers-mobile/category-type-create",
-           },
+              title: "Ajouter Sub Cluster",
+              page: "/customers-mobile/cluster-sub-create",
+            },
+            {
+              title: "Ajouter Category Type",
+              page: "/customers-mobile/category-type-create",
+            },
             {
               title: "Ajouter canaux de vente",
               page: "/customers-mobile/sales-channels-create",
@@ -548,7 +571,6 @@ export class MenuConfig {
               page: "/articles/create-spec",
             },
             {
-              
               title: "Ajouter des Articles",
               page: "/articles/add",
             },
@@ -559,7 +581,7 @@ export class MenuConfig {
             {
               title: "Créer une page de produits",
               page: "/articles/page",
-          },
+            },
           ],
         },
         {
@@ -568,18 +590,32 @@ export class MenuConfig {
           icon: "flaticon2-box-1",
           root: true,
           submenu: [
-              {
-                  title: "Validation des demandes de chargement",
-                  page: "/supervision/validate-charge-demande",
-                },
-                {
-                    title: "Transfert demandes de chargement à la livraison",
-                    page: "/supervision/transfer-charge-demande-delivery",
-                },
-              
-            ],
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
+            },
+          ],
         },
-
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon2-box-1",
+          root: true,
+          submenu: [
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
+            },
+          ],
+        },
 
         {
           title: "Gestion Stock",
@@ -981,7 +1017,7 @@ export class MenuConfig {
               title: "Ajouter un Contrat",
               page: "/deal/create-deal",
             },
-          ]
+          ],
         },
         {
           title: "Gestion des Employés",
@@ -1079,6 +1115,15 @@ export class MenuConfig {
               page: "/project/accident-incident",
             },
 
+            
+            {
+              title: "Sensibilisation",
+              page: "/project/sensibilisation",
+            },
+            {
+              title: "identification",
+              page: "/project/identification",
+            },
             
             {
               title: "Gestion des Listes Outils",
@@ -1230,8 +1275,8 @@ export class MenuConfig {
                   page: "/profiles-mobile/create-profile-mobile",
                 },
                 {
-                   title: "Affection des pages produits",
-                   page: "/profiles-mobile/assign-profile-products-pages",
+                  title: "Affection des pages produits",
+                  page: "/profiles-mobile/assign-profile-products-pages",
                 },
                 {
                   title: "liste des profiles mobile",
@@ -1275,7 +1320,6 @@ export class MenuConfig {
               title: "Liste des token",
               page: "/token-serie/list-all-tokens",
             },
-            
           ],
         },
 
