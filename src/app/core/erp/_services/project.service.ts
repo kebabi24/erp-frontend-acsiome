@@ -13,6 +13,8 @@ const API_URL_SPECIFICATIONS = environment.apiUrl + "/qualityControl/findSpecifi
 const API_URL_SPECIFICATION_DATA = environment.apiUrl + "/qualityControl/findSpecificationWithDetails"
 const API_URL_PROJECT_TYPE = environment.apiUrl + "/projects/projectTypes"
 const API_URL_TESTS_HISTORY = environment.apiUrl + "/qualityControl/createTestsHistory"
+const API_URL_SITES = environment.apiUrl + "/sites/"
+const API_URL_EMPS_BY_SITE = environment.apiUrl + "/employes/find"
 
 @Injectable()
 export class ProjectService {
@@ -41,6 +43,16 @@ export class ProjectService {
         return this.http.get(API_URL_SPECIFICATIONS, { headers: httpHeaders })
     }
 
+    public getAllSites() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL_SITES, { headers: httpHeaders })
+    }
+
+    public getEmployeesBySite(site_code : any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL_EMPS_BY_SITE,site_code, { headers: httpHeaders })
+    }
+
     public getProjectTypes() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL_PROJECT_TYPE, { headers: httpHeaders })
@@ -60,6 +72,14 @@ export class ProjectService {
     public getByAll(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findall`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
+
+    public getByAssetDownTypes() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/assetDownTypes`, { headers: httpHeaders })
 
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         

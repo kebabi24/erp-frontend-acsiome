@@ -34,9 +34,10 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { Site, SiteService, AccountService , InventoryStatusService, EntityService , ProjectService } from "../../../../core/erp"
+import { Site, SiteService, ProjectService,QualityControlService, EmployeService} from "../../../../core/erp"
 import jsPDF from "jspdf"
 import { head } from "lodash"
+import * as _ from "lodash"
 
 @Component({
     selector: "kt-accident-incident",
@@ -46,7 +47,7 @@ import { head } from "lodash"
 })
 export class AccidentIncidentComponent implements OnInit {
     site: Site
-    assetDownForm: FormGroup
+    accidentForm: FormGroup
     hasFormErrors = false
     loadingSubject = new BehaviorSubject<boolean>(true)
     loading$: Observable<boolean>
@@ -66,15 +67,35 @@ export class AccidentIncidentComponent implements OnInit {
   gridObj: any
   angularGrid: AngularGridInstance
   gridService: GridService
+  gridService3: GridService
+  gridService4: GridService
   message: any
   column : Column
   grid: any
   dataView: any
 
   data: any = []; // dataset
+  defaultData: any = []; // dataset
   tableBody = [];
-    
 
+  site_code: any;
+  emp_code: any;
+
+  columnDefinitions3: Column[] = [];
+  gridOptions3: GridOption = {};
+  gridObj3: any;
+  angularGrid3: AngularGridInstance;
+  selectedIndexesSite : any[]
+  sites : any[]
+
+  columnDefinitions4: Column[] = [];
+  gridOptions4: GridOption = {};
+  gridObj4: any;
+  angularGrid4: AngularGridInstance;
+  selectedIndexesEmp : any[]
+  emps : any[]
+    
+  new_even_time = { hour: 13, minute: 30 };
     
 
 
@@ -85,9 +106,10 @@ export class AccidentIncidentComponent implements OnInit {
         private router: Router,
         public dialog: MatDialog,
         private layoutUtilsService: LayoutUtilsService,
-        private modalService: NgbModal,
-        private siteService: SiteService,
+        private qualityControlService : QualityControlService,
         private projectService: ProjectService,
+        private modalService: NgbModal,
+        private employeService: EmployeService,
     ) {
         config.autoClose = true
     }
@@ -95,6 +117,7 @@ export class AccidentIncidentComponent implements OnInit {
     ngOnInit(): void {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
+        this.getSpecificationDetails()
         this.createForm()
         this.prepareGrid()
     }
@@ -102,37 +125,62 @@ export class AccidentIncidentComponent implements OnInit {
     createForm() {
       this.loadingSubject.next(false)
         const date = new Date()
-        this.assetDownForm = this.siteFB.group({
-            project_code: [this.doc_code, Validators.required],
-            down_date: [{
+        this.accidentForm = this.siteFB.group({
+            name: [this.doc_code, Validators.required],
+            description: [this.doc_code],
+            accident_date: [{
               year:date.getFullYear(),
               month: date.getMonth()+1,
               day: date.getDate()
             }],
+            site_code: [this.site_code ],
+            emp_code: [this.emp_code ],
             
 
         })
     }
     
-    onChangeCode() {
-        // const controls = this.specificationForm.controls
-        // this.qualityControlService
-        //     .findSpecificationByCode(
-        //       controls.doc_code.value
-        //     )
-        //     .subscribe((response: any) => {
-        //         if (response.data.length) {
-        //             this.isExist = true
-        //             console.log(response.data.length)
-        //         } else {
-        //             controls.doc_desc.enable()
-        //             controls.validity_date.enable()
-        //         }
-               
-        //  })
-       
+      onChangeCode() {
+          // const controls = this.specificationForm.controls
+          // this.qualityControlService
+          //     .findSpecificationByCode(
+          //       controls.doc_code.value
+          //     )
+          //     .subscribe((response: any) => {
+          //         if (response.data.length) {
+          //             this.isExist = true
+          //             console.log(response.data.length)
+          //         } else {
+          //             controls.doc_desc.enable()
+          //             controls.validity_date.enable()
+          //         }
+                
+          //  })
+        
+        }
+
+      onChangeSite(){
+
       }
 
+      getSpecificationDetails(){
+         this.qualityControlService.findSpecificationWithDetails(
+          "E-09.01"
+         ).subscribe((response: any) => {
+            this.data = response.data.specificationDetails 
+            this.defaultData = response.data.specificationDetails 
+            const fileterd = _.mapValues(_.groupBy(this.data, 'mpd_chr01'));  
+            const filtered_elements = [];
+            for (const [key, value] of Object.entries(fileterd)) {
+              filtered_elements.push({
+                groupe_titel: key,
+                elements: value,
+              });
+            }
+            this.data = filtered_elements
+            console.log(this.data)
+         })
+      }
 
       
     
@@ -145,9 +193,9 @@ export class AccidentIncidentComponent implements OnInit {
     // save data
     onSubmit() {
         this.hasFormErrors = false
-        const controls = this.assetDownForm.controls
+        const controls = this.accidentForm.controls
         /** check form */
-        if (this.assetDownForm.invalid) {
+        if (this.accidentForm.invalid) {
             Object.keys(controls).forEach((controlName) =>
                 controls[controlName].markAsTouched()
             )
@@ -156,32 +204,26 @@ export class AccidentIncidentComponent implements OnInit {
             return
         }
 
-        // tslint:disable-next-line:prefer-const
-        // let site = this.prepareSite()
-        let project_code = controls.project_code.value
-        let down_date = controls.down_date.value
-        const date = down_date.year + '-' + down_date.month + '-' + down_date.day
+      
+        let accident_date = controls.accident_date.value
+        const date = accident_date.year + '-' + accident_date.month + '-' + accident_date.day
 
 
         let lines = []
-        this.data.forEach(element => {
-          this.tableBody.push([element.asset_desc,element.asset_serial,element.asset_comment])
+        this.defaultData.forEach(element => {
+          // this.tableBody.push([element.asset_desc,element.asset_serial,element.asset_comment])
           lines.push({
-            project_code : project_code,
-            down_date : date,
+            //down_date : date,
+            mph_routing : element.mpd_nbr, // code specification 
+            mph_test : element.mpd_label,
 
-            asset_desc : element.asset_desc,
-            asset_serial :element.asset_serial,
-            asset_down_type : element.asset_down_type,
-            asset_comment : element.asset_comment ,
-            asset_down_duration : element.asset_down_duration,
           })
         });
 
 
         
         
-        this.projectService.createAssetDown(lines).subscribe(
+        this.qualityControlService.createTestHistory(lines).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
               this.layoutUtilsService.showActionNotification(
@@ -203,9 +245,9 @@ export class AccidentIncidentComponent implements OnInit {
               )
               this.loadingSubject.next(false)
               // this.router.navigateByUrl("/")
-              this.data=[]
+              // this.data=[]
               this.createForm()
-              this.printpdf(144)
+              // this.printpdf(144)
           }
       )
     }
@@ -619,6 +661,139 @@ export class AccidentIncidentComponent implements OnInit {
    }
     
 
-   
+   open3(content) {
+    this.prepareGrid3();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open4(content) {
+    this.prepareGrid4(this.site_code);
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  prepareGrid3() {
+    this.columnDefinitions3 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "si_site",
+        name: "code specification",
+        field: "si_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "si_desc",
+        name: "description",
+        field: "si_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+     
+    ];
+  
+    this.gridOptions3 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: true,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        multiSelect: false,
+        // rowSelectionOptions: {selectActiveRow: false}
+    };
+  
+    // fill the dataset with your data
+    this.projectService
+      .getAllSites()
+      .subscribe((response: any) => {
+        console.log(response.data)
+        this.sites = response.data});
+  }
+
+  prepareGrid4(site_code : any) {
+    this.columnDefinitions4 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prenom",
+        field: "emp_lname",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+     
+    ];
+  
+    this.gridOptions4 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: true,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        multiSelect: true,
+        rowSelectionOptions: {selectActiveRow: false}
+    };
+  
+    // fill the dataset with your data
+    this.employeService
+      .getBy({emp_site : site_code})
+      .subscribe((response: any) => {
+        console.log(response.data)
+        this.emps = response.data});
+  }
+
+  angularGridReady3(angularGrid: AngularGridInstance) {
+    this.angularGrid3 = angularGrid;
+    this.gridService3 = angularGrid.gridService;
+    this.gridObj3 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+  }
+
+  angularGridReady4(angularGrid: AngularGridInstance) {
+    this.angularGrid4 = angularGrid;
+    this.gridService4 = angularGrid.gridService;
+    this.gridObj4 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+  }
+
+  handleSelectedRowsChanged3(e, args) {
+    this.selectedIndexesSite =[]
+    this.selectedIndexesSite = args.rows;
+    this.site_code = this.gridService3.getDataItemByRowIndex(this.selectedIndexesSite[0]).si_site
+    this.prepareGrid4(this.site_code)
+    console.log(this.site_code)
+
+  }
 
 }

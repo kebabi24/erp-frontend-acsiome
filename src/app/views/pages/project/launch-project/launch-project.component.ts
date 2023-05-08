@@ -206,12 +206,6 @@ export class LaunchProjectComponent implements OnInit {
   this.empForm = this.empFB.group({
       pmr_pm_code: [this.addReport.pmr_pm_code, Validators.required],
       pmdesc :  [{value: "", disabled: true}],
- 
-      
-    
-    
-  
-
 
   })
 }
