@@ -266,7 +266,7 @@ export class ConfirmSoComponent implements OnInit {
       var stat = true;
       if (controls.so_conf.value == false) { stat = false} 
       this.saleOrderService
-          .update(this.soServer.id, { so_conf: stat,  so__chr02: this.user.usrd_user_name } )
+          .updateSo({ so_conf: stat,  so__chr02: this.user.usrd_user_name },this.soServer.id  )
           .subscribe( //(res) => {
 
             (reponse) => console.log("response", Response),

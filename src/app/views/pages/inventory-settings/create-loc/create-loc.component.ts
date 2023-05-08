@@ -36,6 +36,8 @@ import { MatDialog } from "@angular/material/dialog"
 import { Location, LocationService, CodeService, SiteService, InventoryStatusService, ProjectService, Item, ItemService } from "../../../../core/erp"
 import { LocationFilterService } from "src/app/core/erp/_services/location-filter.service"
 import { LocationFilter } from "src/app/core/erp/_models/location-filter.model"
+import { is } from "@amcharts/amcharts4/core"
+import { T } from "@angular/cdk/keycodes"
 
 @Component({
     selector: "kt-create-loc",
@@ -84,7 +86,8 @@ export class CreateLocComponent implements OnInit {
     item: Item;
 
     //for filter
-    dataset: any[];
+    dataset: any[]=[];
+    datasetSaved: any[]=[];
     angularGrid: AngularGridInstance;
     grid: any;
     gridService: GridService;
@@ -92,7 +95,15 @@ export class CreateLocComponent implements OnInit {
     columnDefinitions: Column[];
     gridOptions: GridOption;
     filtredList: any[] = [];
+    public isChecked = false;
+    selectedList: any[]=[]
 
+    angularGridSelected: AngularGridInstance;
+    columnSelectedDefinitions: Column[];
+    gridSelected: any;
+    gridServiceSelected: GridService;
+    gridSelectedOptions: GridOption;
+    listprodIds: any[] = [];
 
     constructor(
         config: NgbDropdownConfig,
@@ -122,7 +133,7 @@ export class CreateLocComponent implements OnInit {
         this.loadingSubject.next(false)
         this.createForm()
         this.prepareGrid()
-        
+        this.prepareGridSelected()
     }
     //create form
     createForm() {
@@ -142,14 +153,18 @@ export class CreateLocComponent implements OnInit {
             loc_cap_um: [{ value: this.location.loc_cap_um, disabled: !this.isExist }],
             loc_xfer_ownership: [{ value: this.location.loc_xfer_ownership, disabled: !this.isExist }],
             chr01: [this.location.chr01],
-            loc_phy_adr:[this.location.loc_phys_addr]
+            loc_phy_adr:[this.location.loc_phys_addr],
+            
+
         })
         this.form1 = this.locationFB.group({
-            pt_article: [{value:''}],//[this.item.pt_article ],
-            pt_break_cat: [{value:''}],//[this.item.pt_break_cat],
-            pt_promo: [{value:''}],//[this.item.pt_promo ],
-            pt_rev: [{value:''}],//[this.item.pt_rev ],
-            pt_net_wt: [{value:''}],//[this.item.pt_net_wt],
+            pts_selected:[{value:false}],
+
+            // pt_article: [{value:''}],//[this.item.pt_article ],
+            // pt_break_cat: [{value:''}],//[this.item.pt_break_cat],
+            // pt_promo: [{value:''}],//[this.item.pt_promo ],
+            // pt_rev: [{value:''}],//[this.item.pt_rev ],
+            // pt_net_wt: [{value:''}],//[this.item.pt_net_wt],
           });
     }
 
@@ -205,6 +220,7 @@ export class CreateLocComponent implements OnInit {
         let location = this.prepateLocation()
         this.addLocation(location,this.filtredList)
     }
+
     /**
      * Returns object for saving
      */
@@ -553,7 +569,6 @@ export class CreateLocComponent implements OnInit {
         this.modalService.open(content, { size: "lg" })
     }
 
-
     handleSelectedRowsChanged3(e, args) {
         const controls = this.locationForm.controls
         
@@ -655,6 +670,7 @@ export class CreateLocComponent implements OnInit {
             .getBy({ code_fldname: this.selectedField })
             .subscribe((response: any) => (this.data = response.data))
       }
+
       open3(content, field) {
         this.selectedField = field
         this.prepareGrid3()
@@ -856,46 +872,80 @@ export class CreateLocComponent implements OnInit {
           enableAutoResize: true,
           rowSelectionOptions: {
             // True (Single Selection), False (Multiple Selections)
-            selectActiveRow: false
+            selectActiveRow: false,
+            
           },
-    
+          // enableRangeSelection=true,
           autoFitColumnsOnFirstLoad: true,
+          // showCellSelection:true,
+          // enableRowSelection:true,
           // autosizeColumnsByCellContentOnFirstLoad: true,
           enableAutoSizeColumns: true,
           syncColumnCellResize: true,
     
           presets: {
             sorters: [{ columnId: "id", direction: "ASC" }],
+            rowSelection: {
+              // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+              dataContextIds: this.listprodIds  //[3,5, 12, 13,]  // (recommended) select by your data object IDs
+            }
           },
         };
     
         // fill the dataset with your data
-        this.dataset = [];
+        // this.dataset = []; this.datasetSaved=[]
+        // if(this.firstime){
+          console.log('we are here ')
         this.itemService.getAll().subscribe(
           (response: any) => {
             this.dataset = response.data;
-            this.dataView.setItems(this.dataset);
+            this.datasetSaved=response.data;
+            // this.dataView.setItems(this.dataset);
           },
     
           (error) => {
             this.dataset = [];
+            this.datasetSaved=[]
           },
           () => {}
         );
-
+        // } 
       }
+
+      onChangeCheckbox(event: Event): void {
+        const checked: boolean = event.target['checked']; // or event.target.checked
+        this.isChecked=checked
+        // console.log(" list f from check bx"+this.filtredList)
+        // console.log(" list id frm cbx "+this.listprodIds)
+        // console.log('checkbox '+checked +' global variable '+this.isChecked)
+        if(checked){
+          //checked
+          // own logic
+          // this.prepareGrid()
+          this.dataset=[]
+          this.dataset=this.selectedList
+        }
+        else{
+            // not checked
+            // logic 
+            this.dataset=[]
+            this.dataset=this.datasetSaved
+        }
+       }
 
       handleSelectedRowsChangedFiltredProd(e, args) {
         // const controls1 = this.form1.controls;    
         this.filtredList=[];
+        this.listprodIds=[]
+        this.selectedList=[]
         if (Array.isArray(args.rows) && this.grid) {
-        //    this.filtredList=args.rows;
-            // products: Array<Product>;
-
-        //    console.log(" arg rows "+args.rows)
-        //    console.log(" arg rows in list "+this.filtredList)
+        //    this.filtredList=args.rows;  
+      
           args.rows.map((idx) => {
             const item = this.grid.getDataItem(idx);
+            
+            this.listprodIds.push(item.id)
+            this.selectedList.push(item)
             // TODO : HERE itterate on selected field and change the value of the selected field
              let pt_fltr ={
                  loc_loc: this.locationForm.controls.loc_loc.value,
@@ -912,13 +962,155 @@ export class CreateLocComponent implements OnInit {
           });
 
            console.log(" list f "+this.filtredList)
-           this.filtredList.map((item)=>{
-            console.log(" item loc "+item.loc_loc)
-            console.log(" item code "+item.loc_part)
-            console.log(" item model "+item.model)
-           })
+           console.log(" list id "+this.listprodIds)
+          //  this.filtredList.map((item)=>{
+          //   console.log(" item loc "+item.loc_loc)
+          //   console.log(" item code "+item.loc_part)
+          //   console.log(" item model "+item.model)
+          //  })
 
         }
       }
 
+      refresh(){
+        console.log(' refresh test ')
+        // this.grid.setSelectedRows(this.listprodIds) 
+        // this.grid.cellSelectionModel(this.listprodIds)
+        this.prepareGrid()
+        // alert('teeest')
+        // this.grid.setActiveCell(this.listprodIds)
+        // this.angularGrid.slickGrid.setSelectedRows(this.listprodIds); 
+        // this.angularGrid.gridService.setSelectedRows(this.listprodIds); 
+        // this.angularGrid.slickGrid.renderGrid()
+        
+      }
+
+      gridSelectedReady(angularGrid: AngularGridInstance) {
+        this.angularGridSelected = angularGrid;
+        this.dataView = angularGrid.dataView;
+        this.gridSelected = angularGrid.slickGrid;
+        this.gridServiceSelected = angularGrid.gridService;
+      }
+    
+      prepareGridSelected() {
+        this.columnSelectedDefinitions = [
+         
+        //   {
+        //     id: "id",
+        //     name: "id",
+        //     field: "id",
+        //     sortable: true,
+        //     width: 10,
+        //   },
+          {
+            id: "pt_part",
+            name: "Code Produit",
+            field: "pt_part",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            minWidth: 80,
+          },
+        //   {
+        //     id: "pt_desc2",
+        //     name: "Description Interne",
+        //     field: "pt_desc2",
+        //     sortable: true,
+        //     filterable: true,
+        //     minWidth: 150,
+        //     type: FieldType.string,
+        //   },
+         
+          {
+            id: "pt_status",
+            name: "Statut",
+            field: "pt_status",
+            sortable: true,
+            filterable: true,
+            // type: FieldType.text,
+            minWidth: 80,
+          },
+          {
+            id: "pt_net_wt",
+            name: "Poids Net",
+            field: "pt_net_wt",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            minWidth: 80,
+          },
+          {
+            id: "pt_model",
+            name: "Format",
+            field: "pt_model",
+            sortable: true,
+            filterable: true,
+            // type: FieldType.text,
+            minWidth: 80,
+          },
+    
+          {
+            id: "pt_break_cat",
+            name: "Couleur",
+            field: "pt_break_cat",
+            sortable: true,
+            filterable: true,
+            minWidth: 80,
+            // type: FieldType.text,
+            // resizeAlwaysRecalculateWidth:true
+          },
+          {
+            id: "pt_promo",
+            name: "Logo",
+            field: "pt_promo",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            minWidth: 80,
+          }
+         
+        ];
+    
+        this.gridSelectedOptions = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          // enableCheckboxSelector:true,
+          multiSelect:true,
+          enableFiltering: true,
+          autoEdit: false,
+          enableAutoResize: true,
+          rowSelectionOptions: {
+            // True (Single Selection), False (Multiple Selections)
+            selectActiveRow: false
+          },
+    
+          autoFitColumnsOnFirstLoad: true,
+          // autosizeColumnsByCellContentOnFirstLoad: true,
+          enableAutoSizeColumns: true,
+          syncColumnCellResize: true,
+    
+          presets: {
+            sorters: [{ columnId: "id", direction: "ASC" }],
+          },
+        };
+       
+        this.dataView.setItems(this.selectedList);
+        // fill the dataset with your data
+        // this.dataset = []; this.datasetSaved=[]
+        // this.itemService.getAll().subscribe(
+        //   (response: any) => {
+        //     this.dataset = response.data;
+        //     this.datasetSaved=response.data;
+        //     this.dataView.setItems(this.dataset);
+        //   },
+    
+        //   (error) => {
+        //     this.dataset = [];
+        //     this.datasetSaved=[]
+        //   },
+        //   () => {}
+        // );
+
+      }
 }

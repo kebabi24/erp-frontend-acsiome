@@ -58,7 +58,7 @@ export class ListJobComponent implements OnInit {
       this.columnDefinitions = [
           {
               id: "edit",
-              field: "id",
+              field: "jbid",
               excludeFromColumnPicker: true,
               excludeFromGridMenu: true,
               excludeFromHeaderMenu: true,
@@ -87,8 +87,8 @@ export class ListJobComponent implements OnInit {
               maxWidth: 50,
               // use onCellClick OR grid.onClick.subscribe which you can see down below
               onCellClick: (e: Event, args: OnEventArgs) => {
-                  const id = args.dataContext.id
-                  this.router.navigateByUrl(`/job/edit-job/${id}`)
+                  const jbid = args.dataContext.jbid
+                  this.router.navigateByUrl(`/job/edit-job/${jbid}`)
               },
           },
           {
@@ -152,8 +152,8 @@ export class ListJobComponent implements OnInit {
           enableCellNavigation: true,
           enableExcelCopyBuffer: true,
           enableFiltering: true,
-          autoEdit: false,
           autoHeight: false,
+          enableAutoResize:true,
           frozenColumn: 0,
           frozenBottom: true,
       }

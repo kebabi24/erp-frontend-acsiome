@@ -234,10 +234,13 @@
              
              <!--add new tab-->
              <ngb-tab>
-                <ng-template ngbTabTitle class="titletab">
-                    <div style="width: 50px;"></div>
-                    Filtrer Article
-                    <div style="width: 50px;"></div>
+                <ng-template ngbTabTitle>
+
+                    <!-- <div (click)="refresh()" style="width: 50px;"></div> -->
+                    <span (click)="refresh()" style="margin-left: 50px; margin-right: 50px;">  Filtrer Article  </span>
+                    <!-- <button type="button" class="btn btn-primary" (click)="refresh()">Filtrer Article </button>  -->
+                    <!-- <div style="width: 50px;"></div> -->
+                
                     <!-- <a *ngIf="hasFormErrors5"
                         class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
                         <i class="flaticon2-information"></i>
@@ -246,18 +249,50 @@
                 </ng-template>
                 <ng-template ngbTabContent>
                     
-                    <div class="row" style="height: 50px;"> </div>
+                    <div class="row" style="height: 20px;"> </div>
+                    <div class="row">
+                        <!-- <button type="button" (click)="refresh()" > Test Refresh </button> -->
+                        <label class="form-group"> Selected Articles </label>
                     
-                    <div  style=" width: 80%; justify-items: center; margin-left: 10%;">
+                        <span class="switch switch-icon ">
+                            <label>
+                                <input type="checkbox" name="mycheckbox" [(ngModel)]="isChecked"
+                                   (change)="onChangeCheckbox($event)"
+                                    class="form-control form-control-sm form-control-solid"> 
+                                    <!-- formControlName="pts_selected" -->
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+
+                <div style=" width: 80%; justify-items: center; margin-left: 10%;">
+                    <angular-slickgrid   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="gridReady($event)"
+                    (sgOnSelectedRowsChanged)="handleSelectedRowsChangedFiltredProd($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions" [dataset]="dataset">
+                    </angular-slickgrid>
+               </div>
+                <!-- <div *ngIf="isChecked; then selected else initial"></div> -->
+                <!-- <ng-template #initial >
+                    <div style=" width: 80%; justify-items: center; margin-left: 10%;">
                         <angular-slickgrid   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
                         (onAngularGridCreated)="gridReady($event)"
                         (sgOnSelectedRowsChanged)="handleSelectedRowsChangedFiltredProd($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptions" [dataset]="dataset">
                         </angular-slickgrid>
-                        <!-- <div class="row" style="height: 50px;"> <button></button> </div> -->
-
-                    </div>
-                
+                   </div>
+                </ng-template>
+            
+                <ng-template #selected>
+                    <div style=" width: 80%; justify-items: center; margin-left: 10%;">
+                    <angular-slickgrid   gridId="gridMesure" [columnDefinitions]="columnSelectedDefinitions"
+                    (onAngularGridCreated)="gridSelectedReady($event)" [dataset]="selectedList"
+                    [gridOptions]="gridSelectedOptions" 
+                        >
+                    </angular-slickgrid>
+                   </div>
+                </ng-template> -->
+                 <!-- *ngIf="isChecked==false" ngIfElse="selected"  -->
                     
                 </ng-template>
 

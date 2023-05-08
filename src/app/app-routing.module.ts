@@ -191,6 +191,13 @@ const routes: Routes = [
           import("./views/pages/pos/pos.module").then((m) => m.PosModule),
       },
       {
+        path: "pos-cafette",
+        loadChildren: () =>
+          import("./views/pages/pos-cafette/pos-cafette.module").then(
+            (m) => m.PosCafetteModule
+          ),
+      },
+      {
         path: "pos-visitor",
         loadChildren: () =>
           import("./views/pages/pos-visitor/pos-visitor.module").then(
@@ -281,6 +288,7 @@ const routes: Routes = [
             (m) => m.RevenueTransferModule
           ),
       },
+      
       // {
       //   path: 'config',
       //   loadChildren: () => import('./views/pages/config/config.module').then(m => m.ConfigModule),
@@ -544,6 +552,13 @@ const routes: Routes = [
         loadChildren: () =>
           import("./views/pages/domain/domain.module").then(
             (m) => m.DomainModule
+          ),
+      },
+      {
+        path: "deal",
+        loadChildren: () =>
+          import("./views/pages/deal/deal.module").then(
+            (m) => m.DealModule
           ),
       },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },

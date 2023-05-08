@@ -91,14 +91,14 @@ export class ListLocComponent implements OnInit {
                   this.router.navigateByUrl(`/inventory-settings/edit-loc/${id}`)
               },
           },
-          {
-              id: "id",
-              name: "id",
-              field: "id",
-              sortable: true,
-              minWidth: 80,
-              maxWidth: 80,
-          },
+        //   {
+        //       id: "id",
+        //       name: "id",
+        //       field: "id",
+        //       sortable: true,
+        //       minWidth: 80,
+        //       maxWidth: 80,
+        //   },
           {
               id: "loc_loc",
               name: "Emplacement",

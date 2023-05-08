@@ -1,14 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { HttpUtilsService } from "../../../core/_base/crud";
-import {
-  Observable,
-  BehaviorSubject,
-  Subscription,
-  of,
-  Subject,
-  Observer,
-} from "rxjs";
+import { Observable, BehaviorSubject, Subscription, of, Subject, Observer } from "rxjs";
 import { Store } from "@ngrx/store";
 import { bk } from "../../../core/erp/mockdata";
 import { Tables } from "../../../core/erp/data/mock-categories";
@@ -21,41 +14,18 @@ import { Cart } from "../../../core/erp/_models/pos-cart.model";
 import { NgbDropdownConfig, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
-import {
-  Customer,
-  EmployeService,
-  PosCategoryService,
-  MobileServiceService,
-} from "../../../core/erp";
+import { Customer, EmployeService, PosCategoryService, MobileServiceService } from "../../../core/erp";
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
 import { DatePipe } from "@angular/common";
-import {
-  FormBuilder,
-  FormGroup,
-  FormArray,
-  FormControl,
-  Validators,
-} from "@angular/forms";
-// declare var electronPrinter: any;
-// declare var etatzPrinter: any;
-import {
-  Column,
-  GridOption,
-  Formatter,
-  Editor,
-  Editors,
-  AngularGridInstance,
-  GridService,
-  Formatters,
-  FieldType,
-  OnEventArgs,
-} from "angular-slickgrid";
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from "@angular/forms";
+
+import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
 
 // import * as path from "path";
 
 import { environment } from "../../../../environments/environment";
 const API_URL = environment.apiUrl + "/codes";
-
+declare var electronPrinter: any;
 @Component({
   selector: "kt-pos",
   templateUrl: "./pos.component.html",
@@ -215,38 +185,22 @@ export class PosComponent implements OnInit {
   deliveryName: string;
   chooseLoc: boolean = true;
   dataset6: any[] = [];
-  constructor(
-    config: NgbDropdownConfig,
-    private http: HttpClient,
-    private httpUtils: HttpUtilsService,
-    private modalService: NgbModal,
-    private bkFb: FormBuilder,
-    private mvFb: FormBuilder,
-    private customerFb: FormBuilder,
-    private activatedRoute: ActivatedRoute,
-    private InventoryFB: FormBuilder,
-    private router: Router,
-    public dialog: MatDialog,
-    private posCategoryService: PosCategoryService,
-    private employeService: EmployeService,
-    private mobileService: MobileServiceService,
-    private fb: FormBuilder,
-    private layoutUtilsService: LayoutUtilsService
-  ) {
+  constructor(config: NgbDropdownConfig, private http: HttpClient, private httpUtils: HttpUtilsService, private modalService: NgbModal, private bkFb: FormBuilder, private mvFb: FormBuilder, private customerFb: FormBuilder, private activatedRoute: ActivatedRoute, private InventoryFB: FormBuilder, private router: Router, public dialog: MatDialog, private posCategoryService: PosCategoryService, private employeService: EmployeService, private mobileService: MobileServiceService, private fb: FormBuilder, private layoutUtilsService: LayoutUtilsService) {
     config.autoClose = true;
 
     this.posCategoryService.getAll().subscribe((res: any) => {
-      this.categories = res.data.map((item) => {
+      console.log(this.user.usrd_profile);
+      //let cat : any[] = []
+      console.log(res.data);
+      console.log(this.user.usrd_profile);
+      this.categories = res.data.filter((item) => item.category_profile === this.user.usrd_profile);
+    });
+    console.log(this.categories);
+    this.posCategoryService.getByCode({ code_fldname: "pt_draw" }).subscribe((res: any) => {
+      this.families = res.data.map((item) => {
         return item;
       });
     });
-    this.posCategoryService
-      .getByCode({ code_fldname: "pt_draw" })
-      .subscribe((res: any) => {
-        this.families = res.data.map((item) => {
-          return item;
-        });
-      });
     this.posCategoryService.getAllProducts().subscribe((res: any) => {
       this.AllProducts = res.data.map((item) => {
         return item;
@@ -263,37 +217,31 @@ export class PosComponent implements OnInit {
         return item;
       });
     });
-    this.posCategoryService
-      .getByItems({ pt_status: "MP-ACTIF", pt_group: "SPEC" })
-      .subscribe((res: any) => {
-        this.ingredients = res.data.map((item) => {
-          const ing = {
-            id: item.id,
-            pt_pt_part: item.pt_part,
-            pt_desc1: item.pt_desc1,
-            pt_desc2: item.pt_desc2,
-            pt_loc: item.pt_loc,
-            pt_bom_code: item.pt_bom_code,
-            isChecked: true,
-            pt_price: item.pt_price,
-          };
-          return ing;
-        });
+    this.posCategoryService.getByItems({ pt_status: "MP-ACTIF", pt_group: "SPEC" }).subscribe((res: any) => {
+      this.ingredients = res.data.map((item) => {
+        const ing = {
+          id: item.id,
+          pt_pt_part: item.pt_part,
+          pt_desc1: item.pt_desc1,
+          pt_desc2: item.pt_desc2,
+          pt_loc: item.pt_loc,
+          pt_bom_code: item.pt_bom_code,
+          isChecked: true,
+          pt_price: item.pt_price,
+        };
+        return ing;
       });
-    this.posCategoryService
-      .getByCode({ code_cmmt: "CT007" })
-      .subscribe((res: any) => {
-        this.soda = res.data.map((item) => {
-          return item;
-        });
+    });
+    this.posCategoryService.getByCode({ code_cmmt: "CT007" }).subscribe((res: any) => {
+      this.soda = res.data.map((item) => {
+        return item;
       });
-    this.posCategoryService
-      .getByItems({ pt_group: "Sauces" })
-      .subscribe((res: any) => {
-        this.sauces = res.data.map((item) => {
-          return item;
-        });
+    });
+    this.posCategoryService.getByItems({ pt_group: "Sauces" }).subscribe((res: any) => {
+      this.sauces = res.data.map((item) => {
+        return item;
       });
+    });
     this.posCategoryService.getAllPlatformesOffers().subscribe((res: any) => {
       this.platformesOffers = res.data.map((item) => {
         return item;
@@ -305,13 +253,11 @@ export class PosComponent implements OnInit {
       });
     });
 
-    this.posCategoryService
-      .getByCode({ code_fldname: "del_desc" })
-      .subscribe((res: any) => {
-        this.platformes = res.data.map((item) => {
-          return item;
-        });
+    this.posCategoryService.getByCode({ code_fldname: "del_desc" }).subscribe((res: any) => {
+      this.platformes = res.data.map((item) => {
+        return item;
       });
+    });
   }
 
   ngOnInit(): void {
@@ -335,12 +281,10 @@ export class PosComponent implements OnInit {
       usrd_site: this.user.usrd_site,
       plateforme: "BOUTIQUE",
     };
-    this.posCategoryService
-      .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
-      .subscribe((res: any) => {
-        this.currentSeq = res.data.seq_curr_val;
-        // this.currentTicketNumber = Number(this.currentSeq);
-      });
+    this.posCategoryService.getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((res: any) => {
+      this.currentSeq = res.data.seq_curr_val;
+      // this.currentTicketNumber = Number(this.currentSeq);
+    });
     console.log(this.currentSeq);
 
     this.initGrid3();
@@ -350,35 +294,31 @@ export class PosComponent implements OnInit {
     this.createMvForm();
     this.createCustomerForm();
     // this.initGrid2();
-    this.mobileService
-      .getByOne({ role_code: this.user.usrd_code, service_open: "true" })
-      .subscribe((res: any) => {
-        this.currentservice = res.data;
+    this.mobileService.getByOne({ role_code: this.user.usrd_code, service_open: "true" }).subscribe((res: any) => {
+      this.currentservice = res.data;
 
-        if (this.currentservice) {
-          console.log(this.currentservice);
-          this.globalState = false;
-          this.stateCaisse = true;
-          this.posCategoryService
-            .getByOneInV({ role_code: this.user.usrd_code, type: "CYC-RCNT" })
-            .subscribe((res: any) => {
-              let data = res.data;
-              if (data) {
-                this.stateInventory = true;
-                this.globalState = false;
-                this.stateCaisse = true;
-              } else {
-                this.stateCaisse = false;
-                this.stateInventory = false;
-                this.globalState = true;
-              }
-            });
-        } else {
-          this.globalState = true;
-          this.stateCaisse = false;
-          this.stateInventory = false;
-        }
-      });
+      if (this.currentservice) {
+        console.log(this.currentservice);
+        this.globalState = false;
+        this.stateCaisse = true;
+        this.posCategoryService.getByOneInV({ role_code: this.user.usrd_code, type: "CYC-RCNT" }).subscribe((res: any) => {
+          let data = res.data;
+          if (data) {
+            this.stateInventory = true;
+            this.globalState = false;
+            this.stateCaisse = true;
+          } else {
+            this.stateCaisse = false;
+            this.stateInventory = false;
+            this.globalState = true;
+          }
+        });
+      } else {
+        this.globalState = true;
+        this.stateCaisse = false;
+        this.stateInventory = false;
+      }
+    });
   }
 
   onSelect(category: Category): void {
@@ -391,9 +331,7 @@ export class PosComponent implements OnInit {
     this.showListOfBrands = false;
     this.disableIng = false;
     this.lists = [];
-    this.selectedProducts = this.families.filter(
-      (item) => item.code_cmmt === category.category_code
-    );
+    this.selectedProducts = this.families.filter((item) => item.code_cmmt === category.category_code);
 
     this.productInCartPrice = 0;
     this.currentItem = undefined;
@@ -419,21 +357,17 @@ export class PosComponent implements OnInit {
 
   initializeProduct(productOnlist) {
     console.log("here initialized");
-    this.posCategoryService
-      .getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile })
-      .subscribe((res: any) => {
-        this.currentSeq = res.data.seq_curr_val;
-        // this.currentTicketNumber = Number(this.currentSeq);
-      });
+    this.posCategoryService.getSeq({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((res: any) => {
+      this.currentSeq = res.data.seq_curr_val;
+      // this.currentTicketNumber = Number(this.currentSeq);
+    });
     this.productId = this.productId + 1;
 
     let test: boolean = false;
-    this.sizeOfProduct = this.AllProducts.filter(
-      (item) => item.pt_draw === productOnlist.code_value
-    );
+    this.sizeOfProduct = this.AllProducts.filter((item) => item.pt_draw === productOnlist.code_value);
     this.addProductBtn = true;
 
-    if (this.sizeOfProduct[0].pt_group === "SU") {
+    if (this.sizeOfProduct[0].pt_group == "SU") {
       this.showSize = false;
       this.prepareProduct(this.sizeOfProduct[0], "");
     } else {
@@ -450,25 +384,15 @@ export class PosComponent implements OnInit {
 
   prepareProduct(size, content) {
     this.productId = this.productId + 1;
-    if (
-      size.pt_group === "COCA" ||
-      size.pt_group === "SCHWEPPES" ||
-      size.pt_group === "SCHWEPPES GOLD"
-    ) {
-      this.elem = this.AllProducts.filter(
-        (item) => item.pt_group === size.pt_group
-      );
+    if (size.pt_group === "COCA" || size.pt_group === "SCHWEPPES" || size.pt_group === "SCHWEPPES GOLD") {
+      this.elem = this.AllProducts.filter((item) => item.pt_group === size.pt_group);
       this.showListOfBrands = true;
     } else {
       this.productInCartPrice = 0;
-      this.currentItem = this.sizeOfProduct.find(
-        (item) => item.pt_group === size.pt_group
-      );
+      this.currentItem = this.sizeOfProduct.find((item) => item.pt_group === size.pt_group);
 
       this.sizeProduct = this.currentItem.pt_group;
-      this.currentCategory.direct === true
-        ? (this.showSauces = false)
-        : (this.showSauces = true);
+      this.currentCategory.direct === true ? (this.showSauces = false) : (this.showSauces = true);
 
       this.currentItem = {
         id: this.productId,
@@ -499,19 +423,15 @@ export class PosComponent implements OnInit {
       const checkItemExist = this.currentItem;
 
       checkItemExist.suppliments.map((item) => {
-        this.productInCartPrice =
-          Number(this.productInCartPrice) + Number(item.pt_price);
+        this.productInCartPrice = Number(this.productInCartPrice) + Number(item.pt_price);
       });
-      this.productInCartPrice =
-        Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
+      this.productInCartPrice = Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
       this.loclocOrder === "Emporté"
-        ? this.posCategoryService
-            .getByOneBom({ ptb_part: checkItemExist.pt_part })
-            .subscribe((res: any) => {
-              res.data.map((item) => {
-                checkItemExist.pt_bom_code = item.ptb_bom;
-              });
-            })
+        ? this.posCategoryService.getByOneBom({ ptb_part: checkItemExist.pt_part }).subscribe((res: any) => {
+            res.data.map((item) => {
+              checkItemExist.pt_bom_code = item.ptb_bom;
+            });
+          })
         : null;
       this.itemToAdd = {
         id: this.productId,
@@ -649,19 +569,15 @@ export class PosComponent implements OnInit {
     // });
 
     checkItemExist.suppliments.map((item) => {
-      this.productInCartPrice =
-        Number(this.productInCartPrice) + Number(item.pt_price);
+      this.productInCartPrice = Number(this.productInCartPrice) + Number(item.pt_price);
     });
-    this.productInCartPrice =
-      Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
+    this.productInCartPrice = Number(this.productInCartPrice) + Number(checkItemExist.pt_price);
     this.loclocOrder === "Emporté"
-      ? this.posCategoryService
-          .getByOneBom({ ptb_part: checkItemExist.pt_part })
-          .subscribe((res: any) => {
-            res.data.map((item) => {
-              checkItemExist.pt_bom_code = item.ptb_bom;
-            });
-          })
+      ? this.posCategoryService.getByOneBom({ ptb_part: checkItemExist.pt_part }).subscribe((res: any) => {
+          res.data.map((item) => {
+            checkItemExist.pt_bom_code = item.ptb_bom;
+          });
+        })
       : null;
     this.itemToAdd = {
       id: this.productId,
@@ -739,10 +655,7 @@ export class PosComponent implements OnInit {
   setSauce(sauce: any) {
     console.log(sauce);
     this.currentItem.pt_formule == false && (this.showSupp = true);
-    this.currentItem &&
-      this.currentItem.pt_formule == true &&
-      (this.showSoda = true) &&
-      (this.showSupp = false);
+    this.currentItem && this.currentItem.pt_formule == true && (this.showSoda = true) && (this.showSupp = false);
     const saucee = {
       pt_pt_part: sauce.pt_part,
       pt_desc1: sauce.pt_desc1,
@@ -776,9 +689,7 @@ export class PosComponent implements OnInit {
       const l = document.getElementById(i);
       l.classList.remove("selected");
       currentItemSpec = currentItemSpec.filter((s) => s !== ingredient);
-      const item = this.cartProducts.find(
-        (item) => item.id === this.currentItem.id
-      );
+      const item = this.cartProducts.find((item) => item.id === this.currentItem.id);
       item.ingredients = currentItemSpec;
     }
     this.currentItem.ingredients = currentItemSpec;
@@ -786,9 +697,7 @@ export class PosComponent implements OnInit {
 
   setAllIngredient(ingredient) {
     let currentItemSpec = this.currentItem.ingredients;
-    const item = this.cartProducts.find(
-      (item) => item.id === this.currentItem.id
-    );
+    const item = this.cartProducts.find((item) => item.id === this.currentItem.id);
     if (item.ingredients.length === this.ingredients.length) {
       this.nothing = false;
       item.ingredients = [];
@@ -804,26 +713,19 @@ export class PosComponent implements OnInit {
     }
   }
   setSoda() {
-    this.currentItem &&
-      this.currentItem.pt_formule == true &&
-      (this.showSoda = true);
+    this.currentItem && this.currentItem.pt_formule == true && (this.showSoda = true);
   }
 
   setListOfBrands(so: any) {
     console.log(so);
     this.showListOfBrands = true;
-    this.elem = this.AllProducts.filter(
-      (item) =>
-        item.pt_draw === so.code_value && item.pt_group !== "JUS PREPARE"
-    );
+    this.elem = this.AllProducts.filter((item) => item.pt_draw === so.code_value && item.pt_group !== "JUS PREPARE");
     console.log(this.elem);
     this.formule = true;
   }
 
   setListOfItems(drinks: any) {
-    this.elem = this.AllProducts.filter(
-      (item) => item.pt_group === drinks.code_value
-    );
+    this.elem = this.AllProducts.filter((item) => item.pt_group === drinks.code_value);
     this.showListOfSoda = true;
     // this.showSupp = true;
   }
@@ -944,8 +846,7 @@ export class PosComponent implements OnInit {
     e.classList.remove("selected2");
     l.classList.remove("selected3");
     this.offer = false;
-    (this.cartAmount = this.cartAmount + this.remisePrice) &&
-      (this.remisePrice = 0);
+    (this.cartAmount = this.cartAmount + this.remisePrice) && (this.remisePrice = 0);
     this.platformesOffers.map((item) => {
       item.actif = false;
     });
@@ -968,8 +869,7 @@ export class PosComponent implements OnInit {
     s.classList.remove("selected1");
     l.classList.remove("selected3");
     this.offer = false;
-    (this.cartAmount = this.cartAmount + this.remisePrice) &&
-      (this.remisePrice = 0);
+    (this.cartAmount = this.cartAmount + this.remisePrice) && (this.remisePrice = 0);
     this.platformesOffers.map((item) => {
       item.actif = false;
     });
@@ -998,22 +898,18 @@ export class PosComponent implements OnInit {
   setBomCode() {
     this.cartProducts.map((product) => {
       this.loclocOrder === "Emporté" || this.loclocOrder === "Livraison"
-        ? this.posCategoryService
-            .getByOneBom({ ptb_part: product.pt_part })
-            .subscribe((res: any) => {
-              res.data.map((item) => {
-                console.log(item.ptb_bom);
-                return (product.pt_bom_code = item.ptb_bom);
-              });
-            })
-        : this.posCategoryService
-            .getByItems({ pt_part: product.pt_part })
-            .subscribe((res: any) => {
-              res.data.map((item) => {
-                console.log(item.pt_bom_code);
-                return (product.pt_bom_code = item.pt_bom_code);
-              });
+        ? this.posCategoryService.getByOneBom({ ptb_part: product.pt_part }).subscribe((res: any) => {
+            res.data.map((item) => {
+              console.log(item.ptb_bom);
+              return (product.pt_bom_code = item.ptb_bom);
             });
+          })
+        : this.posCategoryService.getByItems({ pt_part: product.pt_part }).subscribe((res: any) => {
+            res.data.map((item) => {
+              console.log(item.pt_bom_code);
+              return (product.pt_bom_code = item.pt_bom_code);
+            });
+          });
     });
   }
 
@@ -1050,8 +946,7 @@ export class PosComponent implements OnInit {
 
       this.cart.products = this.cartProducts;
     } else {
-      product.pt_price =
-        Number(product.pt_price) - Number(product.pt_price) / product.pt_qty;
+      product.pt_price = Number(product.pt_price) - Number(product.pt_price) / product.pt_qty;
       product.pt_qty = product.pt_qty - 1;
     }
 
@@ -1077,8 +972,7 @@ export class PosComponent implements OnInit {
     console.log(this.modifproduct);
 
     var pt = this.cartProducts.find((item) => item.id === product.id);
-    pt.pt_price =
-      Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
+    pt.pt_price = Number(product.pt_price) + Number(product.pt_price) / product.pt_qty;
 
     pt.pt_qty = product.pt_qty + 1;
     this.cartAmount = this.calculateSubTotal();
@@ -1117,23 +1011,11 @@ export class PosComponent implements OnInit {
 
   calculateSubTotal() {
     let val = this.cartProducts.reduce((acc, cur) => {
-      return (
-        acc +
-        (this.offer
-          ? Number(cur.pt_price) *
-            (1 - Number(this.currentOffer.del_pct_disc) / 100)
-          : Number(cur.pt_price))
-      );
+      return acc + (this.offer ? Number(cur.pt_price) * (1 - Number(this.currentOffer.del_pct_disc) / 100) : Number(cur.pt_price));
     }, 0);
     if (this.offer) {
       this.remisePrice = this.cartProducts.reduce((acc, cur) => {
-        return (
-          acc +
-          (this.offer
-            ? Number(cur.pt_price) *
-              (Number(this.currentOffer.del_pct_disc) / 100)
-            : Number(cur.pt_price))
-        );
+        return acc + (this.offer ? Number(cur.pt_price) * (Number(this.currentOffer.del_pct_disc) / 100) : Number(cur.pt_price));
       }, 0);
     }
 
@@ -1141,9 +1023,7 @@ export class PosComponent implements OnInit {
   }
   getItemFromHistory(order) {
     this.modif = true;
-    const elem: Cart = this.ordersHistory.find(
-      (item) => item.order_code === order.order_code
-    );
+    const elem: Cart = this.ordersHistory.find((item) => item.order_code === order.order_code);
 
     this.cart.order_code = order.order_code;
     this.disable = true;
@@ -1166,44 +1046,26 @@ export class PosComponent implements OnInit {
 
   prepareCart(content): void {
     console.log("prepare cart", this.currentSeq);
-    const loy = this.cart.products.find(
-      (item) => item.pt_part_type === "STD" || item.pt_part_type === "PRM"
-    );
+    const loy = this.cart.products.find((item) => item.pt_part_type === "STD" || item.pt_part_type === "PRM");
 
     if (loy && this.loy_num) {
-      this.posCategoryService
-        .setLoyCart({ customer_number: this.loy_num, type: loy.pt_part_type })
-        .subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.layoutUtilsService.showActionNotification(
-              "Erreur verifier les informations",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.loadingSubject.next(false);
-          },
-          () => {
-            this.layoutUtilsService.showActionNotification(
-              "Ajout avec succès",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.loadingSubject.next(false);
-          }
-        );
+      this.posCategoryService.setLoyCart({ customer_number: this.loy_num, type: loy.pt_part_type }).subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+          this.loadingSubject.next(false);
+        }
+      );
     }
 
     // console.log(this.cart.products);
     let cart: Cart = {
       // id: Math.floor(Math.random() * 101) + 1,
-      order_code: this.modif
-        ? this.cart.order_code
-        : this.currentSeq.toString(),
+      order_code: this.modif ? this.cart.order_code : this.currentSeq.toString(),
       products: this.cartProducts,
       order_emp: this.loclocOrder,
       customer: "particulier",
@@ -1219,9 +1081,7 @@ export class PosComponent implements OnInit {
       plateforme: this.currentOffer ? this.currentOffer.del_desc : null,
     };
 
-    const site = this.sites.find(
-      (item) => item.si_site === this.user.usrd_site
-    );
+    const site = this.sites.find((item) => item.si_site === this.user.usrd_site);
     let table1 = [];
     let table2 = [];
     let objj: {
@@ -1390,11 +1250,8 @@ export class PosComponent implements OnInit {
     // const order_c = "Numéro commande: " + this.cart.order_code;
     const now = new Date();
     let ChangedFormat = this.pipe.transform(now, "yyyy-MM-dd");
-    let currentOrderCode = this.modif
-      ? this.cart.order_code.slice(3)
-      : this.currentSeq;
-    const current =
-      now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    let currentOrderCode = this.modif ? this.cart.order_code.slice(3) : this.currentSeq;
+    const current = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
     const time = ChangedFormat + " " + current;
     const data = [
       {
@@ -1414,17 +1271,11 @@ export class PosComponent implements OnInit {
       },
       this.loclocOrder === "Sur place" && {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-        value:
-          this.loclocOrder === "Sur place"
-            ? "Table " + this.currentTable
-            : null,
+        value: this.loclocOrder === "Sur place" ? "Table " + this.currentTable : null,
       },
       this.loclocOrder !== "Sur place" && {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-        value:
-          this.loclocOrder !== "Sur place"
-            ? "Numéro client " + this.loy_num
-            : "Numéro client " + 0,
+        value: this.loclocOrder !== "Sur place" ? "Numéro client " + this.loy_num : "Numéro client " + 0,
       },
       this.loclocOrder === "Emporté" && {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
@@ -1515,10 +1366,7 @@ export class PosComponent implements OnInit {
     const data2 = [
       this.loclocOrder === "Sur place" && {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-        value:
-          this.loclocOrder === "Sur place"
-            ? "Table " + this.currentTable
-            : null,
+        value: this.loclocOrder === "Sur place" ? "Table " + this.currentTable : null,
       },
       {
         type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
@@ -1553,23 +1401,11 @@ export class PosComponent implements OnInit {
     this.posCategoryService.addOrder({ cart, modif: this.modif }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       },
       () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         // if (this.cart.products.length != 0 || this.modifproduct.length != 0) {
         //   electronPrinter.print(data, data2);
         // }
@@ -1674,23 +1510,11 @@ export class PosComponent implements OnInit {
     this.posCategoryService.checkInventory2({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       },
       () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       }
     );
@@ -1721,23 +1545,11 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         },
         () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.stateInventory = true;
           this.globalState = false;
           this.loadingSubject.next(false);
@@ -1747,13 +1559,11 @@ export class PosComponent implements OnInit {
   handleSelectedRowsChanged(e, args) {}
 
   getHistory(content) {
-    this.posCategoryService
-      .getAllOrders({ user: this.user.usrd_user_name })
-      .subscribe((res: any) => {
-        this.ordersHistory = res.data.map((item) => {
-          return item;
-        });
+    this.posCategoryService.getAllOrders({ user: this.user.usrd_user_name }).subscribe((res: any) => {
+      this.ordersHistory = res.data.map((item) => {
+        return item;
       });
+    });
     this.modalService.open(content, { size: "xl" });
   }
 
@@ -1781,23 +1591,11 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         },
         () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         }
       );
@@ -1923,9 +1721,7 @@ export class PosComponent implements OnInit {
         ld_status: "CONFORME",
       })
       .subscribe(
-        (response: any) => (
-          (this.dataset = response.data), console.log(response.data)
-        ),
+        (response: any) => ((this.dataset = response.data), console.log(response.data)),
         (error) => {
           this.dataset = [];
         },
@@ -2110,18 +1906,16 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset = [];
-    this.posCategoryService
-      .getPoRec({ pod_site: this.user.usrd_site })
-      .subscribe(
-        (response: any) => {
-          this.datasetRec = response.detail;
-          console.log(this.datasetRec);
-        },
-        (error) => {
-          this.dataset = [];
-        },
-        () => {}
-      );
+    this.posCategoryService.getPoRec({ pod_site: this.user.usrd_site }).subscribe(
+      (response: any) => {
+        this.datasetRec = response.detail;
+        console.log(this.datasetRec);
+      },
+      (error) => {
+        this.dataset = [];
+      },
+      () => {}
+    );
   }
 
   initGrid5() {
@@ -2165,26 +1959,24 @@ export class PosComponent implements OnInit {
         filterable: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           console.log(args.dataContext.pt_part);
-          this.posCategoryService
-            .getItem({ pt_part: args.dataContext.pt_part })
-            .subscribe((resp: any) => {
-              if (resp.data) {
-                console.log(resp.data);
-                this.gridService.updateItemById(args.dataContext.id, {
-                  ...args.dataContext,
-                  pt_part: resp.data.pt_part,
-                  pt_pur_price: resp.data.pt_pur_price,
-                  pt_vend: resp.data.pt_vend,
-                  pt_um: resp.data.pt_um,
-                });
-              } else {
-                alert("Article Nexiste pas");
-                this.gridService.updateItemById(args.dataContext.id, {
-                  ...args.dataContext,
-                  pt_part: null,
-                });
-              }
-            });
+          this.posCategoryService.getItem({ pt_part: args.dataContext.pt_part }).subscribe((resp: any) => {
+            if (resp.data) {
+              console.log(resp.data);
+              this.gridService.updateItemById(args.dataContext.id, {
+                ...args.dataContext,
+                pt_part: resp.data.pt_part,
+                pt_pur_price: resp.data.pt_pur_price,
+                pt_vend: resp.data.pt_vend,
+                pt_um: resp.data.pt_um,
+              });
+            } else {
+              alert("Article Nexiste pas");
+              this.gridService.updateItemById(args.dataContext.id, {
+                ...args.dataContext,
+                pt_part: null,
+              });
+            }
+          });
         },
       },
       {
@@ -2196,9 +1988,7 @@ export class PosComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.row_number = args.row;
-          let element: HTMLElement = document.getElementById(
-            "openItemsGrid"
-          ) as HTMLElement;
+          let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
           element.click();
         },
       },
@@ -2279,46 +2069,30 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset5 = [];
-    this.posCategoryService
-      .getPoRec({ pod_site: this.user.usrd_site })
-      .subscribe(
-        (response: any) => (this.dataset5 = response.detail),
-        (error) => {
-          this.dataset5 = [];
-        },
-        () => {}
-      );
+    this.posCategoryService.getPoRec({ pod_site: this.user.usrd_site }).subscribe(
+      (response: any) => (this.dataset5 = response.detail),
+      (error) => {
+        this.dataset5 = [];
+      },
+      () => {}
+    );
   }
 
   podRecRec() {
     this.datasetRec.map((item) => {
       return (item.pod_qty_rcvd = item.pod_qty_rcvd);
     });
-    this.posCategoryService
-      .createRctPo({ detail: this.datasetRec, it: new Date() })
-      .subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        }
-      );
+    this.posCategoryService.createRctPo({ detail: this.datasetRec, it: new Date() }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      }
+    );
     this.datasetRec = [];
   }
 
@@ -2383,15 +2157,13 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset = [];
-    this.posCategoryService
-      .getBank({ bk_user1: this.user.usrd_user_name })
-      .subscribe(
-        (response: any) => (this.bank = response.data),
-        (error) => {
-          this.dataset = [];
-        },
-        () => {}
-      );
+    this.posCategoryService.getBank({ bk_user1: this.user.usrd_user_name }).subscribe(
+      (response: any) => (this.bank = response.data),
+      (error) => {
+        this.dataset = [];
+      },
+      () => {}
+    );
   }
 
   initGrid4() {
@@ -2452,15 +2224,13 @@ export class PosComponent implements OnInit {
     };
 
     this.dataset = [];
-    this.posCategoryService
-      .getSomeProducts({ pt_buyer: this.selectedBank })
-      .subscribe(
-        (response: any) => (this.items = response.data),
-        (error) => {
-          this.dataset = [];
-        },
-        () => {}
-      );
+    this.posCategoryService.getSomeProducts({ pt_buyer: this.selectedBank }).subscribe(
+      (response: any) => (this.items = response.data),
+      (error) => {
+        this.dataset = [];
+      },
+      () => {}
+    );
   }
   open4(content) {
     this.modalService.open(content, { size: "lg" });
@@ -2475,30 +2245,26 @@ export class PosComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
 
-        this.posCategoryService
-          .getItem({ pt_part: item.pt_part, pt_site: item.pt_site })
-          .subscribe((response: any) => {
-            this.item = response.data;
-            updateItem.pt_part = item.pt_part;
-            updateItem.pt_desc = item.pt_desc1;
-            updateItem.pt_pur_price = item.pt_pur_price;
-            updateItem.pt_vend = item.pt_vend;
-            updateItem.pt_um = item.pt_um;
-            this.gridService.updateItem(updateItem);
-          });
+        this.posCategoryService.getItem({ pt_part: item.pt_part, pt_site: item.pt_site }).subscribe((response: any) => {
+          this.item = response.data;
+          updateItem.pt_part = item.pt_part;
+          updateItem.pt_desc = item.pt_desc1;
+          updateItem.pt_pur_price = item.pt_pur_price;
+          updateItem.pt_vend = item.pt_vend;
+          updateItem.pt_um = item.pt_um;
+          this.gridService.updateItem(updateItem);
+        });
       });
     }
   }
   opBk(content) {
     this.modalService.open(content, { size: "xl" });
-    this.posCategoryService
-      .getBank({ bk_user1: this.user.usrd_user_name })
-      .subscribe((res: any) => {
-        this.bank = res.data.map((item) => {
-          item.bk_balance = 0;
-          return item;
-        });
+    this.posCategoryService.getBank({ bk_user1: this.user.usrd_user_name }).subscribe((res: any) => {
+      this.bank = res.data.map((item) => {
+        item.bk_balance = 0;
+        return item;
       });
+    });
   }
 
   onSubmitCaisseInventory() {
@@ -2513,23 +2279,11 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         },
         () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.stateCaisse = true;
           this.stateInventory = false;
           this.loadingSubject.next(false);
@@ -2548,23 +2302,11 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         },
         () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.globalState = true;
           this.stateInventory = true;
           this.stateCaisse = false;
@@ -2620,23 +2362,11 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         },
         () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         }
       );
@@ -2652,23 +2382,11 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         },
         () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
         }
       );
@@ -2696,22 +2414,10 @@ export class PosComponent implements OnInit {
     this.customerForm = this.customerFb.group({
       customer_phone_one: [this.customer.cm_addr, Validators.required],
       customer_gender: [this.customer.cm_ar_acct, Validators.required],
-      customer_mail: [
-        { value: this.customer.cm_rmks, disabled: !this.isExist },
-        Validators.required,
-      ],
-      customer_name: [
-        { value: this.customer.cm_sort, disabled: !this.isExist },
-        Validators.required,
-      ],
-      customer_birthday: [
-        { value: this.customer.cm_high_cr, disabled: !this.isExist },
-        Validators.required,
-      ],
-      customer_addr: [
-        { value: this.customer.cm_ar_sub, disabled: !this.isExist },
-        Validators.required,
-      ],
+      customer_mail: [{ value: this.customer.cm_rmks, disabled: !this.isExist }, Validators.required],
+      customer_name: [{ value: this.customer.cm_sort, disabled: !this.isExist }, Validators.required],
+      customer_birthday: [{ value: this.customer.cm_high_cr, disabled: !this.isExist }, Validators.required],
+      customer_addr: [{ value: this.customer.cm_ar_sub, disabled: !this.isExist }, Validators.required],
     });
   }
 
@@ -2738,23 +2444,11 @@ export class PosComponent implements OnInit {
     this.posCategoryService.createCustomer({ customer }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       },
       () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       }
     );
@@ -2763,31 +2457,17 @@ export class PosComponent implements OnInit {
   onSubmitMv() {
     const mv = this.prepareMv();
     console.log(mv);
-    this.posCategoryService
-      .createFRequest({ mv, type: "D", user_site: this.user.usrd_site })
-      .subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        },
-        () => {
-          this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
-          this.loadingSubject.next(false);
-        }
-      );
+    this.posCategoryService.createFRequest({ mv, type: "D", user_site: this.user.usrd_site }).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      }
+    );
   }
 
   pEmp(content) {
@@ -2897,32 +2577,18 @@ export class PosComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService
-      .getByTime({ emp_site: this.user.usrd_site })
-      .subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getByTime({ emp_site: this.user.usrd_site }).subscribe((response: any) => (this.emps = response.data));
   }
 
   onSubmitEmpTime() {
     this.employeService.addTime({ empDetails: this.emps }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       },
       () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       }
     );
@@ -2936,16 +2602,9 @@ export class PosComponent implements OnInit {
   onChangeDiscount(discount) {
     if (discount) {
       this.loy_num = discount;
-      const elem = this.discountTable.find(
-        (item) =>
-          item.cm_addr === discount ||
-          item.cm_sort === discount ||
-          item.cm_rmks === discount ||
-          item.cm_db === discount
-      );
+      const elem = this.discountTable.find((item) => item.cm_addr === discount || item.cm_sort === discount || item.cm_rmks === discount || item.cm_db === discount);
       if (elem) {
-        this.cart.total_price =
-          this.cartAmount * (1 - Number(elem.cm_disc_pct) / 100);
+        this.cart.total_price = this.cartAmount * (1 - Number(elem.cm_disc_pct) / 100);
 
         this.remisePrice = this.cartAmount * (Number(elem.cm_disc_pct) / 100);
         this.cartAmount = this.cart.total_price;
@@ -2955,23 +2614,21 @@ export class PosComponent implements OnInit {
   onChangeCode() {
     const controls = this.customerForm.controls;
 
-    this.posCategoryService
-      .getByPhone({ cm_addr: controls.customer_phone_one.value })
-      .subscribe((res: any) => {
-        console.log("aa", res.data);
+    this.posCategoryService.getByPhone({ cm_addr: controls.customer_phone_one.value }).subscribe((res: any) => {
+      console.log("aa", res.data);
 
-        if (res.data) {
-          this.isExist = true;
-          document.getElementById("phone").focus();
-        } else {
-          this.isExist = false;
-          controls.customer_gender.enable();
-          controls.customer_mail.enable();
-          controls.customer_addr.enable();
-          controls.customer_name.enable();
-          controls.customer_birthday.enable();
-        }
-      });
+      if (res.data) {
+        this.isExist = true;
+        document.getElementById("phone").focus();
+      } else {
+        this.isExist = false;
+        controls.customer_gender.enable();
+        controls.customer_mail.enable();
+        controls.customer_addr.enable();
+        controls.customer_name.enable();
+        controls.customer_birthday.enable();
+      }
+    });
   }
   pArticle(content) {
     console.log(this.dataset5);
@@ -2993,23 +2650,14 @@ export class PosComponent implements OnInit {
     const now = new Date();
     let ChangedFormat = this.pipe.transform(now, "yyyy-MM-dd");
 
-    const current =
-      now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    const current = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
 
-    this.currentPlatformeOffers = this.platformesOffers.filter(
-      (del) =>
-        del.del_desc === option.code_desc &&
-        del.del_valid < ChangedFormat &&
-        del.del_exp > ChangedFormat
-    );
+    this.currentPlatformeOffers = this.platformesOffers.filter((del) => del.del_desc === option.code_desc && del.del_valid < ChangedFormat && del.del_exp > ChangedFormat);
     console.log(this.platformesOffers);
   }
 
   applyDiscount(p) {
-    this.currentOffer &&
-      this.currentOffer.del_code != p.del_code &&
-      (this.cartAmount = this.cartAmount + this.remisePrice) &&
-      (this.remisePrice = 0);
+    this.currentOffer && this.currentOffer.del_code != p.del_code && (this.cartAmount = this.cartAmount + this.remisePrice) && (this.remisePrice = 0);
     this.offer = true;
     this.platformesOffers.map((item) => {
       item.del_code === p.del_code ? (item.actif = true) : (item.actif = false);
@@ -3018,16 +2666,12 @@ export class PosComponent implements OnInit {
     this.deliveryName = p.del_desc;
     if (p.del_cndt === "A") {
       this.remisePrice = this.cartAmount * (Number(p.del_pct_disc) / 100);
-      this.cartAmount =
-        this.cartAmount - this.cartAmount * (Number(p.del_pct_disc) / 100);
+      this.cartAmount = this.cartAmount - this.cartAmount * (Number(p.del_pct_disc) / 100);
     } else {
-      const exist = this.cartProducts.find(
-        (item) => item.pt_part_type === p.del_cndt
-      );
+      const exist = this.cartProducts.find((item) => item.pt_part_type === p.del_cndt);
       if (exist) {
         this.remisePrice = this.cartAmount * (Number(p.del_pct_disc) / 100);
-        this.cartAmount =
-          this.cartAmount - this.cartAmount * (Number(p.del_pct_disc) / 100);
+        this.cartAmount = this.cartAmount - this.cartAmount * (Number(p.del_pct_disc) / 100);
         p.del_cndt = "A";
       }
     }
@@ -3035,10 +2679,7 @@ export class PosComponent implements OnInit {
 
   printZstate() {
     console.log(this.currentservice);
-    let ChangedFormat = this.pipe.transform(
-      this.currentservice.service_period_activate_date,
-      "yyyy-MM-dd"
-    );
+    let ChangedFormat = this.pipe.transform(this.currentservice.service_period_activate_date, "yyyy-MM-dd");
     console.log(ChangedFormat);
     this.posCategoryService
       .getSumAmt({
@@ -3050,9 +2691,7 @@ export class PosComponent implements OnInit {
         (response: any) => {
           let etatZ = [];
           var total = 0;
-          const site = this.sites.find(
-            (item) => item.si_site === this.user.usrd_site
-          );
+          const site = this.sites.find((item) => item.si_site === this.user.usrd_site);
           let data = response.data;
           console.log(data);
           data.map((items) => {
@@ -3115,23 +2754,11 @@ export class PosComponent implements OnInit {
     this.posCategoryService.synchro().subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification(
-          "Erreur verifier les informations",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
       },
       () => {
-        this.layoutUtilsService.showActionNotification(
-          "Ajout avec succès",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         this.globalState = false;
       }
