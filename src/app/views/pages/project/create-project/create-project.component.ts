@@ -375,6 +375,16 @@ type: String;
     const date = new Date()
 
     
+  const deal_code = controls.pm_deal.value;
+  
+  this.dealService.getByOne({ deal_code }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
+    
+      if(res.data.length>0) {
+
+      
             _so.so_category =  "SO"
             _so.so_cust = controls.pm_cust.value;
             _so.so_ord_date = controls.pm_ord_date.value
@@ -386,15 +396,37 @@ type: String;
 
             _so.so_po = controls.pm_code.value;
             _so.so_amt = controls.pm_amt.value;
-            _so.so_cr_terms = this.customer.cm_cr_terms;
+            _so.so_cr_terms = res.data.deal_pay_meth;
             _so.so_curr = this.customer.cm_curr 
             _so.so_taxable = this.customer.address.ad_taxable 
             _so.so_taxc = this.customer.address.ad_taxc 
             _so.so_ex_rate = this.ex_rate1 
             _so.so_ex_rate2 = this.ex_rate2
 
+      }
+      else {
+
+        _so.so_category =  "SO"
+        _so.so_cust = controls.pm_cust.value;
+        _so.so_ord_date = controls.pm_ord_date.value
+          ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+          : null;
+        _so.so_due_date = controls.pm_ord_date.value
+          ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+          : null;
+
+        _so.so_po = controls.pm_code.value;
+        _so.so_amt = controls.pm_amt.value;
+        _so.so_cr_terms = this.customer.cm_cr_terms;
+        _so.so_curr = this.customer.cm_curr 
+        _so.so_taxable = this.customer.address.ad_taxable 
+        _so.so_taxc = this.customer.address.ad_taxc 
+        _so.so_ex_rate = this.ex_rate1 
+        _so.so_ex_rate2 = this.ex_rate2
+
+      }  
         
-         
+  })
       
       
     return _so;

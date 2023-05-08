@@ -388,19 +388,7 @@ export class MenuConfig {
                   title: "Liste des Entitées",
                   page: "/accounting-setting/entity-list",
                 },
-                {
-                  title: "Maint des Employés",
-                  page: "/accounting-setting/create-employee",
-                },
-                {
-                  title: "Liste des Employés",
-                  page: "/accounting-setting/list-employe",
-                },
-                {
-                  title: "Maint Congés des Employés",
-                  page: "/accounting-setting/create-emp-avail",
-                },
-
+              
                 {
                   title: "Maint des Banques",
                   page: "/accounting-setting/create-bank",
@@ -996,6 +984,54 @@ export class MenuConfig {
           ]
         },
         {
+          title: "Gestion des Employés",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-delivery-truck",
+          submenu: [
+            {
+              title: "Maint des Employés",
+              page: "/accounting-setting/create-employee",
+            },
+            {
+              title: "Liste des Employés",
+              page: "/accounting-setting/list-employe",
+            },
+            {
+              title: "Maint Congés des Employés",
+              page: "/accounting-setting/create-emp-avail",
+            },
+
+            {
+              title: "Gestion des Métier",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-delivery-truck",
+              submenu: [
+                {
+                  title: "La liste des Code Métiers",
+                  page: "/job/list-job",
+                },
+                {
+                  title: "Ajouter un Code Métier",
+                  page: "/job/create-job",
+                },
+              ],
+            },
+            {
+              title: "Pointage des Employés",
+              page: "/project/emp-temp",
+            },
+
+            {
+              title: "Liste des pointages",
+              page: "/project/list-emp-temp",
+            },
+
+
+          ]
+        },
+        {
           title: "Gestion des projets",
           root: true,
           bullet: "dot",
@@ -1025,15 +1061,7 @@ export class MenuConfig {
             //   title: "Affectation des Employés",
             //   page: "/project/create-project-payment",
             // },
-            {
-              title: "Pointage des Employés",
-              page: "/project/emp-temp",
-            },
-
-            {
-              title: "Liste des pointages",
-              page: "/project/list-emp-temp",
-            },
+            
             {
               title: "Affectation des Employés",
               page: "/accounting-setting/affect-emp",
@@ -1051,22 +1079,7 @@ export class MenuConfig {
               page: "/project/accident-incident",
             },
 
-            {
-              title: "Gestion des Métier",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-delivery-truck",
-              submenu: [
-                {
-                  title: "La liste des Code Métiers",
-                  page: "/job/list-job",
-                },
-                {
-                  title: "Ajouter un Code Métier",
-                  page: "/job/create-job",
-                },
-              ],
-            },
+            
             {
               title: "Gestion des Listes Outils",
               root: true,
