@@ -5,6 +5,7 @@ export class Site extends BaseModel{
     si_site: String
     si_desc: String
     si_entity: String
+    si_cust: String
     si_default: Boolean
     si_status: String
     si_auto_loc: Boolean

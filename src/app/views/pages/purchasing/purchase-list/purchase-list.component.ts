@@ -86,9 +86,9 @@ ngOnInit(): void {
 }
 angularGridReady(angularGrid: AngularGridInstance) {
   this.angularGrid = angularGrid;
-  // this.gridObj = angularGrid.slickGrid; // grid object
-  // this.dataviewObj = angularGrid.dataView;
-  // this.gridService = angularGrid.gridService;
+   this.gridObj = angularGrid.slickGrid; // grid object
+   this.dataviewObj = angularGrid.dataView;
+   this.gridService = angularGrid.gridService;
 }
 
 prepareGrid() {
@@ -150,7 +150,7 @@ prepareGrid() {
     },
     {
       id: "po_due_date",
-      name: "Date d echeance",
+      name: "Date d'écheance",
       field: "po_due_date",
       sortable: true,
       width: 50,
@@ -220,7 +220,6 @@ prepareGrid() {
       width: 30,
       filterable: true,
     },
-    
     {
       id: "pod_qty_ord",
       name: "Quantite",
@@ -234,7 +233,7 @@ prepareGrid() {
     },
     {
       id: "pod_qty_rcvd",
-      name: "Quantite Receptionnee",
+      name: "Quantite receptionnée",
       field: "pod_qty_rcvd",
       sortable: true,
       width: 50,
@@ -256,6 +255,17 @@ prepareGrid() {
       }
     },
     {
+      id: "rest_to_receive",
+      name: " Reste à recevoir",
+      field: "rest_to_receive",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      type: FieldType.float,
+
+    },
+    {
       id: "pod_site",
       name: "Site",
       field: "pod_site",
@@ -273,6 +283,24 @@ prepareGrid() {
       filterable: true,
       type: FieldType.float,
     },
+    {
+      id: "total_price",
+      name: "Montant commandé",
+      field: "total_price",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.float,
+    },
+    {
+      id: "total_recep",
+      name: "Montant réceptionné",
+      field: "total_recep",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.float,
+    }
     
   ];
 
@@ -289,6 +317,7 @@ prepareGrid() {
     showPreHeaderPanel: true,
     preHeaderPanelHeight: 40,
     enableFiltering: true,
+    enableFilterTrimWhiteSpace: true,
     enableSorting: true,
     exportOptions: {
       sanitizeDataExport: true
@@ -341,13 +370,27 @@ prepareGrid() {
 
 // fill the dataset with your data
 this.dataset = []
-console.log(this.site, "hounadz")
+let dataset2 = []
+
+// console.log(this.site, "hounadz")
 if(this.site == null) {
-  console.log("ssssssssssssssssssssssssssss")
+  // console.log("ssssssssssssssssssssssssssss")
 this.poService.getAllwithDetail().subscribe(
-    (response: any) =>  { this.dataset = response.data
+    (response: any) =>  { 
+      //est ce que c;est possibile juste ici parcourir dataset et rajouter f unne nouvelle dataset 2 champs et 
+      // avec ce qui existe deja ...item, po_totalC:(),po_totalR:() 
+      dataset2 = response.data
+      dataset2.map((item)=>{
+        let total_price=item.pod_price * item.pod_qty_ord
+        let total_recep=item.pod_price * item.pod_qty_rcvd
+        let element= {...item,"total_price":total_price,"total_recep":total_recep,"rest_to_receive":(item.pod_qty_ord-item.pod_qty_rcvd)}
+        this.dataset.push(element)
+      })
+      // this.dataset.map((item)=>{
+      //   console.log(" item of dataset updated "+item.po_nbr+" price "+item.total_price)
+      // })
+
     this.dataviewObj.setItems(this.dataset)},
-   
    
 
    (error) => {
@@ -361,7 +404,7 @@ this.poService.getAllwithDetail().subscribe(
   else {
     var site = this.site
     this.dataset = []
-    console.log(site, "hnahnahnahnahan")
+    // console.log(site, "hnahnahnahnahan")
     this.poService.getAllwithDetailSite({site}).subscribe(
       (response: any) =>  { this.dataset = response.data
       this.dataviewObj.setItems(this.dataset)},

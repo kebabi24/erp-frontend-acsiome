@@ -54,6 +54,7 @@ import {
   MesureService,
   printTR,
 } from "../../../../core/erp";
+import { exit } from "process";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -152,6 +153,7 @@ export class TransferComponent implements OnInit {
     datasetPrint = [];
     lddet: any;
     rqm: boolean;
+    statusref: any;
     constructor(
       config: NgbDropdownConfig,
       private trFB: FormBuilder,
@@ -214,6 +216,7 @@ export class TransferComponent implements OnInit {
         tr_loc: [this.inventoryTransaction.tr_loc],
         tr_ref_site: [this.user.usrd_site],
         tr_ref_loc: [this.inventoryTransaction.tr_ref_loc],
+        ref: [null],
         print:[true],
        
       
@@ -426,7 +429,7 @@ export class TransferComponent implements OnInit {
             desc: "",
             tr_qty_loc: 0,
             tr_um: "",
-            tr_trice: 0,
+            tr_price: 0,
             cmvids: "",
             tr_serial: null,
             tr_status: null,
@@ -434,6 +437,137 @@ export class TransferComponent implements OnInit {
           },
           { position: "bottom" }
         );
+      }
+
+      onChangePal() {
+            /*kamel palette*/
+            const controls = this.trForm.controls
+            const ref = controls.ref.value
+          var bol = false
+            for(let ob of this.dataset) {
+
+              if(ob.tr_ref == ref) {
+                console.log("hnehnahna")
+                bol = true
+                break;
+               
+              }
+            }
+            if (!bol) {
+            this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
+              (response: any) => {
+                this.lddet = response.data
+                //console.log(this.lddet.ld_qty_oh)
+            if (this.lddet != null) {
+             
+              if(this.lddet.ld_site != controls.tr_site.value) {
+                alert("Palette N'existe pas dans Ce Site")
+   
+               } else {
+  
+                if (this.lddet.ld_loc != controls.tr_loc.value) {
+                  alert("Palette N'existe pas dans Cet Emplacement")
+                }
+                else {
+             
+             
+              this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-TR" }).subscribe((resstat:any)=>{
+                  console.log(resstat)
+                  const { data } = resstat;
+
+                  if (data) {
+                    this.stat = null
+                    alert("Status Interdit pour ce mouvement ")
+
+
+                  } else {
+                    this.stat = this.lddet.ld_status
+                  
+                    this.inventoryStatusService.getAllDetails({isd_status: this.statusref, isd_tr_type: "RCT-TR" }).subscribe((resstatref:any)=>{
+                      console.log(resstatref)
+                      const { data1 } = resstatref;
+    
+              // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+              //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+                   console.log(this.statusref)
+                   if (data1) {
+                    this.stat = null
+                    alert("Status Interdit pour ce mouvement ")
+
+
+                  } else {
+              this.inventoryStatusService.getByIsm({ism_loc_start: controls.tr_loc.value,ism_loc_end:controls.tr_ref_loc.value, ism_status_start: this.lddet.ld_status, 
+                ism_status_end:this.statusref }).subscribe((resstat:any)=>{
+                console.log(resstat)
+                const { data } = resstat;
+                if (data.length > 0) {
+                  alert("Mouvement Interdit pour Status dans cet emplacement")
+                  this.stat = null
+                } 
+                else{
+                this.stat =  this.statusref
+                     
+             
+             this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+              (respopart: any) => {
+                console.log(respopart)
+
+             this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+              (respo: any) => {
+                this.sct = respo.data
+                console.log(this.sct)
+            
+
+             this.gridService.addItem(
+              {
+                id: this.dataset.length + 1,
+                tr_line: this.dataset.length + 1,
+                tr_part: this.lddet.ld_part,
+                cmvid: "",
+                desc: respopart.data.pt_desc1,
+                tr_qty_loc: this.lddet.ld_qty_oh,
+                qty_oh: this.lddet.ld_qty_oh,
+                tr_um: respopart.data.pt_um,
+                tr_um_conv:1,
+                tr_price: this.sct.sct_mtl_tl,
+                cmvids: "",
+                tr_ref: ref,
+                tr_serial: this.lddet.ld_lot,
+                tr_status: this.stat,
+                tr_expire: this.lddet.ld_expire,
+              },
+              { position: "bottom" }
+            );
+         
+             });
+            }); 
+          }
+        })
+          }
+        })     
+          }
+          }); 
+                }
+            }
+         
+
+
+          }
+
+
+
+            else {
+            alert("Palette Nexiste pas")
+          //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+            }
+
+            });
+
+          }
+          else {
+            alert ("Palette déja scannée")
+          }
+      controls.ref.setValue(null)
       }
       onChangeLoc() {
         const controls = this.trForm.controls;
@@ -466,7 +600,7 @@ export class TransferComponent implements OnInit {
         
                               
 
-                              this.inventoryStatusService.getAllDetails({isd_status: this.location.loc_status, isd_tr_type: "RCT-TR" }).subscribe((resstat:any)=>{
+                              this.inventoryStatusService.getAllDetails({isd_status: this.location.loc_status, isd_tr_type: "ISS-TR" }).subscribe((resstat:any)=>{
                                 console.log(resstat)
                                 const { data } = resstat;
         
@@ -622,7 +756,7 @@ export class TransferComponent implements OnInit {
                             this.lddet = response.data
                             //console.log(this.lddet.ld_qty_oh)
       if (this.lddet != null)
-{                            this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "RCT-TR" }).subscribe((resstat:any)=>{
+{                            this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-TR" }).subscribe((resstat:any)=>{
                               console.log(resstat)
                               const { data } = resstat;
       
@@ -937,71 +1071,88 @@ export class TransferComponent implements OnInit {
           },
                   
           {
+            id: "tr_ref",
+            name: "Palette",
+            field: "tr_ref",
+            sortable: true,
+            width: 80,
+            filterable: false,
+            //type: FieldType.float,
+            editor: {
+              model: Editors.text,
+            },
+            onCellChange: (e: Event, args: OnEventArgs) => {
+            
+            }
+            
+        },
+             
+          {
             id: "tr_status",
             name: "Status",
             field: "tr_status",
             sortable: true,
             width: 80,
             filterable: false,
-            editor: {
-              model: Editors.text,
-            },
-            onCellChange: (e: Event, args: OnEventArgs) => {
-              const controls = this.trForm.controls;
-              console.log(args.dataContext.tr_status)
+        //     editor: {
+        //       model: Editors.text,
+        //     },
+        //     onCellChange: (e: Event, args: OnEventArgs) => {
+        //       const controls = this.trForm.controls;
+        //       console.log(args.dataContext.tr_status)
              
-              this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
-                console.log(ress.data.inventoryStatus) 
-        if (ress.data.inventoryStatus) {
+        //       this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
+        //         console.log(ress.data.inventoryStatus) 
+        // if (ress.data.inventoryStatus) {
   
   
-              this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-TR" }).subscribe((res:any)=>{
-              console.log(res)
-              const { data } = res;
+        //       this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-TR" }).subscribe((res:any)=>{
+        //       console.log(res)
+        //       const { data } = res;
     
-            if (data) {
-              alert ("Mouvement Interdit Pour ce Status")
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //     if (data) {
+        //       alert ("Mouvement Interdit Pour ce Status")
+        //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
               
-             } else {
+        //      } else {
   
-         console.log(args.dataContext.tr_part)
-              let obj = {}
-              obj = {
-                 ld_site: controls.tr_ref_site.value, 
-                 ld_loc: controls.tr_ref_loc.value, 
-                 ld_part: args.dataContext.tr_part, 
-                 ld_lot: args.dataContext.tr_serial
-                }
-                console.log(obj)
-                status = args.dataContext.tr_status
-              console.log(args.dataContext.tr_part) 
-              console.log(status)
-              this.locationDetailService.getByStatus({obj, status} ).subscribe(
-                (response: any) => {
-                 console.log(response.data.length != 0   )
-                  if (response.data.length != 0) {
-                    this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
-                      alert("lot existe avec un autre status")
+        //  console.log(args.dataContext.tr_part)
+        //       let obj = {}
+        //       obj = {
+        //          ld_site: controls.tr_ref_site.value, 
+        //          ld_loc: controls.tr_ref_loc.value, 
+        //          ld_part: args.dataContext.tr_part, 
+        //          ld_lot: args.dataContext.tr_serial
+        //         }
+        //         console.log(obj)
+        //         status = args.dataContext.tr_status
+        //       console.log(args.dataContext.tr_part) 
+        //       console.log(status)
+        //       this.locationDetailService.getByStatus({obj, status} ).subscribe(
+        //         (response: any) => {
+        //          console.log(response.data.length != 0   )
+        //           if (response.data.length != 0) {
+        //             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //               alert("lot existe avec un autre status")
    
-                  }  
+        //           }  
   
   
   
             
-          })
-            }
+        //   })
+        //     }
           
-              })
-            } else {
+        //       })
+        //     } else {
       
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
-              alert("Status N' existe pas")
+        //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //       alert("Status N' existe pas")
       
       
-            }
-          })
-          }
+        //     }
+        //   })
+        //   }
   
 
 
@@ -1009,21 +1160,21 @@ export class TransferComponent implements OnInit {
 
 
           },
-          {
-            id: "mvidlot",
-            field: "cmvidlot",
-            excludeFromHeaderMenu: true,
-            formatter: Formatters.infoIcon,
-            minWidth: 30,
-            maxWidth: 30,
-            onCellClick: (e: Event, args: OnEventArgs) => {
-                this.row_number = args.row;
-                let element: HTMLElement = document.getElementById(
-                "openStatussGrid"
-                ) as HTMLElement;
-                element.click();
-            },
-          },
+          // {
+          //   id: "mvidlot",
+          //   field: "cmvidlot",
+          //   excludeFromHeaderMenu: true,
+          //   formatter: Formatters.infoIcon,
+          //   minWidth: 30,
+          //   maxWidth: 30,
+          //   onCellClick: (e: Event, args: OnEventArgs) => {
+          //       this.row_number = args.row;
+          //       let element: HTMLElement = document.getElementById(
+          //       "openStatussGrid"
+          //       ) as HTMLElement;
+          //       element.click();
+          //   },
+          // },
           {
             id: "tr_expire",
             name: "Expire",
@@ -1173,6 +1324,7 @@ export class TransferComponent implements OnInit {
               }
               case "tr_ref_loc": {
                 controls.tr_ref_loc.setValue(item.loc_loc || "");
+                this.statusref = item.loc_status
                 break;
               }
               default:
@@ -1360,6 +1512,8 @@ export class TransferComponent implements OnInit {
               this.error = true;
             } else {
               this.error = false;
+              this.statusref = data.loc_status
+               
             }
           },
           (error) => console.log(error)
@@ -1384,31 +1538,71 @@ export class TransferComponent implements OnInit {
                   this.sct = response.data
               
 
-                  this.locationDetailService.getByOne({ ld_site: controls.tr_site.value, ld_loc: controls.tr_loc.value, ld_part: item.pt_part, ld_lot: null }).subscribe(
+                  this.locationDetailService.getByOne({ ld_site: controls.tr_site.value, ld_loc: controls.tr_loc.value, ld_part: item.pt_part, ld_lot: null , ld_ref: null}).subscribe(
                     (response: any) => {
                       this.lddet = response.data
                       //console.log(this.lddet.ld_qty_oh)
 
 if (this.lddet != null)
-{                  this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "RCT-TR" }).subscribe((resstat:any)=>{
+{                  this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-TR" }).subscribe((resstat:any)=>{
                     console.log(resstat)
                     const { data } = resstat;
   
                     if (data) {
                       this.stat = null
                     } else {
-                      this.stat = this.lddet.ld_status
+                     // this.stat = this.lddet.ld_status
+
+                      this.inventoryStatusService.getAllDetails({isd_status: this.statusref, isd_tr_type: "RCT-TR" }).subscribe((resstatref:any)=>{
+                        console.log(resstatref)
+                        const { data } = resstatref;
+      
+                        if (data) {
+                          this.stat = null
+                        } else {
+                          this.stat = this.statusref
+    
+                        
+
+                              this.inventoryStatusService.getByIsm({ism_loc_start: controls.tr_loc.value,ism_loc_end:controls.tr_ref_loc.value, ism_status_start: this.lddet.ld_status, 
+                                ism_status_end:this.statusref }).subscribe((resstatd:any)=>{
+                                console.log(resstatd)
+                                const { data } = resstatd;
+                                if (data.length > 0) {
+                                 
+                                  this.stat = null
+                                 
+                                } 
+                                else{
+                                this.stat =  this.statusref
+
+                                
+                                }  
+                                updateItem.tr_part = item.pt_part;
+                                updateItem.desc = item.pt_desc1;
+                                updateItem.tr_um = item.pt_um;
+                                updateItem.tr_um_conv = 1;
+                                updateItem.qty_oh =  this.lddet.ld_qty_oh;
+                                updateItem.tr_price = this.sct.sct_mtl_tl;
+                                
+                                updateItem.tr_status =  this.stat;
+                                updateItem.tr_expire =  this.lddet.ld_expire;
+                              })
+
+
+/*************fin */
+                          
+                        }
+                      })
                     }
   
-                    updateItem.tr_part = item.pt_part;
-                    updateItem.desc = item.pt_desc1;
-                    updateItem.tr_um = item.pt_um;
-                    updateItem.tr_um_conv = 1;
-                    updateItem.qty_oh =  this.lddet.ld_qty_oh;
-                    updateItem.tr_price = this.sct.sct_mtl_tl;
-                    
-                    updateItem.tr_status =  this.stat;
-                    updateItem.tr_expire =  this.lddet.ld_expire;
+
+
+
+
+
+
+                   
                           
                     
                     this.gridService.updateItem(updateItem);
@@ -1532,15 +1726,43 @@ if (this.lddet != null)
               const { data } = resstat;
 
               if (data) {
-                alert("Status Interdit pour ce lot")
-                updateItem.tr_serial = null;
+                alert("Mouvement interdit pour ce Status ")
+                updateItem.tr_status = null;
                
               } 
                 else { 
-            updateItem.tr_serial = item.ld_lot;
-            updateItem.tr_expire = item.ld_expire;
-            updateItem.qty_oh = item.ld_qty_oh;
-            
+
+                  this.inventoryStatusService.getAllDetails({isd_status: this.statusref, isd_tr_type: "RCT-TR" }).subscribe((resstatref:any)=>{
+                    console.log(resstatref)
+                    const { data } = resstatref;
+      
+                    if (data) {
+                      alert("Mouvement interdit pour ce Status ")
+                      updateItem.tr_status = null;
+                     
+                    } 
+                    else {
+
+                      this.inventoryStatusService.getByIsm({ism_loc_start: controls.tr_loc.value,ism_loc_end:controls.tr_ref_loc.value, ism_status_start: item.ld_status, 
+                        ism_status_end:this.statusref }).subscribe((resstatd:any)=>{
+                        console.log(resstatd)
+                        const { data } = resstatd;
+                        if (data.length > 0) {
+                          alert("Mouvement Interdit pour Status dans cet emplacement")
+                          this.stat = null
+                          updateItem.tr_status = null;
+                        } 
+                        else{
+                        this.stat =  this.statusref
+
+                          updateItem.tr_serial = item.ld_lot;
+                          updateItem.tr_expire = item.ld_expire;
+                          updateItem.qty_oh = item.ld_qty_oh;
+                          updateItem.tr_status = this.stat;
+                        }  
+                      })
+                    }  
+                })
                 }
             this.gridService.updateItem(updateItem);
             
@@ -1558,24 +1780,17 @@ if (this.lddet != null)
         const controls = this.trForm.controls; 
 
         this.columnDefinitionslocdet = [
-          {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
+          // {
+          //   id: "id",
+          //   field: "id",
+          //   excludeFromColumnPicker: true,
+          //   excludeFromGridMenu: true,
+          //   excludeFromHeaderMenu: true,
     
-            minWidth: 50,
-            maxWidth: 50,
-          },
-          {
-            id: "id",
-            name: "id",
-            field: "id",
-            sortable: true,
-            minWidth: 80,
-            maxWidth: 80,
-          },
+          //   minWidth: 50,
+          //   maxWidth: 50,
+          // },
+        
           {
             id: "ld_site",
             name: "Site",

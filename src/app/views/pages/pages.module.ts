@@ -19,23 +19,14 @@ import { MobileMenuComponent } from "./mobile-menu/mobile-menu.component";
 import { PosComponent } from "./pos/pos.component";
 import { PosVisitorComponent } from "./pos-visitor/pos-visitor.component";
 import { RevenueTransferComponent } from "./revenue-transfer/revenue-transfer.component";
+import { PosCafetteComponent } from "./pos-cafette/pos-cafette.component";
+import { MobileSettingsComponent } from "./mobile-settings/mobile-settings.component";
+import { SupervisionComponent } from "./supervision/supervision.component";
 
 @NgModule({
-  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent],
+  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent],
   exports: [],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    CoreModule,
-    PartialsModule,
-    AngularSlickgridModule.forRoot(),
-    MailModule,
-    ECommerceModule,
-    UserManagementModule,
-    ProvidersModule,
-    TreeModule,
-  ],
+  imports: [CommonModule, HttpClientModule, FormsModule, CoreModule, PartialsModule, AngularSlickgridModule.forRoot(), MailModule, ECommerceModule, UserManagementModule, ProvidersModule, TreeModule],
   providers: [],
 })
 export class PagesModule {}

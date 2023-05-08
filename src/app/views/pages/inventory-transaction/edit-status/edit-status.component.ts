@@ -94,6 +94,7 @@ export class EditStatusComponent implements OnInit {
     row_number;
     error = false;
     dateexpire: String;
+    lddet: any
   constructor(
       config: NgbDropdownConfig,
       private statusFB: FormBuilder,
@@ -139,6 +140,7 @@ export class EditStatusComponent implements OnInit {
       this.locationDetailService
           .getBy({ ld_site:  controls.tr_site.value , ld_loc: controls.tr_loc.value  , ld_part:  controls.tr_part.value, ld_lot: controls.tr_serial.value })
           .subscribe((response: any) => {
+            this.lddet = response.data[0]
             console.log(response.data[0].ld_status)
             
               if (response.data.length) {
@@ -373,6 +375,18 @@ console.log( controls.tr_serial.value)
             );
             this.error = true;
           } else {
+            this.inventoryStatusService.getByIsm({ism_loc_start: controls.tr_loc.value,ism_loc_end:controls.tr_loc.value, ism_status_start: this.lddet.ld_status, 
+              ism_status_end:controls.tr_status.value }).subscribe((resstat:any)=>{
+              console.log(resstat)
+              const { data } = resstat;
+              if (data.length > 0) {
+                alert("Mouvement Interdit pour Status")
+                controls.tr_status.setValue(null)
+                //console.log(response.data.length)
+                document.getElementById("tr_status").focus();
+              } 
+             
+              })
             this.error = false;
           }
         },
@@ -390,7 +404,22 @@ console.log( controls.tr_serial.value)
           // TODO : HERE itterate on selected field and change the value of the selected field
           //switch (this.selectedField) {
            // case "tr_status": {
-              controls1.tr_status.setValue(item.is_status || "");
+            this.inventoryStatusService.getByIsm({ism_loc_start: controls1.tr_loc.value,ism_loc_end:controls1.tr_loc.value, ism_status_start: this.lddet.ld_status, 
+              ism_status_end:item.is_status }).subscribe((resstat:any)=>{
+              console.log(resstat)
+              const { data } = resstat;
+              console.log(data)
+              if (data.length > 0) {
+                alert("Mouvement Interdit pour Status")
+                controls1.tr_status.setValue(null)
+                //console.log(response.data.length)
+                document.getElementById("tr_status").focus();
+              } 
+              else{
+                controls1.tr_status.setValue(item.is_status || "");
+              }
+              })
+              
            //   break;
           //  }
             
@@ -419,14 +448,7 @@ console.log( controls.tr_serial.value)
           minWidth: 50,
           maxWidth: 50,
         },
-        {
-          id: "id",
-          name: "id",
-          field: "id",
-          sortable: true,
-          minWidth: 80,
-          maxWidth: 80,
-        },
+       
         {
           id: "is_status",
           name: "Status",
@@ -537,15 +559,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         minWidth: 50,
         maxWidth: 50,
       },
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        sortable: true,
-        minWidth: 80,
-        maxWidth: 80,
-      },
-
+      
       {
         id: "loc_loc",
         name: "loc",
@@ -748,6 +762,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
              
         controls.tr_serial.setValue(item.ld_lot ); 
         controls.tr_status.setValue(item.ld_status ); 
+        this.lddet = item
        
         //this.dateexpire = '${item.ld_expire.getFullYear()}-${item.ld_expire.getMonth()+1}-${item.ld_expire.getDay()' 
         if (item.ld_expire != null)
@@ -777,24 +792,24 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
     const controls = this.statusForm.controls; 
 
     this.columnDefinitionslocdet = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromColumnPicker: true,
-        excludeFromGridMenu: true,
-        excludeFromHeaderMenu: true,
+      // {
+      //   id: "id",
+      //   field: "id",
+      //   excludeFromColumnPicker: true,
+      //   excludeFromGridMenu: true,
+      //   excludeFromHeaderMenu: true,
 
-        minWidth: 50,
-        maxWidth: 50,
-      },
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        sortable: true,
-        minWidth: 80,
-        maxWidth: 80,
-      },
+      //   minWidth: 50,
+      //   maxWidth: 50,
+      // },
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 80,
+      //   maxWidth: 80,
+      // },
       {
         id: "ld_site",
         name: "Site",
@@ -827,6 +842,15 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         filterable: true,
         type: FieldType.string,
       },
+      {
+        id: "ld_ref",
+        name: "Réf",
+        field: "ld_ref",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      
       {
         id: "ld_qty_oh",
         name: "Qte",

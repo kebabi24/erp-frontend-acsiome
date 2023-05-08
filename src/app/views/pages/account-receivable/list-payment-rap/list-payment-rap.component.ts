@@ -138,6 +138,14 @@ export class ListPaymentRapComponent implements OnInit {
             type: FieldType.string,
           },
           {
+            id: "chr01",
+            name: "Projet",
+            field: "chr01",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
             id: "ar_bill",
             name: "Client",
             field: "ar_bill",
@@ -254,6 +262,8 @@ export class ListPaymentRapComponent implements OnInit {
           preHeaderPanelHeight: 40,
           enableFiltering: true,
           enableSorting: true,
+          enableAutoResize:true,
+          autoHeight: false,
           exportOptions: {
             sanitizeDataExport: true
           },

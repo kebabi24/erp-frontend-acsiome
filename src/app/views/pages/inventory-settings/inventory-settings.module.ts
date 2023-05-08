@@ -60,7 +60,10 @@ import {SiteService,
         InventoryStatusService,
         AccountService,
         ProjectService,
-      EntityService} 
+        QualityControlService,
+      EntityService,
+      ItemService,
+      CustomerService} 
 from '../../../core/erp'
 import { ListLocComponent } from './list-loc/list-loc.component';
 import { EditLocComponent } from './edit-loc/edit-loc.component';
@@ -68,10 +71,17 @@ import { ListSiteComponent } from './list-site/list-site.component';
 import { EditSiteComponent } from './edit-site/edit-site.component';
 import { ListStatusComponent } from './list-status/list-status.component';
 import { EditStatusComponent } from './edit-status/edit-status.component'
+import { StatusMouvementComponent } from './status-mouvement/status-mouvement.component'
+import { CreateStrandardSpecificationComponent } from "./create-standard-specification/create-standard-specification.component"
+import { LocationFilterService } from "src/app/core/erp/_services/location-filter.service"
 const routes: Routes = [
   {
     path: 'create-site',
-    component: CreateSiteComponent
+    component:   CreateSiteComponent
+  },
+  {
+    path: 'create-standard-specification',
+    component: CreateStrandardSpecificationComponent
   },
   {
     path: 'list-site',
@@ -105,6 +115,10 @@ const routes: Routes = [
     path: 'edit-status/:id',
     component: EditStatusComponent
   },
+  {
+    path: 'status-mouvement',
+    component: StatusMouvementComponent
+  },
 ] 
 
 @NgModule({
@@ -119,6 +133,8 @@ const routes: Routes = [
         EditSiteComponent,
         ListStatusComponent,
         EditStatusComponent,
+        CreateStrandardSpecificationComponent,
+        StatusMouvementComponent
     ],
     imports: [
         CommonModule,
@@ -161,7 +177,11 @@ const routes: Routes = [
         TypesUtilsService,
         LayoutUtilsService,
         InventoryStatusService,
-        ProjectService
+        ProjectService,
+        QualityControlService,
+        LocationFilterService,
+        ItemService,
+        CustomerService
     ],
     entryComponents: [
         ActionNotificationComponent,

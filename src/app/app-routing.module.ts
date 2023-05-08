@@ -127,6 +127,11 @@ const routes: Routes = [
           import("./views/pages/roles/roles.module").then((m) => m.RolesModule),
       },
       {
+        path: "token-serie",
+        loadChildren: () =>
+          import("./views/pages/token-serie/token-serie.module").then((m) => m.TokenSerieModule),
+      },
+      {
         path: "services",
         loadChildren: () =>
           import("./views/pages/services/service.module").then(
@@ -184,6 +189,13 @@ const routes: Routes = [
         path: "pos",
         loadChildren: () =>
           import("./views/pages/pos/pos.module").then((m) => m.PosModule),
+      },
+      {
+        path: "pos-cafette",
+        loadChildren: () =>
+          import("./views/pages/pos-cafette/pos-cafette.module").then(
+            (m) => m.PosCafetteModule
+          ),
       },
       {
         path: "pos-visitor",
@@ -276,6 +288,7 @@ const routes: Routes = [
             (m) => m.RevenueTransferModule
           ),
       },
+      
       // {
       //   path: 'config',
       //   loadChildren: () => import('./views/pages/config/config.module').then(m => m.ConfigModule),
@@ -526,7 +539,28 @@ const routes: Routes = [
             (m) => m.ForcastModule
           ),
       },
-
+      {
+        path: 'mobile-settings',
+        loadChildren: () => import('./views/pages/mobile-settings/mobile-settings.module').then(m => m.MobileSettingsModule),
+      },
+      {
+        path: 'supervision',
+        loadChildren: () => import('./views/pages/supervision/supervision.module').then(m => m.SupervisionModule),
+      },
+      {
+        path: "domain",
+        loadChildren: () =>
+          import("./views/pages/domain/domain.module").then(
+            (m) => m.DomainModule
+          ),
+      },
+      {
+        path: "deal",
+        loadChildren: () =>
+          import("./views/pages/deal/deal.module").then(
+            (m) => m.DealModule
+          ),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },
     ],

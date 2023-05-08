@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-6">
-                                        <label class="form-group">Description ABR:</label>
+                                        <label class="form-group">Description Interne:</label>
                                         <input type="text" class="form-control form-control-solid"
                                         formControlName="pt_desc2" aria-describedby="basic-addon2"
                                         >
@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Ligne Prod:</label>
+                                        <label class="form-group ">Famille :</label>
 
                                         <div class="input-group input-group-sm">
 
@@ -154,7 +154,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Groupe d'etudes:</label>
+                                        <label class="form-group ">Forme Géometrique:</label>
                                         <div class="input-group input-group-sm">
 
                                             <input type="text" class="form-control form-control-solid"
@@ -198,7 +198,7 @@
                                     </div>
 
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Taill:</label>
+                                        <label class="form-group ">Taille:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_drwg_size" id="exampleSelects6">
                                             <option value=""></option>
@@ -210,7 +210,7 @@
                                 <div class="row">
 
                                     <div class="form-group col-2">
-                                        <label class="form-group">Grp Promo:</label>
+                                        <label class="form-group">Logo :</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_promo" id="exampleSelects111">
                                             <option value=""></option>
@@ -478,6 +478,59 @@
 
                                 <div class="row">
                                     <div class="form-group col-2">
+                                        <label class="form-group"> Code Model:</label>
+
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Couleur :</label>
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_break_cat">
+
+                                    </div>
+
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Grammage :</label>
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                        >
+                                            <!-- formControlName="pt_ship_wt" -->
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group "> Qualité :</label>
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                        >
+                                        <!-- <select class="form-control form-control-sm form-control-solid" -->
+                                        
+                                            <!-- formControlName="pt_ship_wt_um" id="exampleSelects8" -->
+                                            <!-- <option value=""></option> -->
+                                            <!-- <option *ngFor="let elem of pt_ship_wt_um" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option> -->
+                                        <!-- </select> -->
+
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Logo :</label>
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_promo" id="exampleSelects111">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of pt_promo" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                        </select>
+                                </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-2">
                                         <label class="form-group"> Code Produit Corp:</label>
 
                                         <div class="input-group input-group-sm">
@@ -521,6 +574,7 @@
                                     </div>
 
                                 </div>
+
                                 <div class="row">
 
 
@@ -563,7 +617,7 @@
                     <!--add new tab-->
                     <ngb-tab>
                         <ng-template ngbTabTitle>
-                            Données personnalisation
+                            Fiche Article d'Unité
                             <div style="width: 10px;"></div>
                             <a *ngIf="hasFormErrors5"
                                 class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">

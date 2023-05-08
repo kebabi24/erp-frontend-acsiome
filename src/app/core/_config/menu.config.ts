@@ -34,6 +34,10 @@ export class MenuConfig {
               page: "/dashboard/manager-dashboard",
             },
             {
+              title: "Dashboard Commercial",
+              page: "/dashboard/commercial-dashboard",
+            },
+            {
               title: "Dashboard CRM",
               page: "/dashboard/crm-dashboard",
             },
@@ -45,6 +49,13 @@ export class MenuConfig {
           icon: "flaticon2-shopping-cart",
           root: true,
           page: "/pos",
+        },
+        {
+          title: "Pos cafette",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          page: "/pos-cafette",
         },
         {
           title: "Weekly inventory",
@@ -88,6 +99,27 @@ export class MenuConfig {
             {
               title: "Liste des catégories",
               page: "/pos-settings/list-category",
+            },
+          ],
+        },
+
+        {
+          title: "Paramétrages Mobile",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          submenu: [
+            {
+              title: "Résultat de la visite",
+              page: "/mobile-settings/visit-result",
+            },
+            {
+              title: "Méthode de paiement",
+              page: "/mobile-settings/payment-method",
+            },
+            {
+              title: "Motif d'annulation",
+              page: "/mobile-settings/cancelation-reason",
             },
           ],
         },
@@ -281,6 +313,21 @@ export class MenuConfig {
                 },
               ],
             },
+
+            // NEW
+            {
+              title: "Parametrage de Qualité",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-settings",
+              submenu: [
+                {
+                  title: "ajouter spécification standard",
+                  page: "/inventory-settings/create-standard-specification",
+                },
+              ],
+            },
+
             {
               title: "Parametrage Comptabilite",
               root: true,
@@ -383,6 +430,7 @@ export class MenuConfig {
             },
           ],
         },
+
         {
           title: "Gestion des Fournisseurs",
           bullet: "dot",
@@ -457,6 +505,26 @@ export class MenuConfig {
               title: "Ajouter Clients",
               page: "/customers-mobile/create-customer-mobile",
             },
+            {
+              title: "Ajouter Cluster",
+              page: "/customers-mobile/cluster-create",
+            },
+            {
+              title: "Ajouter Category",
+              page: "/customers-mobile/category-create",
+            },
+            {
+              title: "Ajouter Sub Cluster",
+              page: "/customers-mobile/cluster-sub-create",
+            },
+            {
+              title: "Ajouter Category Type",
+              page: "/customers-mobile/category-type-create",
+            },
+            {
+              title: "Ajouter canaux de vente",
+              page: "/customers-mobile/sales-channels-create",
+            },
           ],
         },
         {
@@ -486,12 +554,40 @@ export class MenuConfig {
               page: "/articles/list",
             },
             {
-              title: "MAINT des Articles",
+              title: "Modification des articles",
+              page: "/articles/list-update",
+            },
+            {
+              title: "Génération Article",
+              page: "/articles/create-spec",
+            },
+            {
+              title: "Ajouter des Articles",
               page: "/articles/add",
             },
             {
               title: "MAINT Cout Article",
               page: "/articles/edit-cost",
+            },
+            {
+              title: "Créer une page de produits",
+              page: "/articles/page",
+            },
+          ],
+        },
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon2-box-1",
+          root: true,
+          submenu: [
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
             },
           ],
         },
@@ -503,8 +599,16 @@ export class MenuConfig {
           icon: "flaticon2-delivery-truck",
           submenu: [
             {
+              title: "Chargement Des Vans",
+              page: "/inventory-management/loading-vans",
+            },
+            {
               title: "Réception OA",
               page: "/inventory-transaction/po-receip",
+            },
+            {
+              title: "Etiquetage MP",
+              page: "/inventory-transaction/label-create",
             },
             {
               title: "Transfert Article",
@@ -745,6 +849,10 @@ export class MenuConfig {
               page: "/account-receivable/create-account-receivable",
             },
             {
+              title: "Paiement par Projet",
+              page: "/project/create-project-payment",
+            },
+            {
               title: "Liste des Paiement",
               page: "/account-receivable/list-payment",
             },
@@ -871,6 +979,22 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion des Contrats",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-delivery-truck",
+          submenu: [
+            {
+              title: "La liste des Contrats",
+              page: "/deal/list-deal",
+            },
+            {
+              title: "Ajouter un Contrat",
+              page: "/deal/create-deal",
+            },
+          ],
+        },
+        {
           title: "Gestion des projets",
           root: true,
           bullet: "dot",
@@ -885,18 +1009,55 @@ export class MenuConfig {
               page: "/project/create-project",
             },
             {
+              title: "mettre A jour Projet",
+              page: "/project/update-project",
+            },
+            {
               title: "La liste des Projets",
               page: "/project/list-pm",
             },
             {
+              title: "Lancer un projet",
+              page: "/project/launch-project",
+            },
+            // {
+            //   title: "Affectation des Employés",
+            //   page: "/project/create-project-payment",
+            // },
+            {
+              title: "Pointage des Employés",
+              page: "/project/emp-temp",
+            },
+
+            {
+              title: "Liste des pointages",
+              page: "/project/list-emp-temp",
+            },
+            {
               title: "Affectation des Employés",
-              page: "/project/create-project",
+              page: "/accounting-setting/affect-emp",
             },
             {
               title: "Rapport des activités",
               page: "/project/add-report",
             },
+            {
+              title: "Déclaration de panne des équipements",
+              page: "/project/asset-down",
+            },
+            {
+              title: "Déclaration de accident/incident",
+              page: "/project/accident-incident",
+            },
 
+            {
+              title: "Sensibilisation",
+              page: "/project/sensibilisation",
+            },
+            {
+              title: "identification",
+              page: "/project/identification",
+            },
             {
               title: "Gestion des Métier",
               root: true,
@@ -909,7 +1070,7 @@ export class MenuConfig {
                 },
                 {
                   title: "Ajouter un Code Métier",
-                  page: "/job/list-job",
+                  page: "/job/create-job",
                 },
               ],
             },
@@ -1063,6 +1224,10 @@ export class MenuConfig {
                   page: "/profiles-mobile/create-profile-mobile",
                 },
                 {
+                  title: "Affection des pages produits",
+                  page: "/profiles-mobile/assign-profile-products-pages",
+                },
+                {
                   title: "liste des profiles mobile",
                   page: "/profiles-mobile/profiles-list-mobile",
                 },
@@ -1090,6 +1255,23 @@ export class MenuConfig {
             },
           ],
         },
+        {
+          title: "Token Series",
+          bullet: "dot",
+          icon: "flaticon-profile",
+          root: true,
+          submenu: [
+            {
+              title: "Créer token serie",
+              page: "/token-serie/create-new-token",
+            },
+            {
+              title: "Liste des token",
+              page: "/token-serie/list-all-tokens",
+            },
+          ],
+        },
+
         {
           title: "Gestion des services",
           bullet: "dot",

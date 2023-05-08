@@ -1,0 +1,186 @@
+<kt-portlet>
+  <kt-portlet-header [sticky]="true" [title]="'sensibilisation'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <ng-container ktPortletTools>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
+      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+
+      <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div> -->
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div class="example-preview">
+      <form class="form" [formGroup]="userForm">
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Code projet: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="project_code" [className]="userForm.controls['project_code'].errors && (userForm.controls['project_code'].dirty || userForm.controls['project_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="open(content)">
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['project_code'].errors && (userForm.controls['project_code'].dirty || userForm.controls['project_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Employees: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="employees" [className]="userForm.controls['employees'].errors && (userForm.controls['employees'].dirty || userForm.controls['employees'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openEmployees(contentEmployees)">
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['employees'].errors && (userForm.controls['employees'].dirty || userForm.controls['employees'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">educator: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="educator" [className]="userForm.controls['educator'].errors && (userForm.controls['educator'].dirty || userForm.controls['educator'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openEducator(contentEducator)">
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['educator'].errors && (userForm.controls['educator'].dirty || userForm.controls['educator'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">duration: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+
+              <div *ngIf="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-3">
+            <label class="form-group">Date début validité profil : </label>
+
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-solid" placeholder="jj-mm-aaaa" name="formation_date" formControlName="formation_date" ngbDatepicker #formation_date="ngbDatepicker" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" (click)="formation_date.toggle()" type="button">
+                  <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">location: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="location" [className]="userForm.controls['location'].errors && (userForm.controls['location'].dirty || userForm.controls['location'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openLocation(contentLocation)">
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['location'].errors && (userForm.controls['location'].dirty || userForm.controls['location'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <h2 style="margin-top: 20px">THEME DE LA SENSIBILISATION:</h2>
+        <div style="display: flex; flex-direction: row" *ngFor="let mpd of specificationDetails; let i = index">
+          <input style="width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChange($event, mpd)" />
+          <p style="margin-left: 20px">{{ mpd.id }} {{ mpd.mpd_label }}</p>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le projet</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridCode" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="projects"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <div>
+      <ng-template #contentEmployees let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir les employées</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridEmployees" [columnDefinitions]="columnDefinitionsEmployees" (onAngularGridCreated)="angularGridReadyEmployees($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedEmployees($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsEmployees" [dataset]="employees"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <div>
+      <ng-template #contentEducator let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir les educateurs</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridEducator" [columnDefinitions]="columnDefinitionsEducator" (onAngularGridCreated)="angularGridReadyEducator($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedEducator($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsEducator" [dataset]="educators"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <div>
+      <ng-template #contentLocation let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir les locations</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridLocation" [columnDefinitions]="columnDefinitionsLocation" (onAngularGridCreated)="angularGridReadyLocation($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedLocation($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsLocation" [dataset]="locations"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+  </kt-portlet-body>
+</kt-portlet>

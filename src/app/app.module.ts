@@ -1,9 +1,6 @@
 import { CommonModule } from "@angular/common";
 // Angular
-import {
-  BrowserModule,
-  HAMMER_GESTURE_CONFIG,
-} from "@angular/platform-browser";
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from "@angular/platform-browser";
 import { APP_INITIALIZER, NgModule } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { HttpClientModule } from "@angular/common/http";
@@ -15,10 +12,7 @@ import { OverlayModule } from "@angular/cdk/overlay";
 // Angular in memory
 import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
 // Perfect Scroll bar
-import {
-  PERFECT_SCROLLBAR_CONFIG,
-  PerfectScrollbarConfigInterface,
-} from "ngx-perfect-scrollbar";
+import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 // SVG inline
 import { InlineSVGModule } from "ng-inline-svg";
 // Env
@@ -34,7 +28,7 @@ import { StoreRouterConnectingModule } from "@ngrx/router-store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 // State
 import { metaReducers, reducers } from "./core/reducers";
-
+import { MatRadioModule } from "@angular/material/radio";
 // Components
 import { AppComponent } from "./app.component";
 // Modules
@@ -44,28 +38,12 @@ import { ThemeModule } from "./views/theme/theme.module";
 // Partials
 import { PartialsModule } from "./views/partials/partials.module";
 // Layout Services
-import {
-  DataTableService,
-  FakeApiService,
-  KtDialogService,
-  LayoutConfigService,
-  LayoutRefService,
-  MenuAsideService,
-  MenuConfigService,
-  MenuHorizontalService,
-  PageConfigService,
-  SplashScreenService,
-  SubheaderService,
-} from "./core/_base/layout";
+import { DataTableService, FakeApiService, KtDialogService, LayoutConfigService, LayoutRefService, MenuAsideService, MenuConfigService, MenuHorizontalService, PageConfigService, SplashScreenService, SubheaderService } from "./core/_base/layout";
 // Auth
 import { AuthModule } from "./views/pages/auth/auth.module";
 import { AuthService } from "./core/auth";
 // CRUD
-import {
-  HttpUtilsService,
-  LayoutUtilsService,
-  TypesUtilsService,
-} from "./core/_base/crud";
+import { HttpUtilsService, LayoutUtilsService, TypesUtilsService } from "./core/_base/crud";
 // Config
 import { LayoutConfig } from "./core/_config/layout.config";
 // Highlight JS
@@ -121,6 +99,7 @@ export function getHighlightLanguages() {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatRadioModule,
 
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forRoot(FakeApiService, {
@@ -148,7 +127,7 @@ export function getHighlightLanguages() {
     ThemeModule,
     TreeModule,
   ],
-  exports: [],
+  exports: [MatRadioModule],
   providers: [
     AuthService,
     LayoutConfigService,

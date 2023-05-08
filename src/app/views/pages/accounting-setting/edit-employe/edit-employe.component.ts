@@ -89,6 +89,26 @@ export class EditEmployeComponent implements OnInit {
     bdate: any;
     fdate: any;
     ldate: any;
+    hdate: any;
+
+     // grid options
+  mvangularGrid: AngularGridInstance;
+  mvgrid: any;
+  mvgridService: GridService;
+  mvdataView: any;
+  mvcolumnDefinitions: Column[];
+  mvgridOptions: GridOption;
+  mvdataset: any[];
+
+  jbangularGrid: AngularGridInstance;
+  jbgrid: any;
+  jbgridService: GridService;
+  jbdataView: any;
+  jbcolumnDefinitions: Column[];
+  jbgridOptions: GridOption;
+  jbdataset: any[];
+  row_number;
+  mv: any[]
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -124,17 +144,24 @@ export class EditEmployeComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       const id = params.id
       this.employeService.getOne(id).subscribe((response: any)=>{
-      this.employeEdit = response.data
+      this.employeEdit = response.data.employe
+      this.mvdataset = response.data.employeScoreDetail
+      this.jbdataset = response.data.employeJobDetail
+      console.log("hereeeeeeeeeeee", this.jbdataset)
      
                             this.loadingSubject.next(false)
                             this.title = this.title + this.employeEdit.emp_addr
                             this.bdate = new Date(this.employeEdit.emp_birth_date)
                             this.fdate = new Date(this.employeEdit.emp_first_date)
                             this.ldate = new Date(this.employeEdit.emp_last_date)
+                            this.hdate = new Date(this.employeEdit.emp_hab_date)
+                            
         /*      this.bdate.setDate(this.bdate.getDate() + 1)
               this.fdate.setDate(this.fdate.getDate() + 1)
               this.ldate.setDate(this.ldate.getDate() + 1)*/
       this.createForm()
+      this.initmvGrid()
+      this.initjbGrid()
       this.loadingSubject.next(false)
       })
     })
@@ -165,6 +192,11 @@ createForm() {
     Validators.required,
 ],
 
+emp_blood: [
+  { value: this.employeEdit.emp_blood },
+  Validators.required,
+],
+
 emp_birth_date: [{
   year: this.bdate.getFullYear(),
   month: this.bdate.getMonth()+1,
@@ -182,14 +214,17 @@ emp_last_date: [{
 }],
 
 
+emp_hab_date: [{
+  year: this.hdate.getFullYear(),
+  month: this.hdate.getMonth()+1,
+  day: this.hdate.getDate()
+}],
 
 
 
       
 
       emp_line1:  [this.employeEdit.emp_line1, Validators.required,],
-      emp_line2: [this.employeEdit.emp_line2 ],
-      emp_line3: [this.employeEdit.emp_line3 ],
       emp_ss_id:  [this.employeEdit.emp_ss_id , Validators.required,],
       emp_country: [this.employeEdit.emp_country ],
       emp_city: [this.employeEdit.emp_city ],
@@ -211,11 +246,198 @@ emp_last_date: [{
       emp_mrate: [this.employeEdit.emp_mrate ],
       emp_arate: [this.employeEdit.emp_arate ],
 
+      emp_dlicence:  [this.employeEdit.emp_dlicence ],
+      emp_anem: [this.employeEdit.emp_anem ],
+      emp_habiliation: [this.employeEdit.emp_habiliation ],
+
+      emp_child_nbr: [this.employeEdit.emp_child_nbr ],
+
+      emp_contact_fname:  [this.employeEdit.emp_contact_fname],
+      emp_contact_lname:  [this.employeEdit.emp_contact_lname ],
+      emp_contact_adress: [ this.employeEdit.emp_contact_adress ],
+      emp_contact_tel: [ this.employeEdit.emp_contact_tel ],
+      emp_parent_liaison: [ this.employeEdit.emp_parent_liaison ],
 
   })
 }
 
+initmvGrid() {
+  this.mvcolumnDefinitions = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30,
+    
+    },
+    {
+      id: "code_value",
+      name: "Type",
+      field: "code_value",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+    {
+      id: "code_cmmt",
+      name: "Designation",
+      field: "code_cmmt",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+    
+    {
+      id: "emps_amt",
+      name: "Montant",
+      field: "emps_amt",
+      sortable: true,
+      width: 80,
+      filterable: false,
+      type: FieldType.float,
+      editor: {
+        model: Editors.float,
+      },
+    },
+  ];
 
+  this.mvgridOptions = {
+    asyncEditorLoading: false,
+    editable: true,
+    enableColumnPicker: true,
+    enableCellNavigation: true,
+    enableRowSelection: true,
+  };
+  this.codeService.getBy({ code_fldname: "emp_type" })
+  .subscribe((response: any) => {this.mv = response.data
+    for (let m of this.mv) {
+
+      const result = this.mvdataset.find(({ emps_type }) => emps_type === m.code_value);
+      console.log(result)
+      m.emps_amt = result.emps_amt
+    }
+
+  this.mvdataset = this.mv
+  
+  
+  });
+  
+
+}
+
+initjbGrid() {
+  this.jbcolumnDefinitions = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30,
+    
+    },
+    {
+      id: "empj_job",
+      name: "Code Metier",
+      field: "empj_job",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+
+    {
+      id: "mvid",
+      field: "cmvid",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.infoIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+      
+       
+        this.row_number = args.row
+        let element: HTMLElement = document.getElementById(
+            "openItemsGrid"
+        ) as HTMLElement
+        element.click()
+        }  
+      
+    },
+    {
+      id: "desc",
+      name: "Designation",
+      field: "desc",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+    
+    },
+    {
+      id: "empj_level",
+      name: "Niveau",
+      field: "empj_level",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+    
+  ];
+
+  this.jbgridOptions = {
+    asyncEditorLoading: false,
+    editable: true,
+    enableColumnPicker: true,
+    enableCellNavigation: true,
+    enableRowSelection: true,
+  };
+  // this.codeService.getBy({ code_fldname: "emp_type" })
+  // .subscribe((response: any) => (this.mvdataset = response.data));
+ 
+
+}
+
+addNewItem() {
+  this.jbgridService.addItem(
+    {
+      id: this.jbdataset.length + 1,
+     
+      empj_job: null,
+      empj_level: null,
+    },
+    { position: "bottom" }
+  );
+}
+jbGridReady(angularGrid: AngularGridInstance) {
+  this.jbangularGrid = angularGrid;
+  this.jbdataView = angularGrid.dataView;
+  this.jbgrid = angularGrid.slickGrid;
+  this.jbgridService = angularGrid.gridService;
+}
+mvGridReady(angularGrid: AngularGridInstance) {
+  this.mvangularGrid = angularGrid;
+  this.mvdataView = angularGrid.dataView;
+  this.mvgrid = angularGrid.slickGrid;
+  this.mvgridService = angularGrid.gridService;
+}
 onChangeJob() {
   const controls = this.empForm.controls; // chof le champs hada wesh men form rah
   const jb_code = controls.emp_job.value;
@@ -295,7 +517,16 @@ onSubmit() {
 
   // tslint:disable-next-line:prefer-const
   let employe = this.prepareCode()
-  this.addEmploye(employe)
+  for (let data of this.mvdataset) {
+    delete data.id;
+    delete data.cmvid;
+  }
+  for (let data of this.jbdataset) {
+    delete data.id;
+    delete data.cmvid;
+    delete data.desc;
+  }
+  this.addEmploye(employe,this.mvdataset,this.jbdataset)
   
 }
 /**
@@ -321,10 +552,12 @@ onSubmit() {
       ? `${controls.emp_last_date.value.year}/${controls.emp_last_date.value.month}/${controls.emp_last_date.value.day}`
       : null
 
-      _employe.emp_line1 = controls.emp_line1.value
-      _employe.emp_line2 = controls.emp_line2.value
-      _employe.emp_line3 = controls.emp_line3.value
+      _employe.emp_hab_date = controls.emp_hab_date.value
+      ? `${controls.emp_hab_date.value.year}/${controls.emp_hab_date.value.month}/${controls.emp_hab_date.value.day}`
+      : null
 
+      _employe.emp_line1 = controls.emp_line1.value
+      
       _employe.emp_country = controls.emp_country.value
       _employe.emp_city = controls.emp_city.value
       
@@ -344,6 +577,20 @@ onSubmit() {
       _employe.emp_rate = controls.emp_rate.value
       _employe.emp_mrate = controls.emp_mrate.value
       _employe.emp_arate = controls.emp_arate.value
+
+      _employe.emp_anem = controls.emp_anem.value
+      _employe.emp_habiliation = controls.emp_habiliation.value
+      _employe.emp_dlicence = controls.emp_dlicence.value
+      
+
+      
+      _employe.emp_child_nbr = controls.emp_child_nbr.value
+      _employe.emp_blood = controls.emp_blood.value
+      _employe.emp_contact_fname = controls.emp_contact_fname.value
+      _employe.emp_contact_lname = controls.emp_contact_lname.value
+      _employe.emp_contact_adress = controls.emp_contact_adress.value
+      _employe.emp_contact_tel = controls.emp_contact_tel.value
+      _employe.emp_parent_liaison = controls.emp_parent_liaison.value
       
 
 
@@ -362,10 +609,10 @@ onSubmit() {
      *
      * @param _employe: EmployeModel
      */
-    addEmploye(_employe: Employe) {
+    addEmploye(_employe: Employe,details: any, jbdetails:any) {
       const controls = this.empForm.controls
       this.loadingSubject.next(true)
-      this.employeService.update(this.employeEdit.id, _employe).subscribe(
+      this.employeService.update(this.employeEdit.id, {Employe:_employe, employeScoreDetail: details, employeJobDetail: jbdetails}).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
               this.layoutUtilsService.showActionNotification(
@@ -430,15 +677,7 @@ onSubmit() {
     },error=>console.log(error))
 }
 
-  handleSelectedRowsChanged2(e, args) {
-    const controls = this.empForm.controls;
-    if (Array.isArray(args.rows) && this.gridObj2) {
-      args.rows.map((idx) => {
-        const item = this.gridObj2.getDataItem(idx);
-        controls.emp_job.setValue(item.jb_code || "");
-      });
-    }
-  }
+ 
 
   angularGridReady2(angularGrid: AngularGridInstance) {
     this.angularGrid2 = angularGrid;
@@ -824,5 +1063,19 @@ console.log(res.data)
  onAlertClose($event) {
   this.hasFormErrors = false
 }
-
+handleSelectedRowsChanged2(e, args) {
+  
+  let updateItem = this.jbgridService.getDataItemByRowIndex(this.row_number);
+  
+  if (Array.isArray(args.rows) && this.gridObj2) {
+      args.rows.map((idx) => {
+       
+          const item = this.gridObj2.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+          updateItem.empj_job = item.jb_code
+          updateItem.desc = item.jb_desc
+          this.jbgridService.updateItem(updateItem);
+      })
+  }
+}
 }

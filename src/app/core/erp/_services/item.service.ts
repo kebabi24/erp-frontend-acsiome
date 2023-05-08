@@ -10,6 +10,7 @@ import { environment } from "../../../../environments/environment"
 import { Item } from "../_models/item.model"
 
 const API_URL = environment.apiUrl + "/items"
+const API_URL_2 = environment.apiUrl + "/productPage"
 
 @Injectable()
 export class ItemService {
@@ -72,5 +73,29 @@ export class ItemService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
     }
-    // DELETE
+    
+
+    // GET PRODUCT PAGE BY CODE
+    public getProductPageByCode(product_page_code: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/findOneByCode/${product_page_code.product_page_code}`, { headers: httpHeaders })
+        
+    }
+
+    // CREATE PRODUCT PAGE
+    public createProductPage(productPage : any , productsCodes : any){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createProductPage/`, {productPage,productsCodes}, { headers: httpHeaders })
+    }
+     // GET ALL PRODUCT PAGES
+     public getAllProductPages() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/`, { headers: httpHeaders })
+    }
+
+     // UPDATE PROFILE PRODUCT PAGES
+     public updateProfileProductPages(profile_code : any , pagesCodes : any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/updateProfileProductsPages`, {profile_code:profile_code,pagesCodes:pagesCodes}, { headers: httpHeaders })
+    }
 }

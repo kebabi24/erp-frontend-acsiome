@@ -6,241 +6,232 @@
     id="kt_app_root"
   >
     <!--begin::Page-->
-    <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-      <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
-        <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-          <div class="d-flex flex-column flex-column-fluid">
-            <div id="kt_app_content_container">
-              <div class="d-flex flex-column flex-xl-row">
-                <div style="margin-top: 10px">
-                  <div class="card card-flush card-p-0 bg-transparent border-0">
-                    <div class="col-3">
-                      <ul
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
-                      >
-                        <li
-                          *ngFor="let category of categories"
-                          style="width: 240px; height: 65px"
-                        >
-                          <button
-                            class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
-                            data-bs-toggle="pill"
-                            type="button"
-                            (click)="onSelect(category)"
-                            style="
-                              width: 240px;
-                              height: 65px;
-                              background-color: #ffb701;
-                            "
-                            [disabled]="globalState"
-                          >
-                            <div class="">
-                              <img src="{{ category.category_img }}" alt="" />
-                            </div>
 
-                            <div class="">
-                              <span
-                                class="text-gray-900 fw-bold fs-2 d-block"
-                                style="margin-left: 5px"
-                                >{{ category.category_name }}</span
-                              >
-                            </div>
-                          </button>
-                        </li>
-                      </ul>
-
-                      <!--end::Tab Content-->
-                    </div>
-                    <!--end: Card Body-->
+    <div class="d-flex flex-column flex-xl-row">
+      <div style="margin-top: 10px">
+        <div class="">
+          <div class="">
+            <ul
+              class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2"
+            >
+              <li
+                *ngFor="let category of categories"
+                style="width: 240px; height: 65px"
+              >
+                <button
+                  class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary"
+                  data-bs-toggle="pill"
+                  type="button"
+                  (click)="onSelect(category)"
+                  style="width: 240px; height: 65px; background-color: #ffb701"
+                  [disabled]="globalState"
+                >
+                  <div class="">
+                    <img src="{{ category.category_img }}" alt="" />
                   </div>
-                  <!--end::Pos food-->
-                </div>
-                <div class="col-6" style="margin-top: 15px">
-                  <div
-                    class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
-                  >
-                    <button
-                      class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                      *ngFor="let productOnlist of selectedProducts"
-                      type="button"
-                      data-bs-toggle="pill"
-                      (click)="initializeProduct(productOnlist)"
-                      style="background-color: #ffb701"
+
+                  <div class="">
+                    <span
+                      class="text-gray-900 fw-bold fs-2 d-block"
+                      style="margin-left: 5px"
+                      >{{ category.category_name }}</span
                     >
-                      <div class="card-body text-center" type="button">
-                        <div class="mb-2">
-                          <div class="text-center">
-                            <span
-                              class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                              >{{ productOnlist.code_desc }}</span
-                            >
-                            <span
-                              class="text-gray-900 fw-semibold d-block fs-6 mt-n1"
-                              >16 mins to cook</span
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-
-                    <!--end::Card-->
                   </div>
-                  <!--end::Wrapper-->
+                </button>
+              </li>
+            </ul>
 
-                  <!--end::Tap pane-->
+            <!--end::Tab Content-->
+          </div>
+          <!--end: Card Body-->
+        </div>
+        <!--end::Pos food-->
+      </div>
+      <div class="col-6" style="margin-top: 15px">
+        <div
+          class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+        >
+          <button
+            class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+            *ngFor="let productOnlist of selectedProducts"
+            type="button"
+            data-bs-toggle="pill"
+            (click)="initializeProduct(productOnlist)"
+            style="background-color: #ffb701"
+          >
+            <div class="card-body text-center" type="button">
+              <div class="mb-2">
+                <div class="text-center">
+                  <span
+                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                    >{{ productOnlist.code_desc }}</span
+                  >
+                  <span class="text-gray-900 fw-semibold d-block fs-6 mt-n1"
+                    >16 mins to cook</span
+                  >
+                </div>
+              </div>
+            </div>
+          </button>
 
-                  <div class="tab-content" *ngIf="showSize">
-                    <div id="kt_pos_food_content_1">
-                      <div
-                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+          <!--end::Card-->
+        </div>
+        <!--end::Wrapper-->
+
+        <!--end::Tap pane-->
+
+        <div class="" *ngIf="showSize">
+          <div id="">
+            <div
+              class="flex-wrap nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+            >
+              <button
+                class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                type="button"
+                *ngFor="let size of sizeOfProduct"
+                data-bs-toggle="pill"
+                (click)="prepareProduct(size, content2)"
+                style="background-color: #ffb701"
+              >
+                <div class="card-body text-center" type="button">
+                  <div class="mb-2">
+                    <div class="text-center">
+                      <span
+                        class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                        >{{ size.pt_group }}</span
                       >
-                        <button
-                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                          type="button"
-                          *ngFor="let size of sizeOfProduct"
-                          data-bs-toggle="pill"
-                          (click)="prepareProduct(size, content2)"
-                          style="background-color: #ffb701"
-                        >
-                          <div class="card-body text-center" type="button">
-                            <div class="mb-2">
-                              <div class="text-center">
-                                <span
-                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                  >{{ size.pt_group }}</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-
-                        <!--end::Card-->
-                      </div>
-                      <!--end::Wrapper-->
-                    </div>
-
-                    <!--end::Tap pane-->
-                  </div>
-
-                  <div class="tab-content" *ngIf="showSauces">
-                    <div id="kt_pos_food_content_1">
-                      <div
-                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
-                      >
-                        <button
-                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                          type="button"
-                          *ngFor="let sauce of sauces"
-                          data-bs-toggle="pill"
-                          (click)="setSauce(sauce)"
-                          style="background-color: #ffb701"
-                        >
-                          <div class="card-body text-center" type="button">
-                            <div class="mb-2">
-                              <div class="text-center">
-                                <span
-                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                  >{{ sauce.pt_desc1 }}</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-
-                        <!--end::Card-->
-                      </div>
-                      <!--end::Wrapper-->
-                    </div>
-
-                    <!--end::Tap pane-->
-                  </div>
-                  <div class="tab-content" *ngIf="showSupp">
-                    <div id="kt_pos_food_content_1">
-                      <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
-                      >
-                        <button
-                          class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                          *ngFor="let suppliment of suppliments"
-                          type="button"
-                          data-bs-toggle="pill"
-                          (click)="setSupplement(suppliment)"
-                          style="background-color: #ffb701"
-                        >
-                          <div class="card-body text-center" type="button">
-                            <div class="mb-2">
-                              <div class="text-center">
-                                <span
-                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                  >{{ suppliment.pt_desc1 }}</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-
-                        <!--end::Card-->
-                      </div>
-                      <!--end::Wrapper-->
-                    </div>
-
-                    <!--end::Tap pane-->
-                  </div>
-                  <div class="tab-content" *ngIf="showSoda">
-                    <div id="kt_pos_food_content_1">
-                      <div
-                        class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
-                      >
-                        <button
-                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                          type="button"
-                          *ngFor="let so of soda"
-                          data-bs-toggle="pill"
-                          (click)="setListOfBrands(so)"
-                          style="background-color: #ffb701"
-                        >
-                          <div class="card-body text-center" type="button">
-                            <div class="mb-2">
-                              <div class="text-center">
-                                <span
-                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                  >{{ so.code_desc }}</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-                      </div>
                     </div>
                   </div>
-                  <div class="tab-content" *ngIf="showListOfBrands">
-                    <div id="kt_pos_food_content_1">
-                      <div
-                        class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+                </div>
+              </button>
+
+              <!--end::Card-->
+            </div>
+            <!--end::Wrapper-->
+          </div>
+
+          <!--end::Tap pane-->
+        </div>
+
+        <div class="tab-content" *ngIf="showSauces">
+          <div id="kt_pos_food_content_1">
+            <div
+              class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+            >
+              <button
+                class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                type="button"
+                *ngFor="let sauce of sauces"
+                data-bs-toggle="pill"
+                (click)="setSauce(sauce)"
+                style="background-color: #ffb701"
+              >
+                <div class="card-body text-center" type="button">
+                  <div class="mb-2">
+                    <div class="text-center">
+                      <span
+                        class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                        >{{ sauce.pt_desc1 }}</span
                       >
-                        <button
-                          class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
-                          type="button"
-                          *ngFor="let drinks of elem"
-                          data-bs-toggle="pill"
-                          (click)="prepareAnotherProduct(drinks)"
-                          style="background-color: #ffb701"
-                        >
-                          <div class="card-body text-center" type="button">
-                            <div class="mb-2">
-                              <div class="text-center">
-                                <span
-                                  class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
-                                  >{{ drinks.pt_desc1 }}</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </button>
-                      </div>
                     </div>
                   </div>
-                  <!-- <div class="tab-content" *ngIf="showSupp">
+                </div>
+              </button>
+
+              <!--end::Card-->
+            </div>
+            <!--end::Wrapper-->
+          </div>
+
+          <!--end::Tap pane-->
+        </div>
+        <div class="tab-content" *ngIf="showSupp">
+          <div id="kt_pos_food_content_1">
+            <div
+              class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+            >
+              <button
+                class="nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                *ngFor="let suppliment of suppliments"
+                type="button"
+                data-bs-toggle="pill"
+                (click)="setSupplement(suppliment)"
+                style="background-color: #ffb701"
+              >
+                <div class="card-body text-center" type="button">
+                  <div class="mb-2">
+                    <div class="text-center">
+                      <span
+                        class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                        >{{ suppliment.pt_desc1 }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </button>
+
+              <!--end::Card-->
+            </div>
+            <!--end::Wrapper-->
+          </div>
+
+          <!--end::Tap pane-->
+        </div>
+        <div class="tab-content" *ngIf="showSoda">
+          <div id="kt_pos_food_content_1">
+            <div
+              class="nav nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+            >
+              <button
+                class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                type="button"
+                *ngFor="let so of soda"
+                data-bs-toggle="pill"
+                (click)="setListOfBrands(so)"
+                style="background-color: #ffb701"
+              >
+                <div class="card-body text-center" type="button">
+                  <div class="mb-2">
+                    <div class="text-center">
+                      <span
+                        class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                        >{{ so.code_desc }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" *ngIf="showListOfBrands">
+          <div id="kt_pos_food_content_1">
+            <div
+              class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-1 pt-1"
+            >
+              <button
+                class="col-4 nav-link nav-link-border-solid flex-row-fluid align-items-center btn btn-outline btn-flex btn-active-color-primary"
+                type="button"
+                *ngFor="let drinks of elem"
+                data-bs-toggle="pill"
+                (click)="prepareAnotherProduct(drinks)"
+                style="background-color: #ffb701"
+              >
+                <div class="card-body text-center" type="button">
+                  <div class="mb-2">
+                    <div class="text-center">
+                      <span
+                        class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-3 fs-xl-1"
+                        >{{ drinks.pt_desc1 }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="tab-content" *ngIf="showSupp">
                         <div id="kt_pos_food_content_1">
                           <div class="d-flex tab-pane fade show active">
                             <button
@@ -263,7 +254,7 @@
                           </div>
                         </div>
                       </div> -->
-                  <!-- <button
+        <!-- <button
                       *ngIf="addProductBtn"
                       (click)="customizeProduct(content2)"
                       class="btn btn-primary fs-1 w-100 py-4"
@@ -271,50 +262,41 @@
                     >
                       Ajouter au panier
                     </button> -->
-                </div>
+      </div>
 
-                <!--end::Content-->
-                <!--begin::Sidebar-->
-                <div class="flex-column">
-                  <div
-                    class="flex-row-auto w-xl-475px"
-                    style="margin-top: 17px"
-                  >
-                    <!--begin::Pos order-->
-                    <div
-                      class="card card-flush"
-                      style="background-color: #ffb701"
-                    >
-                      <div class="flex-row" style="margin-top: 20px">
-                        <span
-                          class="switch switch-icon"
-                          style="margin-left: 45px"
-                        >
-                          <label
-                            class="fw-bold text-gray-900 fs-1"
-                            style="margin-right: 25px"
-                            >Entreprise:</label
-                          >
-                          <label>
-                            <input
-                              type="checkbox"
-                              class="form-control form-control-sm form-control-solid"
-                              formControlName="usrd_active"
-                              name="select"
-                            />
-                            <span style="margin-right: 50px"></span>
-                          </label>
-                          <button
-                            (click)="addClientModal(content17)"
-                            class="btn fw-bold btn-primary"
-                            style="background-color: #9e110d; font-size: large"
-                            [disabled]="globalState"
-                          >
-                            Ajouter client
-                          </button>
-                        </span>
-                      </div>
-                      <!-- <div class="flex-row" style="margin-top: 20px">
+      <!--end::Content-->
+      <!--begin::Sidebar-->
+      <div class="flex-column">
+        <div class="flex-row-auto w-xl-475px" style="margin-top: 17px">
+          <!--begin::Pos order-->
+          <div class="card card-flush" style="background-color: #ffb701">
+            <div class="flex-row" style="margin-top: 20px">
+              <span class="switch switch-icon" style="margin-left: 45px">
+                <label
+                  class="fw-bold text-gray-900 fs-1"
+                  style="margin-right: 25px"
+                  >Entreprise:</label
+                >
+                <label>
+                  <input
+                    type="checkbox"
+                    class="form-control form-control-sm form-control-solid"
+                    formControlName="usrd_active"
+                    name="select"
+                  />
+                  <span style="margin-right: 50px"></span>
+                </label>
+                <button
+                  (click)="addClientModal(content17)"
+                  class="btn fw-bold btn-primary"
+                  style="background-color: #9e110d; font-size: large"
+                  [disabled]="globalState"
+                >
+                  Ajouter client
+                </button>
+              </span>
+            </div>
+            <!-- <div class="flex-row" style="margin-top: 20px">
                           <div class="form-floating" style="width: 200px">
                             <input
                               style="width: 200px; background-color: beige"
@@ -340,86 +322,76 @@
                             Vérifier
                           </button>
                         </div> -->
-                      <div class="flex card-header">
-                        <div class="card-toolbar">
-                          <div
-                            class="form-floating"
-                            style="
-                              width: 200px;
-                              margin-left: 15px;
-                              margin-right: 47px;
-                            "
-                          >
-                            <input
-                              style="width: 200px; background-color: beige"
-                              type="email"
-                              class="form-control text-gray-900"
-                              placeholder="00.0"
-                              id="floatingInputValue"
-                              #discount
-                              id="discount"
-                              name="discount"
-                              [disabled]="globalState"
-                            />
-                            <label for="floatingInputValue"
-                              >Numéro carte de fidélité
-                            </label>
-                          </div>
-                          <button
-                            (click)="onChangeDiscount(discount.value)"
-                            class="btn fw-bold btn-primary"
-                            style="
-                              background-color: #9e110d;
-                              font-size: large;
-                              width: 157px;
-                            "
-                            [disabled]="globalState"
-                          >
-                            Vérifier
-                          </button>
-                        </div>
-                        <div class="card-toolbar">
-                          <div
-                            class="form-floating"
-                            style="
-                              width: 200px;
-                              margin-left: 15px;
-                              margin-right: 47px;
-                            "
-                          >
-                            <input
-                              style="width: 200px; background-color: beige"
-                              type="email"
-                              class="form-control text-gray-900"
-                              placeholder="00.0"
-                              #discount
-                              id="phone_number"
-                              name="discount"
-                              [disabled]="globalState"
-                            />
-                            <label for="floatingInputValue"
-                              >Numéro de téléphone
-                            </label>
-                          </div>
-                          <button
-                            (click)="onCheckCustomer(discount.value, content17)"
-                            class="btn fw-bold btn-primary"
-                            style="
-                              background-color: #9e110d;
-                              font-size: large;
-                              width: 157px;
-                            "
-                            [disabled]="globalState"
-                          >
-                            Vérifier
-                          </button>
-                        </div>
+            <div class="flex card-header">
+              <div class="card-toolbar">
+                <div
+                  class="form-floating"
+                  style="width: 200px; margin-left: 15px; margin-right: 47px"
+                >
+                  <input
+                    style="width: 200px; background-color: beige"
+                    type="email"
+                    class="form-control text-gray-900"
+                    placeholder="00.0"
+                    id="floatingInputValue"
+                    #discount
+                    id="discount"
+                    name="discount"
+                    [disabled]="globalState"
+                  />
+                  <label for="floatingInputValue"
+                    >Numéro carte de fidélité
+                  </label>
+                </div>
+                <button
+                  (click)="onChangeDiscount(discount.value)"
+                  class="btn fw-bold btn-primary"
+                  style="
+                    background-color: #9e110d;
+                    font-size: large;
+                    width: 157px;
+                  "
+                  [disabled]="globalState"
+                >
+                  Vérifier
+                </button>
+              </div>
+              <div class="card-toolbar">
+                <div
+                  class="form-floating"
+                  style="width: 200px; margin-left: 15px; margin-right: 47px"
+                >
+                  <input
+                    style="width: 200px; background-color: beige"
+                    type="email"
+                    class="form-control text-gray-900"
+                    placeholder="00.0"
+                    #discount
+                    id="phone_number"
+                    name="discount"
+                    [disabled]="globalState"
+                  />
+                  <label for="floatingInputValue">Numéro de téléphone </label>
+                </div>
+                <button
+                  (click)="onCheckCustomer(discount.value, content17)"
+                  class="btn fw-bold btn-primary"
+                  style="
+                    background-color: #9e110d;
+                    font-size: large;
+                    width: 157px;
+                  "
+                  [disabled]="globalState"
+                >
+                  Vérifier
+                </button>
+              </div>
 
-                        <!--end::Toolbar-->
-                      </div>
+              <!--end::Toolbar-->
+            </div>
 
-                      <!--begin::Header-->
-                      <!-- <div class="form-floating">
+            <!--begin::Header-->
+            <!-- <div class="form-floating">
                             <input
                               style="
                                 margin-top: 10px;
@@ -433,7 +405,7 @@
                             />
                           </div> -->
 
-                      <!-- <div class="form-floating">
+            <!-- <div class="form-floating">
                             <input
                               style="
                                 margin-top: 10px;
@@ -448,9 +420,9 @@
                             />
                             <label for="floatingInputValue">Numéro carte </label>
                           </div> -->
-                      <div class="flex card-header">
-                        <div class="card-toolbar">
-                          <!-- <button
+            <div class="flex card-header">
+              <div class="card-toolbar">
+                <!-- <button
                             id="btn1"
                             class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
                             (click)="locOrderS(content)"
@@ -459,318 +431,305 @@
                           >
                            Sur place
                           </button> -->
-                          <button
-                            id="btn2"
-                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
-                            (click)="locOrderE()"
-                            style="margin-left: 5px"
-                            [disabled]="globalState"
-                          >
-                            A Emporter</button
-                          ><button
-                            id="btn3"
-                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
-                            (click)="locOrderL(content19)"
-                            style="margin-left: 5px"
-                            [disabled]="globalState"
-                          >
-                            Livraison
-                          </button>
-                          <button
-                            style="
-                              background-color: beige;
-                              width: 240px;
-                              margin-top: 5px;
-                              margin-left: 85px;
-                            "
-                            (click)="clearCurrentCart()"
-                            class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
-                            [disabled]="globalState"
-                          >
-                            Vider le panier
-                          </button>
-                        </div>
+                <button
+                  id="btn2"
+                  class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                  (click)="locOrderE()"
+                  style="margin-left: 5px"
+                  [disabled]="globalState"
+                >
+                  A Emporter</button
+                ><button
+                  id="btn3"
+                  class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                  (click)="locOrderL(content19)"
+                  style="margin-left: 5px"
+                  [disabled]="globalState"
+                >
+                  Livraison
+                </button>
+                <button
+                  style="
+                    background-color: beige;
+                    width: 240px;
+                    margin-top: 5px;
+                    margin-left: 85px;
+                  "
+                  (click)="clearCurrentCart()"
+                  class="btn btn-light-primary text-gray-900 fs-4 fw-bold py-4"
+                  [disabled]="globalState"
+                >
+                  Vider le panier
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body pt-0">
+              <!--begin::Table container-->
+              <div class="table-responsive mb-8">
+                <!--begin::Table-->
+                <table class="table align-middle">
+                  <!--begin::Table head-->
+
+                  <!--end::Table head-->
+                  <!--begin::Table body-->
+                  <tr *ngIf="inShop">
+                    <td class="pe-0">
+                      <div class="d-flex-column align-items-center">
+                        <span
+                          class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                          >Commande table {{ currentTable }}
+                        </span>
                       </div>
-
-                      <div class="card-body pt-0">
-                        <!--begin::Table container-->
-                        <div class="table-responsive mb-8">
-                          <!--begin::Table-->
-                          <table class="table align-middle">
-                            <!--begin::Table head-->
-
-                            <!--end::Table head-->
-                            <!--begin::Table body-->
-                            <tr *ngIf="inShop">
-                              <td class="pe-0">
-                                <div class="d-flex-column align-items-center">
-                                  <span
-                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                    >Commande table {{ currentTable }}
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr *ngIf="showStatusOut">
-                              <td class="pe-0">
-                                <div class="d-flex-column align-items-center">
-                                  <span
-                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                    >Commande à emporter
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr *ngIf="showStatusDelivery">
-                              <td class="pe-0">
-                                <div class="d-flex-column align-items-center">
-                                  <span
-                                    class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                    >Livraison avec {{ deliveryOption }}
-                                  </span>
-                                </div>
-                              </td>
-                            </tr>
-                            <tbody *ngFor="let elem of cartProducts">
-                              <tr>
-                                <td class="pe-0">
-                                  <div class="d-flex-column align-items-center">
-                                    <!-- <img
+                    </td>
+                  </tr>
+                  <tr *ngIf="showStatusOut">
+                    <td class="pe-0">
+                      <div class="d-flex-column align-items-center">
+                        <span
+                          class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                          >Commande à emporter
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="showStatusDelivery">
+                    <td class="pe-0">
+                      <div class="d-flex-column align-items-center">
+                        <span
+                          class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                          >Livraison avec {{ deliveryOption }}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tbody *ngFor="let elem of cartProducts">
+                    <tr>
+                      <td class="pe-0">
+                        <div class="d-flex-column align-items-center">
+                          <!-- <img
                                           src="{{ elem.pt_article }}"
                                           class="w-50px h-50px rounded-3 me-3"
                                           alt=""
                                         /> -->
-                                    <span
-                                      class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >{{ elem.pt_desc1 }}
-                                    </span>
-                                  </div>
-                                  <div>
-                                    <span
-                                      *ngFor="let item of elem.suppliments"
-                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >{{ item.pt_desc1 }},
-                                    </span>
-                                  </div>
-                                  <div>
-                                    <span
-                                      *ngFor="let item of elem.ingredients"
-                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >Sans {{ item.pt_desc1 }},
-                                    </span>
-                                  </div>
-                                  <div>
-                                    <span
-                                      *ngFor="let item of elem.sauces"
-                                      class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
-                                      >{{ item.pt_desc1 }},
-                                    </span>
-                                  </div>
-                                </td>
-                                <td class="pe-0">
-                                  <!--begin::Dialer-->
-                                  <div
-                                    class="position-relative d-flex align-items-center"
-                                  >
-                                    <!--begin::Decrease control-->
-                                    <button
-                                      type="button"
-                                      class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
-                                      (click)="onDecreaseQty(elem)"
-                                      [disabled]="disable"
-                                    >
-                                      <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
-                                      <span class="svg-icon svg-icon-3x">
-                                        <svg
-                                          width="24"
-                                          height="24"
-                                          viewBox="0 0 24 24"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <rect
-                                            x="6"
-                                            y="11"
-                                            width="12"
-                                            height="2"
-                                            rx="1"
-                                            fill="currentColor"
-                                          />
-                                        </svg>
-                                      </span>
-                                      <!--end::Svg Icon-->
-                                    </button>
-                                    <!--end::Decrease control-->
-                                    <!--begin::Input control-->
-                                    <input
-                                      type="text"
-                                      class="form-control border-0 text-center px-0 fs-3 fw-bold text-gray-800 w-30px"
-                                      data-kt-dialer-control="input"
-                                      placeholder="Amount"
-                                      name="manageBudget"
-                                      readonly="readonly"
-                                      value="{{ elem.pt_qty }}"
-                                      style="background-color: #ffb701"
-                                    />
-                                    <!--end::Input control-->
-                                    <!--begin::Increase control-->
-                                    <button
-                                      type="button"
-                                      class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
-                                      (click)="onIncreaseQty(elem)"
-                                      [disabled]="disable"
-                                    >
-                                      <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
-                                      <span class="svg-icon svg-icon-3x">
-                                        <svg
-                                          width="24"
-                                          height="24"
-                                          viewBox="0 0 24 24"
-                                          fill="none"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                          <rect
-                                            opacity="0.5"
-                                            x="11"
-                                            y="18"
-                                            width="12"
-                                            height="2"
-                                            rx="1"
-                                            transform="rotate(-90 11 18)"
-                                            fill="currentColor"
-                                          />
-                                          <rect
-                                            x="6"
-                                            y="11"
-                                            width="12"
-                                            height="2"
-                                            rx="1"
-                                            fill="currentColor"
-                                          />
-                                        </svg>
-                                      </span>
-                                      <!--end::Svg Icon-->
-                                    </button>
-                                    <!--end::Increase control-->
-                                  </div>
-                                  <!--end::Dialer-->
-                                </td>
-                                <td class="text-start">
-                                  <span
-                                    class="fw text-gray-900 fs-1"
-                                    data-kt-pos-element="item-total"
-                                    >{{ elem.pt_price }} DA</span
-                                  >
-                                </td>
-                              </tr>
-                            </tbody>
-                            <!--end::Table body-->
-                          </table>
-                          <!--end::Table-->
+                          <span
+                            class="fw-bold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                            >{{ elem.pt_desc1 }}
+                          </span>
                         </div>
-                        <!--end::Table container-->
-                        <!--begin::Summary-->
-                        <div
-                          class="d-flex flex-stack rounded-3 p-6 mb-11"
-                          *ngIf="showPrice"
-                          style="background-color: #9e110d"
-                        >
-                          <!--begin::Content-->
-                          <div class="fs-6 fw-bold text-white">
-                            <span class="d-block lh-1 mb-2">Sous totale</span>
-                            <span *ngIf="currentOffer" class="d-block mb-2"
-                              >Pourcentage de remise</span
-                            >
-                            <span class="d-block mb-2">Montant remise</span>
-
-                            <span class="d-block fs-2qx lh-1">Net à payer</span>
-                          </div>
-                          <!--end::Content-->
-                          <!--begin::Content-->
-
-                          <div class="fs-6 fw-bold text-white text-end">
-                            <span
-                              class="d-block lh-1 mb-2"
-                              data-kt-pos-element="total"
-                              >{{ cartAmount + remisePrice }} DA</span
-                            >
-
-                            <span
-                              *ngIf="currentOffer"
-                              class="d-block mb-2"
-                              data-kt-pos-element="discount"
-                              >({{ currentOffer.del_pct_disc }} %)
-                            </span>
-                            <span
-                              class="d-block mb-2"
-                              data-kt-pos-element="discount"
-                              >{{ remisePrice }} DA
-                            </span>
-
-                            <span
-                              class="d-block fs-2qx lh-1"
-                              data-kt-pos-element="grant-total"
-                              >{{ cartAmount }} DA</span
-                            >
-                          </div>
-                          <!--end::Content-->
-                        </div>
-                        <!--end::Summary-->
                         <div>
-                          {{ time | async }}
+                          <span
+                            *ngFor="let item of elem.suppliments"
+                            class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                            >{{ item.pt_desc1 }},
+                          </span>
                         </div>
-                        <div class="m-0">
-                          <!--begin::Title-->
-                          <h1 class="fw-bold text-gray-900 mb-5">
-                            Moyens de paiements
-                          </h1>
-                          <!--end::Title-->
-                          <!--begin::Radio group-->
+                        <div>
+                          <span
+                            *ngFor="let item of elem.ingredients"
+                            class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                            >Sans {{ item.pt_desc1 }},
+                          </span>
+                        </div>
+                        <div>
+                          <span
+                            *ngFor="let item of elem.sauces"
+                            class="fw-semibold text-gray-900 cursor-pointer text-hover-primary fs-6 me-1"
+                            >{{ item.pt_desc1 }},
+                          </span>
+                        </div>
+                      </td>
+                      <td class="pe-0">
+                        <!--begin::Dialer-->
+                        <div
+                          class="position-relative d-flex align-items-center"
+                        >
+                          <!--begin::Decrease control-->
+                          <button
+                            type="button"
+                            class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
+                            (click)="onDecreaseQty(elem)"
+                            [disabled]="disable"
+                          >
+                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr089.svg-->
+                            <span class="svg-icon svg-icon-3x">
+                              <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <rect
+                                  x="6"
+                                  y="11"
+                                  width="12"
+                                  height="2"
+                                  rx="1"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                          </button>
+                          <!--end::Decrease control-->
+                          <!--begin::Input control-->
+                          <input
+                            type="text"
+                            class="form-control border-0 text-center px-0 fs-3 fw-bold text-gray-800 w-30px"
+                            data-kt-dialer-control="input"
+                            placeholder="Amount"
+                            name="manageBudget"
+                            readonly="readonly"
+                            value="{{ elem.pt_qty }}"
+                            style="background-color: #ffb701"
+                          />
+                          <!--end::Input control-->
+                          <!--begin::Increase control-->
+                          <button
+                            type="button"
+                            class="btn btn-icon btn-sm btn-light btn-icon-gray-400"
+                            (click)="onIncreaseQty(elem)"
+                            [disabled]="disable"
+                          >
+                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr087.svg-->
+                            <span class="svg-icon svg-icon-3x">
+                              <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <rect
+                                  opacity="0.5"
+                                  x="11"
+                                  y="18"
+                                  width="12"
+                                  height="2"
+                                  rx="1"
+                                  transform="rotate(-90 11 18)"
+                                  fill="currentColor"
+                                />
+                                <rect
+                                  x="6"
+                                  y="11"
+                                  width="12"
+                                  height="2"
+                                  rx="1"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                          </button>
+                          <!--end::Increase control-->
+                        </div>
+                        <!--end::Dialer-->
+                      </td>
+                      <td class="text-start">
+                        <span
+                          class="fw text-gray-900 fs-1"
+                          data-kt-pos-element="item-total"
+                          >{{ elem.pt_price }} DA</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                  <!--end::Table body-->
+                </table>
+                <!--end::Table-->
+              </div>
+              <!--end::Table container-->
+              <!--begin::Summary-->
+              <div
+                class="d-flex flex-stack rounded-3 p-6 mb-11"
+                *ngIf="showPrice"
+                style="background-color: #9e110d"
+              >
+                <!--begin::Content-->
+                <div class="fs-6 fw-bold text-white">
+                  <span class="d-block lh-1 mb-2">Sous totale</span>
+                  <span *ngIf="currentOffer" class="d-block mb-2"
+                    >Pourcentage de remise</span
+                  >
+                  <span class="d-block mb-2">Montant remise</span>
 
-                          <!--begin::Radio-->
-                          <label
-                            class="btn btn-active-text-gray-900 border border-3 border-gray-100 border-active-primary btn-active-light-primary w-100 px-4"
-                            data-kt-button="true"
-                            style="background-color: beige"
-                          >
-                            <!--begin::Input-->
-                            <input
-                              class="btn-check"
-                              type="radio"
-                              name="method"
-                              value="0"
-                              style="background-color: beige"
-                            />
-                            <!--end::Input-->
-                            <!--begin::Icon-->
-                            <i
-                              class="fonticon-cash-payment fs-2hx mb-2 pe-0"
-                            ></i>
-                            <!--end::Icon-->
-                            <!--begin::Title-->
-                            <span class="fs-7 fw-bold d-block">Cash</span>
-                            <!--end::Title-->
-                          </label>
-                          <button
-                            (click)="getSite(content19)"
-                            class="btn btn-primary fs-1 w-100 py-4"
-                            style="background-color: #9e110d; margin-top: 5px"
-                          >
-                            Choisir une boutique
-                          </button>
-                          <button
-                            (click)="prepareCart()"
-                            class="btn btn-primary fs-1 w-100 py-4"
-                            style="background-color: #9e110d; margin-top: 5px"
-                            [disabled]="globalState"
-                          >
-                            Commander
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <span class="d-block fs-2qx lh-1">Net à payer</span>
                 </div>
+                <!--end::Content-->
+                <!--begin::Content-->
+
+                <div class="fs-6 fw-bold text-white text-end">
+                  <span class="d-block lh-1 mb-2" data-kt-pos-element="total"
+                    >{{ cartAmount + remisePrice }} DA</span
+                  >
+
+                  <span
+                    *ngIf="currentOffer"
+                    class="d-block mb-2"
+                    data-kt-pos-element="discount"
+                    >({{ currentOffer.del_pct_disc }} %)
+                  </span>
+                  <span class="d-block mb-2" data-kt-pos-element="discount"
+                    >{{ remisePrice }} DA
+                  </span>
+
+                  <span
+                    class="d-block fs-2qx lh-1"
+                    data-kt-pos-element="grant-total"
+                    >{{ cartAmount }} DA</span
+                  >
+                </div>
+                <!--end::Content-->
+              </div>
+              <!--end::Summary-->
+              <div>
+                {{ time | async }}
+              </div>
+              <div class="m-0">
+                <!--begin::Title-->
+                <h1 class="fw-bold text-gray-900 mb-5">Moyens de paiements</h1>
+                <!--end::Title-->
+                <!--begin::Radio group-->
+
+                <!--begin::Radio-->
+                <label
+                  class="btn btn-active-text-gray-900 border border-3 border-gray-100 border-active-primary btn-active-light-primary w-100 px-4"
+                  data-kt-button="true"
+                  style="background-color: beige"
+                >
+                  <!--begin::Input-->
+                  <input
+                    class="btn-check"
+                    type="radio"
+                    name="method"
+                    value="0"
+                    style="background-color: beige"
+                  />
+                  <!--end::Input-->
+                  <!--begin::Icon-->
+                  <i class="fonticon-cash-payment fs-2hx mb-2 pe-0"></i>
+                  <!--end::Icon-->
+                  <!--begin::Title-->
+                  <span class="fs-7 fw-bold d-block">Cash</span>
+                  <!--end::Title-->
+                </label>
+                <button
+                  (click)="getSite(content19)"
+                  class="btn btn-primary fs-1 w-100 py-4"
+                  style="background-color: #9e110d; margin-top: 5px"
+                >
+                  Choisir une boutique
+                </button>
+                <button
+                  (click)="prepareCart()"
+                  class="btn btn-primary fs-1 w-100 py-4"
+                  style="background-color: #9e110d; margin-top: 5px"
+                  [disabled]="globalState"
+                >
+                  Commander
+                </button>
               </div>
             </div>
           </div>

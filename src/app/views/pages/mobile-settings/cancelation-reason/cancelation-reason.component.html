@@ -1,0 +1,51 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Motif d annulation'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        <div class="example-preview">
+        <div class="row">
+            
+        </div>
+
+        <br/>
+        <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter motif d'annulation</button>
+            <br><br><br>
+            <span>Liste des motifs d'annulation</span>
+            <br><br>
+        <div class="row">
+            <angular-slickgrid class="col-12" 
+                gridHeight="500" 
+                gridWidth="750"
+                gridId="gridS" 
+                [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                
+                [gridOptions]="gridOptions" 
+                [dataset]="dataset">
+            </angular-slickgrid>
+        </div>
+        </div>
+        
+        
+    
+            
+
+    </kt-portlet-body>
+</kt-portlet>

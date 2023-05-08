@@ -59,8 +59,9 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 import { CRMDashboardComponent } from './crm-dashboard/crm-dashboard.component';
+import { CommercialDashboardComponent } from './commercial-dashboard/commercial-dashboard.component';
 
-import { CRMService } from '../../../core/erp';
+import { CRMService ,DashboardCommercialService} from '../../../core/erp';
 
 
 
@@ -73,13 +74,18 @@ const routes: Routes = [
     path: 'crm-dashboard',
     component: CRMDashboardComponent
   },
+  {
+    path: 'commercial-dashboard',
+    component: CommercialDashboardComponent
+  },
   
 ] 
 @NgModule({
   declarations: [
     DashboardComponent, 
     ManagerDashboardComponent,
-    CRMDashboardComponent
+    CRMDashboardComponent,
+    CommercialDashboardComponent
   ],
   imports: [
     CommonModule,
@@ -117,6 +123,7 @@ const routes: Routes = [
     TypesUtilsService,
     LayoutUtilsService,
     CRMService,
+    DashboardCommercialService
 ],
  
 })

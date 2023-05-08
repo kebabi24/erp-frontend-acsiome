@@ -61,9 +61,14 @@ import {CodeService,
          MesureService, 
          CostSimulationService, 
          InventoryStatusService,
-         TaxeService
+         TaxeService,
+         CustomerMobileService
         } from '../../../core/erp';
 import { EditCostComponent } from './edit-cost/edit-cost.component'
+import { ProductPageCreateComponent } from "./product-page-create/product-page-create.component";
+import { CreateSpecComponent } from './create-spec/create-spec.component';
+import { ListUpdateComponent } from './list-update/list-update.component';
+import { UpdateComponent } from './update/update.component'
 
 
 const routes: Routes = [
@@ -78,16 +83,32 @@ const routes: Routes = [
                 component: ListComponent,
             },
             {
+                path: "list-update",
+                component: ListUpdateComponent,
+            },
+            {
                 path: "add",
                 component: CreateComponent,
+            },
+            {
+                path: "create-spec",
+                component: CreateSpecComponent,
             },
             {
                 path: "edit/:id",
                 component: EditComponent,
             },
             {
+                path: "update/:id",
+                component: UpdateComponent,
+            },
+            {
                 path: "edit-cost",
                 component: EditCostComponent,
+            },
+            {
+                path: "page",
+                component: ProductPageCreateComponent,
             },
         ],
     },
@@ -100,6 +121,10 @@ const routes: Routes = [
         CreateComponent,
         EditComponent,
         EditCostComponent,
+        ProductPageCreateComponent,
+        CreateSpecComponent,
+        ListUpdateComponent,
+        UpdateComponent,
     ],
     imports: [
         CommonModule,
@@ -146,7 +171,8 @@ const routes: Routes = [
         MesureService,
         TaxeService,
         InventoryStatusService,
-        CostSimulationService
+        CostSimulationService,
+        CustomerMobileService
     ],
 
     entryComponents: [

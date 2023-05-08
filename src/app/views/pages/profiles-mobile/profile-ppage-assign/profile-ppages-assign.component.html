@@ -1,0 +1,54 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Affection des pages produits'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+        </ng-container>   
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <div>
+                    <form class="form" [formGroup]="profileForm">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-group">code du profile: *</label>
+                                <select
+                                name="profile_code"
+                                id="profile_code"
+                                formControlName="profile_code"
+                                class="form-control form-control-sm form-control-solid">
+                                <option value=""></option>
+                                <option *ngFor="let elem of profiles" [value]="elem.profile_code">
+                                    {{elem.profile_code}} </option>
+                                
+                                </select> 
+                            </div>  
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br><br><br>
+            <h5>Sélectionnez les pages produits que vous souhaitez ajouter à ce profile</h5>
+            <br><br>
+            <div class="row">
+                <angular-slickgrid class="col-12" 
+                    gridHeight="1000"
+                    gridId="gridProfil" 
+                    [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions" 
+                    [dataset]="dataset"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    >
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

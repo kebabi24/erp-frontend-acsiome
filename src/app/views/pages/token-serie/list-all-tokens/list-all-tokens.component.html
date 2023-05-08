@@ -1,0 +1,22 @@
+
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'La liste des tokens'" [class]="'card-head-lg'">
+       
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
+                            gridId="grid" 
+                            [columnDefinitions]="columnDefinitions"
+                            (onAngularGridCreated)="angularGridReady($event)"
+                            [gridOptions]="gridOptions" 
+                            [dataset]="tokens"
+                            >
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

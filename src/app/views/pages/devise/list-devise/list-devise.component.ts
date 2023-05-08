@@ -102,7 +102,7 @@ export class ListDeviseComponent implements OnInit {
          
           {
               id: "cu_curr",
-              name: "Devisee",
+              name: "Devise",
               field: "cu_curr",
               sortable: true,
               filterable: true,

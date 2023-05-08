@@ -66,7 +66,10 @@ const routes: Routes = [
     path: 'list-job',
     component: ListJobComponent
   },
-  
+  {
+    path: 'edit-job/:id',
+    component: EditJobComponent
+  },
 ] 
 @NgModule({
   declarations: [JobComponent, CreateJobComponent, ListJobComponent, EditJobComponent],

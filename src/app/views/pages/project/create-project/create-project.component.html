@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter Instruction'" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Projet'" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -50,7 +50,22 @@
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                      </div>
+                     <div class="form-group col-2">
+                        <label class="form-group">Site: *</label>
+                    
+                        <div class="input-group input-group-sm">
 
+                            <input type="text" formControlName="pm_site"
+                                [className]="projectForm.controls['pm_site'].errors && (projectForm.controls['pm_site'].dirty || projectForm.controls['pm_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="projectForm.controls['pm_site'].errors && (projectForm.controls['pm_site'].dirty || projectForm.controls['pm_site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
                     
                 </div>
                 <div class="row">
@@ -77,7 +92,22 @@
                         </div>
 
                     </div>
-                </div>    
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">Contrat :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="deal" formControlName="pm_deal"  (change)="onChangeDeal()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opendeal(contentdeal)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>  
+                  
                 <div class="row">
                     <div class="form-group col-3">
                         <label class="form-group">Montant HT :</label>
@@ -99,6 +129,51 @@
                         </div>
 
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-3">
+                        <!-- pm_type -->
+                        <label class="form-group">Type projet:</label> 
+                        <div class="input-group input-group-sm">
+                            <select    
+                            formControlName="pm_type" class="form-control form-control-sm form-control-solid">
+                            <option *ngFor="let type of project_types" [value]="type.code_value" class="mt-2 mb-2 dropdown-item">{{type.code_desc}}</option>
+                        </select>
+                            
+                        </div>
+
+                    </div>
+
+                    <!-- <div class="form-group col-3">
+                        <label class="form-group ">Code specification:</label>
+                        <select    
+                            formControlName="pm_doc_list_code" class="form-control form-control-sm form-control-solid">
+                            <option *ngFor="let spec of specifications" [value]="spec.mp_nbr" class="mt-2 mb-2 dropdown-item">{{spec.mp_nbr}}</option>
+                        </select>
+
+                        <input type="text" class="form-control form-control-solid" id="docl" formControlName="pm_doc_list_code"  (change)="onChangeCust()"
+                        aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <span class="input-group-text" (click)="open2(content2)">
+                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                        </div>
+                    </div> -->
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Code specification :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="cust" formControlName="pm_doc_list_code"  (change)="onChangeCust()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content3)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="form-group col-12 row">
@@ -248,5 +323,77 @@
 
         </div>
 
+        <!-- SPECIFICATIONS POUPU (GRID) -->
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir les spifications</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="specifications">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- SPECIFICATIONS POUPU (GRID) END -->
+
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Site </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionssite" (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="datasite">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentdeal let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Contrat </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionsdeal" (onAngularGridCreated)="angularGridReadydeal($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangeddeal($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsdeal" [dataset]="datadeal">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
     </kt-portlet-body>
 </kt-portlet>

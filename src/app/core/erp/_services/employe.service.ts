@@ -22,19 +22,27 @@ export class EmployeService {
     ) {}
 
     // CREATE
-    public add(employe: Employe) {
+ 
+    public add(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, employe, { headers: httpHeaders })
+        return this.http.post(API_URL, data, { headers: httpHeaders })
     }
-
     public addC(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/C`, data, { headers: httpHeaders })
+    }
+    public addPoint(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_EmpTime}/C`, data, { headers: httpHeaders })
     }
     // READ 
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })
+    }
+    public getAllTime() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL_EmpTime, { headers: httpHeaders })
     }
     public getOne(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -54,12 +62,21 @@ export class EmployeService {
         
         
     }
-    public getByDet(data: any) {
+    public getByTimeProject(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/finddet`,data, { headers: httpHeaders })
+        return this.http.post(`${API_URL}/findtimeproject`,data, { headers: httpHeaders })
 
         
         
+    }
+    public getByDet(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/finddet`,data, { headers: httpHeaders })  
+    }
+    
+    public getByJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findjob`,data, { headers: httpHeaders })  
     }
     // UPDATE
     public update(id: Number, data:any) {

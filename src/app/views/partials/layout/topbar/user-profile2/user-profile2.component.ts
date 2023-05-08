@@ -38,6 +38,7 @@ export class UserProfile2Component implements OnInit {
 	 */
 	ngOnInit(): void {
 		this.user$ = this.store.pipe(select(currentUser));
+		console.log(currentUser)
 	}
 
 	/**

@@ -22,7 +22,7 @@ import {
 } from "angular-slickgrid";
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
-import { EmployeService, CodeService , ProjectService, TaskService,ProviderService,AffectEmpService,AffectEmp} from "../../../../core/erp";
+import { EmployeService, CodeService , ProjectService, SiteService,TaskService,ProviderService,AffectEmpService,AffectEmp} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -75,6 +75,12 @@ export class AffectEmpComponent implements OnInit {
   gridObjtask: any
   angularGridtask: AngularGridInstance
 
+  datasite: []
+  columnDefinitionssite: Column[] = []
+  gridOptionssite: GridOption = {}
+  gridObjsite: any
+  angularGridsite: AngularGridInstance
+
   details: any;
   // grid options
   mvangularGrid: AngularGridInstance;
@@ -104,6 +110,7 @@ export class AffectEmpComponent implements OnInit {
     private employeService: EmployeService,
     private affectEmpService: AffectEmpService,
     private codeService: CodeService,
+    private siteService: SiteService,
     private taskService: TaskService,
     private projectService: ProjectService,
     private providerService: ProviderService,
@@ -129,15 +136,15 @@ export class AffectEmpComponent implements OnInit {
   this.affectEmp = new AffectEmp()
   
   this.empForm = this.empFB.group({
-      pme_pm_code: [this.affectEmp.pme_pm_code, Validators.required],
+      pme_pm_code: [this.affectEmp.pme_pm_code],
+      pme_site: [this.affectEmp.pme_site],
       pmdesc :  [{value: "", disabled: true}],
       pme_inst: [
           this.affectEmp.pme_inst, 
           Validators.required,
       ],
       pme_task: [
-        this.affectEmp.pme_task,
-        Validators.required,
+        this.affectEmp.pme_task
     ],
     taskdesc :  [{value: "", disabled: true}],
       
@@ -186,7 +193,7 @@ prepareCode(): any {
     const controls = this.empForm.controls
     this.projectService
         .getBy({
-              pme_pm_code: controls.pme_addr.value
+              pme_pm_code: controls.pme_pm_code.value
         })
         .subscribe((response: any) => {
          // console.log(response.data)
@@ -198,10 +205,13 @@ prepareCode(): any {
           } else {
 
             controls.pmdesc.setValue(response.data[0].pm_desc || "");
-         
+         controls.pme_site.setValue(response.data[0].pm_site || "")
+         controls.pme_site.disable()
+
           }
       
      })
+    
   }
   //reste form
   reset() {
@@ -455,7 +465,8 @@ handleSelectedRowsChanged(e, args) {
       console.log(item);
       controls.pme_pm_code.setValue(item.pm_code || "");
       controls.pmdesc.setValue(item.pm_desc || "");
-      
+      controls.pme_site.setValue(item.pm_site)
+      controls.pme_site.disable()
       
 
     });
@@ -810,20 +821,30 @@ handleSelectedRowsChangedemp(e, args) {
       args.rows.map((idx) => {
           const item = this.gridObjemp.getDataItem(idx)
           console.log(item)
-     if (item.emp_job != this.job || item.emp_level != this.level) {
 
-      alert("Métier ou Niveai de maitrise ne correspond pas a cet employé")
+
+          this.employeService
+          .getByJob({empj_addr: item.emp_addr, empj_job: this.job, empj_level :this.level })
+          .subscribe((response: any) => {
+         if (response.data.length = 0) 
+         
+{         
+     
+     
+      alert("Métier ou Niveau de maitrise ne correspond pas a cet employé")
       updateItem.pme_employe = null
       this.mvgridService.updateItem(updateItem)
     } else {   
           updateItem.pme_employe = item.emp_addr
           updateItem.fname = item.emp_fname
           updateItem.lname = item.emp_lname
-          updateItem.job = item.emp_job
-          updateItem.level = item.emp_level
+          updateItem.job = response.data[0].empj_job
+          updateItem.level = response.data[0].empj_level
           
           this.mvgridService.updateItem(updateItem)
      }
+    })
+
       })
   }
 }
@@ -1038,5 +1059,92 @@ openprov(content) {
 
 onAlertClose($event) {
   this.hasFormErrors = false
+}
+
+handleSelectedRowsChangedsite(e, args) {
+  const controls = this.empForm.controls
+ 
+  if (Array.isArray(args.rows) && this.gridObjsite) {
+      args.rows.map((idx) => {
+          const item = this.gridObjsite.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+          
+                  controls.pme_site.setValue(item.si_site || "")
+          
+      })
+  }
+}
+angularGridReadysite(angularGrid: AngularGridInstance) {
+  this.angularGridsite = angularGrid
+  this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridsite() {
+  this.columnDefinitionssite = [
+      {
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+
+          minWidth: 50,
+          maxWidth: 50,
+      },
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+      {
+          id: "si_site",
+          name: "Site",
+          field: "si_site",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "si_desc",
+          name: "Designation",
+          field: "si_desc",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+  ]
+
+  this.gridOptionssite = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  this.siteService
+      .getAll()
+      .subscribe((response: any) => (this.datasite = response.data))
+}
+opensite(contentsite) {
+  
+  this.prepareGridsite()
+  this.modalService.open(contentsite, { size: "lg" })
 }
 }

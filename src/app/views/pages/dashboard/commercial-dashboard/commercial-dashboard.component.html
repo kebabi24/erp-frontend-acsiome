@@ -1,0 +1,167 @@
+<kt-portlet>
+  <kt-portlet-body [class]="'kt-portlet__body--fit'">
+    <div>
+      {{ time | async }}
+    </div>
+
+    <div class="row col-xl-12 mb-2" >
+      <form class="form" [formGroup]="dashboardForm">
+
+        <div class="row">
+            <div class="form-group col-2">
+              <label class="form-group">Date de début</label>
+              <div class="input-group input-group-sm">
+                  <input class="form-control form-control-sm form-control-solid"  formControlName="start_date" 
+                      placeholder="jj-mm-aaaa" name="start_date" ngbDatepicker f
+                      #start_date="ngbDatepicker"   >
+                  <div class="input-group-append">
+                      <button class="btn btn-primary" (click)="start_date.toggle()"  type="button">
+                          <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                      </button>
+                  </div>
+                  
+              </div>
+
+            </div>
+
+            <div class="form-group col-2">
+              <label class="form-group">Date de fin</label>
+              <div class="input-group input-group-sm">
+                  <input class="form-control form-control-sm form-control-solid"  formControlName="end_date" 
+                      placeholder="jj-mm-aaaa" name="end_date" ngbDatepicker f
+                      #end_date="ngbDatepicker"   >
+                  <div class="input-group-append">
+                      <button class="btn btn-primary" (click)="end_date.toggle()"  type="button">
+                          <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                      </button>
+                  </div>
+                  
+              </div>
+
+            </div>
+
+            <div class="form-group col-2">
+              <label class="form-group">Boutique</label>
+              <div class="input-group input-group-sm">
+                <select 
+                formControlName="selected_shop" 
+                class=" form-control form-control-sm form-control-solid ">
+                  <option value="" class="mt-2 mb-2 dropdown-item">Tous les boutiques</option>
+                  <option *ngFor="let shop of shops" [value]="shop.code" class="mt-2 mb-2 dropdown-item">{{shop.label}}</option>
+                  
+                </select>
+                  
+                  
+              </div>
+
+            </div>
+
+            
+
+            <div class="form-group col-3">
+              <label class="form-group">Réactualiser</label>
+              <div class="input-group input-group-sm">
+
+              <button type="button"  (click)="updateData()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Réactualiser</button>
+              </div>
+          </div>  
+
+        </div>
+
+      </form>
+    </div>
+    
+   
+
+    <div class="row">
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/Cout'">
+            <label >date</label>
+            <select 
+              class=" form-control form-control-sm form-control-solid ">
+              <option *ngFor="let date of orders_dates" [value]="date" class="mt-2 mb-2 dropdown-item">{{date}}</option>
+                              
+            </select>
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdiv10" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Type de viande '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN5" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+
+    </div>
+
+    <div class="row">
+
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Type de pain '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN6" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Taille '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN7" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Forme '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN8" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Plateforme '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN9" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6">
+        <kt-portlet [class]="'kt-portlet--height-fluid'">
+          <kt-portlet-header [title]="'CA/ Client '">
+          </kt-portlet-header>
+          <kt-portlet-body>
+            <div id="chartdivN10" style="width: 100%; height: 350px"></div>
+          </kt-portlet-body>
+        </kt-portlet>
+      </div>
+    </div>
+
+   
+  </kt-portlet-body>
+</kt-portlet>

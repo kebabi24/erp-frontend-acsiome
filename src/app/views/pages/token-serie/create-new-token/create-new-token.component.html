@@ -1,0 +1,44 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter token serie'" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="row">
+            <!-- <div class="form-group col-12">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button>
+                </kt-alert>
+            </div> -->
+            
+        </div>
+
+        <div class="row">
+            <button type="button" (click)="addNewItem()" class="btn btn-success btn-sm mr-2 col-3">ajouter un élément </button>
+        </div>
+        <br>
+        <br>
+        <br>
+
+        <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
+                        gridId="grid" 
+                        [columnDefinitions]="columnDefinitions"
+                        (onAngularGridCreated)="angularGridReady($event)"
+                        [gridOptions]="gridOptions" 
+                        [dataset]="tokens"
+                        >
+            </angular-slickgrid>
+        </div>
+
+        
+
+
+    </kt-portlet-body>
+</kt-portlet>
