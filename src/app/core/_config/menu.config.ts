@@ -1029,6 +1029,11 @@ export class MenuConfig {
               title: "Pointage des Employés",
               page: "/project/emp-temp",
             },
+
+            {
+              title: "Liste des pointages",
+              page: "/project/list-emp-temp",
+            },
             {
               title: "Affectation des Employés",
               page: "/accounting-setting/affect-emp",

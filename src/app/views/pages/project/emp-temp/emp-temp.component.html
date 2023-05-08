@@ -56,7 +56,7 @@
                     
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" formControlName="site"
+                            <input type="text" class="form-control form-control-solid" formControlName="site" (change)="getEmp()"
                             aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="opensite(contentsite)">
@@ -72,9 +72,10 @@
                 <div class="row">
                     <angular-slickgrid
                     class="col-12"
-                    gridHeight="500"
+                    
                     gridId="empGrid"
                     [columnDefinitions]="columnDefinitions18"
+                    (onAngularGridCreated)="angularGridReady18($event)"
                     [gridOptions]="gridOptions18"
                     [dataset]="emps"
                     >

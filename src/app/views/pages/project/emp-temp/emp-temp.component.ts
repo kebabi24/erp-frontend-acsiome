@@ -149,6 +149,9 @@ export class EmpTempComponent implements OnInit {
     this.user =  JSON.parse(localStorage.getItem('user'))       
     
     if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
+    this.codeService
+    .getBy({ code_fldname: "emp_shift" })
+    .subscribe((response: any) => (this.emp_shift = response.data));
     this.createForm();
     this.initGrid18();
    
@@ -190,20 +193,36 @@ export class EmpTempComponent implements OnInit {
         type: FieldType.string,
         editor: {
           model: Editors.singleSelect,
-
-          // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
           enableRenderHtml: true,
-          collectionAsync: this.http.get(`${API_URL}/emptype`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-          //   customStructure: {
-          //     value: 'code_value',
-          //     label: 'code_cmmt',
-          //     optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
-          //     //labelSuffix: 'text',
-          //  },
-          //   editorOptions: {
-          //     maxHeight: 400
-          //   }
+          collectionAsync: this.http.get(`${API_URL}/emptype`), 
+         
         },
+      },
+      
+      {
+        id: "empt_mrate_activ",
+        name: "Taux Multiple",
+        field: "empt_mrate_activ",
+        sortable: true,
+        width: 80,
+        type: FieldType.boolean,
+        formatter: Formatters.checkbox,
+        editor: {
+          model: Editors.checkbox,
+        }
+
+      },
+      {
+        id: "empt_arate_activ",
+        name: "Taux Additionel",
+        field: "empt_arate_activ",
+        sortable: true,
+        width: 80,
+        formatter: Formatters.checkbox,
+        type: FieldType.boolean,
+        editor: {
+          model: Editors.checkbox,
+        }
       },
       // {
       //   id: "timestart",
@@ -272,7 +291,7 @@ export class EmpTempComponent implements OnInit {
       (response: any) => {   
         this.emps = response.data
        console.log(this.emps)
-       //this.dataView18.setItems(this.emps);
+       this.dataView18.setItems(this.emps);
         
          },
       (error) => {
@@ -422,6 +441,7 @@ export class EmpTempComponent implements OnInit {
             // TODO : HERE itterate on selected field and change the value of the selected field
             
                     controls.site.setValue(item.si_site || "")
+                    this.getEmp()
             
         })
     }
