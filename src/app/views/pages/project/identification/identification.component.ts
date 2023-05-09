@@ -24,8 +24,8 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 })
 export class IdentificationComponent implements OnInit {
   options = [
-    { id: "Oui", label: "Oui" },
-    { id: "Non", label: "Non" },
+    { id: "true", label: "true" },
+    { id: "false", label: "false" },
   ];
   user: User;
   userForm: FormGroup;
@@ -87,7 +87,7 @@ export class IdentificationComponent implements OnInit {
       project_code: ["", Validators.required],
       employees: ["", Validators.required],
 
-      duration: ["", [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      // duration: ["", [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       formation_date: ["this.user.formation_date"],
       site: ["", Validators.required],
     });
@@ -440,11 +440,11 @@ export class IdentificationComponent implements OnInit {
     const controls = this.userForm.controls;
     const _sensibilisation_data = new Sensibilisation();
     _sensibilisation_data.code_project = controls.project_code.value;
-    // _sensibilisation_data.code_employee = controls.employees.value;
+    _sensibilisation_data.code_employee = controls.employees.value;
 
     _sensibilisation_data.date = controls.formation_date.value ? `${controls.formation_date.value.year}/${controls.formation_date.value.month}/${controls.formation_date.value.day}` : null;
 
-    _sensibilisation_data.duration = controls.duration.value;
+    // _sensibilisation_data.duration = controls.duration.value;
 
     _sensibilisation_data.location = controls.site.value;
 
@@ -453,25 +453,25 @@ export class IdentificationComponent implements OnInit {
 
   onSubmit() {
     console.log(this.selectedOptions);
-    // console.log("dz");
-    // this.hasFormErrors = false;
-    // const controls = this.userForm.controls;
-    // /** check form */
+    this.hasFormErrors = false;
+    const controls = this.userForm.controls;
+    /** check form */
     // if (this.userForm.invalid) {
     //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
 
     //   this.hasFormErrors = true;
     //   return;
     // }
-    // console.log("onsubmit");
-    // // tslint:disable-next-line:prefer-const
-    // let identificationdata = this.prepareData();
-    // this.addData(identificationdata);
+    console.log("onsubmit");
+    // tslint:disable-next-line:prefer-const
+    let identificationdata = this.prepareData();
+    this.addData(identificationdata);
   }
 
   addData(data: Sensibilisation) {
+    console.log(data);
     this.loadingSubject.next(true);
-    this.projectService.addIdentificationData(data).subscribe(
+    this.projectService.addIdentificationData({ data, selectedOptions: this.selectedOptions }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
@@ -483,20 +483,5 @@ export class IdentificationComponent implements OnInit {
         this.router.navigateByUrl("/");
       }
     );
-  }
-
-  onChange(event: Event, mpd: any, txt: any) {
-    // const isChecked = event.target as HTMLInputElement;
-    // console.log(isChecked);
-    // Handle the checkbox change event here
-    const input = document.getElementById(mpd.id) as HTMLInputElement;
-    // console.log(input);
-    // console.log(txt);
-    if (txt === "oui" && input.checked == true) {
-      input.checked = false;
-    }
-    if (txt === "non" && input.checked == true) {
-      input.checked = false;
-    }
   }
 }

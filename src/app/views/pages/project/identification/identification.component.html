@@ -82,33 +82,16 @@
           <p>{{ mpd.mpd_label }}</p>
         </div>
         <div style="display: flex; flex-direction: row" class="col-2">
-          <mat-radio-group [(ngModel)]="selectedOptions[mpd.id]">
+          <mat-radio-group [(ngModel)]="selectedOptions[mpd.mpd_label]">
             <mat-radio-button *ngFor="let option of options" [value]="option.id">
               {{ option.label }}
             </mat-radio-button>
           </mat-radio-group>
         </div>
         <div class="col-4">
-          <form class="form" [formGroup]="mpdForm">
-            <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-          </form>
+          <!-- <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" /> -->
         </div>
       </div>
-      <!-- <h2 style="margin-top: 20px">Identification des aspects environnementaux :</h2> -->
-      <!-- <div style="display: flex; flex-direction: row; margin-top: 20px" *ngFor="let mpd of specificationDetails; let i = index">
-          <div class="col-2">
-            <p>{{ mpd.mpd_label }}</p>
-          </div>
-          <div style="display: flex; flex-direction: row" class="col-6">
-            <p style="margin-left: 150px">Oui</p>
-            <input style="margin-left: 10px; width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChangee($event, mpd)" />
-            <p style="margin-left: 150px">Non</p>
-            <input style="margin-left: 10px; width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChangee($event, mpd)" />
-          </div>
-          <div class="col-4">
-            <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-          </div>
-        </div> -->
     </div>
 
     <div>
