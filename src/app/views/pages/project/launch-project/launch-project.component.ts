@@ -143,11 +143,14 @@ export class LaunchProjectComponent implements OnInit {
 
 
     pm_doc_list_code : String;
+    project_code : String;
     specificationHeader :any 
     specificationDetails :any 
     validationForm: FormGroup;
     customeControls: Object = {};
     checkedValues = [];
+
+    trigger_documents = [];
 
   constructor(
     
@@ -254,26 +257,39 @@ prepareCode(): any {
   // save data
   onSubmit() {
     let testsHistory = []
-    this.specificationDetails.forEach(specDetail => {
-      const index = this.checkedValues.findIndex(detail=>{
-        return detail == specDetail.mpd_type
-     })
+    let totalDetailsNB = 0;
+    this.trigger_documents.forEach(doc=>{
+      doc.spec_details.forEach(detail=>{
+        totalDetailsNB +=1 
+        console.log(detail)
+        const index = this.checkedValues.findIndex(detaill=>{
+          return detaill == detail.mpd_label
+       })
 
-     if(index == -1){
+       if(index == -1){
+        testsHistory.push({
+         mph_test : detail.mpd_label,
+         mph_rsult : "false"
+        })
+      }else{
        testsHistory.push({
-        mph_test : specDetail.mpd_label,
-        mph_rsult : "negative"
-       })
-     }else{
-      testsHistory.push({
-        mph_test : specDetail.mpd_label,
-        mph_rsult : "positive"
-       })
-     }
-    });
+         mph_test : detail.mpd_label,
+         mph_rsult : "true"
+        })
+      }
+
+
+      })
+    })
+    
+    let update_project_status = false
+    if (totalDetailsNB == this.checkedValues.length){
+      update_project_status = true
+    }
+    
 
     this.projectService
-      .createTestsHistory(testsHistory)
+      .createTestsHistoryUpdateStatus(testsHistory,update_project_status,this.project_code)
       .subscribe(
         (reponse) => {
 
@@ -294,7 +310,7 @@ prepareCode(): any {
         () => {
           this.createForm();
           this.layoutUtilsService.showActionNotification(
-            "Réclamation enregistr avec succès",
+            "résultats enregistr avec succès",
             MessageType.Create,
             10000,
             true,
@@ -837,33 +853,12 @@ handleSelectedRowsChanged(e, args) {
   if (Array.isArray(args.rows) && this.gridObj) {
     args.rows.map((idx) => {
       const item = this.gridObj.getDataItem(idx);
-      console.log(item);
       controls.pmr_pm_code.setValue(item.pm_code || "");
       controls.pmdesc.setValue(item.pm_desc || "");
       this.pm_doc_list_code = item.pm_doc_list_code
       this.getProjectEmployees(item.pm_code)
-      this.siteService.getByOne({ si_default: true  }).subscribe(
-        (res: any) => {
-        this.site = res.data.si_site
-        
-        this.locationService.getByOne({ loc_site: this.site, loc_project: item.pm_code  }).subscribe(
-          (resp: any) => {
-
-            if (resp.data == null) {
-              alert("projet n'est pas affecté à un emplacement ")
-
-              controls.pmr_pm_code.setValue(null);
-              controls.pmdesc.setValue(null);
-            } else {
-          
-          console.log(resp.data)
-          this.loc = resp.data.loc_loc
-          console.log(this.site, this.loc)
-            }
-      })
-      
-
-    });
+      this.getLaunchSpecifications(item.pm_code)
+      this.project_code = item.pm_code
   })
  }
 }
@@ -940,6 +935,7 @@ prepareGrid() {
         this.dataset = response.data
       })
 }
+
 open(content) {
  
   this.prepareGrid()
@@ -1267,16 +1263,25 @@ getProjectEmployees(project_code){
       })
 }
 
-onCheckClick(val){
+getLaunchSpecifications(project_code){
+  this.projectService
+      .getLaunchSpecifications(project_code)
+      .subscribe((response: any) =>{ 
+        console.log(response.data)
+        this.trigger_documents = response.data
+      })
+}
 
+onCheckClick(val){
+  console.log(val)
   const index = this.checkedValues.findIndex(detail=>{
     return detail == val
- })
- if(index == -1){this.checkedValues.push(val)}
- else{
-  this.checkedValues.splice(index, 1);
- }
-  console.log(this.checkedValues)
+  })
+  if(index == -1){this.checkedValues.push(val)}
+  else{
+    this.checkedValues.splice(index, 1);
+  }
+    console.log(this.checkedValues)
 }
 
 }

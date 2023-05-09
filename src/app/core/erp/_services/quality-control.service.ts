@@ -47,6 +47,12 @@ export class QualityControlService {
         return this.http.get(`${API_URL}/findSpecificationWithDetails/${specification_code}`, { headers: httpHeaders })
    
     }
+
+    public findDocumentTriggers() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/docTriggers/`, { headers: httpHeaders })
+   
+    }
     
     
 }

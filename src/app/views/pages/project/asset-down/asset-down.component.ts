@@ -67,23 +67,23 @@ export class AssetDownComponent implements OnInit {
   gridOptions3: GridOption = {}
   gridObj: any
   gridObj2: any
-  gridObj3: any
   angularGrid: AngularGridInstance
   angularGrid2: AngularGridInstance
+  gridObj3: any
   angularGrid3: AngularGridInstance
+  dataView3: any
+  gridService3: GridService
+  grid3: any
   gridService: GridService
   gridService2: GridService
-  gridService3: GridService
   message: any
   column : Column
   column2 : Column
   column3 : Column
   grid: any
   grid2: any
-  grid3: any
   dataView: any
   dataView2: any
-  dataView3: any
 
   data: any = []; // dataset
   tableBody = [];

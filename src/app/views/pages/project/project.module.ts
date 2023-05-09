@@ -40,7 +40,7 @@ import { AngularSlickgridModule } from "angular-slickgrid";
 
 import {ProjectService, TaskService, ItemService,ProviderService, CustomerService,BomService, CostSimulationService,
   LocationDetailService,InventoryStatusService,MesureService, SiteService, LocationService, InventoryTransactionService,
-        PsService,SaleOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, QualityControlService} 
+        PsService,SaleOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService} 
 from '../../../core/erp';
 
 import { ListPmComponent } from "./list-pm/list-pm.component";
@@ -89,6 +89,19 @@ const routes: Routes = [
     path: "identification",
     component: IdentificationComponent,
   },
+  {
+    path: "launch-project",
+    component: LaunchProjectComponent,
+  },
+  {
+    path: "asset-down",
+    component: AssetDownComponent,
+  },
+  {
+    path: "accident-incident",
+    component: AccidentIncidentComponent,
+  },
+  
 ];
 
 @NgModule({
@@ -140,6 +153,7 @@ const routes: Routes = [
     DealService,
     AddReportService,
     SaleOrderService,
+    QualityControlService,
     SequenceService,
     RequisitionService,
     CostSimulationService,
