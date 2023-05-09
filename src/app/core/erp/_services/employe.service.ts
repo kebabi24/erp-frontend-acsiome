@@ -50,7 +50,9 @@ export class EmployeService {
     }
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+        return this.http.post(`${API_URL}/find`,data, 
+        { headers: httpHeaders }
+        )
 
         
         

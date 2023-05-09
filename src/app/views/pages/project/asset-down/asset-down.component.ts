@@ -15,7 +15,7 @@ import {
     Editor,
     Editors,
     AngularGridInstance,
-    FieldType, GridService
+    FieldType, GridService, Formatters, OnEventArgs
 } from "angular-slickgrid"
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -61,18 +61,39 @@ export class AssetDownComponent implements OnInit {
     // GRID 
   columnDefinitions: Column[] = []
   columnDefinitions2: Column[] = []
+  columnDefinitions3: Column[] = []
   gridOptions: GridOption = {}
   gridOptions2: GridOption = {}
+  gridOptions3: GridOption = {}
   gridObj: any
+  gridObj2: any
   angularGrid: AngularGridInstance
+  angularGrid2: AngularGridInstance
+  gridObj3: any
+  angularGrid3: AngularGridInstance
+  dataView3: any
+  gridService3: GridService
+  grid3: any
   gridService: GridService
+  gridService2: GridService
   message: any
   column : Column
+  column2 : Column
+  column3 : Column
   grid: any
+  grid2: any
   dataView: any
+  dataView2: any
 
   data: any = []; // dataset
   tableBody = [];
+
+  projects : any = [];
+  selectedIndexes : any = []
+  selectedIndexes2 : any = []
+  row_number : any ;
+
+  types : any = [{id : 1 , code_value :"test", code_desc:"Desc"}]
     
 
     
@@ -292,8 +313,26 @@ export class AssetDownComponent implements OnInit {
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string, 
-                  editor: {model: Editors.text}
+                  editor: {
+                    model: Editors.text,
+                  },
                 },
+                {
+                  id: "mvidl",
+                  field: "cmvidl",
+                  excludeFromHeaderMenu: true,
+                  formatter: Formatters.infoIcon,
+                  minWidth: 30,
+                  maxWidth: 30,
+                  onCellClick: (e: Event, args: OnEventArgs) => {
+                      this.row_number = args.row;
+                      console.log(this.row_number)
+                      let element: HTMLElement = document.getElementById(
+                      "openTypePopup"
+                      ) as HTMLElement;
+                      element.click();
+                  },
+              },    
     
                 
                 {
@@ -359,7 +398,6 @@ export class AssetDownComponent implements OnInit {
       // printpdf(nbr,wodlot,wodnbr,part,descr,routing,gamme,qte) {
     //   //const controls = this.totForm.controls 
     //   const controlss = this.wodForm.controls 
-     console.log("pdf")
        var doc = new jsPDF();
      
       // var img = new Image()
@@ -617,6 +655,189 @@ export class AssetDownComponent implements OnInit {
     //   }
     
    }
+
+   prepareGridProject() {
+    this.columnDefinitions2 = [
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+        {
+            id: "pm_code",
+            name: "Code Projet",
+            field: "pm_code",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "pm_desc",
+            name: "Designation",
+            field: "pm_desc",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+          id: "pm_cust",
+          name: "Client",
+          field: "pm_cust",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+        
+    ];
+  
+    this.gridOptions2 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+  
+    // fill the dataset with your data
+    this.projectService
+    // {pm_status: ""}
+        .getByAll({})
+        .subscribe((response: any) =>{ 
+          this.projects = response.data
+        })
+  }
+
+  prepareGridTypes() {
+    this.columnDefinitions3 = [
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+        {
+            id: "code_value",
+            name: "Code",
+            field: "code_value",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "code_desc",
+            name: "Designation",
+            field: "code_desc",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+       
+        
+    ];
+  
+    this.gridOptions3 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+  
+    // fill the dataset with your data
+    this.projectService
+    // {pm_status: ""}
+        .getByAssetDownTypes()
+        .subscribe((response: any) =>{ 
+          this.types = response.data
+        })
+  }
+
+  angularGridReady2(angularGrid: AngularGridInstance) {
+    this.angularGrid2 = angularGrid;
+    this.dataView2 = angularGrid.dataView;
+    this.grid2 = angularGrid.slickGrid;
+    this.gridService2 = angularGrid.gridService;
+    this.dataView2.getItemMetadata = this.updateItemMetadata(this.dataView2.getItemMetadata);
+    this.grid2.invalidate();
+    this.grid2.render();
+}
+
+angularGridReady3(angularGrid: AngularGridInstance) {
+  this.angularGrid3 = angularGrid;
+  this.dataView3 = angularGrid.dataView;
+  this.grid3 = angularGrid.slickGrid;
+  this.gridService3 = angularGrid.gridService;
+  this.dataView3.getItemMetadata = this.updateItemMetadata(this.dataView3.getItemMetadata);
+  this.grid3.invalidate();
+  this.grid3.render();
+}
+
+  handleSelectedRowsChanged(e, args) {
+    const controls = this.assetDownForm.controls
+    // controls.pmr_pm_code.setValue(item.pm_code || "");
+    this.selectedIndexes =[]
+    this.selectedIndexes = args.rows;
+    if(this.selectedIndexes.length >0  ){
+      const selected_code = this.gridService2.getDataItemByRowIndex(this.selectedIndexes[0]).pm_code
+      
+      controls.project_code.setValue(selected_code)
+    }
+   // this.pagesCodes.push(this.gridService.getDataItemByRowIndex(index).product_page_code) 
+  }
+
+  handleSelectedRowsChanged3(e, args) {
+    // const controls = this.assetDownForm.controls
+    // // controls.pmr_pm_code.setValue(item.pm_code || "");
+    this.selectedIndexes2 =[]
+    this.selectedIndexes2 = args.rows;
+    const selected_type = this.gridService3.getDataItemByRowIndex(this.selectedIndexes2[0]).code_value
+    this.data[this.row_number].asset_down_type = selected_type
+    let updateItem = this.gridService3.getDataItemByRowIndex(this.row_number);
+    this.dataView.setItems(this.data)
+  
+  }
+
+  open(content) {
+ 
+    this.prepareGridProject()
+    this.modalService.open(content, { size: "lg" })
+  }
+
+  openTypesGrid(content){
+    this.prepareGridTypes()
+    this.modalService.open(content, { size: "lg" })
+  }
     
 
    

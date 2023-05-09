@@ -11,28 +11,62 @@
     <kt-portlet-body>
         <div class="example-preview">
 
-            <form class="form" [formGroup]="assetDownForm">
+            <form class="form" [formGroup]="accidentForm">
                 <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
                     Ce Code existe deja
                 </kt-alert>
+
+                <!-- site  -->
                 <div class="row">
 
                     <div class="form-group col-2">
-                        <label class="form-group">Nom et Prenom: *</label>
+                        <label class="form-group">Code site :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="cust" formControlName="site_code"  (change)="onChangeSite()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content3)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Code employé :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="cust" formControlName="emp_code"  (change)="onChangeSite()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open4(content4)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom et prenom employé: *</label>
                         <input type="text" (change)="onChangeCode()"
-                        [className]="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                        formControlName="project_code">
-                            <div *ngIf="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched)"
+                        [className]="accidentForm.controls['name'].errors && (accidentForm.controls['name'].dirty || accidentForm.controls['name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="name">
+                            <div *ngIf="accidentForm.controls['name'].errors && (accidentForm.controls['name'].dirty || accidentForm.controls['name'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>
                      </div>
 
                      <div class="form-group col-2">
                         <label class="form-group">Description: *</label>
                         <input type="text" (change)="onChangeCode()"
-                        [className]="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                        formControlName="project_code">
-                            <div *ngIf="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched)"
+                        [className]="accidentForm.controls['description'].errors && (accidentForm.controls['description'].dirty || accidentForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="description">
+                            <div *ngIf="accidentForm.controls['description'].errors && (accidentForm.controls['description'].dirty || accidentForm.controls['description'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>
                      </div>
 
@@ -40,7 +74,7 @@
                         <label class="form-group">date de accident: *</label>
                             <div class="input-group input-group-sm">
 
-                                <input class="form-control form-control-sm form-control-solid" formControlName="down_date"
+                                <input class="form-control form-control-sm form-control-solid" formControlName="accident_date"
                                 placeholder="jj-mm-aaaa" name="tr_rcp_date1" ngbDatepicker f
                                 #tr_rcp_date1="ngbDatepicker">
                             <div class="input-group-append">
@@ -51,33 +85,116 @@
                             </div>
                     </div>
 
-                    
-
-                    
+                    <!-- <div class="form-group col-2">
+                        <label class="form-group"> l'heure de accident :</label>
+                            <ngb-timepicker [(ngModel)]="new_even_time "></ngb-timepicker>
+                          
+                    </div> -->
 
                 </div>
 
-            </form>
-            <br>
-            <br>
-            <br>
-            <!-- <div class="row">
-                <button type="button" (click)="addNewItem()" class="btn btn-success btn-sm mr-2 col-3">ajouter un élément </button>
-            </div> -->
-            <br>
-            <br>
-            <!-- <div class="row">
-                <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
-                            gridId="grid" 
-                            [columnDefinitions]="columnDefinitions"
-                            (onAngularGridCreated)="angularGridReady($event)"
-                            [gridOptions]="gridOptions" 
-                            [dataset]="data"
-                            >
-                </angular-slickgrid>
-            </div> -->
+                
 
+                <!-- CHECK ELEMENTS -->
+                <div class="row mt-5 ml-2">
+                    <div class="row">
+                        <div class="accordion" id="accordionExample">
+
+                            <div class="accordion-item" *ngFor="let ELEM of data; let i = index">
+                                <h3 class="accordion-header" id="panelsStayOpen-headingOne-{{i}}">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#panelsStayOpen-collapseOne-{{i}}" aria-expanded="true" attr.aria-controls="panelsStayOpen-collapseOne-{{i}}">
+                                      {{ELEM.groupe_titel}}
+                                    </button>
+                                  </h3>
+
+                                  <div id="panelsStayOpen-collapseOne-{{i}}" class="accordion-collapse collapse " attr.aria-labelledby="panelsStayOpen-headingOne-{{i}}">
+                                    <div class="accordion-body">
+                                        
+                                        <div
+                                        class="col-12"
+                                        *ngFor="let elem of ELEM.elements; let j = index"
+                                        >
+                                        <fieldset class="col-6">
+                                            <input
+                                              type="checkbox"
+                                              />
+                                              <!-- formControlName="{{ cause.code_value }}"
+                                              (change)="onCauseSelect(cause.code_value)" -->
+                                            <label  class="ml-2">
+                                              {{elem.mpd_label}}
+                                          </label>
+                                          </fieldset>
+                                        
+                                        </div>
+                                     
+            
+                                    </div>
+                                  </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- CHECK ELEMENTS -->
+
+            </form>
+            
+            
+           
         </div>
+
+        <!-- SITE POUPU (GRID) -->
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title"> les sites</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="sites">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- SITE POUPU (GRID) END -->
+
+        <!-- EMP POUPU (GRID) -->
+        <div>
+            <ng-template #content4 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title"> les employés</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="emps">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- EMP POUPU (GRID) END -->
 
     </kt-portlet-body>
 </kt-portlet>

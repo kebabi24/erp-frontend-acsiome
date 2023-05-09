@@ -36,6 +36,23 @@ export class QualityControlService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/createSpecification/`, {standardSpecificationHeader,standardSpecificationDetails}, { headers: httpHeaders })
     }
+
+    public createTestHistory(testsHistory : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createTestsHistory/`, {testsHistory}, { headers: httpHeaders })
+    }
+
+    public findSpecificationWithDetails(specification_code: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findSpecificationWithDetails/${specification_code}`, { headers: httpHeaders })
+   
+    }
+
+    public findDocumentTriggers() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/docTriggers/`, { headers: httpHeaders })
+   
+    }
     
     
 }
