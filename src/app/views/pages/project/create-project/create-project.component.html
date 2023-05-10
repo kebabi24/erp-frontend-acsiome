@@ -327,7 +327,7 @@
         <div>
             <ng-template #content3 let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir les spifications</h4>
+                    <h4 class="modal-title">Choissir les specifications</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -348,6 +348,37 @@
             </ng-template>
         </div>
         <!-- SPECIFICATIONS POUPU (GRID) END -->
+
+        <!-- BUTTON TO OPEN TRIGGERS POPUP -->
+        <button hidden id="openTriggerPopup" class="btn btn-primary" (click)="openTriggerGrid(content5)"></button>
+        <!-- BUTTON TO OPEN TRIGGERS POPUP -->
+
+         <!-- SELECT TRIGGER POPUP -->
+         <div>
+            <ng-template #content5 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Déclencheur :  </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro2"
+                        [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions5" [dataset]="doc_triggers">
+                    </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- SELECT TRIGGER POPUP END -->
 
         <div>
             <ng-template #contentsite let-c="close" let-d="dismiss">

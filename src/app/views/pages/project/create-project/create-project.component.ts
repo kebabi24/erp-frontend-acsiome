@@ -25,7 +25,7 @@ import { round } from 'lodash';
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
 import { Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService , SaleOrderService, Requisition,
-         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService,DealService} from "../../../../core/erp";
+         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService,DealService ,QualityControlService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -34,6 +34,7 @@ import {
   MessageType,
 } from "../../../../core/_base/crud"
 import { reverseString } from "@amcharts/amcharts4/.internal/core/utils/Utils";
+import { HttpClient } from "@angular/common/http";
 @Component({
   selector: 'kt-create-project',
   templateUrl: './create-project.component.html',
@@ -44,6 +45,7 @@ export class CreateProjectComponent implements OnInit {
  
   projectForm: FormGroup;
   row_number;
+  selected_doc_row_number;
 
   isExist = false
 
@@ -116,11 +118,23 @@ export class CreateProjectComponent implements OnInit {
   angularGriddeal: AngularGridInstance
 
 
-date: String;
-customer: any;
-ex_rate1 : any;
-ex_rate2 : any;
-type: String;
+  date: String;
+  customer: any;
+  ex_rate1 : any;
+  ex_rate2 : any;
+  type: String;
+
+  doc_triggers : any = []
+  columnDefinitions5: Column[] = [];
+  gridOptions5: GridOption = {};
+  gridObj5: any;
+  angularGrid5: AngularGridInstance
+  dataView5: any
+  dataView3: any
+  gridService5: GridService
+  grid5: any
+  selectedTriggersIndexes : any[]
+
   constructor(
     config: NgbDropdownConfig,
     private projectFB: FormBuilder,
@@ -132,6 +146,7 @@ type: String;
     private projectService: ProjectService,
     private taskService: TaskService,
     private customerService: CustomerService,
+    private qualityControlService: QualityControlService,
     private providerService: ProviderService,
     private itemService: ItemService,
     private bomService: BomService,
@@ -141,6 +156,7 @@ type: String;
     private deviseService: DeviseService,
     private siteService: SiteService,
     private dealService: DealService,
+    private http: HttpClient,
   ) {
     config.autoClose = true;
   }
@@ -159,6 +175,7 @@ type: String;
     this.getProjectTypes();
     this.createForm();
     this.initmvGrid();
+    this.prepareTriggersGrid()
   }
 
   //create form
@@ -303,9 +320,11 @@ type: String;
     
     let l = []
     this.selectedIndexes.forEach(index => {
-      l.push(this.specifications[index]['mp_nbr'])
+      l.push({
+        code_doc : this.specifications[index]['mp_nbr'],
+        trigger : this.specifications[index]['pjd_trigger']
+      })
     });
-    console.log(l)
 
 
     this.loadingSubject.next(true);
@@ -958,11 +977,18 @@ handleSelectedRowsChanged2(e, args) {
 handleSelectedRowsChanged3(e, args) {
   this.selectedIndexes =[]
   this.selectedIndexes = args.rows;
-//   let a = []
-//   this.selectedIndexes.forEach(index => {
-//     a.push(this.specifications[index]['mp_nbr'])
-//  });
-//   console.log(a)
+
+}
+
+handleSelectedRowsChanged5(e, args) {
+  this.selectedTriggersIndexes =[]
+  this.selectedTriggersIndexes = args.rows;
+  // const selected_trigger_code = this.gridService5.getDataItemByRowIndex(this.selectedTriggersIndexes[0]).code_value
+  
+  (this.specifications[this.selected_doc_row_number] as any).pjd_trigger = this.gridService5.getDataItemByRowIndex(this.selectedTriggersIndexes[0]).code_value
+  // this.specifications[this.selected_doc_row_number].pjd_trigger = selected_trigger_code
+
+  this.dataView3.setItems(this.specifications)
 }
 
 angularGridReady2(angularGrid: AngularGridInstance) {
@@ -974,7 +1000,11 @@ angularGridReady3(angularGrid: AngularGridInstance) {
   this.angularGrid3 = angularGrid;
   this.gridService = angularGrid.gridService;
   this.gridObj3 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+  this.dataView3 = angularGrid.dataView;
 }
+
+// DOCS ***************************************
+
 
 prepareGrid3() {
   this.columnDefinitions3 = [
@@ -1002,6 +1032,35 @@ prepareGrid3() {
       filterable: true,
       type: FieldType.string,
     },
+    {
+      id: "pjd_trigger",
+      name: "Trigger",
+      field: "pjd_trigger",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      type: FieldType.string,
+      editor: {model: Editors.text}
+    },
+    {
+      id: "mvid",
+      field: "cmvid",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.infoIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+          this.selected_doc_row_number = args.row
+          console.log(this.selected_doc_row_number)
+          let element: HTMLElement = document.getElementById(
+              "openTriggerPopup"
+          ) as HTMLElement
+          element.click()
+        
+           
+      },
+    },
+
     {
       id: "mp_expire",
       name: "date expiration",
@@ -1033,6 +1092,65 @@ prepareGrid3() {
     .getSpecifications()
     .subscribe((response: any) => (this.specifications = response.data));
 }
+
+prepareTriggersGrid() {
+  this.columnDefinitions5 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "code_value",
+      name: "code",
+      field: "code_value",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "code_desc",
+      name: "description",
+      field: "code_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    
+  ];
+
+  this.gridOptions5 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: true,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      multiSelect: true,
+      rowSelectionOptions: {selectActiveRow: false}
+  };
+
+  // fill the dataset with your data
+  this.qualityControlService
+  .findDocumentTriggers()
+  .subscribe((response: any) => {
+    console.log(response.data)
+    this.doc_triggers = response.data});
+}
+
+openTriggerGrid(content){
+  this.prepareTriggersGrid()
+  this.modalService.open(content, { size: "lg" })
+}
+
+
 
 prepareGrid2() {
   this.columnDefinitions2 = [
@@ -1133,6 +1251,7 @@ open2(content) {
   this.prepareGrid2();
   this.modalService.open(content, { size: "lg" });
 }
+
 
 open3(content) {
   this.prepareGrid3();
@@ -1462,6 +1581,43 @@ prepareGrid4() {
 open4(content) {
   this.prepareGrid4();
   this.modalService.open(content, { size: "lg" });
+}
+angularGridReady5(angularGrid: AngularGridInstance) {
+  this.angularGrid5 = angularGrid;
+  this.gridService5 = angularGrid.gridService;
+  this.gridObj5 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+
+  // this.angularGrid5 = angularGrid;
+  // this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+
+
+   this.dataView5 = angularGrid.dataView;
+   this.grid5= angularGrid.slickGrid;
+   this.dataView5.getItemMetadata = this.updateItemMetadata(this.dataView5.getItemMetadata);
+   this.grid5.invalidate();
+   this.grid5.render();
+}
+
+updateItemMetadata(previousItemMetadata: any) {
+  const newCssClass = 'highlight-bg';
+  return (rowNumber: number) => {
+    const item = this.dataView5.getItem(rowNumber);
+    let meta = {
+      cssClasses: ''
+    };
+    if (typeof previousItemMetadata === 'object') {
+      meta = previousItemMetadata(rowNumber);
+    }
+
+    if (meta && item && item.etat_service) {
+      const state = item.etat_service;
+      if (state === "true") {
+        meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
+      }
+    }
+
+    return meta;
+  };
 }
 
 
@@ -1879,4 +2035,8 @@ opendeal(content) {
   this.prepareGriddeal()
   this.modalService.open(content, { size: "lg" })
 }
+
+
+
+
 }

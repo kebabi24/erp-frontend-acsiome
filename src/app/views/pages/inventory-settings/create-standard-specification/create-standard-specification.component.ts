@@ -169,6 +169,7 @@ export class CreateStrandardSpecificationComponent implements OnInit {
 
         let specificationDetails = []
         this.details.forEach(element => {
+          console.log("NB LINE : " + element.mpd_tol)
           specificationDetails.push({
             mpd_nbr : doc_code,
             mpd_label : element.code_param,
@@ -313,6 +314,8 @@ export class CreateStrandardSpecificationComponent implements OnInit {
     }
     
     prepareGrid() {
+      console.log("Grid length :"+ this.details.length )
+
       this.columnDefinitions = [
                 {
                     id: "nb_line",
@@ -428,6 +431,7 @@ export class CreateStrandardSpecificationComponent implements OnInit {
     }
     
     addNewItem( ) {
+      console.log("Grid length :"+ this.details.length )
       this.gridService.addItem(
         {
           id: this.details.length + 1,
@@ -444,8 +448,4 @@ export class CreateStrandardSpecificationComponent implements OnInit {
         { position: "bottom" }
       );
     }
-    
-
-   
-
 }
