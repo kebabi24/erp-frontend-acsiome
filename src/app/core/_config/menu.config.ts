@@ -103,27 +103,7 @@ export class MenuConfig {
           ],
         },
 
-        {
-          title: "Paramétrages Mobile",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          submenu: [
-            {
-              title: "Résultat de la visite",
-              page: "/mobile-settings/visit-result",
-            },
-            {
-              title: "Méthode de paiement",
-              page: "/mobile-settings/payment-method",
-            },
-            {
-              title: "Motif d'annulation",
-              page: "/mobile-settings/cancelation-reason",
-            },
-          ],
-        },
-
+        
         {
           title: "Paramétrages Mobile",
           bullet: "dot",
@@ -630,6 +610,10 @@ export class MenuConfig {
             {
               title: "Réception OA",
               page: "/inventory-transaction/po-receip",
+            },
+            {
+              title: "Réception et Etiquetage",
+              page: "/inventory-transaction/po-receip-cab",
             },
             {
               title: "Etiquetage MP",
