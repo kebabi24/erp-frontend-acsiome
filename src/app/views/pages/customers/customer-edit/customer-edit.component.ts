@@ -69,6 +69,7 @@ import {
     SiteService,
     TaxeService,
     BankService,
+    SequenceService,
 } from "../../../../core/erp"
 @Component({
   selector: 'kt-customer-edit',
@@ -105,6 +106,12 @@ export class CustomerEditComponent implements OnInit {
  
   error = false
 
+  sequences: []
+  columnDefinitions1: Column[] = []
+  gridOptions1: GridOption = {}
+  gridObj1: any
+  angularGrid1: AngularGridInstance
+
   datatax: []
   columnDefinitionstax: Column[] = []
   gridOptionstax: GridOption = {}
@@ -137,7 +144,9 @@ gridObj4: any;
 angularGrid4: AngularGridInstance;
 fieldcode = "";
 fldname;
-title: String = 'Modifier Fournisseur - '
+title: String = 'Modifier Client - '
+user : any
+
   // selects
   ad_city: any[] = []
   ad_state: any[] = []
@@ -187,6 +196,7 @@ title: String = 'Modifier Fournisseur - '
       private siteService: SiteService,
       private bankService: BankService,
       private cdr: ChangeDetectorRef,
+      private sequenceService: SequenceService,
       config: NgbDropdownConfig
   ) {
       config.autoClose = true
@@ -235,6 +245,7 @@ title: String = 'Modifier Fournisseur - '
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(true)
+    this.user =  JSON.parse(localStorage.getItem('user'))
     this.activatedRoute.params.subscribe((params) => {
         const id = params.id
         this.customerService.getOne(id).subscribe((response: any)=>{
@@ -304,6 +315,7 @@ createCustomerForm() {
   this.customerForm = this.formBuilder.group({
       cm_sort: [this.customerEdit.cm_sort],
       cm_type: [this.customerEdit.cm_type],
+      cm_seq: [this.customerEdit.cm_seq],
       cm_slspn: [this.customerEdit.cm_slspn],
       cm_region: [this.customerEdit.cm_region],
       cm_ar_acct: [this.customerEdit.cm_ar_acct],
@@ -531,6 +543,7 @@ prepareCustomer(): Customer {
   const _customer = new Customer()
   _customer.cm_addr = this.address.ad_addr
   _customer.cm_sort = controls.cm_sort.value
+  _customer.cm_seq = controls.cm_seq.value
   _customer.cm_type = controls.cm_type.value
 
   _customer.cm_slspn = controls.cm_slspn.value
@@ -1306,6 +1319,131 @@ prepareGridbank() {
 }
 openbank(content) {
   this.prepareGridbank()
+  this.modalService.open(content, { size: "lg" })
+}
+
+
+onChangeSeq() {
+  const controls = this.customerForm.controls
+  console.log(this.user.usrd_profile)
+  this.sequenceService
+      .getBy({seq_seq: controls.cm_seq.value, seq_type: 'SO'})
+      .subscribe((response: any) => {
+          console.log(response)
+          if (response.data.length == 0) {
+              alert("Sequence nexiste pas")
+              controls.cm_seq.setValue("")
+              console.log(response.data.length)
+              document.getElementById("SEQUENCE").focus();
+          } 
+      })
+}
+
+handleSelectedRowsChanged(e, args) {
+  const controls = this.customerForm.controls
+  if (Array.isArray(args.rows) && this.gridObj1) {
+      args.rows.map((idx) => {
+          const item = this.gridObj1.getDataItem(idx)
+          controls.cm_seq.setValue(item.seq_seq || "")
+      })
+  }
+}
+
+angularGridReady(angularGrid: AngularGridInstance) {
+  this.angularGrid1 = angularGrid
+  this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGrid1() {
+  this.columnDefinitions1 = [
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+      {
+          id: "seq_seq",
+          name: "code sequence",
+          field: "seq_seq",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "seq_desc",
+          name: "description",
+          field: "seq_desc",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "seq_appr1",
+          name: "approbateur 1",
+          field: "seq_appr1",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "seq_appr2",
+          name: "approbateur 2",
+          field: "seq_appr2",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "seq_appr3",
+          name: "approbateur 3",
+          field: "seq_appr3",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+  ]
+
+  this.gridOptions1 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+ 
+  this.sequenceService
+      .getBy({seq_type: 'SO'})
+      .subscribe((response: any) => (this.sequences = response.data))
+     
+}
+open1(content) {
+  this.prepareGrid1()
   this.modalService.open(content, { size: "lg" })
 }
 }

@@ -60,5 +60,6 @@ export class Provider extends BaseModel{
     vd_tot_terms_code: String
     vd_carrier_id: String
     vd_kanban_supplier: String
+    vd_seq : String
 
 }

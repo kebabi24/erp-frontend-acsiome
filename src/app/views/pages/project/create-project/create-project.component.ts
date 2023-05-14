@@ -301,7 +301,7 @@ export class CreateProjectComponent implements OnInit {
           sod_part: resp.data.pt_part,
           sod_um: resp.data.pt_um,
           sod__chr01:  data.pmd_task,
-          sod_qty_ord: 1,
+          sod_qty_ord: data.pmd_qty,
           sod_desc: resp.data.pt_desc1 ,
           sod_site:resp.data.pt_site, 
           sod_loc: resp.data.pt_loc,
@@ -343,9 +343,29 @@ export class CreateProjectComponent implements OnInit {
           this.loadingSubject.next(false);
         },
         () => {
-          let so = this.prepareSo();
-          console.log("so", so)
-          this.addSo(so, this.sodataset);
+          const controls = this.projectForm.controls
+            const deal_code = controls.pm_deal.value;
+  
+  this.dealService.getByOne({ deal_code }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
+ 
+      if(res.data != null) {
+
+        let so = this.prepareSo();
+        console.log("so", so)
+        so.so_cr_terms = res.data.deal_pay_meth
+        this.addSo(so, this.sodataset);
+
+      }
+      else {
+
+                let so = this.prepareSo();
+                console.log("so", so)
+                this.addSo(so, this.sodataset);
+      }
+    })
           this.addReq(details);
           
           this.layoutUtilsService.showActionNotification(
@@ -394,36 +414,36 @@ export class CreateProjectComponent implements OnInit {
     const date = new Date()
 
     
-  const deal_code = controls.pm_deal.value;
+  // const deal_code = controls.pm_deal.value;
   
-  this.dealService.getByOne({ deal_code }).subscribe(
-    (res: any) => {
-      console.log(res);
-      const { data } = res;
+  // this.dealService.getByOne({ deal_code }).subscribe(
+  //   (res: any) => {
+  //     console.log(res);
+  //     const { data } = res;
     
-      if(res.data.length>0) {
+  //     if(res.data.length>0) {
 
       
-            _so.so_category =  "SO"
-            _so.so_cust = controls.pm_cust.value;
-            _so.so_ord_date = controls.pm_ord_date.value
-              ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-              : null;
-            _so.so_due_date = controls.pm_ord_date.value
-              ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-              : null;
+  //           _so.so_category =  "SO"
+  //           _so.so_cust = controls.pm_cust.value;
+  //           _so.so_ord_date = controls.pm_ord_date.value
+  //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+  //             : null;
+  //           _so.so_due_date = controls.pm_ord_date.value
+  //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+  //             : null;
 
-            _so.so_po = controls.pm_code.value;
-            _so.so_amt = controls.pm_amt.value;
-            _so.so_cr_terms = res.data.deal_pay_meth;
-            _so.so_curr = this.customer.cm_curr 
-            _so.so_taxable = this.customer.address.ad_taxable 
-            _so.so_taxc = this.customer.address.ad_taxc 
-            _so.so_ex_rate = this.ex_rate1 
-            _so.so_ex_rate2 = this.ex_rate2
+  //           _so.so_po = controls.pm_code.value;
+  //           _so.so_amt = controls.pm_amt.value;
+  //           _so.so_cr_terms = res.data.deal_pay_meth;
+  //           _so.so_curr = this.customer.cm_curr 
+  //           _so.so_taxable = this.customer.address.ad_taxable 
+  //           _so.so_taxc = this.customer.address.ad_taxc 
+  //           _so.so_ex_rate = this.ex_rate1 
+  //           _so.so_ex_rate2 = this.ex_rate2
 
-      }
-      else {
+  //     }
+  //     else {
 
         _so.so_category =  "SO"
         _so.so_cust = controls.pm_cust.value;
@@ -443,9 +463,9 @@ export class CreateProjectComponent implements OnInit {
         _so.so_ex_rate = this.ex_rate1 
         _so.so_ex_rate2 = this.ex_rate2
 
-      }  
+      // }  
         
-  })
+  // })
       
       
     return _so;
@@ -639,6 +659,10 @@ export class CreateProjectComponent implements OnInit {
         width: 30,
         filterable: false,
         type: FieldType.float,
+        editor: {
+          model: Editors.float,
+          params:{minDecimal: 2,},
+        },
        
       },
       {

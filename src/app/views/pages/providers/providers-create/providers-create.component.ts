@@ -69,6 +69,7 @@ import {
     TaxeService,
     BankService,
     DeviseService,
+    SequenceService,
 } from "../../../../core/erp"
 
 
@@ -97,6 +98,12 @@ export class ProvidersCreateComponent implements OnInit {
     addressId$: Observable<Number>
 
     isExist = false
+
+    sequences: []
+    columnDefinitions1: Column[] = []
+    gridOptions1: GridOption = {}
+    gridObj1: any
+    angularGrid1: AngularGridInstance
 
     banks: [];
     columnDefinitionsbank: Column[] = [];
@@ -132,7 +139,8 @@ export class ProvidersCreateComponent implements OnInit {
   gridObj4: any;
   angularGrid4: AngularGridInstance;
   fieldcode = "";
-fldname;
+  fldname;
+  user: any
     // selects
     ad_city: any[] = []
     ad_state: any[] = []
@@ -180,6 +188,7 @@ fldname;
         private bankService: BankService,
         private cdr: ChangeDetectorRef,
         private deviseService: DeviseService,
+        private sequenceService: SequenceService,
         config: NgbDropdownConfig
     ) {
         config.autoClose = true
@@ -226,6 +235,7 @@ fldname;
     ngOnInit() {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
+        this.user =  JSON.parse(localStorage.getItem('user'))
         this.init()
         // sticky portlet header
         window.onload = () => {
@@ -330,6 +340,7 @@ fldname;
         this.providerForm = this.formBuilder.group({
             vd_sort: [{ value: this.provider.vd_sort, disabled: !this.isExist }],
             vd_type: [{ value: this.provider.vd_type, disabled: !this.isExist }],
+            vd_seq: [{ value: this.provider.vd_seq, disabled: !this.isExist }],
             vd_act_acct: [{ value: this.provider.vd_act_acct, disabled: !this.isExist }],
             vd_act_sub: [{ value: this.provider.vd_act_sub, disabled: !this.isExist }],
             vd_act_cc: [{ value: this.provider.vd_act_cc, disabled: !this.isExist }],
@@ -409,6 +420,7 @@ fldname;
                     controls.ad_pst_id.enable()
                     controls.ad_misc1_id.enable()
                     controls.ad_misc2_id.enable()
+                    controls1.vd_seq.enable()
                     controls1.vd_sort.enable()
                     controls1.vd_type.enable()
                     controls1.vd_act_acct.enable()
@@ -590,6 +602,7 @@ fldname;
         const controls = this.providerForm.controls
         const _provider = new Provider()
         _provider.vd_addr = this.address.ad_addr
+        _provider.vd_seq = controls.vd_seq.value
         _provider.vd_sort = controls.vd_sort.value
         _provider.vd_type = controls.vd_type.value
         _provider.vd_act_acct = controls.vd_act_acct.value
@@ -1318,6 +1331,128 @@ fldname;
         this.prepareGrid2();
         this.modalService.open(content, { size: "lg" });
       }
+      onChangeSeq() {
+        const controls = this.providerForm.controls
+        console.log(this.user.usrd_profile)
+        this.sequenceService
+            .getBy({seq_seq: controls.vd_seq.value, seq_type: 'PO'})
+            .subscribe((response: any) => {
+                console.log(response)
+                if (response.data.length == 0) {
+                    alert("Sequence nexiste pas")
+                    controls.vd_seq.setValue("")
+                    console.log(response.data.length)
+                    document.getElementById("SEQUENCE").focus();
+                } 
+            })
+    }
+      handleSelectedRowsChanged(e, args) {
+        const controls = this.providerForm.controls
+        if (Array.isArray(args.rows) && this.gridObj1) {
+            args.rows.map((idx) => {
+                const item = this.gridObj1.getDataItem(idx)
+                controls.vd_seq.setValue(item.seq_seq || "")
+            })
+        }
+    }
     
+    angularGridReady(angularGrid: AngularGridInstance) {
+        this.angularGrid1 = angularGrid
+        this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {}
+    }
+    
+    prepareGrid1() {
+        this.columnDefinitions1 = [
+            {
+                id: "id",
+                name: "id",
+                field: "id",
+                sortable: true,
+                minWidth: 80,
+                maxWidth: 80,
+            },
+            {
+                id: "seq_seq",
+                name: "code sequence",
+                field: "seq_seq",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "seq_desc",
+                name: "description",
+                field: "seq_desc",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "seq_appr1",
+                name: "approbateur 1",
+                field: "seq_appr1",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "seq_appr2",
+                name: "approbateur 2",
+                field: "seq_appr2",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+            {
+                id: "seq_appr3",
+                name: "approbateur 3",
+                field: "seq_appr3",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+            },
+        ]
+    
+        this.gridOptions1 = {
+            enableSorting: true,
+            enableCellNavigation: true,
+            enableExcelCopyBuffer: true,
+            enableFiltering: true,
+            autoEdit: false,
+            autoHeight: false,
+            frozenColumn: 0,
+            frozenBottom: true,
+            enableRowSelection: true,
+            enableCheckboxSelector: true,
+            checkboxSelector: {
+                // optionally change the column index position of the icon (defaults to 0)
+                // columnIndexPosition: 1,
+    
+                // remove the unnecessary "Select All" checkbox in header when in single selection mode
+                hideSelectAllCheckbox: true,
+    
+                // you can override the logic for showing (or not) the expand icon
+                // for example, display the expand icon only on every 2nd row
+                // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+            },
+            multiSelect: false,
+            rowSelectionOptions: {
+                // True (Single Selection), False (Multiple Selections)
+                selectActiveRow: true,
+            },
+        }
+    
+        // fill the dataset with your data
+       
+        this.sequenceService
+            .getBy({seq_type: 'PO'})
+            .subscribe((response: any) => (this.sequences = response.data))
+           
+    }
+    open1(content) {
+        this.prepareGrid1()
+        this.modalService.open(content, { size: "lg" })
+    }
+   
   
 }

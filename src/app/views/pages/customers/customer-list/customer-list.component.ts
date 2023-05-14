@@ -240,6 +240,21 @@ export class CustomerListComponent implements OnInit {
         },
       },
       {
+        id: "cm_seq",
+        name: "Sequence",
+        field: "cm_seq",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        grouping: {
+          getter: "cm_seq",
+          formatter: (g) =>
+            `Sequence: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        },
+      },
+      {
         id: "cm_type",
         name: "Type",
         field: "cm_type",
@@ -254,6 +269,7 @@ export class CustomerListComponent implements OnInit {
           collapsed: false,
         },
       },
+
       {
         id: "cm_class",
         name: "Classe",

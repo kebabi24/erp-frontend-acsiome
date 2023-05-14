@@ -1381,8 +1381,9 @@ export class CreatesaleorderComponent implements OnInit {
       };
   
       // fill the dataset with your data
+      const controls = this.soForm.controls
       this.customersService
-        .getByAll({ cm_hold: false })
+        .getByAll({ cm_hold: false,cm_seq: controls.so_category.value })
         .subscribe((response: any) => (this.customers = response.data));
     }
     open2(content) {

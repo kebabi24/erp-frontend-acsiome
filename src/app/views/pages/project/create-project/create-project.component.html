@@ -51,22 +51,19 @@
 
                      </div>
                      <div class="form-group col-2">
-                        <label class="form-group">Site: *</label>
-                    
+                        <label class="form-group">Contrat :</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" formControlName="pm_site"
-                                [className]="projectForm.controls['pm_site'].errors && (projectForm.controls['pm_site'].dirty || projectForm.controls['pm_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            <input type="text" class="form-control form-control-solid" id="deal" formControlName="pm_deal"  (change)="onChangeDeal()"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                <span class="input-group-text" (click)="opendeal(contentdeal)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
-                            <div *ngIf="projectForm.controls['pm_site'].errors && (projectForm.controls['pm_site'].dirty || projectForm.controls['pm_site'].touched)"
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
+
                     </div>
-                    
+                     
                 </div>
                 <div class="row">
                     <div class="form-group col-2">
@@ -94,18 +91,22 @@
                     </div>
                     
                     <div class="form-group col-2">
-                        <label class="form-group">Contrat :</label>
+                        <label class="form-group">Site: *</label>
+                    
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" id="deal" formControlName="pm_deal"  (change)="onChangeDeal()"
+                            <input type="text" formControlName="pm_site"
+                                [className]="projectForm.controls['pm_site'].errors && (projectForm.controls['pm_site'].dirty || projectForm.controls['pm_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <span class="input-group-text" (click)="opendeal(contentdeal)">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
+                            <div *ngIf="projectForm.controls['pm_site'].errors && (projectForm.controls['pm_site'].dirty || projectForm.controls['pm_site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
-
                     </div>
+                    
                 </div>  
                   
                 <div class="row">
