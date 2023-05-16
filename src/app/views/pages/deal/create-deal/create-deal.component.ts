@@ -81,6 +81,7 @@ export class CreateDealComponent implements OnInit {
       deal_sign_prov: [{ value: this.deal.deal_sign_prov, disabled: !this.isExist }],
 
       deal_open: [{ value: this.deal.deal_open, disabled: !this.isExist }],
+      deal_inv: [{ value: this.deal.deal_inv, disabled: !this.isExist }],
       deal_status: [{ value: this.deal.deal_status, disabled: !this.isExist }],
     });
   }
@@ -120,6 +121,7 @@ export class CreateDealComponent implements OnInit {
           controls.deal_sign_prov.enable();
 
           controls.deal_open.enable();
+          controls.deal_inv.enable();
           controls.deal_status.enable();
         }
       });
@@ -170,6 +172,7 @@ export class CreateDealComponent implements OnInit {
     _deal.deal_sign_prov = controls.deal_sign_prov.value;
 
     _deal.deal_open = controls.deal_open.value;
+    _deal.deal_inv = controls.deal_inv.value;
     _deal.deal_status = controls.deal_status.value;
 
     _deal.deal_start_date = controls.deal_start_date.value ? `${controls.deal_start_date.value.year}/${controls.deal_start_date.value.month}/${controls.deal_start_date.value.day}` : null;

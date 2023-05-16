@@ -399,6 +399,23 @@ error = false;
       
       },
       {
+        id: "itdh_qty_cons",
+        name: "Jour Facturable",
+        field: "itdh_qty_cons",
+        sortable: true,
+        width: 60,
+        filterable: false,
+        type: FieldType.float,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 }
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+            this.calculatetot();
+      }
+      
+      },
+      {
         id: "itdh_price",
         name: "Prix unitaire",
         field: "itdh_price",
@@ -947,6 +964,7 @@ error = false;
                       cmvid: "",
                       desc: detail.sod_desc,
                       itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+                      itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
                       itdh_um: detail.sod_um,
                       itdh_um_conv: detail.sod_um_conv,
                       itdh_price: detail.sod_price,
@@ -969,6 +987,7 @@ error = false;
                       cmvid: "",
                       desc: detail.sod_desc,
                       itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+                      itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
                       itdh_um: detail.sod_um,
                       itdh_um_conv: detail.sod_um_conv,
                       itdh_price: detail.sod_price,
@@ -1685,6 +1704,7 @@ changeTax(){
                           cmvid: "",
                           desc: detail.item.pt_desc1,
                           itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+                          itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
                           itdh_um: detail.sod_um,
                           itdh_um_conv: detail.sod_um_conv,
                           itdh_price: detail.sod_price,

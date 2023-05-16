@@ -215,6 +215,15 @@ export class ListDealComponent implements OnInit {
             formatter:Formatters.checkmark,
             type: FieldType.boolean,
            },
+           {
+            id: "deal_inv",
+            name: "Facturation Complete/Partielle",
+            field: "deal_inv",
+            sortable: true,
+            filterable: true,
+            formatter:Formatters.checkmark,
+            type: FieldType.boolean,
+           },
 
           
           

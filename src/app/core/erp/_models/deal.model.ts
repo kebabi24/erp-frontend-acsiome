@@ -23,6 +23,7 @@ export class Deal extends BaseModel{
 
 
     deal_open: Boolean
+    deal_inv: Boolean
     
     deal_domain: String
    
