@@ -8,4 +8,5 @@ export class Sensibilisation extends BaseModel {
   duration: Number;
   date: String;
   location: String;
+  materials: String;
 }

@@ -78,6 +78,7 @@ import { ListRctComponent } from './list-rct/list-rct.component';
 import { ConsoReportComponent } from './conso-report/conso-report.component';
 import { LabelCreateComponent } from './label-create/label-create.component';
 import { PoReceipIdComponent } from './po-receip-id/po-receip-id.component';
+import { PoReceipCabComponent } from './po-receip-cab/po-receip-cab.component';
 
 const routes: Routes = [
   {
@@ -132,12 +133,16 @@ const routes: Routes = [
     path: "po-receip-id/:id",
     component: PoReceipIdComponent,
   },
+  {
+    path: 'po-receip-cab',
+    component: PoReceipCabComponent
+  },
 ] 
 
 
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent],
   imports: [
     CommonModule,
     HttpClientModule,

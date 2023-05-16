@@ -210,6 +210,22 @@
                                 </kt-alert>
 
                                 <div class="row">
+                                    <div class="form-group col-1">
+                                        <label class="form-group">SEQUENCE:</label>
+                                        <div class="input-group input-group-sm">
+                
+                                            <input type="text"   id="SEQUENCE"
+                                            class="form-control form-control-sm form-control-solid"
+                                                formControlName="cm_seq" (change)="onChangeSeq()" aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)=open1(content1)>
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                
+                                        </div>
+                
+                
+                                    </div>
                                     <div class="form-group col-4">
                                         <label class="form-group">Nom Tri:</label>
                                         
@@ -905,5 +921,30 @@
                 </div>
             </ng-template>
         </div>
+        <div>
+            <ng-template #content1 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la SEQUENCE</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridSeq"
+                            [columnDefinitions]="columnDefinitions1" (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions1" [dataset]="sequences">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+
     </kt-portlet-body>
 </kt-portlet>

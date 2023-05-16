@@ -75,6 +75,20 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Matières et matériaux utilisés: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="materials" [className]="userForm.controls['materials'].errors && (userForm.controls['materials'].dirty || userForm.controls['materials'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openBom(contentBom)">
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['materials'].errors && (userForm.controls['materials'].dirty || userForm.controls['materials'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
       </form>
       <h2 style="margin-top: 20px">IDENTIFICATION DE DANGER SST:</h2>
       <div style="display: flex; flex-direction: row; margin-top: 20px" *ngFor="let mpd of specificationDetails; let i = index">
@@ -82,33 +96,16 @@
           <p>{{ mpd.mpd_label }}</p>
         </div>
         <div style="display: flex; flex-direction: row" class="col-2">
-          <mat-radio-group [(ngModel)]="selectedOptions[mpd.id]">
+          <mat-radio-group [(ngModel)]="selectedOptions[mpd.mpd_label]">
             <mat-radio-button *ngFor="let option of options" [value]="option.id">
               {{ option.label }}
             </mat-radio-button>
           </mat-radio-group>
         </div>
         <div class="col-4">
-          <form class="form" [formGroup]="mpdForm">
-            <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-          </form>
+          <!-- <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" /> -->
         </div>
       </div>
-      <!-- <h2 style="margin-top: 20px">Identification des aspects environnementaux :</h2> -->
-      <!-- <div style="display: flex; flex-direction: row; margin-top: 20px" *ngFor="let mpd of specificationDetails; let i = index">
-          <div class="col-2">
-            <p>{{ mpd.mpd_label }}</p>
-          </div>
-          <div style="display: flex; flex-direction: row" class="col-6">
-            <p style="margin-left: 150px">Oui</p>
-            <input style="margin-left: 10px; width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChangee($event, mpd)" />
-            <p style="margin-left: 150px">Non</p>
-            <input style="margin-left: 10px; width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChangee($event, mpd)" />
-          </div>
-          <div class="col-4">
-            <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-          </div>
-        </div> -->
     </div>
 
     <div>
@@ -179,6 +176,25 @@
         <div class="modal-body">
           <div class="row">
             <angular-slickgrid class="col-12" gridHeight="300" gridId="gridLocation" [columnDefinitions]="columnDefinitionsLocation" (onAngularGridCreated)="angularGridReadyLocation($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedLocation($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsLocation" [dataset]="sites"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <div>
+      <ng-template #contentBom let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir Matières et matériaux utilisés</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridBom" [columnDefinitions]="columnDefinitionsBom" (onAngularGridCreated)="angularGridReadyBom($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedBom($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsBom" [dataset]="materials"> </angular-slickgrid>
           </div>
         </div>
         <div class="modal-footer">

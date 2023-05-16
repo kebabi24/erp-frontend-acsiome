@@ -145,6 +145,7 @@ export class EditDealComponent implements OnInit {
 
           
           deal_open: [this.dealEdit.deal_open],
+          deal_inv: [this.dealEdit.deal_inv],
           deal_status: [this.dealEdit.deal_status],
           
           deal_start_date: [{
@@ -210,6 +211,7 @@ export class EditDealComponent implements OnInit {
       _deal.deal_sign_prov= controls.deal_sign_prov.value
 
       _deal.deal_open= controls.deal_open.value
+      _deal.deal_inv= controls.deal_inv.value
       _deal.deal_status= controls.deal_status.value
       
       _deal.deal_start_date = controls.deal_start_date.value

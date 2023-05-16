@@ -90,6 +90,7 @@ export class Customer extends BaseModel{
    
     
     cm_pay_method: String
+    cm_seq : String
     cm_domain: String
 
 }

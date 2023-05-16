@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { User, UsersService, SiteService, ProjectService, EmployeService, LocationService, AffectEmpService } from "../../../../core/erp";
+import { User, UsersService, SiteService, ProjectService, EmployeService, LocationService, AffectEmpService, BomService } from "../../../../core/erp";
 import { Sensibilisation } from "../../../../core/erp";
 import { MenuConfig } from "../../../../core/_config/menu.config";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
@@ -24,8 +24,8 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 })
 export class IdentificationComponent implements OnInit {
   options = [
-    { id: "Oui", label: "Oui" },
-    { id: "Non", label: "Non" },
+    { id: "true", label: "true" },
+    { id: "false", label: "false" },
   ];
   user: User;
   userForm: FormGroup;
@@ -37,6 +37,7 @@ export class IdentificationComponent implements OnInit {
   employees: [];
   educators: [];
   sites: [];
+  materials: [];
   specificationDetails: [];
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
@@ -46,6 +47,8 @@ export class IdentificationComponent implements OnInit {
   gridOptionsEducator: GridOption = {};
   columnDefinitionsLocation: Column[] = [];
   gridOptionsLocation: GridOption = {};
+  columnDefinitionsBom: Column[] = [];
+  gridOptionsBom: GridOption = {};
   gridObj: any;
   angularGrid: AngularGridInstance;
   selectedOptions = {};
@@ -58,9 +61,11 @@ export class IdentificationComponent implements OnInit {
   angularGridEducator: AngularGridInstance;
   gridObjLocation: any;
   angularGridLocation: AngularGridInstance;
+  gridObjBom: any;
+  angularGridBom: AngularGridInstance;
   error = false;
 
-  constructor(config: NgbDropdownConfig, private userFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private projectService: ProjectService, private employeesService: EmployeService, private siteService: SiteService, private affectEmployees: AffectEmpService, private modalService: NgbModal) {
+  constructor(config: NgbDropdownConfig, private userFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private projectService: ProjectService, private employeesService: EmployeService, private siteService: SiteService, private affectEmployees: AffectEmpService, private bomService: BomService, private modalService: NgbModal) {
     config.autoClose = true;
     console.log(new MenuConfig().defaults);
   }
@@ -86,8 +91,8 @@ export class IdentificationComponent implements OnInit {
     this.userForm = this.userFB.group({
       project_code: ["", Validators.required],
       employees: ["", Validators.required],
-
-      duration: ["", [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      materials: ["", Validators.required],
+      // duration: ["", [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       formation_date: ["this.user.formation_date"],
       site: ["", Validators.required],
     });
@@ -354,6 +359,67 @@ export class IdentificationComponent implements OnInit {
     this.siteService.getAll().subscribe((response: any) => (this.sites = response.data));
   }
 
+  prepareGridBom() {
+    this.columnDefinitionsBom = [
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 80,
+      //   maxWidth: 80,
+      // },
+      {
+        id: "bom_code",
+        name: "material code",
+        field: "bom_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "bom_desc",
+        name: "material descrption",
+        field: "bom_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsBom = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.bomService.getAll().subscribe((response: any) => (this.materials = response.data));
+  }
+
   open(content) {
     this.prepareGrid();
     this.modalService.open(content, { size: "lg" });
@@ -411,6 +477,10 @@ export class IdentificationComponent implements OnInit {
     this.prepareGridLocation();
     this.modalService.open(content, { size: "lg" });
   }
+  openBom(content) {
+    this.prepareGridBom();
+    this.modalService.open(content, { size: "lg" });
+  }
   handleSelectedRowsChangedLocation(e, args) {
     const controls = this.userForm.controls;
     if (Array.isArray(args.rows) && this.gridObjLocation) {
@@ -425,9 +495,23 @@ export class IdentificationComponent implements OnInit {
     this.gridObjLocation = (angularGrid && angularGrid.slickGrid) || {};
   }
 
+  handleSelectedRowsChangedBom(e, args) {
+    const controls = this.userForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjBom) {
+      args.rows.map((idx) => {
+        const item = this.gridObjBom.getDataItem(idx);
+        controls.materials.setValue(item.bom_code || "");
+      });
+    }
+  }
+  angularGridReadyBom(angularGrid: AngularGridInstance) {
+    this.angularGridBom = angularGrid;
+    this.gridObjBom = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/user-mstr/users-list`;
+    const url = `/`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
@@ -440,11 +524,11 @@ export class IdentificationComponent implements OnInit {
     const controls = this.userForm.controls;
     const _sensibilisation_data = new Sensibilisation();
     _sensibilisation_data.code_project = controls.project_code.value;
-    // _sensibilisation_data.code_employee = controls.employees.value;
-
+    _sensibilisation_data.code_employee = controls.employees.value;
+    _sensibilisation_data.materials = controls.materials.value;
     _sensibilisation_data.date = controls.formation_date.value ? `${controls.formation_date.value.year}/${controls.formation_date.value.month}/${controls.formation_date.value.day}` : null;
 
-    _sensibilisation_data.duration = controls.duration.value;
+    // _sensibilisation_data.duration = controls.duration.value;
 
     _sensibilisation_data.location = controls.site.value;
 
@@ -453,25 +537,25 @@ export class IdentificationComponent implements OnInit {
 
   onSubmit() {
     console.log(this.selectedOptions);
-    // console.log("dz");
-    // this.hasFormErrors = false;
-    // const controls = this.userForm.controls;
-    // /** check form */
+    this.hasFormErrors = false;
+    const controls = this.userForm.controls;
+    /** check form */
     // if (this.userForm.invalid) {
     //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
 
     //   this.hasFormErrors = true;
     //   return;
     // }
-    // console.log("onsubmit");
-    // // tslint:disable-next-line:prefer-const
-    // let identificationdata = this.prepareData();
-    // this.addData(identificationdata);
+    console.log("onsubmit");
+    // tslint:disable-next-line:prefer-const
+    let identificationdata = this.prepareData();
+    this.addData(identificationdata);
   }
 
   addData(data: Sensibilisation) {
+    console.log(data);
     this.loadingSubject.next(true);
-    this.projectService.addIdentificationData(data).subscribe(
+    this.projectService.addIdentificationData({ data, selectedOptions: this.selectedOptions }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
@@ -483,20 +567,5 @@ export class IdentificationComponent implements OnInit {
         this.router.navigateByUrl("/");
       }
     );
-  }
-
-  onChange(event: Event, mpd: any, txt: any) {
-    // const isChecked = event.target as HTMLInputElement;
-    // console.log(isChecked);
-    // Handle the checkbox change event here
-    const input = document.getElementById(mpd.id) as HTMLInputElement;
-    // console.log(input);
-    // console.log(txt);
-    if (txt === "oui" && input.checked == true) {
-      input.checked = false;
-    }
-    if (txt === "non" && input.checked == true) {
-      input.checked = false;
-    }
   }
 }
