@@ -17,6 +17,32 @@
                     Ce Code existe deja
                 </kt-alert>
 
+                <!-- DATE AND HOUR  -->
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">date de accident: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input class="form-control form-control-sm form-control-solid" formControlName="accident_date"
+                                placeholder="jj-mm-aaaa" name="tr_rcp_date1" ngbDatepicker f
+                                #tr_rcp_date1="ngbDatepicker"
+                                (change) = "onDateUpdate()"
+                                >
+                            <div class="input-group-append">
+                                <button class="btn btn-abracadabra" (click)="tr_rcp_date1.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            </div>
+                    </div>
+
+                    <!-- <div class="form-group col-2">
+                        <label class="form-group"> l'heure de accident :</label>
+                            <ngb-timepicker [(ngModel)]="new_even_time "></ngb-timepicker>
+                          
+                    </div> -->
+                </div>
+
                 <!-- site  -->
                 <div class="row">
 
@@ -35,6 +61,22 @@
                     </div>
 
                     <div class="form-group col-2">
+                        <label class="form-group">Site :</label>
+                        <div>
+
+                            <h5>{{site_name}}</h5>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+
+               
+
+                <div class="row">
+
+                    <div class="form-group col-2">
                         <label class="form-group">Code employé :</label>
                         <div class="input-group input-group-sm">
 
@@ -48,10 +90,6 @@
 
                     </div>
 
-                </div>
-
-                <div class="row">
-
                     <div class="form-group col-2">
                         <label class="form-group">Nom et prenom employé: *</label>
                         <input type="text" (change)="onChangeCode()"
@@ -63,35 +101,19 @@
 
                      <div class="form-group col-2">
                         <label class="form-group">Description: *</label>
+                        <!-- <textarea formControlName="description" rows="2" type="text"></textarea> -->
                         <input type="text" (change)="onChangeCode()"
                         [className]="accidentForm.controls['description'].errors && (accidentForm.controls['description'].dirty || accidentForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                        formControlName="description">
-                            <div *ngIf="accidentForm.controls['description'].errors && (accidentForm.controls['description'].dirty || accidentForm.controls['description'].touched)"
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                        formControlName="description"> 
+                             <!-- <div *ngIf="accidentForm.controls['description'].errors && (accidentForm.controls['description'].dirty || accidentForm.controls['description'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div> -->
                      </div>
 
-                     <div class="form-group col-2">
-                        <label class="form-group">date de accident: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input class="form-control form-control-sm form-control-solid" formControlName="accident_date"
-                                placeholder="jj-mm-aaaa" name="tr_rcp_date1" ngbDatepicker f
-                                #tr_rcp_date1="ngbDatepicker">
-                            <div class="input-group-append">
-                                <button class="btn btn-abracadabra" (click)="tr_rcp_date1.toggle()" type="button">
-                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                </button>
-                            </div>
-                            </div>
-                    </div>
-
-                    <!-- <div class="form-group col-2">
-                        <label class="form-group"> l'heure de accident :</label>
-                            <ngb-timepicker [(ngModel)]="new_even_time "></ngb-timepicker>
-                          
-                    </div> -->
+                     
 
                 </div>
+
+               
 
                 
 
@@ -103,7 +125,7 @@
                             <div class="accordion-item" *ngFor="let ELEM of data; let i = index">
                                 <h3 class="accordion-header" id="panelsStayOpen-headingOne-{{i}}">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#panelsStayOpen-collapseOne-{{i}}" aria-expanded="true" attr.aria-controls="panelsStayOpen-collapseOne-{{i}}">
-                                      {{ELEM.groupe_titel}}
+                                      {{ELEM.group_title}}
                                     </button>
                                   </h3>
 
@@ -116,10 +138,9 @@
                                         >
                                         <fieldset class="col-6">
                                             <input
-                                              type="checkbox"
-                                              />
-                                              <!-- formControlName="{{ cause.code_value }}"
-                                              (change)="onCauseSelect(cause.code_value)" -->
+                                              (change)="onCheckClick(elem.mpd_label,ELEM.group_title)"
+                                              type="checkbox"/>
+                                    
                                             <label  class="ml-2">
                                               {{elem.mpd_label}}
                                           </label>
@@ -183,7 +204,7 @@
                     <div class="row">
                         <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
                             [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptions4" [dataset]="emps">
                         </angular-slickgrid>
                     </div>
@@ -195,6 +216,106 @@
             </ng-template>
         </div>
         <!-- EMP POUPU (GRID) END -->
+
+         <!-- SPACE -->
+         <div class="empty_space">
+            
+         </div>
+         <!-- SPACE -->
+
+         <!-- TABLE DATA -->
+            <div id="tablePdf" #tablePdf class="w-100">
+                
+                
+                <table class="table table-bordered w-100">
+                    
+                    <tbody class="t_body">
+                        <!-- <tr *ngFor="let elem of data"> -->
+                        <tr>
+                            <td class="w-25">NOM & Prénom </td>
+                            <td class="w-75">{{emp_name}}</td>    
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Date et heure </td>
+                            <td class="w-75">{{accident_date}}</td>    
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Lieu de accident / incident </td>
+                            <td class="w-75">{{site_name}}</td>    
+                        </tr>
+                        
+                        <tr>
+                            <td class="w-25">Description de l’accident ou de l’incident </td>
+                            <td class="w-75"></td>    
+                        </tr>
+
+                        <tr  *ngFor="let ELEM of data; let i = index" >
+                                <td class="w-25 " *ngIf="2>i"> {{ELEM.group_title}}</td>
+                            
+                                <td class="w-75 " *ngIf="2>i" >
+                                    <div *ngFor="let elem of ELEM.elements; let j = index">
+                                        <input 
+                                        type="checkbox"
+                                        [(ngModel)]="elem.checked"
+                                        />
+                                        
+                                            <span  class="ml-2 "> {{elem.mpd_label}}</span>
+
+                                        
+                                        
+                                    </div>
+                                    <br>
+                                </td>
+                                
+                                
+                        
+                            <!-- <td  *ngIf="2>i">
+                                    Observation : 
+                            </td> -->
+                        </tr>
+                    
+                    </tbody>
+                </table>
+            
+            </div>
+        <!-- TABLE DATA -->
+
+       <!-- SECOND PART -->
+       <div id="tablePdf2" #tablePdf2 class="w-100">
+        <table class="table table-bordered w-100">
+            <tbody class="t_body">
+                <tr  *ngFor="let ELEM of data; let i = index" >
+                    <td class="w-25 " *ngIf="i>2"> {{ELEM.group_title}}</td>
+                
+                    <td class="w-75 " *ngIf="i>2" >
+                        <div *ngFor="let elem of ELEM.elements; let j = index" >
+                            <input 
+                             type="checkbox"
+                             
+                             [(ngModel)]="elem.checked"
+                            />
+                            
+                                <span  class="ml-2"> {{elem.mpd_label}}</span>
+                        
+                        
+                        </div>
+                        <br>
+                    </td>
+                    
+                    
+            
+                <!-- <td  *ngIf="2>i">
+                        Observation : 
+                </td> -->
+                </tr>
+            </tbody>
+            
+        </table>
+       
+       </div>
+       <!-- SECOND PART -->
 
     </kt-portlet-body>
 </kt-portlet>
