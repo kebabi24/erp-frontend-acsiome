@@ -32,9 +32,13 @@ import {
   LayoutUtilsService,
   TypesUtilsService,
   MessageType,
+  HttpUtilsService,
 } from "../../../../core/_base/crud"
 import { reverseString } from "@amcharts/amcharts4/.internal/core/utils/Utils";
 import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../../../environments/environment";
+const API_URL = environment.apiUrl + "/codes";
+
 @Component({
   selector: 'kt-create-project',
   templateUrl: './create-project.component.html',
@@ -135,8 +139,13 @@ export class CreateProjectComponent implements OnInit {
   grid5: any
   selectedTriggersIndexes : any[]
 
+
+  httpOptions = this.httpUtils.getHTTPHeaders();
+  
+
   constructor(
     config: NgbDropdownConfig,
+    private httpUtils: HttpUtilsService,
     private projectFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -302,6 +311,8 @@ export class CreateProjectComponent implements OnInit {
           sod_um: resp.data.pt_um,
           sod__chr01:  data.pmd_task,
           sod_qty_ord: data.pmd_qty,
+          sod_qty_ret: data.day,
+          sod_qty_cons: 0,
           sod_desc: resp.data.pt_desc1 ,
           sod_site:resp.data.pt_site, 
           sod_loc: resp.data.pt_loc,
@@ -725,6 +736,14 @@ export class CreateProjectComponent implements OnInit {
         editor: {
           model: Editors.date,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
+          if ( days < 0) {days = 0 }
+          console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , day: days })
+
+          },
       },
       
       {
@@ -737,6 +756,26 @@ export class CreateProjectComponent implements OnInit {
         type: FieldType.dateIso,
         editor: {
           model: Editors.date,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
+          if ( days < 0) {days = 0 }
+          console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , day: days })
+
+          },
+      },
+      {
+        id: "day",
+        name: "Nbr Jour",
+        field: "day",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.integer,
+        editor: {
+          model: Editors.integer,
         },
       },
       {
@@ -1056,34 +1095,50 @@ prepareGrid3() {
       filterable: true,
       type: FieldType.string,
     },
-    {
-      id: "pjd_trigger",
-      name: "Trigger",
-      field: "pjd_trigger",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      type: FieldType.string,
-      editor: {model: Editors.text}
-    },
-    {
-      id: "mvid",
-      field: "cmvid",
-      excludeFromHeaderMenu: true,
-      formatter: Formatters.infoIcon,
-      minWidth: 30,
-      maxWidth: 30,
-      onCellClick: (e: Event, args: OnEventArgs) => {
-          this.selected_doc_row_number = args.row
-          console.log(this.selected_doc_row_number)
-          let element: HTMLElement = document.getElementById(
-              "openTriggerPopup"
-          ) as HTMLElement
-          element.click()
+    // {
+    //   id: "pjd_trigger",
+    //   name: "Trigger",
+    //   field: "pjd_trigger",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   type: FieldType.string,
+    //   editor: {model: Editors.text}
+    // },
+    // {
+    //   id: "mvid",
+    //   field: "cmvid",
+    //   excludeFromHeaderMenu: true,
+    //   formatter: Formatters.infoIcon,
+    //   minWidth: 30,
+    //   maxWidth: 30,
+    //   onCellClick: (e: Event, args: OnEventArgs) => {
+    //       this.selected_doc_row_number = args.row
+    //       console.log(this.selected_doc_row_number)
+    //       let element: HTMLElement = document.getElementById(
+    //           "openTriggerPopup"
+    //       ) as HTMLElement
+    //       element.click()
         
            
+    //   },
+    // },
+    {
+        id: "pjd_trigger",
+        name: "Trigger",
+        field: "pjd_trigger",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.singleSelect,
+          enableRenderHtml: true,
+          collectionAsync: this.http.get(`${API_URL}/triggerType`), 
+         
+        },
       },
-    },
+    
 
     {
       id: "mp_expire",
@@ -1101,6 +1156,7 @@ prepareGrid3() {
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
       enableFiltering: true,
+      editable : true,
       autoEdit: false,
       autoHeight: true,
       frozenColumn: 0,
