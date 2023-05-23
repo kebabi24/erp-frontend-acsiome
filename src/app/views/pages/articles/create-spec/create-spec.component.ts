@@ -474,8 +474,6 @@ export class CreateSpecComponent implements OnInit {
 
 
 
-
-
   handleSelectedRowsChangedsite(e, args) {
     const controls1 = this.form1.controls;
   
