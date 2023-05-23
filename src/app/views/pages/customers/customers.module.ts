@@ -53,7 +53,8 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 
 //Service 
-import {AccountReceivableService,SaleOrderService, AddressService, CodeService, CustomerService, AccountService, TaxeService, SiteService, DeviseService, BankService } from '../../../core/erp';
+import {AccountReceivableService,SaleOrderService, AddressService, CodeService, CustomerService, AccountService, TaxeService, 
+        SiteService, DeviseService, BankService, SequenceService } from '../../../core/erp';
 import { CustomerSoldelistComponent } from './customer-soldelist/customer-soldelist.component';
 import { CustomerCAlistComponent } from './customer-calist/customer-calist.component';
 import { CustomerCAbyItemlistComponent } from './customer-caby-itemlist/customer-caby-itemlist.component';
@@ -169,6 +170,7 @@ const routes: Routes = [
         BankService,
         SaleOrderService,
         AccountReceivableService,
+        SequenceService,
     ],
     entryComponents: [
         ActionNotificationComponent,

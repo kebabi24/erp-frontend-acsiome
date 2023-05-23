@@ -207,6 +207,14 @@ export class ProvidersListComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
           }, 
+          {
+            id: "vd_sequence",
+            name: "Sequence",
+            field: "vd_seq",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
 
       ]
 

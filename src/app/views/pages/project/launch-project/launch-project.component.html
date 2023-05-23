@@ -152,29 +152,30 @@
                     </button>
                 </div>
                 <div class="modal-body pl-10 pr-10">
-                    <div class="row">
+                    <div class="row" *ngFor="let doc of trigger_documents; let i=index">
                         
-                        <h5 class="col-3">Code specification :</h5><span class="col-4">{{pm_doc_list_code}}</span> 
-                       
-                    </div>
-
-                    <br>
-                    <div class="row">
-                        <h5 class="col-3 mb-10">les tests:</h5>
-                       
-                    </div>
-
-                    <div class="row">
+                        <h5 class="col-3">Code specification :</h5><span class="col-4">{{doc.spec.mp_desc}}</span> 
                         <br>
-                        <div class="col-12" *ngFor="let detail of specificationDetails; let i = index">
-                            <label class="ml-5 mr-10 col-2">{{detail.mpd_label}}</label>
-                            <input
-                            type="checkbox"
-                            class="mb-5 mt-1"
-                            (change)="onCheckClick(detail.mpd_type)"
-                            />
+                        <div class="row">
+                            <h5 class="col-3 mb-10">les tests:</h5>
+                           
                         </div>
+    
+                        <div class="row">
+                            <br>
+                            <div class="col-12" *ngFor="let detail of $any(doc.spec_details); let i = index">
+                                <label class="ml-5 mr-10 col-2">{{detail.mpd_label}}</label>
+                                <input
+                                type="checkbox"
+                                class="mb-5 mt-1"
+                                (change)="onCheckClick(detail.mpd_label)"
+                                />
+                            </div>
+                        </div>
+                       
                     </div>
+
+                   
 
                 </div>
                 <div class="modal-footer">

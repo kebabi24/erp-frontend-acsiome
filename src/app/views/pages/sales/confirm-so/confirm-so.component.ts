@@ -225,6 +225,7 @@ export class ConfirmSoComponent implements OnInit {
       this.soForm = this.soFB.group({
           so_nbr: [this.saleOrder.so_nbr],
           so_cust: [{ value: this.saleOrder.so_cust, disabled: true }],
+          so_po: [{ value: this.saleOrder.so_po, disabled: true }],
           name: [{value: '', disabled: true}],
           so_ord_date: [
               { value: this.saleOrder.so_ord_date, disabled: true },
@@ -295,7 +296,7 @@ export class ConfirmSoComponent implements OnInit {
 
 
                                 this.projectService
-                                .updateM({ pm_status: "R",  }, id)
+                                .updateM({ pm_status: "A",  }, id)
                                 .subscribe( //(res) => {
                       
                                 

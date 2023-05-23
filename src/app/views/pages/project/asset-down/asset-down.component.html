@@ -11,19 +11,32 @@
     <kt-portlet-body>
         <div class="example-preview">
 
+            <div>
+                {{ time | async }}
+              </div>
+
             <form class="form" [formGroup]="assetDownForm">
                 <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
                     Ce Code existe deja
                 </kt-alert>
+                
                 <div class="row">
                     <div class="form-group col-2">
                         <label class="form-group">code  project: *</label>
-                        <input type="text" (change)="onChangeCode()"
-                        [className]="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                        formControlName="project_code">
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"   id="project_code"
+                                [className]="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="project_code" (change)="onChangeCode()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=open(content)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+
                             <div *ngIf="assetDownForm.controls['project_code'].errors && (assetDownForm.controls['project_code'].dirty || assetDownForm.controls['project_code'].touched)"
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
                      </div>
 
                      <div class="form-group col-2">
@@ -66,6 +79,137 @@
             </div>
 
         </div>
+
+         <!-- SELECT PROJECT POPUP -->
+         <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Projet </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="projects">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- SELECT PROJECT POPUP END -->
+
+        <button hidden id="openTypePopup" class="btn btn-primary" (click)="openTypesGrid(content3)"></button>
+
+        <!-- SELECT TYPE POPUP -->
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Type </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="types">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- SELECT TYPE POPUP END -->
+        
+        <!-- SPACE -->
+        <div class="empty_space">
+            
+        </div>
+        <!-- SPACE -->
+
+        <!-- TABLE DATA -->
+        <div id="tablePdf" #tablePdf class="w-100">
+            
+            
+                <table class="table table-bordered w-100">
+                    <thead class="t_header">
+                        <tr>
+                            <th scope="col" class="t_header table-active">Désignation équipement </th>
+                            <th scope="col" class="t_header table-active">Numéro de série  </th>
+                            <th scope="col" class="t_header table-active">Description de la Panne   </th>
+                        </tr>
+                    </thead>
+                    <tbody class="t_body">
+                        <tr *ngFor="let elem of data">
+                            <td>{{elem.asset_desc}}</td>
+                            <td>{{elem.asset_serial}}</td>
+                            <td>{{elem.asset_comment}}</td>
+                            
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            
+        </div>
+        <!-- TABLE DATA -->
+
+        <!-- TABLE INFO -->
+        <div id="tableInfo" #tableInfo class="w-100" >
+            
+            
+                <table class="table table-bordered w-100">
+                   
+                    <tbody class="t_body">
+                        <tr >
+                            <td class="table-active w-50">Nature des travaux ( activité (s))</td>
+                            <td class="w-50"></td>
+                        </tr>
+                        <tr >
+                            <td class="table-active w-50">Chantier </td>
+                            <td class="w-50"></td>
+                        </tr>
+                        <tr >
+                            <td class="table-active w-50">Période </td>
+                            <td class="w-50"></td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            
+        </div>
+        <!-- TABLE INFO -->
+
+        <!-- TABLE LAST -->
+        <div id="tableLast" #tableLast class="w-100" >
+            
+            
+            <table class="table table-bordered w-100">
+              
+                    <thead class=".t_header">
+                        <th class="table-active t_header w-50">Superviseur (s)</th>
+                        <th class="table-active t_header w-50">Signature</th>
+                    </thead>     
+                    <tbody>
+                        <tr class="empty_cell"></tr>
+                        <tr class="empty_cell"></tr>
+                    </tbody>
+            </table>
+        
+        </div>
+        <!-- TABLE LAST -->
 
     </kt-portlet-body>
 </kt-portlet>

@@ -25,15 +25,20 @@ import { round } from 'lodash';
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
 import { Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService , SaleOrderService, Requisition,
-         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService} from "../../../../core/erp";
+         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService,DealService ,QualityControlService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
   LayoutUtilsService,
   TypesUtilsService,
   MessageType,
+  HttpUtilsService,
 } from "../../../../core/_base/crud"
 import { reverseString } from "@amcharts/amcharts4/.internal/core/utils/Utils";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../../../environments/environment";
+const API_URL = environment.apiUrl + "/codes";
+
 @Component({
   selector: 'kt-create-project',
   templateUrl: './create-project.component.html',
@@ -44,6 +49,7 @@ export class CreateProjectComponent implements OnInit {
  
   projectForm: FormGroup;
   row_number;
+  selected_doc_row_number;
 
   isExist = false
 
@@ -109,14 +115,37 @@ export class CreateProjectComponent implements OnInit {
   gridObjsite: any
   angularGridsite: AngularGridInstance
 
+  datadeal: []
+  columnDefinitionsdeal: Column[] = []
+  gridOptionsdeal: GridOption = {}
+  gridObjdeal: any
+  angularGriddeal: AngularGridInstance
 
-date: String;
-customer: any;
-ex_rate1 : any;
-ex_rate2 : any;
-type: String;
+
+  date: String;
+  customer: any;
+  ex_rate1 : any;
+  ex_rate2 : any;
+  type: String;
+
+  doc_triggers : any = []
+  columnDefinitions5: Column[] = [];
+  gridOptions5: GridOption = {};
+  gridObj5: any;
+  angularGrid5: AngularGridInstance
+  dataView5: any
+  dataView3: any
+  gridService5: GridService
+  grid5: any
+  selectedTriggersIndexes : any[]
+
+
+  httpOptions = this.httpUtils.getHTTPHeaders();
+  
+
   constructor(
     config: NgbDropdownConfig,
+    private httpUtils: HttpUtilsService,
     private projectFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -126,6 +155,7 @@ type: String;
     private projectService: ProjectService,
     private taskService: TaskService,
     private customerService: CustomerService,
+    private qualityControlService: QualityControlService,
     private providerService: ProviderService,
     private itemService: ItemService,
     private bomService: BomService,
@@ -134,7 +164,8 @@ type: String;
     private psService: PsService,
     private deviseService: DeviseService,
     private siteService: SiteService,
-    
+    private dealService: DealService,
+    private http: HttpClient,
   ) {
     config.autoClose = true;
   }
@@ -153,6 +184,7 @@ type: String;
     this.getProjectTypes();
     this.createForm();
     this.initmvGrid();
+    this.prepareTriggersGrid()
   }
 
   //create form
@@ -165,6 +197,7 @@ type: String;
       pm_desc: [{ value: this.project.pm_desc, disabled: !this.isExist },  Validators.required],
       pm_site: [{ value: this.project.pm_site, disabled: !this.isExist },  Validators.required],
       pm_cust: [{ value: this.project.pm_cust, disabled: !this.isExist }],
+      pm_deal: [{ value: this.project.pm_deal, disabled: !this.isExist }],
       name: [{value:"", disabled: true}],
       pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
       pm_cost: [{value:0, disabled: true}],
@@ -201,6 +234,7 @@ type: String;
                 controls.pm_amt.enable()
                 controls.pm_type.enable()
                 controls.pm_doc_list_code.enable()
+                controls.pm_deal.enable()
               
                 
             }
@@ -248,6 +282,7 @@ type: String;
     _project.pm_desc = controls.pm_desc.value;
     _project.pm_site = controls.pm_site.value;
     _project.pm_cust = controls.pm_cust.value;
+    _project.pm_deal = controls.pm_deal.value;
     _project.pm_amt = controls.pm_amt.value;
     _project.pm_cost = controls.pm_cost.value;
     _project.pm_type = controls.pm_type.value;
@@ -275,7 +310,9 @@ type: String;
           sod_part: resp.data.pt_part,
           sod_um: resp.data.pt_um,
           sod__chr01:  data.pmd_task,
-          sod_qty_ord: 1,
+          sod_qty_ord: data.pmd_qty,
+          sod_qty_ret: data.day,
+          sod_qty_cons: 0,
           sod_desc: resp.data.pt_desc1 ,
           sod_site:resp.data.pt_site, 
           sod_loc: resp.data.pt_loc,
@@ -294,9 +331,11 @@ type: String;
     
     let l = []
     this.selectedIndexes.forEach(index => {
-      l.push(this.specifications[index]['mp_nbr'])
+      l.push({
+        code_doc : this.specifications[index]['mp_nbr'],
+        trigger : this.specifications[index]['pjd_trigger']
+      })
     });
-    console.log(l)
 
 
     this.loadingSubject.next(true);
@@ -315,9 +354,29 @@ type: String;
           this.loadingSubject.next(false);
         },
         () => {
-          let so = this.prepareSo();
-          console.log("so", so)
-          this.addSo(so, this.sodataset);
+          const controls = this.projectForm.controls
+            const deal_code = controls.pm_deal.value;
+  
+  this.dealService.getByOne({ deal_code }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
+ 
+      if(res.data != null) {
+
+        let so = this.prepareSo();
+        console.log("so", so)
+        so.so_cr_terms = res.data.deal_pay_meth
+        this.addSo(so, this.sodataset);
+
+      }
+      else {
+
+                let so = this.prepareSo();
+                console.log("so", so)
+                this.addSo(so, this.sodataset);
+      }
+    })
           this.addReq(details);
           
           this.layoutUtilsService.showActionNotification(
@@ -366,26 +425,58 @@ type: String;
     const date = new Date()
 
     
-            _so.so_category =  "SO"
-            _so.so_cust = controls.pm_cust.value;
-            _so.so_ord_date = controls.pm_ord_date.value
-              ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-              : null;
-            _so.so_due_date = controls.pm_ord_date.value
-              ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-              : null;
+  // const deal_code = controls.pm_deal.value;
+  
+  // this.dealService.getByOne({ deal_code }).subscribe(
+  //   (res: any) => {
+  //     console.log(res);
+  //     const { data } = res;
+    
+  //     if(res.data.length>0) {
 
-            _so.so_po = controls.pm_code.value;
-            _so.so_amt = controls.pm_amt.value;
-            _so.so_cr_terms = this.customer.cm_cr_terms;
-            _so.so_curr = this.customer.cm_curr 
-            _so.so_taxable = this.customer.address.ad_taxable 
-            _so.so_taxc = this.customer.address.ad_taxc 
-            _so.so_ex_rate = this.ex_rate1 
-            _so.so_ex_rate2 = this.ex_rate2
+      
+  //           _so.so_category =  "SO"
+  //           _so.so_cust = controls.pm_cust.value;
+  //           _so.so_ord_date = controls.pm_ord_date.value
+  //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+  //             : null;
+  //           _so.so_due_date = controls.pm_ord_date.value
+  //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+  //             : null;
 
+  //           _so.so_po = controls.pm_code.value;
+  //           _so.so_amt = controls.pm_amt.value;
+  //           _so.so_cr_terms = res.data.deal_pay_meth;
+  //           _so.so_curr = this.customer.cm_curr 
+  //           _so.so_taxable = this.customer.address.ad_taxable 
+  //           _so.so_taxc = this.customer.address.ad_taxc 
+  //           _so.so_ex_rate = this.ex_rate1 
+  //           _so.so_ex_rate2 = this.ex_rate2
+
+  //     }
+  //     else {
+
+        _so.so_category =  "SO"
+        _so.so_cust = controls.pm_cust.value;
+        _so.so_ord_date = controls.pm_ord_date.value
+          ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+          : null;
+        _so.so_due_date = controls.pm_ord_date.value
+          ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+          : null;
+
+        _so.so_po = controls.pm_code.value;
+        _so.so_amt = controls.pm_amt.value;
+        _so.so_cr_terms = this.customer.cm_cr_terms;
+        _so.so_curr = this.customer.cm_curr 
+        _so.so_taxable = this.customer.address.ad_taxable 
+        _so.so_taxc = this.customer.address.ad_taxc 
+        _so.so_ex_rate = this.ex_rate1 
+        _so.so_ex_rate2 = this.ex_rate2
+
+      // }  
         
-         
+  // })
       
       
     return _so;
@@ -579,6 +670,10 @@ type: String;
         width: 30,
         filterable: false,
         type: FieldType.float,
+        editor: {
+          model: Editors.float,
+          params:{minDecimal: 2,},
+        },
        
       },
       {
@@ -641,6 +736,14 @@ type: String;
         editor: {
           model: Editors.date,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
+          if ( days < 0) {days = 0 }
+          console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , day: days })
+
+          },
       },
       
       {
@@ -653,6 +756,26 @@ type: String;
         type: FieldType.dateIso,
         editor: {
           model: Editors.date,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
+          if ( days < 0) {days = 0 }
+          console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , day: days })
+
+          },
+      },
+      {
+        id: "day",
+        name: "Nbr Jour",
+        field: "day",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.integer,
+        editor: {
+          model: Editors.integer,
         },
       },
       {
@@ -834,6 +957,41 @@ onChangeCust() {
   );
 }
 
+onChangeDeal() {
+  const controls = this.projectForm.controls; // chof le champs hada wesh men form rah
+  const deal_code = controls.pm_deal.value;
+  
+  this.dealService.getByOne({ deal_code }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
+
+      if (!data) {
+        this.layoutUtilsService.showActionNotification(
+          "ce contrat n'existe pas!",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.error = true;
+        document.getElementById("deal").focus();
+        controls.pm_deal.setValue(null)
+      } else {
+        this.error = false;
+        controls.pm_deal.setValue(data.deal_code || "");
+             
+          
+      
+
+
+      }
+       
+    },
+    (error) => console.log(error)
+  );
+}
+
 handleSelectedRowsChanged2(e, args) {
   
   const controls = this.projectForm.controls;
@@ -882,11 +1040,18 @@ handleSelectedRowsChanged2(e, args) {
 handleSelectedRowsChanged3(e, args) {
   this.selectedIndexes =[]
   this.selectedIndexes = args.rows;
-//   let a = []
-//   this.selectedIndexes.forEach(index => {
-//     a.push(this.specifications[index]['mp_nbr'])
-//  });
-//   console.log(a)
+
+}
+
+handleSelectedRowsChanged5(e, args) {
+  this.selectedTriggersIndexes =[]
+  this.selectedTriggersIndexes = args.rows;
+  // const selected_trigger_code = this.gridService5.getDataItemByRowIndex(this.selectedTriggersIndexes[0]).code_value
+  
+  (this.specifications[this.selected_doc_row_number] as any).pjd_trigger = this.gridService5.getDataItemByRowIndex(this.selectedTriggersIndexes[0]).code_value
+  // this.specifications[this.selected_doc_row_number].pjd_trigger = selected_trigger_code
+
+  this.dataView3.setItems(this.specifications)
 }
 
 angularGridReady2(angularGrid: AngularGridInstance) {
@@ -898,7 +1063,11 @@ angularGridReady3(angularGrid: AngularGridInstance) {
   this.angularGrid3 = angularGrid;
   this.gridService = angularGrid.gridService;
   this.gridObj3 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+  this.dataView3 = angularGrid.dataView;
 }
+
+// DOCS ***************************************
+
 
 prepareGrid3() {
   this.columnDefinitions3 = [
@@ -926,6 +1095,51 @@ prepareGrid3() {
       filterable: true,
       type: FieldType.string,
     },
+    // {
+    //   id: "pjd_trigger",
+    //   name: "Trigger",
+    //   field: "pjd_trigger",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   type: FieldType.string,
+    //   editor: {model: Editors.text}
+    // },
+    // {
+    //   id: "mvid",
+    //   field: "cmvid",
+    //   excludeFromHeaderMenu: true,
+    //   formatter: Formatters.infoIcon,
+    //   minWidth: 30,
+    //   maxWidth: 30,
+    //   onCellClick: (e: Event, args: OnEventArgs) => {
+    //       this.selected_doc_row_number = args.row
+    //       console.log(this.selected_doc_row_number)
+    //       let element: HTMLElement = document.getElementById(
+    //           "openTriggerPopup"
+    //       ) as HTMLElement
+    //       element.click()
+        
+           
+    //   },
+    // },
+    {
+        id: "pjd_trigger",
+        name: "Trigger",
+        field: "pjd_trigger",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.singleSelect,
+          enableRenderHtml: true,
+          collectionAsync: this.http.get(`${API_URL}/triggerType`), 
+         
+        },
+      },
+    
+
     {
       id: "mp_expire",
       name: "date expiration",
@@ -942,6 +1156,7 @@ prepareGrid3() {
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
       enableFiltering: true,
+      editable : true,
       autoEdit: false,
       autoHeight: true,
       frozenColumn: 0,
@@ -957,6 +1172,65 @@ prepareGrid3() {
     .getSpecifications()
     .subscribe((response: any) => (this.specifications = response.data));
 }
+
+prepareTriggersGrid() {
+  this.columnDefinitions5 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "code_value",
+      name: "code",
+      field: "code_value",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "code_desc",
+      name: "description",
+      field: "code_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    
+  ];
+
+  this.gridOptions5 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: true,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      multiSelect: true,
+      rowSelectionOptions: {selectActiveRow: false}
+  };
+
+  // fill the dataset with your data
+  this.qualityControlService
+  .findDocumentTriggers()
+  .subscribe((response: any) => {
+    console.log(response.data)
+    this.doc_triggers = response.data});
+}
+
+openTriggerGrid(content){
+  this.prepareTriggersGrid()
+  this.modalService.open(content, { size: "lg" })
+}
+
+
 
 prepareGrid2() {
   this.columnDefinitions2 = [
@@ -1057,6 +1331,7 @@ open2(content) {
   this.prepareGrid2();
   this.modalService.open(content, { size: "lg" });
 }
+
 
 open3(content) {
   this.prepareGrid3();
@@ -1387,6 +1662,43 @@ open4(content) {
   this.prepareGrid4();
   this.modalService.open(content, { size: "lg" });
 }
+angularGridReady5(angularGrid: AngularGridInstance) {
+  this.angularGrid5 = angularGrid;
+  this.gridService5 = angularGrid.gridService;
+  this.gridObj5 = (angularGrid && angularGrid.slickGrid && angularGrid.gridService) || {};
+
+  // this.angularGrid5 = angularGrid;
+  // this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+
+
+   this.dataView5 = angularGrid.dataView;
+   this.grid5= angularGrid.slickGrid;
+   this.dataView5.getItemMetadata = this.updateItemMetadata(this.dataView5.getItemMetadata);
+   this.grid5.invalidate();
+   this.grid5.render();
+}
+
+updateItemMetadata(previousItemMetadata: any) {
+  const newCssClass = 'highlight-bg';
+  return (rowNumber: number) => {
+    const item = this.dataView5.getItem(rowNumber);
+    let meta = {
+      cssClasses: ''
+    };
+    if (typeof previousItemMetadata === 'object') {
+      meta = previousItemMetadata(rowNumber);
+    }
+
+    if (meta && item && item.etat_service) {
+      const state = item.etat_service;
+      if (state === "true") {
+        meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
+      }
+    }
+
+    return meta;
+  };
+}
 
 
 
@@ -1660,5 +1972,151 @@ opensite(contentsite) {
   this.prepareGridsite()
   this.modalService.open(contentsite, { size: "lg" })
 }
+
+
+
+handleSelectedRowsChangeddeal(e, args) {
+  const controls = this.projectForm.controls
+ 
+  if (Array.isArray(args.rows) && this.gridObjdeal) {
+      args.rows.map((idx) => {
+          const item = this.gridObjdeal.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+          
+                  controls.pm_deal.setValue(item.deal_code || "")
+          
+      })
+  }
+}
+angularGridReadydeal(angularGrid: AngularGridInstance) {
+  this.angularGriddeal = angularGrid
+  this.gridObjdeal = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGriddeal() {
+  this.columnDefinitionsdeal = [
+      {
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+
+          minWidth: 50,
+          maxWidth: 50,
+      },
+     
+   
+    {
+        id: "deal_code",
+        name: "Code",
+        field: "deal_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+    },
+    {
+        id: "deal_desc",
+        name: "Designation",
+        field: "deal_desc",
+        sortable: true,
+        width: 200,
+        filterable: true,
+        type: FieldType.string,
+    },
+    {
+      id: "deal_start_date",
+      name: "Date Début",
+      field: "deal_start_date",
+      sortable: true,
+      filterable: true,
+      type: FieldType.dateIso,
+     },
+     {
+      id: "deal_end_date",
+      name: "Date Fin",
+      field: "deal_end_date",
+      sortable: true,
+      filterable: true,
+      type: FieldType.dateIso,
+     },
+     {
+      id: "deal_amt",
+      name: "Montant",
+      field: "deal_amt",
+      sortable: true,
+      filterable: true,
+      type: FieldType.float,
+     },
+     {
+      id: "deal_inv_meth",
+      name: "Méthode de Facturaion",
+      field: "deal_inv_meth",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     },
+     {
+      id: "deal_pay_meth",
+      name: "Méthode de Paiement",
+      field: "deal_pay_meth",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     },
+    
+     {
+      id: "deal_status",
+      name: "Status",
+      field: "deal_status",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     },
+     {
+      id: "deal_open",
+      name: "Ouvert/Ferme",
+      field: "deal_open",
+      sortable: true,
+      filterable: true,
+      formatter:Formatters.checkmark,
+      type: FieldType.boolean,
+     },
+      
+  ]
+
+  this.gridOptionsdeal = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  const controls = this.projectForm.controls
+  this.dealService
+      .getAll()
+      .subscribe((response: any) => (this.datadeal = response.data))
+}
+opendeal(content) {
+  
+  this.prepareGriddeal()
+  this.modalService.open(content, { size: "lg" })
+}
+
+
+
 
 }

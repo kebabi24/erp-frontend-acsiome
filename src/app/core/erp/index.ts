@@ -72,15 +72,17 @@ export { GeneralLedger } from "./_models/general-ledger.model";
 export { CategoryProduct } from "./_models/pos-category-product.model";
 export { PosInventory } from "./_models/pos-inventory.model";
 export { Delivery } from "./_models/delivery.model";
+export { Sensibilisation } from "./_models/sensibilisation.model";
 export { Label } from "./_models/label.model";
-export { Cluster } from "./_models/cluster.model"
-export { SubCluster } from "./_models/cluster-sub.model"
-export { Category } from "./_models/category.model"
-export { CategoryType } from "./_models/category-type.model"
-export { VisitResult } from "./_models/visit-result.model"
-export { ProductPage } from "./_models/product-page.model"
-export { Domain } from "./_models/domain.model"
-export { TokenSerie } from "./_models/token-serie.model"
+export { Cluster } from "./_models/cluster.model";
+export { SubCluster } from "./_models/cluster-sub.model";
+export { Category } from "./_models/category.model";
+export { CategoryType } from "./_models/category-type.model";
+export { VisitResult } from "./_models/visit-result.model";
+export { ProductPage } from "./_models/product-page.model";
+export { Domain } from "./_models/domain.model";
+export { TokenSerie } from "./_models/token-serie.model";
+export { Deal } from "./_models/deal.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -159,36 +161,11 @@ export { CRMService } from "./_services/crm.service";
 export { DeliveryService } from "./_services/delivery.service";
 export { ForcastService } from "./_services/forcast.service";
 export { LabelService } from "./_services/label.service";
-export { MobileSettingsService } from "./_services/mobile-settings.service"
-export { LoadRequestService } from "./_services/load-request.service"
-export { QualityControlService } from "./_services/quality-control.service"
+export { MobileSettingsService } from "./_services/mobile-settings.service";
+export { LoadRequestService } from "./_services/load-request.service";
+export { QualityControlService } from "./_services/quality-control.service";
 export { DomainService } from "./_services/domain.service";
-export { TokenSerieService } from "./_services/token-serie.service"
-export { DashboardCommercialService } from "./_services/dashboard-commercial.service"
-
-export {
-  printBc,
-  printTag,
-  printReceive,
-  printReceiveUNP,
-  printTR,
-  printISSUNP,
-  printOc,
-  printSO,
-  printBL,
-  printIH,
-  printInventory,
-  printInventoryOfSecurity,
-  printInventoryActivity,
-  printProviderBalance,
-  printInventoryByLoc,
-  printInventoryByStatus,
-  printItemPurchaseByProvider,
-  printProviderActivity,
-  printProviderCA,
-  printItemSalesByCustomer,
-  printCustomerActivity,
-  printCustomerSolde,
-  printCustomerCAList,
-  printLp,
-} from "./helpers/print";
+export { TokenSerieService } from "./_services/token-serie.service";
+export { DashboardCommercialService } from "./_services/dashboard-commercial.service";
+export { DealService } from "./_services/deal.service";
+export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

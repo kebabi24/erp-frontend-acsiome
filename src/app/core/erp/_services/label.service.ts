@@ -22,7 +22,7 @@ export class LabelService {
     // CREATE
     public add(label: Label) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, location, { headers: httpHeaders })
+        return this.http.post(API_URL, label, { headers: httpHeaders })
     }
 
     // READ

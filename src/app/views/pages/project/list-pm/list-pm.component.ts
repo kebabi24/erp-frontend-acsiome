@@ -146,7 +146,7 @@ export class ListPmComponent implements OnInit {
           enableSorting: true,
           enableCellNavigation: true,
           enableExcelCopyBuffer: true,
-          enableFiltering: false,
+          enableFiltering: true,
           enableAutoResize: true,
           autoEdit: false,
           autoHeight: false,

@@ -1,0 +1,198 @@
+<kt-portlet>
+  <kt-portlet-header [sticky]="true" [title]="'Ajouter un Contrat'" [class]="'card-head-lg'">
+    <ng-container ktPortletTools>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div class="example-preview">
+      <form class="form" [formGroup]="dealForm">
+        <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Code Contrat: *</label>
+            <input type="text" (change)="onChangeCode()" [className]="dealForm.controls['deal_code'].errors && (dealForm.controls['deal_code'].dirty || dealForm.controls['deal_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="deal_code" />
+            <div *ngIf="dealForm.controls['deal_code'].errors && (dealForm.controls['deal_code'].dirty || dealForm.controls['deal_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-6">
+            <label class="form-group">Description: *</label>
+            <input type="text" [className]="dealForm.controls['deal_desc'].errors && (dealForm.controls['deal_desc'].dirty || dealForm.controls['deal_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="deal_desc" />
+            <div *ngIf="dealForm.controls['deal_desc'].errors && (dealForm.controls['deal_desc'].dirty || dealForm.controls['deal_desc'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+          </div>
+
+          <div class="form-group col-2">
+            <label class="form-group">Client :</label>
+            <div class="input-group input-group-sm">
+              <input type="text" (change)="onChangeCust()" id="cust" [className]="dealForm.controls['deal_cust'].errors && (dealForm.controls['deal_cust'].dirty || dealForm.controls['deal_cust'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="deal_cust" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="open2(content2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div>
+              <div *ngIf="dealForm.controls['deal_cust'].errors && (dealForm.controls['deal_cust'].dirty || dealForm.controls['deal_cust'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-3">
+            <label class="form-group">Date Début: </label>
+
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-solid" placeholder="jj-mm-aaaa" name="deal_start_date" formControlName="deal_start_date" ngbDatepicker #deal_start_date="ngbDatepicker" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" (click)="deal_start_date.toggle()" type="button">
+                  <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-3">
+            <label class="form-group">Date Fin: </label>
+
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-solid" placeholder="jj-mm-aaaa" name="deal_end_date" formControlName="deal_end_date" ngbDatepicker #deal_end_date="ngbDatepicker" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" (click)="deal_end_date.toggle()" type="button">
+                  <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group"> Montant:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" aria-describedby="basic-addon2" formControlName="deal_amt" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Méthode De Facturation:</label>
+            <select class="form-control form-control-sm form-control-solid" id="deal_inv_meth" formControlName="deal_inv_meth">
+              <option value=""></option>
+              <option *ngFor="let elem of deal_inv_meth" [value]="elem.code_value">{{ elem.code_value }} {{ elem.code_cmmt }}</option>
+            </select>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Méthode De Paiement:</label>
+            <select class="form-control form-control-sm form-control-solid" id="deal_pay_meth" formControlName="deal_pay_meth">
+              <option value=""></option>
+              <option *ngFor="let elem of deal_pay_meth" [value]="elem.code_value">{{ elem.code_value }} {{ elem.code_cmmt }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group"> Pénalité Client:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" aria-describedby="basic-addon2" step="0.01" formControlName="deal_pen_cust" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group"> Pénalité Fournisseur:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" aria-describedby="basic-addon2" step="0.01" formControlName="deal_pen_prov" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group"> Délai Client:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" aria-describedby="basic-addon2" formControlName="deal_delai_cust" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group"> Délai Fournisseur:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" aria-describedby="basic-addon2" formControlName="deal_delai_prov" />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Status:</label>
+            <select class="form-control form-control-sm form-control-solid" id="deal_status" formControlName="deal_status">
+              <option value=""></option>
+              <option *ngFor="let elem of deal_status" [value]="elem.code_value">{{ elem.code_value }} {{ elem.code_cmmt }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group"> Signateur Client:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" aria-describedby="basic-addon2" formControlName="deal_sign_cust" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group"> Signateur Fournisseur:</label>
+
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" aria-describedby="basic-addon2" formControlName="deal_sign_prov" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group"> Ouvert/Ferme: *</label>
+            <span class="switch switch-icon">
+              <label>
+                <input type="checkbox" name="Permanent" formControlName="deal_open" class="form-control form-control-sm form-control-solid" />
+                <span></span>
+              </label>
+            </span>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group"> Facturation Complete/Partielle: *</label>
+            <span class="switch switch-icon">
+              <label>
+                <input type="checkbox" name="inv" formControlName="deal_inv" class="form-control form-control-sm form-control-solid" />
+                <span></span>
+              </label>
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-4">
+            <label class="form-group"> Contrat attach: *</label>
+            <div class="input-group input-group-sm">
+              <input type="file" class="form-control form-control-solid" aria-describedby="basic-addon2" name="attach" (change)="uploadFile($event)" value="" />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <ng-template #content2 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le Client</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions2" [dataset]="customers"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+  </kt-portlet-body>
+</kt-portlet>

@@ -20,4 +20,5 @@ export class Project extends BaseModel {
     pm_win_addr : String
     pm_win_amt : Number
     pm_win_cmmt : String
+    pm_deal: String
 }
