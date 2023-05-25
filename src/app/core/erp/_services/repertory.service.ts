@@ -7,11 +7,11 @@ import { HttpUtilsService } from "../../_base/crud"
 import { environment } from "../../../../environments/environment"
 
 // model
-import { Label } from "../_models/label.model"
-const API_URL = environment.apiUrl + "/labels"
+
+const API_URL = environment.apiUrl + "/repertorys"
 
 @Injectable()
-export class LabelService {
+export class RepertoryService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -20,20 +20,10 @@ export class LabelService {
     ) {}
 
     // CREATE
-    public add(label: Label) {
+    public add(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, label, { headers: httpHeaders })
+        return this.http.post(API_URL, data, { headers: httpHeaders })
     }
-
-    public addProd(label: Label) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/prod`, label, { headers: httpHeaders })
-    }
-    public addPAL(label: Label) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/prodpal`, label, { headers: httpHeaders })
-    }
-    // READ
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -45,19 +35,26 @@ export class LabelService {
     }
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
-
-       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-        
+        return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })   
+    }
+    public getByAddress(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findaddress`,data, { headers: httpHeaders })   
+    }
+    public getByOne(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findOne`,data, { headers: httpHeaders })
+   
     }
     // UPDATE
-    public update(data: any, id:any) {
+    public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
-    }
-    public updatelist(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/upd`, data, { headers: httpHeaders })
+        return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
     }
     // DELETE
+    public delete(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
+    
 }

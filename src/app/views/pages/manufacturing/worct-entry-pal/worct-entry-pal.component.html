@@ -1,130 +1,156 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Sortie Composant OF" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Reception Production" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button-->
 
         </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview">
 
-            <form class="form row" [formGroup]="trForm">
+            <form class="form" [formGroup]="trForm">
                 <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
                     {{message}}
                 </kt-alert>
-                <div class="col-9">
-                    <div class="row">
-                        
-                        
-                        
-                        <div class="form-group col-2">
-                            <label class="form-group">Effet:</label>
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-sm form-control-solid" formControlName="tr_effdate"
-                                    placeholder="jj-mm-aaaa" name="tr_effdate" ngbDatepicker f
-                                    #tr_effdate="ngbDatepicker">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" (click)="tr_effdate.toggle()" type="button">
-                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                    </button>
-                                </div>
-                                
-                            </div>
-
-
-                        </div>
+                <div class="row">
                     
-                        <div class="form-group col-2">
-                            <label class="form-group">ID OF:</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" class="form-control form-control-solid"  formControlName="tr_lot" id="id"
-                                    aria-describedby="basic-addon2" (change)="onChangeOA()">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open5(content5)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
+                    
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">Effet:</label>
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid" formControlName="tr_effdate"
+                                 placeholder="jj-mm-aaaa" name="tr_effdate" ngbDatepicker f
+                                #tr_effdate="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="tr_effdate.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
                             </div>
-
+                            
                         </div>
-                        
-                        <div class="form-group col-2">
-                            <label class="form-group">N° OF:</label>
-                            <div class="input-group input-group-sm">
 
-                                <input type="text" class="form-control form-control-solid"  formControlName="tr_nbr"
-                                    aria-describedby="basic-addon2" >
-                                
+
+                    </div>
+                  
+                    <div class="form-group col-2">
+                        <label class="form-group">ID OF:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="tr_lot" id="id"
+                                aria-describedby="basic-addon2" (change)="onChangeOA()">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open5(content5)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">N° OF:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="tr_nbr"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Site:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"   id="site"
+                                [className]="trForm.controls['tr_site'].errors && (trForm.controls['tr_site'].dirty || trForm.controls['tr_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="tr_site" (change)="onChangeSite()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=opensite(contentsite)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
 
+                            <div *ngIf="trForm.controls['tr_site'].errors && (trForm.controls['tr_site'].dirty || trForm.controls['tr_site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="form-group">Empl: </label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="tr_loc" (change)="onChangeLoc()" formControlName="tr_loc"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openloc(contentloc)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
 
-                        <div class="form-group col-2">
-                            <label class="form-group">Article:</label>
-                            <div class="input-group input-group-sm">
+                </div>
+                <div class="row">
 
-                                <input type="text" class="form-control form-control-solid"  formControlName="tr_part"
-                                    aria-describedby="basic-addon2" >
-                                
-                            </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Article:</label>
+                        <div class="input-group input-group-sm">
 
+                            <input type="text" class="form-control form-control-solid"  formControlName="tr_part"
+                                aria-describedby="basic-addon2" >
+                            
                         </div>
-                        <div class="form-group col-4">
-                            <label class="form-group">Designation:</label>
-                            <div class="input-group input-group-sm">
 
-                                <input type="text" class="form-control form-control-solid"  formControlName="desc"
-                                    aria-describedby="basic-addon2" >
-                                
-                            </div>
-
-                        </div>
-                        <div class="form-group col-2">
-                            <label class="form-group">Liaison:</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" class="form-control form-control-solid"  formControlName="tr_so_job"
-                                    aria-describedby="basic-addon2" >
-                                
-                            </div>
-
-                        </div>
-                        
-                        
                     </div>
-                    <div class="row">
+                    <div class="form-group col-4">
+                        <label class="form-group">Designation:</label>
+                        <div class="input-group input-group-sm">
 
-                        <div class="form-group col-3">
-                            <label class="form-group">N° Palette :</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()"
-                                    aria-describedby="basic-addon2">
-                                
-                            </div>
-
+                            <input type="text" class="form-control form-control-solid"  formControlName="desc"
+                                aria-describedby="basic-addon2" >
+                            
                         </div>
+
+                    </div>
+                    
+                </div>
+                 
+                <div class="row">
+
+                    <div class="form-group col-4">
+                        <label class="form-group">Observation:</label>
+                        <textarea class="form-control form-control-sm form-control-solid" formControlName="tr_rmks"
+                            rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Liaison:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="tr_so_job"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                   
+                       
+                     
+                 
+                    
+                </div>
+                <div class="row" style="display: flex; justify-content:right">
+                    <div class="form-group col-3">
+                        <label class="form-group">Valider:</label>
+                        <a class="btn btn-success font-weight-bold mr-2" (click)="onSubmit()">
+                            <i class="flaticon2-print"></i> Valider
+                        </a> 
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="row">
 
-                        <div class="form-group col-9">
-                            <label class="form-group">Observation:</label>
-                            <textarea class="form-control form-control-sm form-control-solid" formControlName="tr_rmks"
-                                rows="5"></textarea>
-                        </div>
-
-                        
-                            
-                    </div>
-                </div> 
                 <div class="row">
                     <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
                 </div>
@@ -195,32 +221,6 @@
                 modal</button>
         </div>
         <div>
-            <ng-template #contentlocdet let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir Lot </h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridloc"
-                            [columnDefinitions]="columnDefinitionslocdet"
-                            (onAngularGridCreated)="angularGridReadylocdet($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedlocdet($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptionslocdet" [dataset]="datalocdet">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-            <button hidden id="openLocdetsGrid" class="btn btn-primary" (click)="openlocdet(contentlocdet)">Launch demo
-                modal</button>
-        </div>
-        <div>
             <ng-template #contentum let-c="close" let-d="dismiss">
                 <div class="modal-header">
                     <h4 class="modal-title">Choissir UM</h4>
@@ -246,33 +246,6 @@
                 modal</button>
     
         </div>
-        <div>
-            <ng-template #content4 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir l'article</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
-                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptions4" [dataset]="items">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
-                modal</button>
-
-        </div>
-
         <div>
             <ng-template #contentstatus let-c="close" let-d="dismiss">
                 <div class="modal-header">

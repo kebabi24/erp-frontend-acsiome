@@ -54,13 +54,15 @@ import { NgxPermissionsModule } from "ngx-permissions"
 
 //Service 
 import {AccountReceivableService,SaleOrderService, AddressService, CodeService, CustomerService, AccountService, TaxeService, 
-        SiteService, DeviseService, BankService, SequenceService } from '../../../core/erp';
+        SiteService, DeviseService, BankService, SequenceService, RepertoryService } from '../../../core/erp';
 import { CustomerSoldelistComponent } from './customer-soldelist/customer-soldelist.component';
 import { CustomerCAlistComponent } from './customer-calist/customer-calist.component';
 import { CustomerCAbyItemlistComponent } from './customer-caby-itemlist/customer-caby-itemlist.component';
 import { CustomerActivitylistComponent } from './customer-activitylist/customer-activitylist.component'
 import { CustomerReclamationComponent } from "./customer-reclamation/customer-reclamation.component";
 import { CustomerSatisfactionComponent } from "./customer-satisfaction/customer-satisfaction.component";
+import { CreateRepComponent } from './create-rep/create-rep.component';
+import { ListRepComponent } from './list-rep/list-rep.component';
 const routes: Routes = [
   {
       path: "",
@@ -108,6 +110,14 @@ const routes: Routes = [
             path: "customer-satisfaction",
             component: CustomerSatisfactionComponent,
           },
+          {
+            path: "create-rep",
+            component: CreateRepComponent,
+          },
+          {
+            path: "list-rep",
+            component: ListRepComponent,
+          },
       ],
   },
 ]
@@ -124,6 +134,8 @@ const routes: Routes = [
         CustomerActivitylistComponent,
         CustomerReclamationComponent,
         CustomerSatisfactionComponent,
+        CreateRepComponent,
+        ListRepComponent,
     ],
     imports: [
         CommonModule,
@@ -171,6 +183,7 @@ const routes: Routes = [
         SaleOrderService,
         AccountReceivableService,
         SequenceService,
+        RepertoryService,
     ],
     entryComponents: [
         ActionNotificationComponent,

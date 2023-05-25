@@ -6,6 +6,8 @@ export class Label extends BaseModel {
 
     lb_loc : String 
 
+    lb_pal : String
+    
     lb_part : String 
 
     lb_nbr : String 
@@ -18,7 +20,7 @@ export class Label extends BaseModel {
 
     lb_cab : String 
 
-    lb_qty: Boolean 
+    lb_qty: Number 
 
     lb_actif: Boolean
 

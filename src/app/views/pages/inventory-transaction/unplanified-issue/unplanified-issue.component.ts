@@ -627,6 +627,19 @@ export class UnplanifiedIssueComponent implements OnInit {
           
         },
         {
+          id: "tr_ref",
+          name: "Palette",
+          field: "tr_ref",
+          sortable: true,
+          width: 80,
+          filterable: false,
+         // editor: {
+         //     model: Editors.float,
+          //},
+          
+        },
+        
+        {
             id: "tr_price",
             name: "Prix unitaire",
             field: "tr_price",
@@ -760,7 +773,9 @@ export class UnplanifiedIssueComponent implements OnInit {
         
         tr_rmks: [this.inventoryTransaction.tr_rmks],
         tr_addr: [this.inventoryTransaction.tr_addr],
-        print:[true]
+        print:[true],
+        ref: [null],
+     
       });
     }
     //reste form
@@ -1414,6 +1429,7 @@ export class UnplanifiedIssueComponent implements OnInit {
               updateItem.tr_serial = item.ld_lot;
               updateItem.tr_status = item.ld_status;
               updateItem.tr_expire = item.ld_expire;
+              updateItem.tr_ref = item.ld_ref;
               updateItem.qty_oh = item.ld_qty_oh;
               
               this.gridService.updateItem(updateItem);
@@ -1490,6 +1506,15 @@ export class UnplanifiedIssueComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
           },
+          {
+            id: "ld_ref",
+            name: "Palette",
+            field: "ld_ref",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          
           {
             id: "ld_qty_oh",
             name: "Qte",
@@ -1939,6 +1964,115 @@ console.log(updateItem.tr_part)
     this.prepareGrid2();
     this.modalService.open(content, { size: "lg" });
   }
+
+
+
+  onChangePal() {
+    /*kamel palette*/
+    const controls = this.trForm.controls
+    const ref = controls.ref.value
+  var bol = false
+    for(let ob of this.dataset) {
+
+      if(ob.tr_ref == ref) {
+        console.log("hnehnahna")
+        bol = true
+        break;
+       
+      }
+    }
+    if (!bol) {
+    this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
+      (response: any) => {
+        this.lddet = response.data
+        //console.log(this.lddet.ld_qty_oh)
+    if (this.lddet != null) {
+     
+      
+      
+     
+     
+      this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-UNP" }).subscribe((resstat:any)=>{
+          console.log(resstat)
+          const { data } = resstat;
+
+          if (data) {
+            this.stat = null
+            alert("Status Interdit pour ce mouvement ")
+
+
+          } else {
+            this.stat = this.lddet.ld_status
+          
+
+      // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+      //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+             
+     
+     this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+      (respopart: any) => {
+        console.log(respopart)
+
+     this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+      (respo: any) => {
+        this.sct = respo.data
+        console.log(this.sct)
+    
+
+     this.gridService.addItem(
+      {
+        id: this.dataset.length + 1,
+        tr_line: this.dataset.length + 1,
+        tr_part: this.lddet.ld_part,
+        cmvid: "",
+        desc: respopart.data.pt_desc1,
+        tr_qty_loc: this.lddet.ld_qty_oh,
+        qty_oh: this.lddet.ld_qty_oh,
+        tr_site:  this.lddet.ld_site,
+        tr_loc: this.lddet.ld_loc,
+        tr_ref: this.lddet.ld_ref,
+        tr_um: respopart.data.pt_um,
+        tr_um_conv:1,
+        tr_price: this.sct.sct_mtl_tl,
+        cmvids: "",
+        tr_serial: this.lddet.ld_lot,
+        tr_status: this.stat,
+        tr_expire: this.lddet.ld_expire,
+      },
+      { position: "bottom" }
+    );
+ 
+     });
+  
+})
+  
+     
+  }
+  }); 
+        
+    
+ 
+
+
+  }
+
+
+
+    else {
+    alert("Palette Nexiste pas")
+  //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+    }
+
+    });
+
+  }
+  else {
+    alert ("Palette déja scannée")
+  }
+  controls.ref.setValue(null)
+  document.getElementById("ref").focus();
+  
+}
 
 
 }

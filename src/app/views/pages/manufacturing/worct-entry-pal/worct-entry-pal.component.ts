@@ -71,12 +71,13 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   return { valid: true, msg: '' };
 };
 
+
 @Component({
-  selector: 'kt-worct-entry',
-  templateUrl: './worct-entry.component.html',
-  styleUrls: ['./worct-entry.component.scss']
+  selector: 'kt-worct-entry-pal',
+  templateUrl: './worct-entry-pal.component.html',
+  styleUrls: ['./worct-entry-pal.component.scss']
 })
-export class WorctEntryComponent implements OnInit {
+export class WorctEntryPalComponent implements OnInit {
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   hasFormErrors = false;
@@ -91,7 +92,7 @@ export class WorctEntryComponent implements OnInit {
   gridOptions: GridOption;
   dataset: any[];
   provider: any;
-  
+  trdataset: any[];
  
   items: [];
   columnDefinitions4: Column[] = [];
@@ -152,6 +153,9 @@ export class WorctEntryComponent implements OnInit {
   site;
   loc;
   rctwostat;
+  price;
+  label;
+  
   constructor(
     config: NgbDropdownConfig,
     private trFB: FormBuilder,
@@ -235,7 +239,7 @@ export class WorctEntryComponent implements OnInit {
 
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_um)
+          //(args.dataContext.tr_um)
           this.itemsService.getBy({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
             
           if   (args.dataContext.tr_um == resp.data.pt_um )  {
@@ -247,7 +251,7 @@ export class WorctEntryComponent implements OnInit {
 
 
               this.mesureService.getBy({um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
-              console.log(res)
+              //console.log(res)
               const { data } = res;
     
             if (data) {
@@ -256,7 +260,7 @@ export class WorctEntryComponent implements OnInit {
               this.angularGrid.gridService.highlightRow(1, 1500);
             } else {
               this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
-                console.log(res)
+                //console.log(res)
                 const { data } = res;
                 if (data) {
                   //alert ("Mouvement Interdit Pour ce Status")
@@ -325,7 +329,7 @@ export class WorctEntryComponent implements OnInit {
           this.siteService.getByOne({ si_site: args.dataContext.tr_site,}).subscribe(
             (response: any) => {
               
-      console.log(response.data)
+     // console.log(response.data)
 
                 if (response.data) {
                   
@@ -378,7 +382,7 @@ export class WorctEntryComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_loc)
+          //console.log(args.dataContext.tr_loc)
           
             
             this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe(
@@ -388,7 +392,7 @@ export class WorctEntryComponent implements OnInit {
 
                     
                         this.inventoryStatusService.getAllDetails({isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat:any)=>{
-                          console.log(resstat)
+                         // console.log(resstat)
                           const { data } = resstat;
   
                           if (data) {
@@ -441,7 +445,7 @@ export class WorctEntryComponent implements OnInit {
           this.locationDetailService.getBy({ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial
           } ).subscribe(
             (response: any) => {
-              console.log(response.data)
+             // console.log(response.data)
           if (response.data.length != 0) {
 
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire })
@@ -472,15 +476,15 @@ export class WorctEntryComponent implements OnInit {
 
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_status)
+          //console.log(args.dataContext.tr_status)
          
           this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
-            console.log(ress.data.inventoryStatus) 
+          //  console.log(ress.data.inventoryStatus) 
     if (ress.data.inventoryStatus) {
 
 
           this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-WO" }).subscribe((res:any)=>{
-          console.log(res)
+      //    console.log(res)
           const { data } = res;
 
         if (data) {
@@ -494,10 +498,10 @@ export class WorctEntryComponent implements OnInit {
              ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial
             }
             status = args.dataContext.tr_status
-          console.log(status)
+         // console.log(status)
           this.locationDetailService.getByStatus({obj, status} ).subscribe(
             (response: any) => {
-             console.log(response.data.length != 0   )
+             //console.log(response.data.length != 0   )
               if (response.data.length != 0) {
                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
                   alert("lot existe avec un autre status")
@@ -670,7 +674,8 @@ export class WorctEntryComponent implements OnInit {
       }],
       tr_lot : [this.inventoryTransaction.tr_lot],
       tr_nbr:  [{value: this.inventoryTransaction.tr_nbr,disabled:true}],
-     
+      tr_site:  [this.inventoryTransaction.tr_site],
+      tr_loc:  [this.inventoryTransaction.tr_loc],
       tr_part:  [{value:this.inventoryTransaction.tr_part, disabled: true}],
       desc:  [{value:"", disabled: true}],
 
@@ -694,6 +699,8 @@ export class WorctEntryComponent implements OnInit {
         controls.tr_lot.setValue(this.woServer.id);
         controls.tr_nbr.setValue(this.woServer.wo_nbr);
         controls.tr_part.setValue(this.woServer.wo_part);
+        controls.tr_site.setValue(this.woServer.wo_site);
+        controls.tr_loc.setValue(this.woServer.wo_loc);
         controls.desc.setValue(this.woServer.item.pt_desc1)
         this.umd = this.woServer.item.pt_um
         this.qtycart = (this.woServer.item.int03 != null) ? this.woServer.item.int03 : 0
@@ -708,7 +715,7 @@ export class WorctEntryComponent implements OnInit {
                 loc_loc: this.loc,
           })
           .subscribe((resp: any) => {
-              console.log(resp.data, resp.data.length)
+             // console.log(resp.data, resp.data.length)
               this.rctwostat = resp.data.loc_status
           })
         
@@ -736,6 +743,73 @@ export class WorctEntryComponent implements OnInit {
     this.hasFormErrors = false;
   }
   // save data
+  // onSubmit() {
+    
+    
+
+  //   this.hasFormErrors = false;
+  //   const controls = this.trForm.controls;
+  //   /** check form */
+  //   if (this.trForm.invalid) {
+  //     Object.keys(controls).forEach((controlName) =>
+  //       controls[controlName].markAsTouched()
+  //     );
+  //     this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+  //     this.hasFormErrors = true;
+
+  //     return;
+  //   }
+
+  //   if (!this.dataset.length) {
+  //     this.message = "La liste des article ne peut pas etre vide";
+  //     this.hasFormErrors = true;
+
+  //     return;
+  //   }
+  //   for (var i = 0; i < this.dataset.length; i++) {
+  //     console.log(this.dataset[i]  )
+  //    if (this.dataset[i].tr_site == "" || this.dataset[i].tr_site == null  ) {
+  //     this.message = "Le Site ne peut pas etre vide";
+  //     this.hasFormErrors = true;
+  //     return;
+ 
+  //    }
+  //    if (this.dataset[i].tr_loc == "" || this.dataset[i].tr_loc == null  ) {
+  //     this.message = "L' Emplacement ne peut pas etre vide";
+  //     this.hasFormErrors = true;
+  //     return;
+ 
+  //    }
+  //    if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null  ) {
+  //     this.message = "L' UM ne peut pas etre vide";
+  //     this.hasFormErrors = true;
+  //     return;
+ 
+  //    }
+  //    if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null  ) {
+  //     this.message = "Le Status ne peut pas etre vide";
+  //     this.hasFormErrors = true;
+  //     return;
+ 
+  //    }
+  //    if (this.dataset[i].tr_qty_loc == 0 ) {
+  //     this.message = "La Quantite ne peut pas etre 0";
+  //     this.hasFormErrors = true;
+  //     return;
+ 
+  //    }
+
+  //   }
+  
+  //         let tr = this.prepare()
+  //   this.addIt( this.dataset,tr);
+        
+  //     // tslint:disable-next-line:prefer-const
+    
+    
+      
+  // }
+
   onSubmit() {
     
     
@@ -760,7 +834,7 @@ export class WorctEntryComponent implements OnInit {
       return;
     }
     for (var i = 0; i < this.dataset.length; i++) {
-      console.log(this.dataset[i]  )
+     // console.log(this.dataset[i]  )
      if (this.dataset[i].tr_site == "" || this.dataset[i].tr_site == null  ) {
       this.message = "Le Site ne peut pas etre vide";
       this.hasFormErrors = true;
@@ -794,8 +868,80 @@ export class WorctEntryComponent implements OnInit {
 
     }
   
-          let tr = this.prepare()
-    this.addIt( this.dataset,tr);
+    this.trdataset = []
+     var qtypal : number = 0;  
+    for (let i of this.dataset) {
+      qtypal = qtypal + Number(i.tr_qty_loc)
+    }
+
+    const _lb = new Label();
+    _lb.lb_site =controls.tr_site.value
+    _lb.lb_loc = controls.tr_loc.value
+    _lb.lb_part = controls.tr_part.value
+    _lb.lb_nbr = controls.tr_nbr.value
+    _lb.lb_lot ="AAAAAAAAAAA"
+    _lb.lb_date = controls.tr_effdate.value
+        ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+        : null
+    _lb.lb_qty = qtypal
+    _lb.lb_ld_status = this.rctwostat
+    _lb.lb_desc = controls.desc.value
+
+    let lab = null
+
+    
+    this.labelService.addPAL(_lb).subscribe(
+      (reponse: any) => (lab = reponse.data),
+      (error) => {
+       alert("Erreur Impression Etiquette")   },
+      () => {
+    
+        this.labelService.updatelist({ detail: this.dataset , nbr : lab.lb_pal}).subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+              this.layoutUtilsService.showActionNotification(
+                  "Erreur verifier les informations",
+                  MessageType.Create,
+                  10000,
+                  true,
+                  true
+              )
+              this.loadingSubject.next(false)
+          },
+          () => {
+         
+    
+              this.label = lab
+              console.log("label",this.label)
+              this.trdataset.push({
+
+                tr_line: 1,
+                tr_part: controls.tr_part.value,
+                tr_qty_loc: Number(qtypal),
+                tr_um: this.umd,
+                tr_um_conv: 1,
+                tr_price: 0,
+                tr_site: controls.tr_site.value,
+                tr_loc: this.loc,
+                tr_serial: "AAAAAAAAAAA",
+                tr_status: this.rctwostat,
+                tr_ref: this.label.lb_pal,
+                tr_expire: null,
+          
+              })
+             // console.log(this.trdataset)
+              let tr = this.prepare()
+              console.log(tr)
+              this.addIt( this.trdataset,tr);
+          
+              this.loadingSubject.next(false)
+             
+          }
+      )
+        }
+  )
+   
+    //this.reset()
         
       // tslint:disable-next-line:prefer-const
     
@@ -804,6 +950,7 @@ export class WorctEntryComponent implements OnInit {
   }
 
   prepare(){
+    console.log("hounahouna")
     const controls = this.trForm.controls;
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = controls.tr_nbr.value
@@ -818,6 +965,7 @@ export class WorctEntryComponent implements OnInit {
     
     _tr.tr_rmks = controls.tr_rmks.value
   
+    console.log("-tr",_tr)
     return _tr
   }
   /**
@@ -835,13 +983,11 @@ export class WorctEntryComponent implements OnInit {
       delete data.cmvid;
     }
     this.loadingSubject.next(true);
-    const controls = this.trForm.controls;
-
-
+    
     this.inventoryTransactionService
       .addRCTWO({detail, it})
       .subscribe(
-       (reponse: any) => console.log(reponse),
+       (reponse: any) => //console.log(reponse),
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -864,7 +1010,7 @@ export class WorctEntryComponent implements OnInit {
       //    console.log(this.provider, po, this.dataset);
          
       
-          this.router.navigateByUrl("/");
+  //        this.router.navigateByUrl("/");
         }
       );
   }
@@ -881,7 +1027,7 @@ export class WorctEntryComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
-    console.log(this.sct)
+    //console.log(this.sct)
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -889,7 +1035,7 @@ export class WorctEntryComponent implements OnInit {
         tr_qty_loc: this.qtycart,
         tr_um: this.umd,
         tr_um_conv: 1,
-        tr_price: this.sct.sct_cst_tot,
+        tr_price: this.price,
         tr_site: this.site,
         tr_loc: this.loc,
         tr_serial: (this.uniquelot == "L") ? "AAAAAAAAAAA" : null,
@@ -915,17 +1061,18 @@ export class WorctEntryComponent implements OnInit {
       if (Array.isArray(args.rows) && this.gridObjsite) {
         args.rows.map((idx) => {
           const item = this.gridObjsite.getDataItem(idx);
-          console.log(item);
+         // console.log(item);
   
           this.sctService.getByOne({ sct_site: item.si_site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
             (resp: any) => {
               this.sct = resp.data
         
-          updateItem.tr_site  = item.si_site;
-          updateItem.tr_price = this.sct.sct_cst_tot;
+                    controls.tr_site.setValue(item.si_site || "");
+      
+         this.price = this.sct.sct_cst_tot;
+          this.site = item.si_site;
           
-          
-          this.gridService.updateItem(updateItem);
+         // this.gridService.updateItem(updateItem);
        
         });
     
@@ -1007,12 +1154,13 @@ export class WorctEntryComponent implements OnInit {
 
     handleSelectedRowsChangedloc(e, args) {
       let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+      const controls = this.trForm.controls
       if (Array.isArray(args.rows) && this.gridObjloc) {
         args.rows.map((idx) => {
           const item = this.gridObjloc.getDataItem(idx);
   
 
-          this.locationService.getByOne({ loc_loc: item.loc_loc, loc_site: updateItem.tr_site }).subscribe(
+          this.locationService.getByOne({ loc_loc: item.loc_loc, loc_site: controls.tr_site.value }).subscribe(
             (response: any) => {
               this.location = response.data
               if (response.data) {
@@ -1020,7 +1168,7 @@ export class WorctEntryComponent implements OnInit {
                  
              
                       this.inventoryStatusService.getAllDetails({isd_status: this.location.loc_status, isd_tr_type: "RCT-WO" }).subscribe((resstat:any)=>{
-                        console.log(resstat)
+                       // console.log(resstat)
                         const { data } = resstat;
 
                         if (data) {
@@ -1029,9 +1177,9 @@ export class WorctEntryComponent implements OnInit {
                           this.stat = this.location.loc_status
                         }
                         
-                        updateItem.tr_loc = item.loc_loc
-                        updateItem.tr_status = this.stat
-                        this.gridService.updateItem(updateItem);
+                        controls.tr_loc.setValue(item.loc_loc || "");
+                        this.loc = item.loc_loc;
+                       
                       });     
    
                     
@@ -1143,11 +1291,11 @@ export class WorctEntryComponent implements OnInit {
             selectActiveRow: true,
           },
         };
-        let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+        const controls = this.trForm.controls
       
       // fill the dataset with your data
       this.locationService
-        .getBy({ loc_site:  updateItem.tr_site })
+        .getBy({ loc_site:  controls.tr_site.value })
         .subscribe((response: any) => (this.dataloc = response.data));
     }
     openloc(contentloc) {
@@ -1179,7 +1327,7 @@ export class WorctEntryComponent implements OnInit {
 
 
               this.mesureService.getBy({um_um: updateItem.tr_um, um_alt_um: resp.data.pt_um, um_part: controls.tr_part.value  }).subscribe((res:any)=>{
-              console.log(res)
+             // console.log(res)
               const { data } = res;
 
             if (data) {
@@ -1188,7 +1336,7 @@ export class WorctEntryComponent implements OnInit {
               this.angularGrid.gridService.highlightRow(1, 1500);
             } else {
               this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: updateItem.tr_um, um_part: controls.tr_part.value  }).subscribe((res:any)=>{
-                console.log(res)
+               // console.log(res)
                 const { data } = res;
                 if (data) {
                   //alert ("Mouvement Interdit Pour ce Status")
@@ -1311,7 +1459,7 @@ export class WorctEntryComponent implements OnInit {
         const item = this.gridObjstatus.getDataItem(idx);
 
         this.inventoryStatusService.getAllDetails({isd_status: item.is_status, isd_tr_type: "RCT-WO" }).subscribe((res:any)=>{
-          console.log(res)
+         // console.log(res)
           const { data } = res;
 
         if (data) {
@@ -1421,7 +1569,7 @@ prepareGridstatus() {
     this.inventoryStatusService
       .getAll()
       .subscribe((response: any) => (this.statuss = response.data));
-      console.log(this.statuss)
+     // console.log(this.statuss)
 }
 openstatus(content) {
     this.prepareGridstatus()
@@ -1552,6 +1700,8 @@ handleSelectedRowsChanged5(e, args) {
      
       controls.tr_nbr.setValue(item.wo_nbr);
       controls.tr_part.setValue(item.wo_part);
+      controls.tr_site.setValue(item.wo_site);
+      controls.tr_loc.setValue(item.wo_loc);
       controls.desc.setValue(item.item.pt_desc1)
       this.umd = item.item.pt_um
       this.qtycart = (item.item.int03 != null) ? item.item.int03 : 0
@@ -1566,7 +1716,7 @@ handleSelectedRowsChanged5(e, args) {
               loc_loc: this.loc,
         })
         .subscribe((resp: any) => {
-            console.log(resp.data, resp.data.length)
+            //console.log(resp.data, resp.data.length)
             this.rctwostat = resp.data.loc_status
         })
       
@@ -1576,7 +1726,8 @@ handleSelectedRowsChanged5(e, args) {
       this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
         (resp: any) => {
           this.sct = resp.data
-          console.log(this.sct)
+         // console.log(this.sct)
+          this.price = this.sct.sct_cst_tot
     
     });
         }
@@ -1689,4 +1840,61 @@ open5(content) {
   this.prepareGrid5();
   this.modalService.open(content, { size: "lg" });
 }
+
+onChangeCode() {
+  const controls = this.trForm.controls
+  this.siteService
+      .getByOne({
+            si_site: controls.tr_site.value,
+          
+      })
+      .subscribe((response: any) => {
+          
+          const { data } = response;
+          if (!data) {
+            alert("Site n'existe pas")
+            controls.tr_site.setValue("")
+            document.getElementById("site").focus();
+          }else {
+            this.site = controls.tr_site.value
+          } 
+   })
+}
+onChangeLoc() {
+  const controls = this.trForm.controls;
+  const loc_loc = controls.tr_loc.value;
+  const loc_site = controls.tr_site.value;
+ 
+  
+  this.locationService.getByOne({ loc_site, loc_loc }).subscribe(
+    (res: any) => {
+      //console.log(res)
+      this.location = res.data
+
+      if (this.location == null) {
+
+      
+        alert("Emplacement n'existe pas ")
+        controls.tr_loc.setValue("")
+        //console.log(response.data.length)
+        document.getElementById("tr_loc").focus();
+      } else {
+        this.inventoryStatusService.getAllDetails({isd_status: this.location.loc_status, isd_tr_type: "RCT-WO" }).subscribe((resstat:any)=>{
+         // console.log(resstat)
+          const { data } = resstat;
+
+          if (data) {
+            this.stat = null
+          } else {
+            this.stat = this.location.loc_status
+          }
+        this.loc = controls.tr_loc.value
+    
+        })    
+      }
+    })    
+    
+}
+
+
 }
