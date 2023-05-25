@@ -694,7 +694,7 @@ prepareItem(): Item {
     // _item.pt_net_wt_um = controls2.pt_net_wt_um.value;  //
     // _item.pt_size = controls2.pt_size.value;         //
     // _item.pt_size_um = controls2.pt_size_um.value;   //
-    // _item.pt_drwg_size = controls2.pt_drwg_size.value; not used any more , changed with int03
+    // _item.pt_drwg_size = controls2.pt_drwg_size.value; not used any more , changed with int05
     _item.int03=controls2.int03.value;
     _item.int04=controls2.int04.value;
     _item.int05=controls2.int05.value;

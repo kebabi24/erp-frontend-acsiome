@@ -885,11 +885,11 @@ handleSelectedRowsChangedFiltredProd(e, args) {
      console.log(" list ids2 "+this.listprodIds)
     //  this.grid.setSelectedRows(this.listprodIds) 
 
-    //  this.filtredList.map((item)=>{
-    //   console.log(" item loc "+item.loc_loc)
-    //   console.log(" item code "+item.loc_part)
-    //   console.log(" item model "+item.model)
-    //  })
+     this.filtredList.map((item)=>{
+      console.log(" item loc "+item.loc_loc)
+      console.log(" item code "+item.loc_part)
+      console.log(" item model "+item.model)
+     })
 
   }
 }
