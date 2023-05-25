@@ -274,7 +274,7 @@ export class CreateLocComponent implements OnInit {
                     true
                 )
                 this.loadingSubject.next(false)
-                this.router.navigateByUrl("/")
+                this.router.navigateByUrl("/inventory-settings/list-loc")
             }
         )
         
@@ -976,13 +976,44 @@ export class CreateLocComponent implements OnInit {
         console.log(' refresh test ')
         // this.grid.setSelectedRows(this.listprodIds) 
         // this.grid.cellSelectionModel(this.listprodIds)
-        this.prepareGrid()
+        // this.prepareGrid()
+
         // alert('teeest')
         // this.grid.setActiveCell(this.listprodIds)
         // this.angularGrid.slickGrid.setSelectedRows(this.listprodIds); 
         // this.angularGrid.gridService.setSelectedRows(this.listprodIds); 
         // this.angularGrid.slickGrid.renderGrid()
         
+        this.gridOptions = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          enableCheckboxSelector:true,
+          multiSelect:true,
+          enableFiltering: true,
+          autoEdit: false,
+          enableAutoResize: true,
+          rowSelectionOptions: {
+            // True (Single Selection), False (Multiple Selections)
+            selectActiveRow: false,
+            
+          },
+          // enableRangeSelection=true,
+          autoFitColumnsOnFirstLoad: true,
+          // showCellSelection:true,
+          // enableRowSelection:true,
+          // autosizeColumnsByCellContentOnFirstLoad: true,
+          enableAutoSizeColumns: true,
+          syncColumnCellResize: true,
+    
+          presets: {
+            sorters: [{ columnId: "id", direction: "ASC" }],
+            rowSelection: {
+              // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+              dataContextIds: this.listprodIds  //[3,5, 12, 13,]  // (recommended) select by your data object IDs
+            }
+          },
+        };
       }
 
       gridSelectedReady(angularGrid: AngularGridInstance) {

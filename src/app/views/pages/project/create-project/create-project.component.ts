@@ -32,9 +32,13 @@ import {
   LayoutUtilsService,
   TypesUtilsService,
   MessageType,
+  HttpUtilsService,
 } from "../../../../core/_base/crud"
 import { reverseString } from "@amcharts/amcharts4/.internal/core/utils/Utils";
 import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../../../environments/environment";
+const API_URL = environment.apiUrl + "/codes";
+
 @Component({
   selector: 'kt-create-project',
   templateUrl: './create-project.component.html',
@@ -135,8 +139,13 @@ export class CreateProjectComponent implements OnInit {
   grid5: any
   selectedTriggersIndexes : any[]
 
+
+  httpOptions = this.httpUtils.getHTTPHeaders();
+  
+
   constructor(
     config: NgbDropdownConfig,
+    private httpUtils: HttpUtilsService,
     private projectFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -1086,34 +1095,50 @@ prepareGrid3() {
       filterable: true,
       type: FieldType.string,
     },
-    {
-      id: "pjd_trigger",
-      name: "Trigger",
-      field: "pjd_trigger",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      type: FieldType.string,
-      editor: {model: Editors.text}
-    },
-    {
-      id: "mvid",
-      field: "cmvid",
-      excludeFromHeaderMenu: true,
-      formatter: Formatters.infoIcon,
-      minWidth: 30,
-      maxWidth: 30,
-      onCellClick: (e: Event, args: OnEventArgs) => {
-          this.selected_doc_row_number = args.row
-          console.log(this.selected_doc_row_number)
-          let element: HTMLElement = document.getElementById(
-              "openTriggerPopup"
-          ) as HTMLElement
-          element.click()
+    // {
+    //   id: "pjd_trigger",
+    //   name: "Trigger",
+    //   field: "pjd_trigger",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   type: FieldType.string,
+    //   editor: {model: Editors.text}
+    // },
+    // {
+    //   id: "mvid",
+    //   field: "cmvid",
+    //   excludeFromHeaderMenu: true,
+    //   formatter: Formatters.infoIcon,
+    //   minWidth: 30,
+    //   maxWidth: 30,
+    //   onCellClick: (e: Event, args: OnEventArgs) => {
+    //       this.selected_doc_row_number = args.row
+    //       console.log(this.selected_doc_row_number)
+    //       let element: HTMLElement = document.getElementById(
+    //           "openTriggerPopup"
+    //       ) as HTMLElement
+    //       element.click()
         
            
+    //   },
+    // },
+    {
+        id: "pjd_trigger",
+        name: "Trigger",
+        field: "pjd_trigger",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.string,
+        editor: {
+          model: Editors.singleSelect,
+          enableRenderHtml: true,
+          collectionAsync: this.http.get(`${API_URL}/triggerType`), 
+         
+        },
       },
-    },
+    
 
     {
       id: "mp_expire",
@@ -1131,6 +1156,7 @@ prepareGrid3() {
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
       enableFiltering: true,
+      editable : true,
       autoEdit: false,
       autoHeight: true,
       frozenColumn: 0,

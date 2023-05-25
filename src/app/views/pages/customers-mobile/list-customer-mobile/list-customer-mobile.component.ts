@@ -122,6 +122,51 @@ export class ListCustomerMobileComponent implements OnInit {
           filterable: true,
           type: FieldType.date,
         },
+
+        {
+          id: "cluster_code",
+          name: "Code cluster",
+          field: "cluster_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },    
+        {
+          id: "sub_cluster_code",
+          name: "Code sous-cluster",
+          field: "sub_cluster_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },     
+        
+        {
+          id: "category_code",
+          name: "Code catégorie",
+          field: "category_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        }, 
+
+        {
+          id: "category_type_code",
+          name: "Type catégorie",
+          field: "category_type_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+
+        {
+          id: "sales_channel_code",
+          name: "Code canal de vente",
+          field: "sales_channel_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        
         
         
     ]
@@ -136,7 +181,6 @@ export class ListCustomerMobileComponent implements OnInit {
         frozenColumn: 0,
         frozenBottom: true,
     }
-    console.log(this.dataset)
     // fill the dataset with your data
     this.dataset = []
     this.customerMobileService.getAllCustomers().subscribe(
@@ -144,6 +188,7 @@ export class ListCustomerMobileComponent implements OnInit {
         (response: any) => {
           this.dataset = response.data
           this.dataView.setItems(this.dataset)
+          console.log(this.dataset)
         },
         (error) => {
             this.dataset = []

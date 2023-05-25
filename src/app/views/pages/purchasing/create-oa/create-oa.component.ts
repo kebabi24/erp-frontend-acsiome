@@ -751,6 +751,7 @@ error = false;
     }, {});
     console.log("array",result)
     
+    // je dois parcourir la liste dataset des article et pour chaque item jajoute 2 champs et jenvoie la nouvelle liste 
     this.addPo( controls.site.value,result,this.dataset);
   }
 

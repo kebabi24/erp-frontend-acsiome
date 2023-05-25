@@ -11,6 +11,10 @@
     <kt-portlet-body>
         <div class="example-preview">
 
+            <div>
+                {{ time | async }}
+              </div>
+
             <form class="form" [formGroup]="assetDownForm">
                 <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
@@ -129,6 +133,83 @@
             </ng-template>
         </div>
         <!-- SELECT TYPE POPUP END -->
+        
+        <!-- SPACE -->
+        <div class="empty_space">
+            
+        </div>
+        <!-- SPACE -->
+
+        <!-- TABLE DATA -->
+        <div id="tablePdf" #tablePdf class="w-100">
+            
+            
+                <table class="table table-bordered w-100">
+                    <thead class="t_header">
+                        <tr>
+                            <th scope="col" class="t_header table-active">Désignation équipement </th>
+                            <th scope="col" class="t_header table-active">Numéro de série  </th>
+                            <th scope="col" class="t_header table-active">Description de la Panne   </th>
+                        </tr>
+                    </thead>
+                    <tbody class="t_body">
+                        <tr *ngFor="let elem of data">
+                            <td>{{elem.asset_desc}}</td>
+                            <td>{{elem.asset_serial}}</td>
+                            <td>{{elem.asset_comment}}</td>
+                            
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            
+        </div>
+        <!-- TABLE DATA -->
+
+        <!-- TABLE INFO -->
+        <div id="tableInfo" #tableInfo class="w-100" >
+            
+            
+                <table class="table table-bordered w-100">
+                   
+                    <tbody class="t_body">
+                        <tr >
+                            <td class="table-active w-50">Nature des travaux ( activité (s))</td>
+                            <td class="w-50"></td>
+                        </tr>
+                        <tr >
+                            <td class="table-active w-50">Chantier </td>
+                            <td class="w-50"></td>
+                        </tr>
+                        <tr >
+                            <td class="table-active w-50">Période </td>
+                            <td class="w-50"></td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            
+        </div>
+        <!-- TABLE INFO -->
+
+        <!-- TABLE LAST -->
+        <div id="tableLast" #tableLast class="w-100" >
+            
+            
+            <table class="table table-bordered w-100">
+              
+                    <thead class=".t_header">
+                        <th class="table-active t_header w-50">Superviseur (s)</th>
+                        <th class="table-active t_header w-50">Signature</th>
+                    </thead>     
+                    <tbody>
+                        <tr class="empty_cell"></tr>
+                        <tr class="empty_cell"></tr>
+                    </tbody>
+            </table>
+        
+        </div>
+        <!-- TABLE LAST -->
 
     </kt-portlet-body>
 </kt-portlet>

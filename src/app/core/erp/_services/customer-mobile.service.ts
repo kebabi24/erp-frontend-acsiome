@@ -54,6 +54,12 @@ export class CustomerMobileService {
         return this.http.get(`${API_URL_2}/findCluster/${code.code}`, { headers: httpHeaders })
     }
 
+    // GET CLUSTER BY CODE
+    public getCreateCustomerData() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/getDataCreateCustomer/`, { headers: httpHeaders })
+    }
+
     // CREATE CLUSTER 
     public createCluster(cluster : any){
         const httpHeaders = this.httpUtils.getHTTPHeaders()
