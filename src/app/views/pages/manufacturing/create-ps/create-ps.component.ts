@@ -365,6 +365,20 @@ export class CreatePsComponent implements OnInit {
        
 
       },
+      {
+        id: "ps__qad01",
+        name: "Imprimable",
+        field: "ps__qad01group",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.checkbox,
+        
+        },
+        formatter: Formatters.checkmark,
+
+      },
     ];
 
     this.gridOptions = {

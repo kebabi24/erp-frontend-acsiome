@@ -71,6 +71,7 @@ import { ListSalesComponent } from './list-sales/list-sales.component';
 import { ListPosComponent } from './list-pos/list-pos.component';
 import { ListCaisseComponent } from './list-caisse/list-caisse.component';
 import { ListSiteCaComponent } from './list-site-ca/list-site-ca.component';
+import { ListInvoiceMobComponent } from './list-invoice-mob/list-invoice-mob.component';
 
 const routes: Routes = [
     {
@@ -164,7 +165,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent],
     imports: [
         CommonModule,
         HttpClientModule,

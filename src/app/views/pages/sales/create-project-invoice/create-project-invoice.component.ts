@@ -2550,15 +2550,16 @@ calculatetot(){
           let ttc = 0
           for (var i = 0; i < this.dataset.length; i++) {
             console.log("here here " ,this.dataset[i]  )
-            tht += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  this.dataset[i].itdh_qty_inv),2)
-            if(controlsso.ith_taxable.value == true) tva += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  this.dataset[i].itdh_qty_inv) * (this.dataset[i].itdh_taxc ? this.dataset[i].itdh_taxc / 100 : 0),2)
+            tht += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons))),2)
+            
+            if(controlsso.ith_taxable.value == true) tva += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons))) * (this.dataset[i].itdh_taxc ? this.dataset[i].itdh_taxc / 100 : 0),2)
            
          
             
        
             
             if(controlsso.ith_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-              if (timbre > 2500) { timbre = 2500} } 
+              if (timbre > 10000) { timbre = 10000} } 
          
           }
         ttc = round(tht + tva + timbre,2)

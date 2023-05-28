@@ -31,6 +31,38 @@ export class CreateCustomerMobileComponent implements OnInit {
   ad_city: any[] = [];
   isExist = false;
 
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {};
+  gridObj: any;
+  angularGrid: AngularGridInstance;
+
+  columnDefinitions2: Column[] = [];
+  gridOptions2: GridOption = {};
+  gridObj2: any;
+  angularGrid2: AngularGridInstance;
+
+  columnDefinitions3: Column[] = [];
+  gridOptions3: GridOption = {};
+  gridObj3: any;
+  angularGrid3: AngularGridInstance;
+
+  columnDefinitions4: Column[] = [];
+  gridOptions4: GridOption = {};
+  gridObj4: any;
+  angularGrid4: AngularGridInstance;
+
+  columnDefinitions5: Column[] = [];
+  gridOptions5: GridOption = {};
+  gridObj5: any;
+  angularGrid5: AngularGridInstance;
+
+  data: any = [];
+  clusters: any = [];
+  sub_clusters: any = [];
+  categories: any = [];
+  categories_types: any = [];
+  sales_channels: any = [];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -58,6 +90,7 @@ export class CreateCustomerMobileComponent implements OnInit {
   }
 
   init() {
+    this.getData();
     this.createCustomerForm();
     // this.createAddresseMobileForm()
     this.loadingSubject.next(false);
@@ -88,6 +121,12 @@ export class CreateCustomerMobileComponent implements OnInit {
       customer_fax: [{ value: this.customerMobile.customer_fax, disabled: !this.isExist }],
       customer_web_adr: [{ value: this.customerMobile.customer_web_adr, disabled: !this.isExist }],
       customer_barcode: [{ value: this.customerMobile.customer_barcode, disabled: !this.isExist }],
+
+      cluster_code: [this.customerMobile.cluster_code],
+      sub_cluster_code: [this.customerMobile.sub_cluster_code],
+      category_code: [this.customerMobile.category_code],
+      category_type_code: [this.customerMobile.category_type_code],
+      sales_channel_code: [this.customerMobile.sales_channel_code],
     });
   }
 
@@ -267,6 +306,12 @@ export class CreateCustomerMobileComponent implements OnInit {
     _customerMobile.country = controls.country.value;
     _customerMobile.geoarea_code = controls.geoarea_code.value;
 
+    _customerMobile.cluster_code = controls.cluster_code.value;
+    _customerMobile.sub_cluster_code = controls.sub_cluster_code.value;
+    _customerMobile.category_code = controls.category_code.value;
+    _customerMobile.category_type_code = controls.category_type_code.value;
+    _customerMobile.sales_channel_code = controls.sales_channel_code.value;
+
     return _customerMobile;
   }
 
@@ -287,5 +332,375 @@ export class CreateCustomerMobileComponent implements OnInit {
   }
   onAlertClose($event) {
     this.hasFormErrors = false;
+  }
+
+  // GRIDS
+
+  getData() {
+    this.customerMobileService.getCreateCustomerData().subscribe((response: any) => {
+      this.data = response.data;
+      this.clusters = this.data.clusters;
+      this.categories = this.data.categories;
+      this.sales_channels = this.data.sales_channels;
+    });
+  }
+
+  open(content) {
+    this.prepareGrid();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open2(content) {
+    this.prepareGrid2();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open3(content) {
+    this.prepareGrid3();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open4(content) {
+    this.prepareGrid4();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  open5(content) {
+    this.prepareGrid5();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  prepareGrid() {
+    this.columnDefinitions = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "cluster_code",
+        name: "Code cluster",
+        field: "cluster_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "description",
+        name: "Designation",
+        field: "description",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+  }
+
+  prepareGrid2() {
+    this.columnDefinitions2 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "sub_cluster_code",
+        name: "Code sous-cluster",
+        field: "sub_cluster_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "description",
+        name: "Designation",
+        field: "description",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions2 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+  }
+
+  prepareGrid3() {
+    this.columnDefinitions3 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "category_code",
+        name: "Code cluster",
+        field: "category_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "description",
+        name: "Designation",
+        field: "description",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions3 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+  }
+
+  prepareGrid4() {
+    this.columnDefinitions4 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "category_type_code",
+        name: "Code categorie type",
+        field: "category_type_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "description",
+        name: "Designation",
+        field: "description",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions4 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+  }
+
+  prepareGrid5() {
+    this.columnDefinitions5 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "sales_channel_code",
+        name: "Code canal de vente",
+        field: "sales_channel_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "description",
+        name: "Designation",
+        field: "description",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "rank",
+        name: "Rang",
+        field: "rank",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions5 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+  }
+
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.gridObj = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  angularGridReady2(angularGrid: AngularGridInstance) {
+    this.angularGrid2 = angularGrid;
+    this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  angularGridReady3(angularGrid: AngularGridInstance) {
+    this.angularGrid3 = angularGrid;
+    this.gridObj3 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  angularGridReady4(angularGrid: AngularGridInstance) {
+    this.angularGrid4 = angularGrid;
+    this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  angularGridReady5(angularGrid: AngularGridInstance) {
+    this.angularGrid5 = angularGrid;
+    this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  handleSelectedRowsChanged(e, args) {
+    // this.mvdataset = [];
+    const controls = this.customerMobileForm.controls; // chof le champs hada wesh men form rah
+    if (Array.isArray(args.rows) && this.gridObj) {
+      args.rows.map((idx) => {
+        const item = this.gridObj.getDataItem(idx);
+        controls.cluster_code.setValue(item.cluster_code || "");
+        const index = this.clusters.findIndex((cluster) => {
+          return item.cluster_code == cluster.cluster_code;
+        });
+        this.sub_clusters = this.clusters[index].subClusters;
+      });
+    }
+  }
+
+  handleSelectedRowsChanged2(e, args) {
+    const controls = this.customerMobileForm.controls; // chof le champs hada wesh men form rah
+    if (Array.isArray(args.rows) && this.gridObj2) {
+      args.rows.map((idx) => {
+        const item = this.gridObj2.getDataItem(idx);
+        controls.sub_cluster_code.setValue(item.sub_cluster_code || "");
+      });
+    }
+  }
+
+  handleSelectedRowsChanged3(e, args) {
+    // this.mvdataset = [];
+    const controls = this.customerMobileForm.controls; // chof le champs hada wesh men form rah
+    if (Array.isArray(args.rows) && this.gridObj3) {
+      args.rows.map((idx) => {
+        const item = this.gridObj3.getDataItem(idx);
+        controls.category_code.setValue(item.category_code || "");
+        const index = this.categories.findIndex((category) => {
+          return item.category_code == category.category_code;
+        });
+        this.categories_types = this.categories[index].categoryTypes;
+      });
+    }
+  }
+
+  handleSelectedRowsChanged4(e, args) {
+    const controls = this.customerMobileForm.controls;
+    if (Array.isArray(args.rows) && this.gridObj4) {
+      args.rows.map((idx) => {
+        const item = this.gridObj4.getDataItem(idx);
+        controls.category_type_code.setValue(item.category_type_code || "");
+      });
+    }
+  }
+
+  handleSelectedRowsChanged5(e, args) {
+    const controls = this.customerMobileForm.controls;
+    if (Array.isArray(args.rows) && this.gridObj5) {
+      args.rows.map((idx) => {
+        const item = this.gridObj5.getDataItem(idx);
+        controls.sales_channel_code.setValue(item.sales_channel_code || "");
+      });
+    }
   }
 }

@@ -461,6 +461,14 @@ export class MenuConfig {
               title: "Ajouter Fournisseurs",
               page: "/providers/add",
             },
+            {
+              title: "Répertoire Fournisseurs",
+              page: "/providers/create-rep",
+            },
+            {
+              title: "Liste Répertoire Fournisseurs",
+              page: "/providers/list-rep",
+            },
           ],
         },
         {
@@ -476,6 +484,14 @@ export class MenuConfig {
             {
               title: "Ajouter Clients",
               page: "/customers/customer-create",
+            },
+            {
+              title: "Répertoire Clients",
+              page: "/customers/create-rep",
+            },
+            {
+              title: "Liste Répertoire Fournisseurs",
+              page: "/customers/list-rep",
             },
             {
               title: "La liste des ventes par clients",
@@ -1209,7 +1225,7 @@ export class MenuConfig {
         {
           title: "Gestion des utilisateurs",
           bullet: "dot",
-          icon: "flaticon-user",
+          icon: "flaticon-users-1",
           root: true,
           submenu: [
             {
@@ -1218,6 +1234,7 @@ export class MenuConfig {
               submenu: [
                 {
                   title: "Ajouter un utilisateur",
+                  icon: "flaticon-user-add",
                   page: "/users/create-user",
                 },
                 {
@@ -1245,7 +1262,7 @@ export class MenuConfig {
         {
           title: "Gestion des profils",
           bullet: "dot",
-          icon: "flaticon-profile",
+          icon: "flaticon-profile-1",
           root: true,
           submenu: [
             {

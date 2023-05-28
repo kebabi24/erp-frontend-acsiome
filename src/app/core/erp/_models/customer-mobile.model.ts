@@ -26,5 +26,12 @@ export class CustomerMobile extends BaseModel {
     geoarea_code: String
     longitude: String
     latitude: String
+
+    // commercial fiels
+    cluster_code : String 
+    sub_cluster_code: String
+    category_code : String 
+    category_type_code : String 
+    sales_channel_code : String 
  
 }

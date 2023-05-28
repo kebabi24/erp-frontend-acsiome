@@ -87,7 +87,7 @@ export class CreateGammeComponent implements OnInit {
     this.gammeForm = this.gammeFB.group({
       ro_routing: [this.workRouting.ro_routing, Validators.required],
       ro_op    : [this.workRouting.ro_op, Validators.required],
-
+      ro_rollup: [{value: this.workRouting.ro_rollup,  disabled: !this.isExist } ],
       ro_wkctr: [{value: this.workRouting.ro_wkctr,  disabled: !this.isExist }, Validators.required ],
       ro_mch: [{value: this.workRouting.ro_mch,  disabled: !this.isExist }, Validators.required],
       
@@ -137,6 +137,7 @@ export class CreateGammeComponent implements OnInit {
                   
                   controls.ro_wkctr.enable()
                   controls.ro_mch.enable()
+                  controls.ro_rollup.enable()
                   controls.ro_desc.enable()
                   controls.ro_mch_op.enable()
                   controls.ro_tran_qty.enable()
@@ -187,6 +188,7 @@ prepareCode(): WorkRouting {
   const _workrouting = new WorkRouting()
   _workrouting.ro_routing = controls.ro_routing.value
   _workrouting.ro_op = controls.ro_op.value
+  _workrouting.ro_rollup = controls.ro_rollup.value
   _workrouting.ro_desc = controls.ro_desc.value
   _workrouting.ro_wkctr = controls.ro_wkctr.value
   _workrouting.ro_mch = controls.ro_mch.value

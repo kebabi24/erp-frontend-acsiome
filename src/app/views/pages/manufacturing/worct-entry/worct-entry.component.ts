@@ -51,7 +51,8 @@ import {
   CodeService,
   MesureService,
   WorkOrderService,
-  
+  Label,
+  LabelService,  
 } from "../../../../core/erp";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -146,6 +147,11 @@ export class WorctEntryComponent implements OnInit {
   seq: any;
   woServer;
   umd;
+  qtycart;
+  uniquelot;
+  site;
+  loc;
+  rctwostat;
   constructor(
     config: NgbDropdownConfig,
     private trFB: FormBuilder,
@@ -166,6 +172,7 @@ export class WorctEntryComponent implements OnInit {
     private sequenceService: SequenceService,
     private inventoryStatusService : InventoryStatusService,
     private workOrderService: WorkOrderService,
+    private labelService: LabelService,
   ) {
     config.autoClose = true;
     this.initGrid();
@@ -554,7 +561,70 @@ export class WorctEntryComponent implements OnInit {
         formatter: Formatters.decimal,
        
       },
-      
+      {
+        id: "tr_ref",
+        name: "N° PAL",
+        field: "tr_ref",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+       
+        
+       
+      },
+      {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+          <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
+               <i class="flaticon2-printer"></i>
+               
+           </a>
+           `;
+        },
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          //   this.angularGrid.gridService.deleteItem(args.dataContext);
+          // }
+          const controls = this.trForm.controls
+         
+          if(controls.tr_part.value != null ) {
+          const _lb = new Label();
+              _lb.lb_site =args.dataContext.tr_site
+              _lb.lb_loc = args.dataContext.tr_loc
+              _lb.lb_part = controls.tr_part.value
+              _lb.lb_nbr = controls.tr_nbr.value
+              _lb.lb_lot = args.dataContext.tr_serial
+              _lb.lb_date = controls.tr_effdate.value
+                  ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+                  : null
+              _lb.lb_qty = args.dataContext.tr_qty_loc
+              _lb.lb_ld_status = args.dataContext.tr_status
+              _lb.lb_desc = controls.desc.value
+    
+              let lab = null
+
+              this.labelService.addProd(_lb).subscribe(
+                (reponse: any) => (lab = reponse.data),
+                (error) => {
+                 alert("Erreur Impression Etiquette")   },
+                () => {
+         
+                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
+                }
+            )
+              }
+              else {
+                alert ("Veuillez verifier les informations")
+              }
+        },
+      },
     ];
 
     this.gridOptions = {
@@ -626,6 +696,26 @@ export class WorctEntryComponent implements OnInit {
         controls.tr_part.setValue(this.woServer.wo_part);
         controls.desc.setValue(this.woServer.item.pt_desc1)
         this.umd = this.woServer.item.pt_um
+        this.qtycart = (this.woServer.item.int03 != null) ? this.woServer.item.int03 : 0
+        this.uniquelot = this.woServer.item.pt_lot_ser
+        this.site = this.woServer.item.pt_site
+        this.loc = this.woServer.item.pt_loc
+        if (this.woServer.item.pt_rctwo_active) { 
+          this.rctwostat = this.woServer.item.pt_rctwo_status 
+        } else {
+          this.locationService
+          .getByOne({
+                loc_loc: this.loc,
+          })
+          .subscribe((resp: any) => {
+              console.log(resp.data, resp.data.length)
+              this.rctwostat = resp.data.loc_status
+          })
+        
+        
+        }  
+        
+      
           }
           else {
 
@@ -791,21 +881,19 @@ export class WorctEntryComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    console.log(this.sct)
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
         tr_line: this.dataset.length + 1,
-        tr_part: "",
-        cmvid: "",
-        desc: "",
-        tr_qty_loc: 0,
+        tr_qty_loc: this.qtycart,
         tr_um: this.umd,
         tr_um_conv: 1,
-        tr_trice: 0,
-        tr_site: "",
-        tr_loc: "",
-        tr_serial: null,
-        tr_status: null,
+        tr_price: this.sct.sct_cst_tot,
+        tr_site: this.site,
+        tr_loc: this.loc,
+        tr_serial: (this.uniquelot == "L") ? "AAAAAAAAAAA" : null,
+        tr_status: this.rctwostat,
         tr_expire: null,
       },
       { position: "bottom" }
@@ -1466,8 +1554,31 @@ handleSelectedRowsChanged5(e, args) {
       controls.tr_part.setValue(item.wo_part);
       controls.desc.setValue(item.item.pt_desc1)
       this.umd = item.item.pt_um
-        
+      this.qtycart = (item.item.int03 != null) ? item.item.int03 : 0
+      this.uniquelot = item.item.pt_lot_ser
+      this.site = item.item.pt_site
+      this.loc = item.item.pt_loc
+      if (item.item.pt_rctwo_active) { 
+        this.rctwostat = item.item.pt_rctwo_status 
+      } else {
+        this.locationService
+        .getByOne({
+              loc_loc: this.loc,
+        })
+        .subscribe((resp: any) => {
+            console.log(resp.data, resp.data.length)
+            this.rctwostat = resp.data.loc_status
+        })
       
+      
+      }  
+      
+      this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+        (resp: any) => {
+          this.sct = resp.data
+          console.log(this.sct)
+    
+    });
         }
       );
 

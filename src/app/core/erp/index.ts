@@ -170,4 +170,5 @@ export { TokenSerieService } from "./_services/token-serie.service";
 export { DashboardCommercialService } from "./_services/dashboard-commercial.service";
 export { DealService } from "./_services/deal.service";
 export { PrintersService } from "./_services/printer.service";
+export { RepertoryService } from "./_services/repertory.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

@@ -11,104 +11,120 @@
     <kt-portlet-body>
         <div class="example-preview">
 
-            <form class="form" [formGroup]="trForm">
+            <form class="form row" [formGroup]="trForm">
                 <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
                     {{message}}
                 </kt-alert>
-                <div class="row">
-                    
-                    
-                    
-                    <div class="form-group col-2">
-                        <label class="form-group">Effet:</label>
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-sm form-control-solid" formControlName="tr_effdate"
-                                 placeholder="jj-mm-aaaa" name="tr_effdate" ngbDatepicker f
-                                #tr_effdate="ngbDatepicker">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" (click)="tr_effdate.toggle()" type="button">
-                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                </button>
+                <div class="col-9">
+                    <div class="row">
+                        
+                        
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group">Effet:</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid" formControlName="tr_effdate"
+                                    placeholder="jj-mm-aaaa" name="tr_effdate" ngbDatepicker f
+                                    #tr_effdate="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" (click)="tr_effdate.toggle()" type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
                             </div>
-                            
+
+
                         </div>
+                    
+                        <div class="form-group col-2">
+                            <label class="form-group">ID OF:</label>
+                            <div class="input-group input-group-sm">
 
-
-                    </div>
-                  
-                    <div class="form-group col-2">
-                        <label class="form-group">ID OF:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_lot" id="id"
-                                aria-describedby="basic-addon2" (change)="onChangeOA()">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="open5(content5)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                <input type="text" class="form-control form-control-solid"  formControlName="tr_lot" id="id"
+                                    aria-describedby="basic-addon2" (change)="onChangeOA()">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open5(content5)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group">N° OF:</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid"  formControlName="tr_nbr"
+                                    aria-describedby="basic-addon2" >
+                                
+                            </div>
+
+                        </div>
                     </div>
-                    
-                    <div class="form-group col-2">
-                        <label class="form-group">N° OF:</label>
-                        <div class="input-group input-group-sm">
+                    <div class="row">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_nbr"
-                                aria-describedby="basic-addon2" >
-                            
+                        <div class="form-group col-2">
+                            <label class="form-group">Article:</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid"  formControlName="tr_part"
+                                    aria-describedby="basic-addon2" >
+                                
+                            </div>
+
                         </div>
+                        <div class="form-group col-4">
+                            <label class="form-group">Designation:</label>
+                            <div class="input-group input-group-sm">
 
+                                <input type="text" class="form-control form-control-solid"  formControlName="desc"
+                                    aria-describedby="basic-addon2" >
+                                
+                            </div>
+
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Liaison:</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid"  formControlName="tr_so_job"
+                                    aria-describedby="basic-addon2" >
+                                
+                            </div>
+
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group col-3">
+                            <label class="form-group">N° Palette :</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()"
+                                    aria-describedby="basic-addon2">
+                                
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="col-3">
+                    <div class="row">
 
-                    <div class="form-group col-2">
-                        <label class="form-group">Article:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_part"
-                                aria-describedby="basic-addon2" >
-                            
+                        <div class="form-group col-9">
+                            <label class="form-group">Observation:</label>
+                            <textarea class="form-control form-control-sm form-control-solid" formControlName="tr_rmks"
+                                rows="5"></textarea>
                         </div>
 
-                    </div>
-                    <div class="form-group col-4">
-                        <label class="form-group">Designation:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="desc"
-                                aria-describedby="basic-addon2" >
+                        
                             
-                        </div>
-
                     </div>
-                    
-                </div>
-                 
-                <div class="row">
-
-                    <div class="form-group col-4">
-                        <label class="form-group">Observation:</label>
-                        <textarea class="form-control form-control-sm form-control-solid" formControlName="tr_rmks"
-                            rows="2"></textarea>
-                    </div>
-
-                    <div class="form-group col-2">
-                        <label class="form-group">Liaison:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_so_job"
-                                aria-describedby="basic-addon2" >
-                            
-                        </div>
-
-                    </div>
-                    
-                          
-                </div>
-
+                </div> 
                 <div class="row">
                     <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
                 </div>

@@ -63,7 +63,7 @@ export class EditItineraryComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    setInterval(() => {
+    setTimeout(() => {
       this.createForm();
     }, 1000);
   }
@@ -171,12 +171,12 @@ export class EditItineraryComponent implements OnInit {
     this.hasFormErrors = false;
     const controls = this.itineraryForm.controls;
     /** check form */
-    if (this.itineraryForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
+    // if (this.itineraryForm.invalid) {
+    //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
 
-      this.hasFormErrors = true;
-      return;
-    }
+    //   this.hasFormErrors = true;
+    //   return;
+    // }
 
     // tslint:disable-next-line:prefer-const
     let itn = this.prepareItinerary();
@@ -195,7 +195,7 @@ export class EditItineraryComponent implements OnInit {
 
   updateItinerary(_itinerary: Itinerary, _customers: any) {
     this.loadingSubject.next(true);
-    this.itineraryService.updateItinerary({ itinerary: _itinerary, customers: _customers }, _itinerary.itinerary_code).subscribe(
+    this.itineraryService.updateItinerary(_itinerary.itinerary_code, { itinerary: _itinerary, customers: _customers }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
@@ -259,7 +259,7 @@ export class EditItineraryComponent implements OnInit {
       // console.log("log")
       this.customers = args.rows.map((idx: number) => {
         const item = this.gridObj.getDataItem(idx);
-        return item.id;
+        return item;
       });
     }
   }

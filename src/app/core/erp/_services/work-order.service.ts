@@ -25,6 +25,12 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
+    public addDirect(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createdirect`, data, {
+            headers: httpHeaders,
+          });
+    }
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
