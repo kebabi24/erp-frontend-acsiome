@@ -32458,7 +32458,7 @@ fieldset:disabled .btn {
     --kt-feedback-popup-background-color: #ffffff;
     --kt-scrollbar-color: #eff2f5;
     --kt-scrollbar-hover-color: #e9edf1;
-    --kt-scrollbar-width: 0.4rem;
+    --kt-scrollbar-width: 1.2rem;
     --kt-scrollbar-height: 0.4rem;
     --kt-scrollbar-space: 0.5rem;
     --kt-overlay-bg: rgba(0, 0, 0, 0.05);

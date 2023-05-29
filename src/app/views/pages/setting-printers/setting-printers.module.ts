@@ -39,6 +39,7 @@ import { UsersMobileService, PrintersService, UsersService } from "../../../core
 import { TreeModule } from "@circlon/angular-tree-component";
 import { AddPrinterComponent } from "./add-printer/add-printer.component";
 import { SetPrinterComponent } from "./set-printer/set-printer.component";
+import { ListPrintersComponent } from "./list-printers/list-printers.component";
 
 const routes: Routes = [
   {
@@ -49,9 +50,13 @@ const routes: Routes = [
     path: "set-printer",
     component: SetPrinterComponent,
   },
+  {
+    path: "list-printers",
+    component: ListPrintersComponent,
+  },
 ];
 @NgModule({
-  declarations: [AddPrinterComponent, SetPrinterComponent],
+  declarations: [AddPrinterComponent, SetPrinterComponent, ListPrintersComponent],
   imports: [
     CommonModule,
     HttpClientModule,

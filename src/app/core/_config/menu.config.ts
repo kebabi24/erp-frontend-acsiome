@@ -116,6 +116,10 @@ export class MenuConfig {
               title: "Affecter une imprimante",
               page: "/setting-printers/set-printer",
             },
+            {
+              title: "Liste des imprimantes",
+              page: "/setting-printers/list-printers",
+            },
           ],
         },
 
