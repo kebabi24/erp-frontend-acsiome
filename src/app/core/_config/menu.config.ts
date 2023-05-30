@@ -81,7 +81,7 @@ export class MenuConfig {
         {
           title: "Paramétrages POS",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon2-settings",
           root: true,
           submenu: [
             {
@@ -107,7 +107,7 @@ export class MenuConfig {
         {
           title: "Paramétrages Mobile",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon2-settings",
           root: true,
           submenu: [
             {
@@ -202,13 +202,13 @@ export class MenuConfig {
           title: "Paramétrages",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon2-settings",
           submenu: [
             {
               title: "Parametrage Stock",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-delivery-truck",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "Maint des Sites",
@@ -241,7 +241,7 @@ export class MenuConfig {
               title: "Gestion des Devises",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-delivery-truck",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "Maint des Devises",
@@ -261,7 +261,7 @@ export class MenuConfig {
               title: "Parametrage des Tarif",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-delivery-truck",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "Maint des Liste Prix",
@@ -278,7 +278,7 @@ export class MenuConfig {
               title: "Parametrage Des Codes",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-settings",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "Maint code-mstr",
@@ -302,7 +302,7 @@ export class MenuConfig {
               title: "Parametrage Des Unitées",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-settings",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "Maint Unité Mesure",
@@ -320,7 +320,7 @@ export class MenuConfig {
               title: "Parametrage de Qualité",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-settings",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "ajouter spécification standard",
@@ -333,7 +333,7 @@ export class MenuConfig {
               title: "Parametrage Comptabilite",
               root: true,
               bullet: "dot",
-              icon: "flaticon-profile-1",
+              icon: "flaticon-settings-1",
               submenu: [
                 {
                   title: "Maint Compte",
@@ -720,7 +720,7 @@ export class MenuConfig {
           title: "Gestion des achats",
           root: true,
           bullet: "dot",
-          icon: "flaticon-cart",
+          icon: "flaticon2-download",
           submenu: [
             {
               title: "Demande d'achats",

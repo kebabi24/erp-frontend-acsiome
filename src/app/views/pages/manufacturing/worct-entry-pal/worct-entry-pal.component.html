@@ -67,7 +67,7 @@
 
                             <input type="text"   id="site"
                                 [className]="trForm.controls['tr_site'].errors && (trForm.controls['tr_site'].dirty || trForm.controls['tr_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                formControlName="tr_site" (change)="onChangeSite()" aria-describedby="basic-addon2">
+                                formControlName="tr_site" (change)="onChangesite()" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)=opensite(contentsite)>
                                     <i class="text-dark-50 flaticon2-search"></i> </span>

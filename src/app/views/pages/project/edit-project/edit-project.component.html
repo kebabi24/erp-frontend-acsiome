@@ -1,9 +1,11 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter Projet'" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
         </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
@@ -15,6 +17,13 @@
             </kt-alert>
 
                 <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Code: *</label>
+                        <input type="text" formControlName="pm_code"  [(ngModel)]="projectEdit.pm_code"  
+                        class="form-control form-control-solid">
+                       
+
+                     </div>  
                     <div class="form-group col-2">
                         <label class="form-group">Date de creation:</label>
                         <div class="input-group input-group-sm">
@@ -31,14 +40,7 @@
 
 
                     </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Code: *</label>
-                        <input type="text" formControlName="pm_code"  (change)="onChangeCode()"
-                            [className]="projectForm.controls['pm_code'].errors && (projectForm.controls['pm_code'].dirty || projectForm.controls['pm_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                        <div *ngIf="projectForm.controls['pm_code'].errors && (projectForm.controls['pm_code'].dirty || projectForm.controls['pm_code'].touched) "
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
-
-                     </div>
+                   
 
                     
                 
@@ -130,9 +132,6 @@
                         </div>
 
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="form-group col-3">
                         <!-- pm_type -->
                         <label class="form-group">Type projet:</label> 
@@ -176,6 +175,7 @@
                     </div>
 
                 </div>
+
 
                 <div class="form-group col-12 row">
                     <label class="col-2 col-form-label text-right"> Détail du Projet </label>
@@ -429,3 +429,4 @@
         </div>
     </kt-portlet-body>
 </kt-portlet>
+

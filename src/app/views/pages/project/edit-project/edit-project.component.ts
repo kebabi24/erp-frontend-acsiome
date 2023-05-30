@@ -25,7 +25,7 @@ import { round } from 'lodash';
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
 import { Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService , SaleOrderService, Requisition,
-         RequisitionService,SaleOrder, PurchaseOrder, DeviseService, SiteService,DealService ,QualityControlService} from "../../../../core/erp";
+         RequisitionService,SaleOrder, AddressService, DeviseService, SiteService,DealService ,QualityControlService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -40,11 +40,11 @@ import { environment } from "../../../../../environments/environment";
 const API_URL = environment.apiUrl + "/codes";
 
 @Component({
-  selector: 'kt-create-project',
-  templateUrl: './create-project.component.html',
-  styleUrls: ['./create-project.component.scss']
+  selector: 'kt-edit-project',
+  templateUrl: './edit-project.component.html',
+  styleUrls: ['./edit-project.component.scss']
 })
-export class CreateProjectComponent implements OnInit {
+export class EditProjectComponent implements OnInit {
 
  
   projectForm: FormGroup;
@@ -138,11 +138,12 @@ export class CreateProjectComponent implements OnInit {
   gridService5: GridService
   grid5: any
   selectedTriggersIndexes : any[]
-
-
+projectEdit:any;
+soEdit: any;
   httpOptions = this.httpUtils.getHTTPHeaders();
-  
-
+  title: String = 'Modifier Projet - '
+orddate: any
+name : any
   constructor(
     config: NgbDropdownConfig,
     private httpUtils: HttpUtilsService,
@@ -165,6 +166,7 @@ export class CreateProjectComponent implements OnInit {
     private deviseService: DeviseService,
     private siteService: SiteService,
     private dealService: DealService,
+    private addressService: AddressService,
     private http: HttpClient,
   ) {
     config.autoClose = true;
@@ -176,70 +178,98 @@ export class CreateProjectComponent implements OnInit {
     this.mvgrid = angularGrid.slickGrid;
     this.mvgridService = angularGrid.gridService;
   }
+  
   ngOnInit(): void {
-    this.reset();
-    this.loading$ = this.loadingSubject.asObservable();
-    this.loadingSubject.next(false);
-    this.getSpecifications();
-    this.getProjectTypes();
-    this.createForm();
-    this.initmvGrid();
-    this.prepareTriggersGrid()
-  }
+    //this.reset();
+   
+    this.loading$ = this.loadingSubject.asObservable()
+    this.loadingSubject.next(true)
+    this.activatedRoute.params.subscribe((params) => {
+        const id = params.id
+        this.projectService.getOne(id).subscribe((response: any)=>{
+        
+          this.projectEdit = response.data.project
+          this.mvdataset = response.data.details
+          this.orddate = new Date(this.projectEdit.pm_ord_date)
+         // console.log(this.projectEdit)
+         
+         
+         
 
+          this.initCode()
+          this.loadingSubject.next(false)
+          this.title = this.title + this.projectEdit.pm_code
+         // console.log(this.mvdataset)
+          
+          this.customerService.getBy({ cm_addr : this.projectEdit.pm_cust  }).subscribe(
+            (res: any) => {
+              this.customer=res.data
+             // console.log(this.customer)
+            })
+            this.saleOrderService.getBy({ so_po : this.projectEdit.pm_code  }).subscribe(
+              (respon: any) => {
+                this.soEdit=respon.data.saleOrder
+            //    console.log(this.soEdit)
+              })
+        })
+ 
+         
+      
+       
+    })
+       
+    
+   
+   
+
+   
+  this.initmvGrid() 
+  
+    this.prepareTriggersGrid()
+    this.getSpecifications();
+    this.getProjectTypes(); 
+    
+
+    
+  }
+  // init code
+initCode() {
+  this.createForm()
+  this.loadingSubject.next(false)
+}
   //create form
   createForm() {
     this.loadingSubject.next(false);
-    this.project = new Project();
-    const date = new Date;
+   // this.project = new Project();
+   // const date = new Date;
     this.projectForm = this.projectFB.group({
-      pm_code: [this.project.pm_code, Validators.required],
-      pm_desc: [{ value: this.project.pm_desc, disabled: !this.isExist },  Validators.required],
-      pm_site: [{ value: this.project.pm_site, disabled: !this.isExist },  Validators.required],
-      pm_cust: [{ value: this.project.pm_cust, disabled: !this.isExist }],
-      pm_deal: [{ value: this.project.pm_deal, disabled: !this.isExist }],
-      name: [{value:"", disabled: true}],
-      pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
-      pm_cost: [{value:0, disabled: true}],
+      pm_code: [{value:this.projectEdit.pm_code, disabled:true}],
+      pm_desc: [this.projectEdit.pm_desc  ,  Validators.required],
+      pm_site: [this.projectEdit.pm_site  ,  Validators.required],
+      pm_cust: [ this.projectEdit.pm_cust ],
+      pm_deal: [this.projectEdit.pm_deal],
+      name: [{value:this.name, disabled: true}],
+      pm_amt: [ this.projectEdit.pm_amt],
+      pm_cost: [this.projectEdit.pm_cost],
       pm_ord_date: [{
-        year:date.getFullYear(),
-        month: date.getMonth()+1,
-        day: date.getDate()
+        year:this.orddate.getFullYear(),
+        month: this.orddate.getMonth()+1,
+        day: this.orddate.getDate()
       }],
-      pm_type: [{ value: this.project.pm_type, disabled: !this.isExist }],
-      pm_doc_list_code: [{ value: this.project.pm_doc_list_code, disabled: !this.isExist }],
+      pm_type: [this.projectEdit.pm_type],
+      pm_doc_list_code: [this.projectEdit.pm_doc_list_code],
       
      
     });
+  const controls = this.projectForm.controls
+    this.addressService.getBy({ad_addr: this.projectEdit.pm_cust}).subscribe((resp: any)=>{
+      this.name = resp.data.ad_name
+    controls.name.setValue(this.name)
+     
+   }) 
   }
 
 
-  onChangeCode() {
-    this.mvdataset = []
-    this.sodataset = []
-    const controls = this.projectForm.controls
-    this.projectService
-        .getBy({
-              pm_code: controls.pm_code.value
-        })
-        .subscribe((response: any) => {
-         
-            if (response.data.project ) {
-                this.isExist = true
-              
-            } else {
-                controls.pm_desc.enable()
-                controls.pm_cust.enable()
-                controls.pm_site.enable()
-                controls.pm_amt.enable()
-                controls.pm_type.enable()
-                controls.pm_doc_list_code.enable()
-                controls.pm_deal.enable()
-              
-                
-            }
-     })
-  }
   //reste form
   reset() {
     this.isExist = false 
@@ -296,54 +326,58 @@ export class CreateProjectComponent implements OnInit {
    */
   addproject(_project: Project, details: any) {
     this.sodataset = [];
-    for (let data of details) {
-      this.itemService.getByOne({pt_part: data.pmd_part }).subscribe((resp:any)=>{
+   // console.log("details",details)
+    // for (let data of details) {
+    //   console.log("yawyawyawyaw",data)
+    //   this.itemService.getByOne({pt_part: data.pmd_part }).subscribe((resp:any)=>{
 
-        if (resp.data.pt_phantom) {
-          this.type = 'M'
+    //     if (resp.data.pt_phantom) {
+    //       this.type = 'M'
         
-        } else {
-          this.type = null
-        }            
-        this.sodataset.push({
-          sod_line: data.pmd_line,
-          sod_part: resp.data.pt_part,
-          sod_um: resp.data.pt_um,
-          sod__chr01:  data.pmd_task,
-          sod__chr02:  data.pmd_bom_code,
-          sod_qty_ord: data.pmd_qty,
-          sod_qty_ret: data.int01,
-          sod_qty_cons: 0,
-          sod_desc: resp.data.pt_desc1 ,
-          sod_site:resp.data.pt_site, 
-          sod_loc: resp.data.pt_loc,
-          sod_um_conv:1, 
-          sod_type: this.type,
-          sod_price: resp.data.pt_price, 
-          sod_disc_pct:0, 
-          sod_tax_code:resp.data.pt_taxc, 
-          sod_taxc: resp.data.taxe.tx2_tax_pct, 
-          sod_taxable: resp.data.pt_taxable
-        })
+    //     } else {
+    //       this.type = null
+    //     }            
+    //     this.sodataset.push({
+    //       sod_line: data.pmd_line,
+    //       sod_part: resp.data.pt_part,
+    //       sod_um: resp.data.pt_um,
+    //       sod__chr01:  data.pmd_task,
+    //       sod_qty_ord: data.pmd_qty,
+    //       sod_qty_ret: data.day,
+    //       //sod_qty_cons: 0,
+    //       sod_desc: resp.data.pt_desc1 ,
+    //       sod_site:resp.data.pt_site, 
+    //       sod_loc: resp.data.pt_loc,
+    //       sod_um_conv:1, 
+    //       sod_type: this.type,
+    //       sod_price: resp.data.pt_price, 
+    //       sod_disc_pct:0, 
+    //       sod_tax_code:resp.data.pt_taxc, 
+    //       sod_taxc: resp.data.taxe.tx2_tax_pct, 
+    //       sod_taxable: resp.data.pt_taxable
+    //     })
      
-      })
-      
-    }
-    
+    //   })
+    //   console.log("creation", this.sodataset)
+    // }
+    // console.log("creation 2", this.sodataset)
     let l = []
+    if (this.selectedIndexes.length > 0) {
     this.selectedIndexes.forEach(index => {
       l.push({
         code_doc : this.specifications[index]['mp_nbr'],
         trigger : this.specifications[index]['pjd_trigger']
       })
     });
+    }
 
 
     this.loadingSubject.next(true);
     this.projectService
-      .add({ Project: _project, ProjectDetails: details , docs_codes :l  })
-      .subscribe(
-        (reponse) => console.log("response", Response),
+      // .add({ Project: _project, ProjectDetails: details , docs_codes :l  })
+      // .subscribe(
+        this.projectService.update({project: _project, details,  docs_codes :l},this.projectEdit.id).subscribe( 
+        (reponse) => console.log("response", reponse),
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -358,27 +392,66 @@ export class CreateProjectComponent implements OnInit {
           const controls = this.projectForm.controls
             const deal_code = controls.pm_deal.value;
   
+
+            for (let data of details) {
+             // console.log("yawyawyawyaw",data)
+              this.itemService.getByOne({pt_part: data.pmd_part }).subscribe((resp:any)=>{
+        
+                if (resp.data.pt_phantom) {
+                  this.type = 'M'
+                
+                } else {
+                  this.type = null
+                }            
+                this.sodataset.push({
+                  sod_line: data.pmd_line,
+                  sod_part: resp.data.pt_part,
+                  sod_um: resp.data.pt_um,
+                  sod__chr01:  data.pmd_task,
+                  sod__chr02: data.pmd_bom_code,
+                  sod_qty_ord: data.pmd_qty,
+                  sod_qty_ret: data.day,
+                  //sod_qty_cons: 0,
+                  sod_desc: resp.data.pt_desc1 ,
+                  sod_site:resp.data.pt_site, 
+                  sod_loc: resp.data.pt_loc,
+                  sod_um_conv:1, 
+                  sod_type: this.type,
+                  sod_price: resp.data.pt_price, 
+                  sod_disc_pct:0, 
+                  sod_tax_code:resp.data.pt_taxc, 
+                  sod_taxc: resp.data.taxe.tx2_tax_pct, 
+                  sod_taxable: resp.data.pt_taxable
+                })
+             
+              })
+             // console.log("creation", this.sodataset)
+            }
+
+
   this.dealService.getByOne({ deal_code }).subscribe(
     (res: any) => {
-      console.log(res);
+      //console.log(res);
       const { data } = res;
  
+    //  console.log("deal",this.sodataset)
       if(res.data != null) {
 
+      //  console.log("hna datasetSo",this.sodataset)
         let so = this.prepareSo();
-        console.log("so", so)
+      //  console.log("so", so)
         so.so_cr_terms = res.data.deal_pay_meth
         this.addSo(so, this.sodataset);
 
       }
       else {
-
+       // console.log("hna datasetSo 2",this.sodataset)
                 let so = this.prepareSo();
-                console.log("so", so)
+               // console.log("so", so)
                 this.addSo(so, this.sodataset);
       }
     })
-          this.addReq(details);
+         // this.addReq(details);
           
           this.layoutUtilsService.showActionNotification(
             "Ajout avec succès",
@@ -390,8 +463,8 @@ export class CreateProjectComponent implements OnInit {
          
           this.loadingSubject.next(false);
           this.reset();
-          this.router.navigateByUrl("/project/create-project");
-          this.reset();
+          this.router.navigateByUrl("/project/list-pm");
+   //       this.reset();
         }
       );
 
@@ -426,39 +499,9 @@ export class CreateProjectComponent implements OnInit {
     const date = new Date()
 
     
-  // const deal_code = controls.pm_deal.value;
-  
-  // this.dealService.getByOne({ deal_code }).subscribe(
-  //   (res: any) => {
-  //     console.log(res);
-  //     const { data } = res;
-    
-  //     if(res.data.length>0) {
-
-      
-  //           _so.so_category =  "SO"
-  //           _so.so_cust = controls.pm_cust.value;
-  //           _so.so_ord_date = controls.pm_ord_date.value
-  //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-  //             : null;
-  //           _so.so_due_date = controls.pm_ord_date.value
-  //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-  //             : null;
-
-  //           _so.so_po = controls.pm_code.value;
-  //           _so.so_amt = controls.pm_amt.value;
-  //           _so.so_cr_terms = res.data.deal_pay_meth;
-  //           _so.so_curr = this.customer.cm_curr 
-  //           _so.so_taxable = this.customer.address.ad_taxable 
-  //           _so.so_taxc = this.customer.address.ad_taxc 
-  //           _so.so_ex_rate = this.ex_rate1 
-  //           _so.so_ex_rate2 = this.ex_rate2
-
-  //     }
-  //     else {
-
-        _so.so_category =  "SO"
+        //_so.so_category =  "SO"
         _so.so_cust = controls.pm_cust.value;
+        _so.so_nbr = this.soEdit.so_nbr;
         _so.so_ord_date = controls.pm_ord_date.value
           ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
           : null;
@@ -483,7 +526,6 @@ export class CreateProjectComponent implements OnInit {
     return _so;
 
 
-
   
   }
   /**
@@ -494,13 +536,16 @@ export class CreateProjectComponent implements OnInit {
   addSo(_so: any, sodetail: any) {
     
      
-    
+ //console.log("so sos os ososososososososo")   
 
     this.loadingSubject.next(true);
     let so = null;
     
-    this.saleOrderService
-      .add({ saleOrder: _so, saleOrderDetail: sodetail })
+    // this.saleOrderService
+    //   .add({ saleOrder: _so, saleOrderDetail: sodetail })
+    //   .subscribe(
+      this.saleOrderService
+      .updateproj(this.soEdit.id ,{ saleOrder: _so, saleOrderDetail: sodetail})
       .subscribe(
         (reponse: any) => (so = reponse.data),
         (error) => {
@@ -516,61 +561,61 @@ export class CreateProjectComponent implements OnInit {
       );
   }
 
-  addReq(detail:any) {
-    const controls = this.projectForm.controls;
-    for (let data of detail) {
-    if ( data.pmd_vend != "" &&  data.pmd_vend != null) {  
-      this.reqdataset = []
-      const _req = new Requisition()
-      _req.rqm_category =  "RQ"
-        _req.rqm_vend =  data.pmd_vend
-        _req.rqm_req_date=  controls.pm_ord_date.value
-        ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-        : null;
-        _req.rqm_need_date=  controls.pm_ord_date.value
-        ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-        : null;
-        //_req.rqm_status=  controls.rqm_status.value
-        _req.rqm_open= true
-        _req.rqm_aprv_stat = '0'
+//   addReq(detail:any) {
+//     const controls = this.projectForm.controls;
+//     for (let data of detail) {
+//     if ( data.pmd_vend != "" &&  data.pmd_vend != null) {  
+//       this.reqdataset = []
+//       const _req = new Requisition()
+//       _req.rqm_category =  "RQ"
+//         _req.rqm_vend =  data.pmd_vend
+//         _req.rqm_req_date=  controls.pm_ord_date.value
+//         ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+//         : null;
+//         _req.rqm_need_date=  controls.pm_ord_date.value
+//         ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+//         : null;
+//         //_req.rqm_status=  controls.rqm_status.value
+//         _req.rqm_open= true
+//         _req.rqm_aprv_stat = '0'
 
-      this.reqdataset.push({
-        rqd_line: data.pmd_line,
-        rqd_part: data.pmd_part,
-        rqd_um: data.pmd_um,
+//       this.reqdataset.push({
+//         rqd_line: data.pmd_line,
+//         rqd_part: data.pmd_part,
+//         rqd_um: data.pmd_um,
         
-        rqd_req_qty: 1,
-             });
+//         rqd_req_qty: 1,
+//              });
              
     
-    this.loadingSubject.next(true)
-    this.requisitonService.add({ requisition: _req, requisitionDetail: this.reqdataset }).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-            this.layoutUtilsService.showActionNotification(
-                "Erreur verifier les informations",
-                MessageType.Create,
-                10000,
-                true,
-                true
-            )
-            this.loadingSubject.next(false)
-        },
-        () => {
-            this.layoutUtilsService.showActionNotification(
-                "Ajout avec succès",
-                MessageType.Create,
-                10000,
-                true,
-                true
-            )
-            this.loadingSubject.next(false)
-            //this.router.navigateByUrl("/")
-        }
-    )
-    }
-  }
-}
+//     this.loadingSubject.next(true)
+//     this.requisitonService.add({ requisition: _req, requisitionDetail: this.reqdataset }).subscribe(
+//         (reponse) => console.log("response", Response),
+//         (error) => {
+//             this.layoutUtilsService.showActionNotification(
+//                 "Erreur verifier les informations",
+//                 MessageType.Create,
+//                 10000,
+//                 true,
+//                 true
+//             )
+//             this.loadingSubject.next(false)
+//         },
+//         () => {
+//             this.layoutUtilsService.showActionNotification(
+//                 "Ajout avec succès",
+//                 MessageType.Create,
+//                 10000,
+//                 true,
+//                 true
+//             )
+//             this.loadingSubject.next(false)
+//             //this.router.navigateByUrl("/")
+//         }
+//     )
+//     }
+//   }
+// }
 
   /**
    * Go back to the list
@@ -635,7 +680,7 @@ export class CreateProjectComponent implements OnInit {
       {
         id: "desc",
         name: "Designation",
-        field: "desc",
+        field: "task.tk_desc",
         sortable: true,
         width: 120,
         filterable: false,
@@ -741,7 +786,7 @@ export class CreateProjectComponent implements OnInit {
           
           var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
           if ( days < 0) {days = 0 }
-          console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
+          //console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
           this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , int01: days })
 
           },
@@ -762,7 +807,7 @@ export class CreateProjectComponent implements OnInit {
           
           var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
           if ( days < 0) {days = 0 }
-          console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
+          //console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
           this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , int01: days })
 
           },
@@ -770,7 +815,7 @@ export class CreateProjectComponent implements OnInit {
       {
         id: "int01",
         name: "Nbr Jour",
-        field: "it01",
+        field: "int01",
         sortable: true,
         width: 80,
         filterable: false,
@@ -809,7 +854,7 @@ export class CreateProjectComponent implements OnInit {
       {
         id: "descr",
         name: "Designation",
-        field: "descr",
+        field: "item.pt_desc1",
         sortable: true,
         width: 120,
         filterable: false,
@@ -836,8 +881,10 @@ export class CreateProjectComponent implements OnInit {
         filterable: false,
         type: FieldType.string,
         editor: {
+          
           model: Editors.text,
         },
+        
       },
       {
         id: "mvid",
@@ -866,11 +913,22 @@ export class CreateProjectComponent implements OnInit {
       enableAutoResize: true,
       autoCommitEdit:true,
       enableColumnPicker: true,
+      autoEdit:true,
       enableCellNavigation: true,
       enableRowSelection: true,
-    };
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
 
-    this.mvdataset = [];
+    };
+   // this.mvdataView.setItems(this.mvdataset)
+    // this.mvdataset = [];
   }
   addNewItem() {
     const newId = this.mvdataset.length+1;
@@ -905,7 +963,7 @@ onChangeCust() {
   
   this.customerService.getBy({ cm_addr }).subscribe(
     (res: any) => {
-      console.log(res);
+     // console.log(res);
       const { data } = res;
 
       if (!data) {
@@ -924,7 +982,7 @@ onChangeCust() {
         controls.name.setValue(data.address.ad_name || "");
         this.customerService.getBy({ cm_addr : controls.pm_cust.value  }).subscribe(
           (res: any) => {
-            console.log(res);
+            //console.log(res);
             const { data } = res;
     
             if (data) {
@@ -967,7 +1025,7 @@ onChangeDeal() {
   
   this.dealService.getByOne({ deal_code }).subscribe(
     (res: any) => {
-      console.log(res);
+      //console.log(res);
       const { data } = res;
 
       if (!data) {
@@ -1008,7 +1066,7 @@ handleSelectedRowsChanged2(e, args) {
       
       this.customerService.getBy({ cm_addr : controls.pm_cust.value  }).subscribe(
         (res: any) => {
-          console.log(res);
+          //console.log(res);
           const { data } = res;
   
           if (data) {
@@ -1225,7 +1283,7 @@ prepareTriggersGrid() {
   this.qualityControlService
   .findDocumentTriggers()
   .subscribe((response: any) => {
-    console.log(response.data)
+   // console.log(response.data)
     this.doc_triggers = response.data});
 }
 
@@ -1357,7 +1415,7 @@ handleSelectedRowsChangedtask(e, args) {
               tk_code: item.tk_code
         })
         .subscribe((response: any) => {
-          console.log(response.data, response.data.details.length)
+        //  console.log(response.data, response.data.details.length)
           updateItem.pmd_task = item.tk_code;
           updateItem.desc = item.tk_desc;
           updateItem.pmd_um = item.tk_um;
@@ -1478,7 +1536,7 @@ handleSelectedRowsChangedbom(e, args) {
             ps_parent: item.bom_parent
       })
       .subscribe((response: any) => {
-        console.log(response.data, "here")
+        //console.log(response.data, "here")
         updateItem.pmd_bom_code = item.bom_parent;
         
         updateItem.pmd_bom_cost = response.data;
@@ -1571,7 +1629,7 @@ openbom(contentbom) {
 handleSelectedRowsChanged4(e, args) {
   let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
   
-  console.log(updateItem.pmd_line)
+  //console.log(updateItem.pmd_line)
   if (Array.isArray(args.rows) && this.gridObj4) {
     args.rows.map((idx) => {
 
@@ -1836,11 +1894,11 @@ calculatetot(){
    for (var i = 0; i < this.mvdataset.length; i++) {
      tcost += Number(this.mvdataset[i].pmd_cost) +  Number(this.mvdataset[i].pmd_bom_cost)
 
-     console.log("tcost",tcost)
-     console.log(this.mvdataset[i].pmd_cost,this.mvdataset[i].pmd_bom_cost)
+    // console.log("tcost",tcost)
+   //  console.log(this.mvdataset[i].pmd_cost,this.mvdataset[i].pmd_bom_cost)
 
 }
-console.log(tcost)
+//console.log(tcost)
 controls.pm_cost.setValue(Number(tcost.toFixed(2)));
 }
 
@@ -1849,8 +1907,9 @@ getSpecifications() {
     (response) => {
       if (response["data"] != null) {
         this.specifications = response["data"]
-        console.log(this.specifications)
-        console.log(response["data"])
+       // console.log(this.specifications)
+       // console.log(response["data"])
+        
       }
     },
     (error) => {
@@ -1871,8 +1930,8 @@ getProjectTypes() {
     (response) => {
       if (response["data"] != null) {
         this.project_types = response["data"]
-        console.log(this.project_types)
-        console.log(response["data"])
+        // console.log(this.project_types)
+        // console.log(response["data"])
       }
     },
     (error) => {
