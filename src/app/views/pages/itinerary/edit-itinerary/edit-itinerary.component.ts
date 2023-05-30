@@ -5,7 +5,7 @@ import { Column, GridOption, AngularGridInstance, FieldType } from "angular-slic
 import { ActivatedRoute, Router } from "@angular/router";
 import { Form, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
+import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs";
 import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
 
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
@@ -13,13 +13,14 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { Itinerary, ItineraryService, CustomerMobileService, CodeMobileService, RoleService, RoleItinerary } from "../../../../core/erp";
 
 import { config } from "process";
+import { create } from "lodash";
 
 @Component({
-  selector: "kt-create-new-itinerary",
-  templateUrl: "./create-new-itinerary.component.html",
-  styleUrls: ["./create-new-itinerary.component.scss"],
+  selector: "kt-edit-itinerary",
+  templateUrl: "./edit-itinerary.component.html",
+  styleUrls: ["./edit-itinerary.component.scss"],
 })
-export class CreateNewItineraryComponent implements OnInit {
+export class EditItineraryComponent implements OnInit {
   lat = 36.748205868214235;
   lng = 3.083509081242227;
   zoom: number = 10;
@@ -39,45 +40,53 @@ export class CreateNewItineraryComponent implements OnInit {
   itinerary_type: any[] = [];
   week_days: any[] = [];
   // roles : any[] = []
-
+  itineraryEdit: any[] = [];
+  somedata: any[] = [];
+  formReady: boolean = false;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private typesUtilsService: TypesUtilsService, private formBuilder: FormBuilder, public dialog: MatDialog, private subheaderService: SubheaderService, private layoutUtilsService: LayoutUtilsService, private layoutConfigService: LayoutConfigService, private modalService: NgbModal, private itineraryService: ItineraryService, private customerMobileService: CustomerMobileService, private codeMobileService: CodeMobileService, private roleService: RoleService, config: NgbDropdownConfig) {
     config.autoClose = true;
     this.codeMobileService.getBy({ code_name: "week_days" }).subscribe((response: any) => (this.week_days = response.data));
     this.codeMobileService.getBy({ code_name: "itinerary_type" }).subscribe((response: any) => (this.itinerary_type = response.data));
+    this.activatedRoute.params.subscribe((params) => {
+      const id = params.id;
+      this.itineraryService.getOne(id).subscribe((response: any) => {
+        this.somedata.push(response.data);
+        this.itineraryEdit = this.somedata.map((item) => {
+          return item;
+        });
+        console.log(this.itineraryEdit);
+      });
+    });
     this.prepareGrid();
   }
 
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    this.createForm();
+    setTimeout(() => {
+      this.createForm();
+    }, 1000);
   }
-
+  time = new Observable<string>((observer: Observer<string>) => {
+    setInterval(() => {
+      observer.next("");
+    }, 1000);
+  });
   createForm() {
     this.loadingSubject.next(false);
     this.itinerary = new Itinerary();
+    this.formReady = true;
+    console.log(this.itineraryEdit[0]);
     this.itineraryForm = this.formBuilder.group({
-      itinerary_code: [this.itinerary.itinerary_code, Validators.required],
-      itinerary_name: [this.itinerary.itinerary_name, Validators.required],
-      itinerary_type: [{ value: this.itinerary.itinerary_type }, Validators.required],
-      itinerary_day: [{ value: this.itinerary.itinerary_day }, Validators.required],
-      customers: [{ value: this.itinerary.customers_name }, Validators.required],
+      itinerary_code: [this.itineraryEdit[0].itinerary_code, Validators.required],
+      itinerary_name: [this.itineraryEdit[0].itinerary_name, Validators.required],
+      itinerary_type: [this.itineraryEdit[0].itinerary_type, Validators.required],
+      itinerary_day: [this.itineraryEdit[0].itinerary_day, Validators.required],
+      customers: [this.itinerary.customers_name, Validators.required],
       // roles : [{value : this.itinerary.roles}, Validators.required]
     });
   }
-  onChangeCode() {
-    const controls = this.itineraryForm.controls;
 
-    this.itineraryService.getOne(controls.itinerary_code.value).subscribe((res: any) => {
-      console.log("aa", res.data);
-
-      if (res.data) {
-        console.log(res.data.itinerary_name);
-        this.router.navigateByUrl(`/itinerary/edit-itinerary/${res.data.itinerary_code}`);
-        //console.log(res.data.id)
-      }
-    });
-  }
   prepareGrid() {
     this.columnDefinitions = [
       {
@@ -123,50 +132,6 @@ export class CreateNewItineraryComponent implements OnInit {
         filterable: true,
         type: FieldType.boolean,
       },
-
-      {
-        id: "cluster_code",
-        name: "Code cluster",
-        field: "cluster_code",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
-        id: "sub_cluster_code",
-        name: "Code sous-cluster",
-        field: "sub_cluster_code",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-
-      {
-        id: "category_code",
-        name: "Code catégorie",
-        field: "category_code",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-
-      {
-        id: "category_type_code",
-        name: "Type catégorie",
-        field: "category_type_code",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-
-      {
-        id: "sales_channel_code",
-        name: "Code canal de vente",
-        field: "sales_channel_code",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
     ];
 
     this.gridOptions = {
@@ -202,34 +167,35 @@ export class CreateNewItineraryComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.itineraryEdit[0].itinerary_code);
     this.hasFormErrors = false;
     const controls = this.itineraryForm.controls;
     /** check form */
-    if (this.itineraryForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
+    // if (this.itineraryForm.invalid) {
+    //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
 
-      this.hasFormErrors = true;
-      return;
-    }
+    //   this.hasFormErrors = true;
+    //   return;
+    // }
 
     // tslint:disable-next-line:prefer-const
     let itn = this.prepareItinerary();
-    this.addItinerary(itn, this.customers);
+    this.updateItinerary(itn, this.customers);
   }
 
   prepareItinerary(): Itinerary {
     const controls = this.itineraryForm.controls;
     const _itinerary = new Itinerary();
-
+    _itinerary.itinerary_code = controls.itinerary_code.value;
     _itinerary.itinerary_name = controls.itinerary_name.value;
     _itinerary.itinerary_day = controls.itinerary_day.value;
     _itinerary.itinerary_type = controls.itinerary_type.value;
     return _itinerary;
   }
 
-  addItinerary(_itinerary: Itinerary, _customers: any) {
+  updateItinerary(_itinerary: Itinerary, _customers: any) {
     this.loadingSubject.next(true);
-    this.itineraryService.addItinerary({ itinerary: _itinerary, customers: _customers }).subscribe(
+    this.itineraryService.updateItinerary(_itinerary.itinerary_code, { itinerary: _itinerary, customers: _customers }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
@@ -293,7 +259,7 @@ export class CreateNewItineraryComponent implements OnInit {
       // console.log("log")
       this.customers = args.rows.map((idx: number) => {
         const item = this.gridObj.getDataItem(idx);
-        return item.id;
+        return item;
       });
     }
   }

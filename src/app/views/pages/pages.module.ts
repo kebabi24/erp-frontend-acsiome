@@ -22,9 +22,10 @@ import { RevenueTransferComponent } from "./revenue-transfer/revenue-transfer.co
 import { PosCafetteComponent } from "./pos-cafette/pos-cafette.component";
 import { MobileSettingsComponent } from "./mobile-settings/mobile-settings.component";
 import { SupervisionComponent } from "./supervision/supervision.component";
+import { SettingPrintersComponent } from './setting-printers/setting-printers.component';
 
 @NgModule({
-  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent],
+  declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent, SettingPrintersComponent],
   exports: [],
   imports: [CommonModule, HttpClientModule, FormsModule, CoreModule, PartialsModule, AngularSlickgridModule.forRoot(), MailModule, ECommerceModule, UserManagementModule, ProvidersModule, TreeModule],
   providers: [],

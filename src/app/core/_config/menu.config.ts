@@ -102,8 +102,27 @@ export class MenuConfig {
             },
           ],
         },
+        {
+          title: "Paramétrages des imprimantes",
+          bullet: "dot",
+          icon: "flaticon2-shopping-cart",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter une imprimantes",
+              page: "/setting-printers/add-printer",
+            },
+            {
+              title: "Affecter une imprimante",
+              page: "/setting-printers/set-printer",
+            },
+            {
+              title: "Liste des imprimantes",
+              page: "/setting-printers/list-printers",
+            },
+          ],
+        },
 
-        
         {
           title: "Paramétrages Mobile",
           bullet: "dot",
@@ -394,7 +413,7 @@ export class MenuConfig {
                   title: "Liste des Entitées",
                   page: "/accounting-setting/entity-list",
                 },
-              
+
                 {
                   title: "Maint des Banques",
                   page: "/accounting-setting/create-bank",
@@ -990,8 +1009,16 @@ export class MenuConfig {
               page: "/manufacturing/list-ps",
             },
             {
+              title: "Broyage",
+              page: "/manufacturing/create-direct-wo",
+            },
+            {
               title: "Déclaration Production",
               page: "/manufacturing/worct-entry",
+            },
+            {
+              title: "Déclaration Production Palette",
+              page: "/manufacturing/worct-entry-pal",
             },
             {
               title: "Déclaration Consomation",
@@ -1063,9 +1090,7 @@ export class MenuConfig {
               title: "Liste des pointages",
               page: "/project/list-emp-temp",
             },
-
-
-          ]
+          ],
         },
         {
           title: "Gestion des projets",
@@ -1097,7 +1122,7 @@ export class MenuConfig {
             //   title: "Affectation des Employés",
             //   page: "/project/create-project-payment",
             // },
-            
+
             {
               title: "Affectation des Employés",
               page: "/accounting-setting/affect-emp",
@@ -1115,7 +1140,6 @@ export class MenuConfig {
               page: "/project/accident-incident",
             },
 
-            
             {
               title: "Sensibilisation",
               page: "/project/sensibilisation",
@@ -1124,7 +1148,7 @@ export class MenuConfig {
               title: "identification",
               page: "/project/identification",
             },
-            
+
             {
               title: "Gestion des Listes Outils",
               root: true,

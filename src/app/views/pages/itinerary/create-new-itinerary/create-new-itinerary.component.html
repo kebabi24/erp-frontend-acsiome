@@ -1,140 +1,71 @@
 <kt-portlet>
-  <kt-portlet-header
-    [sticky]="true"
-    [title]="'Ajouter un nouveau itinéraire'"
-    [class]="'card-head-lg'"
-    [viewLoading$]="loading$"
-  >
+  <kt-portlet-header [sticky]="true" [title]="'Ajouter un nouveau itinéraire'" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button
-        type="button"
-        (click)="goBack()"
-        class="btn btn-secondary btn-sm mr-2"
-      >
-        Annuller
-      </button>
-      <button
-        type="button"
-        (click)="reset()"
-        class="btn btn-secondary btn-sm mr-2"
-      >
-        Réinitialiser
-      </button>
-      <button
-        type="button"
-        (click)="onSubmit()"
-        class="btn btn-success btn-sm mr-2"
-      >
-        Sauvgarder
-      </button>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
     <div class="example-preview">
       <div class="row">
-        <div class="col-6">
-          <form [formGroup]="itineraryForm" class="form">
-            <kt-alert
-              *ngIf="isExist"
-              type="warn"
-              [showCloseButton]="true"
-              [duration]="10000"
-              (close)="onAlertClose($event)"
-            >
-              Ce Code existe deja
-            </kt-alert>
-
-            <div class="row">
-              <div class="form-group col-6">
-                <label class="form-group" id="code"
-                  >Nom de l'itinéraire :</label
-                >
-                <input
-                  type="text"
-                  [className]="
-                    itineraryForm.controls['itinerary_name'].errors &&
-                    (itineraryForm.controls['itinerary_name'].dirty ||
-                      itineraryForm.controls['itinerary_name'].touched)
-                      ? 'form-control form-control-sm form-control-solid is-invalid'
-                      : 'form-control form-control-sm form-control-solid'
-                  "
-                  formControlName="itinerary_name"
-                />
-                <div
-                  *ngIf="
-                    itineraryForm.controls['itinerary_name'].errors &&
-                    (itineraryForm.controls['itinerary_name'].dirty ||
-                      itineraryForm.controls['itinerary_name'].touched)
-                  "
-                  class="invalid-feedback"
-                >
-                  Ce Champs est obligatoire
+        <div class="row">
+          <div class="col-6">
+            <form [formGroup]="itineraryForm" class="form">
+              <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label class="form-group" id="code">Code de l'itinérarie :</label>
+                  <input type="text" [className]="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="itinerary_code" (change)="onChangeCode()" />
+                  <div *ngIf="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="form-group col-6">
-                <label class="form-group">Journée d'application</label>
-                <select
-                  class="form-control form-control-sm form-control-solid"
-                  id="exampleSelects1"
-                  formControlName="itinerary_day"
-                >
-                  <option value=""></option>
-                  <option
-                    *ngFor="let elem of week_days"
-                    [value]="elem.code_value"
-                  >
-                    {{ elem.code_value }}
-                  </option>
-                </select>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label class="form-group" id="code">Nom de l'itinéraire :</label>
+                  <input type="text" [className]="itineraryForm.controls['itinerary_name'].errors && (itineraryForm.controls['itinerary_name'].dirty || itineraryForm.controls['itinerary_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="itinerary_name" />
+                  <div *ngIf="itineraryForm.controls['itinerary_name'].errors && (itineraryForm.controls['itinerary_name'].dirty || itineraryForm.controls['itinerary_name'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+                </div>
               </div>
-              <div class="form-group col-6">
-                <label class="form-group">Type de l'itinéraire</label>
-                <select
-                  class="form-control form-control-sm form-control-solid"
-                  id="exampleSelects1"
-                  formControlName="itinerary_type"
-                >
-                  <option value=""></option>
-                  <option
-                    *ngFor="let elem of itinerary_type"
-                    [value]="elem.code_value"
-                  >
-                    {{ elem.code_value }}
-                  </option>
-                </select>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label class="form-group">Journée d'application</label>
+                  <select class="form-control form-control-sm form-control-solid" id="exampleSelects1" formControlName="itinerary_day">
+                    <option value=""></option>
+                    <option *ngFor="let elem of week_days" [value]="elem.code_value">
+                      {{ elem.code_value }}
+                    </option>
+                  </select>
+                </div>
+                <div class="form-group col-6">
+                  <label class="form-group">Type de l'itinéraire</label>
+                  <select class="form-control form-control-sm form-control-solid" id="exampleSelects1" formControlName="itinerary_type">
+                    <option value=""></option>
+                    <option *ngFor="let elem of itinerary_type" [value]="elem.code_value">
+                      {{ elem.code_value }}
+                    </option>
+                  </select>
+                </div>
               </div>
-            </div>
-          </form>
-          <br />
-          <br />
-          <div class="col-12">
-            <angular-slickgrid
-              gridId="grid4"
-              [columnDefinitions]="columnDefinitions"
-              (onAngularGridCreated)="angularGridReady($event)"
-              (sgOnSelectedRowsChanged)="
-                handleSelectedRowsChanged(
-                  $event.detail.eventData,
-                  $event.detail.args
-                )
-              "
-              [gridOptions]="gridOptions"
-              [dataset]="dataset"
-            >
-            </angular-slickgrid>
+            </form>
+            <br />
+            <br />
+            <br />
+            <br />
+
+            <br />
+            <br />
+          </div>
+          <div class="col-6">
+            <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false">
+              <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+            </agm-map>
           </div>
         </div>
-        <div class="col-6">
-          <agm-map
-            [latitude]="lat"
-            [longitude]="lng"
-            [zoom]="zoom"
-            [disableDefaultUI]="false"
-          >
-            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-          </agm-map>
+
+        <div></div>
+        <div class="col-12">
+          <angular-slickgrid gridId="grid4" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
         </div>
       </div>
     </div> </kt-portlet-body
