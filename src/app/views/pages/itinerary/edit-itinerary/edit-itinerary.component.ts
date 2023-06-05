@@ -43,12 +43,18 @@ export class EditItineraryComponent implements OnInit {
   itineraryEdit: any[] = [];
   somedata: any[] = [];
   formReady: boolean = false;
+  selectedCustomers: any[] = [];
+  param: any;
+  dataView: any;
+  grid: any;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private typesUtilsService: TypesUtilsService, private formBuilder: FormBuilder, public dialog: MatDialog, private subheaderService: SubheaderService, private layoutUtilsService: LayoutUtilsService, private layoutConfigService: LayoutConfigService, private modalService: NgbModal, private itineraryService: ItineraryService, private customerMobileService: CustomerMobileService, private codeMobileService: CodeMobileService, private roleService: RoleService, config: NgbDropdownConfig) {
     config.autoClose = true;
     this.codeMobileService.getBy({ code_name: "week_days" }).subscribe((response: any) => (this.week_days = response.data));
     this.codeMobileService.getBy({ code_name: "itinerary_type" }).subscribe((response: any) => (this.itinerary_type = response.data));
+
     this.activatedRoute.params.subscribe((params) => {
       const id = params.id;
+      this.param = id;
       this.itineraryService.getOne(id).subscribe((response: any) => {
         this.somedata.push(response.data);
         this.itineraryEdit = this.somedata.map((item) => {
@@ -57,10 +63,17 @@ export class EditItineraryComponent implements OnInit {
         console.log(this.itineraryEdit);
       });
     });
+    // this.customerMobileService.getBySomething({ itinerary_code: this.param }).subscribe((response: any) => (this.selectedCustomers = response.data));
+    this.customerMobileService.getBySomething({ itinerary_code: this.param }).subscribe((res: any) => {
+      this.selectedCustomers = res.data.map((item) => {
+        return item;
+      });
+    });
     this.prepareGrid();
   }
 
   ngOnInit(): void {
+    this.angularGrid;
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     setTimeout(() => {
@@ -76,7 +89,8 @@ export class EditItineraryComponent implements OnInit {
     this.loadingSubject.next(false);
     this.itinerary = new Itinerary();
     this.formReady = true;
-    console.log(this.itineraryEdit[0]);
+    // console.log(this.itineraryEdit[0]);
+    console.log(this.selectedCustomers);
     this.itineraryForm = this.formBuilder.group({
       itinerary_code: [this.itineraryEdit[0].itinerary_code, Validators.required],
       itinerary_name: [this.itineraryEdit[0].itinerary_name, Validators.required],
@@ -98,6 +112,14 @@ export class EditItineraryComponent implements OnInit {
         maxWidth: 80,
       },
 
+      {
+        id: "customer_code",
+        name: "code client",
+        field: "customer_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
       {
         id: "customer_name",
         name: "Client",
@@ -266,5 +288,11 @@ export class EditItineraryComponent implements OnInit {
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = (angularGrid && angularGrid.slickGrid) || {};
+    this.dataView = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid;
+    console.log(this.dataView);
+    const selectedRows = this.selectedCustomers.map((item) => this.dataView.getIdxById(item.id));
+    console.log(selectedRows);
+    this.grid.setSelectedRows(selectedRows);
   }
 }

@@ -1,13 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 
 import { NgbDropdownConfig, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Column, GridOption, AngularGridInstance, FieldType } from "angular-slickgrid";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Form, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
+import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs";
 import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
-
+import { AgmMap } from "@agm/core";
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 
 import { Itinerary, ItineraryService, CustomerMobileService, CodeMobileService, RoleService, RoleItinerary } from "../../../../core/erp";
@@ -20,9 +20,10 @@ import { config } from "process";
   styleUrls: ["./create-new-itinerary.component.scss"],
 })
 export class CreateNewItineraryComponent implements OnInit {
-  lat = 36.748205868214235;
-  lng = 3.083509081242227;
-  zoom: number = 10;
+  @ViewChild("map", { static: true }) map: AgmMap;
+  lat = 36.7338351;
+  lng = 3.3450027;
+  zoom: number = 12;
   itinerary: Itinerary;
   itineraryForm: FormGroup;
   hasFormErrors = false;
@@ -39,7 +40,10 @@ export class CreateNewItineraryComponent implements OnInit {
   itinerary_type: any[] = [];
   week_days: any[] = [];
   // roles : any[] = []
-
+  newMarker: boolean = false;
+  markerLat: any = 0;
+  markerLng: any = 0;
+  customersSelected: any[] = [];
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private typesUtilsService: TypesUtilsService, private formBuilder: FormBuilder, public dialog: MatDialog, private subheaderService: SubheaderService, private layoutUtilsService: LayoutUtilsService, private layoutConfigService: LayoutConfigService, private modalService: NgbModal, private itineraryService: ItineraryService, private customerMobileService: CustomerMobileService, private codeMobileService: CodeMobileService, private roleService: RoleService, config: NgbDropdownConfig) {
     config.autoClose = true;
     this.codeMobileService.getBy({ code_name: "week_days" }).subscribe((response: any) => (this.week_days = response.data));
@@ -200,7 +204,11 @@ export class CreateNewItineraryComponent implements OnInit {
     this.createForm();
     this.hasFormErrors = false;
   }
-
+  time = new Observable<string>((observer: Observer<string>) => {
+    setInterval(() => {
+      observer.next("");
+    }, 1000);
+  });
   onSubmit() {
     this.hasFormErrors = false;
     const controls = this.itineraryForm.controls;
@@ -293,12 +301,39 @@ export class CreateNewItineraryComponent implements OnInit {
       // console.log("log")
       this.customers = args.rows.map((idx: number) => {
         const item = this.gridObj.getDataItem(idx);
-        return item.id;
+
+        return item;
       });
     }
+    console.log(this.customers);
   }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = (angularGrid && angularGrid.slickGrid) || {};
   }
+
+  // mapOptions: any = {
+  //   zoom: 10,
+  //   center: { lat: this.lat, lng: this.lng },
+  // };
+  // onMapReady(map: any) {
+  //   const bounds = new google.maps.LatLngBounds();
+  //   this.customers.forEach((marker: any) => {
+  //     console.log(marker);
+  //     bounds.extend(new google.maps.LatLng(marker.latitude, marker.longitude));
+  //   });
+
+  //   // Step 4: Set map options
+  //   this.map.map.fitBounds(bounds);
+  //   this.mapOptions = {
+  //     zoom: map.fitBounds(bounds),
+  //     center: bounds.getCenter(),
+  //   };
+  // }
+
+  // new() {
+  //   setTimeout(() => {
+  //     this.onMapReady(map);
+  //   }, 1000);
+  // }
 }
