@@ -48,6 +48,6 @@ export class FooterComponent implements OnInit {
     this.footerContainerClasses = this.uiClasses.getClasses('footer_container', true).toString();
     this.user$ = JSON.parse(localStorage.getItem('user'))
     this.userd = JSON.parse(localStorage.getItem('user'))
-		console.log(this.user$,"gggg")
+	//	console.log(this.user$,"gggg")
   }
 }

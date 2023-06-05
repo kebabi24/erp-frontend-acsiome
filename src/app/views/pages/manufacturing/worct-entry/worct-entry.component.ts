@@ -53,6 +53,8 @@ import {
   WorkOrderService,
   Label,
   LabelService,  
+  SaleOrderService,
+  Daybook,
 } from "../../../../core/erp";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -152,6 +154,9 @@ export class WorctEntryComponent implements OnInit {
   site;
   loc;
   rctwostat;
+  address: any;
+  product : any;
+  emp_shift: any[] = [];
   constructor(
     config: NgbDropdownConfig,
     private trFB: FormBuilder,
@@ -173,8 +178,12 @@ export class WorctEntryComponent implements OnInit {
     private inventoryStatusService : InventoryStatusService,
     private workOrderService: WorkOrderService,
     private labelService: LabelService,
+    private saleOrderService : SaleOrderService,
   ) {
     config.autoClose = true;
+    this.codeService
+    .getBy({ code_fldname: "emp_shift" })
+    .subscribe((response: any) => (this.emp_shift = response.data));
     this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -606,7 +615,13 @@ export class WorctEntryComponent implements OnInit {
                   : null
               _lb.lb_qty = args.dataContext.tr_qty_loc
               _lb.lb_ld_status = args.dataContext.tr_status
-              _lb.lb_desc = controls.desc.value
+              _lb.lb_desc = this.product.pt_desc2
+              _lb.lb_cust = this.address.ad_addr
+              _lb.lb_addr = this.address.ad_line1
+              _lb.lb_rmks = controls.emp_shift.value
+              _lb.lb_tel  = this.address.ad_phone
+              _lb.int01   = this.product.int01
+              _lb.int02   = this.product.int02
     
               let lab = null
 
@@ -675,11 +690,41 @@ export class WorctEntryComponent implements OnInit {
       desc:  [{value:"", disabled: true}],
 
       tr_so_job: [this.inventoryTransaction.tr_so_job],
+      emp_shift: [this.inventoryTransaction.tr_addr],
       
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       });
   }
 
+  onChangeJob() {
+  const controls = this.trForm.controls
+    if (controls.tr_so_job.value != null && controls.tr_so_job.value != "") {
+      this.saleOrderService.getBy({ so_nbr : controls.tr_so_job.value}).subscribe(
+        (res: any) => {
+        console.log(res.data)
+          if (res.data.saleOrder != null) { 
+            this.addressService.getBy({ ad_addr : res.data.saleOrder.so_cust}).subscribe(
+              (resaddr: any) => {
+                console.log(resaddr.data)
+                this.address = resaddr.data
+                
+            })
+          }
+          else {
+            alert("Commande n'existe pas")
+            controls.tr_so_job.setValue(null);
+            document.getElementById("sojob").focus();
+          }  
+      })
+    } else {
+      this.addressService.getBy({ ad_addr : "1000"}).subscribe(
+        (resaddr: any) => {
+          console.log(resaddr.data)
+          this.address = resaddr.data
+          
+      })
+    }  console.log(this.address)
+  }
   onChangeOA() {
     this.dataset=[]
     const controls = this.trForm.controls;
@@ -694,7 +739,9 @@ export class WorctEntryComponent implements OnInit {
         controls.tr_lot.setValue(this.woServer.id);
         controls.tr_nbr.setValue(this.woServer.wo_nbr);
         controls.tr_part.setValue(this.woServer.wo_part);
+        controls.tr_so_job.setValue(this.woServer.wo_so_job)
         controls.desc.setValue(this.woServer.item.pt_desc1)
+        this.product = this.woServer.item
         this.umd = this.woServer.item.pt_um
         this.qtycart = (this.woServer.item.int03 != null) ? this.woServer.item.int03 : 0
         this.uniquelot = this.woServer.item.pt_lot_ser
@@ -715,7 +762,35 @@ export class WorctEntryComponent implements OnInit {
         
         }  
         
+        if (this.woServer.wo_so_job != null && this.woServer.wo_so_job != "") {
+          this.saleOrderService.getBy({ so_nbr : this.woServer.wo_so_job}).subscribe(
+            (res: any) => {
+            console.log(res.data)
+              if (res.data.saleOrder != null) { 
+                this.addressService.getBy({ ad_addr : res.data.saleOrder.so_cust}).subscribe(
+                  (resaddr: any) => {
+                    console.log(resaddr.data)
+                    this.address = resaddr.data
+                    
+                })
+              }
+             
+          })
+        } else {
+          this.addressService.getBy({ ad_addr : "1000"}).subscribe(
+            (resaddr: any) => {
+              console.log(resaddr.data)
+              this.address = resaddr.data
+              
+          })
+        }  console.log(this.address)
+        console.log(this.site)
+        this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: 'STDCG' }).subscribe(
+          (resp: any) => {
+            this.sct = resp.data
+            console.log(this.sct)
       
+      });
           }
           else {
 
@@ -727,6 +802,8 @@ export class WorctEntryComponent implements OnInit {
         
       
       });
+
+    
   }
 
   //reste form
@@ -817,7 +894,7 @@ export class WorctEntryComponent implements OnInit {
     _tr.tr_so_job = controls.tr_so_job.value
     
     _tr.tr_rmks = controls.tr_rmks.value
-  
+    _tr.tr_addr = controls.emp_shift.value
     return _tr
   }
   /**
@@ -881,7 +958,19 @@ export class WorctEntryComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
-    console.log(this.sct)
+    const controls = this.trForm.controls
+    const eff_date = `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+    const effdate  = new Date(eff_date)
+    
+    var year     = effdate.getFullYear();
+    var month    = effdate.getMonth()+1;
+    var day      = effdate.getDate();
+    var days : String
+    var months : String
+    if (day < 9) { days = "0"+ String(day) } else { days =  String(day)}; 
+    if (month < 12) { months = "0"+ String(month) } else { months =  String(month)}; 
+    
+    console.log(days,months,year)
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -892,7 +981,8 @@ export class WorctEntryComponent implements OnInit {
         tr_price: this.sct.sct_cst_tot,
         tr_site: this.site,
         tr_loc: this.loc,
-        tr_serial: (this.uniquelot == "L") ? "AAAAAAAAAAA" : null,
+        
+        tr_serial: (this.uniquelot == "L") ? `${this.product.pt_article}${this.product.pt_break_cat}${this.product.pt_net_wt}/${days}.${months}.${year}`   : null,
         tr_status: this.rctwostat,
         tr_expire: null,
       },
@@ -995,9 +1085,16 @@ export class WorctEntryComponent implements OnInit {
       };
   
       // fill the dataset with your data
-      this.siteService
-        .getAll()
-        .subscribe((response: any) => (this.datasite = response.data));
+      if(this.user.usrd_site == "*") {
+        this.siteService
+          .getAll()
+          .subscribe((response: any) => (this.datasite = response.data));
+      }else {
+        this.siteService
+          .getBy({si_site: this.user.usrd_site})
+          .subscribe((response: any) => (this.datasite = response.data));
+        
+     }
     }
     opensite(contentsite) {
       this.prepareGridsite();
@@ -1552,7 +1649,9 @@ handleSelectedRowsChanged5(e, args) {
      
       controls.tr_nbr.setValue(item.wo_nbr);
       controls.tr_part.setValue(item.wo_part);
+      controls.tr_so_job.setValue(item.wo_so_job)
       controls.desc.setValue(item.item.pt_desc1)
+      this.product = item.item
       this.umd = item.item.pt_um
       this.qtycart = (item.item.int03 != null) ? item.item.int03 : 0
       this.uniquelot = item.item.pt_lot_ser
@@ -1586,6 +1685,28 @@ handleSelectedRowsChanged5(e, args) {
 
     
   }
+  if (controls.tr_so_job.value != null && controls.tr_so_job.value != "") {
+    this.saleOrderService.getBy({ so_nbr : controls.tr_so_job.value}).subscribe(
+      (res: any) => {
+      console.log(res.data)
+        if (res.data.saleOrder != null) { 
+          this.addressService.getBy({ ad_addr : res.data.saleOrder.so_cust}).subscribe(
+            (resaddr: any) => {
+              console.log(resaddr.data)
+              this.address = resaddr.data
+              
+          })
+        }
+       
+    })
+  } else {
+    this.addressService.getBy({ ad_addr : "1000"}).subscribe(
+      (resaddr: any) => {
+        console.log(resaddr.data)
+        this.address = resaddr.data
+        
+    })
+  }  console.log(this.address)
 }
 
 angularGridReady5(angularGrid: AngularGridInstance) {

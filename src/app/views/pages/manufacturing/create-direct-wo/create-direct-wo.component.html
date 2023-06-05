@@ -68,6 +68,15 @@
                             <div *ngIf="woForm.controls['wo_routing'].errors && (woForm.controls['wo_routing'].dirty || woForm.controls['wo_routing'].touched)"
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Equipe:</label>
+                            <select class="form-control form-control-sm form-control-solid"
+                                formControlName="emp_shift" id="exampleSelects4">
+                                <option value=""></option>
+                                <option *ngFor="let elem of emp_shift" [value]="elem.code_value">
+                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="row">
 

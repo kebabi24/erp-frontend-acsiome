@@ -58,6 +58,8 @@ import {
   CodeService,
   printBc,
   MesureService,
+  LabelService,
+  Label,
 } from "../../../../core/erp";
 
 @Component({
@@ -141,6 +143,8 @@ export class CreateDirectWoComponent implements OnInit {
   loc: any
   rctwostat: any
   ro_rollup:  any[] = [];
+  emp_shift: any[] = [];
+  desc2: any
   constructor(
     config: NgbDropdownConfig,
     private woFB: FormBuilder,
@@ -164,11 +168,16 @@ export class CreateDirectWoComponent implements OnInit {
     private mesureService: MesureService,
     private codeService: CodeService,
     private requisitionService: RequisitionService,
-    private locationDetailService: LocationDetailService
+    private locationDetailService: LocationDetailService,
+    private labelService : LabelService,
   ) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true })
       .subscribe((response: any) => (this.ro_rollup = response.data));
+    this.codeService
+      .getBy({ code_fldname: "emp_shift" })
+      .subscribe((response: any) => (this.emp_shift = response.data));
+    
     this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -371,6 +380,7 @@ export class CreateDirectWoComponent implements OnInit {
       ref: [{value:null,disabled:true} ],
 
       wo_qty_comp: [this.workOrder.wo_qty_comp ],
+      emp_shift: [null],
       wo_serial: [this.workOrder.wo_serial ],
       
       
@@ -411,23 +421,78 @@ export class CreateDirectWoComponent implements OnInit {
     const controls = this.woForm.controls
     let tr = this.prepareTr()
     this.trdataset = []
-    this.trdataset.push({
 
-      tr_line: 1,
-      tr_part: controls.wo_part.value,
-      tr_qty_loc: controls.wo_qty_comp.value,
-      tr_um: this.um,
-      tr_um_conv: 1,
-      tr_price: 0,
-      tr_site: controls.wo_site.value,
-      tr_loc: this.loc,
-      tr_serial: controls.wo_serial.value,
-      tr_status: this.rctwostat,
-      tr_expire: null,
+    if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value == 0  ) {
+           
+            this.hasFormErrors = true;
+            this.message = "Verifier la Quantité";
+           // alert("Saisir Qte")
+      
+            return;
+          }
+          if (this.dataset.length == 0  ) {
+           
+            this.hasFormErrors = true;
+            this.message = "Verifier la liste des consomation";
+      
+            return;
+          }
 
-    })
-    console.log(this.trdataset)
-    this.addTR( this.trdataset,tr);
+   
+
+
+    const _lb = new Label();
+              _lb.lb_site = controls.wo_site.value
+              _lb.lb_loc = this.loc
+              _lb.lb_part =  controls.wo_part.value
+              _lb.lb_nbr = this.nof
+              _lb.lb_lot = controls.wo_serial.value
+              _lb.lb_date = controls.wo_ord_date.value
+                          ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
+                          : null
+              _lb.lb_qty = controls.wo_qty_comp.value
+              _lb.lb_ld_status = this.rctwostat
+              _lb.lb_desc = this.desc2
+              _lb.lb_rmks = controls.emp_shift.value
+              // _lb.lb_cust = this.address.ad_addr
+              // _lb.lb_addr = this.address.ad_line1
+              // _lb.lb_rmks = controls.emp_shift.value
+              // _lb.lb_tel  = this.address.ad_phone
+              // _lb.int01   = this.product.int01
+              // _lb.int02   = this.product.int02
+    
+              let lab = null
+
+              this.labelService.add(_lb).subscribe(
+                (reponse: any) => (lab = reponse.data),
+                (error) => {
+                 alert("Erreur Impression Etiquette")   },
+                () => {
+
+                  console.log("lab",lab)
+
+                    this.trdataset.push({
+
+                      tr_line: 1,
+                      tr_part: controls.wo_part.value,
+                      tr_qty_loc: controls.wo_qty_comp.value,
+                      tr_um: this.um,
+                      tr_um_conv: 1,
+                      tr_price: 0,
+                      tr_site: controls.wo_site.value,
+                      tr_loc: this.loc,
+                      tr_serial: controls.wo_serial.value,
+                      tr_status: this.rctwostat,
+                      tr_expire: null,
+                      tr_ref: lab.lb_ref,
+
+                    })
+                    console.log(this.trdataset)
+                    this.addTR( this.trdataset,tr);
+
+               //   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
+                }
+            )
     let wod = this.prepareWOD()
     this.addWod( this.dataset,wod);
     this.reset()
@@ -446,6 +511,7 @@ export class CreateDirectWoComponent implements OnInit {
     : null
     _tr.tr_qty_loc = controls.wo_qty_comp.value
     _tr.tr_serial = controls.wo_serial.value
+    _tr.tr_addr = controls.emp_shift.value
     // _tr.tr_so_job = controls.tr_so_job.value
     
     // _tr.tr_rmks = controls.tr_rmks.value
@@ -468,7 +534,8 @@ export class CreateDirectWoComponent implements OnInit {
       delete data.cmvid;
     }
     this.loadingSubject.next(true);
-    const controls = this.woForm.controls;
+   
+
 
 
     this.inventoryTransactionService
@@ -827,6 +894,7 @@ onchangePart(){
               document.getElementById("part").focus();
             } else {
               controls.desc.setValue(response.data[0].pt_desc1)
+              this.desc2 = response.data[0].pt_desc2
               controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth()+1) + "." + date.getDate()) 
               this.um = response.data[0].pt_um
               this.loc = response.data[0].pt_loc
@@ -936,9 +1004,16 @@ onchangePart(){
     };
 
     // fill the dataset with your data
-    this.siteService
-      .getAll()
-      .subscribe((response: any) => (this.sites = response.data));
+    if(this.user.usrd_site == "*") {
+      this.siteService
+        .getAll()
+        .subscribe((response: any) => (this.sites = response.data));
+    }else {
+      this.siteService
+        .getBy({si_site: this.user.usrd_site})
+        .subscribe((response: any) => (this.sites = response.data));
+      
+   }
   }
   opensite(content) {
     this.prepareGridsite();
@@ -959,6 +1034,7 @@ onchangePart(){
       
 controls.wo_part.setValue(item.pt_part)
 controls.desc.setValue(item.pt_desc1)
+this.desc2 = item.pt_desc2
 controls.wo_serial.setValue(item.pt_part_type + item.pt_break_cat + date.getFullYear() + "." + Number(date.getMonth()+1)  + "." + date.getDate()) 
             
 this.um = item.pt_um
