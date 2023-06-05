@@ -37,6 +37,8 @@
                     </option>
                   </select>
                 </div>
+              </div>
+              <div class="row">
                 <div class="form-group col-6">
                   <label class="form-group">Type de l'itinéraire</label>
                   <select class="form-control form-control-sm form-control-solid" id="exampleSelects1" formControlName="itinerary_type">
@@ -57,12 +59,14 @@
             <br />
           </div>
           <div class="col-6">
-            <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false">
-              <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+            <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+              <agm-marker *ngFor="let mark of customers" [latitude]="mark.latitude" [longitude]="mark.longitude"></agm-marker>
             </agm-map>
           </div>
         </div>
-
+        <div>
+          {{ time | async }}
+        </div>
         <div></div>
         <div class="col-12">
           <angular-slickgrid gridId="grid4" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
