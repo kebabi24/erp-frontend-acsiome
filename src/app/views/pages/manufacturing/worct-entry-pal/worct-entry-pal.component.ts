@@ -740,6 +740,7 @@ export class WorctEntryPalComponent implements OnInit {
   reset() {
     this.inventoryTransaction = new InventoryTransaction();
     this.createForm();
+    this.dataset = []
     this.hasFormErrors = false;
   }
   // save data
@@ -934,7 +935,7 @@ export class WorctEntryPalComponent implements OnInit {
               console.log(tr)
               this.addIt( this.trdataset,tr);
           
-              this.loadingSubject.next(false)
+             // this.loadingSubject.next(false)
              
           }
       )
@@ -987,7 +988,7 @@ export class WorctEntryPalComponent implements OnInit {
     this.inventoryTransactionService
       .addRCTWO({detail, it})
       .subscribe(
-       (reponse: any) => //console.log(reponse),
+       (reponse: any) => console.log(reponse),
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -999,6 +1000,7 @@ export class WorctEntryPalComponent implements OnInit {
           this.loadingSubject.next(false);
         },
         () => {
+           console.log("DdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddD")
           this.layoutUtilsService.showActionNotification(
             "Ajout avec succès",
             MessageType.Create,
@@ -1007,6 +1009,7 @@ export class WorctEntryPalComponent implements OnInit {
             true
           );
           this.loadingSubject.next(false);
+          this.reset()
       //    console.log(this.provider, po, this.dataset);
          
       
@@ -1701,7 +1704,7 @@ handleSelectedRowsChanged5(e, args) {
       controls.tr_nbr.setValue(item.wo_nbr);
       controls.tr_part.setValue(item.wo_part);
       controls.tr_site.setValue(item.wo_site);
-      controls.tr_loc.setValue(item.wo_loc);
+      controls.tr_loc.setValue(item.item.pt_loc);
       controls.desc.setValue(item.item.pt_desc1)
       this.umd = item.item.pt_um
       this.qtycart = (item.item.int03 != null) ? item.item.int03 : 0
@@ -1894,6 +1897,23 @@ onChangeLoc() {
       }
     })    
     
+}
+
+onChangesite() {
+  const controls = this.trForm.controls;
+  const si_site = controls.tr_site.value;
+  
+  this.siteService.getByOne({ si_site }).subscribe(
+    (res: any) => {
+
+      if (!res.data) {
+
+          alert("Site n'existe pas  ")
+          controls.tr_site.setValue(null);
+          document.getElementById("site").focus();
+        }
+    
+    });
 }
 
 

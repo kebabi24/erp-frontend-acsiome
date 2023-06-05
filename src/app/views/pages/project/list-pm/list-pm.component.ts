@@ -62,6 +62,29 @@ export class ListPmComponent implements OnInit {
   prepareGrid() {
       this.columnDefinitions = [
           
+        {
+          id: "edit",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+          formatter: (row, cell, value, columnDef, dataContext) => {
+            // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+            return `
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit Projet">
+                 <i class="flaticon-edit"></i>
+                 
+             </a>
+             `;
+          },
+          minWidth: 50,
+          maxWidth: 50,
+          // use onCellClick OR grid.onClick.subscribe which you can see down below
+          onCellClick: (e: Event, args: OnEventArgs) => {
+              const id = args.dataContext.id
+              this.router.navigateByUrl(`/project/edit-project/${id}`)
+          },
+      },
         
           {
               id: "id",
