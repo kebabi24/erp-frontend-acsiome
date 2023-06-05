@@ -59,7 +59,7 @@
             <br />
           </div>
           <div class="col-6">
-            <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="mapOptions.zoom">
+            <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
               <agm-marker *ngFor="let mark of customers" [latitude]="mark.latitude" [longitude]="mark.longitude"></agm-marker>
             </agm-map>
           </div>
