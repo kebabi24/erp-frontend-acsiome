@@ -1,49 +1,51 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { RouterModule, Routes } from "@angular/router"
-import { AgmCoreModule } from '@agm/core';
+import { RouterModule, Routes } from "@angular/router";
+import { AgmCoreModule } from "@agm/core";
 
-import { CreateNewItineraryComponent } from "../itinerary/create-new-itinerary/create-new-itinerary.component"
-import { ListItineraryComponent } from "../itinerary/list-itinerary/list-itinerary.component"
+import { CreateNewItineraryComponent } from "../itinerary/create-new-itinerary/create-new-itinerary.component";
+import { ListItineraryComponent } from "../itinerary/list-itinerary/list-itinerary.component";
 
-import { ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent } from '../../partials/content/crud';
-import { ModuleGuard } from "../../../core/auth"
-import { HttpUtilsService, InterceptService, LayoutUtilsService, TypesUtilsService } from 'src/app/core/_base/crud';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { PartialsModule } from '../../partials/partials.module';
-import { NgxPermissionsModule } from 'ngx-permissions';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { AngularSlickgridModule } from 'angular-slickgrid';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatButtonModule } from '@angular/material/button';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TreeModule } from '@circlon/angular-tree-component';
-import { environment } from 'src/environments/environment';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { FakeApiService } from 'src/app/core/_base/layout';
-import { ItineraryService, RoleService } from 'src/app/core/erp';
-import { CustomerMobileService } from 'src/app/core/erp';
-import { CodeMobileService } from 'src/app/core/erp';
+import { ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent } from "../../partials/content/crud";
+import { ModuleGuard } from "../../../core/auth";
+import { HttpUtilsService, InterceptService, LayoutUtilsService, TypesUtilsService } from "src/app/core/_base/crud";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { PartialsModule } from "../../partials/partials.module";
+import { NgxPermissionsModule } from "ngx-permissions";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
+import { AngularSlickgridModule } from "angular-slickgrid";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatButtonModule } from "@angular/material/button";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { TreeModule } from "@circlon/angular-tree-component";
+import { environment } from "src/environments/environment";
+import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
+import { FakeApiService } from "src/app/core/_base/layout";
+import { ItineraryService, RoleService } from "src/app/core/erp";
+import { CustomerMobileService } from "src/app/core/erp";
+import { CodeMobileService } from "src/app/core/erp";
+import { EditItineraryComponent } from "./edit-itinerary/edit-itinerary.component";
 
 const routes: Routes = [
   {
-      path: "create-new-itinerary",
-      component: CreateNewItineraryComponent,
+    path: "create-new-itinerary",
+    component: CreateNewItineraryComponent,
   },
   {
-      path: "list-itinerary",
-      component: ListItineraryComponent,
+    path: "list-itinerary",
+    component: ListItineraryComponent,
   },
-]
+  {
+    path: "edit-itinerary/:id",
+    component: EditItineraryComponent,
+  },
+];
 
 @NgModule({
-  declarations: [
-    CreateNewItineraryComponent, 
-    ListItineraryComponent
-  ],
+  declarations: [CreateNewItineraryComponent, ListItineraryComponent, EditItineraryComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -55,7 +57,7 @@ const routes: Routes = [
     TranslateModule.forChild(),
     AngularSlickgridModule.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: ''
+      apiKey: "",
     }),
     MatMenuModule,
     MatTabsModule,
@@ -63,19 +65,19 @@ const routes: Routes = [
     NgbModule,
     TreeModule,
     environment.isMockEnabled
-        ? HttpClientInMemoryWebApiModule.forFeature(FakeApiService, {
-              passThruUnknownUrl: true,
-              dataEncapsulation: false,
-          })
-        : [],
+      ? HttpClientInMemoryWebApiModule.forFeature(FakeApiService, {
+          passThruUnknownUrl: true,
+          dataEncapsulation: false,
+        })
+      : [],
   ],
   providers: [
     ModuleGuard,
     InterceptService,
     {
-        provide: HTTP_INTERCEPTORS,
-        useClass: InterceptService,
-        multi: true,
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptService,
+      multi: true,
     },
 
     TypesUtilsService,
@@ -89,11 +91,6 @@ const routes: Routes = [
     LayoutUtilsService,
   ],
 
-  entryComponents: [
-    ActionNotificationComponent,
-    DeleteEntityDialogComponent,
-    FetchEntityDialogComponent,
-    UpdateStatusDialogComponent,
-  ],
+  entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],
 })
-export class ItineraryModule { }
+export class ItineraryModule {}

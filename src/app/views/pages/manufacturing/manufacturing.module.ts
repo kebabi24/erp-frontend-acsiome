@@ -61,10 +61,9 @@ import {
 
 import { NgxPermissionsModule } from "ngx-permissions";
 import {BomService, PsService, ItemService,SiteService,WorkOrderService, SequenceService,
-        LocationService, MesureService, LocationDetailService, WorkOrderDetailService,CostSimulationService,
-
+        LocationService, MesureService, LocationDetailService, WorkOrderDetailService,CostSimulationService,RequisitionService,
         AddressService,InventoryTransactionService,InventoryStatusService,ReasonService,WorkCenterService,
-        WorkRoutingService,OperationHistory, OperationHistoryService, WoroutingService,BomPartService} from '../../../core/erp';
+        WorkRoutingService, OperationHistoryService, WoroutingService,BomPartService,CodeService, LabelService, SaleOrderService} from '../../../core/erp';
 
         
 
@@ -82,6 +81,8 @@ import { ListWorkCenterComponent } from './list-work-center/list-work-center.com
 import { AffectBomComponent } from './affect-bom/affect-bom.component';
 import { ListPsComponent } from './list-ps/list-ps.component';
 import { EditPsComponent } from './edit-ps/edit-ps.component';
+import { CreateDirectWoComponent } from './create-direct-wo/create-direct-wo.component';
+import { WorctEntryPalComponent } from './worct-entry-pal/worct-entry-pal.component';
 
 
 
@@ -99,6 +100,10 @@ const routes: Routes = [
   {
     path: 'edit-wo',
     component: EditWoComponent
+  },
+  {
+    path: 'create-direct-wo',
+    component: CreateDirectWoComponent
   },
   {
     path: 'launch-order',
@@ -161,6 +166,10 @@ const routes: Routes = [
     component: WoissEntryComponent
   },
   {
+    path: 'worct-entry-pal',
+    component: WorctEntryPalComponent
+  },
+  {
     path: 'affect-bom',
     component: AffectBomComponent
   },
@@ -177,7 +186,7 @@ const routes: Routes = [
       CreateNomenclatureComponent, 
       CreateCauseComponent, 
       WorctEntryComponent, 
-      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent
+      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent
     ],
 
     imports: [
@@ -235,6 +244,10 @@ const routes: Routes = [
       OperationHistoryService,
       ReasonService,
       BomPartService,
+      CodeService,
+      RequisitionService,
+      LabelService,
+      SaleOrderService,
   ],
   
     entryComponents: [

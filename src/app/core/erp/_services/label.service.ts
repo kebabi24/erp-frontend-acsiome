@@ -25,6 +25,14 @@ export class LabelService {
         return this.http.post(API_URL, label, { headers: httpHeaders })
     }
 
+    public addProd(label: Label) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/prod`, label, { headers: httpHeaders })
+    }
+    public addPAL(label: Label) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/prodpal`, label, { headers: httpHeaders })
+    }
     // READ
     // READ
     public getAll() {
@@ -47,6 +55,9 @@ export class LabelService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
-    
+    public updatelist(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/upd`, data, { headers: httpHeaders })
+    }
     // DELETE
 }

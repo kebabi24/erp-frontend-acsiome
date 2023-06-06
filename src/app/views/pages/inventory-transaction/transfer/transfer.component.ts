@@ -568,6 +568,7 @@ export class TransferComponent implements OnInit {
             alert ("Palette déja scannée")
           }
       controls.ref.setValue(null)
+      document.getElementById("ref").focus();
       }
       onChangeLoc() {
         const controls = this.trForm.controls;
@@ -1194,6 +1195,8 @@ export class TransferComponent implements OnInit {
           enableColumnPicker: true,
           enableCellNavigation: true,
           enableRowSelection: true,
+          autoHeight:false,
+          enableAutoResize:true,
           formatterOptions: {
             
             

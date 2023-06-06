@@ -63,6 +63,7 @@ import {
   printSO,
   ConfigService,
   PayMethService,
+  PsService,
 } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
@@ -228,6 +229,7 @@ error = false;
     private pricelistService: PricelistService,
     private configService: ConfigService,
     private payMethService: PayMethService,
+    private psService: PsService,
   ) {
     config.autoClose = true;
     
@@ -577,6 +579,8 @@ error = false;
                       itdh_um_conv: detail.sod_um_conv,
                   itdh_price: detail.sod_price,
                   itdh_disc_pct: detail.sod_disc_pct,
+                  itdh__chr01 : detail.sod__chr01,
+                  itdh__chr02 : detail.sod__chr02,
                   itdh_site: detail.item.pt_site,
                   itdh_loc: detail.item.pt_loc,
                   itdh_type: detail.item.pt_type,
@@ -757,6 +761,29 @@ error = false;
     // tslint:disable-next-line:prefer-const
     let ith = this.prepareIth();
     
+    for (let sod of this.dataset) {
+
+               
+      this.psService.getBy({ps_parent: sod.itdh__chr02}).subscribe((Response: any) => {
+        let des = null   
+           
+        if (Response.data.length > 0){
+          for(let obj of Response.data) {
+            if(obj.ps__qad01) {
+               
+              if(des == null) {
+                des = obj.item.pt_desc1
+              } else {
+                des = des + ", " + obj.item.pt_desc1
+              }
+            }
+          }
+          sod.itdh__chr03 = des
+        }
+      })
+
+  }
+
     this.addIth(ith, this.dataset);
   }
 
@@ -808,6 +835,8 @@ error = false;
       delete data.id;
       delete data.cmvid;
      
+      console.log(data.itdh__chr03)
+
     }
     this.loadingSubject.next(true);
     let so = null;
@@ -955,6 +984,8 @@ error = false;
                 for (const object in details) {
                   const detail = details[object];
                   console.log(detail);
+
+                  
                   this.gridService.addItem(
                     {
                       id: this.dataset.length + 1,
@@ -969,6 +1000,8 @@ error = false;
                       itdh_um_conv: detail.sod_um_conv,
                       itdh_price: detail.sod_price,
                       itdh_disc_pct: detail.sod_disc_pct,
+                      itdh__chr01 : detail.sod__chr01,
+                      itdh__chr02 : detail.sod__chr02,
                       itdh_site: detail.sod_site,
                       itdh_loc: detail.sod_loc,
                       itdh_type: detail.sod_type,
@@ -1708,6 +1741,8 @@ changeTax(){
                           itdh_um: detail.sod_um,
                           itdh_um_conv: detail.sod_um_conv,
                           itdh_price: detail.sod_price,
+                          itdh__chr01 : detail.sod__chr01,
+                          itdh__chr02 : detail.sod__chr02,
                           itdh_disc_pct: detail.sod_disc_pct,
                           itdh_site: detail.sod_site,
                           itdh_loc: detail.sod_loc,
@@ -2550,15 +2585,16 @@ calculatetot(){
           let ttc = 0
           for (var i = 0; i < this.dataset.length; i++) {
             console.log("here here " ,this.dataset[i]  )
-            tht += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  this.dataset[i].itdh_qty_inv),2)
-            if(controlsso.ith_taxable.value == true) tva += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  this.dataset[i].itdh_qty_inv) * (this.dataset[i].itdh_taxc ? this.dataset[i].itdh_taxc / 100 : 0),2)
+            tht += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons))),2)
+            
+            if(controlsso.ith_taxable.value == true) tva += round((this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100 ) *  (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons))) * (this.dataset[i].itdh_taxc ? this.dataset[i].itdh_taxc / 100 : 0),2)
            
          
             
        
             
             if(controlsso.ith_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-              if (timbre > 2500) { timbre = 2500} } 
+              if (timbre > 10000) { timbre = 10000} } 
          
           }
         ttc = round(tht + tva + timbre,2)
@@ -3019,10 +3055,89 @@ doc.addPage();
       doc.line(160, i - 5 , 160, i );
       doc.line(170, i - 5 , 170, i );
       doc.line(200, i-5 , 200, i );
-      doc.line(10, i, 200, i );
+     // doc.line(10, i, 200, i );
 
-      i = i + 5 ;
       
+
+        /*ps*/
+
+        if (this.dataset[j].itdh__chr03 != null){
+
+          if (this.dataset[j].itdh__chr03.length > 42) {
+            let psdesc = this.dataset[j].itdh__chr03.substring(35)
+           
+            let ind = psdesc.indexOf(' ')
+           
+            if (ind == -1) { ind = this.dataset[j].itdh__chr03.length - 42}
+            psdesc = this.dataset[j].itdh__chr03.substring(0, 42  + ind)
+            let psdesc2 = this.dataset[j].itdh__chr03.substring(42+ind)
+  
+            i = i + 5 ;
+        
+  
+          doc.text(String(psdesc), 47 , i  - 1);
+          
+          doc.line(10, i - 5, 10, i );
+          doc.line(20, i - 5, 20, i);
+          doc.line(45, i - 5 , 45, i );
+          doc.line(100, i - 5, 100, i );
+          doc.line(120, i - 5 , 120, i );
+          doc.line(130, i - 5, 130, i );
+          doc.line(150, i - 5, 150, i );
+          doc.line(160, i - 5 , 160, i );
+          doc.line(170, i - 5 , 170, i );
+          doc.line(200, i-5 , 200, i );
+          
+          i = i + 5
+  
+          doc.text(String(psdesc2), 47 , i  - 1);
+          
+          doc.line(10, i - 5, 10, i );
+          doc.line(20, i - 5, 20, i);
+          doc.line(45, i - 5 , 45, i );
+          doc.line(100, i - 5, 100, i );
+          doc.line(120, i - 5 , 120, i );
+          doc.line(130, i - 5, 130, i );
+          doc.line(150, i - 5, 150, i );
+          doc.line(160, i - 5 , 160, i );
+          doc.line(170, i - 5 , 170, i );
+          doc.line(200, i-5 , 200, i );
+  
+          doc.line(10, i, 200, i );
+  
+          i = i + 5 ;
+        } else {
+  
+          doc.text(String(this.dataset[j].itdh__chr03), 47 , i  - 1);
+        
+          doc.line(10, i - 5, 10, i );
+          doc.line(20, i - 5, 20, i);
+          doc.line(45, i - 5 , 45, i );
+          doc.line(100, i - 5, 100, i );
+          doc.line(120, i - 5 , 120, i );
+          doc.line(130, i - 5, 130, i );
+          doc.line(150, i - 5, 150, i );
+          doc.line(160, i - 5 , 160, i );
+          doc.line(170, i - 5 , 170, i );
+          doc.line(200, i-5 , 200, i );
+          doc.line(10, i, 200, i );
+         // doc.line(10, i, 200, i );
+          i = i + 5;
+        }
+    
+     
+     
+      
+        }
+        else{
+          doc.line(10, i, 200, i );
+          i = i + 5
+        }
+        /*ps*/
+
+
+
+
     } else {
 
 
@@ -3048,8 +3163,82 @@ doc.addPage();
       ((100 - this.dataset[j].itdh_disc_pct) / 100) *
       this.dataset[j].itdh_qty_inv).toFixed(2)), 198 , i  - 1,{ align: 'right' });
     doc.line(200, i-5 , 200, i );
-    doc.line(10, i, 200, i );
-    i = i + 5;
+   
+    /*ps*/
+
+    if (this.dataset[j].itdh__chr03 != null){
+
+      if (this.dataset[j].itdh__chr03.length > 42) {
+        let psdesc = this.dataset[j].itdh__chr03.substring(35)
+       
+        let ind = psdesc.indexOf(' ')
+       
+        if (ind == -1) { ind = this.dataset[j].itdh__chr03.length - 42}
+        psdesc = this.dataset[j].itdh__chr03.substring(0, 42  + ind)
+        let psdesc2 = this.dataset[j].itdh__chr03.substring(42+ind)
+
+      i = i + 5
+
+      doc.text(String(psdesc), 47 , i  - 1);
+      
+      doc.line(10, i - 5, 10, i );
+      doc.line(20, i - 5, 20, i);
+      doc.line(45, i - 5 , 45, i );
+      doc.line(100, i - 5, 100, i );
+      doc.line(120, i - 5 , 120, i );
+      doc.line(130, i - 5, 130, i );
+      doc.line(150, i - 5, 150, i );
+      doc.line(160, i - 5 , 160, i );
+      doc.line(170, i - 5 , 170, i );
+      doc.line(200, i-5 , 200, i );
+      
+      i = i + 5
+
+      doc.text(String(psdesc2), 47 , i  - 1);
+      
+      doc.line(10, i - 5, 10, i );
+      doc.line(20, i - 5, 20, i);
+      doc.line(45, i - 5 , 45, i );
+      doc.line(100, i - 5, 100, i );
+      doc.line(120, i - 5 , 120, i );
+      doc.line(130, i - 5, 130, i );
+      doc.line(150, i - 5, 150, i );
+      doc.line(160, i - 5 , 160, i );
+      doc.line(170, i - 5 , 170, i );
+      doc.line(200, i-5 , 200, i );
+
+      doc.line(10, i, 200, i );
+
+      i = i + 5 ;
+    } else {
+
+      doc.text(String(this.dataset[j].itdh__chr03), 47 , i  - 1);
+    
+      doc.line(10, i - 5, 10, i );
+      doc.line(20, i - 5, 20, i);
+      doc.line(45, i - 5 , 45, i );
+      doc.line(100, i - 5, 100, i );
+      doc.line(120, i - 5 , 120, i );
+      doc.line(130, i - 5, 130, i );
+      doc.line(150, i - 5, 150, i );
+      doc.line(160, i - 5 , 160, i );
+      doc.line(170, i - 5 , 170, i );
+      doc.line(200, i-5 , 200, i );
+      doc.line(10, i, 200, i );
+     // doc.line(10, i, 200, i );
+      i = i + 5;
+    }
+
+ 
+ 
+  
+    }
+    else{
+      doc.line(10, i, 200, i );
+      i = i + 5
+    }
+    /*ps*/
+
     }
   }
   

@@ -1,0 +1,55 @@
+<kt-portlet>
+  <kt-portlet-header [sticky]="true" [title]="'Ajouter une nouvelle imprimante'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <ng-container ktPortletTools>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+      <button type="button" (click)="goBack()" class="btn btn-success btn-sm mr-2">Retour</button>
+      <button type="button" (click)="reset()" class="btn btn-success btn-sm mr-2">Réinitialiser</button>
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div class="example-preview">
+      <form class="form" [formGroup]="printersForm">
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Code imprimante: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="printer_code" [className]="printersForm.controls['printer_code'].errors && (printersForm.controls['printer_code'].dirty || printersForm.controls['printer_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+
+              <div *ngIf="printersForm.controls['printer_code'].errors && (printersForm.controls['printer_code'].dirty || printersForm.controls['printer_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Description imprimante: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="printer_desc" [className]="printersForm.controls['printer_desc'].errors && (printersForm.controls['printer_desc'].dirty || printersForm.controls['printer_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+
+              <div *ngIf="printersForm.controls['printer_desc'].errors && (printersForm.controls['printer_desc'].dirty || printersForm.controls['printer_desc'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Path imprimante: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="printer_path" [className]="printersForm.controls['printer_path'].errors && (printersForm.controls['printer_path'].dirty || printersForm.controls['printer_path'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+
+              <div *ngIf="printersForm.controls['printer_path'].errors && (printersForm.controls['printer_path'].dirty || printersForm.controls['printer_path'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Type imprimante: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="printer_type" [className]="printersForm.controls['printer_type'].errors && (printersForm.controls['printer_type'].dirty || printersForm.controls['printer_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+
+              <div *ngIf="printersForm.controls['printer_type'].errors && (printersForm.controls['printer_type'].dirty || printersForm.controls['printer_type'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </kt-portlet-body>
+</kt-portlet>

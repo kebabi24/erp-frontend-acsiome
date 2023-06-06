@@ -310,8 +310,9 @@ export class CreateProjectComponent implements OnInit {
           sod_part: resp.data.pt_part,
           sod_um: resp.data.pt_um,
           sod__chr01:  data.pmd_task,
+          sod__chr02:  data.pmd_bom_code,
           sod_qty_ord: data.pmd_qty,
-          sod_qty_ret: data.day,
+          sod_qty_ret: data.int01,
           sod_qty_cons: 0,
           sod_desc: resp.data.pt_desc1 ,
           sod_site:resp.data.pt_site, 
@@ -715,9 +716,9 @@ export class CreateProjectComponent implements OnInit {
         },
     },    
     {
-      id: "bomcout",
+      id: "pmd_bom_cost",
       name: "Cout Nomenclature",
-      field: "bomcout",
+      field: "pmd_bom_cost",
       sortable: true,
       width: 80,
       filterable: false,
@@ -741,7 +742,7 @@ export class CreateProjectComponent implements OnInit {
           var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
           if ( days < 0) {days = 0 }
           console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
-          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , day: days })
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , int01: days })
 
           },
       },
@@ -762,14 +763,14 @@ export class CreateProjectComponent implements OnInit {
           var days = Number(1) + Number((new Date(args.dataContext.pmd_end).getTime() - new Date(args.dataContext.pmd_start).getTime() ) / (1000 * 3600 * 24));
           if ( days < 0) {days = 0 }
           console.log(args.dataContext.pmd_end,args.dataContext.pmd_start,days)
-          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , day: days })
+          this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , int01: days })
 
           },
       },
       {
-        id: "day",
+        id: "int01",
         name: "Nbr Jour",
-        field: "day",
+        field: "it01",
         sortable: true,
         width: 80,
         filterable: false,
@@ -861,6 +862,9 @@ export class CreateProjectComponent implements OnInit {
     this.mvgridOptions = {
       asyncEditorLoading: false,
       editable: true,
+      autoHeight:true,
+      enableAutoResize: true,
+      autoCommitEdit:true,
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
@@ -878,7 +882,7 @@ export class CreateProjectComponent implements OnInit {
       desc: "",
       cout: 0,
       pmd_bom: "",
-      bomcout : 0,
+      pmd_bom_cost : 0,
       pmd_start: null,
       pmd_end: null,
       pmd_part: "",
@@ -1477,7 +1481,7 @@ handleSelectedRowsChangedbom(e, args) {
         console.log(response.data, "here")
         updateItem.pmd_bom_code = item.bom_parent;
         
-        updateItem.bomcout = response.data;
+        updateItem.pmd_bom_cost = response.data;
         this.mvgridService.updateItem(updateItem);
         this.calculatetot();
    })
@@ -1830,10 +1834,10 @@ calculatetot(){
   const controls = this.projectForm.controls 
    let tcost = 0
    for (var i = 0; i < this.mvdataset.length; i++) {
-     tcost += Number(this.mvdataset[i].pmd_cost) +  Number(this.mvdataset[i].bomcout)
+     tcost += Number(this.mvdataset[i].pmd_cost) +  Number(this.mvdataset[i].pmd_bom_cost)
 
      console.log("tcost",tcost)
-     console.log(this.mvdataset[i].pmd_cost,this.mvdataset[i].bomcout)
+     console.log(this.mvdataset[i].pmd_cost,this.mvdataset[i].pmd_bom_cost)
 
 }
 console.log(tcost)

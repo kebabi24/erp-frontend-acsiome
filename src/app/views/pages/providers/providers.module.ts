@@ -53,13 +53,15 @@ import { NgxPermissionsModule } from "ngx-permissions"
 
 //Service 
 
-import {PurchaseOrderService, AddressService, CodeService, ProviderService, AccountService, TaxeService, DeviseService, SequenceService} from '../../../core/erp';
+import {PurchaseOrderService, AddressService, CodeService, ProviderService, AccountService, TaxeService, DeviseService, SequenceService, RepertoryService} from '../../../core/erp';
 import { ItempurchasebyproviderListComponent } from './itempurchasebyprovider-list/itempurchasebyprovider-list.component';
 import { ProviderActivitylistComponent } from './provider-activitylist/provider-activitylist.component';
 import { ProviderCAlistComponent } from './provider-calist/provider-calist.component'
 
 import {BankService} from '../../../core/erp';
-import { BalanceGeneraleComponent } from './balance-generale/balance-generale.component'
+import { BalanceGeneraleComponent } from './balance-generale/balance-generale.component';
+import { CreateRepComponent } from './create-rep/create-rep.component';
+import { ListRepComponent } from './list-rep/list-rep.component'
 
 
 const routes: Routes = [
@@ -97,6 +99,15 @@ const routes: Routes = [
 	            path: "provider-balancelist",
 	            component: BalanceGeneraleComponent,
             },
+            {
+	            path: "create-rep",
+	            component: CreateRepComponent,
+            },
+            {
+	            path: "list-rep",
+	            component: ListRepComponent,
+            },
+ 
         ],
     },
 ]
@@ -111,6 +122,8 @@ const routes: Routes = [
         ProviderActivitylistComponent,
         ProviderCAlistComponent,
         BalanceGeneraleComponent,
+        CreateRepComponent,
+        ListRepComponent,
     ],
     imports: [
         CommonModule,
@@ -156,6 +169,7 @@ const routes: Routes = [
         BankService,
         DeviseService,
         SequenceService,
+        RepertoryService,
     ],
     entryComponents: [
         ActionNotificationComponent,

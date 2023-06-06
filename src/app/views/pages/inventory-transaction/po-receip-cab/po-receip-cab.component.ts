@@ -621,6 +621,7 @@ export class PoReceipCabComponent implements OnInit {
           const controls = this.prhForm.controls
           const _lb = new Label();
               _lb.lb_site = controls.prh_site.value
+              _lb.lb_rmks = controls.prh_rmks.value
               _lb.lb_loc = args.dataContext.prh_loc
               _lb.lb_part = args.dataContext.prh_part
               _lb.lb_nbr = this.prhnbr
@@ -631,6 +632,7 @@ export class PoReceipCabComponent implements OnInit {
               _lb.lb_qty = args.dataContext.prh_rcvd
               _lb.lb_ld_status = args.dataContext.tr_status
               _lb.lb_desc = args.dataContext.desc
+
     
               let lab = null
 

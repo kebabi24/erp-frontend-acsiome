@@ -26,7 +26,7 @@ export class MenuConfig {
         {
           title: "Dashboard",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon-dashboard",
           root: true,
           submenu: [
             {
@@ -43,92 +43,40 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Pos",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          page: "/pos",
-        },
-        {
-          title: "Pos cafette",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          page: "/pos-cafette",
-        },
-        {
-          title: "Weekly inventory",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          page: "/weekly-inventory",
-        },
-        {
-          title: "Transfert des recettes",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          page: "/revenue-transfer",
-        },
-        {
-          title: "Pos call center",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          page: "/pos-visitor",
-        },
-        {
-          title: "Paramétrages POS",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          submenu: [
-            {
-              title: "Listes des Plateformes",
-              page: "/pos-settings/list-delivery",
-            },
-            {
-              title: "Ajouter une Plateforme",
-              page: "/pos-settings/create-delivery",
-            },
-            {
-              title: "Ajouter une catégorie",
-              page: "/pos-settings/create-category",
-            },
-            {
-              title: "Liste des catégories",
-              page: "/pos-settings/list-category",
-            },
-          ],
-        },
-
         
         {
-          title: "Paramétrages Mobile",
+          title: "POS",
           bullet: "dot",
           icon: "flaticon2-shopping-cart",
           root: true,
           submenu: [
             {
-              title: "Résultat de la visite",
-              page: "/mobile-settings/visit-result",
+              title: "Pos",
+              page: "/pos",
             },
             {
-              title: "Méthode de paiement",
-              page: "/mobile-settings/payment-method",
+              title: "Pos cafette",
+              page: "/pos-cafette",
             },
             {
-              title: "Motif d'annulation",
-              page: "/mobile-settings/cancelation-reason",
+              title: "Weekly inventory",
+              page: "/weekly-inventory",
             },
-          ],
+            {
+              title: "Transfert des recettes",
+              page: "/revenue-transfer",
+            },
+            {
+              title: "Pos call center",
+              page: "/pos-visitor",
+            },
+          ]
+        
         },
-
         {
           title: "Rapports",
           bullet: "dot",
-          icon: "flaticon2-gear",
+          icon: "flaticon-file-2",
           root: true,
           submenu: [
             {
@@ -173,7 +121,7 @@ export class MenuConfig {
         {
           title: "CRM",
           bullet: "dot",
-          icon: "flaticon2-gear",
+          icon: "flaticon-event-calendar-symbol",
           root: true,
           submenu: [
             {
@@ -198,232 +146,11 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Paramétrages",
-          root: true,
-          bullet: "dot",
-          icon: "flaticon2-delivery-truck",
-          submenu: [
-            {
-              title: "Parametrage Stock",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-delivery-truck",
-              submenu: [
-                {
-                  title: "Maint des Sites",
-                  page: "/inventory-settings/create-site",
-                },
-                {
-                  title: "List des Sites",
-                  page: "/inventory-settings/list-site",
-                },
-
-                {
-                  title: "Maint des Emplacements",
-                  page: "/inventory-settings/create-loc",
-                },
-                {
-                  title: "Liste des Emplacements",
-                  page: "/inventory-settings/list-loc",
-                },
-                {
-                  title: "Maint des Status de Stock",
-                  page: "/inventory-settings/create-status-stock",
-                },
-                {
-                  title: "List des Status Stock",
-                  page: "/inventory-settings/list-status",
-                },
-              ],
-            },
-            {
-              title: "Gestion des Devises",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-delivery-truck",
-              submenu: [
-                {
-                  title: "Maint des Devises",
-                  page: "/devise/create-devise",
-                },
-                {
-                  title: "Liste des Devises",
-                  page: "/devise/list-devise",
-                },
-                {
-                  title: "Maint des Taux de Changes",
-                  page: "/devise/exchange-rate",
-                },
-              ],
-            },
-            {
-              title: "Parametrage des Tarif",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-delivery-truck",
-              submenu: [
-                {
-                  title: "Maint des Liste Prix",
-                  page: "/price-setting/create-price",
-                },
-                {
-                  title: "Liste des liste de Prix",
-                  page: "/price-setting/list-price",
-                },
-              ],
-            },
-
-            {
-              title: "Parametrage Des Codes",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-settings",
-              submenu: [
-                {
-                  title: "Maint code-mstr",
-                  page: "/code-mstr/create-code",
-                },
-                {
-                  title: "Liste des codes",
-                  page: "/code-mstr/codes-list",
-                },
-                {
-                  title: "Maint des sequence",
-                  page: "/purchasing/create-sequence",
-                },
-                {
-                  title: "Liste des sequence",
-                  page: "/purchasing/list-sequence",
-                },
-              ],
-            },
-            {
-              title: "Parametrage Des Unitées",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-settings",
-              submenu: [
-                {
-                  title: "Maint Unité Mesure",
-                  page: "/unit-mesure/create-unit",
-                },
-                {
-                  title: "Liste des Unitées",
-                  page: "/unit-mesure/units-list",
-                },
-              ],
-            },
-
-            // NEW
-            {
-              title: "Parametrage de Qualité",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon2-settings",
-              submenu: [
-                {
-                  title: "ajouter spécification standard",
-                  page: "/inventory-settings/create-standard-specification",
-                },
-              ],
-            },
-
-            {
-              title: "Parametrage Comptabilite",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon-profile-1",
-              submenu: [
-                {
-                  title: "Maint Compte",
-                  page: "/accounting-setting/create-account",
-                },
-                {
-                  title: "Liste des Compte",
-                  page: "/accounting-setting/account-list",
-                },
-                {
-                  title: "Maint des sous comptes",
-                  page: "/accounting-setting/sub-account",
-                },
-                {
-                  title: "Liste des sous comptes",
-                  page: "/accounting-setting/list-subaccount",
-                },
-                {
-                  title: "Maint des centre de coûts",
-                  page: "/accounting-setting/cost-center",
-                },
-                {
-                  title: "Liste des Centres de Coût",
-                  page: "/accounting-setting/list-cc",
-                },
-                {
-                  title: "Maint des Agregat",
-                  page: "/accounting-setting/agregat",
-                },
-
-                {
-                  title: "Maint des Journaux",
-                  page: "/accounting-setting/journal",
-                },
-                {
-                  title: "Liste des Journaux",
-                  page: "/accounting-setting/list-journal",
-                },
-
-                {
-                  title: "Maint des Lignes de produit",
-                  page: "/accounting-setting/product-ligne",
-                },
-                {
-                  title: "Maint des Taxes",
-                  page: "/accounting-setting/create-tax",
-                },
-                {
-                  title: "Liste des Taxes",
-                  page: "/accounting-setting/taxes-list",
-                },
-
-                {
-                  title: "Maint des Entitées",
-                  page: "/accounting-setting/create-entity",
-                },
-                {
-                  title: "Liste des Entitées",
-                  page: "/accounting-setting/entity-list",
-                },
-              
-                {
-                  title: "Maint des Banques",
-                  page: "/accounting-setting/create-bank",
-                },
-                {
-                  title: "Liste des Banques",
-                  page: "/accounting-setting/bank-list",
-                },
-                {
-                  title: "Maint Methode Paiement",
-                  page: "/accounting-setting/create-pay-meth",
-                },
-                {
-                  title: "Liste des Methodes de paiement",
-                  page: "/accounting-setting/list-pay-meth",
-                },
-              ],
-            },
-            {
-              title: "Configuration Module",
-              page: "/config/maint-config",
-            },
-          ],
-        },
-
+        
         {
           title: "Gestion des Fournisseurs",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon2-group",
           root: true,
           submenu: [
             {
@@ -446,12 +173,20 @@ export class MenuConfig {
               title: "Ajouter Fournisseurs",
               page: "/providers/add",
             },
+            {
+              title: "Répertoire Fournisseurs",
+              page: "/providers/create-rep",
+            },
+            {
+              title: "Liste Répertoire Fournisseurs",
+              page: "/providers/list-rep",
+            },
           ],
         },
         {
           title: "Gestion des Clients",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon-customer",
           root: true,
           submenu: [
             {
@@ -461,6 +196,14 @@ export class MenuConfig {
             {
               title: "Ajouter Clients",
               page: "/customers/customer-create",
+            },
+            {
+              title: "Répertoire Clients",
+              page: "/customers/create-rep",
+            },
+            {
+              title: "Liste Répertoire Fournisseurs",
+              page: "/customers/list-rep",
             },
             {
               title: "La liste des ventes par clients",
@@ -483,7 +226,7 @@ export class MenuConfig {
         {
           title: "Gestion des clients mobile",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon2-avatar",
           root: true,
           submenu: [
             {
@@ -519,7 +262,7 @@ export class MenuConfig {
         {
           title: "Gestion des itinéraires",
           bullet: "dot",
-          icon: "flaticon2-shopping-cart",
+          icon: "flaticon2-delivery-truck",
           root: true,
           submenu: [
             {
@@ -567,7 +310,7 @@ export class MenuConfig {
         {
           title: "Supervision",
           bullet: "dot",
-          icon: "flaticon2-box-1",
+          icon: "flaticon-user-settings",
           root: true,
           submenu: [
             {
@@ -590,7 +333,7 @@ export class MenuConfig {
           title: "Gestion Stock",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon2-delivery-package",
           submenu: [
             {
               title: "Chargement Des Vans",
@@ -663,6 +406,7 @@ export class MenuConfig {
             },
             {
               title: "Gestion des inventaires",
+              icon: "flaticon2-delivery-package",
               submenu: [
                 {
                   title: "Generation liste d’inventaire",
@@ -697,7 +441,7 @@ export class MenuConfig {
           title: "Gestion des achats",
           root: true,
           bullet: "dot",
-          icon: "flaticon-cart",
+          icon: "flaticon2-shopping-cart",
           submenu: [
             {
               title: "Demande d'achats",
@@ -758,7 +502,7 @@ export class MenuConfig {
           title: "Gestion des Ventes",
           root: true,
           bullet: "dot",
-          icon: "flaticon-cart",
+          icon: "flaticon2-delivery-package",
           submenu: [
             {
               title: "Offres Commerciales",
@@ -775,6 +519,10 @@ export class MenuConfig {
             {
               title: "Commande Clients",
               page: "/sales/create-so",
+            },
+            {
+              title: "Modification des Commandes",
+              page: "/sales/list-so-edit",
             },
             {
               title: "Débloque commande",
@@ -826,7 +574,7 @@ export class MenuConfig {
           title: "Gestion des Prévisions",
           root: true,
           bullet: "dot",
-          icon: "flaticon-cart",
+          icon: "flaticon2-rocket",
           submenu: [
             {
               title: "Maint Prévision",
@@ -844,7 +592,7 @@ export class MenuConfig {
           title: "Comptabilité Client",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon2-analytics-1",
           submenu: [
             {
               title: "Maint des Paiement",
@@ -876,7 +624,7 @@ export class MenuConfig {
           title: "Comptabilité Fournisseur",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon2-analytics",
           submenu: [
             {
               title: "Maint des Factures",
@@ -912,7 +660,7 @@ export class MenuConfig {
           title: "Gestion de Production",
           root: true,
           bullet: "dot",
-          icon: "flaticon-cart",
+          icon: "flaticon2-quotation-mark",
           submenu: [
             {
               title: "Maint Ordre de Fabrication",
@@ -967,8 +715,16 @@ export class MenuConfig {
               page: "/manufacturing/list-ps",
             },
             {
+              title: "Broyage",
+              page: "/manufacturing/create-direct-wo",
+            },
+            {
               title: "Déclaration Production",
               page: "/manufacturing/worct-entry",
+            },
+            {
+              title: "Déclaration Production Palette",
+              page: "/manufacturing/worct-entry-pal",
             },
             {
               title: "Déclaration Consomation",
@@ -984,7 +740,7 @@ export class MenuConfig {
           title: "Gestion des Contrats",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon2-contract",
           submenu: [
             {
               title: "La liste des Contrats",
@@ -1000,7 +756,7 @@ export class MenuConfig {
           title: "Gestion des Employés",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon-users-1",
           submenu: [
             {
               title: "Maint des Employés",
@@ -1019,7 +775,7 @@ export class MenuConfig {
               title: "Gestion des Métier",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-delivery-truck",
+              icon: "flaticon-network",
               submenu: [
                 {
                   title: "La liste des Code Métiers",
@@ -1040,15 +796,13 @@ export class MenuConfig {
               title: "Liste des pointages",
               page: "/project/list-emp-temp",
             },
-
-
-          ]
+          ],
         },
         {
           title: "Gestion des projets",
           root: true,
           bullet: "dot",
-          icon: "flaticon2-delivery-truck",
+          icon: "flaticon2-files-and-folders",
           submenu: [
             {
               title: "La liste Detail des Projets",
@@ -1074,7 +828,7 @@ export class MenuConfig {
             //   title: "Affectation des Employés",
             //   page: "/project/create-project-payment",
             // },
-            
+
             {
               title: "Affectation des Employés",
               page: "/accounting-setting/affect-emp",
@@ -1092,7 +846,7 @@ export class MenuConfig {
               page: "/project/accident-incident",
             },
 
-            
+
             {
               title: "Sensibilisation",
               page: "/project/sensibilisation",
@@ -1101,12 +855,12 @@ export class MenuConfig {
               title: "identification",
               page: "/project/identification",
             },
-            
+
             {
               title: "Gestion des Listes Outils",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-delivery-truck",
+              icon: "flaticon2-tools-and-utensils",
               submenu: [
                 {
                   title: "La liste des Listes Outils",
@@ -1122,7 +876,7 @@ export class MenuConfig {
               title: "Gestion des Instructions",
               root: true,
               bullet: "dot",
-              icon: "flaticon2-delivery-truck",
+              icon: "flaticon2-sms",
               submenu: [
                 {
                   title: "La liste des Instructions",
@@ -1165,7 +919,7 @@ export class MenuConfig {
         {
           title: "Comptabilité Générale",
           bullet: "dot",
-          icon: "flaticon-profile",
+          icon: "flaticon2-graphic-design",
           root: true,
           submenu: [
             {
@@ -1188,9 +942,54 @@ export class MenuConfig {
         },
 
         {
+          title: "Gestion des roles",
+          bullet: "dot",
+          icon: "fab fa-critical-role",
+          root: true,
+          submenu: [
+            {
+              title: "Créer un nouveau role",
+              page: "/roles/create-new-roles",
+            },
+            {
+              title: "Liste des roles",
+              page: "/roles/list-all-roles",
+            },
+          ],
+        },
+        {
+          title: "Token Series",
+          bullet: "dot",
+          icon: "flaticon2-list-1",
+          root: true,
+          submenu: [
+            {
+              title: "Créer token serie",
+              page: "/token-serie/create-new-token",
+            },
+            {
+              title: "Liste des token",
+              page: "/token-serie/list-all-tokens",
+            },
+          ],
+        },
+
+        {
+          title: "Gestion des services",
+          bullet: "dot",
+          icon: "flaticon2-checking",
+          root: true,
+          submenu: [
+            {
+              title: "Créer un nouveau service",
+              page: "/services/create-new-service",
+            },
+          ],
+        },
+        {
           title: "Gestion des utilisateurs",
           bullet: "dot",
-          icon: "flaticon-user",
+          icon: "flaticon-users-1",
           root: true,
           submenu: [
             {
@@ -1199,6 +998,7 @@ export class MenuConfig {
               submenu: [
                 {
                   title: "Ajouter un utilisateur",
+                  icon: "flaticon-user-add",
                   page: "/users/create-user",
                 },
                 {
@@ -1226,7 +1026,7 @@ export class MenuConfig {
         {
           title: "Gestion des profils",
           bullet: "dot",
-          icon: "flaticon-profile",
+          icon: "flaticon-profile-1",
           root: true,
           submenu: [
             {
@@ -1268,50 +1068,295 @@ export class MenuConfig {
           ],
         },
         {
-          title: "Gestion des roles",
-          bullet: "dot",
-          icon: "flaticon-profile",
+          title: "Paramétrages",
           root: true,
+          bullet: "dot",
+          icon: "flaticon2-settings",
           submenu: [
             {
-              title: "Créer un nouveau role",
-              page: "/roles/create-new-roles",
+              title: "Parametrage Stock",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Maint des Sites",
+                  page: "/inventory-settings/create-site",
+                },
+                {
+                  title: "List des Sites",
+                  page: "/inventory-settings/list-site",
+                },
+
+                {
+                  title: "Maint des Emplacements",
+                  page: "/inventory-settings/create-loc",
+                },
+                {
+                  title: "Liste des Emplacements",
+                  page: "/inventory-settings/list-loc",
+                },
+                {
+                  title: "Maint des Status de Stock",
+                  page: "/inventory-settings/create-status-stock",
+                },
+                {
+                  title: "List des Status Stock",
+                  page: "/inventory-settings/list-status",
+                },
+              ],
             },
             {
-              title: "Liste des roles",
-              page: "/roles/list-all-roles",
+              title: "Gestion des Devises",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Maint des Devises",
+                  page: "/devise/create-devise",
+                },
+                {
+                  title: "Liste des Devises",
+                  page: "/devise/list-devise",
+                },
+                {
+                  title: "Maint des Taux de Changes",
+                  page: "/devise/exchange-rate",
+                },
+              ],
             },
-          ],
-        },
-        {
-          title: "Token Series",
-          bullet: "dot",
-          icon: "flaticon-profile",
-          root: true,
-          submenu: [
             {
-              title: "Créer token serie",
-              page: "/token-serie/create-new-token",
+              title: "Parametrage des Tarif",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-price-tag",
+              submenu: [
+                {
+                  title: "Maint des Liste Prix",
+                  page: "/price-setting/create-price",
+                },
+                {
+                  title: "Liste des liste de Prix",
+                  page: "/price-setting/list-price",
+                },
+              ],
+            },
+
+            {
+              title: "Parametrage Des Codes",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Maint code-mstr",
+                  page: "/code-mstr/create-code",
+                },
+                {
+                  title: "Liste des codes",
+                  page: "/code-mstr/codes-list",
+                },
+                {
+                  title: "Maint des sequence",
+                  page: "/purchasing/create-sequence",
+                },
+                {
+                  title: "Liste des sequence",
+                  page: "/purchasing/list-sequence",
+                },
+              ],
             },
             {
-              title: "Liste des token",
-              page: "/token-serie/list-all-tokens",
+              title: "Parametrage Des Unitées",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Maint Unité Mesure",
+                  page: "/unit-mesure/create-unit",
+                },
+                {
+                  title: "Liste des Unitées",
+                  page: "/unit-mesure/units-list",
+                },
+              ],
+            },
+
+            // NEW
+            {
+              title: "Parametrage de Qualité",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "ajouter spécification standard",
+                  page: "/inventory-settings/create-standard-specification",
+                },
+              ],
+            },
+
+            {
+              title: "Parametrage Comptabilite",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Maint Compte",
+                  page: "/accounting-setting/create-account",
+                },
+                {
+                  title: "Liste des Compte",
+                  page: "/accounting-setting/account-list",
+                },
+                {
+                  title: "Maint des sous comptes",
+                  page: "/accounting-setting/sub-account",
+                },
+                {
+                  title: "Liste des sous comptes",
+                  page: "/accounting-setting/list-subaccount",
+                },
+                {
+                  title: "Maint des centre de coûts",
+                  page: "/accounting-setting/cost-center",
+                },
+                {
+                  title: "Liste des Centres de Coût",
+                  page: "/accounting-setting/list-cc",
+                },
+                {
+                  title: "Maint des Agregat",
+                  page: "/accounting-setting/agregat",
+                },
+
+                {
+                  title: "Maint des Journaux",
+                  page: "/accounting-setting/journal",
+                },
+                {
+                  title: "Liste des Journaux",
+                  page: "/accounting-setting/list-journal",
+                },
+
+                {
+                  title: "Maint des Lignes de produit",
+                  page: "/accounting-setting/product-ligne",
+                },
+                {
+                  title: "Maint des Taxes",
+                  page: "/accounting-setting/create-tax",
+                },
+                {
+                  title: "Liste des Taxes",
+                  page: "/accounting-setting/taxes-list",
+                },
+
+                {
+                  title: "Maint des Entitées",
+                  page: "/accounting-setting/create-entity",
+                },
+                {
+                  title: "Liste des Entitées",
+                  page: "/accounting-setting/entity-list",
+                },
+
+                {
+                  title: "Maint des Banques",
+                  page: "/accounting-setting/create-bank",
+                },
+                {
+                  title: "Liste des Banques",
+                  page: "/accounting-setting/bank-list",
+                },
+                {
+                  title: "Maint Methode Paiement",
+                  page: "/accounting-setting/create-pay-meth",
+                },
+                {
+                  title: "Liste des Methodes de paiement",
+                  page: "/accounting-setting/list-pay-meth",
+                },
+              ],
+            },
+
+            {
+              title: "Paramétrages POS",
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              root: true,
+              submenu: [
+                {
+                  title: "Listes des Plateformes",
+                  page: "/pos-settings/list-delivery",
+                },
+                {
+                  title: "Ajouter une Plateforme",
+                  page: "/pos-settings/create-delivery",
+                },
+                {
+                  title: "Ajouter une catégorie",
+                  page: "/pos-settings/create-category",
+                },
+                {
+                  title: "Liste des catégories",
+                  page: "/pos-settings/list-category",
+                },
+              ],
+            },
+            {
+              title: "Paramétrages des imprimantes",
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              root: true,
+              submenu: [
+                {
+                  title: "Ajouter une imprimantes",
+                  page: "/setting-printers/add-printer",
+                },
+                {
+                  title: "Affecter une imprimante",
+                  page: "/setting-printers/set-printer",
+                },
+                {
+                  title: "Liste des imprimantes",
+                  page: "/setting-printers/list-printers",
+                },
+              ],
+            },
+    
+            {
+              title: "Paramétrages Mobile",
+              bullet: "dot",
+              icon: "flaticon-interface-1",
+              root: true,
+              submenu: [
+                {
+                  title: "Résultat de la visite",
+                  page: "/mobile-settings/visit-result",
+                },
+                {
+                  title: "Méthode de paiement",
+                  page: "/mobile-settings/payment-method",
+                },
+                {
+                  title: "Motif d'annulation",
+                  page: "/mobile-settings/cancelation-reason",
+                },
+              ],
+            },
+    
+
+            {
+              title: "Configuration Module",
+              page: "/config/maint-config",
             },
           ],
         },
 
-        {
-          title: "Gestion des services",
-          bullet: "dot",
-          icon: "flaticon-profile",
-          root: true,
-          submenu: [
-            {
-              title: "Créer un nouveau service",
-              page: "/services/create-new-service",
-            },
-          ],
-        },
         {
           title: "",
           bullet: "",

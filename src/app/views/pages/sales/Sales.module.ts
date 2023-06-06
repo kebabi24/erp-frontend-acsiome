@@ -52,7 +52,7 @@ import { QuoteService, UsersService, ItemService, CodeService, TaxeService, Sale
          SaleShiperService,CustomerService,SequenceService, SiteService,LocationService, MesureService,
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
-         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService} from '../../../core/erp';
+         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService} from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -71,6 +71,8 @@ import { ListSalesComponent } from './list-sales/list-sales.component';
 import { ListPosComponent } from './list-pos/list-pos.component';
 import { ListCaisseComponent } from './list-caisse/list-caisse.component';
 import { ListSiteCaComponent } from './list-site-ca/list-site-ca.component';
+import { ListInvoiceMobComponent } from './list-invoice-mob/list-invoice-mob.component';
+import { ListSoEditComponent } from './list-so-edit/list-so-edit.component';
 
 const routes: Routes = [
     {
@@ -96,6 +98,10 @@ const routes: Routes = [
               path: "so-list",
             component: SoListComponent,
           },
+          {
+            path: "list-so-edit",
+          component: ListSoEditComponent,
+        },
           {
             path: "edit-so/:id",
             component: EditSoComponent,
@@ -164,7 +170,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -225,6 +231,7 @@ const routes: Routes = [
         ProductLineService,
         InvoiceOrderTempService,
         PosCategoryService,
+        PsService,
     ],
 
     entryComponents: [

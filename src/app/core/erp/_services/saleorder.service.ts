@@ -72,6 +72,10 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
     }
+    public updateproj(id: Number, data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/project/${id}`,data, { headers: httpHeaders })
+    }
     public updateSo(data:any,id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/So/${id}`,data, { headers: httpHeaders })
