@@ -64,6 +64,11 @@ export class RoleService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL_ROLE}/${id}`, { headers: httpHeaders })
     }
+
+    public getOneByDeviceId(device_id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_ROLE}/deviceId/${device_id}`, { headers: httpHeaders })
+    }
     
 
     public updated(id: Number, data:any) {

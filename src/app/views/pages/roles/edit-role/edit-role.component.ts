@@ -36,6 +36,7 @@ export class EditRoleComponent implements OnInit {
   roleEdit: any
   title: String = 'Modifier role - '
   user_mobile_code : String
+  device_id : String
   constructor(
       config: NgbDropdownConfig,
       private roleF: FormBuilder,
@@ -63,6 +64,7 @@ export class EditRoleComponent implements OnInit {
         controls.role_code.setValue(this.roleEdit.role_code)
         controls.role_name.setValue(this.roleEdit.role_name)
         controls.user_mobile_code.setValue(this.roleEdit.user_mobile_code)
+        controls.device_id.setValue(this.roleEdit.device_id)
         this.loadingSubject.next(false)
         this.title = this.title + this.roleEdit.role_name
           })
@@ -78,6 +80,7 @@ export class EditRoleComponent implements OnInit {
         role_code: [{value: this.role.role_code, disabled : false}, Validators.required],
         role_name: [{value: this.role.role_name, disabled : true}],
         user_mobile_code: [this.role.user_mobile_code, Validators.required],
+        device_id : [this.role.device_id , Validators.required],
         init: [ false],
 
     })
@@ -125,6 +128,7 @@ export class EditRoleComponent implements OnInit {
     _role.role_code =   controls.role_code.value
     _role.role_name = controls.fullname.value
     _role.user_mobile_code =   this.user_mobile_code
+    _role.device_id = controls.device_id.value
 
     return _role
   }

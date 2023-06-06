@@ -58,7 +58,8 @@ import {
   ItemService,
   AccountService,
   EntityService,
-  InventoryManagementService
+  InventoryManagementService,
+  UnloadRequestService
 } from "../../../core/erp";
 import { PhysicalInventoryTagEntryComponent } from './physical-inventory-tag-entry/physical-inventory-tag-entry.component';
 import { TagGapAnalysisComponent } from './tag-gap-analysis/tag-gap-analysis.component';
@@ -71,6 +72,7 @@ import { InventoryByLoclistComponent } from './inventory-by-loclist/inventory-by
 import { OutOFStocklistComponent } from './out-ofstocklist/out-ofstocklist.component';
 import { InventoryByStatuslistComponent } from './inventory-by-statuslist/inventory-by-statuslist.component';
 import { LoadingVansComponent } from "./loading-vans/loading-vans.component";
+import { UnloadingVansComponent } from "./unloading-vans/unloading-vans.component";
 
 const routes: Routes = [
   {
@@ -121,10 +123,14 @@ const routes: Routes = [
     path: "loading-vans",
     component: LoadingVansComponent,
   },
+  {
+    path: "unloading-vans",
+    component: UnloadingVansComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [LoadingVansComponent,InventoryManagementComponent, PhysicalInventoryTagComponent, PhysicalInventoryTagEntryComponent, TagGapAnalysisComponent, PhysicalInventoryTagReentryComponent, FreezeInventoryComponent, ValidateTagComponent, InventoryOfDateComponent, InventoryActivitylistComponent, InventoryByLoclistComponent, OutOFStocklistComponent, InventoryByStatuslistComponent],
+  declarations: [LoadingVansComponent,InventoryManagementComponent, PhysicalInventoryTagComponent, PhysicalInventoryTagEntryComponent, TagGapAnalysisComponent, PhysicalInventoryTagReentryComponent, FreezeInventoryComponent, ValidateTagComponent, InventoryOfDateComponent, InventoryActivitylistComponent, InventoryByLoclistComponent, OutOFStocklistComponent, InventoryByStatuslistComponent , UnloadingVansComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -168,6 +174,7 @@ const routes: Routes = [
     InventoryStatusService,
     InventoryManagementService,
     ItemService,
+    UnloadRequestService
   ],
   entryComponents: [
     ActionNotificationComponent,
