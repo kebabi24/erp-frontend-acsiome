@@ -6,4 +6,5 @@ export class Role extends BaseModel{
     role_name : String
     user_mobile_code: String
     tokenSerie_code: String
+    device_id : String
 }

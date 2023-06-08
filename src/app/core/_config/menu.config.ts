@@ -318,12 +318,16 @@ export class MenuConfig {
               page: "/supervision/validate-charge-demande",
             },
             {
+              title: "Validation des demandes de dechargement",
+              page: "/supervision/validate-decharge-demande",
+            },
+            {
               title: "Transfert demandes de chargement à la livraison",
               page: "/supervision/transfer-charge-demande-delivery",
             },
           ],
         },
-        
+       
 
         {
           title: "Gestion Stock",
@@ -334,6 +338,10 @@ export class MenuConfig {
             {
               title: "Chargement Des Vans",
               page: "/inventory-management/loading-vans",
+            },
+            {
+              title: "Dechargement Des Vans",
+              page: "/inventory-management/unloading-vans",
             },
             {
               title: "Réception OA",
@@ -837,6 +845,7 @@ export class MenuConfig {
               title: "Déclaration de accident/incident",
               page: "/project/accident-incident",
             },
+
 
             {
               title: "Sensibilisation",

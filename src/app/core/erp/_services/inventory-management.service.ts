@@ -113,5 +113,9 @@ export class InventoryManagementService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/createLoadRequestDetails/`, {load_request_details:details,load_request_lines:lines},{ headers: httpHeaders })
     }
+    public createLoadRequestDetailsUpdateStatus(details : any, lines:any , load_request_code:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createLoadRequestDetailsStatus/`, {load_request_details:details,load_request_lines:lines , load_request_code:load_request_code},{ headers: httpHeaders })
+    }
 }
 

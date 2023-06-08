@@ -64,6 +64,7 @@ export class CreateNewRolesComponent implements OnInit {
         role_code: [this.role.role_code, Validators.required],
         role_name: [this.role.role_name, Validators.required],
         user_mobile_code: [{value: this.role.user_mobile_code, disabled: !this.isExist}, Validators.required],
+        device_id : [this.role.device_id , Validators.required],
     })
   }
 
@@ -263,6 +264,19 @@ export class CreateNewRolesComponent implements OnInit {
 
   }
 
+  onDeviceIdChange() {
+    const controls = this.roleForm.controls
+    console.log("hello")
+    
+    this.roleService.getOneByDeviceId(controls.device_id.value).subscribe(
+        (res: any) => {
+          console.log("aa", res.data);
+          alert("Cet identifiant d'appareil existe")
+          controls.device_id.setValue(null) 
+          document.getElementById("device").focus();            
+    })
+  }
+
   open(content) {
     this.prepareGrid()
     this.modalService.open(content, { size: "lg" })
@@ -301,6 +315,7 @@ export class CreateNewRolesComponent implements OnInit {
     _role.role_code = controls.role_code.value
     _role.role_name = controls.role_name.value
     _role.user_mobile_code = controls.user_mobile_code.value
+    _role.device_id = controls.device_id.value
 
     return _role
   }

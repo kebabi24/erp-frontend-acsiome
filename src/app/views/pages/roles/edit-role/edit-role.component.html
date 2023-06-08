@@ -75,6 +75,22 @@
                     
 
                     </div>
+                    <div class="row">    
+                        <div class="form-group col-6">
+                            <label class="form-group">Reference de l'appareil: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="device_id"
+                                    [className]="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div *ngIf="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            
+                        </div>
+                    
+
+                    </div>
                   
 
             

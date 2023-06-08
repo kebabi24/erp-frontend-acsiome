@@ -164,6 +164,7 @@ export { ForcastService } from "./_services/forcast.service";
 export { LabelService } from "./_services/label.service";
 export { MobileSettingsService } from "./_services/mobile-settings.service";
 export { LoadRequestService } from "./_services/load-request.service";
+export { UnloadRequestService } from "./_services/unload-request.service";
 export { QualityControlService } from "./_services/quality-control.service";
 export { DomainService } from "./_services/domain.service";
 export { TokenSerieService } from "./_services/token-serie.service";

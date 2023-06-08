@@ -60,7 +60,7 @@
                             <label class="form-group">utilisateur: *</label>
                             <div class="input-group input-group-sm">
 
-                                <input type="text" formControlName="user_mobile_code"
+                                <input type="text" formControlName="user_mobile_code" 
                                     [className]="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                     aria-describedby="basic-addon2">
                                 <div class="input-group-append">
@@ -68,6 +68,23 @@
                                         <i class="text-dark-50 flaticon2-search"></i> </span>
                                 </div>
                                 <div *ngIf="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            
+                        </div>
+                    
+
+                    </div>
+
+                    <div class="row">    
+                        <div class="form-group col-6">
+                            <label class="form-group">Reference de l'appareil: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="device_id" change ="onDeviceIdChange()" id="device"
+                                    [className]="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div *ngIf="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched)"
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div>
                             

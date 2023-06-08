@@ -60,7 +60,9 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 
-import { ItineraryService, MobileServiceService, RoleService, UsersMobileService ,MobileSettingsService, LoadRequestService } from "../../../core/erp"
+import { ItineraryService, MobileServiceService, RoleService, UsersMobileService ,MobileSettingsService, LoadRequestService,
+  UnloadRequestService } from "../../../core/erp"
+import { ValidateDeChargeDemandeComponent } from './validate-decharge-demande/validate-decharge-demande.component';
 
 
 
@@ -73,12 +75,16 @@ const routes: Routes = [
     path: 'transfer-charge-demande-delivery',
     component: TransferChargeDemandeToDeliveryComponent
   },
+  {
+    path: 'validate-decharge-demande',
+    component: ValidateDeChargeDemandeComponent
+  },
 
   
   
 ] 
 @NgModule({
-  declarations: [ ValidateChargeDemandeComponent,TransferChargeDemandeToDeliveryComponent],
+  declarations: [ ValidateChargeDemandeComponent,TransferChargeDemandeToDeliveryComponent,ValidateDeChargeDemandeComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -119,6 +125,7 @@ const routes: Routes = [
     TypesUtilsService,
     LayoutUtilsService,
     LoadRequestService,
+    UnloadRequestService,
 ],
  
 })

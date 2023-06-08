@@ -9,15 +9,15 @@ import { AngularGridInstance, Column, FieldType, GridOption, OnEventArgs, GridSe
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
-import { MobileServiceService, MobileService, RoleService, ItineraryService,LoadRequestService } from "../../../../core/erp"
+import { UnloadRequestService, MobileService, RoleService, ItineraryService,LoadRequestService } from "../../../../core/erp"
 import {   MobileSettingsService} from "../../../../core/erp"
 @Component({
   selector: 'kt-validate-charge-demande',
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './validate-charge-demande.component.html',
-  styleUrls: ['./validate-charge-demande.component.scss']
+  templateUrl: './validate-decharge-demande.component.html',
+  styleUrls: ['./validate-decharge-demande.component.scss']
 })
-export class ValidateChargeDemandeComponent implements OnInit {
+export class ValidateDeChargeDemandeComponent implements OnInit {
   service: MobileService
   validationForm: FormGroup
   hasFormErrors = false
@@ -27,9 +27,14 @@ export class ValidateChargeDemandeComponent implements OnInit {
   
   role_code : any
   load_request_code : any
+  unload_request_code : any
+
   roles: any[] = []
   loadRequests: any[] = []
+  unloadRequests: any[] = []
   loadRequestData: any[] = []
+  unloadRequestData: any[] = []
+  displayData : any = false
 
   constructor(
     config: NgbDropdownConfig,
@@ -38,6 +43,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
         private router: Router,
         public dialog: MatDialog,
         private loadRequestService : LoadRequestService,
+        private unloadRequestService : UnloadRequestService,
         private layoutUtilsService: LayoutUtilsService,
   ) { 
         config.autoClose = true   
@@ -54,14 +60,15 @@ export class ValidateChargeDemandeComponent implements OnInit {
 
   onSubmit() {
 
-    this.loadRequestService.updateLoadRequestStatus10(this.load_request_code, this.loadRequestData).subscribe(
+    this.unloadRequestService.updateUnloadRequestStatus10(this.unload_request_code, this.unloadRequestData).subscribe(
 
       (response: any) => {
         console.log(response)
-        this.loadRequestData = []
-        this.load_request_code = ""
+        this.unloadRequestData = []
+        this.unload_request_code = ""
         this.role_code = ""
         this.createForm()
+        this.displayData = false
       },
       (error) => {
         // this.loadRequestData = []
@@ -69,14 +76,14 @@ export class ValidateChargeDemandeComponent implements OnInit {
       },
       () => {
         this.layoutUtilsService.showActionNotification(
-            "Load Request updated",
+            "unload Request updated",
             MessageType.Create,
             10000,
             true,
             true
         )
         this.loadingSubject.next(false)
-        this.router.navigateByUrl("/supervision/validate-charge-demande")
+        this.router.navigateByUrl("/supervision/validate-decharge-demande")
     }
     )
 
@@ -90,7 +97,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
 
 // GET ROLES OF THE SUPERVISOR
 prepareRoles(){
-  this.loadRequestService.getRoles('administrateur').subscribe(
+  this.unloadRequestService.getRoles('administrateur').subscribe(
       
       (response: any) => {
         this.roles = response.data
@@ -103,30 +110,30 @@ prepareRoles(){
 }
 
 // GET LOAD REQUESTS STATUS 0 OF THE SELECTED ROLE
-prepareLoadRequets(role_code){
-  this.loadRequestService.getLoadRequests(role_code).subscribe(
+prepareunLoadRequets(role_code){
+  this.unloadRequestService.getUnloadRequests(role_code).subscribe(
       
       (response: any) => {
-        this.loadRequests = response.data
+        this.unloadRequests = response.data
        
       },
       (error) => {
-          this.loadRequests = []
+          this.unloadRequests = []
       },
       () => {}
   )
 }
 
 // GET DATA OF THE SELECTED LOADREQUEST
-prepareLoadRequestData(load_request_data){
-  this.loadRequestService.getLoadRequestData(load_request_data).subscribe(
+prepareLoadRequestData(unload_request_data){
+  this.unloadRequestService.getUnloadRequestData(unload_request_data).subscribe(
 
       (response: any) => {
-        this.loadRequestData = response.loadRequestData
-        console.log(response.loadRequestData)
+        this.unloadRequestData = response.unloadRequestData
+        this.displayData = true
       },
       (error) => {
-        this.loadRequestData = []
+        this.unloadRequestData = []
       },
       () => {}
   )
@@ -135,35 +142,28 @@ prepareLoadRequestData(load_request_data){
 
 
 onSelectRole(role_code){
-  this.prepareLoadRequets(role_code)
+  this.prepareunLoadRequets(role_code)
 }
 
-onSelectLoadRequest(load_request_code){
-  this.prepareLoadRequestData(load_request_code)
-  this.load_request_code = load_request_code
+onSelectLoadRequest(unload_request_code){
+  this.prepareLoadRequestData(unload_request_code)
+  this.unload_request_code = unload_request_code
 }
 
-onInputChanged(pageCode,prodCode,value){
+onInputChanged(p_code, lot,value){
   console.log('value:' + value)
-  const indexPage = this.loadRequestData.findIndex(loadRequest=>{
-    return loadRequest.page_code  === pageCode
+  const indexProduct = this.unloadRequestData.findIndex(detail=>{
+    return detail.product_code  === p_code && detail.lot === lot
   })
-  console.log('pageCodeIndex:' + indexPage)
-  const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
-    return product.product_code === prodCode
-  })
-  console.log('prodCodeIndex:' + indexProduct)
-  this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
-  console.log(this.loadRequestData[indexPage].products[indexProduct])
-  
- 
+  this.unloadRequestData[indexProduct].qt_effected = value
+  console.log(this.unloadRequestData[indexProduct])
 }
 
 createForm() {
   this.loadingSubject.next(false)
   this.validationForm = this.profileFB.group({
     role_code :[this.role_code],
-    load_request_code:[this.load_request_code]
+    unload_request_code:[this.unload_request_code]
   })
 }
 }
