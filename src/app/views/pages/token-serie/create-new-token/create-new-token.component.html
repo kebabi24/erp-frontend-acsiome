@@ -20,14 +20,14 @@
         </div>
 
         <div class="row">
-            <button type="button" (click)="addNewItem()" class="btn btn-success btn-sm mr-2 col-3">ajouter un élément </button>
+            <button type="button" (click)="addNewItem()" class="btn btn-primary btn-elevate col-lg-2">ajouter un élément </button>
         </div>
         <br>
         <br>
         <br>
 
         <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridWidth="1300"
+            <angular-slickgrid class="col-12" 
                         gridId="grid" 
                         [columnDefinitions]="columnDefinitions"
                         (onAngularGridCreated)="angularGridReady($event)"
