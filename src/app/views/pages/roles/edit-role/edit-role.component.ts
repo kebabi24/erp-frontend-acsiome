@@ -126,8 +126,8 @@ export class EditRoleComponent implements OnInit {
     const controls = this.roleForm.controls
     const _role = new Role()
     _role.role_code =   controls.role_code.value
-    _role.role_name = controls.fullname.value
-    _role.user_mobile_code =   this.user_mobile_code
+    _role.role_name =   controls.role_name.value
+    _role.user_mobile_code =   controls.user_mobile_code.value
     _role.device_id = controls.device_id.value
 
     return _role
@@ -135,7 +135,7 @@ export class EditRoleComponent implements OnInit {
 
   addRole(_role: Role, _itinerary : any) {
     this.loadingSubject.next(true)
-    this.roleService.addRole({role: _role, itinerary: _itinerary}).subscribe(
+    this.roleService.updated( this.roleEdit.id,{role: _role, itinerary: _itinerary}).subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
             this.layoutUtilsService.showActionNotification(

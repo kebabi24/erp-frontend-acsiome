@@ -1,13 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef,Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
-import { Column, AngularGridInstance, FieldType, GridOption } from 'angular-slickgrid';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
 import { Role, RoleService, ItineraryService, Itinerary  } from "../../../../core/erp";
 import * as os from 'os';
+import {
+  AngularGridInstance,
+  Column,
+  FieldType,
+  Filters,
+  Formatters,
+  GridOption,
+  GridStateChange,
+  GridService,
+}  from 'angular-slickgrid';
+import { AnyCnameRecord } from 'dns';
 
 @Component({
   selector: 'kt-create-new-roles',
@@ -22,18 +32,31 @@ export class CreateNewRolesComponent implements OnInit {
     loadingSubject = new BehaviorSubject<boolean>(true)
     loading$: Observable<boolean>
     users: []
-    itinerary: []
+    itinerary: any []
+    its: []
     selectedItinerary: number[] = []
     columnDefinitions: Column[] = []
+    columnDefinitionsit: Column[] = []
     columnDefinitions2: Column[] = []
     gridOptions: GridOption = {}
     gridOptions2: GridOption = {}
+    gridOptionsit: GridOption = {}
     gridObj: any
     angularGrid: AngularGridInstance
     gridObj2: any
     angularGrid2: AngularGridInstance
+    gridObjit: any
+    angularGridit: AngularGridInstance
     selectedTitle: any
     message: any
+    //selectedGrid2IDs!: number[];
+    selectedTriggersIndexes : any[]
+    selected_doc_row_number;
+    dataViewit: any
+    gridServiceit: GridService
+    selectedIndexes : any[]
+    selectedIndexes2 : any[]
+    d: Array<number> = []
   constructor(
         config: NgbDropdownConfig,
         private roleF : FormBuilder,
@@ -43,7 +66,8 @@ export class CreateNewRolesComponent implements OnInit {
         private layoutUtilsService: LayoutUtilsService,
         private roleService: RoleService,
         private itineraryService: ItineraryService,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private cd: ChangeDetectorRef
   ) {
         config.autoClose = true
         this.prepareGrid2()
@@ -70,14 +94,14 @@ export class CreateNewRolesComponent implements OnInit {
 
   prepareGrid2(){
     this.columnDefinitions2 = [
-      {
-          id: "id",
-          name: "id",
-          field: "id",
-          sortable: true,
-          minWidth: 80,
-          maxWidth: 80,
-      },
+      // {
+      //     id: "id",
+      //     name: "id",
+      //     field: "id",
+      //     sortable: true,
+      //     minWidth: 80,
+      //     maxWidth: 80,
+      // },
       {
         id: "itinerary_code",
         name: "Code de l'itinéraire",
@@ -111,32 +135,33 @@ export class CreateNewRolesComponent implements OnInit {
       enableFiltering: true,
       autoEdit: false,
       autoHeight: false,
-      frozenColumn: 0,
-      frozenBottom: true,
-      enableRowSelection: true,
-      rowSelectionOptions: {
-        // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: false
-        },
-      enableCheckboxSelector: true,
-      checkboxSelector: {
-          // optionally change the column index position of the icon (defaults to 0)
-          // columnIndexPosition: 1,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: false,
+      // rowSelectionOptions: {
+      //   // True (Single Selection), False (Multiple Selections)
+      //   selectActiveRow: false
+      //   },
+      // enableCheckboxSelector: true,
+      // checkboxSelector: {
+      //     // optionally change the column index position of the icon (defaults to 0)
+      //     // columnIndexPosition: 1,
 
-          // remove the unnecessary "Select All" checkbox in header when in single selection mode
-          hideSelectAllCheckbox: true,
+      //     // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      //     hideSelectAllCheckbox: true,
 
-          // you can override the logic for showing (or not) the expand icon
-          // for example, display the expand icon only on every 2nd row
-          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
-      },
-      multiSelect: false,
+      //     // you can override the logic for showing (or not) the expand icon
+      //     // for example, display the expand icon only on every 2nd row
+      //     // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      // },
+      // multiSelect: false,
   }
 
+  this.itinerary = []
   // fill the dataset with your data
-  this.itineraryService
-      .getAllItinerary()
-      .subscribe((response: any) => (this.itinerary = response.data))
+  // this.itineraryService
+  //     .getAllItinerary()
+  //     .subscribe((response: any) => (this.itinerary = response.data))
     
   }
 
@@ -145,7 +170,7 @@ export class CreateNewRolesComponent implements OnInit {
     
     this.roleService.getByOne({role_code: controls.role_code.value }).subscribe(
         (res: any) => {
-          console.log("aa", res.data);
+          //console.log("aa", res.data);
        
           if (res.data) {
             alert("Ce role exist déja")
@@ -252,10 +277,10 @@ export class CreateNewRolesComponent implements OnInit {
     
     this.roleService.getByOne({role_code: controls.role_code.value }).subscribe(
         (res: any) => {
-          console.log("aa", res.data);
+          //console.log("aa", res.data);
        
           if (res.data) {
-            console.log("here")
+            //console.log("here")
             this.router.navigateByUrl(`/roles/edit-role/${res.data.id}`)
             //console.log(res.data.id)
           }
@@ -266,11 +291,11 @@ export class CreateNewRolesComponent implements OnInit {
 
   onDeviceIdChange() {
     const controls = this.roleForm.controls
-    console.log("hello")
+    //console.log("hello")
     
     this.roleService.getOneByDeviceId(controls.device_id.value).subscribe(
         (res: any) => {
-          console.log("aa", res.data);
+          //console.log("aa", res.data);
           alert("Cet identifiant d'appareil existe")
           controls.device_id.setValue(null) 
           document.getElementById("device").focus();            
@@ -281,7 +306,21 @@ export class CreateNewRolesComponent implements OnInit {
     this.prepareGrid()
     this.modalService.open(content, { size: "lg" })
   }
-  
+  openit(content) {
+   let dd = []
+    for(let it of this.itinerary){
+      //console.log(it)
+      //this.selectedIndexes2.push(1)
+      var i = it.id
+      dd.push(i)
+     // console.log("i",i)
+    }
+   // console.log(this.selectedIndexes2)
+   // console.log(dd)
+    this.selectedIndexes2 = dd
+    this.prepareGridit()
+    this.modalService.open(content, { size: "lg" })
+  }
   reset() {
     this.role = new Role()
     this.createForm()
@@ -307,7 +346,7 @@ export class CreateNewRolesComponent implements OnInit {
     //console.log(this.selectedItinerary)
     this.addRole(role, this.selectedItinerary)
     const hostname = os.networkInterfaces()
-    console.log(hostname)
+    //console.log(hostname)
   }
   prepareRole(): Role {
     const controls = this.roleForm.controls
@@ -325,6 +364,10 @@ export class CreateNewRolesComponent implements OnInit {
      *
      * @param _role: RoleModel
      */
+   addNewItem(content){
+
+    this.openit(content)
+   }
    addRole(_role: Role, _itinerary : any) {
     this.loadingSubject.next(true)
     this.roleService.addRole({role: _role, itinerary: _itinerary}).subscribe(
@@ -377,17 +420,17 @@ export class CreateNewRolesComponent implements OnInit {
   }
 
 
-  handleSelectedRowsChanged2(e, args) {
-    if (Array.isArray(args.rows) && this.gridObj2) {
+  // handleSelectedRowsChanged2(e, args) {
+  //   if (Array.isArray(args.rows) && this.gridObj2) {
 
-      this.selectedItinerary = args.rows.map((idx: number) => {
-        const item = this.gridObj2.getDataItem(idx);
-        return item.itinerary_code;
-      });
+  //     this.selectedItinerary = args.rows.map((idx: number) => {
+  //       const item = this.gridObj2.getDataItem(idx);
+  //       return item.itinerary_code;
+  //     });
  
-  }
+  // }
   //console.log(this.selectedItinerary)
-  }
+  //}
   angularGridReady2(angularGrid: AngularGridInstance) {
     this.angularGrid2 = angularGrid
     this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {}
@@ -399,4 +442,125 @@ export class CreateNewRolesComponent implements OnInit {
   
 
 
+  
+  angularGridReadyit(angularGrid: AngularGridInstance) {
+    this.angularGridit = angularGrid
+    this.gridObjit = (angularGrid && angularGrid.slickGrid) || {}
+  
+    this.gridServiceit = angularGrid.gridService;
+     this.dataViewit = angularGrid.dataView;
+  
+  }
+
+
+
+
+  prepareGridit() {
+    this.columnDefinitionsit = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+    },
+    {
+      id: "itinerary_code",
+      name: "Code de l'itinéraire",
+      field: "itinerary_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+        id: "itinerary_name",
+        name: "Nom de l'itinéraire",
+        field: "itinerary_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+    },
+    {
+        id: "itinerary_type",
+        name: "Type de l'itinéraire",
+        field: "itinerary_type",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+    },
+    ]
+
+    this.gridOptionsit = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: false,
+      },
+      presets:{
+        sorters:  [ { columnId: 'id', direction: 'ASC' }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2  // (recommended) select by your data object IDs
+          //dataContextIds
+      }
+     
+    }
+  }
+
+    // fill the dataset with your data
+    this.itineraryService
+        .getAllItinerary()
+        .subscribe((response: any) => (this.its = response.data))
+  }
+
+  handleSelectedRowsChangedit(e, args) {
+    this.selectedIndexes =[]
+  this.selectedIndexes = args.rows;
+    // const selected_trigger_code = this.gridService5.getDataItemByRowIndex(this.selectedTriggersIndexes[0]).code_value
+    
+    // (this.itinerary[this.selected_doc_row_number] as any).itinerary_code = this.gridServiceit.getDataItemByRowIndex(this.selectedTriggersIndexes[0]).itinerary_code
+    // // this.specifications[this.selected_doc_row_number].pjd_trigger = selected_trigger_code
+  
+    // this.dataViewit.setItems(this.itinerary)
+   // console.log(this.selectedIndexes)
+  }
+  addit(){
+   // this.itinerary.push({})
+   var l : any[] = []
+   this.selectedIndexes.forEach(index => {
+     l.push({
+       id: index,
+       itinerary_code : this.its[index]['itinerary_code'],
+       itinerary_name : this.its[index]['itinerary_name'],
+       itinerary_type : this.its[index]['itinerary_type'],
+       //trigger : this.itinerary[index]['pjd_trigger']
+     })
+   });
+  // console.log("lllllllll",l)
+   this.itinerary = l
+  
+   this.dataViewit.setItems(this.itinerary)
+  }
 }

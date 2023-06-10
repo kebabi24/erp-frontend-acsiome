@@ -142,7 +142,7 @@ prepareGrid() {
                 maxWidth: 300,
                 filterable: true,
                 type: FieldType.string,
-                editor: {model: Editors.text}
+                
 
             },
 
@@ -155,7 +155,7 @@ prepareGrid() {
                 maxWidth: 300,
                 filterable: true,
                 type: FieldType.string, 
-                editor: {model: Editors.text}
+                
             },
             {
               id: "token_digitcount",
@@ -166,7 +166,6 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.integer, 
-              editor: {model: Editors.integer}
             },
 
             
@@ -179,7 +178,6 @@ prepareGrid() {
                 maxWidth: 300,
                 filterable: true,
                 type: FieldType.string, 
-                editor: {model: Editors.text}
             },
             {
               id: "service_next_number ",
@@ -190,7 +188,6 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.integer, 
-              editor: {model: Editors.integer}
             },
 
 
@@ -204,7 +201,6 @@ prepareGrid() {
                 maxWidth: 300,
                 filterable: true,
                 type: FieldType.string, 
-                editor: {model: Editors.text}
             },
             {
               id: "visit_next_number",
@@ -215,7 +211,6 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.integer, 
-              editor: {model: Editors.integer}
             },
 
             // ***
@@ -228,7 +223,6 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.string, 
-              editor: {model: Editors.text}
             },
             {
               id: "customer_next_number",
@@ -239,7 +233,6 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.integer, 
-              editor: {model: Editors.integer}
             },
 
             // ***
@@ -252,7 +245,6 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.string, 
-              editor: {model: Editors.text}
             },
             {
               id: "load_request_next_number",
@@ -263,8 +255,7 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.integer, 
-              editor: {model: Editors.integer}
-            },
+             },
 
             // ***
             {
@@ -276,7 +267,7 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.string, 
-              editor: {model: Editors.text}
+             
             },
             {
               id: "inventory_next_number",
@@ -287,7 +278,7 @@ prepareGrid() {
               maxWidth: 300,
               filterable: true,
               type: FieldType.integer, 
-              editor: {model: Editors.integer}
+             
             },
   
             
@@ -296,8 +287,10 @@ prepareGrid() {
 
       this.gridOptions = {
         asyncEditorLoading: false,
-        editable: true,
+        editable: false,
         enableAddRow:true,
+        enableAutoResize:true,
+        autoHeight:true,
         enableColumnPicker: true,
         enableCellNavigation: true,
         enableRowSelection: true,
