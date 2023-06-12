@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter un nouveau role'" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" [title]="'Modifier le role'" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -68,6 +68,22 @@
                                         <i class="text-dark-50 flaticon2-search"></i> </span>
                                 </div>
                                 <div *ngIf="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            
+                        </div>
+                    
+
+                    </div>
+                    <div class="row">    
+                        <div class="form-group col-6">
+                            <label class="form-group">Reference de l'appareil: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="device_id"
+                                    [className]="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div *ngIf="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched)"
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div>
                             

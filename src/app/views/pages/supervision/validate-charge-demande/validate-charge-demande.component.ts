@@ -58,6 +58,10 @@ export class ValidateChargeDemandeComponent implements OnInit {
 
       (response: any) => {
         console.log(response)
+        this.loadRequestData = []
+        this.load_request_code = ""
+        this.role_code = ""
+        this.createForm()
       },
       (error) => {
         // this.loadRequestData = []

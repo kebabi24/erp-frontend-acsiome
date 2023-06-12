@@ -333,6 +333,10 @@ export class CreateNewTokenComponent implements OnInit {
         this.gridOptions = {
           asyncEditorLoading: false,
           editable: true,
+          enableAutoResize:true,
+          autoCommitEdit:true,
+          autoEdit:true,
+          autoHeight:true,
           enableAddRow:true,
           enableColumnPicker: true,
           enableCellNavigation: true,

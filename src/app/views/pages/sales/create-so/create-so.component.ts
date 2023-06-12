@@ -2719,10 +2719,10 @@ doc.addPage();
         mt1 = mt.substring(0, 90  + ind)
         let mt2 = mt.substring(90+ind)
    
-        doc.text( "Arretée la présente Commande a la somme de :" + mt1  , 20, i + 53)
+        doc.text( "Arretée la présente Commande a la somme de : " + mt1  , 20, i + 53)
         doc.text(  mt2  , 20, i + 60)
       } else {
-        doc.text( "Arretée la présente Commande a la somme de :" + mt  , 20, i + 53)
+        doc.text( "Arretée la présente Commande a la somme de : " + mt  , 20, i + 53)
 
       }
     // window.open(doc.output('bloburl'), '_blank');

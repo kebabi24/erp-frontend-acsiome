@@ -18,7 +18,7 @@ import {
   OnEventArgs,
 } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
-import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
+import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
 // Layout
 import {
@@ -75,6 +75,8 @@ export class LoadingVansComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+
+  showSpinner : Boolean =  false;
   
 
 
@@ -109,6 +111,12 @@ export class LoadingVansComponent implements OnInit {
       })
   }
 
+  time = new Observable<string>((observer: Observer<string>) => {
+    setInterval(() => {
+      observer.next("");
+    }, 1000);
+  });
+
   createForm2() {
     this.loadingSubject.next(false)
 
@@ -118,13 +126,11 @@ export class LoadingVansComponent implements OnInit {
   }
   // sets grid data for lots
   open(content,product_code , page_code) {
-    console.log(product_code,page_code)
     this.currentPageCode = page_code 
     this.currentProductCode = product_code
     this.currentPageIndex = this.loadRequestData.findIndex(page =>{
       return page.page_code === page_code
     })
-    console.log(this.currentPageIndex)
     const ld_loc = this.loadRequest.role_loc
     const ld_site = this.loadRequest.role_site
     this.inventoryManagementService.getProductLots(ld_loc,ld_site,product_code).subscribe(
@@ -151,23 +157,36 @@ export class LoadingVansComponent implements OnInit {
      const details = []
      const lines = []
      this.loadRequestData.forEach(loadRequest => {
+      let sum = 0 
       loadRequest.selectedProducts.forEach(product => {
-        // if(product.lots.length >0){
-        //   product.lots.forEach(lot =>{
-        //     details.push({
-        //       "product_code":"EM000001",
-        //       "load_request_code":"LOADRQR2-003"
-        //     })
-        //   })
-        // }
+        if(product.lots.length >0){
+          product.lots.forEach(lot =>{
+            sum += +lot.qt_effected
+            details.push({
+              "product_code":product.product_code,
+              "load_request_code":this.load_request_code,
+              "lot":lot.lot_code,
+              "qt_effected" : lot.qt_effected,
+              "pt_price":product.pt_price,
+            })
+          })
+          lines.push({
+            "product_code":product.product_code,
+            "load_request_code":this.load_request_code,
+            "qt_effected": sum
+          })
+        }
       })
       
-     })
+     }) 
 
      this.inventoryManagementService.createLoadRequestDetails(details,lines).subscribe(
 
       (response: any) => {
         console.log(response)
+        this.loadRequestData = []
+        this.load_request_code = ""
+        this.role_code = ""
       },
       (error) => {
         // this.loadRequestData = []
@@ -190,33 +209,38 @@ export class LoadingVansComponent implements OnInit {
 
   onSaveCharge(){
     const details = []
-    const lines = []
+     const lines = []
      this.loadRequestData.forEach(loadRequest => {
+      let sum = 0 
       loadRequest.selectedProducts.forEach(product => {
-        // if(product.lots.length >0){
-        //   product.lots.forEach(lot =>{
-        //     details.push({
-        //       "product_code":"EM000001",
-        //       "load_request_code":"LOADRQR2-003"
-        //     })
-        //   })
-        // }
-        if(product.qt_effected >0){
+        if(product.lots.length >0){
+          product.lots.forEach(lot =>{
+            sum += +lot.qt_effected
+            details.push({
+              "product_code":product.product_code,
+              "load_request_code":this.load_request_code,
+              "lot":lot.lot_code,
+              "qt_effected" : lot.qt_effected,
+              "pt_price":product.pt_price,
+            })
+          })
           lines.push({
-            load_request_code:this.load_request_code,
-            product_code : product.pt_part,
-            qt_effected : product.qt_effected
+            "product_code":product.product_code,
+            "load_request_code":this.load_request_code,
+            "qt_effected": sum
           })
         }
       })
       
-     })
-     console.log(lines)
+     }) 
 
-     this.inventoryManagementService.createLoadRequestDetails(details,lines).subscribe(
+     this.inventoryManagementService.createLoadRequestDetailsUpdateStatus(details,lines, this.load_request_code).subscribe(
 
       (response: any) => {
         console.log(response)
+        this.loadRequestData = []
+        this.load_request_code = ""
+        this.role_code = ""
       },
       (error) => {
         // this.loadRequestData = []
@@ -251,14 +275,14 @@ export class LoadingVansComponent implements OnInit {
       console.log(product.product_code +"\t"+this.productCodeToAdd )
       return product.product_code = this.productCodeToAdd
     })
-    // console.log(indexProduct)
-    // this.loadRequestData[indexPage].selectedProducts.push(
-    //   this.loadRequestData[indexPage].unselectedProducts[indexProduct]
-    // )
-    // delete this.loadRequestData[indexPage].unselectedProducts[indexProduct]
-    // if(this.loadRequestData[indexPage].unselectedProducts[indexProduct].lengt == 0){
-    //   this.loadRequestData[indexPage].hasAddProduct = false
-    // }
+    console.log(indexProduct)
+    this.loadRequestData[indexPage].selectedProducts.push(
+      this.loadRequestData[indexPage].unselectedProducts[indexProduct]
+    )
+    delete this.loadRequestData[indexPage].unselectedProducts[indexProduct]
+    if(this.loadRequestData[indexPage].unselectedProducts[indexProduct].length == 0){
+      this.loadRequestData[indexPage].hasAddProduct = false
+    }
     // console.log(indexProduct)
     // console.log(this.loadRequestData[indexPage].unselectedProducts)
     // console.log(this.loadRequestData[indexPage].selectedProducts)
@@ -294,15 +318,18 @@ export class LoadingVansComponent implements OnInit {
   onSelectProductToAdd(product_code,page_code){
     this.pageCodeToAddIn  = page_code
     this.productCodeToAdd =product_code
+    console.log(this.pageCodeToAddIn,this.productCodeToAdd)
   }
 
   // FORMS DATA FUNCTIONS 
   prepareLoadRequestData(load_request_code){
+    this.showSpinner = true
     this.inventoryManagementService.getLoadRequestData(load_request_code).subscribe(
   
         (response: any) => {
           this.loadRequestData = response.loadRequestData
           this.loadRequest = response.data
+          this.showSpinner = false
         },
         (error) => {
           this.loadRequestData = []
@@ -312,6 +339,7 @@ export class LoadingVansComponent implements OnInit {
   }
 
   onSelectLoadRequest(load_request_code){
+    this.showSpinner = true
     this.prepareLoadRequestData(load_request_code)
     this.load_request_code = load_request_code
   }
@@ -429,18 +457,18 @@ export class LoadingVansComponent implements OnInit {
         type: FieldType.dateIso,
         
       },
-      {
-        id: "qty_selected",
-        name: "QTE Selected",
-        field: "qty_selected",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.integer,
-        editor: {
-          model: Editors.text,
-        },
-    },
+    //   {
+    //     id: "qty_selected",
+    //     name: "QTE Selected",
+    //     field: "qty_selected",
+    //     sortable: true,
+    //     width: 80,
+    //     filterable: false,
+    //     type: FieldType.integer,
+    //     editor: {
+    //       model: Editors.text,
+    //     },
+    // },
     ];
 
     this.gridOptions = {

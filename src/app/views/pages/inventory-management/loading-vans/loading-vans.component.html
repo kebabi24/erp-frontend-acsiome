@@ -9,13 +9,16 @@
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview  ">
+            <div>
+                {{ time | async }}
+              </div>
 
             <!-- FORM -->
             <div>
                 <form class="form" [formGroup]="chargeForm">
                     <div class="row ">
                         <div class="col-3">
-                            <label class="form-group">Role Code:</label>
+                            <label class="form-group">Code de rôle:</label>
                             <select 
                             (change)="onSelectRole($event.target.value)"
                             name="role_code"
@@ -29,7 +32,7 @@
                             </select> 
                         </div>  
                         <div class="col-3">
-                            <label class="form-group">Load Request Code:</label>
+                            <label class="form-group">Code de demande de chargement:</label>
                             <select 
                             (change)="onSelectLoadRequest($event.target.value)"
                             name="load_request_code"
@@ -48,18 +51,24 @@
                     <br>
                     <div class="row">
                         <div class="col-12">
-                           <h5>Selected Load Request : {{load_request_code}}</h5>
+                           <h5>Demande de chargement sélectionnée : {{load_request_code}}</h5>
                         </div>  
                     </div>
                 </form>
 
                 <br>
-                    <span>Products List</span>
+                    <span>Liste de produits</span>
                 <br><br>
             </div>
             <!-- FORM END -->
 
             <!-- TABLES -->
+            <div *ngIf="showSpinner" class="d-flex justify-content-center">
+
+                <div  class="spinner-border text-info" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
             <div class="row mb-5" *ngFor="let productPage of loadRequestData" style="min-width: 800px">
                 <br><br>
 
@@ -89,7 +98,7 @@
                             </div>
                             
                             <a (click)="addRow()" class="col-6 btn btn-white text-dark btn-sm font-weight-bolder">
-                                Add a Product</a>
+                                Ajouter un produit</a>
                         </div>
                     </div>
                     <!--end::Header : PAGE HEADER END -->
@@ -102,23 +111,31 @@
                         <div class="card card-custom ">
                             <div class="card-header border-0 bg-primary py-2">
                                 <div class="card-title text-white ">
-                                      Product Code : {{product.product_code}}
-                                          
+                                    <span class="mr-10">
+                                        <span class="text-dark">Code produit </span>: {{product.product_code}}
+                                    </span>
+                                    <span class="mr-10">
+                                        <span class="text-dark">Nom du produit :</span>  {{product.pt_desc1}} 
+                                    </span>
+                                    <span class="mr-10">
+                                      <span class="text-dark"> Prix ​​du produit :</span>  {{product.pt_price}} DZ  
+                                    </span>
+                                                    
                                 </div>
                                 <div class="card-toolbar">
                                     <a (click)="open(content, product.product_code ,productPage.page_code )" class="btn btn-sm btn-white" >
-                                     Add Line
+                                        Ajouter une ligne
                                     </a>
                                 </div>
                             </div>
                             <div class="separator separator-solid separator-white opacity-20"></div>
                             <div class="card-body text-white py-5" >
                                 <div class="px-5 row text-dark"> 
-                                    <h5 class="mr-10">Product Name : <span class="text-success">{{product.pt_desc1}}</span> </h5>
-                                    <h5 class="mr-10">Product Price : <span class="text-success">{{product.pt_price}} DZ</span> </h5>
-                                    <h5 class="mr-10">QT Validated : <span class="text-success">{{product.qt_validated}}</span> </h5>
-                                    <h5 class="mr-10">QT Affected : <span class="text-danger">{{product.qt_effected}}</span> </h5>
-                                    <h5 class="mr-10">QT Stored : <span class="text-danger">{{product.qt_stored}}</span> </h5>
+                                    <!-- <h5 class="mr-10 col 2">Product Name : <span class="text-success">{{product.pt_desc1}}</span> </h5>
+                                    <h5 class="mr-10 col-2">Product Price : <span class="text-success">{{product.pt_price}} DZ</span> </h5> -->
+                                    <h5 class="mr-10 col-2">Quantité validée: <span class="text-success">{{product.qt_validated}}</span> </h5>
+                                    <h5 class="mr-10 col-2">Quantité affectée: <span class="text-danger">{{product.qt_effected}}</span> </h5>
+                                    <h5 class="mr-10 col-2">Quantité stockée: <span class="text-danger">{{product.qt_stored}}</span> </h5>
                                 </div> 
                                 <br>
                                 <!--begin::Table-->
@@ -128,9 +145,9 @@
                                             <tr class="text-left">
 
                                                 <th class="pr-0" style="width: 50px"></th>
-                                                <th class="pr-0" style="width: 200px">Lot Code</th>
-                                                <th style="min-width: 200px">Quantity In Lot</th>
-                                                <th style="min-width: 200px">Quantity Selected</th>
+                                                <th class="pr-0" style="width: 200px">Code de lot</th>
+                                                <th style="min-width: 200px">Quantité en lot</th>
+                                                <th style="min-width: 200px">Quantité sélectionnée</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -171,7 +188,7 @@
         <div>
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Select lot for product</h4>
+                    <h4 class="modal-title">Sélectionnez les lots</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>

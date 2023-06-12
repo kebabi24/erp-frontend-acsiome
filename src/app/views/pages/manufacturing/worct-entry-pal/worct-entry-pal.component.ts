@@ -52,7 +52,8 @@ import {
   MesureService,
   WorkOrderService,
   Label,
-  LabelService,  
+  LabelService,
+  SaleOrderService,  
 } from "../../../../core/erp";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -155,7 +156,9 @@ export class WorctEntryPalComponent implements OnInit {
   rctwostat;
   price;
   label;
-  
+  address: any;
+  product: any;
+  emp_shift: any[] = [];
   constructor(
     config: NgbDropdownConfig,
     private trFB: FormBuilder,
@@ -177,8 +180,12 @@ export class WorctEntryPalComponent implements OnInit {
     private inventoryStatusService : InventoryStatusService,
     private workOrderService: WorkOrderService,
     private labelService: LabelService,
+    private saleOrderService: SaleOrderService,
   ) {
     config.autoClose = true;
+    this.codeService
+    .getBy({ code_fldname: "emp_shift" })
+    .subscribe((response: any) => (this.emp_shift = response.data));
     this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -600,18 +607,25 @@ export class WorctEntryPalComponent implements OnInit {
          
           if(controls.tr_part.value != null ) {
           const _lb = new Label();
-              _lb.lb_site =args.dataContext.tr_site
-              _lb.lb_loc = args.dataContext.tr_loc
-              _lb.lb_part = controls.tr_part.value
-              _lb.lb_nbr = controls.tr_nbr.value
-              _lb.lb_lot = args.dataContext.tr_serial
-              _lb.lb_date = controls.tr_effdate.value
-                  ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
-                  : null
-              _lb.lb_qty = args.dataContext.tr_qty_loc
-              _lb.lb_ld_status = args.dataContext.tr_status
-              _lb.lb_desc = controls.desc.value
-    
+            _lb.lb_site =args.dataContext.tr_site
+            _lb.lb_loc = args.dataContext.tr_loc
+            _lb.lb_part = controls.tr_part.value
+            _lb.lb_nbr = controls.tr_nbr.value
+            _lb.lb_lot = args.dataContext.tr_serial
+            _lb.lb_date = controls.tr_effdate.value
+                ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+                : null
+            _lb.lb_qty = args.dataContext.tr_qty_loc
+            _lb.lb_ld_status = args.dataContext.tr_status
+            _lb.lb_desc = this.product.pt_desc2
+            _lb.lb_cust = this.address.ad_addr
+            _lb.lb_addr = this.address.ad_line1
+            _lb.lb_rmks = controls.emp_shift.value
+            _lb.lb_tel  = this.address.ad_phone
+            _lb.int01   = this.product.int01
+            _lb.int02   = this.product.int02
+      
+
               let lab = null
 
               this.labelService.addProd(_lb).subscribe(
@@ -661,6 +675,35 @@ export class WorctEntryPalComponent implements OnInit {
     
   }
 
+  onChangeJob() {
+    const controls = this.trForm.controls
+      if (controls.tr_so_job.value != null && controls.tr_so_job.value != "") {
+        this.saleOrderService.getBy({ so_nbr : controls.tr_so_job.value}).subscribe(
+          (res: any) => {
+          console.log(res.data)
+            if (res.data.saleOrder != null) { 
+              this.addressService.getBy({ ad_addr : res.data.saleOrder.so_cust}).subscribe(
+                (resaddr: any) => {
+                  console.log(resaddr.data)
+                  this.address = resaddr.data
+                  
+              })
+            }
+            else {
+              alert("Commande n'existe pas")
+              controls.tr_so_job.setValue(null);
+              document.getElementById("sojob").focus();
+            }  
+        })
+      } else {
+        this.addressService.getBy({ ad_addr : "1000"}).subscribe(
+          (resaddr: any) => {
+            console.log(resaddr.data)
+            this.address = resaddr.data
+            
+        })
+      }  console.log(this.address)
+    }
   //create form
   createForm() {
     this.loadingSubject.next(false);
@@ -680,7 +723,7 @@ export class WorctEntryPalComponent implements OnInit {
       desc:  [{value:"", disabled: true}],
 
       tr_so_job: [this.inventoryTransaction.tr_so_job],
-      
+      emp_shift: [this.inventoryTransaction.tr_addr],
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       });
   }
@@ -699,9 +742,11 @@ export class WorctEntryPalComponent implements OnInit {
         controls.tr_lot.setValue(this.woServer.id);
         controls.tr_nbr.setValue(this.woServer.wo_nbr);
         controls.tr_part.setValue(this.woServer.wo_part);
-        controls.tr_site.setValue(this.woServer.wo_site);
-        controls.tr_loc.setValue(this.woServer.wo_loc);
+        controls.tr_site.setValue(this.woServer.item.pt_site);
+        controls.tr_loc.setValue(this.woServer.item.pt_loc);
+        controls.tr_so_job.setValue(this.woServer.wo_so_job)
         controls.desc.setValue(this.woServer.item.pt_desc1)
+        this.product = this.woServer.item
         this.umd = this.woServer.item.pt_um
         this.qtycart = (this.woServer.item.int03 != null) ? this.woServer.item.int03 : 0
         this.uniquelot = this.woServer.item.pt_lot_ser
@@ -715,14 +760,42 @@ export class WorctEntryPalComponent implements OnInit {
                 loc_loc: this.loc,
           })
           .subscribe((resp: any) => {
-             // console.log(resp.data, resp.data.length)
+              console.log(resp.data, resp.data.length)
               this.rctwostat = resp.data.loc_status
           })
         
         
         }  
         
+        if (this.woServer.wo_so_job != null && this.woServer.wo_so_job != "") {
+          this.saleOrderService.getBy({ so_nbr : this.woServer.wo_so_job}).subscribe(
+            (res: any) => {
+            console.log(res.data)
+              if (res.data.saleOrder != null) { 
+                this.addressService.getBy({ ad_addr : res.data.saleOrder.so_cust}).subscribe(
+                  (resaddr: any) => {
+                    console.log(resaddr.data)
+                    this.address = resaddr.data
+                    
+                })
+              }
+             
+          })
+        } else {
+          this.addressService.getBy({ ad_addr : "1000"}).subscribe(
+            (resaddr: any) => {
+              console.log(resaddr.data)
+              this.address = resaddr.data
+              
+          })
+        }  console.log(this.address)
+        console.log(this.site)
+        this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: 'STDCG' }).subscribe(
+          (resp: any) => {
+            this.sct = resp.data
+            console.log(this.sct)
       
+      });
           }
           else {
 
@@ -734,8 +807,9 @@ export class WorctEntryPalComponent implements OnInit {
         
       
       });
-  }
 
+    
+  }
   //reste form
   reset() {
     this.inventoryTransaction = new InventoryTransaction();
@@ -874,19 +948,36 @@ export class WorctEntryPalComponent implements OnInit {
     for (let i of this.dataset) {
       qtypal = qtypal + Number(i.tr_qty_loc)
     }
-
+   
+    const eff_date = `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+    const effdate  = new Date(eff_date)
+    
+    var year     = effdate.getFullYear();
+    var month    = effdate.getMonth()+1;
+    var day      = effdate.getDate();
+    var days : String
+    var months : String
+    if (day < 9) { days = "0"+ String(day) } else { days =  String(day)}; 
+    if (month < 12) { months = "0"+ String(month) } else { months =  String(month)}; 
+    
     const _lb = new Label();
     _lb.lb_site =controls.tr_site.value
     _lb.lb_loc = controls.tr_loc.value
     _lb.lb_part = controls.tr_part.value
     _lb.lb_nbr = controls.tr_nbr.value
-    _lb.lb_lot ="AAAAAAAAAAA"
+    _lb.lb_lot = (this.uniquelot == "L") ? `${this.product.pt_article}${this.product.pt_break_cat}${this.product.pt_net_wt}/${days}.${months}.${year}`   : null,
     _lb.lb_date = controls.tr_effdate.value
         ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
         : null
     _lb.lb_qty = qtypal
     _lb.lb_ld_status = this.rctwostat
-    _lb.lb_desc = controls.desc.value
+    _lb.lb_desc = this.product.pt_desc2
+    _lb.lb_cust = this.address.ad_addr
+    _lb.lb_addr = this.address.ad_line1
+    _lb.lb_tel = this.address.ad_phone
+    _lb.int01   = this.product.int01
+    _lb.int02   = this.product.int02
+    _lb.lb_rmks = controls.emp_shift.value
 
     let lab = null
 
@@ -965,7 +1056,7 @@ export class WorctEntryPalComponent implements OnInit {
     _tr.tr_so_job = controls.tr_so_job.value
     
     _tr.tr_rmks = controls.tr_rmks.value
-  
+    _tr.tr_addr = controls.emp_shift.value
     console.log("-tr",_tr)
     return _tr
   }
@@ -1030,7 +1121,18 @@ export class WorctEntryPalComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
-    //console.log(this.sct)
+    const controls = this.trForm.controls
+    const eff_date = `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+    const effdate  = new Date(eff_date)
+    
+    var year     = effdate.getFullYear();
+    var month    = effdate.getMonth()+1;
+    var day      = effdate.getDate();
+    var days : String
+    var months : String
+    if (day < 9) { days = "0"+ String(day) } else { days =  String(day)}; 
+    if (month < 12) { months = "0"+ String(month) } else { months =  String(month)}; 
+    
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -1041,7 +1143,7 @@ export class WorctEntryPalComponent implements OnInit {
         tr_price: this.price,
         tr_site: this.site,
         tr_loc: this.loc,
-        tr_serial: (this.uniquelot == "L") ? "AAAAAAAAAAA" : null,
+        tr_serial: (this.uniquelot == "L") ? `${this.product.pt_article}${this.product.pt_break_cat}${this.product.pt_net_wt}/${days}.${months}.${year}`   : null,
         tr_status: this.rctwostat,
         tr_expire: null,
       },
@@ -1145,9 +1247,16 @@ export class WorctEntryPalComponent implements OnInit {
       };
   
       // fill the dataset with your data
-      this.siteService
-        .getAll()
-        .subscribe((response: any) => (this.datasite = response.data));
+      if(this.user.usrd_site == "*") {
+        this.siteService
+          .getAll()
+          .subscribe((response: any) => (this.datasite = response.data));
+      }else {
+        this.siteService
+          .getBy({si_site: this.user.usrd_site})
+          .subscribe((response: any) => (this.datasite = response.data));
+        
+     }
     }
     opensite(contentsite) {
       this.prepareGridsite();
@@ -1703,9 +1812,11 @@ handleSelectedRowsChanged5(e, args) {
      
       controls.tr_nbr.setValue(item.wo_nbr);
       controls.tr_part.setValue(item.wo_part);
-      controls.tr_site.setValue(item.wo_site);
+      controls.tr_so_job.setValue(item.wo_so_job)
+      controls.tr_site.setValue(item.item.pt_site);
       controls.tr_loc.setValue(item.item.pt_loc);
       controls.desc.setValue(item.item.pt_desc1)
+      this.product = item.item
       this.umd = item.item.pt_um
       this.qtycart = (item.item.int03 != null) ? item.item.int03 : 0
       this.uniquelot = item.item.pt_lot_ser
@@ -1719,7 +1830,7 @@ handleSelectedRowsChanged5(e, args) {
               loc_loc: this.loc,
         })
         .subscribe((resp: any) => {
-            //console.log(resp.data, resp.data.length)
+            console.log(resp.data, resp.data.length)
             this.rctwostat = resp.data.loc_status
         })
       
@@ -1729,8 +1840,7 @@ handleSelectedRowsChanged5(e, args) {
       this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
         (resp: any) => {
           this.sct = resp.data
-         // console.log(this.sct)
-          this.price = this.sct.sct_cst_tot
+          console.log(this.sct)
     
     });
         }
@@ -1740,6 +1850,28 @@ handleSelectedRowsChanged5(e, args) {
 
     
   }
+  if (controls.tr_so_job.value != null && controls.tr_so_job.value != "") {
+    this.saleOrderService.getBy({ so_nbr : controls.tr_so_job.value}).subscribe(
+      (res: any) => {
+      console.log(res.data)
+        if (res.data.saleOrder != null) { 
+          this.addressService.getBy({ ad_addr : res.data.saleOrder.so_cust}).subscribe(
+            (resaddr: any) => {
+              console.log(resaddr.data)
+              this.address = resaddr.data
+              
+          })
+        }
+       
+    })
+  } else {
+    this.addressService.getBy({ ad_addr : "1000"}).subscribe(
+      (resaddr: any) => {
+        console.log(resaddr.data)
+        this.address = resaddr.data
+        
+    })
+  }  console.log(this.address)
 }
 
 angularGridReady5(angularGrid: AngularGridInstance) {
