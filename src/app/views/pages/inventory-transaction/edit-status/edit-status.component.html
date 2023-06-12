@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Emplacement'" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="'Modification Information Lot'" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -86,12 +86,21 @@
                     <div class="form-group col-2">
                         <label class="form-group">Lot: *</label>
                         <div class="input-group input-group-sm">
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_serial" (change)="onChangeCode()"
+                            <input type="text" class="form-control form-control-solid"  formControlName="tr_serial_prev" 
                             aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <span class="input-group-text" (click)="openlocdet(contentlocdet)">
                                 <i class="text-dark-50 flaticon2-search"></i> </span>
                         </div>
+                    
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Lot A: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid"  formControlName="tr_serial" 
+                            aria-describedby="basic-addon2">
+                       
                     
                         </div>
                     </div>

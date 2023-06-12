@@ -77,7 +77,7 @@ export class EditRoleComponent implements OnInit {
     this.loadingSubject.next(false)
     this.role = new Role()
     this.roleForm = this.roleF.group({
-        role_code: [{value: this.role.role_code, disabled : false}, Validators.required],
+        role_code: [{value: this.role.role_code, disabled : true}, Validators.required],
         role_name: [{value: this.role.role_name, disabled : true}],
         user_mobile_code: [this.role.user_mobile_code, Validators.required],
         device_id : [this.role.device_id , Validators.required],
