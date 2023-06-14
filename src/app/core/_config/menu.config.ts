@@ -260,22 +260,6 @@ export class MenuConfig {
           ],
         },
         {
-          title: "Gestion des itinéraires",
-          bullet: "dot",
-          icon: "flaticon2-delivery-truck",
-          root: true,
-          submenu: [
-            {
-              title: "Listes des itinéraires",
-              page: "/itinerary/list-itinerary",
-            },
-            {
-              title: "Ajouter un itinéraire",
-              page: "/itinerary/create-new-itinerary",
-            },
-          ],
-        },
-        {
           title: "Gestion des articles",
           bullet: "dot",
           icon: "flaticon2-box-1",
@@ -307,28 +291,6 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Supervision",
-          bullet: "dot",
-          icon: "flaticon-user-settings",
-          root: true,
-          submenu: [
-            {
-              title: "Validation des demandes de chargement",
-              page: "/supervision/validate-charge-demande",
-            },
-            {
-              title: "Validation des demandes de dechargement",
-              page: "/supervision/validate-decharge-demande",
-            },
-            {
-              title: "Transfert demandes de chargement à la livraison",
-              page: "/supervision/transfer-charge-demande-delivery",
-            },
-          ],
-        },
-       
-
         {
           title: "Gestion Stock",
           root: true,
@@ -941,6 +903,42 @@ export class MenuConfig {
           ],
         },
 
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon-user-settings",
+          root: true,
+          submenu: [
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Validation des demandes de dechargement",
+              page: "/supervision/validate-decharge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
+            },
+          ],
+        },
+        {
+          title: "Gestion des itinéraires",
+          bullet: "dot",
+          icon: "flaticon2-delivery-truck",
+          root: true,
+          submenu: [
+            {
+              title: "Listes des itinéraires",
+              page: "/itinerary/list-itinerary",
+            },
+            {
+              title: "Ajouter un itinéraire",
+              page: "/itinerary/create-new-itinerary",
+            },
+          ],
+        },
         {
           title: "Gestion des roles",
           bullet: "dot",
