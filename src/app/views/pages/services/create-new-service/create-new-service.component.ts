@@ -295,50 +295,40 @@ export class CreateNewServiceComponent implements OnInit {
     // this.addItinerary(service)
   }
 
-  // prepareService() : MobileService{
+  prepareService(): MobileService {
+    const controls = this.createServiceForm.controls;
+    const _service = new MobileService();
 
-  //   const controls = this.serviceForm.controls
-  //   const _service = new MobileService()
+    // _service.service_code = controls.service_code.value;
+    // _service.service_creation_date = controls.service_creation_date.value;
+    console.log(controls.service_creation_date.value.year);
+    const year = controls.service_creation_date.value.year;
+    const month = controls.service_creation_date.value.month;
+    const day = controls.service_creation_date.value.day;
+    _service.service_creation_date = `${day}/${month}/${year}`;
+    //_service.service_closing_date = controls.service_closing_date.value
+    _service.role_code = controls.role_code.value;
+    _service.itinerary_code = controls.itinerary_code.value;
+    // _service.service_open = controls.service_open.value
+    return _service;
+  }
 
-  //   _service.service_code = controls.service_code.value
-  //   _service.service_creation_date = controls.service_creation_date.value
-  //   _service.service_closing_date = controls.service_closing_date.value
-  //   _service.role_code = controls.role_code.value
-  //   _service.itinerary_code = controls.itinerary_code.value
-  //   // _service.service_open = controls.service_open.value
-  //   return _service
-
-  // }
-
-  // addItinerary(_service: MobileService){
-  //   console.log(_service)
-  //   this.loadingSubject.next(true)
-  //       this.mobileService.addService(_service).subscribe(
-  //           (reponse) => console.log("response", Response),
-  //           (error) => {
-  //               this.layoutUtilsService.showActionNotification(
-  //                   "Erreur verifier les informations",
-  //                   MessageType.Create,
-  //                   10000,
-  //                   true,
-  //                   true
-  //               )
-  //               this.loadingSubject.next(false)
-  //           },
-  //           () => {
-  //             this.layoutUtilsService.showActionNotification(
-  //               "Ajout avec succès",
-  //               MessageType.Create,
-  //               10000,
-  //               true,
-  //               true
-  //           )
-  //           this.loadingSubject.next(false)
-  //           this.router.navigateByUrl("/service")
-
-  //       }
-  //       )
-  // }
+  addItinerary(_service: MobileService) {
+    console.log(_service);
+    this.loadingSubject.next(true);
+    this.mobileService.addService(_service).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+        this.router.navigateByUrl("/service");
+      }
+    );
+  }
 
   goBack() {
     this.loadingSubject.next(false);
@@ -352,7 +342,10 @@ export class CreateNewServiceComponent implements OnInit {
         const item = this.grid.getDataItem(idx);
         // this.itinerary = this.services[idx].role_itineraries
         this.itinerary = [];
-        this.services[idx].role_itineraries.map((item: any) => {
+        console.log(this.services[idx]);
+        const newItem = [];
+        newItem.push(this.services[idx].role_itinerary);
+        newItem.map((item: any) => {
           this.itinerary.push({ itinerary_code: item.itinerary.itinerary_code, itinerary_name: item.itinerary.itinerary_name });
         });
         console.log(this.itinerary);
@@ -362,7 +355,7 @@ export class CreateNewServiceComponent implements OnInit {
 
     if (this.selectedRow.etat_service === null) {
       this.createForm(this.selectedRow);
-      this.createService();
+      // this.createService();
       this.isNotSelected = false;
       this.isClose = true;
     } else {
@@ -375,7 +368,8 @@ export class CreateNewServiceComponent implements OnInit {
     console.log("close");
   }
   createService() {
-    console.log("create");
+    let service = this.prepareService();
+    this.addItinerary(service);
   }
 
   createForm(row) {
@@ -384,7 +378,7 @@ export class CreateNewServiceComponent implements OnInit {
     this.service = new MobileService();
     this.createServiceForm = this.serviceF.group({
       // service_code: [{value: row.service_code, disabled: true}],
-      service_creation_date: [{ value: this.service.service_closing_date }, Validators.required],
+      service_creation_date: [{ value: this.service.service_creation_date }, Validators.required],
       service_closing_date: [{ value: this.service.service_closing_date }, Validators.required],
       role_code: [row.role_code, Validators.required],
       role_name: [row.role_name, Validators.required],
