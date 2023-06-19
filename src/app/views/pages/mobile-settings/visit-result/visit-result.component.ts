@@ -143,15 +143,15 @@ export class VisitResultComponent implements OnInit {
                 }
                 
               },
-              {
-                  id: "id",
-                  name: "id",
-                  field: "id",
-                  excludeFromHeaderMenu: true,
-                  minWidth: 40,
-                  maxWidth: 60,
-                  sortable:true,
-              },
+              // {
+              //     id: "id",
+              //     name: "id",
+              //     field: "id",
+              //     excludeFromHeaderMenu: true,
+              //     minWidth: 40,
+              //     maxWidth: 60,
+              //     sortable:true,
+              // },
               {
                   id: "visitresult_code",
                   name: "Code du résultat de la visite",
