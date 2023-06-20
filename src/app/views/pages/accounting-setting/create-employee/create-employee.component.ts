@@ -7,6 +7,7 @@ import {
   NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
 // Angular slickgrid
+import { HttpClient } from "@angular/common/http"
 import {
   Column,
   GridOption,
@@ -36,6 +37,9 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import { Employe, EmployeService, JobService , CodeService, SiteService} from "../../../../core/erp"
+import { HttpUtilsService } from "../../../../core/_base/crud"
+import { environment } from "../../../../../environments/environment"
+const API_URL = environment.apiUrl + "/jobs"
 @Component({
   selector: 'kt-create-employee',
   templateUrl: './create-employee.component.html',
@@ -102,6 +106,8 @@ export class CreateEmployeeComponent implements OnInit {
     emp_county: any[] = []
     emp_country: any[] = []
     row_number;
+    httpOptions = this.httpUtils.getHTTPHeaders()
+    leveljob = []
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -114,6 +120,9 @@ export class CreateEmployeeComponent implements OnInit {
       private jobService: JobService,
       private codeService: CodeService,
       private siteService: SiteService,
+      private http: HttpClient,
+      private httpUtils: HttpUtilsService,
+    
       
   ) {
       config.autoClose = true
@@ -192,7 +201,7 @@ initmvGrid() {
     asyncEditorLoading: false,
     editable: true,
     enableAutoResize:true,
-    autoHeight:false,
+    autoHeight:true,
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
@@ -212,6 +221,11 @@ initjbGrid() {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          this.jbangularGrid.gridService.deleteItem(args.dataContext);
+        }
+      },
     
     },
     {
@@ -225,6 +239,21 @@ initjbGrid() {
       editor: {
         model: Editors.text,
       },
+      onCellChange: (e: Event, args: OnEventArgs) => {
+        
+        this.jobService.getLevel({jbd_code: args.dataContext.empj_job }).subscribe((resp:any)=>{
+
+         this.leveljob = resp.data 
+        
+        console.log(resp.data)
+         console.log(this.leveljob)
+        });
+
+         
+       
+       
+      }
+
     },
 
     {
@@ -264,8 +293,15 @@ initjbGrid() {
       filterable: false,
       type: FieldType.string,
       editor: {
+      
+        //collection: this.leveljob,
+      
         model: Editors.text,
+      
+        
       },
+      
+
     },
     
   ];
@@ -275,6 +311,9 @@ initjbGrid() {
     editable: true,
     enableAutoResize:true,
     autoHeight:false,
+   
+    autoEdit: true,
+    autoCommitEdit: true,
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
@@ -1084,6 +1123,15 @@ handleSelectedRowsChanged2(e, args) {
           updateItem.empj_job = item.jb_code
           updateItem.desc = item.jb_desc
           this.jbgridService.updateItem(updateItem);
+          this.jobService.getLevel({jbd_code: item.jb_code }).subscribe((resp:any)=>{
+
+            this.leveljob = resp.data 
+           
+            console.log(resp)
+            console.log(this.leveljob)
+           
+           });
+   
       })
   }
 }

@@ -11,6 +11,8 @@ import { Employe } from "../_models/employe.model"
 
 const API_URL = environment.apiUrl + "/employes"
 const API_URL_EmpTime = environment.apiUrl + "/employe-times"
+const API_URL_EmpSalary = environment.apiUrl + "/employe-salarys"
+
 
 @Injectable()
 export class EmployeService {
@@ -93,5 +95,13 @@ export class EmployeService {
     public addTime(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL_EmpTime, data, { headers: httpHeaders })
+    }
+    public GetSalary(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_EmpTime}/findsalary`, data, { headers: httpHeaders })
+    }
+    public addSalary(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL_EmpSalary, data, { headers: httpHeaders })
     }
 }

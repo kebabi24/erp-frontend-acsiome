@@ -83,6 +83,10 @@ const routes: Routes = [
     component: ListEmpTempComponent,
   },
   {
+    path: "emp-temp",
+    component: EmpTempComponent,
+  },
+  {
     path: "add-report",
     component: AddReportComponent,
   },

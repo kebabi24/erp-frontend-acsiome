@@ -315,6 +315,8 @@ initmvGrid() {
     asyncEditorLoading: false,
     editable: true,
     enableColumnPicker: true,
+    enableAutoResize:true,
+    autoHeight:true,
     enableCellNavigation: true,
     enableRowSelection: true,
   };
@@ -406,6 +408,8 @@ initjbGrid() {
     asyncEditorLoading: false,
     editable: true,
     enableColumnPicker: true,
+    enableAutoResize:true,
+    autoHeight:true,
     enableCellNavigation: true,
     enableRowSelection: true,
   };

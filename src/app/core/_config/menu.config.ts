@@ -758,6 +758,10 @@ export class MenuConfig {
               title: "Liste des pointages",
               page: "/project/list-emp-temp",
             },
+            {
+              title: "Calcule paie",
+              page: "/project/employe-salary",
+            },
           ],
         },
         {

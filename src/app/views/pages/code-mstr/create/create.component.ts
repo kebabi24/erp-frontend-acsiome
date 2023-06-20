@@ -81,18 +81,18 @@ export class CreateComponent implements OnInit {
                 Validators.required,
             ],
             code_desc: [{ value: this.code.code_cmmt, disabled: !this.isExist }],
-            code_chr01: [{ value: this.code.chr01, disabled: !this.isExist }],
-            code_chr02: [{ value: this.code.chr02, disabled: !this.isExist }],
-            code_chr03: [{ value: this.code.chr02, disabled: !this.isExist }],
-            code_chr04: [{ value: this.code.chr02, disabled: !this.isExist }],
-            code_dec01: [{ value: this.code.dec01, disabled: !this.isExist }],
-            code_dec02: [{ value: this.code.dec02, disabled: !this.isExist }],
-            code_dec03: [{ value: this.code.dec02, disabled: !this.isExist }],
-            code_dec04: [{ value: this.code.dec02, disabled: !this.isExist }],
-            code_date01: [{ value: this.code.date01, disabled: !this.isExist }],
-            code_date02: [{ value: this.code.date02, disabled: !this.isExist }],
-            code_bool01: [{ value: this.code.bool01, disabled: !this.isExist }],
-            code_bool02: [{ value: this.code.bool02, disabled: !this.isExist }],
+            chr01: [{ value: this.code.chr01, disabled: !this.isExist }],
+            chr02: [{ value: this.code.chr02, disabled: !this.isExist }],
+            chr03: [{ value: this.code.chr02, disabled: !this.isExist }],
+            chr04: [{ value: this.code.chr02, disabled: !this.isExist }],
+            dec01: [{ value: this.code.dec01, disabled: !this.isExist }],
+            dec02: [{ value: this.code.dec02, disabled: !this.isExist }],
+            dec03: [{ value: this.code.dec02, disabled: !this.isExist }],
+            dec04: [{ value: this.code.dec02, disabled: !this.isExist }],
+            date01: [{ value: this.code.date01, disabled: !this.isExist }],
+            date02: [{ value: this.code.date02, disabled: !this.isExist }],
+            bool01: [{ value: this.code.bool01, disabled: !this.isExist }],
+            bool02: [{ value: this.code.bool02, disabled: !this.isExist }],
         })
     }
     onChangeCode() {
@@ -110,18 +110,18 @@ export class CreateComponent implements OnInit {
                     controls.code_value.enable()
                     controls.code_cmmt.enable()
                     controls.code_desc.enable()
-                    controls.code_chr01.enable()
-                    controls.code_chr02.enable()
-                    controls.code_chr03.enable()
-                    controls.code_chr04.enable()
-                    controls.code_dec01.enable()
-                    controls.code_dec02.enable()
-                    controls.code_dec03.enable()
-                    controls.code_dec04.enable()
-                    controls.code_date01.enable()
-                    controls.code_date02.enable()
-                    controls.code_bool01.enable()
-                    controls.code_bool02.enable()
+                    controls.chr01.enable()
+                    controls.chr02.enable()
+                    controls.chr03.enable()
+                    controls.chr04.enable()
+                    controls.dec01.enable()
+                    controls.dec02.enable()
+                    controls.dec03.enable()
+                    controls.dec04.enable()
+                    controls.date01.enable()
+                    controls.date02.enable()
+                    controls.bool01.enable()
+                    controls.bool02.enable()
                 }
             })
     }
@@ -161,22 +161,22 @@ export class CreateComponent implements OnInit {
         _code.code_cmmt = controls.code_cmmt.value
         _code.code_desc = controls.code_desc.value
         
-        _code.chr01 = controls.code_chr01.value
-        _code.chr02 = controls.code_chr02.value
-        _code.chr03 = controls.code_chr03.value
-        _code.chr04 = controls.code_chr04.value
-        _code.dec01 = controls.code_dec01.value
-        _code.dec02 = controls.code_dec02.value
-        _code.dec03 = controls.code_dec03.value
-        _code.dec04 = controls.code_dec04.value
-        _code.date01 = controls.code_date01.value
-            ? `${controls.code_date01.value.year}/${controls.code_date01.value.month}/${controls.code_date01.value.day}`
+        _code.chr01 = controls.chr01.value
+        _code.chr02 = controls.chr02.value
+        _code.chr03 = controls.chr03.value
+        _code.chr04 = controls.chr04.value
+        _code.dec01 = controls.dec01.value
+        _code.dec02 = controls.dec02.value
+        _code.dec03 = controls.dec03.value
+        _code.dec04 = controls.dec04.value
+        _code.date01 = controls.date01.value
+            ? `${controls.date01.value.year}/${controls.date01.value.month}/${controls.date01.value.day}`
             : null
-        _code.date02 = controls.code_date02.value
-            ? `${controls.code_date02.value.year}/${controls.code_date02.value.month}/${controls.code_date02.value.day}`
+        _code.date02 = controls.date02.value
+            ? `${controls.date02.value.year}/${controls.date02.value.month}/${controls.date02.value.day}`
             : null
-        _code.bool01 = controls.code_bool01.value
-        _code.bool02 = controls.code_bool02.value
+        _code.bool01 = controls.bool01.value
+        _code.bool02 = controls.bool02.value
 
         return _code
     }
