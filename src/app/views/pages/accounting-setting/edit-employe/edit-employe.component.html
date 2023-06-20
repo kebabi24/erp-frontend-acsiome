@@ -430,7 +430,7 @@
                                     <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter </button>
                                 </div>
                                 <div class="row">
-                                    <angular-slickgrid class="col-12"  gridId="plagejbGrid" [columnDefinitions]="jbcolumnDefinitions"
+                                    <angular-slickgrid class="col-12"  gridHeight="300"  gridId="plagejbGrid" [columnDefinitions]="jbcolumnDefinitions"
                                      [gridOptions]="jbgridOptions" [dataset]="jbdataset" (onAngularGridCreated)="jbGridReady($event)">
                                     </angular-slickgrid>
                                 </div>

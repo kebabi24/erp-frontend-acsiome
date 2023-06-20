@@ -39,6 +39,7 @@ import { MatDialog } from "@angular/material/dialog"
 import { Employe, EmployeService, JobService , CodeService, SiteService} from "../../../../core/erp"
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
+import { array } from "@amcharts/amcharts4/core";
 const API_URL = environment.apiUrl + "/jobs"
 @Component({
   selector: 'kt-create-employee',
@@ -107,7 +108,8 @@ export class CreateEmployeeComponent implements OnInit {
     emp_country: any[] = []
     row_number;
     httpOptions = this.httpUtils.getHTTPHeaders()
-    leveljob = []
+    leveljbd = [];
+  leveljob = []
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -201,7 +203,7 @@ initmvGrid() {
     asyncEditorLoading: false,
     editable: true,
     enableAutoResize:true,
-    autoHeight:true,
+    autoHeight:false,
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
@@ -245,8 +247,15 @@ initjbGrid() {
 
          this.leveljob = resp.data 
         
-        console.log(resp.data)
-         console.log(this.leveljob)
+       
+         for (let obj of this.leveljob) {
+           let ob = {
+             value : obj.value,
+             label : obj.label
+           }
+           this.leveljbd.push(ob)
+         }
+         
         });
 
          
@@ -293,10 +302,10 @@ initjbGrid() {
       filterable: false,
       type: FieldType.string,
       editor: {
+        model: Editors.singleSelect,
+        collection: this.leveljbd,
       
-        //collection: this.leveljob,
       
-        model: Editors.text,
       
         
       },
@@ -307,13 +316,11 @@ initjbGrid() {
   ];
 
   this.jbgridOptions = {
+   
     asyncEditorLoading: false,
     editable: true,
     enableAutoResize:true,
     autoHeight:false,
-   
-    autoEdit: true,
-    autoCommitEdit: true,
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
@@ -1127,8 +1134,14 @@ handleSelectedRowsChanged2(e, args) {
 
             this.leveljob = resp.data 
            
-            console.log(resp)
-            console.log(this.leveljob)
+      
+            for (let obj of this.leveljob) {
+              let ob = {
+                value : obj.value,
+                label : obj.label
+              }
+              this.leveljbd.push(ob)
+            }
            
            });
    

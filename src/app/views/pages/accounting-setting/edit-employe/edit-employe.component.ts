@@ -108,7 +108,9 @@ export class EditEmployeComponent implements OnInit {
   jbgridOptions: GridOption;
   jbdataset: any[];
   row_number;
-  mv: any[]
+  mv: any[];
+  leveljbd = [];
+  leveljob = []
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -346,6 +348,11 @@ initjbGrid() {
       formatter: Formatters.deleteIcon,
       minWidth: 30,
       maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          this.jbangularGrid.gridService.deleteItem(args.dataContext);
+        }
+      },
     
     },
     {
@@ -359,6 +366,28 @@ initjbGrid() {
       editor: {
         model: Editors.text,
       },
+      onCellChange: (e: Event, args: OnEventArgs) => {
+        
+        this.jobService.getLevel({jbd_code: args.dataContext.empj_job }).subscribe((resp:any)=>{
+
+         this.leveljob = resp.data 
+        
+      
+         for (let obj of this.leveljob) {
+           let ob = {
+             value : obj.value,
+             label : obj.label
+           }
+           this.leveljbd.push(ob)
+         }
+         
+        });
+
+         
+       
+       
+      }
+
     },
 
     {
@@ -398,7 +427,12 @@ initjbGrid() {
       filterable: false,
       type: FieldType.string,
       editor: {
-        model: Editors.text,
+        model: Editors.singleSelect,
+        collection: this.leveljbd,
+      
+      
+      
+        
       },
     },
     
@@ -1079,6 +1113,20 @@ handleSelectedRowsChanged2(e, args) {
           updateItem.empj_job = item.jb_code
           updateItem.desc = item.jb_desc
           this.jbgridService.updateItem(updateItem);
+          this.jobService.getLevel({jbd_code: item.jb_code }).subscribe((resp:any)=>{
+
+            this.leveljob = resp.data 
+           
+           
+            for (let obj of this.leveljob) {
+              let ob = {
+                value : obj.value,
+                label : obj.label
+              }
+              this.leveljbd.push(ob)
+            }
+           
+           });
       })
   }
 }
