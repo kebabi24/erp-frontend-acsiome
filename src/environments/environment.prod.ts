@@ -5,5 +5,5 @@ export const environment = {
     apiUrl: "http://localhost:3001/api/v1",
    // apiUrl: "http://192.168.1.253:3001/api/v1",
   //edelweiss apiUrl: "http://10.10.130.9:3001/api/v1",
-   //willda apiUrl: "http://192.168.1.253:3001/api/v1",
+   //willda apiUrl: "http://192.168.1.252:3001/api/v1",
 };

@@ -52,7 +52,7 @@ import { QuoteService, UsersService, ItemService, CodeService, TaxeService, Sale
          SaleShiperService,CustomerService,SequenceService, SiteService,LocationService, MesureService,
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
-         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService} from '../../../core/erp';
+         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService} from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -73,6 +73,10 @@ import { ListCaisseComponent } from './list-caisse/list-caisse.component';
 import { ListSiteCaComponent } from './list-site-ca/list-site-ca.component';
 import { ListInvoiceMobComponent } from './list-invoice-mob/list-invoice-mob.component';
 import { ListSoEditComponent } from './list-so-edit/list-so-edit.component';
+import { ListInvoicesComponent } from './list-invoices/list-invoices.component';
+import { ListPaiementMobComponent } from './list-paiement-mob/list-paiement-mob.component';
+import { ListVisitMobComponent } from './list-visit-mob/list-visit-mob.component';
+
 
 const routes: Routes = [
     {
@@ -162,15 +166,29 @@ const routes: Routes = [
             path: "list-site-ca",
             component: ListSiteCaComponent,
           },
-
-
+          {
+            path: "list-invoice-mob",
+            component: ListInvoiceMobComponent,
+          },
+          {
+            path: "list-invoices",
+            component: ListInvoicesComponent,
+          },
+          {
+            path: "list-paiement-mob",
+            component: ListPaiementMobComponent,
+          },
+          {
+            path: "list-visit-mob",
+            component: ListVisitMobComponent,
+          },
           
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -232,6 +250,7 @@ const routes: Routes = [
         InvoiceOrderTempService,
         PosCategoryService,
         PsService,
+        MobileSettingsService
     ],
 
     entryComponents: [

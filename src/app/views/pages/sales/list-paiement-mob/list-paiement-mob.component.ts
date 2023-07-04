@@ -67,12 +67,11 @@ import { HttpClient } from "@angular/common/http"
 const API_URL = environment.apiUrl + "/users-mobile"
 
 @Component({
-  selector: 'kt-list-invoice-mob',
-  templateUrl: './list-invoice-mob.component.html',
-  styleUrls: ['./list-invoice-mob.component.scss']
+  selector: 'kt-list-paiement-mob',
+  templateUrl: './list-paiement-mob.component.html',
+  styleUrls: ['./list-paiement-mob.component.scss']
 })
-export class ListInvoiceMobComponent implements OnInit {
-
+export class ListPaiementMobComponent implements OnInit {
   soForm: FormGroup;
   totForm: FormGroup;
   hasFormErrors = false;
@@ -165,7 +164,6 @@ export class ListInvoiceMobComponent implements OnInit {
     console.log(this.user)
     this.createForm();
     this.initmvGrid();
-    this.initGrid();
     this.solist();
    
   }
@@ -210,11 +208,7 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'site',
           formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
           ],
             aggregateCollapsed: false,
             collapsed: false,
@@ -222,8 +216,33 @@ export class ListInvoiceMobComponent implements OnInit {
 
       }, 
       {
-        id: "period_active_date",
+        id: "the_date",
         name: "Date",
+        field: "the_date",
+        sortable: true,
+        width: 50,
+        type: FieldType.date,
+        filterable: true,
+        filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
+        grouping: {
+          getter: 'the_date',
+          formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('amount'),
+         ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "period_active_date",
+        name: "Date Effet",
         field: "period_active_date",
         sortable: true,
         width: 50,
@@ -239,12 +258,8 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'period_active_date',
           formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
-        ],
+         ],
           aggregateCollapsed: false,
           collapsed: false,
         }
@@ -263,12 +278,8 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'role_code',
           formatter: (g) => `Role: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
-        ],
+         ],
           aggregateCollapsed: false,
           collapsed: false,
         }
@@ -287,11 +298,7 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'itinerary_code',
           formatter: (g) => `Itineraire: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -311,11 +318,7 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'customer_code',
           formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -335,11 +338,7 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'service_code',
           formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -355,7 +354,16 @@ export class ListInvoiceMobComponent implements OnInit {
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-    
+        grouping: {
+          getter: 'invoice_code',
+          formatter: (g) => `Facture: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
       },
       
       {
@@ -377,42 +385,16 @@ export class ListInvoiceMobComponent implements OnInit {
            model: Filters.multipleSelect,
           
          },
-      }, 
-      {
-        id: "closed",
-        name: "Clos",
-        field: "closed",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.text,
-        formatter: Formatters.checkmark,
-        filter: {
-
-              
-           collection: [{value: true , label: "OUI"}, {value: false , label: "NON"}],
-          //collectionAsync:  this.http.get(`${API_URL}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-       
-       
-         
-           model: Filters.multipleSelect,
-          
-         },
-        grouping: {
-          getter: 'closed',
-          formatter: (g) => `Clos: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+         grouping: {
+          getter: 'payment_term_code',
+          formatter: (g) => `Methode Paiement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
         ],
           aggregateCollapsed: false,
           collapsed: false,
         }
-       
-      },
+      }, 
       {
         id: "canceled",
         name: "Annulée",
@@ -435,11 +417,7 @@ export class ListInvoiceMobComponent implements OnInit {
           getter: 'canceled',
           formatter: (g) => `Annulée: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
-          new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -447,55 +425,9 @@ export class ListInvoiceMobComponent implements OnInit {
        
       },
       {
-        id: "horstax_amount",
-        name: "Montant HT",
-        field: "horstax_amount",
-        sortable: true,
-        width: 50,
-        filterable: true,
-       
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-
-      },
-      {
-        id: "tax_amount",
-        name: "TVA",
-        field: "tax_amount",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-      },
-      {
-        id: "stamp_amount",
-        name: "Timbre",
-        field: "stamp_amount",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-      },
-      {
         id: "amount",
         name: "Montant TTC",
         field: "amount",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-      },
-      {
-        id: "due_amount",
-        name: "Montant Appliqué",
-        field: "due_amount",
         sortable: true,
         width: 50,
         filterable: true,
@@ -514,29 +446,30 @@ export class ListInvoiceMobComponent implements OnInit {
         enableFiltering: true,
         enableAutoResize: true,
         enableSorting: true,
+        autoHeight:true,
         exportOptions: {
           sanitizeDataExport: true
         },
        
         //enableRowSelection: true,
-        enableCellNavigation: true,
-        enableCheckboxSelector: true,
-        checkboxSelector: {
-          // optionally change the column index position of the icon (defaults to 0)
-          // columnIndexPosition: 1,
+      //   enableCellNavigation: true,
+      //   enableCheckboxSelector: true,
+      //   checkboxSelector: {
+      //     // optionally change the column index position of the icon (defaults to 0)
+      //     // columnIndexPosition: 1,
   
-          // remove the unnecessary "Select All" checkbox in header when in single selection mode
-          hideSelectAllCheckbox: true,
+      //     // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      //     hideSelectAllCheckbox: true,
   
-          // you can override the logic for showing (or not) the expand icon
-          // for example, display the expand icon only on every 2nd row
-          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
-        },
-       // multiSelect: false,
-        rowSelectionOptions: {
-          // True (Single Selection), False (Multiple Selections)
-          selectActiveRow: true,
-        },
+      //     // you can override the logic for showing (or not) the expand icon
+      //     // for example, display the expand icon only on every 2nd row
+      //     // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      //   },
+      //  // multiSelect: false,
+      //   rowSelectionOptions: {
+      //     // True (Single Selection), False (Multiple Selections)
+      //     selectActiveRow: true,
+      //   },
        
      
         gridMenu: {
@@ -571,7 +504,7 @@ export class ListInvoiceMobComponent implements OnInit {
     console.log(date,controls.calc_date.value,date1)
     const site = controls.site.value
     let obj= {date,date1,site}
-    this.mobileSettingsService.getAllInvoices(obj).subscribe(
+    this.mobileSettingsService.getAllPayment(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -597,7 +530,7 @@ export class ListInvoiceMobComponent implements OnInit {
     : null;
     const site = controls.site.value
     let obj= {date,date1,site}
-    this.mobileSettingsService.getAllInvoices(obj).subscribe(
+    this.mobileSettingsService.getAllPayment(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -702,35 +635,7 @@ export class ListInvoiceMobComponent implements OnInit {
     }
     this.mvgrid.invalidate(); // invalidate all rows and re-render
   }
-  handleSelectedRowsChanged(e, args) {
-    const controls = this.soForm.controls;
-      if (Array.isArray(args.rows) && this.mvgrid) {
-      args.rows.map((idx) => {
-        const item = this.mvgrid.getDataItem(idx);
-        console.log(item);
-        
-       const invoicecode = item.invoice_code 
-       
-    let obj= {invoicecode}
-this.dataset= []
-       
-       this.mobileSettingsService.getAllInvoicesLine(obj).subscribe(
-        (respo: any) => {   
-          this.dataset = respo.data
-         console.log(this.dataset)
-         this.dataView.setItems(this.dataset);
-          
-           },
-        (error) => {
-            this.dataset = []
-        },
-        () => {}
-    )
-     
-  });
 
-    }
-  }
    
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.soForm.controls;
@@ -828,203 +733,4 @@ this.dataset= []
   }
 
 
-
-  initGrid() {
-    this.columnDefinitions = [
-  /*    {
-        id: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.deleteIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.mvangularGrid.gridService.deleteItem(args.dataContext);
-          }
-        },
-      },*/
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-      
-        minWidth: 30,
-        maxWidth: 30,
-        
-      },
-      {
-        id: "product_code",
-        name: "Code Produit",
-        field: "product_code",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.text,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-        grouping: {
-          getter: 'site',
-          formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-            new Aggregators.Sum('quantity'),
-            new Aggregators.Sum('Montant')
-          ],
-            aggregateCollapsed: false,
-            collapsed: false,
-          }
-
-      }, 
-      {
-        id: "description",
-        name: "Designation",
-        field: "description",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.text,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-        grouping: {
-          getter: 'description',
-          formatter: (g) => `Designation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-            new Aggregators.Sum('quantity'),
-            new Aggregators.Sum('Montant')
-          ],
-            aggregateCollapsed: false,
-            collapsed: false,
-          }
-
-      }, 
-      
-      {
-        id: "lot",
-        name: "Lot/Serie",
-        field: "lot",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.text,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-        grouping: {
-          getter: 'lot',
-          formatter: (g) => `Lot/Serie: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-            new Aggregators.Sum('quantity'),
-            new Aggregators.Sum('Montant')
-          ],
-            aggregateCollapsed: false,
-            collapsed: false,
-          }
-
-      }, 
-      
-       
-      {
-        id: "quantity",
-        name: "Quantité",
-        field: "quantity",
-        sortable: true,
-        width: 50,
-        filterable: true,
-       
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-
-      },
-      {
-        id: "unit_price",
-        name: "Prix",
-        field: "unit_price",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-      },
-     
-      {
-        id: "Montant",
-        name: "Montant",
-        field: "Montant",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-      },
-     
-      
-    ];
-
-    this.gridOptions = {
-      enableDraggableGrouping: true,
-        createPreHeaderPanel: true,
-        showPreHeaderPanel: true,
-        preHeaderPanelHeight: 40,
-        enableFiltering: true,
-        enableAutoResize: true,
-        autoHeight:true,
-        enableSorting: true,
-        exportOptions: {
-          sanitizeDataExport: true
-        },
-       
-        //enableRowSelection: true,
-        enableCellNavigation: true,
-        
-     
-        gridMenu: {
-          onCommand: (e, args) => {
-            if (args.command === 'toggle-preheader') {
-              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-              this.clearGroupingp();
-            }
-          },
-        },
-        draggableGrouping: {
-          dropPlaceHolderText: 'Drop a column header here to group by the column',
-          // groupIconCssClass: 'fa fa-outdent',
-          deleteIconCssClass: 'fa fa-times',
-          onGroupChanged: (e, args) => this.onGroupChangedp(args),
-          onExtensionRegistered: (extension) => this.draggableGroupingPluginp = extension,
-      
-      },
-
-    }
-    this.dataset = [];
-    
-    
-  }
-  onGroupChangedp(change: { caller?: string; groupColumns: Grouping[] }) {
-    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
-    const caller = change && change.caller || [];
-    const groups = change && change.groupColumns || [];
-
-    if (Array.isArray(this.selectedGroupingFieldsp) && Array.isArray(groups) && groups.length > 0) {
-      // update all Group By select dropdown
-      this.selectedGroupingFieldsp.forEach((g, i) => this.selectedGroupingFieldsp[i] = groups[i] && groups[i].getter || '');
-    } else if (groups.length === 0 && caller === 'remove-group') {
-      this.clearGroupingSelectsp();
-    }
-  }
-  clearGroupingSelectsp() {
-    this.selectedGroupingFieldsp.forEach((g, i) => this.selectedGroupingFieldsp[i] = '');
-  }
-  
-  collapseAllGroupsp() {
-    this.dataView.collapseAllGroupsp();
-  }
-
-  expandAllGroupsp() {
-    this.dataView.expandAllGroupsp();
-  }
-  clearGroupingp() {
-    if (this.draggableGroupingPluginp && this.draggableGroupingPlugin.setDroppedGroupsp) {
-      this.draggableGroupingPluginp.clearDroppedGroupsp();
-    }
-    this.grid.invalidate(); // invalidate all rows and re-render
-  }
 }

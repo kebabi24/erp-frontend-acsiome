@@ -528,8 +528,21 @@ export class MenuConfig {
             },
             {
               title: "Liste des Factures",
-              page: "/sales/invoice-list",
+              page: "/sales/list-invoices",
             },
+            {
+              title: "Liste des Factures DD",
+              page: "/sales/list-invoice-mob",
+            },
+            {
+              title: "Liste des Paiement DD",
+              page: "/sales/list-paiement-mob",
+            },
+            {
+              title: "Liste des Visites",
+              page: "/sales/list-visit-mob",
+            },
+            
           ],
         },
         {
