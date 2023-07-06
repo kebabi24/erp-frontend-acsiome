@@ -38,6 +38,10 @@ export class WorkRoutingService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
     }
+    public getByOne(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })
+    }
     public getAllDistinct() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/distinct', { headers: httpHeaders })
@@ -51,5 +55,14 @@ export class WorkRoutingService {
     public delete(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
+    public CalcRoCost(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/calcrocost`,data, { headers: httpHeaders })
+    }
+    
+    public AddRoCost(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/addrocost`,data, { headers: httpHeaders })
     }
 }

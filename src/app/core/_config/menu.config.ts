@@ -642,10 +642,6 @@ export class MenuConfig {
               page: "/manufacturing/create-order",
             },
             {
-              title: "Cloture OF",
-              page: "/manufacturing/edit-wo",
-            },
-            {
               title: "List des OFs",
               page: "/manufacturing/list-wo",
             },
@@ -654,40 +650,8 @@ export class MenuConfig {
               page: "/manufacturing/launch-order",
             },
             {
-              title: "Maint Centre de Charge ",
-              page: "/manufacturing/create-work-center",
-            },
-            {
-              title: "List des Centres de Charges",
-              page: "/manufacturing/list-work-center",
-            },
-            {
-              title: "Maint des gammes",
-              page: "/manufacturing/create-gamme",
-            },
-            {
-              title: "Maint des Code Causes",
-              page: "/manufacturing/create-rsn",
-            },
-            {
-              title: "List des Codes Cause",
-              page: "/manufacturing/list-rsn",
-            },
-            {
               title: "Déclaration Operation",
               page: "/manufacturing/create-op",
-            },
-            {
-              title: "Maint Code Nomenclature",
-              page: "/manufacturing/create-nomenclature",
-            },
-            {
-              title: "Maint des Nomenclature",
-              page: "/manufacturing/create-ps",
-            },
-            {
-              title: "Liste des Nomenclature",
-              page: "/manufacturing/list-ps",
             },
             {
               title: "Broyage",
@@ -705,10 +669,13 @@ export class MenuConfig {
               title: "Déclaration Consomation",
               page: "/manufacturing/woiss-entry",
             },
+            
+            
             {
-              title: "Affectation Nomenclature",
-              page: "/manufacturing/affect-bom",
+              title: "Cloture OF",
+              page: "/manufacturing/edit-wo",
             },
+              
           ],
         },
         {
@@ -1118,6 +1085,61 @@ export class MenuConfig {
                 {
                   title: "List des Status Stock",
                   page: "/inventory-settings/list-status",
+                },
+              ],
+            },
+            {
+              title: "Paramétrage de production",
+              icon: "flaticon2-settings",
+              submenu: [
+            
+                {
+                  title: "Maint Code Nomenclature",
+                  page: "/manufacturing/create-nomenclature",
+                },
+                {
+                  title: "Maint des Nomenclature",
+                  page: "/manufacturing/create-ps",
+                },
+                {
+                  title: "Liste des Nomenclature",
+                  page: "/manufacturing/list-ps",
+                },
+                {
+                  title: "Affectation Nomenclature",
+                  page: "/manufacturing/affect-bom",
+                },
+                {
+                  title: "Calcul coût des Nomenclatures",
+                  page: "/manufacturing/bom-cost",
+                },
+                {
+                  title: "Maint Centre de Charge ",
+                  page: "/manufacturing/create-work-center",
+                },
+                {
+                  title: "List des Centres de Charges",
+                  page: "/manufacturing/list-work-center",
+                },
+                {
+                  title: "Maint des gammes",
+                  page: "/manufacturing/create-gamme",
+                },
+                {
+                  title: "List des Gammes",
+                  page: "/manufacturing/list-gamme",
+                },
+                {
+                  title: "Calcul coût des gammes",
+                  page: "/manufacturing/ro-cost",
+                },
+                {
+                  title: "Maint des Code Causes",
+                  page: "/manufacturing/create-rsn",
+                },
+                {
+                  title: "List des Codes Cause",
+                  page: "/manufacturing/list-rsn",
                 },
               ],
             },

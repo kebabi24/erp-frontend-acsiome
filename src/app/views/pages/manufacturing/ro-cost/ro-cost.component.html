@@ -1,0 +1,152 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Ajouter Une Gamme" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        
+        <div class="example-preview">
+            <form class="form" [formGroup]="gammeForm">
+             
+                <div class="row"> 
+
+                    <div class="form-group col-2" >
+                        <label class="form-group">Site: *</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="site" (change)="onChangesite()" id="site"
+                                [className]="gammeForm.controls['site'].errors && (gammeForm.controls['site'].dirty || gammeForm.controls['site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="gammeForm.controls['site'].errors && (gammeForm.controls['site'].dirty || gammeForm.controls['site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Gamme :  </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class='form-control form-control-sm form-control-solid' id="routing1"  formControlName="routing1" (change)="changeRo('routing1')" >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opengamme(contentgamme,'routing1')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">Gamme A :  </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class='form-control form-control-sm form-control-solid' id="routing2"   formControlName="routing2" (change)="changeRo('routing2')" >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opengamme(contentgamme,'routing2')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">Type Coût :</label>
+            
+                        <select 
+                        [className]="gammeForm.controls['type'].errors && (gammeForm.controls['type'].dirty || gammeForm.controls['type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                          
+                       
+                        formControlName="type"  id="type" >
+                        
+                         
+                          <option value="STD-CG">STD-CG</option>
+                          <option value="STD-CR">STD-CR</option>
+                          
+                          
+                        </select>
+                        <div *ngIf="gammeForm.controls['type'].errors && (gammeForm.controls['type'].dirty || gammeForm.controls['type'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                        
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">Valider: *</label>
+                        <div class="input-group input-group-sm">
+    
+                        <button type="button"  (click)="calculatecost()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
+                        </div>
+                    </div>  
+                </div>
+                      
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plageGrid"  
+                          [columnDefinitions]="columnDefinitions"
+                          [gridOptions]="gridOptions"
+                          [dataset]="dataset" 
+                          (onAngularGridCreated)="GridReady($event)">
+                    </angular-slickgrid>
+                </div>
+                 
+                           
+            </form>
+        </div>    
+
+
+    </kt-portlet-body>
+    <div>
+        <ng-template #contentgamme let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Gamme </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionsgamme"
+                        (onAngularGridCreated)="angularGridReadygamme($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedgamme($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsgamme" [dataset]="gammes">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+
+    <div>
+        <ng-template #contentsite let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choisir Site </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
+                        [columnDefinitions]="columnDefinitionssite"
+                        (onAngularGridCreated)="angularGridReadysite($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionssite" [dataset]="datasite">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+        <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
+            modal</button>
+    </div>
+</kt-portlet>
