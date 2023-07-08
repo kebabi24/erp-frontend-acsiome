@@ -21,9 +21,9 @@ export class FraisService {
     ) {}
 
     // CREATE
-    public add(frais: Frais) {
+    public add(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, frais, { headers: httpHeaders })
+        return this.http.post(API_URL, data, { headers: httpHeaders })
     }
     // READ 
     public getAll() {
@@ -52,5 +52,8 @@ export class FraisService {
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
     }
 
-    
+    public getByAll(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findAll`,data, { headers: httpHeaders })
+    }
 }
