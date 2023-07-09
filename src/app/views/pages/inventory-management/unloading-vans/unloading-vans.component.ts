@@ -33,7 +33,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { InventoryManagementService,UnloadRequestService, printInventory } from "../../../../core/erp"
+import { InventoryManagementService,InventoryTransactionService,LocationService,RoleService,UnloadRequestService } from "../../../../core/erp"
 
 @Component({
   selector: 'kt-unloading-vans',
@@ -50,6 +50,7 @@ export class UnloadingVansComponent implements OnInit {
   loading$: Observable<boolean>
 
   role_code : any
+  role : any 
   unload_request_code : any
   roles: any[] = []
   unloadRequests: any[] = []
@@ -79,6 +80,8 @@ export class UnloadingVansComponent implements OnInit {
   dataset: any[];
 
   showSpinner : Boolean =  false;
+
+  locData : any ;
   
 
 
@@ -90,8 +93,11 @@ export class UnloadingVansComponent implements OnInit {
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private inventoryManagementService: InventoryManagementService,
+      private inventoryTransactionService: InventoryTransactionService,
       private unloadRequestService: UnloadRequestService,
-      private modalService: NgbModal
+      private roleService: RoleService,
+      private modalService: NgbModal,
+      private locationService: LocationService
   ) {
       config.autoClose = true
   }
@@ -127,11 +133,63 @@ export class UnloadingVansComponent implements OnInit {
   }
   // save data
   onSubmit() {
+    let nlot = this.unload_request_code
+    let it ={
+      tr_site : this.loadRequest.role_site,
+      tr_loc : this.role.role_loc, // loc from , for unload : loc 
+      tr_ref_site : this.loadRequest.role_site, 
+      tr_ref_loc : this.role.role_loc_from, // loc , for unload : loc from
+      tr_effdate : new Date(),
+      tr_nbr : nlot,
+    }
+
+    this.getLdStatus(this.loadRequest.role_site, this.role.role_loc_from)
+
+    // the data in comments is not available 
+    let details = [] , i = 1 ; 
+    this.unloadRequestData.forEach(product => {
+      details.push({
+        tr_line : i,
+        tr_part : product.product_code,
+        tr_serial : product.lot,
+        tr_qty_loc : product.qt_effected, 
+        tr_um : product.pt_um,
+         tr_status : this.locData,
+         tr_expire : product.date_expiration,
+        tr_um_conv : 1, 
+        tr_ref : null
+      })
+      i++
+    });
+
 
     this.unloadRequestService.updateUnloadRequestStatus20(this.unload_request_code, this.unloadRequestData).subscribe(
 
       (response: any) => {
-        console.log(response)
+        // addTr
+        // this.inventoryTransactionService.addTr({nlot , it ,details}).subscribe(
+
+        //   (response: any) => {
+        //     console.log(response)
+        //   },
+        //   (error) => {
+        //     // this.loadRequestData = []
+        //     console.log(error)
+        //   },
+        //   () => {
+        //     this.layoutUtilsService.showActionNotification(
+        //         "Load Request Details Updated",
+        //         MessageType.Create,
+        //         10000,
+        //         true,
+        //         true
+        //     )
+        //     this.loadingSubject.next(false)
+        //     // this.router.navigateByUrl("/customers-mobile/cluster-create")
+        // }
+        // ) 
+
+
         this.unloadRequestData = []
         this.unload_request_code = ""
         this.role_code = ""
@@ -226,6 +284,31 @@ export class UnloadingVansComponent implements OnInit {
 
   onSelectRole(role_code){
     this.prepareUnloadRequests(role_code)
+    this.roleService.getByOne({role_code : role_code}).subscribe(
+
+      (response: any) => {
+        this.role = response.data
+     
+      },
+      (error) => {
+       console.log("error")
+      },
+      () => {}
+  )
+ }
+
+ getLdStatus(site , loc_ref){
+  this.locationService.getByOne({loc_site : site , loc_loc : loc_ref }).subscribe(
+
+    (response: any) => {
+      this.locData = response.data.loc_status
+   
+    },
+    (error) => {
+     console.log("error")
+    },
+    () => {}
+)
  }
 
  

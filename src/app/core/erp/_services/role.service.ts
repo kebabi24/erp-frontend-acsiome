@@ -14,6 +14,8 @@ import { RoleItinerary } from '../_models/role-itinerary.model'
 const API_URL_ROLE = environment.apiUrl + "/roles"
 const API_URL_USER = environment.apiUrl + "/users-mobile"
 const API_ROLE_ITINERARY = environment.apiUrl + "/role-itinerary"
+const GET_LOCAIONS = environment.apiUrl + "/locations/"
+const GET_SITES = environment.apiUrl + "/sites/"
 
 
 @Injectable()
@@ -83,5 +85,13 @@ export class RoleService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_ROLE}/findone`,data, { headers: httpHeaders })   
     }
-    
+
+    public getAllLocations() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(GET_LOCAIONS, { headers: httpHeaders })
+    }
+    public getAllSites() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(GET_SITES, { headers: httpHeaders })
+    }
 }

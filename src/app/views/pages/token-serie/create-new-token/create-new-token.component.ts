@@ -218,9 +218,9 @@ export class CreateNewTokenComponent implements OnInit {
                   editor: {model: Editors.text}
               },
               {
-                id: "service_next_number ",
+                id: "service_next_number",
                 name: "Numéro suivant",
-                field: "service_next_number ",
+                field: "service_next_number",
                 sortable: true,
                 minWidth: 100,
                 maxWidth: 300,
@@ -318,6 +318,74 @@ export class CreateNewTokenComponent implements OnInit {
                 id: "inventory_next_number",
                 name: "Numéro suivant",
                 field: "inventory_next_number",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.integer, 
+                editor: {model: Editors.integer}
+              },
+              {
+                id: "invoice_prefix",
+                name: "Invoice préfixe",
+                field: "invoice_prefix",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.string, 
+                editor: {model: Editors.text}
+              },
+              {
+                id: "invoice_next_number",
+                name: "Numéro suivant",
+                field: "invoice_next_number",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.integer, 
+                editor: {model: Editors.integer}
+              },
+
+              {
+                id: "payment_prefix",
+                name: "Payment préfixe",
+                field: "payment_prefix",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.string, 
+                editor: {model: Editors.text}
+              },
+              {
+                id: "payment_next_number",
+                name: "Numéro suivant",
+                field: "payment_next_number",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.integer, 
+                editor: {model: Editors.integer}
+              },
+
+              {
+                id: "unload_request_prefix",
+                name: "Unload préfixe",
+                field: "unload_request_prefix",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.string, 
+                editor: {model: Editors.text}
+              },
+              {
+                id: "unload_request_next_number",
+                name: "Numéro suivant",
+                field: "unload_request_next_number",
                 sortable: true,
                 minWidth: 100,
                 maxWidth: 300,
