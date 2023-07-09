@@ -45,6 +45,7 @@ import {
   SiteService,
   InventoryStatusService,
   LocationDetailService,
+  CostSimulationService
 } from "../../../../core/erp";
 
 @Component({
@@ -95,6 +96,7 @@ export class EditStatusRefComponent implements OnInit {
     row_number;
     error = false;
     dateexpire: String;
+    sct;
     lddet: any
   constructor(
       config: NgbDropdownConfig,
@@ -108,6 +110,7 @@ export class EditStatusRefComponent implements OnInit {
       private inventoryStatusService: InventoryStatusService,
       private itemService: ItemService,
       private locationDetailService: LocationDetailService,      
+      private sctService: CostSimulationService,
       private modalService: NgbModal,
       private inventoryTransactionService: InventoryTransactionService,
   ) {
@@ -124,54 +127,18 @@ export class EditStatusRefComponent implements OnInit {
       this.loadingSubject.next(false)
       this.inventoryTransaction = new InventoryTransaction()
       this.statusForm = this.statusFB.group({
-          tr_site: [this.inventoryTransaction.tr_site, Validators.required],
-          tr_loc: [this.inventoryTransaction.tr_loc, Validators.required],
-          tr_part: [this.inventoryTransaction.tr_part, Validators.required],
-          tr_serial: [this.inventoryTransaction.tr_serial],
-          
-          tr_status: [{ value: this.inventoryTransaction.tr_status,disabled: !this.isExist }, Validators.required],
-          tr_expire: [{ value: this.inventoryTransaction.tr_expire,disabled: !this.isExist }],
+          ref: [null],
+          tr_site: [{value:this.inventoryTransaction.tr_site, disabled: true}, Validators.required],
+          tr_loc: [{value:this.inventoryTransaction.tr_loc, disabled: true},Validators.required],
+          tr_part: [{value:this.inventoryTransaction.tr_part,disabled: true}, Validators.required],
+          tr_serial_prev: [{value:this.inventoryTransaction.tr_serial, disabled:true}],
+          tr_serial: [this.inventoryTransaction.tr_serial], 
+          tr_status: [this.inventoryTransaction.tr_status , Validators.required],
+          tr_expire: [this.inventoryTransaction.tr_expire],
           
         })
   }
 
-  onChangeCode() {
-      const controls = this.statusForm.controls
-       this.dateexpire = ""
-      this.locationDetailService
-          .getBy({ ld_site:  controls.tr_site.value , ld_loc: controls.tr_loc.value  , ld_part:  controls.tr_part.value, ld_lot: controls.tr_serial.value })
-          .subscribe((response: any) => {
-            this.lddet = response.data[0]
-            console.log(response.data[0].ld_status)
-            
-              if (response.data.length) {
-                  console.log(response.data.length)
-                  controls.tr_status.enable()
-                  controls.tr_expire.enable()
-                  controls.tr_status.setValue(response.data[0].ld_status || "");
-                  
-                  
-                
-                if  (response.data[0].ld_expire != null) 
-                { const d = new Date(response.data[0].ld_expire)
-                  d.setDate(d.getDate() )
-                    controls.tr_expire.setValue({
-                      year: d.getFullYear(),
-                      month: d.getMonth()+1,
-                      day: d.getDate()
-                    }|| null); 
-                } else {
-
-                  controls.tr_expire.setValue(null);
-                }            
-
-
-                } else {
-                  this.isExist = true
-                 
-              }
-       })
-    }
   //reste form
   reset() {
       this.inventoryTransaction = new InventoryTransaction()
@@ -209,8 +176,9 @@ console.log( controls.tr_serial.value)
       _it.tr_status = controls.tr_status.value
       _it.tr_part = controls.tr_part.value
       _it.tr_type = "ISS-CHL"
-    
+      _it.tr_ref  = controls.ref.value
       _it.tr_serial = controls.tr_serial.value
+      _it.tr_vend_lot = controls.tr_serial_prev.value
       _it.tr_expire = controls.tr_expire.value
       ? `${controls.tr_expire.value.year}/${controls.tr_expire.value.month}/${controls.tr_expire.value.day}`
       : null
@@ -224,7 +192,7 @@ console.log( controls.tr_serial.value)
    */
   addIt(_it: InventoryTransaction) {
       this.loadingSubject.next(true)
-      this.inventoryTransactionService.addIssChl(_it).subscribe(
+      this.inventoryTransactionService.addIssChlRef(_it).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
               this.layoutUtilsService.showActionNotification(
@@ -918,4 +886,81 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
     this.modalService.open(contentlocdet, { size: "lg" });
   }
 
+  onChangePal() {
+    /*kamel palette*/
+    const controls = this.statusForm.controls
+    const ref = controls.ref.value
+    this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
+      (response: any) => {
+        this.lddet = response.data
+        //console.log(this.lddet.ld_qty_oh)
+    if (this.lddet != null) {
+     
+      
+     
+             
+     
+     this.itemService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+      (respopart: any) => {
+        console.log(respopart)
+
+     this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+      (respo: any) => {
+        this.sct = respo.data
+        console.log(this.sct)
+    
+
+    //  this.gridService.addItem(
+    //   {
+    //     id: this.dataset.length + 1,
+    //     tr_line: this.dataset.length + 1,
+    //     tr_part: this.lddet.ld_part,
+    //     cmvid: "",
+    //     desc: respopart.data.pt_desc1,
+    //     tr_qty_loc: this.lddet.ld_qty_oh,
+    //     qty_oh: this.lddet.ld_qty_oh,
+    //     tr_um: respopart.data.pt_um,
+    //     tr_um_conv:1,
+    //     tr_price: this.sct.sct_mtl_tl,
+    //     cmvids: "",
+    //     tr_ref: ref,
+    //     tr_serial: this.lddet.ld_lot,
+    //     tr_status: this.stat,
+    //     tr_expire: this.lddet.ld_expire,
+    //   },
+    //   { position: "bottom" }
+    // );
+ 
+    controls.tr_site.setValue(this.lddet.ld_site)
+    controls.tr_loc.setValue(this.lddet.ld_loc)
+    controls.tr_part.setValue(this.lddet.ld_part)
+    controls.tr_serial_prev.setValue(this.lddet.ld_lot)
+    controls.tr_serial.setValue(this.lddet.ld_lot)
+    controls.tr_status.setValue(this.lddet.ld_status)
+    if(this.lddet.ld_expire != null) {
+    const d = new Date(this.lddet.ld_expire)
+    d.setDate(d.getDate() )
+      controls.tr_expire.setValue({
+        year: d.getFullYear(),
+        month: d.getMonth()+1,
+        day: d.getDate()
+      })
+    } else {
+      controls.tr_expire.setValue(null)
+    }
+     
+})
+  
+})     
+  }
+ 
+    else {
+    alert("Palette Nexiste pas")
+  //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+ 
+controls.ref.setValue(null)
+document.getElementById("ref").focus();
+}
+})
+  }
 }

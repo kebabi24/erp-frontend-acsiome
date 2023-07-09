@@ -51,7 +51,18 @@ export class BomService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
     }
-
+    public getByOne(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })
+    }
     
+    public CalcBomCost(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/calcbomcost`,data, { headers: httpHeaders })
+    }
     
+    public AddBomCost(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/addbomcost`,data, { headers: httpHeaders })
+    }
 }

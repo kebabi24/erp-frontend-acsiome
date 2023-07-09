@@ -9,8 +9,8 @@
   <kt-portlet-body>
     <div class="example-preview">
       <div class="row">
-        <div class="row">
-          <div class="col-6">
+     
+          <div class="col-3">
             <form [formGroup]="itineraryForm" class="form">
               <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
               <div class="row">
@@ -21,7 +21,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="form-group col-6">
+                <div class="form-group col-12">
                   <label class="form-group" id="code">Nom de l'itinéraire :</label>
                   <input type="text" [className]="itineraryForm.controls['itinerary_name'].errors && (itineraryForm.controls['itinerary_name'].dirty || itineraryForm.controls['itinerary_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="itinerary_name" />
                   <div *ngIf="itineraryForm.controls['itinerary_name'].errors && (itineraryForm.controls['itinerary_name'].dirty || itineraryForm.controls['itinerary_name'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
@@ -58,12 +58,12 @@
             <br />
             <br />
           </div>
-          <div class="col-6">
+          <div class="col-9">
             <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
               <agm-marker *ngFor="let mark of customers" [latitude]="mark.latitude" [longitude]="mark.longitude"></agm-marker>
             </agm-map>
           </div>
-        </div>
+       
         <div>
           {{ time | async }}
         </div>

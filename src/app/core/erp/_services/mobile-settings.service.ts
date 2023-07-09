@@ -41,11 +41,25 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/sumbitVisitResultsData/`, {...visitResults,...deleteIds , ...updateData},{ headers: httpHeaders })
     }
+    public   getAllInvoices(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoices/`, data,{ headers: httpHeaders })
+    }
+
+    public   getAllInvoicesLine(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getInvoiceLines/`, data,{ headers: httpHeaders })
+    }
 
     
-
-        
-    
+    public   getAllPayment(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllPayment/`, data,{ headers: httpHeaders })
+    }   
+    public   getAllVisites(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllVisit/`, data,{ headers: httpHeaders })
+    }   
   
 }
 

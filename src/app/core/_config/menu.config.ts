@@ -260,22 +260,6 @@ export class MenuConfig {
           ],
         },
         {
-          title: "Gestion des itinéraires",
-          bullet: "dot",
-          icon: "flaticon2-delivery-truck",
-          root: true,
-          submenu: [
-            {
-              title: "Listes des itinéraires",
-              page: "/itinerary/list-itinerary",
-            },
-            {
-              title: "Ajouter un itinéraire",
-              page: "/itinerary/create-new-itinerary",
-            },
-          ],
-        },
-        {
           title: "Gestion des articles",
           bullet: "dot",
           icon: "flaticon2-box-1",
@@ -307,28 +291,6 @@ export class MenuConfig {
             },
           ],
         },
-        {
-          title: "Supervision",
-          bullet: "dot",
-          icon: "flaticon-user-settings",
-          root: true,
-          submenu: [
-            {
-              title: "Validation des demandes de chargement",
-              page: "/supervision/validate-charge-demande",
-            },
-            {
-              title: "Validation des demandes de dechargement",
-              page: "/supervision/validate-decharge-demande",
-            },
-            {
-              title: "Transfert demandes de chargement à la livraison",
-              page: "/supervision/transfer-charge-demande-delivery",
-            },
-          ],
-        },
-       
-
         {
           title: "Gestion Stock",
           root: true,
@@ -570,8 +532,21 @@ export class MenuConfig {
             },
             {
               title: "Liste des Factures",
-              page: "/sales/invoice-list",
+              page: "/sales/list-invoices",
             },
+            {
+              title: "Liste des Factures DD",
+              page: "/sales/list-invoice-mob",
+            },
+            {
+              title: "Liste des Paiement DD",
+              page: "/sales/list-paiement-mob",
+            },
+            {
+              title: "Liste des Visites",
+              page: "/sales/list-visit-mob",
+            },
+            
           ],
         },
         {
@@ -671,10 +646,6 @@ export class MenuConfig {
               page: "/manufacturing/create-order",
             },
             {
-              title: "Cloture OF",
-              page: "/manufacturing/edit-wo",
-            },
-            {
               title: "List des OFs",
               page: "/manufacturing/list-wo",
             },
@@ -683,40 +654,8 @@ export class MenuConfig {
               page: "/manufacturing/launch-order",
             },
             {
-              title: "Maint Centre de Charge ",
-              page: "/manufacturing/create-work-center",
-            },
-            {
-              title: "List des Centres de Charges",
-              page: "/manufacturing/list-work-center",
-            },
-            {
-              title: "Maint des gammes",
-              page: "/manufacturing/create-gamme",
-            },
-            {
-              title: "Maint des Code Causes",
-              page: "/manufacturing/create-rsn",
-            },
-            {
-              title: "List des Codes Cause",
-              page: "/manufacturing/list-rsn",
-            },
-            {
               title: "Déclaration Operation",
               page: "/manufacturing/create-op",
-            },
-            {
-              title: "Maint Code Nomenclature",
-              page: "/manufacturing/create-nomenclature",
-            },
-            {
-              title: "Maint des Nomenclature",
-              page: "/manufacturing/create-ps",
-            },
-            {
-              title: "Liste des Nomenclature",
-              page: "/manufacturing/list-ps",
             },
             {
               title: "Broyage",
@@ -734,10 +673,13 @@ export class MenuConfig {
               title: "Déclaration Consomation",
               page: "/manufacturing/woiss-entry",
             },
+            
+            
             {
-              title: "Affectation Nomenclature",
-              page: "/manufacturing/affect-bom",
+              title: "Cloture OF",
+              page: "/manufacturing/edit-wo",
             },
+              
           ],
         },
         {
@@ -799,6 +741,10 @@ export class MenuConfig {
             {
               title: "Liste des pointages",
               page: "/project/list-emp-temp",
+            },
+            {
+              title: "Calcule paie",
+              page: "/project/employe-salary",
             },
           ],
         },
@@ -945,6 +891,42 @@ export class MenuConfig {
           ],
         },
 
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon-user-settings",
+          root: true,
+          submenu: [
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Validation des demandes de dechargement",
+              page: "/supervision/validate-decharge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
+            },
+          ],
+        },
+        {
+          title: "Gestion des itinéraires",
+          bullet: "dot",
+          icon: "flaticon2-delivery-truck",
+          root: true,
+          submenu: [
+            {
+              title: "Listes des itinéraires",
+              page: "/itinerary/list-itinerary",
+            },
+            {
+              title: "Ajouter un itinéraire",
+              page: "/itinerary/create-new-itinerary",
+            },
+          ],
+        },
         {
           title: "Gestion des roles",
           bullet: "dot",
@@ -1107,6 +1089,61 @@ export class MenuConfig {
                 {
                   title: "List des Status Stock",
                   page: "/inventory-settings/list-status",
+                },
+              ],
+            },
+            {
+              title: "Paramétrage de production",
+              icon: "flaticon2-settings",
+              submenu: [
+            
+                {
+                  title: "Maint Code Nomenclature",
+                  page: "/manufacturing/create-nomenclature",
+                },
+                {
+                  title: "Maint des Nomenclature",
+                  page: "/manufacturing/create-ps",
+                },
+                {
+                  title: "Liste des Nomenclature",
+                  page: "/manufacturing/list-ps",
+                },
+                {
+                  title: "Affectation Nomenclature",
+                  page: "/manufacturing/affect-bom",
+                },
+                {
+                  title: "Calcul coût des Nomenclatures",
+                  page: "/manufacturing/bom-cost",
+                },
+                {
+                  title: "Maint Centre de Charge ",
+                  page: "/manufacturing/create-work-center",
+                },
+                {
+                  title: "List des Centres de Charges",
+                  page: "/manufacturing/list-work-center",
+                },
+                {
+                  title: "Maint des gammes",
+                  page: "/manufacturing/create-gamme",
+                },
+                {
+                  title: "List des Gammes",
+                  page: "/manufacturing/list-gamme",
+                },
+                {
+                  title: "Calcul coût des gammes",
+                  page: "/manufacturing/ro-cost",
+                },
+                {
+                  title: "Maint des Code Causes",
+                  page: "/manufacturing/create-rsn",
+                },
+                {
+                  title: "List des Codes Cause",
+                  page: "/manufacturing/list-rsn",
                 },
               ],
             },

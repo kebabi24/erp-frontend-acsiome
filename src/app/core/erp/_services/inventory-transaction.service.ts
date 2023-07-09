@@ -53,7 +53,10 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/iss-chl', data, { headers: httpHeaders })
     }
-    
+    public addIssChlRef(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/iss-chlref', data, { headers: httpHeaders })
+    }
     // READ
     public findBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

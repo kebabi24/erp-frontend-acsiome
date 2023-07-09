@@ -500,30 +500,30 @@ export class CreateComponent implements OnInit {
     });
     
     this.sct1 = new CostSimulation();
-    this.sctForm = this.formBuilder.group({
-      sct_mtl_tl: [0],
-      sct_mtl_ll: [0],
-      sct_lbr_tl: [0],
-      sct_lbr_ll: [0],
-      sct_bdn_tl: [0],
-      sct_bdn_ll: [0],
-      sct_ovh_tl: [0],
-      sct_ovh_ll: [0],
-      sct_sub_tl: [0],
-      sct_sub_ll: [0],
-    });
-    this.sctForm1 = this.formBuilder.group({
-      sct_mtl_tl: [0],
-      sct_mtl_ll: [0],
-      sct_lbr_tl: [0],
-      sct_lbr_ll: [0],
-      sct_bdn_tl: [0],
-      sct_bdn_ll: [0],
-      sct_ovh_tl: [0],
-      sct_ovh_ll: [0],
-      sct_sub_tl: [0],
-      sct_sub_ll: [0],
-    });
+    // this.sctForm = this.formBuilder.group({
+    //   sct_mtl_tl: [0],
+    //   sct_mtl_ll: [0],
+    //   sct_lbr_tl: [0],
+    //   sct_lbr_ll: [0],
+    //   sct_bdn_tl: [0],
+    //   sct_bdn_ll: [0],
+    //   sct_ovh_tl: [0],
+    //   sct_ovh_ll: [0],
+    //   sct_sub_tl: [0],
+    //   sct_sub_ll: [0],
+    // });
+    // this.sctForm1 = this.formBuilder.group({
+    //   sct_mtl_tl: [0],
+    //   sct_mtl_ll: [0],
+    //   sct_lbr_tl: [0],
+    //   sct_lbr_ll: [0],
+    //   sct_bdn_tl: [0],
+    //   sct_bdn_ll: [0],
+    //   sct_ovh_tl: [0],
+    //   sct_ovh_ll: [0],
+    //   sct_sub_tl: [0],
+    //   sct_sub_ll: [0],
+    // });
   }
 
 
@@ -885,20 +885,20 @@ export class CreateComponent implements OnInit {
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     
-    _sct.sct_sim = 'STDCG'
-    _sct.sct_part = control1.pt_part.value;
-    _sct.sct_mtl_tl = controls.sct_mtl_tl.value;
-    _sct.sct_mtl_ll = controls.sct_mtl_ll.value;
-    _sct.sct_lbr_tl = controls.sct_lbr_tl.value;
-    _sct.sct_lbr_ll = controls.sct_lbr_ll.value;
-    _sct.sct_bdn_tl = controls.sct_bdn_tl.value;
-    _sct.sct_bdn_ll = controls.sct_bdn_ll.value;
-    _sct.sct_ovh_tl = controls.sct_ovh_tl.value;
-    _sct.sct_ovh_ll = controls.sct_ovh_ll.value;
-    _sct.sct_sub_tl = controls.sct_sub_tl.value;
-    _sct.sct_sub_ll = controls.sct_sub_ll.value;
-    _sct.sct_cst_tot  = (_sct.sct_mtl_tl + _sct.sct_mtl_ll +  _sct.sct_lbr_tl +  _sct.sct_lbr_ll + _sct.sct_bdn_tl + _sct.sct_bdn_ll + _sct.sct_ovh_tl + _sct.sct_ovh_ll + _sct.sct_sub_tl + _sct.sct_sub_ll)
-    _sct.sct_site = control1.pt_site.value;
+    _sct.sct_sim      = 'STDCG'
+    _sct.sct_part     = control1.pt_part.value;
+    _sct.sct_mtl_tl   = 0;
+    _sct.sct_mtl_ll   = 0;
+    _sct.sct_lbr_tl   = 0;
+    _sct.sct_lbr_ll   = 0;
+    _sct.sct_bdn_tl   = 0;
+    _sct.sct_bdn_ll   = 0;
+    _sct.sct_ovh_tl   = 0;
+    _sct.sct_ovh_ll   = 0;
+    _sct.sct_sub_tl   = 0;
+    _sct.sct_sub_ll   = 0;
+    _sct.sct_cst_tot  = 0;
+    _sct.sct_site     = control1.pt_site.value;
 
     return _sct;
   }
@@ -907,20 +907,20 @@ export class CreateComponent implements OnInit {
     const controls = this.sctForm1.controls;
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
-    _sct.sct_sim = 'STDCR'
-    _sct.sct_part = control1.pt_part.value
-    _sct.sct_mtl_tl = controls.sct_mtl_tl.value;
-    _sct.sct_mtl_ll = controls.sct_mtl_ll.value;
-    _sct.sct_lbr_tl = controls.sct_lbr_tl.value;
-    _sct.sct_lbr_ll = controls.sct_lbr_ll.value;
-    _sct.sct_bdn_tl = controls.sct_bdn_tl.value;
-    _sct.sct_bdn_ll = controls.sct_bdn_ll.value;
-    _sct.sct_ovh_tl = controls.sct_ovh_tl.value;
-    _sct.sct_ovh_ll = controls.sct_ovh_ll.value;
-    _sct.sct_sub_tl = controls.sct_sub_tl.value;
-    _sct.sct_sub_ll = controls.sct_sub_ll.value;
-    _sct.sct_cst_tot = (_sct.sct_mtl_tl + _sct.sct_mtl_ll +  _sct.sct_lbr_tl +  _sct.sct_lbr_ll + _sct.sct_bdn_tl + _sct.sct_bdn_ll +  _sct.sct_ovh_tl + _sct.sct_ovh_ll + _sct.sct_sub_tl + _sct.sct_sub_ll)
-    _sct.sct_site = control1.pt_site.value;
+    _sct.sct_sim     = 'STDCR'
+    _sct.sct_part    = control1.pt_part.value
+    _sct.sct_mtl_tl  = 0;
+    _sct.sct_mtl_ll  = 0;
+    _sct.sct_lbr_tl  = 0;
+    _sct.sct_lbr_ll  = 0;
+    _sct.sct_bdn_tl  = 0;
+    _sct.sct_bdn_ll  = 0;
+    _sct.sct_ovh_tl  = 0;
+    _sct.sct_ovh_ll  = 0;
+    _sct.sct_sub_tl  = 0;
+    _sct.sct_sub_ll  = 0;
+    _sct.sct_cst_tot = 0;
+    _sct.sct_site    = control1.pt_site.value;
     return _sct;
   }
 

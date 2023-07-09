@@ -61,7 +61,7 @@
                         <select
                             [className]="frpForm.controls['frp_type_affect'].errors && (frpForm.controls['frp_type_affect'].dirty || frpForm.controls['frp_type_affect'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                             formControlName="frp_type_affect"  id="exampleSelects7">
-                            <option value=""></option>
+                           
                             <option value="Quantite">Quantite</option>
                             <option value="Valeur">Valeur</option>
                             <option value="Manuel">Manuel</option>
@@ -109,7 +109,7 @@
 
                 <div class="row">
                     <angular-slickgrid class="col-12" gridHeight="200" gridId="mGrid3"
-                        [columnDefinitions]="columnDefinitionsfrp" [gridOptions]="gridOptionsfrp" [dataset]="frpdataset"
+                        [columnDefinitions]="columnDefinitionsfrp" [gridOptions]="gridOptionsfrp" [dataset]="cfrpdataset"
                         (onAngularGridCreated)="gridReadyfrp($event)">
                     </angular-slickgrid>
                 </div>

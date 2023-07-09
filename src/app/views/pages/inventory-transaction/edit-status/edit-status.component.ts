@@ -126,7 +126,8 @@ export class EditStatusComponent implements OnInit {
           tr_site: [this.inventoryTransaction.tr_site, Validators.required],
           tr_loc: [this.inventoryTransaction.tr_loc, Validators.required],
           tr_part: [this.inventoryTransaction.tr_part, Validators.required],
-          tr_serial: [this.inventoryTransaction.tr_serial],
+          tr_serial_prev: [{value:this.inventoryTransaction.tr_serial, disabled:true}],
+          tr_serial: [this.inventoryTransaction.tr_serial], 
           
           tr_status: [{ value: this.inventoryTransaction.tr_status,disabled: !this.isExist }, Validators.required],
           tr_expire: [{ value: this.inventoryTransaction.tr_expire,disabled: !this.isExist }],
@@ -210,6 +211,7 @@ console.log( controls.tr_serial.value)
       _it.tr_type = "ISS-CHL"
     
       _it.tr_serial = controls.tr_serial.value
+      _it.tr_vend_lot = controls.tr_serial_prev.value
       _it.tr_expire = controls.tr_expire.value
       ? `${controls.tr_expire.value.year}/${controls.tr_expire.value.month}/${controls.tr_expire.value.day}`
       : null
@@ -760,7 +762,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         controls.tr_status.enable()
         controls.tr_expire.enable()
              
-        controls.tr_serial.setValue(item.ld_lot ); 
+        controls.tr_serial_prev.setValue(item.ld_lot ); 
         controls.tr_status.setValue(item.ld_status ); 
         this.lddet = item
        

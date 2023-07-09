@@ -55,13 +55,16 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import {
   SiteService,
-  LocationService,
-  PosCategoryService,
+  MobileSettingsService,
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import thId from "src/assets/plugins/formvalidation/src/js/validators/id/thId";
+import { HttpUtilsService } from "../../../../core/_base/crud"
+import { environment } from "../../../../../environments/environment"
+import { HttpClient } from "@angular/common/http"
+const API_URL = environment.apiUrl + "/users-mobile"
 
 @Component({
   selector: 'kt-list-invoice-mob',
@@ -80,6 +83,10 @@ export class ListInvoiceMobComponent implements OnInit {
   draggableGroupingPlugin: any;
   
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+
+  draggableGroupingPluginp: any;
+  
+  selectedGroupingFieldsp: Array<string | GroupingGetterFunction> = ['', '', ''];
   // grid options
 
   mvangularGrid: AngularGridInstance;
@@ -90,50 +97,17 @@ export class ListInvoiceMobComponent implements OnInit {
   mvgridOptions: GridOption;
   mvdataset: any[];
 
-  providers: [];
-  columnDefinitions2: Column[] = [];
-  gridOptions2: GridOption = {};
-  gridObj2: any;
-  angularGrid2: AngularGridInstance;
+  
+  angularGrid: AngularGridInstance;
+  grid: any;
+  gridService: GridService;
+  dataView: any;
+  columnDefinitions: Column[];
+  gridOptions: GridOption;
+  dataset: any[];
 
-  users: [];
-  columnDefinitions3: Column[] = [];
-  gridOptions3: GridOption = {};
-  gridObj3: any;
-  angularGrid3: AngularGridInstance;
-
-  requisitions: [];
-  columnDefinitions5: Column[] = [];
-  gridOptions5: GridOption = {};
-  gridObj5: any;
-  angularGrid5: AngularGridInstance;
-
-  items: [];
-  columnDefinitions4: Column[] = [];
-  gridOptions4: GridOption = {};
-  gridObj4: any;
-  angularGrid4: AngularGridInstance;
-
-  ums: [];
-  columnDefinitionsum: Column[] = [];
-  gridOptionsum: GridOption = {};
-  gridObjum: any;
-  angularGridum: AngularGridInstance;
-
-
-  datatax: [];
-  columnDefinitionstax: Column[] = [];
-  gridOptionstax: GridOption = {};
-  gridObjtax: any;
-  angularGridtax: AngularGridInstance;
-
-
-  devises: [];
-  columnDefinitionscurr: Column[] = [];
-  gridOptionscurr: GridOption = {};
-  gridObjcurr: any;
-  angularGridcurr: AngularGridInstance;
-
+  
+  
   datasite: [];
   columnDefinitionssite: Column[] = [];
   gridOptionssite: GridOption = {};
@@ -157,17 +131,19 @@ export class ListInvoiceMobComponent implements OnInit {
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
-   
+    private http: HttpClient,
+    private httpUtils: HttpUtilsService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private modalService: NgbModal,
     private layoutUtilsService: LayoutUtilsService,
     private siteService: SiteService,
-    private posCategoryService: PosCategoryService,
+    private mobileSettingsService: MobileSettingsService,
   ) {
     config.autoClose = true;
-
+    
+  
   }
 
   mvGridReady(angularGrid: AngularGridInstance) {
@@ -176,6 +152,12 @@ export class ListInvoiceMobComponent implements OnInit {
     this.mvgrid = angularGrid.slickGrid;
     this.mvgridService = angularGrid.gridService;
   }
+  GridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.dataView = angularGrid.dataView;
+    this.grid = angularGrid.slickGrid;
+    this.gridService = angularGrid.gridService;
+  }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
@@ -183,6 +165,7 @@ export class ListInvoiceMobComponent implements OnInit {
     console.log(this.user)
     this.createForm();
     this.initmvGrid();
+    this.initGrid();
     this.solist();
    
   }
@@ -203,7 +186,7 @@ export class ListInvoiceMobComponent implements OnInit {
             this.mvangularGrid.gridService.deleteItem(args.dataContext);
           }
         },
-      },
+      },*/
       {
         id: "id",
         name: "id",
@@ -213,7 +196,7 @@ export class ListInvoiceMobComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         
-      },*/
+      },
       {
         id: "site",
         name: "Site",
@@ -221,33 +204,46 @@ export class ListInvoiceMobComponent implements OnInit {
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
         grouping: {
           getter: 'site',
           formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('ord_qty'),
-            new Aggregators.Sum('amt')
+            new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
           ],
             aggregateCollapsed: false,
             collapsed: false,
           }
 
-      },
+      }, 
       {
-        id: "part",
-        name: "Code Produit",
-        field: "part",
+        id: "period_active_date",
+        name: "Date",
+        field: "period_active_date",
         sortable: true,
         width: 50,
+        type: FieldType.date,
         filterable: true,
-        type: FieldType.float,
+        filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
         grouping: {
-          getter: 'part',
-          formatter: (g) => `Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          getter: 'period_active_date',
+          formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -255,19 +251,205 @@ export class ListInvoiceMobComponent implements OnInit {
        
       },
       {
-        id: "desc1",
-        name: "Description",
-        field: "desc1",
+        id: "role_code",
+        name: "Role",
+        field: "role_code",
         sortable: true,
-        width: 80,
+        width: 50,
         filterable: true,
-        type: FieldType.string,
-      
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'role_code',
+          formatter: (g) => `Role: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      }, 
+      {
+        id: "itinerary_code",
+        name: "Itineraire",
+        field: "itinerary_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'itinerary_code',
+          formatter: (g) => `Itineraire: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
       },
       {
-        id: "ord_qty",
-        name: "Qte vendu",
-        field: "ord_qty",
+        id: "customer_code",
+        name: "Code Client",
+        field: "customer_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'customer_code',
+          formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      }, 
+      {
+        id: "service_code",
+        name: "Service",
+        field: "service_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'service_code',
+          formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "invoice_code",
+        name: "Facture",
+        field: "invoice_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+    
+      },
+      
+      {
+        id: "payment_term_code",
+        name: "Type Paiement",
+        field: "payment_term_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {
+
+              
+          // collectionAsync: this.elem,
+          collectionAsync:  this.http.get(`${API_URL}/findterms`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+       
+         
+           model: Filters.multipleSelect,
+          
+         },
+      }, 
+      {
+        id: "closed",
+        name: "Clos",
+        field: "closed",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        formatter: Formatters.checkmark,
+        filter: {
+
+              
+           collection: [{value: true , label: "OUI"}, {value: false , label: "NON"}],
+          //collectionAsync:  this.http.get(`${API_URL}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+       
+         
+           model: Filters.multipleSelect,
+          
+         },
+        grouping: {
+          getter: 'closed',
+          formatter: (g) => `Clos: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "canceled",
+        name: "Annulée",
+        field: "canceled",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        formatter: Formatters.checkmark,
+        filter: {
+
+              
+          collection: [{value: true , label: "OUI"}, {value: false , label: "NON"}],
+        
+        
+          model: Filters.multipleSelect,
+         
+        },
+        grouping: {
+          getter: 'canceled',
+          formatter: (g) => `Annulée: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "horstax_amount",
+        name: "Montant HT",
+        field: "horstax_amount",
         sortable: true,
         width: 50,
         filterable: true,
@@ -278,9 +460,9 @@ export class ListInvoiceMobComponent implements OnInit {
 
       },
       {
-        id: "amt",
-        name: "CA",
-        field: "amt",
+        id: "tax_amount",
+        name: "TVA",
+        field: "tax_amount",
         sortable: true,
         width: 50,
         filterable: true,
@@ -288,106 +470,38 @@ export class ListInvoiceMobComponent implements OnInit {
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
-      
       {
-        id: "parttype",
-        name: "Pain",
-        field: "parttype",
+        id: "stamp_amount",
+        name: "Timbre",
+        field: "stamp_amount",
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.text,
-        grouping: {
-          getter: 'parttype',
-          formatter: (g) => `Pain : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       {
-        id: "group",
-        name: "Viande",
-        field: "group",
+        id: "amount",
+        name: "Montant TTC",
+        field: "amount",
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.text,
-        grouping: {
-          getter: 'group',
-          formatter: (g) => `Viande : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
-      },
-      // {
-      //   id: "size",
-      //   name: "Viande",
-      //   field: "size",
-      //   sortable: true,
-      //   width: 50,
-      //   filterable: true,
-      //   type: FieldType.text,
-      //   grouping: {
-      //     getter: 'size',
-      //     formatter: (g) => `Size : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-      //     aggregators: [
-      //     new Aggregators.Sum('ord_qty'),
-      //     new Aggregators.Sum('amt')
-      //   ],
-      //     aggregateCollapsed: false,
-      //     collapsed: false,
-      //   }
-       
-      // },
-      {
-        id: "promo",
-        name: "Categorie",
-        field: "promo",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.text,
-        grouping: {
-          getter: 'promo',
-          formatter: (g) => `Categorie : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       {
-        id: "dsgn_grp",
-        name: "Forme",
-        field: "dsgn_grp",
+        id: "due_amount",
+        name: "Montant Appliqué",
+        field: "due_amount",
         sortable: true,
         width: 50,
         filterable: true,
-        type: FieldType.text,
-        grouping: {
-          getter: 'dsgn_grp',
-          formatter: (g) => `Forme : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-          new Aggregators.Sum('ord_qty'),
-          new Aggregators.Sum('amt')
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       
     ];
@@ -403,12 +517,25 @@ export class ListInvoiceMobComponent implements OnInit {
         exportOptions: {
           sanitizeDataExport: true
         },
-        presets: {
-        
-          // sorters: [
-          //   { columnId: 'duration', direction: 'DESC' },
-          //   { columnId: 'complete', direction: 'ASC' }
-          // ],
+       
+        //enableRowSelection: true,
+        enableCellNavigation: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+       // multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
         },
        
      
@@ -444,7 +571,7 @@ export class ListInvoiceMobComponent implements OnInit {
     console.log(date,controls.calc_date.value,date1)
     const site = controls.site.value
     let obj= {date,date1,site}
-    this.posCategoryService.getSumAmt(obj).subscribe(
+    this.mobileSettingsService.getAllInvoices(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -470,11 +597,11 @@ export class ListInvoiceMobComponent implements OnInit {
     : null;
     const site = controls.site.value
     let obj= {date,date1,site}
-    this.posCategoryService.getSumAmt(obj).subscribe(
+    this.mobileSettingsService.getAllInvoices(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
+     //  this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {
@@ -575,7 +702,35 @@ export class ListInvoiceMobComponent implements OnInit {
     }
     this.mvgrid.invalidate(); // invalidate all rows and re-render
   }
-  
+  handleSelectedRowsChanged(e, args) {
+    const controls = this.soForm.controls;
+      if (Array.isArray(args.rows) && this.mvgrid) {
+      args.rows.map((idx) => {
+        const item = this.mvgrid.getDataItem(idx);
+        console.log(item);
+        
+       const invoicecode = item.invoice_code 
+       
+    let obj= {invoicecode}
+this.dataset= []
+       
+       this.mobileSettingsService.getAllInvoicesLine(obj).subscribe(
+        (respo: any) => {   
+          this.dataset = respo.data
+         console.log(this.dataset)
+         this.dataView.setItems(this.dataset);
+          
+           },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+    )
+     
+  });
+
+    }
+  }
    
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.soForm.controls;
@@ -672,4 +827,204 @@ export class ListInvoiceMobComponent implements OnInit {
     this.modalService.open(contentsite, { size: "lg" });
   }
 
+
+
+  initGrid() {
+    this.columnDefinitions = [
+  /*    {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.mvangularGrid.gridService.deleteItem(args.dataContext);
+          }
+        },
+      },*/
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+      
+        minWidth: 30,
+        maxWidth: 30,
+        
+      },
+      {
+        id: "product_code",
+        name: "Code Produit",
+        field: "product_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'site',
+          formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),
+            new Aggregators.Sum('Montant')
+          ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          }
+
+      }, 
+      {
+        id: "description",
+        name: "Designation",
+        field: "description",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'description',
+          formatter: (g) => `Designation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),
+            new Aggregators.Sum('Montant')
+          ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          }
+
+      }, 
+      
+      {
+        id: "lot",
+        name: "Lot/Serie",
+        field: "lot",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'lot',
+          formatter: (g) => `Lot/Serie: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),
+            new Aggregators.Sum('Montant')
+          ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          }
+
+      }, 
+      
+       
+      {
+        id: "quantity",
+        name: "Quantité",
+        field: "quantity",
+        sortable: true,
+        width: 50,
+        filterable: true,
+       
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+
+      },
+      {
+        id: "unit_price",
+        name: "Prix",
+        field: "unit_price",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
+     
+      {
+        id: "Montant",
+        name: "Montant",
+        field: "Montant",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
+     
+      
+    ];
+
+    this.gridOptions = {
+      enableDraggableGrouping: true,
+        createPreHeaderPanel: true,
+        showPreHeaderPanel: true,
+        preHeaderPanelHeight: 40,
+        enableFiltering: true,
+        enableAutoResize: true,
+        autoHeight:true,
+        enableSorting: true,
+        exportOptions: {
+          sanitizeDataExport: true
+        },
+       
+        //enableRowSelection: true,
+        enableCellNavigation: true,
+        
+     
+        gridMenu: {
+          onCommand: (e, args) => {
+            if (args.command === 'toggle-preheader') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.clearGroupingp();
+            }
+          },
+        },
+        draggableGrouping: {
+          dropPlaceHolderText: 'Drop a column header here to group by the column',
+          // groupIconCssClass: 'fa fa-outdent',
+          deleteIconCssClass: 'fa fa-times',
+          onGroupChanged: (e, args) => this.onGroupChangedp(args),
+          onExtensionRegistered: (extension) => this.draggableGroupingPluginp = extension,
+      
+      },
+
+    }
+    this.dataset = [];
+    
+    
+  }
+  onGroupChangedp(change: { caller?: string; groupColumns: Grouping[] }) {
+    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+    const caller = change && change.caller || [];
+    const groups = change && change.groupColumns || [];
+
+    if (Array.isArray(this.selectedGroupingFieldsp) && Array.isArray(groups) && groups.length > 0) {
+      // update all Group By select dropdown
+      this.selectedGroupingFieldsp.forEach((g, i) => this.selectedGroupingFieldsp[i] = groups[i] && groups[i].getter || '');
+    } else if (groups.length === 0 && caller === 'remove-group') {
+      this.clearGroupingSelectsp();
+    }
+  }
+  clearGroupingSelectsp() {
+    this.selectedGroupingFieldsp.forEach((g, i) => this.selectedGroupingFieldsp[i] = '');
+  }
+  
+  collapseAllGroupsp() {
+    this.dataView.collapseAllGroupsp();
+  }
+
+  expandAllGroupsp() {
+    this.dataView.expandAllGroupsp();
+  }
+  clearGroupingp() {
+    if (this.draggableGroupingPluginp && this.draggableGroupingPlugin.setDroppedGroupsp) {
+      this.draggableGroupingPluginp.clearDroppedGroupsp();
+    }
+    this.grid.invalidate(); // invalidate all rows and re-render
+  }
 }
