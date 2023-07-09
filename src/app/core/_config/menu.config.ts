@@ -873,6 +873,10 @@ export class MenuConfig {
               page: "/general-accounting/affect-frp",
             },
             {
+              title: "Calcul Coût Moyen Pondéré",
+              page: "/general-accounting/calc-cmp",
+            },
+            {
               title: "Maint Ecriture Standard",
               page: "/general-accounting/create-gl",
             },
