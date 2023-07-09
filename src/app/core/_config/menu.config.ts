@@ -344,6 +344,10 @@ export class MenuConfig {
               page: "/inventory-management/unloading-vans",
             },
             {
+              title: "Consultation demandes de chargement",
+              page: "/inventory-management/load-request-list",
+            },
+            {
               title: "Réception OA",
               page: "/inventory-transaction/po-receip",
             },

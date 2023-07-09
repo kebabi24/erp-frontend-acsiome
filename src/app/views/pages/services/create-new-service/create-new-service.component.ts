@@ -223,9 +223,10 @@ export class CreateNewServiceComponent implements OnInit {
       (response: any) => 
       {
         this.data = response.data
+        console.log(this.data)
         this.dataset = this.data.map((item) => {
           this.services.push(item)
-          const itineraries = item.role_itineraries
+          const itineraries = item.role_itinerary
           const itn = itineraries.filter((item_itinerary) => 
             (item.service != null) &&
               item_itinerary.itinerary.itinerary_code === item.service.itinerary_code

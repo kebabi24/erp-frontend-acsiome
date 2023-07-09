@@ -59,7 +59,10 @@ import {
   AccountService,
   EntityService,
   InventoryManagementService,
-  UnloadRequestService
+  InventoryTransactionService,
+  UnloadRequestService,
+  LoadRequestService,
+  RoleService
 } from "../../../core/erp";
 import { PhysicalInventoryTagEntryComponent } from './physical-inventory-tag-entry/physical-inventory-tag-entry.component';
 import { TagGapAnalysisComponent } from './tag-gap-analysis/tag-gap-analysis.component';
@@ -73,6 +76,7 @@ import { OutOFStocklistComponent } from './out-ofstocklist/out-ofstocklist.compo
 import { InventoryByStatuslistComponent } from './inventory-by-statuslist/inventory-by-statuslist.component';
 import { LoadingVansComponent } from "./loading-vans/loading-vans.component";
 import { UnloadingVansComponent } from "./unloading-vans/unloading-vans.component";
+import { LoadRequestListComponent } from "./load-request-list/load-request-list.component";
 
 const routes: Routes = [
   {
@@ -127,10 +131,17 @@ const routes: Routes = [
     path: "unloading-vans",
     component: UnloadingVansComponent,
   },
+  {
+    path: "load-request-list",
+    component: LoadRequestListComponent,
+  },
+
+
+  
 ];
 
 @NgModule({
-  declarations: [LoadingVansComponent,InventoryManagementComponent, PhysicalInventoryTagComponent, PhysicalInventoryTagEntryComponent, TagGapAnalysisComponent, PhysicalInventoryTagReentryComponent, FreezeInventoryComponent, ValidateTagComponent, InventoryOfDateComponent, InventoryActivitylistComponent, InventoryByLoclistComponent, OutOFStocklistComponent, InventoryByStatuslistComponent , UnloadingVansComponent],
+  declarations: [LoadingVansComponent,InventoryManagementComponent,LoadRequestListComponent, PhysicalInventoryTagComponent, PhysicalInventoryTagEntryComponent, TagGapAnalysisComponent, PhysicalInventoryTagReentryComponent, FreezeInventoryComponent, ValidateTagComponent, InventoryOfDateComponent, InventoryActivitylistComponent, InventoryByLoclistComponent, OutOFStocklistComponent, InventoryByStatuslistComponent , UnloadingVansComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -174,7 +185,10 @@ const routes: Routes = [
     InventoryStatusService,
     InventoryManagementService,
     ItemService,
-    UnloadRequestService
+    UnloadRequestService,
+    InventoryTransactionService,
+    LoadRequestService,
+    RoleService
   ],
   entryComponents: [
     ActionNotificationComponent,
