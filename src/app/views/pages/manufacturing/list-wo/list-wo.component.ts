@@ -129,6 +129,24 @@ export class ListWoComponent implements OnInit {
           },
         
           {
+            id: "wo_qty_comp",
+            name: "Quantité Complété",
+            field: "wo_qty_comp",
+            sortable: true,
+            width: 80,
+            filterable: false,
+           
+          },
+          {
+            id: "wo_qty_rjct",
+            name: "Quantité Rejetée",
+            field: "wo_qty_rjct",
+            sortable: true,
+            width: 80,
+            filterable: false,
+           
+          },
+          {
             id: "wo_ord_date",
             name: "Date Création",
             field: "wo_ord_date",

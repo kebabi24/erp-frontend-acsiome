@@ -178,6 +178,24 @@ export class CalcCoutWoComponent implements OnInit {
         
       },
       {
+        id: "qtycomp",
+        name: "Quantité Complété",
+        field: "qtycomp",
+        sortable: true,
+        width: 80,
+        filterable: false,
+       
+      },
+      {
+        id: "qtyrjct",
+        name: "Quantité Rejetée",
+        field: "qtyrjct",
+        sortable: true,
+        width: 80,
+        filterable: false,
+       
+      },
+      {
         id: "mtl",
         name: "Coût Matiere ",
         field: "mtl",
