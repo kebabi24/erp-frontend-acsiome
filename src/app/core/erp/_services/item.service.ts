@@ -98,4 +98,12 @@ export class ItemService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/updateProfileProductsPages`, {profile_code:profile_code,pagesCodes:pagesCodes}, { headers: httpHeaders })
     }
+
+    public CalcCmp(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/calccmp`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
 }

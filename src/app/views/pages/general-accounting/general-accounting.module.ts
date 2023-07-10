@@ -51,7 +51,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid'
 import { GeneralAccountingComponent } from './general-accounting.component';
 import { AffectFrpComponent } from './affect-frp/affect-frp.component';
 import { AccountPayableService,FraisService, PurchaseReceiveService, GeneralLedgerService, DeviseService,
-         AccountService,SubaccountService,CostcenterService, DaybookService, ProjectService, EntityService,CostSimulationService,ItemService } from '../../../core/erp';
+         AccountService,SubaccountService,CostcenterService, DaybookService, ProjectService, EntityService,CostSimulationService,ItemService, SiteService } from '../../../core/erp';
 import { CreateGlComponent } from './create-gl/create-gl.component';
 import { EditGlComponent } from './edit-gl/edit-gl.component';
 import { ListGlComponent } from './list-gl/list-gl.component';
@@ -130,6 +130,7 @@ providers: [
     EntityService,
     CostSimulationService,
     ItemService,
+    SiteService,
     TypesUtilsService,
     LayoutUtilsService,
 ],

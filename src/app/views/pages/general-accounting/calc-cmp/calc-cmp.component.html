@@ -1,1 +1,169 @@
-<p>calc-cmp works!</p>
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Calcul CMP" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        
+        <div class="example-preview">
+            <form class="form" [formGroup]="calcForm">
+             
+                <!--div class="row"> 
+
+                    <div class="form-group col-2" >
+                        <label class="form-group">Site: *</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="site" (change)="onChangesite()" id="site"
+                                [className]="calcForm.controls['site'].errors && (calcForm.controls['site'].dirty || calcForm.controls['site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="calcForm.controls['site'].errors && (calcForm.controls['site'].dirty || calcForm.controls['site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                </div-->
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Date: *</label>
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" 
+                                 placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f
+                                #calc_date="ngbDatepicker"   >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="calc_date.toggle()"  type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">A: *</label>
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date1" 
+                                 placeholder="jj-mm-aaaa" name="calc_date1" ngbDatepicker f
+                                #calc_date1="ngbDatepicker"   >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="calc_date1.toggle()"  type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row"> 
+                    <div class="form-group col-2">
+                        <label class="form-group">Code :  </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class='form-control form-control-sm form-control-solid' id="part1"  formControlName="part1" (change)="changepart('part1')" >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openpart(contentpart,'part1')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">Code A :  </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class='form-control form-control-sm form-control-solid' id="part2"   formControlName="part2" (change)="changepart('part2')" >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openpart(contentpart,'part2')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                   
+                    <div class="form-group col-4">
+                        <label class="form-group">Valider: *</label>
+                        <div class="input-group input-group-sm">
+    
+                        <button type="button"  (click)="onValidate()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
+                        </div>
+                    </div>  
+                </div>
+                      
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plageGrid"  
+                          [columnDefinitions]="columnDefinitions"
+                          [gridOptions]="gridOptions"
+                          [dataset]="dataset" 
+                          (onAngularGridCreated)="GridReady($event)">
+                    </angular-slickgrid>
+                </div>
+                 
+                           
+            </form>
+        </div>    
+
+
+    </kt-portlet-body>
+   
+    <div>
+        <ng-template #contentpart let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Article </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionspart"
+                        (onAngularGridCreated)="angularGridReadypart($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedpart($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionspart" [dataset]="parts">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+
+    <div>
+        <ng-template #contentsite let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choisir Site </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
+                        [columnDefinitions]="columnDefinitionssite"
+                        (onAngularGridCreated)="angularGridReadysite($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionssite" [dataset]="datasite">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+        <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
+            modal</button>
+    </div>
+    
+</kt-portlet>
+
