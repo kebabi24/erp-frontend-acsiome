@@ -244,7 +244,42 @@ export class ListWoComponent implements OnInit {
                      
           },
           
-    
+          {
+            id: "wo__dec01",
+            name: "Coût Matiére",
+            field: "wo__dec01",
+            sortable: true,
+            width: 80,
+            filterable: false,
+            type: FieldType.float,
+            formatter: Formatters.percentComplete,
+                     
+          },
+          
+          {
+            id: "wo__dec02",
+            name: "Coût Main d'Oeuvre",
+            field: "wo__dec02",
+            sortable: true,
+            width: 80,
+            filterable: false,
+            type: FieldType.float,
+            formatter: Formatters.percentComplete,
+                     
+          },
+          
+          {
+            id: "wo__dec03",
+            name: "Coût FG Variable",
+            field: "wo__dec03",
+            sortable: true,
+            width: 80,
+            filterable: false,
+            type: FieldType.float,
+            formatter: Formatters.percentComplete,
+                     
+          },
+          
           
           
     

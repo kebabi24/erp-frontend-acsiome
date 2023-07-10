@@ -679,6 +679,10 @@ export class MenuConfig {
               title: "Cloture OF",
               page: "/manufacturing/edit-wo",
             },
+            {
+              title: "Calcul Coût Production",
+              page: "/manufacturing/calc-cout-wo",
+            },
               
           ],
         },
