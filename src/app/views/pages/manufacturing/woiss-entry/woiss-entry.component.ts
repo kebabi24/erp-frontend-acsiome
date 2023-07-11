@@ -754,6 +754,8 @@ export class WoissEntryComponent implements OnInit {
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      autoHeight:true,
+      enableAutoResize:true,
       formatterOptions: {
         
         
@@ -1008,6 +1010,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
             tr_status  : null,
 
             tr_serial  : det.wod_serial,
+            tr_ref: null,
             tr_expire  : null,
            
           },
@@ -1051,6 +1054,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
         tr_site: "",
         cmvids: "",
         tr_loc: "",
+        tr_ref:null,
         tr_serial: null,
         tr_status: null,
         tr_expire: null,
@@ -1073,7 +1077,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
               (response: any) => {
                 this.sct = response.data
             
-                this.locationDetailService.getByOne({ ld_site: item.pt_site, ld_loc: item.pt_loc, ld_part: item.pt_part, ld_lot: null }).subscribe(
+                this.locationDetailService.getByOne({ ld_site: item.pt_site, ld_loc: item.pt_loc, ld_part: item.pt_part, ld_lot: null ,ld_ref:null}).subscribe(
                   (response: any) => {
                     this.lddet = response.data
                     //console.log(this.lddet.ld_qty_oh)
@@ -1095,6 +1099,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
               
               updateItem.tr_site = item.pt_site;
               updateItem.tr_loc = item.pt_loc;
+              updateItem.tr_ref = null;
               updateItem.tr_price = this.sct.sct_mtl_tl;
               
               updateItem.qty_oh =  this.lddet.ld_qty_oh;
@@ -1113,7 +1118,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
             updateItem.tr_site = item.pt_site;
             updateItem.tr_loc = item.pt_loc;
             updateItem.tr_price = this.sct.sct_mtl_tl;
-            
+            updateItem.tr_ref = null;
             updateItem.qty_oh =  0;
             
             updateItem.tr_status =  null;
@@ -1322,7 +1327,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
               this.location = response.data
               if (response.data) {
 
-                this.locationDetailService.getByOne({ ld_site: updateItem.tr_site, ld_loc: item.tr_loc, ld_part: updateItem.tr_part, ld_lot: updateItem.tr_serial }).subscribe(
+                this.locationDetailService.getByOne({ ld_site: updateItem.tr_site, ld_loc: item.tr_loc, ld_part: updateItem.tr_part, ld_lot: updateItem.tr_serial,ld_ref:null }).subscribe(
                   (response: any) => {
                     this.lddet = response.data
                   //  console.log(this.lddet[0].ld_qty_oh)
@@ -2066,6 +2071,7 @@ handleSelectedRowsChanged5(e, args) {
                     tr_status  : null,
         
                     tr_serial  : det.wod_serial,
+                    tr_ref: null,
                     tr_expire  : null,
                    
                   },

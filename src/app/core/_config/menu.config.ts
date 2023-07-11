@@ -683,7 +683,10 @@ export class MenuConfig {
               title: "Calcul Coût Production",
               page: "/manufacturing/calc-cout-wo",
             },
-              
+            {
+              title: "List Prix de Revient OF",
+              page: "/manufacturing/costprice-list",
+            },  
           ],
         },
         {

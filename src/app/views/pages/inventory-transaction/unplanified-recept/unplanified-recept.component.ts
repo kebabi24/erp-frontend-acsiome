@@ -541,9 +541,9 @@ seq: any;
           sortable: false,
         
           filterable: false,
-         // editor: {
-         //     model: Editors.float,
-          //},
+         editor: {
+             model: Editors.text,
+          },
           
         },
         {
@@ -968,6 +968,7 @@ seq: any;
           tr_site: "",
           tr_loc: "",
           tr_serial: null,
+          tr_ref:null,
           tr_status: null,
           tr_expire: null,
         },

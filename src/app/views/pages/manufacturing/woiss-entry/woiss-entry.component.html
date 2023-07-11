@@ -21,7 +21,7 @@
                         
                         
                         
-                        <div class="form-group col-2">
+                        <div class="form-group col-3">
                             <label class="form-group">Effet:</label>
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-sm form-control-solid" formControlName="tr_effdate"
@@ -38,7 +38,7 @@
 
                         </div>
                     
-                        <div class="form-group col-2">
+                        <div class="form-group col-3">
                             <label class="form-group">ID OF:</label>
                             <div class="input-group input-group-sm">
 
@@ -52,7 +52,7 @@
 
                         </div>
                         
-                        <div class="form-group col-2">
+                        <div class="form-group col-3">
                             <label class="form-group">N° OF:</label>
                             <div class="input-group input-group-sm">
 
@@ -65,7 +65,7 @@
                     </div>
                     <div class="row">
 
-                        <div class="form-group col-2">
+                        <div class="form-group col-3">
                             <label class="form-group">Article:</label>
                             <div class="input-group input-group-sm">
 
@@ -75,7 +75,7 @@
                             </div>
 
                         </div>
-                        <div class="form-group col-4">
+                        <div class="form-group col-6">
                             <label class="form-group">Designation:</label>
                             <div class="input-group input-group-sm">
 
@@ -85,7 +85,7 @@
                             </div>
 
                         </div>
-                        <div class="form-group col-2">
+                        <div class="form-group col-3">
                             <label class="form-group">Liaison:</label>
                             <div class="input-group input-group-sm">
 
@@ -110,6 +110,12 @@
                             </div>
 
                         </div>
+                        <div class="form-group col-9">
+                            <label class="form-group">Ajouter une entrée:</label>
+                            <div class="input-group input-group-sm">
+                                 <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
+                            </div>     
+                        </div>    
                     </div>
                 </div>
                 <div class="col-3">
@@ -125,14 +131,19 @@
                             
                     </div>
                 </div> 
-                <div class="row">
-                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
-                </div>
-                <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
-                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
-                        (onAngularGridCreated)="gridReady($event)">
-                    </angular-slickgrid>
+                <!--div class="row">
+                   
+                    <div class="form-group col-9">
+                        <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
+                    </div>    
+                </div-->
+                <div class="col-12">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridId="mGrid"
+                            [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                            (onAngularGridCreated)="gridReady($event)">
+                        </angular-slickgrid>
+                    </div>
                 </div>
             </form>
         </div>

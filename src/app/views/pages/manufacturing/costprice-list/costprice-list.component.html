@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Reception Production" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Liste Prix de Revient OF" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -11,7 +11,7 @@
     <kt-portlet-body>
         <div class="example-preview">
 
-            <form class="form" [formGroup]="trForm">
+            <form class="form" [formGroup]="woForm">
                 <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
                     {{message}}
@@ -20,28 +20,13 @@
                     
                     
                     
-                    <div class="form-group col-2">
-                        <label class="form-group">Effet:</label>
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-sm form-control-solid" formControlName="tr_effdate"
-                                 placeholder="jj-mm-aaaa" name="tr_effdate" ngbDatepicker f
-                                #tr_effdate="ngbDatepicker">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" (click)="tr_effdate.toggle()" type="button">
-                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                </button>
-                            </div>
-                            
-                        </div>
-
-
-                    </div>
+                   
                   
                     <div class="form-group col-2">
                         <label class="form-group">ID OF:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_lot" id="id"
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_lot" id="id"
                                 aria-describedby="basic-addon2" (change)="onChangeOA()">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open5(content5)">
@@ -55,20 +40,19 @@
                         <label class="form-group">N° OF:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_nbr"
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_nbr"
                                 aria-describedby="basic-addon2" >
                             
                         </div>
 
                     </div>
-                </div>
-                <div class="row">
+            
 
                     <div class="form-group col-2">
                         <label class="form-group">Article:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="tr_part"
+                            <input type="text" class="form-control form-control-solid"  formControlName="part"
                                 aria-describedby="basic-addon2" >
                             
                         </div>
@@ -88,45 +72,67 @@
                 </div>
                  
                 <div class="row">
-
-                    <div class="form-group col-4">
-                        <label class="form-group">Observation:</label>
-                        <textarea class="form-control form-control-sm form-control-solid" formControlName="tr_rmks"
-                            rows="2"></textarea>
-                    </div>
-
                     <div class="form-group col-2">
-                        <label class="form-group">Liaison:</label>
+                        <label class="form-group">Quantité Complétée:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  id="sojob" formControlName="tr_so_job"  (change)="onChangeJob()"
+                            <input type="number" class="form-control form-control-solid"  formControlName="qtycomp"
                                 aria-describedby="basic-addon2" >
                             
                         </div>
 
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group ">Equipe:</label>
-                        <select class="form-control form-control-sm form-control-solid"
-                            formControlName="emp_shift" id="exampleSelects4">
-                            <option value=""></option>
-                            <option *ngFor="let elem of emp_shift" [value]="elem.code_value">
-                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                        </select>
+                        <label class="form-group">Quantité Rejetée:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid"  formControlName="qtyrjct"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
                     </div>
                     
-                          
-                </div>
+                </div>    
+                <br>
+                
+                  <div class="row">
+                    <div class="form-group col-6">
+                        <h3>Declaration Production</h3>
+                    </div> 
+                    <div class="form-group col-6">
+                        <h3>Consomation MP</h3>
+                    </div> 
+                  </div>
+                       
+                    <div class="row">
+                        
+                            <angular-slickgrid class="col-6"  title="Declaration Production"   gridHeight="300" gridId="mGrid"
+                                [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                                (onAngularGridCreated)="gridReady($event)">
+                            </angular-slickgrid>
+                    
+                        <angular-slickgrid class="col-6"  title="Consomation MP" gridHeight="300" gridId="wodGrid"
+                            [columnDefinitions]="columnDefinitionsmp" [gridOptions]="gridOptionsmp" [dataset]="mpdataset"
+                            (onAngularGridCreated)="gridReadymp($event)">
+                        </angular-slickgrid>
+                    </div>    
 
-                <div class="row">
-                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
-                </div>
-                <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="mGrid"
-                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
-                        (onAngularGridCreated)="gridReady($event)">
-                    </angular-slickgrid>
-                </div>
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Coût Matiére Unitaire:</label>
+                            <div class="input-group input-group-sm">
+    
+                                <input type="number" class="form-control form-control-solid"  formControlName="unitcost"
+                                    aria-describedby="basic-addon2" >
+                                
+                            </div>
+    
+                        </div>
+                        
+                        
+                    </div>    
+                
             </form>
         </div>
 
@@ -291,3 +297,4 @@
         </div>
     </kt-portlet-body>
 </kt-portlet>
+
