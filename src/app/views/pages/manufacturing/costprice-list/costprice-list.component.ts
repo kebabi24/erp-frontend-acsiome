@@ -55,7 +55,9 @@ import {
   LabelService,  
   SaleOrderService,
   Daybook,
+  OperationHistoryService
 } from "../../../../core/erp";
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -101,7 +103,13 @@ export class CostpriceListComponent implements OnInit {
   gridOptionsmp: GridOption;
   mpdataset: any[];
  
-  
+  angularGridop: AngularGridInstance;
+  gridop: any;
+  gridServiceop: GridService;
+  dataViewop: any;
+  columnDefinitionsop: Column[];
+  gridOptionsop: GridOption;
+  opdataset: any[];
 
   wos: [];
   columnDefinitions5: Column[] = [];
@@ -157,7 +165,7 @@ export class CostpriceListComponent implements OnInit {
     private inventoryStatusService : InventoryStatusService,
     private workOrderService: WorkOrderService,
     private labelService: LabelService,
-    private saleOrderService : SaleOrderService,
+    private operationHistoryService : OperationHistoryService,
   ) {
     config.autoClose = true;
     this.codeService
@@ -165,6 +173,7 @@ export class CostpriceListComponent implements OnInit {
     .subscribe((response: any) => (this.emp_shift = response.data));
     this.initGrid();
     this.initGridMP();
+    this.initGridOP();
   }
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -177,6 +186,12 @@ export class CostpriceListComponent implements OnInit {
     this.dataViewmp = angularGrid.dataView;
     this.gridmp = angularGrid.slickGrid;
     this.gridServicemp = angularGrid.gridService;
+  }
+  gridReadyop(angularGrid: AngularGridInstance) {
+    this.angularGridop = angularGrid;
+    this.dataViewop = angularGrid.dataView;
+    this.gridop = angularGrid.slickGrid;
+    this.gridServiceop = angularGrid.gridService;
   }
   initGrid() {
     this.columnDefinitions = [
@@ -407,6 +422,102 @@ export class CostpriceListComponent implements OnInit {
 
     this.mpdataset = [];
   }
+
+  initGridOP() {
+    this.columnDefinitionsop = [
+     
+
+     
+      {
+        id: "op_wkctr",
+        name: "Centre de Charge",
+        field: "op_wkctr",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        
+      },
+      {
+        id: "op_mch",
+        name: "Machine",
+        field: "op_mch",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        
+      },
+
+      {
+        id: "op_wo_op",
+        name: "Opération",
+        field: "op_wo_op",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        
+      },
+      
+      {
+          id: "op_qty_comp",
+          name: "QTE Terminée",
+          field: "op_qty_comp",
+          sortable: true,
+          width: 80,
+          filterable: false,
+          type: FieldType.float,
+        
+          
+      },
+      
+      {
+        id: "op_act_setup",
+        name: "Réglage",
+        field: "op_act_setup",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.float,
+      
+      },
+    
+      {
+        id: "op_act_run",
+        name: "Execution",
+        field: "op_act_run",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.float,
+      
+      },  
+      
+
+    ];
+
+    this.gridOptionsop = {
+      asyncEditorLoading: false,
+      editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      formatterOptions: {
+        
+        
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: true,
+  
+        // Defaults to undefined, minimum number of decimals
+        minDecimal: 2,
+  
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+      },
+    };
+
+    this.opdataset = [];
+  }
+
+
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
@@ -429,6 +540,9 @@ export class CostpriceListComponent implements OnInit {
       qtycomp:  [{value:0, disabled: true}],
       qtyrjct:  [{value:0, disabled: true}],
       unitcost:  [{value:0, disabled: true}],
+      unitlbr:  [{value:0, disabled: true}],
+      unitbdn:  [{value:0, disabled: true}],
+      unittotalcost :  [{value:0, disabled: true}],
 
       
       });
@@ -453,7 +567,7 @@ export class CostpriceListComponent implements OnInit {
         controls.qtycomp.setValue(this.woServer.wo_qty_comp);
         controls.qtyrjct.setValue(this.woServer.wo_qty_rjct);
       
-        this.inventoryTransactionService.getBy({tr_lot:this.woServer.id,tr_type:"RCT-WO"}).subscribe(
+        this.inventoryTransactionService.getBy({tr_lot:String(this.woServer.id),tr_nbr:this.woServer.wo_nbr,tr_type:"RCT-WO"}).subscribe(
           (res: any) => {
         
           //(response: any) => (this.dataset = response.data),
@@ -465,6 +579,55 @@ export class CostpriceListComponent implements OnInit {
         this.loadingSubject.next(false) 
       })
       
+
+
+      
+    
+    this.inventoryTransactionService.getByCost({tr_lot:String(this.woServer.id),tr_nbr:this.woServer.wo_nbr,tr_type:"ISS-WO"}).subscribe(
+      (resp: any) => {
+    
+      //(response: any) => (this.dataset = response.data),
+     // console.log(resp.data)
+      this.mpdataset  = resp.data;
+      this.dataViewmp.setItems(this.mpdataset)
+        
+    //this.dataset = res.data
+    let cost = 0
+    for (let det of this.mpdataset) {
+      console.log("herehere",det.tr__dec04)
+      cost = cost + Number(det.tr__dec04)
+    }
+
+    controls.unitcost.setValue (Number((cost /  (Number(controls.qtycomp.value) + Number(controls.qtyrjct.value))).toFixed(2)))
+
+   
+    this.workOrderService.CalcCostWo({id:String(this.woServer.id)}).subscribe(
+      (response: any) => {   
+       
+       const lbr = Number(response.data.lbr.toFixed(2))
+       const bdn = Number(response.data.bdn.toFixed(2))
+       controls.unitlbr.setValue(Number(lbr.toFixed(2)))
+       controls.unitbdn.setValue(Number(bdn.toFixed(2)))
+       console.log(controls.unitcost.value)
+       const tot = Number((Number( controls.unitcost.value)+Number(lbr)+Number(bdn)).toFixed(2))
+       controls.unittotalcost.setValue(Number(tot))
+      })
+  })
+ 
+  this.operationHistoryService.getBy({op_wo_lot:String(this.woServer.id),op_type:"labor"}).subscribe(
+    (res: any) => {
+  
+    //(response: any) => (this.dataset = response.data),
+    console.log(res.data)
+    this.opdataset  = res.data;
+    this.dataViewop.setItems(this.opdataset)
+      
+  //this.dataset = res.data
+ 
+})
+
+
+
           }
           else {
 
@@ -659,7 +822,7 @@ handleSelectedRowsChanged5(e, args) {
       controls.part.setValue(item.wo_part);
       controls.desc.setValue(item.item.pt_desc1)
       controls.qtycomp.setValue(item.wo_qty_comp);
-        controls.qtyrjct.setValue(item.wo_qty_rjct);
+      controls.qtyrjct.setValue(item.wo_qty_rjct);
         this.inventoryTransactionService.getBy({tr_lot:String(item.id),tr_nbr:item.wo_nbr,tr_type:"RCT-WO"}).subscribe(
           (res: any) => {
         
@@ -676,22 +839,44 @@ handleSelectedRowsChanged5(e, args) {
         (resp: any) => {
       
         //(response: any) => (this.dataset = response.data),
-        console.log(resp.data)
+       // console.log(resp.data)
         this.mpdataset  = resp.data;
         this.dataViewmp.setItems(this.mpdataset)
           
       //this.dataset = res.data
-
-
-     
-    })
-    let cost = 0
+      let cost = 0
       for (let det of this.mpdataset) {
-
+        console.log("herehere",det.tr__dec04)
         cost = cost + Number(det.tr__dec04)
       }
 
-      controls.unitcost.setValue (cost /  (Number(controls.qtycomp.value) + Number(controls.qtyrjct.value)))
+      controls.unitcost.setValue (Number((cost /  (Number(controls.qtycomp.value) + Number(controls.qtyrjct.value))).toFixed(2)))
+
+     
+      this.workOrderService.CalcCostWo({id:String(item.id)}).subscribe(
+        (response: any) => {   
+         
+         const lbr = Number(response.data.lbr.toFixed(2))
+         const bdn = Number(response.data.bdn.toFixed(2))
+         controls.unitlbr.setValue(Number(lbr.toFixed(2)))
+         controls.unitbdn.setValue(Number(bdn.toFixed(2)))
+         console.log(controls.unitcost.value)
+         const tot = Number((Number( controls.unitcost.value)+Number(lbr)+Number(bdn)).toFixed(2))
+         controls.unittotalcost.setValue(Number(tot))
+        })
+    })
+   
+    this.operationHistoryService.getBy({op_wo_lot:String(item.id),op_type:"labor"}).subscribe(
+      (res: any) => {
+    
+      //(response: any) => (this.dataset = response.data),
+      console.log(res.data)
+      this.opdataset  = res.data;
+      this.dataViewop.setItems(this.opdataset)
+        
+    //this.dataset = res.data
+   
+  })
   }
   );
 

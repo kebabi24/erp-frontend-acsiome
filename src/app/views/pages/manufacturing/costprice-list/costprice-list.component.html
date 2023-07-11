@@ -104,7 +104,7 @@
                         <h3>Consomation MP</h3>
                     </div> 
                   </div>
-                       
+                  
                     <div class="row">
                         
                             <angular-slickgrid class="col-6"  title="Declaration Production"   gridHeight="300" gridId="mGrid"
@@ -116,22 +116,78 @@
                             [columnDefinitions]="columnDefinitionsmp" [gridOptions]="gridOptionsmp" [dataset]="mpdataset"
                             (onAngularGridCreated)="gridReadymp($event)">
                         </angular-slickgrid>
-                    </div>    
-
-                    <div class="row">
-                        <div class="form-group col-2">
-                            <label class="form-group">Coût Matiére Unitaire:</label>
-                            <div class="input-group input-group-sm">
-    
-                                <input type="number" class="form-control form-control-solid"  formControlName="unitcost"
-                                    aria-describedby="basic-addon2" >
-                                
-                            </div>
-    
+                    </div>
+                    <br>
+                    <h3>Declaration Opération</h3>    
+                <div class="row">
+                    
+                    <div class="col-6">    
+                        <div class="row">
+                            <angular-slickgrid class="col-12"  title="Declaration Operation"   gridHeight="300" gridId="opGrid"
+                                [columnDefinitions]="columnDefinitionsop" [gridOptions]="gridOptionsop" [dataset]="opdataset"
+                                (onAngularGridCreated)="gridReadyop($event)">
+                            </angular-slickgrid>
                         </div>
+                    </div>
+                    <div class="col-6">    
+                        <div class="row">    
+                            <div class="form-group col-2">
+                                <label class="form-group">Coût Matiére Unitaire:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitcost"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
                         
                         
-                    </div>    
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-2">
+                                <label class="form-group">Coût Main d'Oeuvre:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitlbr"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            
+                            
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-2">
+                                <label class="form-group">Coût FG Variable:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitbdn"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            
+                            
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-2">
+                                <label class="form-group">Coût Unitaire:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unittotalcost"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            
+                            
+                        </div>    
+                    </div>
+                </div>   
                 
             </form>
         </div>
@@ -140,134 +196,6 @@
 
         
         
-        <div>
-            <ng-template #contentsite let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir Site </h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
-                            [columnDefinitions]="columnDefinitionssite"
-                            (onAngularGridCreated)="angularGridReadysite($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptionssite" [dataset]="datasite">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-            <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
-                modal</button>
-        </div>
-    
-        <div>
-            <ng-template #contentloc let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir Emplacement </h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridloc"
-                            [columnDefinitions]="columnDefinitionsloc"
-                            (onAngularGridCreated)="angularGridReadyloc($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedloc($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptionsloc" [dataset]="dataloc">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-            <button hidden id="openLocsGrid" class="btn btn-primary" (click)="openloc(contentloc)">Launch demo
-                modal</button>
-        </div>
-        <div>
-            <ng-template #contentum let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir UM</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridum"
-                            [columnDefinitions]="columnDefinitionsum" (onAngularGridCreated)="angularGridReadyum($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedum($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptionsum" [dataset]="ums">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-            <button hidden id="openUmsGrid" class="btn btn-primary" (click)="openum(contentum)">Launch demo
-                modal</button>
-    
-        </div>
-        <div>
-            <ng-template #contentstatus let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir Status</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridum"
-                            [columnDefinitions]="columnDefinitionsstatus" (onAngularGridCreated)="angularGridReadystatus($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedstatus($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptionsstatus" [dataset]="statuss">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-            <button hidden id="openStatussGrid" class="btn btn-primary" (click)="openstatus(contentstatus)">Launch demo
-                modal</button>
-    
-        </div>
-        <div>
-            <ng-template #content2 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir Code Adresse</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
-                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptions2" [dataset]="adresses">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-        </div>
         
         <div>
             <ng-template #content5 let-c="close" let-d="dismiss">

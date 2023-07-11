@@ -63,4 +63,8 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/calccost`,data, { headers: httpHeaders })   
     }
+    public CalcCostWo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/calccostwo`,data, { headers: httpHeaders })   
+    }
 }
