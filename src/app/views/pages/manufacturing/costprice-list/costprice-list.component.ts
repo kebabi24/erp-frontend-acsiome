@@ -55,6 +55,7 @@ import {
   LabelService,  
   SaleOrderService,
   Daybook,
+  PsService,
   OperationHistoryService
 } from "../../../../core/erp";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER_FACTORY } from "@angular/cdk/overlay/overlay-directives";
@@ -164,7 +165,7 @@ export class CostpriceListComponent implements OnInit {
     private sequenceService: SequenceService,
     private inventoryStatusService : InventoryStatusService,
     private workOrderService: WorkOrderService,
-    private labelService: LabelService,
+    private psService: PsService,
     private operationHistoryService : OperationHistoryService,
   ) {
     config.autoClose = true;
@@ -546,7 +547,7 @@ export class CostpriceListComponent implements OnInit {
 
       unitlbrstd:  [{value:0, disabled: true}],
       unitbdnstd:  [{value:0, disabled: true}],
-
+      coststd:  [{value:0, disabled: true}],
       
       });
   }
@@ -872,6 +873,16 @@ handleSelectedRowsChanged5(e, args) {
          console.log(controls.unitcost.value)
          const tot = Number((Number( controls.unitcost.value)+Number(lbr)+Number(bdn)).toFixed(2))
          controls.unittotalcost.setValue(Number(tot))
+
+         this.psService.getPrice ({ps_parent: item.wo_bom_code}).subscribe(
+          (respon: any) => {   
+            const coststd = respon.data.price  
+            console.log(coststd)
+            controls.coststd.setValue(Number(coststd.toFixed(2)))
+
+
+
+          })
         })
     })
    
