@@ -548,6 +548,11 @@ export class CostpriceListComponent implements OnInit {
       unitlbrstd:  [{value:0, disabled: true}],
       unitbdnstd:  [{value:0, disabled: true}],
       coststd:  [{value:0, disabled: true}],
+      unittotalcoststd :  [{value:0, disabled: true}],
+      costecart:  [{value:0, disabled: true}],
+      lbrecart:  [{value:0, disabled: true}],
+      bdnecart:  [{value:0, disabled: true}],
+      totecart:  [{value:0, disabled: true}],
       
       });
   }
@@ -874,14 +879,23 @@ handleSelectedRowsChanged5(e, args) {
          const tot = Number((Number( controls.unitcost.value)+Number(lbr)+Number(bdn)).toFixed(2))
          controls.unittotalcost.setValue(Number(tot))
 
+        
+
          this.psService.getPrice ({ps_parent: item.wo_bom_code}).subscribe(
           (respon: any) => {   
-            const coststd = respon.data.price  
-            console.log(coststd)
-            controls.coststd.setValue(Number(coststd.toFixed(2)))
+            const coststd = respon.data  
+            console.log(respon.data  ,coststd)
+            controls.coststd.setValue(Number(coststd))
 
+            const totstd = Number((Number( controls.coststd.value)+Number(lbrstd)+Number(bdnstd)).toFixed(2))
+            controls.unittotalcoststd.setValue(Number(totstd))
 
+            controls.totecart.setValue(Number(100 * ((Number(controls.unittotalcost.value) - Number(totstd))/ Number(totstd))).toFixed(2))
 
+            controls.bdnecart.setValue(Number(100 * ((Number(controls.unitbdn.value) - Number( controls.unitbdnstd.value) )/ Number( controls.unitbdnstd.value))).toFixed(2))
+            controls.lbrecart.setValue(Number(100 * ((Number(controls.unitlbr.value) - Number( controls.unitbdnstd.value)) / Number( controls.unitbdnstd.value))).toFixed(2))
+            controls.costecart.setValue(Number(100 * ((Number(controls.unitcost.value) - Number( controls.coststd.value))/ Number( controls.coststd.value))).toFixed(2))
+            
           })
         })
     })
