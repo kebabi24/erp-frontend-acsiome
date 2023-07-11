@@ -264,7 +264,7 @@ export class WoissEntryComponent implements OnInit {
               console.log(resp.data)
 
              
-                this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STDCG' }).subscribe(
+                this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
                   (response: any) => {
                     this.sct = response.data
            
@@ -987,7 +987,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
     for (const object in this.detail) {
       const det = this.detail[object];
    
-     /*   this.sctService.getByOne({ sct_site: det.wod_site, sct_part: det.wod_part, sct_sim: 'STDCG' }).subscribe(
+     /*   this.sctService.getByOne({ sct_site: det.wod_site, sct_part: det.wod_part, sct_sim: 'STD-CG' }).subscribe(
           (respo: any) => {
             this.sct = respo.data
        */ 
@@ -1073,7 +1073,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
 
        
         
-            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STDCG' }).subscribe(
+            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
               (response: any) => {
                 this.sct = response.data
             
@@ -2266,7 +2266,7 @@ var bol = false
     (respopart: any) => {
       console.log(respopart)
 
-   this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+   this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
     (respo: any) => {
       this.sct = respo.data
       console.log(this.sct)

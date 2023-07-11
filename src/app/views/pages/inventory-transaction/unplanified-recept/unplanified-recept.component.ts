@@ -217,7 +217,7 @@ seq: any;
                 (response: any) => {
                   this.location = response.data
               
-                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STDCG' }).subscribe(
+                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
                     (response: any) => {
                       this.sct = response.data
              
@@ -988,7 +988,7 @@ seq: any;
             (response: any) => {
               this.location = response.data
           
-            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STDCG' }).subscribe(
+            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
               (response: any) => {
                 this.sct = response.data
             

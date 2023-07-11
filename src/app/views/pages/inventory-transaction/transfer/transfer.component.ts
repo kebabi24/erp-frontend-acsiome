@@ -512,7 +512,7 @@ export class TransferComponent implements OnInit {
               (respopart: any) => {
                 console.log(respopart)
 
-             this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+             this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
               (respo: any) => {
                 this.sct = respo.data
                 console.log(this.sct)
@@ -587,7 +587,7 @@ export class TransferComponent implements OnInit {
                     for (var i = 0; i < this.dataset.length; i++) {
                       console.log(this.dataset[i].tr_part  )
                       let updateItem = this.gridService.getDataItemByRowIndex(i);
-                      this.sctService.getByOne({ sct_site: loc_site, sct_part: this.dataset[i].tr_part, sct_sim: 'STDCG' }).subscribe(
+                      this.sctService.getByOne({ sct_site: loc_site, sct_part: this.dataset[i].tr_part, sct_sim: 'STD-CG' }).subscribe(
                         (response: any) => {
                           this.sct = response.data
                          console.log(this.sct.sct_cst_tot)
@@ -748,7 +748,7 @@ export class TransferComponent implements OnInit {
                   //(response: any) => {
                     //this.location = response.data
                 
-                    this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STDCG' }).subscribe(
+                    this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
                       (response: any) => {
                         this.sct = response.data
                
@@ -933,7 +933,7 @@ export class TransferComponent implements OnInit {
                // meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
               } else {
                 if (this.rqm) {
-                this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: args.dataContext.tr_part, sct_sim: 'STDCG' }).subscribe(
+                this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: args.dataContext.tr_part, sct_sim: 'STD-CG' }).subscribe(
                   (response: any) => {
                     this.sct = response.data
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_price: this.sct.sct_cst_tot  })
@@ -1536,7 +1536,7 @@ export class TransferComponent implements OnInit {
              // (response: any) => {
               //  this.location = response.data
             
-              this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: item.pt_part, sct_sim: 'STDCG' }).subscribe(
+              this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
                 (response: any) => {
                   this.sct = response.data
               

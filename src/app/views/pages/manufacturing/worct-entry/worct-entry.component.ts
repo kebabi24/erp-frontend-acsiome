@@ -342,7 +342,7 @@ export class WorctEntryComponent implements OnInit {
 
 
 
-                    this.sctService.getByOne({ sct_site: response.data.si_site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+                    this.sctService.getByOne({ sct_site: response.data.si_site, sct_part: controls.tr_part.value, sct_sim: 'STD-CG' }).subscribe(
                       (resp: any) => {
                         this.sct = resp.data
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_site: response.data.si_site, tr_price:this.sct.sct_cst_tot })
@@ -787,7 +787,7 @@ export class WorctEntryComponent implements OnInit {
           })
         }  console.log(this.address)
         console.log(this.site)
-        this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: 'STDCG' }).subscribe(
+        this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: 'STD-CG' }).subscribe(
           (resp: any) => {
             this.sct = resp.data
             console.log(this.sct)
@@ -1009,7 +1009,7 @@ export class WorctEntryComponent implements OnInit {
           const item = this.gridObjsite.getDataItem(idx);
           console.log(item);
   
-          this.sctService.getByOne({ sct_site: item.si_site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+          this.sctService.getByOne({ sct_site: item.si_site, sct_part: controls.tr_part.value, sct_sim: 'STD-CG' }).subscribe(
             (resp: any) => {
               this.sct = resp.data
         
@@ -1676,7 +1676,7 @@ handleSelectedRowsChanged5(e, args) {
       }  
       
       console.log(this.site)
-      this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+      this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STD-CG' }).subscribe(
         (resp: any) => {
           this.sct = resp.data
           console.log("sct",this.sct)

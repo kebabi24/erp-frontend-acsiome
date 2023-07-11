@@ -885,7 +885,7 @@ export class CreateComponent implements OnInit {
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     
-    _sct.sct_sim      = 'STDCG'
+    _sct.sct_sim      = 'STD-CG'
     _sct.sct_part     = control1.pt_part.value;
     _sct.sct_mtl_tl   = 0;
     _sct.sct_mtl_ll   = 0;
@@ -907,7 +907,7 @@ export class CreateComponent implements OnInit {
     const controls = this.sctForm1.controls;
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
-    _sct.sct_sim     = 'STDCR'
+    _sct.sct_sim     = 'STD-CR'
     _sct.sct_part    = control1.pt_part.value
     _sct.sct_mtl_tl  = 0;
     _sct.sct_mtl_ll  = 0;

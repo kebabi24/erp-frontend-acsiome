@@ -1534,7 +1534,7 @@ if (item.pt_rctwo_active) {
       (respopart: any) => {
         console.log(respopart)
 
-     this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STDCG' }).subscribe(
+     this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
       (respo: any) => {
         this.sct = respo.data
         console.log(this.sct)

@@ -544,6 +544,9 @@ export class CostpriceListComponent implements OnInit {
       unitbdn:  [{value:0, disabled: true}],
       unittotalcost :  [{value:0, disabled: true}],
 
+      unitlbrstd:  [{value:0, disabled: true}],
+      unitbdnstd:  [{value:0, disabled: true}],
+
       
       });
   }
@@ -860,6 +863,12 @@ handleSelectedRowsChanged5(e, args) {
          const bdn = Number(response.data.bdn.toFixed(2))
          controls.unitlbr.setValue(Number(lbr.toFixed(2)))
          controls.unitbdn.setValue(Number(bdn.toFixed(2)))
+
+         const lbrstd = Number(response.data.lbrstd.toFixed(2))
+         const bdnstd = Number(response.data.bdnstd.toFixed(2))
+         controls.unitlbrstd.setValue(Number(lbrstd.toFixed(2)))
+         controls.unitbdnstd.setValue(Number(bdnstd.toFixed(2)))
+
          console.log(controls.unitcost.value)
          const tot = Number((Number( controls.unitcost.value)+Number(lbr)+Number(bdn)).toFixed(2))
          controls.unittotalcost.setValue(Number(tot))
