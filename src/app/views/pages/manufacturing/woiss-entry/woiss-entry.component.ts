@@ -1075,6 +1075,7 @@ this.workOrderDetailService.getBy({wod_lot: id, wod__qadl01: false}).subscribe(
         
             this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
               (response: any) => {
+                console.log("sct",response.data)
                 this.sct = response.data
             
                 this.locationDetailService.getByOne({ ld_site: item.pt_site, ld_loc: item.pt_loc, ld_part: item.pt_part, ld_lot: null ,ld_ref:null}).subscribe(
