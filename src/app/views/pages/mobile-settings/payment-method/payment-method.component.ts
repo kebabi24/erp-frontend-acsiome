@@ -57,6 +57,7 @@ export class PaymentMethodComponent implements OnInit {
         public dialog: MatDialog,
         private modalService: NgbModal,
         private mobileSettingsService : MobileSettingsService,
+        private layoutUtilsService: LayoutUtilsService,
   ) { 
         config.autoClose = true
         // this.prepareVisitResult()
@@ -132,14 +133,12 @@ export class PaymentMethodComponent implements OnInit {
                 minWidth: 30,
                 maxWidth: 30,
                 onCellClick: (e: Event, args: OnEventArgs) => {
-                  // this.confirmDelete = true
                   this.alertWarning = `Deleting: ${args.dataContext.cluster_code}`;
-                  // this.deleteCluster(args.dataContext.id)
-                  // this.dataset = this.dataset.filter(function(value, index, arr){ 
-                  //   return value.id != args.dataContext.id;
-                  // })
-                  // this.dataView.setItems(this.dataset)
-                  this.addToDeletedIds(args.dataContext.id)
+                
+                   this.dataset = this.dataset.filter(function(value, index, arr){ 
+                     return value.id != args.dataContext.id;
+                   })
+                   this.dataView.setItems(this.dataset)
                 }
                 
               },
@@ -164,11 +163,7 @@ export class PaymentMethodComponent implements OnInit {
                   maxWidth: 100,
                   filterable: true,
                   type: FieldType.string,
-                  onCellChange: (e: Event, args: OnEventArgs) => {
-                    this.addToUpdatedIds(args.dataContext.id)
-                    //  this.dataView.getItemById(args.dataContext.id)
-                    // console.log(Object.keys(this.dataView))
-                  },
+                  
               },
               {
                   id: "description",
@@ -182,11 +177,7 @@ export class PaymentMethodComponent implements OnInit {
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
-                  onCellChange: (e: Event, args: OnEventArgs) => {
-                    this.addToUpdatedIds(args.dataContext.id)
-                    // this.dataView.getItemById(args.dataContext.id).meta
-                    // console.log(Object.keys(this.dataView))
-                  },
+                 
               },
               {
                 id: "tax_pct",
@@ -197,14 +188,10 @@ export class PaymentMethodComponent implements OnInit {
                 maxWidth: 100,
                 filterable: true,  
                 editor: {
-                  model: Editors.text,
+                  model: Editors.float,
                 },
-                type: FieldType.string,
-                onCellChange: (e: Event, args: OnEventArgs) => {
-                  this.addToUpdatedIds(args.dataContext.id)
-                  // this.dataView.getItemById(args.dataContext.id).meta
-                  // console.log(Object.keys(this.dataView))
-                },
+                type: FieldType.float,
+
               }  
         ]
 
@@ -252,32 +239,44 @@ export class PaymentMethodComponent implements OnInit {
 
   onSubmit() {
     // GET THE IDS TO BE ADDED 
-    this.addToCreateIds()
+    // this.addToCreateIds()
 
-    const updateData = []
+    // const updateData = []
     
     // fill updateData with the updated data from dataset 
-    this.updateIds.forEach(index => {
-      const element = this.dataset.filter(function(e){
-        return e.id == index;
-      })
-      updateData.push(...element)
-    });
+    // this.updateIds.forEach(index => {
+    //   const element = this.dataset.filter(function(e){
+    //     return e.id == index;
+    //   })
+    //   updateData.push(...element)
+    // });
 
     // 
-    this.mobileSettingsService.submitVisitListData(
-      {visitResults: this.newVisitResults},
-      {deleteIds : this.deleteIds},
-      {updateData :updateData }
+    this.mobileSettingsService.createPaymentMethods(
+      this.dataset
       ).subscribe(
       (response: any) => {
-        console.log(response.updatedResults)
-        this.dataset = response.newVisitResults
-        this.dataView.setItems(this.dataset)
       },
       (error) => {
-          console.log(error)
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
       },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
     )
   }
 
@@ -354,12 +353,9 @@ updateItemMetadata(previousItemMetadata: any) {
 addNewItem() {
   this.angularGrid.gridService.addItem(
     {
-      // id: this.dataset.length + 1,
-      id : "",
-      visitresult_code:"", 
-      name: "", 
-      rank: "", 
-      revisit: true
+      id: this.dataset.length + 1,
+      payment_method_code:"", 
+      description: "", 
     },
     { position: "bottom" }
   );
