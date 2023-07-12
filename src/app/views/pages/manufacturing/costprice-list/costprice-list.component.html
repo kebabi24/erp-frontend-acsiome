@@ -1,0 +1,304 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Liste Prix de Revient OF" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="woForm">
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    {{message}}
+                </kt-alert>
+                <div class="row">
+                    
+                    
+                    
+                   
+                  
+                    <div class="form-group col-2">
+                        <label class="form-group">ID OF:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_lot" id="id"
+                                aria-describedby="basic-addon2" (change)="onChangeOA()">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open5(content5)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">N° OF:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_nbr"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+            
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Article:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="part"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">Designation:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="desc"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                    
+                </div>
+                 
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Quantité Complétée:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid"  formControlName="qtycomp"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Quantité Rejetée:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid"  formControlName="qtyrjct"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                    
+                </div>    
+                <br>
+                
+                  <div class="row">
+                    <div class="form-group col-6">
+                        <h3>Declaration Production</h3>
+                    </div> 
+                    <div class="form-group col-6">
+                        <h3>Consomation MP</h3>
+                    </div> 
+                  </div>
+                  
+                    <div class="row">
+                        
+                            <angular-slickgrid class="col-6"  title="Declaration Production"   gridHeight="300" gridId="mGrid"
+                                [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                                (onAngularGridCreated)="gridReady($event)">
+                            </angular-slickgrid>
+                    
+                        <angular-slickgrid class="col-6"  title="Consomation MP" gridHeight="300" gridId="wodGrid"
+                            [columnDefinitions]="columnDefinitionsmp" [gridOptions]="gridOptionsmp" [dataset]="mpdataset"
+                            (onAngularGridCreated)="gridReadymp($event)">
+                        </angular-slickgrid>
+                    </div>
+                    <br>
+                    <h3>Declaration Opération</h3>    
+                <div class="row">
+                    
+                    <div class="col-6">    
+                        <div class="row">
+                            <angular-slickgrid class="col-12"  title="Declaration Operation"   gridHeight="300" gridId="opGrid"
+                                [columnDefinitions]="columnDefinitionsop" [gridOptions]="gridOptionsop" [dataset]="opdataset"
+                                (onAngularGridCreated)="gridReadyop($event)">
+                            </angular-slickgrid>
+                        </div>
+                    </div>
+                    <div class="col-6">    
+                        <div class="row">    
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût Matiére Unitaire:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitcost"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût Matiére STD:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="coststd"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-group">Ecart Coût Matiére :</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="costecart"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                        
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût Main d'Oeuvre:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitlbr"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût Main d'Oeuvre STD:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitlbrstd"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-group">Ecart Coût Main d'Oeuvre:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="lbrecart"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût FG Variable:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitbdn"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût FG Variable STD:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unitbdnstd"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-group">Ecart FG Variablee :</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="bdnecart"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût Unitaire:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unittotalcost"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            
+                            <div class="form-group col-3">
+                                <label class="form-group">Coût Unitaire STD:</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="unittotalcoststd"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-3">
+                                <label class="form-group">Ecart Coût Unitaire :</label>
+                                <div class="input-group input-group-sm">
+        
+                                    <input type="number" class="form-control form-control-solid"  formControlName="totecart"
+                                        aria-describedby="basic-addon2" >
+                                    
+                                </div>
+        
+                            </div>
+                        </div>    
+                    </div>
+                </div>   
+                
+            </form>
+        </div>
+
+       
+
+        
+        
+        
+        <div>
+            <ng-template #content5 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir ID</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpos"
+                            [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions5" [dataset]="wos">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open5(content5)">Launch demo
+                modal</button>
+
+        </div>
+    </kt-portlet-body>
+</kt-portlet>
+

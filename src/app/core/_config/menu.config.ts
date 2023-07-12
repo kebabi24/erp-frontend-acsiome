@@ -679,7 +679,14 @@ export class MenuConfig {
               title: "Cloture OF",
               page: "/manufacturing/edit-wo",
             },
-              
+            {
+              title: "Calcul Coût Production",
+              page: "/manufacturing/calc-cout-wo",
+            },
+            {
+              title: "List Prix de Revient OF",
+              page: "/manufacturing/costprice-list",
+            },  
           ],
         },
         {
@@ -875,6 +882,10 @@ export class MenuConfig {
             {
               title: "Affectation Frais d approche",
               page: "/general-accounting/affect-frp",
+            },
+            {
+              title: "Calcul Coût Moyen Pondéré",
+              page: "/general-accounting/calc-cmp",
             },
             {
               title: "Maint Ecriture Standard",

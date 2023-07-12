@@ -217,7 +217,7 @@ seq: any;
                 (response: any) => {
                   this.location = response.data
               
-                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STDCG' }).subscribe(
+                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
                     (response: any) => {
                       this.sct = response.data
              
@@ -541,9 +541,9 @@ seq: any;
           sortable: false,
         
           filterable: false,
-         // editor: {
-         //     model: Editors.float,
-          //},
+         editor: {
+             model: Editors.text,
+          },
           
         },
         {
@@ -968,6 +968,7 @@ seq: any;
           tr_site: "",
           tr_loc: "",
           tr_serial: null,
+          tr_ref:null,
           tr_status: null,
           tr_expire: null,
         },
@@ -987,7 +988,7 @@ seq: any;
             (response: any) => {
               this.location = response.data
           
-            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STDCG' }).subscribe(
+            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
               (response: any) => {
                 this.sct = response.data
             
