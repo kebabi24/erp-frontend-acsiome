@@ -181,7 +181,7 @@ export class CreateNewServiceComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       autoEdit: false,
-      autoHeight: false,
+      autoHeight: true,
       enableAutoResize: true,
       frozenColumn: 0,
       frozenBottom: true,
@@ -305,7 +305,7 @@ export class CreateNewServiceComponent implements OnInit {
     const year = controls.service_creation_date.value.year;
     const month = controls.service_creation_date.value.month;
     const day = controls.service_creation_date.value.day;
-    _service.service_creation_date = `${day}/${month}/${year}`;
+    _service.service_creation_date = `${year}/${month}/${day}`;
     //_service.service_closing_date = controls.service_closing_date.value
     _service.role_code = controls.role_code.value;
     _service.itinerary_code = controls.itinerary_code.value;
