@@ -610,7 +610,7 @@ prepareCode(): any {
               console.log(resp.data)
 
              
-                this.sctService.getByOne({ sct_site: this.site, sct_part: resp.data.pt_part, sct_sim: 'STDCG' }).subscribe(
+                this.sctService.getByOne({ sct_site: this.site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
                   (response: any) => {
                     this.sct = response.data
            
@@ -1579,7 +1579,7 @@ handleSelectedRowsChanged4(e, args) {
 
      
       
-          this.sctService.getByOne({ sct_site: this.site, sct_part: item.pt_part, sct_sim: 'STDCG' }).subscribe(
+          this.sctService.getByOne({ sct_site: this.site, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
             (response: any) => {
               this.sct = response.data
           

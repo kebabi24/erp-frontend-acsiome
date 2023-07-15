@@ -51,7 +51,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { RoleService, ItineraryService } from "../../../core/erp"
+import { RoleService, ItineraryService ,  TokenSerieService ,LocationService, UsersService } from "../../../core/erp"
 import { TreeModule } from "@circlon/angular-tree-component";
 import { EditRoleComponent } from './edit-role/edit-role.component';
 
@@ -104,7 +104,10 @@ const routes: Routes = [
             multi: true,
         },
         RoleService,
+        TokenSerieService,
         ItineraryService,
+        LocationService,
+        UsersService,
         TypesUtilsService,
         LayoutUtilsService,
         HttpUtilsService,

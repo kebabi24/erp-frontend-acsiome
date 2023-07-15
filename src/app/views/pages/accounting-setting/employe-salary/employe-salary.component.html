@@ -1,0 +1,102 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Calcul de la paie'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+           
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <form class="form" [formGroup]="empForm">
+                <div class="row">
+                
+                    <div class="form-group col-2">
+                      <label class="form-group">Année:</label>
+          
+                      <select
+                        formControlName="year"
+                        [className]="
+                          empForm.controls['year'].errors &&
+                          (empForm.controls['year'].dirty ||
+                            empForm.controls['year'].touched)
+                            ? 'form-control form-control-sm form-control-solid is-invalid'
+                            : 'form-control form-control-sm form-control-solid'
+                        "
+                      >
+                        <option *ngFor="let elem of year" [value]="elem.y">
+                          {{ elem.y }}
+                        </option>
+                      </select>
+                      <div
+                        *ngIf="
+                          empForm.controls['year'].errors &&
+                          (empForm.controls['year'].dirty ||
+                            empForm.controls['year'].touched)
+                        "
+                        class="invalid-feedback"
+                      >
+                        Ce Champs est obligatoire
+                      </div>
+                    </div>
+                    <div class="form-group col-2">
+                      <label class="form-group">Mois:</label>
+          
+                        <select
+                            formControlName="month"
+                            [className]="
+                            empForm.controls['month'].errors &&
+                            (empForm.controls['month'].dirty ||
+                                empForm.controls['month'].touched)
+                                ? 'form-control form-control-sm form-control-solid is-invalid'
+                                : 'form-control form-control-sm form-control-solid'
+                            "
+                        >
+                            <option value=""></option>
+                            <option value="01">Janvier</option>
+                            <option value="02">Fevrier</option>
+                            <option value="03">Mars</option>
+                            <option value="04">Avril</option>
+                            <option value="05">Mai</option>
+                            <option value="06">Juin</option>
+                            <option value="07">Juillet</option>
+                            <option value="08">Aout</option>
+                            <option value="09">Septembre</option>
+                            <option value="10">Octobre</option>
+                            <option value="11">Novembre</option>
+                            <option value="12">Decembre</option>
+                        </select>
+                        <div
+                            *ngIf="
+                            empForm.controls['month'].errors &&
+                            (empForm.controls['month'].dirty ||
+                                empForm.controls['month'].touched)
+                            "
+                            class="invalid-feedback"
+                        >
+                            Ce Champs est obligatoire
+                        </div>
+                   
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">Valider: *</label>
+                        <div class="input-group input-group-sm">
+
+                        <button type="button"  (click)="valide()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
+                        </div>
+                    </div>    
+                </div>
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridId="gridCode" [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                        [gridOptions]="gridOptions" [dataset]="dataset">
+                    </angular-slickgrid>
+                </div>
+            </form>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>
+
+

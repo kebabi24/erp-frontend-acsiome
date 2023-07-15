@@ -342,7 +342,7 @@ export class WorctEntryComponent implements OnInit {
 
 
 
-                    this.sctService.getByOne({ sct_site: response.data.si_site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+                    this.sctService.getByOne({ sct_site: response.data.si_site, sct_part: controls.tr_part.value, sct_sim: 'STD-CG' }).subscribe(
                       (resp: any) => {
                         this.sct = resp.data
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_site: response.data.si_site, tr_price:this.sct.sct_cst_tot })
@@ -648,6 +648,8 @@ export class WorctEntryComponent implements OnInit {
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      autoHeight:true,
+      enableAutoResize:true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -785,7 +787,7 @@ export class WorctEntryComponent implements OnInit {
           })
         }  console.log(this.address)
         console.log(this.site)
-        this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: 'STDCG' }).subscribe(
+        this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: 'STD-CG' }).subscribe(
           (resp: any) => {
             this.sct = resp.data
             console.log(this.sct)
@@ -981,7 +983,7 @@ export class WorctEntryComponent implements OnInit {
         tr_price: this.sct.sct_cst_tot,
         tr_site: this.site,
         tr_loc: this.loc,
-        
+        tr_ref:null,
         tr_serial: (this.uniquelot == "L") ? `${this.product.pt_article}${this.product.pt_break_cat}${this.product.pt_net_wt}/${days}.${months}.${year}`   : null,
         tr_status: this.rctwostat,
         tr_expire: null,
@@ -1007,7 +1009,7 @@ export class WorctEntryComponent implements OnInit {
           const item = this.gridObjsite.getDataItem(idx);
           console.log(item);
   
-          this.sctService.getByOne({ sct_site: item.si_site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+          this.sctService.getByOne({ sct_site: item.si_site, sct_part: controls.tr_part.value, sct_sim: 'STD-CG' }).subscribe(
             (resp: any) => {
               this.sct = resp.data
         
@@ -1657,6 +1659,7 @@ handleSelectedRowsChanged5(e, args) {
       this.uniquelot = item.item.pt_lot_ser
       this.site = item.item.pt_site
       this.loc = item.item.pt_loc
+      console.log("item.item.pt_loc",item.item.pt_loc)
       if (item.item.pt_rctwo_active) { 
         this.rctwostat = item.item.pt_rctwo_status 
       } else {
@@ -1672,10 +1675,11 @@ handleSelectedRowsChanged5(e, args) {
       
       }  
       
-      this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STDCG' }).subscribe(
+      console.log(this.site)
+      this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: 'STD-CG' }).subscribe(
         (resp: any) => {
           this.sct = resp.data
-          console.log(this.sct)
+          console.log("sct",this.sct)
     
     });
         }

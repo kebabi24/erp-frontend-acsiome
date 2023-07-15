@@ -88,6 +88,7 @@ import { ListSubaccountComponent } from './list-subaccount/list-subaccount.compo
 import { EditSubaccountComponent } from './edit-subaccount/edit-subaccount.component';
 import { ListCcComponent } from './list-cc/list-cc.component';
 import { EditCcComponent } from './edit-cc/edit-cc.component';
+import { EmployeSalaryComponent } from './employe-salary/employe-salary.component';
 const routes: Routes = [
     {
         path: "create-account",
@@ -214,6 +215,10 @@ const routes: Routes = [
         path: "list-pay-meth",
         component: ListPayMethComponent,
     },
+    {
+        path: "employe-salary",
+        component: EmployeSalaryComponent,
+    },
 ]
 
 @NgModule({
@@ -251,6 +256,7 @@ const routes: Routes = [
         EditSubaccountComponent,
         ListCcComponent,
         EditCcComponent,
+        EmployeSalaryComponent,
        
     ],
     imports: [

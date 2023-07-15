@@ -340,12 +340,12 @@ export class EditCostComponent implements OnInit {
               
              // this.site = response.data
               
-              this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STDCG'}).subscribe((response: any)=>{
+              this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STD-CG'}).subscribe((response: any)=>{
                 
                 
                 this.sct1Edit = response.data
 
-                this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STDCR'}).subscribe((response: any)=>{
+                this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STD-CR'}).subscribe((response: any)=>{
                 
                 
                   this.sct2Edit = response.data
@@ -431,13 +431,13 @@ onChangePart() {
             controls4.pt_taxc.enable()
             controls4.site.enable()
        
-            this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STDCG'}).subscribe((response: any)=>{
+            this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STD-CG'}).subscribe((response: any)=>{
                 
                 
               this.sct1Edit = response.data
               console.log("kamel", this.sct1Edit)
 
-              this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STDCR'}).subscribe((response: any)=>{
+              this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: controls4.site.value, sct_sim: 'STD-CR'}).subscribe((response: any)=>{
               
               
                 this.sct2Edit = response.data
@@ -614,7 +614,7 @@ onChangePart() {
     const control1 = this.form4.controls;
     const _sct = new CostSimulation();
     _sct.id = this.sct1Edit.id;
-    _sct.sct_sim = 'STDCG';
+    _sct.sct_sim = 'STD-CG';
     _sct.sct_part   = control1.pt_part.value;
     _sct.sct_mtl_tl = controls.sct_mtl_tl.value;
     _sct.sct_mtl_ll = controls.sct_mtl_ll.value;
@@ -637,7 +637,7 @@ onChangePart() {
     const control1 = this.form4.controls;
     const _sct = new CostSimulation();
     _sct.id = this.sct2Edit.id;
-    _sct.sct_sim = 'STDCR';
+    _sct.sct_sim = 'STD-CR';
     _sct.sct_part = control1.pt_part.value
     _sct.sct_mtl_tl = controls.sct_mtl_tl.value;
     _sct.sct_mtl_ll = controls.sct_mtl_ll.value;
@@ -689,13 +689,13 @@ onChangePart() {
 
 
 
-            this.sctService.getByOne({sct_part: item.pt_part, sct_site: item.pt_site, sct_sim: 'STDCG'}).subscribe((response: any)=>{
+            this.sctService.getByOne({sct_part: item.pt_part, sct_site: item.pt_site, sct_sim: 'STD-CG'}).subscribe((response: any)=>{
                 
                 
               this.sct1Edit = response.data
 
               
-              this.sctService.getByOne({sct_part: item.pt_part, sct_site: item.pt_site, sct_sim: 'STDCR'}).subscribe((response: any)=>{
+              this.sctService.getByOne({sct_part: item.pt_part, sct_site: item.pt_site, sct_sim: 'STD-CR'}).subscribe((response: any)=>{
               
               
                 this.sct2Edit = response.data
@@ -974,13 +974,13 @@ handleSelectedRowsChangedsite(e, args) {
               case "site": {
                   controls4.site.setValue(item.si_site || "")
                   
-                  this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: item.si_site, sct_sim: 'STDCG'}).subscribe((response: any)=>{
+                  this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: item.si_site, sct_sim: 'STD-CG'}).subscribe((response: any)=>{
                 
                 
                     this.sct1Edit = response.data
       
                     
-                    this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: item.si_site, sct_sim: 'STDCR'}).subscribe((response: any)=>{
+                    this.sctService.getByOne({sct_part: controls4.pt_part.value, sct_site: item.si_site, sct_sim: 'STD-CR'}).subscribe((response: any)=>{
                     
                     
                       this.sct2Edit = response.data

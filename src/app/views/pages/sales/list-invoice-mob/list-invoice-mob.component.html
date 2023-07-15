@@ -67,11 +67,21 @@
                         </div>    
                     </div> 
                 <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
-                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid"  gridHeight="300"
+                          [columnDefinitions]="mvcolumnDefinitions"
+                          (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
+                          (onAngularGridCreated)="mvGridReady($event)">
                     </angular-slickgrid>
                 </div>
                
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plageGrid"  
+                          [columnDefinitions]="columnDefinitions"
+                          [gridOptions]="gridOptions" [dataset]="dataset" 
+                          (onAngularGridCreated)="GridReady($event)">
+                    </angular-slickgrid>
+                </div>
             </form>
            
         </div>

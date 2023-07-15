@@ -11,6 +11,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
 import { MobileServiceService, MobileService, RoleService, ItineraryService } from "../../../../core/erp"
 import {   MobileSettingsService} from "../../../../core/erp"
+
+
 @Component({
   selector: 'kt-cancelation-reason',
   encapsulation: ViewEncapsulation.None,
@@ -55,13 +57,14 @@ export class CancelationReasonComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private router: Router,
         public dialog: MatDialog,
+        private layoutUtilsService: LayoutUtilsService,
         private modalService: NgbModal,
         private mobileSettingsService : MobileSettingsService,
   ) { 
         config.autoClose = true
         // this.prepareVisitResult()
         // this.fillDataset()
-        this.prepareGrid()
+        
         
         // this.gridService.highlightRow("")
   }
@@ -78,6 +81,7 @@ export class CancelationReasonComponent implements OnInit {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
         // this.createForm()
+        this.prepareGrid()
         
   }
 
@@ -132,13 +136,11 @@ export class CancelationReasonComponent implements OnInit {
                 minWidth: 30,
                 maxWidth: 30,
                 onCellClick: (e: Event, args: OnEventArgs) => {
-                  // this.confirmDelete = true
-                  this.alertWarning = `Deleting: ${args.dataContext.cluster_code}`;
-                  // this.deleteCluster(args.dataContext.id)
-                  // this.dataset = this.dataset.filter(function(value, index, arr){ 
-                  //   return value.id != args.dataContext.id;
-                  // })
-                  // this.dataView.setItems(this.dataset)
+                  this.alertWarning = `Deleting: ${args.dataContext.cancelation_reason_code}`;
+                   this.dataset = this.dataset.filter(function(value, index, arr){ 
+                     return value.id != args.dataContext.id;
+                   })
+                   this.dataView.setItems(this.dataset)
                   this.addToDeletedIds(args.dataContext.id)
                 }
                 
@@ -148,8 +150,8 @@ export class CancelationReasonComponent implements OnInit {
                   name: "id",
                   field: "id",
                   excludeFromHeaderMenu: true,
-                  minWidth: 40,
-                  maxWidth: 60,
+                  minWidth: 70,
+                  maxWidth: 100,
                   sortable:true,
               },
               {
@@ -160,15 +162,15 @@ export class CancelationReasonComponent implements OnInit {
                   editor: {
                     model: Editors.text,
                   },
-                  minWidth: 70,
-                  maxWidth: 100,
+                  minWidth: 100,
+                  maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
-                  onCellChange: (e: Event, args: OnEventArgs) => {
-                    this.addToUpdatedIds(args.dataContext.id)
-                    //  this.dataView.getItemById(args.dataContext.id)
-                    // console.log(Object.keys(this.dataView))
-                  },
+                  // onCellChange: (e: Event, args: OnEventArgs) => {
+                  //   this.addToUpdatedIds(args.dataContext.id)
+                  //   //  this.dataView.getItemById(args.dataContext.id)
+                  //   // console.log(Object.keys(this.dataView))
+                  // },
               },
               {
                   id: "name",
@@ -182,11 +184,10 @@ export class CancelationReasonComponent implements OnInit {
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string,
-                  onCellChange: (e: Event, args: OnEventArgs) => {
-                    this.addToUpdatedIds(args.dataContext.id)
-                    // this.dataView.getItemById(args.dataContext.id).meta
-                    // console.log(Object.keys(this.dataView))
-                  },
+                  // onCellChange: (e: Event, args: OnEventArgs) => {
+                  //   this.addToUpdatedIds(args.dataContext.id)
+
+                  // },
               },
               {
                 id: "rank",
@@ -197,14 +198,14 @@ export class CancelationReasonComponent implements OnInit {
                 maxWidth: 100,
                 filterable: true,  
                 editor: {
-                  model: Editors.text,
+                  model: Editors.integer,
                 },
-                type: FieldType.string,
-                onCellChange: (e: Event, args: OnEventArgs) => {
-                  this.addToUpdatedIds(args.dataContext.id)
-                  // this.dataView.getItemById(args.dataContext.id).meta
-                  // console.log(Object.keys(this.dataView))
-                },
+                type: FieldType.integer,
+                // onCellChange: (e: Event, args: OnEventArgs) => {
+                //   this.addToUpdatedIds(args.dataContext.id)
+                //   // this.dataView.getItemById(args.dataContext.id).meta
+                //   // console.log(Object.keys(this.dataView))
+                // },
               }, 
         ]
 
@@ -251,33 +252,35 @@ export class CancelationReasonComponent implements OnInit {
 
 
   onSubmit() {
-    // GET THE IDS TO BE ADDED 
-    this.addToCreateIds()
-
-    const updateData = []
     
-    // fill updateData with the updated data from dataset 
-    this.updateIds.forEach(index => {
-      const element = this.dataset.filter(function(e){
-        return e.id == index;
-      })
-      updateData.push(...element)
-    });
-
-    // 
-    this.mobileSettingsService.submitVisitListData(
-      {visitResults: this.newVisitResults},
-      {deleteIds : this.deleteIds},
-      {updateData :updateData }
+    this.mobileSettingsService.createCancelationReasons(
+      this.dataset
+     
       ).subscribe(
       (response: any) => {
-        console.log(response.updatedResults)
-        this.dataset = response.newVisitResults
-        this.dataView.setItems(this.dataset)
+        console.log(response)
       },
       (error) => {
-          console.log(error)
+        this.layoutUtilsService.showActionNotification(
+          "Erreur verifier les informations",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
       },
+      () => {
+        this.layoutUtilsService.showActionNotification(
+          "Ajout avec succès",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.loadingSubject.next(false);
+      }
+      
     )
   }
 
@@ -354,12 +357,9 @@ updateItemMetadata(previousItemMetadata: any) {
 addNewItem() {
   this.angularGrid.gridService.addItem(
     {
-      // id: this.dataset.length + 1,
-      id : "",
-      visitresult_code:"", 
-      name: "", 
-      rank: "", 
-      revisit: true
+      id: this.dataset.length + 1,
+      cancelation_reason_code:"",
+      name: "",  
     },
     { position: "bottom" }
   );

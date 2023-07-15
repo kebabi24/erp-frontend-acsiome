@@ -140,6 +140,19 @@ export class AffectFrpComponent implements OnInit {
     this.columnDefinitions = [
       {
         id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.angularGrid.gridService.deleteItem(args.dataContext);
+          }
+        },
+      },
+      {
+        id: "id",
         name: "id",
         field: "id",
         sortable: true,
@@ -161,6 +174,7 @@ export class AffectFrpComponent implements OnInit {
        },
         
       },
+
       {
         id: "mvid",
         field: "cmvid",
@@ -179,6 +193,20 @@ export class AffectFrpComponent implements OnInit {
           element.click();
           
         },
+      },
+      {
+        id: "vend",
+        name: "Fournisseur",
+        field: "vend",
+        sortable: true,
+        minWidth: 200,
+        maxWidth: 200,
+        filterable: false,
+        
+        editor: {
+          model: Editors.text,
+       },
+        
       },
       {
         id: "effdate",
@@ -261,42 +289,51 @@ export class AffectFrpComponent implements OnInit {
     },
       
     {
-      id: "frp_prh_nbr",
+      id: "frpd_prh_nbr",
       name: "N RC",
-      field: "frp_prh_nbr",
+      field: "frpd_prh_nbr",
       sortable: true,
       filterable: false,
       
     }, 
     {
-      id: "frp_part",
+      id: "frpd_part",
       name: "Artice",
-      field: "frp_part",
+      field: "frpd_part",
       sortable: true,
       filterable: false,
       
     },
     {
-      id: "frp_qty_rcv",
-      name: "Qte",
-      field: "frp_qty_rcv",
+      id: "desc",
+      name: "Designation",
+      field: "desc",
       sortable: true,
       filterable: false,
       
     },
 
     {
-      id: "frp_price",
+      id: "frpd_qty_rcvd",
+      name: "Qte",
+      field: "frpd_qty_rcvd",
+      sortable: true,
+      filterable: false,
+      
+    },
+
+    {
+      id: "frpd_price",
       name: "Prix",
-      field: "frp_price",
+      field: "frpd_price",
       sortable: true,
       filterable: false,
       
     },
     {
-      id: "amt_afct",
+      id: "frpd_amt",
       name: "Montant ",
-      field: "amt_afct",
+      field: "frpd_amt",
       sortable: true,
       filterable: false,
       editor: {
@@ -336,7 +373,7 @@ export class AffectFrpComponent implements OnInit {
       },*/
     };
 
-    //this.dataset = [];
+    this.cfrpdataset = [];
   }
   
 
@@ -371,7 +408,7 @@ export class AffectFrpComponent implements OnInit {
         amt:  [{value: 0  }],
         frp_rmks:  [this.frais.frp_rmks  ],
       
-        frp_type_affect: [this.frais.frp_type_affect ],
+        frp_type_affect: ["Quantite" ],
         
 
       });
@@ -424,7 +461,7 @@ export class AffectFrpComponent implements OnInit {
    
     
     let ap = this.prepareAP()
-    //this.addAP(ap, this.dataset, this.cfdataset);
+    this.addAP(ap, this.cfrpdataset);
 
 
   }
@@ -442,7 +479,7 @@ export class AffectFrpComponent implements OnInit {
 
     _frais.frp_rmks = controls.frp_rmks.value; 
     _frais.frp_type_affect = controls.frp_type_affect.value; 
-    
+    _frais.frp_val = controls.amt.value; 
     return _frais;
   
   }
@@ -451,7 +488,7 @@ export class AffectFrpComponent implements OnInit {
    *
    * @param _frais: ap
    */
-  addAP(_frais: any, detail: any, cfdetail:any) {
+  addAP(_frais: any, detail: any) {
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -461,8 +498,8 @@ export class AffectFrpComponent implements OnInit {
     let ar = null;
     const controls = this.frpForm.controls;
 
-  /*  this.fraisService
-      .add({ accountPayable: _frais, accountPayableDetail: detail, gldetail: cfdetail })
+   this.fraisService
+      .add({ frais: _frais, fraisDetail: detail })
       .subscribe(
         (reponse: any) => (ar = reponse.data),
         (error) => {
@@ -489,7 +526,7 @@ export class AffectFrpComponent implements OnInit {
           this.router.navigateByUrl("/account-Payable/create-account-Payable");
           this.reset()
         }
-      );*/
+      );
   }
  
   
@@ -525,6 +562,7 @@ handleSelectedRowsChanged4(e, args) {
       
       
     controls.frp_inv_nbr.setValue(item.ap_nbr)  
+    
     controls.amt.setValue(item.ap_amt)  
       
     }  
@@ -623,10 +661,15 @@ handleSelectedRowsChangedprh(e, args) {
   if (Array.isArray(args.rows) && this.gridObjprh) {
     args.rows.map((idx) => {
       const item = this.gridObjprh.getDataItem(idx);
-         
+
+     
+      const result = this.dataset.find(({ prh_nbr }) => prh_nbr === item.prh_receiver);
+      if(!result) {
+      console.log(result)
             updateItem.prh_nbr = item.prh_receiver;
             updateItem.effdate = item.prh_rcp_date;
-            
+            updateItem.amt = item.total_amt;
+            updateItem.vend = item.prh_vend;
             this.gridService.updateItem(updateItem);
 
             this.purchaseReceiveService.findBy({ prh_receiver : item.prh_receiver }).subscribe(
@@ -634,28 +677,49 @@ handleSelectedRowsChangedprh(e, args) {
                
                 this.details  = res.data;
                
-                //console.log(this.details)
+                console.log("det",this.details)
                 for (var object = 0; object < this.details.length; object++) {
                   const detail = this.details[object];
-              
+              console.log(detail)
                  
-                 this.cfrpdataset.push(
+              this.gridServicefrp.addItem(
+                  
               {
                   id: this.cfrpdataset.length + 1,
-                  frp_prh_nbr : detail.prh_receiver,
-                  frp_part : detail.prh_part,
-                  frp_qty_rcv : detail.prh_rcvd,
-                  frp_price: detail.prh_pur_cost,
+                  frpd_prh_nbr : detail.prh_receiver,
+                  frpd_part : detail.prh_part,
+                  desc: detail.item.pt_desc1,
+                  frpd_qty_rcvd : detail.prh_rcvd,
+                  frpd_price: detail.prh_pur_cost,
+                  frpd_po_nbr: detail.prh_nbr,
+                  frpd_prh_date: detail.prh_rcp_date,
+                  
         
                 
               },
-                 // { position: "bottom" }
+                  { position: "bottom" }
                   );
-               
+
+                  // this.cfrpdataset.push(
+                  
+                  //   {
+                  //       id: this.cfrpdataset.length + 1,
+                  //       frpd_prh_nbr : detail.prh_receiver,
+                  //       frpd_part : detail.prh_part,
+                  //       desc: detail.item.pt_desc1,
+                  //       frpd_qty_rcvd : detail.prh_rcvd,
+                  //       frpd_price: detail.prh_pur_cost,
+              
+                      
+                  //   },
+                  // )
               
               }
             })
-        
+          }
+          else {
+            alert("Récéption déjà choisie")
+          }
     });
   
 }
@@ -692,6 +756,22 @@ prepareGridprh() {
       filterable: true,
       type: FieldType.dateIso,
     },
+    {
+      id: "prh_vend",
+      name: "Fournisseur",
+      field: "prh_vend",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "total_amt",
+      name: "Montant",
+      field: "total_amt",
+      sortable: true,
+      filterable: true,
+      type: FieldType.float,
+    },
     
   ];
 
@@ -726,7 +806,7 @@ prepareGridprh() {
 
   // fill the dataset with your data
   this.purchaseReceiveService
-    .getGroup() 
+    .getGroupAmt() 
     .subscribe((response: any) => (this.dataprh = response.data));
 }
 openprh(content) {
@@ -739,6 +819,7 @@ openprh(content) {
 
 
 oncreateFRP() {
+  console.log(this.cfrpdataset)
   const controls = this.frpForm.controls;
 
   console.log(this.cfrpdataset.length)
@@ -746,74 +827,36 @@ oncreateFRP() {
 this.qty = 0
 for (var i = 0; i < this.cfrpdataset.length; i++) {
 if (controls.frp_type_affect.value == "Quantite") {
-  this.qty = this.qty +  Number(this.cfrpdataset[i].frp_qty_rcv)
+  this.qty = this.qty +  Number(this.cfrpdataset[i].frpd_qty_rcvd)
 }
 else {
 
-  this.qty = this.qty +  Number(this.cfrpdataset[i].frp_qty_rcv) *  Number(this.cfrpdataset[i].frp_price) 
+  this.qty = this.qty +  Number(this.cfrpdataset[i].frpd_qty_rcvd) *  Number(this.cfrpdataset[i].frpd_price) 
 
 }
 }
-console.log(this.qty)
+//console.log(this.qty)
 let afc = 0  
 for (var i = 0; i < this.cfrpdataset.length; i++) {
     //console.log(this.dataset[i].prh_nbr)
     if (controls.frp_type_affect.value == "Quantite") {
-      afc = Number(this.cfrpdataset[i].frp_qty_rcv) * (Number(controls.amt.value) / this.qty) 
+      afc = Number(this.cfrpdataset[i].frpd_qty_rcvd) * (Number(controls.amt.value) / this.qty) 
 
     }
     else {
-afc = Number(this.cfrpdataset[i].frp_qty_rcv) * Number(this.cfrpdataset[i].frp_price)  * Number(controls.amt.value) / Number(this.qty) 
+afc = Number(this.cfrpdataset[i].frpd_qty_rcvd) * Number(this.cfrpdataset[i].frpd_price)  * Number(controls.amt.value) / Number(this.qty) 
         
 }  
-    this.gridServicefrp.addItem(
-      {
-          id: i + 1,
-          frp_prh_nbr : this.cfrpdataset[i].frp_prh_nbr,
-          frp_part : this.cfrpdataset[i].frp_part,
-          frp_qty_rcv : this.cfrpdataset[i].frp_qty_rcv,
-          frp_price: this.cfrpdataset[i].frp_price,
-        amt_afct : afc,
-      },
-          { position: "bottom" }
-          );
-       
-       
-      }
-      console.log(this.qty)
-   
 
- /*for (var i = 0; i < this.dataset.length; i++) {
-//console.log(this.dataset[i].prh_nbr)
+             this.cfrpdataset[i].frpd_amt = afc;
+             console.log(afc)
+            //  updateItem.frpd_amt = afc;
+}
+      console.log(this.cfrpdataset)
+      this.dataViewfrp.setItems(this.cfrpdataset)
+    //  this.dataViewfrp.setValue(this.cfrpdataset)
 
-    this.purchaseReceiveService.findBy({ prh_receiver : this.dataset[i].prh_nbr }).subscribe(
-      (res: any) => {
-       
-        this.details  = res.data;
-       
-        //console.log(this.details)
-        for (var object = 0; object < this.details.length; object++) {
-          const detail = this.details[object];
-      
-         
-         this.gridServicefrp.addItem(
-      {
-          id: i + 1,
-          frp_prh_nbr : detail.prh_receiver,
-          frp_part : detail.prh_part,
-          frp_qty_rcv : detail.prh_rcvd,
-          frp_price: detail.prh_pur_cost,
 
-        
-      },
-          { position: "bottom" }
-          );
-       
-      
-      }
-    })
-  }
-*/
   
 }
 }

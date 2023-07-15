@@ -89,4 +89,15 @@ export class LoadRequestService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/updateLoadRequest40/`, {load_requests_codes},{ headers: httpHeaders })
     }
+
+    public getLoadRequestsBetweenDates(startDate : any ,endDate : any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findLoadRequestsDates/`,{startDate , endDate}, { headers: httpHeaders })
+    }
+
+    public getLoadRequestLinesDetails(load_request_code: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/findLoadRequestLinesDetails/${load_request_code}`, { headers: httpHeaders })
+        
+    }
 }

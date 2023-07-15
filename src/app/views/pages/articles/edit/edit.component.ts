@@ -284,13 +284,13 @@ export class EditComponent implements OnInit {
         this.itemService.getOne(id).subscribe((response: any)=>{
           this.itemEdit = response.data
                   console.log(this.itemEdit.pt_promo)
-          //this.sctService.getByOne({sct_part: this.itemEdit.pt_part, sct_sim: 'STDCG'}).subscribe((response: any)=>{
+          //this.sctService.getByOne({sct_part: this.itemEdit.pt_part, sct_sim: 'STD-CG'}).subscribe((response: any)=>{
             //this.sct1Edit = response.data
                 
            
             
           
-           // this.sctService.getByOne({sct_part: this.itemEdit.pt_part, sct_sim: 'STDCR'}).subscribe((response: any)=>{
+           // this.sctService.getByOne({sct_part: this.itemEdit.pt_part, sct_sim: 'STD-CR'}).subscribe((response: any)=>{
            //       this.sct2Edit = response.data         
             
             this.initCode()
@@ -802,7 +802,7 @@ prepareItem(): Item {
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     _sct.id = this.sct1Edit.id;
-    _sct.sct_sim = 'STDCG';
+    _sct.sct_sim = 'STD-CG';
     _sct.sct_part   = control1.pt_part.value;
     _sct.sct_mtl_tl = controls.sct_mtl_tl.value;
     _sct.sct_mtl_ll = controls.sct_mtl_ll.value;
@@ -825,7 +825,7 @@ prepareItem(): Item {
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     _sct.id = this.sct2Edit.id;
-    _sct.sct_sim = 'STDCR';
+    _sct.sct_sim = 'STD-CR';
     _sct.sct_part = control1.pt_part.value
     _sct.sct_mtl_tl = controls.sct_mtl_tl.value;
     _sct.sct_mtl_ll = controls.sct_mtl_ll.value;

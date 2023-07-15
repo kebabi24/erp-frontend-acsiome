@@ -83,6 +83,10 @@ import { ListPsComponent } from './list-ps/list-ps.component';
 import { EditPsComponent } from './edit-ps/edit-ps.component';
 import { CreateDirectWoComponent } from './create-direct-wo/create-direct-wo.component';
 import { WorctEntryPalComponent } from './worct-entry-pal/worct-entry-pal.component';
+import { RoCostComponent } from './ro-cost/ro-cost.component';
+import { BomCostComponent } from './bom-cost/bom-cost.component';
+import { CalcCoutWoComponent } from './calc-cout-wo/calc-cout-wo.component';
+import { CostpriceListComponent } from './costprice-list/costprice-list.component';
 
 
 
@@ -120,6 +124,10 @@ const routes: Routes = [
   {
     path: 'create-gamme',
     component: CreateGammeComponent
+  },
+  {
+    path: 'list-gamme',
+    component: ListGammeComponent
   },
   {
     path: 'create-rsn',
@@ -173,6 +181,22 @@ const routes: Routes = [
     path: 'affect-bom',
     component: AffectBomComponent
   },
+  {
+    path: 'ro-cost',
+    component: RoCostComponent
+  },
+  {
+    path: 'bom-cost',
+    component: BomCostComponent
+  },
+  {
+    path: 'calc-cout-wo',
+    component: CalcCoutWoComponent
+  },
+  {
+    path: 'costprice-list',
+    component: CostpriceListComponent
+  },
 ]
 
   @NgModule({
@@ -186,7 +210,7 @@ const routes: Routes = [
       CreateNomenclatureComponent, 
       CreateCauseComponent, 
       WorctEntryComponent, 
-      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent
+      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent
     ],
 
     imports: [

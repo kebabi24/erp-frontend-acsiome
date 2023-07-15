@@ -53,6 +53,8 @@ import {
   CodeService,
   MesureService,
   printReceiveUNP,
+  LabelService,
+  Label
 } from "../../../../core/erp";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -159,6 +161,7 @@ seq: any;
       private mesureService: MesureService,
       private sequenceService: SequenceService,
       private inventoryStatusService : InventoryStatusService,
+      private labelService : LabelService,
     ) {
       config.autoClose = true;
       this.initGrid();
@@ -214,7 +217,7 @@ seq: any;
                 (response: any) => {
                   this.location = response.data
               
-                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STDCG' }).subscribe(
+                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
                     (response: any) => {
                       this.sct = response.data
              
@@ -531,7 +534,18 @@ seq: any;
           },
   
         },
+        {
+          id: "tr_ref",
+          name: "N° Palette",
+          field: "tr_ref",
+          sortable: false,
         
+          filterable: false,
+         editor: {
+             model: Editors.text,
+          },
+          
+        },
         {
           id: "tr_status",
           name: "Status",
@@ -621,6 +635,59 @@ seq: any;
           type: FieldType.dateIso,
           editor: {
             model: Editors.date,
+          },
+        },
+        {
+          id: "id",
+          field: "id",
+          excludeFromHeaderMenu: true,
+          formatter: (row, cell, value, columnDef, dataContext) => {
+            // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+            return `
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
+                 <i class="flaticon2-printer"></i>
+                 
+             </a>
+             `;
+          },
+          minWidth: 30,
+          maxWidth: 30,
+          onCellClick: (e: Event, args: OnEventArgs) => {
+            // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            //   this.angularGrid.gridService.deleteItem(args.dataContext);
+            // }
+            if(args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null) {
+            const controls = this.trForm.controls
+            const _lb = new Label();
+                _lb.lb_site = args.dataContext.tr_site
+                _lb.lb_rmks = controls.tr_rmks.value
+                _lb.lb_loc = args.dataContext.tr_loc
+                _lb.lb_part = args.dataContext.tr_part
+                _lb.lb_nbr = args.dataContext.tr_so_job //this.trnbr
+                _lb.lb_lot = args.dataContext.tr_serial
+                _lb.lb_date = controls.tr_effdate.value
+                    ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
+                    : null
+                _lb.lb_qty = args.dataContext.tr_qty_loc
+                _lb.lb_ld_status = args.dataContext.tr_status
+                _lb.lb_desc = args.dataContext.desc
+  
+      
+                let lab = null
+  
+                this.labelService.add(_lb).subscribe(
+                  (reponse: any) => (lab = reponse.data),
+                  (error) => {
+                   alert("Erreur Impression Etiquette")   },
+                  () => {
+           
+                    this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
+                  }
+              )
+                }
+                else {
+                  alert ("Veuillez verifier les informations")
+                }
           },
         },
       ];
@@ -901,6 +968,7 @@ seq: any;
           tr_site: "",
           tr_loc: "",
           tr_serial: null,
+          tr_ref:null,
           tr_status: null,
           tr_expire: null,
         },
@@ -920,7 +988,7 @@ seq: any;
             (response: any) => {
               this.location = response.data
           
-            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STDCG' }).subscribe(
+            this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: 'STD-CG' }).subscribe(
               (response: any) => {
                 this.sct = response.data
             

@@ -213,6 +213,7 @@ export class CreateNewServiceComponent implements OnInit {
     this.mobileService.getAllService().subscribe(
       (response: any) => {
         this.data = response.data;
+        console.log(this.data)
         this.dataset = this.data.map((item) => {
           this.services.push(item);
           console.log(item);

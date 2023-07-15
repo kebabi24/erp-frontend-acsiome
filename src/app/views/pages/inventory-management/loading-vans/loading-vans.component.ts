@@ -33,7 +33,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { InventoryManagementService, printInventory } from "../../../../core/erp"
+import { InventoryManagementService, printInventory  , InventoryTransactionService} from "../../../../core/erp"
 
 @Component({
   selector: 'kt-loading-vans',
@@ -50,6 +50,7 @@ export class LoadingVansComponent implements OnInit {
   loading$: Observable<boolean>
 
   role_code : any
+  role : any
   load_request_code : any
   roles: any[] = []
   loadRequests: any[] = []
@@ -88,6 +89,7 @@ export class LoadingVansComponent implements OnInit {
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private inventoryManagementService: InventoryManagementService,
+      private inventoryTransactionService: InventoryTransactionService,
       private modalService: NgbModal
   ) {
       config.autoClose = true
@@ -207,40 +209,101 @@ export class LoadingVansComponent implements OnInit {
      
   }
 
-  onSaveCharge(){
+  onSaveCharge(){ 
     const details = []
-     const lines = []
+    const lines = []
+    let detailss = []
+
      this.loadRequestData.forEach(loadRequest => {
       let sum = 0 
+
       loadRequest.selectedProducts.forEach(product => {
         if(product.lots.length >0){
+          let i = 1 
           product.lots.forEach(lot =>{
             sum += +lot.qt_effected
+
+            // CREATE DETAILS LINE
             details.push({
               "product_code":product.product_code,
               "load_request_code":this.load_request_code,
               "lot":lot.lot_code,
               "qt_effected" : lot.qt_effected,
               "pt_price":product.pt_price,
+              "line" :i 
             })
+            // DETAIL LINE FOR ISSTR
+            detailss.push({
+              tr_line : i,
+              tr_part : product.product_code,
+              tr_serial : lot.lot_code,
+              tr_qty_loc : lot.qt_effected, 
+              tr_um : product.pt_um,
+              tr_status : lot.ld_status,
+              tr_expire : lot.ld_expire,
+              tr_um_conv : 1, 
+              tr_ref : null
+            })
+            i++;
           })
+
+          // CREATE LINE 
           lines.push({
             "product_code":product.product_code,
             "load_request_code":this.load_request_code,
             "qt_effected": sum
           })
+
+          
         }
       })
       
      }) 
+  
+     // IssTr 
+    let nlot = this.load_request_code
+    let it ={
+      tr_site : this.loadRequest.role_site,
+      tr_loc : this.role.role_loc_from, // loc from , for unload : loc 
+      tr_ref_site : this.loadRequest.role_site, 
+      tr_ref_loc : this.role.role_loc, // loc , for unload : loc from
+      tr_effdate : new Date(),
+      tr_nbr : nlot,
+    }
+      
+    
 
      this.inventoryManagementService.createLoadRequestDetailsUpdateStatus(details,lines, this.load_request_code).subscribe(
 
       (response: any) => {
-        console.log(response)
         this.loadRequestData = []
         this.load_request_code = ""
         this.role_code = ""
+
+        let detail = detailss
+
+        // isstr        
+        this.inventoryTransactionService.addTr({nlot , it ,detail}).subscribe(
+
+          (response: any) => {
+            console.log(response)
+          },
+          (error) => {
+            // this.loadRequestData = []
+            console.log(error)
+          },
+          () => {
+            this.layoutUtilsService.showActionNotification(
+                "Load Request Details Updated",
+                MessageType.Create,
+                10000,
+                true,
+                true
+            )
+            this.loadingSubject.next(false)
+            // this.router.navigateByUrl("/customers-mobile/cluster-create")
+        }
+        ) 
       },
       (error) => {
         // this.loadRequestData = []
@@ -257,7 +320,8 @@ export class LoadingVansComponent implements OnInit {
         this.loadingSubject.next(false)
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
     }
-    )
+    ) 
+    
   }
   
   goBack() {
@@ -329,6 +393,8 @@ export class LoadingVansComponent implements OnInit {
         (response: any) => {
           this.loadRequestData = response.loadRequestData
           this.loadRequest = response.data
+          this.role = response.role
+          console.log(response)
           this.showSpinner = false
         },
         (error) => {
@@ -349,6 +415,7 @@ export class LoadingVansComponent implements OnInit {
         
         (response: any) => {
           this.roles = response.data
+          console.log(this.roles)
         },
         (error) => {
           this.roles = []
@@ -370,6 +437,7 @@ export class LoadingVansComponent implements OnInit {
   }
 
   onSelectRole(role_code){
+    console.log(role_code)
     this.prepareLoadRequests(role_code)
  }
 
@@ -571,10 +639,7 @@ export class LoadingVansComponent implements OnInit {
   }
 
   onInputChanged(value,pageCode,productCode,lotCode){
-    // console.log('value:' + value)
-    // console.log('page code: '+ pageCode)
-    // console.log('product code: '+ productCode)
-    // console.log('lot code: '+ lotCode)
+
     
 
     // FIND PAGE INDEX IN LOAD REQUEST DATA 
@@ -621,5 +686,8 @@ export class LoadingVansComponent implements OnInit {
     
    
   }
+
+  
+  
 
 }
