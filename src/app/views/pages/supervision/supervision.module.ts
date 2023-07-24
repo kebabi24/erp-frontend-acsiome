@@ -63,6 +63,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid'
 import { ItineraryService, MobileServiceService, RoleService, UsersMobileService ,MobileSettingsService, LoadRequestService,
   UnloadRequestService } from "../../../core/erp"
 import { ValidateDeChargeDemandeComponent } from './validate-decharge-demande/validate-decharge-demande.component';
+import { CreateLoadRequestComponent } from './create-load-request/create-load-request.component';
 
 
 
@@ -80,11 +81,16 @@ const routes: Routes = [
     component: ValidateDeChargeDemandeComponent
   },
 
+  {
+    path: 'create-load-request',
+    component: CreateLoadRequestComponent
+  },
+
   
   
 ] 
 @NgModule({
-  declarations: [ ValidateChargeDemandeComponent,TransferChargeDemandeToDeliveryComponent,ValidateDeChargeDemandeComponent],
+  declarations: [ CreateLoadRequestComponent , ValidateChargeDemandeComponent,TransferChargeDemandeToDeliveryComponent,ValidateDeChargeDemandeComponent],
   imports: [
     CommonModule,
     HttpClientModule,

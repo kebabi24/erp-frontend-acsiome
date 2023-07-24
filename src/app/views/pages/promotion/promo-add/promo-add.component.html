@@ -1,0 +1,251 @@
+
+<kt-portlet >
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter promotion'" [class]="'card-head-lg '" [viewLoading$]="loading$" >
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
+            <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body >
+        <div class="example-preview">
+            <div>
+                <div>
+                    {{ time | async }}
+                </div>
+
+                <form [formGroup]="populationForm" class="form">
+
+                    <div class="row">
+
+                      <!-- CODE PROMOTION -->
+                      <div class=" form-group col-3">
+                            <label class="form-group " id="code" >code promotion:</label>
+                            <input 
+                            
+                            type="text"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="promo_code"
+                            (change) = "onChangeCode()"
+                            >
+                            
+                            <div *ngIf="populationForm.controls['promo_code'].errors && (populationForm.controls['promo_code'].dirty || populationForm.controls['promo_code'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                      </div>
+                      <!-- CODE PROMOTION END  -->
+
+                      <!-- CODE POP ARTICLE -->
+                      <div class="form-group col-3">
+                        <label class="form-group">code population article: *</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="pop_a_code" 
+                                [className]="populationForm.controls['pop_a_code'].errors && (populationForm.controls['pop_a_code'].dirty || populationForm.controls['pop_a_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content3)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="populationForm.controls['pop_a_code'].errors && (populationForm.controls['pop_a_code'].dirty || populationForm.controls['pop_a_code'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>   
+                      </div>
+                      <!-- CODE POP ARTICLE  END  -->
+
+                      <!-- CODE POP CLIENT -->
+                      <div class=" form-group col-3">
+                        <label class="form-group " >code population client:</label>
+                        <select 
+                          formControlName="pop_c_code" 
+                          class=" form-control form-control-sm form-control-solid ">
+                        
+                          <option *ngFor="let type of adv_types" [value]="type.value" class="mt-2 mb-2 dropdown-item">{{type.name}}</option>
+                            
+                          </select>
+                      
+                      </div>
+                      <!-- CODE POP CLIENT END  -->
+
+                      <!-- SITE -->
+                      <div class="form-group col-3">
+                        <label class="form-group">Site: *</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="site" 
+                                [className]="populationForm.controls['site'].errors && (populationForm.controls['site'].dirty || populationForm.controls['site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open8(content8)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="populationForm.controls['site'].errors && (populationForm.controls['site'].dirty || populationForm.controls['site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>   
+                      </div>
+                      <!-- SITE -->
+
+                      
+        
+
+                    </div>
+
+
+                    <!-- DATES -->
+                    <div class="row">
+                         <!-- START DATE -->
+                         <div class="form-group col-3">
+                            <label class="form-group"> Date de début: </label>
+                        
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid" formControlName="start_date"
+                                    placeholder="jj-mm-aaaa" name="tr_rcp_date1" ngbDatepicker f
+                                    #tr_rcp_date1="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-abracadabra" (click)="tr_rcp_date1.toggle()" type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                          </div>
+                          <!-- START DATE END -->
+  
+                          <!-- End DATE -->
+                          <div class="form-group col-3">
+                            <label class="form-group"> Date de fin: </label>
+                        
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid" formControlName="end_date"
+                                    placeholder="jj-mm-aaaa" name="tr_rcp_date" ngbDatepicker f
+                                    #tr_rcp_date="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-abracadabra" (click)="tr_rcp_date.toggle()" type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+                          </div>
+                          <!-- START DATE END -->
+
+                          
+                            <!-- TYPE -->
+                            <div class="form-group col-2">
+                                <label class="form-group">combinée :</label>
+                                <span class="switch switch-icon red-switch">
+                                    <label>
+                                        <input type="checkbox"
+                                            class="form-control form-control-sm form-control-solid"
+                                            formControlName="combine" name="select" />
+                                        <span></span>
+                                    </label>
+                                </span>
+                                     
+                            </div>
+                            <!-- TYPE END -->
+                        
+                        
+                    </div>
+                    <!-- DATES END -->
+
+                    <!-- ROW 3 -->
+                    <div class="row">
+                        <div class=" form-group col-3">
+                            <label class="form-group " id="code" >condition:</label>
+                            <input 
+                            
+                            type="text"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="condition"
+                            >
+                            
+                            <div *ngIf="populationForm.controls['condition'].errors && (populationForm.controls['condition'].dirty || populationForm.controls['condition'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                      </div>
+
+                      <div class=" form-group col-3">
+                        <label class="form-group " id="code" >code avantage:</label>
+                        <input 
+                        
+                        type="text"
+                        class="form-control form-control-sm form-control-solid"
+                        formControlName="adv_code"
+                        >
+                        
+                        <div *ngIf="populationForm.controls['adv_code'].errors && (populationForm.controls['adv_code'].dirty || populationForm.controls['adv_code'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                  </div>
+                        
+                    </div>
+                    <!-- ROW 3 END -->
+
+                </form> 
+                
+               
+
+             
+            </div>
+
+
+            <!-- MODAL ROLE GRID -->
+            <div>
+                <ng-template #content3 let-c="close" let-d="dismiss">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Choissir le code de population article:</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3"
+                                [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                                (sgOnSelectedRowsChanged)="handleSelectedPopArticle($event.detail.eventData, $event.detail.args)"
+                            
+                                [gridOptions]="gridOptions3" [dataset]="popsArticle">
+                            </angular-slickgrid>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    </div>
+                </ng-template>
+            </div>
+            <!-- MODAL ROLE GRID  END -->
+
+            <!-- MODAL SITE   -->
+        <div>
+            <ng-template #content8 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le site:</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
+                            [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedSite($event.detail.eventData, $event.detail.args)"
+                           
+                            [gridOptions]="gridOptions6" [dataset]="sites">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <!-- MODAL SITE  END  -->
+
+
+        </div>
+
+    </kt-portlet-body>
+ 
