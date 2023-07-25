@@ -30,7 +30,7 @@
             <form class="form" [formGroup]="productPageForm">
                 <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="500">
    
-                Ce code page produits existe deja - ferme <button type="warn" (click)="showCloseButton = false" class="btn" >Cliquez ici</button>
+                Ce code page produits existe deja - ferme <button type="warn" (click)="getCurrentPageData()" class="btn" >Cliquez ici</button>
             </kt-alert>
             <div class="row">
                 <div class="col-6">
@@ -76,6 +76,7 @@
                         [gridOptions]="gridOptions" 
                         [dataset]="dataset"
                         (onAngularGridCreated)="angularGridReady($event)"
+                        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
                     >
                     </angular-slickgrid>
                 </div>

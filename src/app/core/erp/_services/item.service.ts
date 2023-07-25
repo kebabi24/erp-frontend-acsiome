@@ -99,6 +99,12 @@ export class ItemService {
         return this.http.post(`${API_URL_2}/updateProfileProductsPages`, {profile_code:profile_code,pagesCodes:pagesCodes}, { headers: httpHeaders })
     }
 
+    // GET PRODUCT PAGE BY CODE
+    public getPageProducts(product_page_code: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/getPageProducts/${product_page_code}`, { headers: httpHeaders })
+    }
+        
     public CalcCmp(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/calccmp`,data, { headers: httpHeaders })

@@ -146,6 +146,29 @@ export class MenuConfig {
             },
           ],
         },
+
+        // PROMO
+        {
+          title: "Promotion",
+          bullet: "dot",
+          icon: "flaticon-event-calendar-symbol",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter population article",
+              page: "/promo/population-art-add",
+            }, 
+            {
+              title: "Ajouter avantage",
+              page: "/promo/advantage-add",
+            }, 
+            {
+              title: "Ajouter promotion",
+              page: "/promo/promo-add",
+            }, 
+            
+          ],
+        },
         
         {
           title: "Gestion des Fournisseurs",
@@ -908,6 +931,10 @@ export class MenuConfig {
           icon: "flaticon-user-settings",
           root: true,
           submenu: [
+            {
+              title: "Crée demande de chargement",
+              page: "/supervision/create-load-request",
+            },
             {
               title: "Validation des demandes de chargement",
               page: "/supervision/validate-charge-demande",

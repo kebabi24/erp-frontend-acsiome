@@ -60,51 +60,14 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllVisit/`, data,{ headers: httpHeaders })
     }   
-  
+    
+    public createCancelationReasons(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createCancelReasons/`, {data},{ headers: httpHeaders })
+    }
+
+    public createPaymentMethods(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createPaymentMethods/`, {data},{ headers: httpHeaders })
+    }
 }
-
-
-    // // UPDATE
-    // public update(id: Number, data:any) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
-    // }
-    // // DELETE
-    // public delete(id: Number) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
-    // }
-
-     // CREATE
-    //  public add(customer: Customer) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.post(API_URL, customer, { headers: httpHeaders })
-    // }
-    // // READ
-    // public getAll() {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.get(API_URL, { headers: httpHeaders })
-    // }
-    // public getOne(id: Number) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
-    // }
-  
-    // public getBy(data: any) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
-
-    //    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-        
-    // }
-    // public getSolde(data: any) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.post(`${API_URL}/findsolde`,data, { headers: httpHeaders })
-    // }    
-    // public getByAll(data: any) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.post(`${API_URL}/findall`,data, { headers: httpHeaders })
-
-    //    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-        
-    // }

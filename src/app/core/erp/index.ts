@@ -177,4 +177,5 @@ export { RepertoryService } from "./_services/repertory.service";
 export { TransportcostService } from "./_services/transportcost.service";
 export { CostlistService } from "./_services/costlist.service";
 
+export { PromotionService } from "./_services/promotion.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

@@ -77,6 +77,7 @@ export class ProductPageCreateComponent implements OnInit {
     isSelected = false
     alertWarning: any
     productCodes : any [] = []
+    selectedProductsIndexes : any[] = []
     
    
     constructor(
@@ -90,6 +91,7 @@ export class ProductPageCreateComponent implements OnInit {
         private customerMobileService : CustomerMobileService
     ) {
         config.autoClose = true
+        // this.getItems()
         this.prepareGrid() 
        
     }
@@ -104,6 +106,9 @@ export class ProductPageCreateComponent implements OnInit {
         this.loadingSubject.next(true)
         this.createForm()
     }
+    
+    
+    
  
 
     //create form
@@ -148,14 +153,13 @@ export class ProductPageCreateComponent implements OnInit {
         this.angularGrid = angularGrid;
           this.dataView = angularGrid.dataView;
           this.grid = angularGrid.slickGrid;
-      
-          // if you want to change background color of Duration over 50 right after page load,
-          // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
+          this.gridService = angularGrid.gridService;
           this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
           this.grid.invalidate();
           this.grid.render();
       }
-    
+
+      
 
     updateItemMetadata(previousItemMetadata: any) {
         const newCssClass = 'highlight-bg';
@@ -186,53 +190,34 @@ export class ProductPageCreateComponent implements OnInit {
         });
     }
 
+    getItems(){
+      this.itemService.getAll().subscribe(
+        (response: any) => {
+          this.dataset = response.data
+          this.dataView.setItems(this.dataset)
+        },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+      )
+    }
+
     prepareGrid() {
-        
-        this.itemService.getAll().subscribe(
-          (response: any) => {
-            this.dataset = response.data
-            this.dataView.setItems(this.dataset)
-          },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-        )
+      this.itemService.getAll().subscribe(
+        (response: any) => {
+          this.dataset = response.data
+          this.dataView.setItems(this.dataset)
+        },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+      )
+       
 
 
-        this.columnDefinitions = [
-          {
-            id: 'select',
-            field: "pt_part",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
-            formatter: Formatters.checkmark,
-            
-            minWidth: 30,
-            maxWidth: 30,
-            onCellClick: (e: Event, args: OnEventArgs) => {
-              // this.confirmDelete = true
-              // console.log(args.dataContext.pt_part)
-              const product_code = args.dataContext.pt_part
-              // this.alertWarning = `Clicked: ${args.dataContext.pt_part}`;
-              // this.deleteCluster(args.dataContext.id)
-              // this.dataset = this.dataset.filter(function(value, index, arr){ 
-              //   return value.id != args.dataContext.id;
-              // })
-              // this.dataView.setItems(this.dataset)
-              // this.addToDeletedIds(args.dataContext.id)
-              
-              if(!this.productCodes.includes(product_code)){
-               this.productCodes.push(product_code)
-              }else{
-                this.productCodes = this.arrayRemove(this.productCodes,product_code)
-              }
-              console.log(this.productCodes)
-            }
-            
-          },
-           
+        this.columnDefinitions = [      
             {
                 id: "id",
                 name: "id",
@@ -346,8 +331,16 @@ export class ProductPageCreateComponent implements OnInit {
             enableCheckboxSelector: true,
             // multiSelect: false,
             rowSelectionOptions: {
-              // True (Single Selection), False (Multiple Selections)
               selectActiveRow: false
+            },
+            presets: {
+
+              // sorters: [{ columnId: "id", direction: "ASC" }],
+        
+              rowSelection: {
+                gridRowIndexes: this.selectedProductsIndexes,           // the row position of what you see on the screen (UI)
+                dataContextIds: this.selectedProductsIndexes, // (recommended) select by your data object IDs
+              }
             },
         }
   
@@ -447,5 +440,41 @@ export class ProductPageCreateComponent implements OnInit {
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
     
+
+    onSelectedRowsChanged(e, args) {
+      // console.log('indexs', args.rows);
+      const indexes = args.rows;
+      this.productCodes = []
+      indexes.forEach(index => {
+        const product_code = this.gridService.getDataItemByRowIndex(index).pt_part
+        this.productCodes.push(product_code)
+      });
+      console.log(this.productCodes)
+    }
+
+    
+
+    getCurrentPageData(){
+      console.log("hey")
+      const controls = this.productPageForm.controls
+      this.isExist = false 
+      this.selectedProductsIndexes = []
+      this.itemService.getPageProducts(controls.product_page_code.value).subscribe(
+        (reponse) => {
+          reponse['products_codes'].forEach(prod => {
+            const index = this.getIndexOfProduct(prod.product_code)
+            this.selectedProductsIndexes.push(index)
+          });
+          console.log(this.selectedProductsIndexes)
+           this.prepareGrid()
+        })
+    }
+
+    getIndexOfProduct(code_product){
+      const index = this.dataset.findIndex(element =>{
+        return element.pt_part == code_product
+      })
+      return this.dataset[index].id
+    }
     
 }
