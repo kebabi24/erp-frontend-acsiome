@@ -1,0 +1,197 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="trcForm">
+
+                
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Frais: *</label>
+                        <input type="text" formControlName="trc_code"  [(ngModel)]="trcEdit.trc_code"
+                            [className]="trcForm.controls['trc_code'].errors && (trcForm.controls['trc_code'].dirty || trcForm.controls['trc_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="trcForm.controls['trc_code'].errors && (trcForm.controls['trc_code'].dirty || trcForm.controls['trc_code'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="trc_desc"  id="trc_desc"
+                            [className]="trcForm.controls['trc_desc'].errors && (trcForm.controls['trc_desc'].dirty || trcForm.controls['trc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="trcForm.controls['trc_desc'].errors && (trcForm.controls['trc_desc'].dirty || trcForm.controls['trc_desc'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group"> Compte Frais:</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="trc_acct" id="trc_acct" (change)="onChangeAcct()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=openacct(contentacct)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Numero Projet:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="trc_project" id="trc_project"
+                                aria-describedby="basic-addon2" (change)="onChangePM()">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openpm(contentpm)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group col-2">
+                    <label class="form-group">Taxable:</label>
+                    <div class="col-6">
+                        <span class="switch switch-icon">
+                            <label>
+                                <input type="checkbox"
+                                    class="form-control form-control-sm form-control-solid"
+                                    formControlName="trc_taxable" name="select" />
+                                <span></span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group col-2">
+                    <label class="form-group "> Taux taxe:</label>
+
+                    <div class="input-group input-group-sm">
+
+                        <input type="text" class="form-control form-control-solid" id="trc_taxc" (change)="onChangeTax()"
+                            formControlName="trc_taxc" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <span class="input-group-text" (click)=opentax(contenttax)>
+                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                        </div>
+                    </div>
+
+                </div>
+                
+
+
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Remise aux paiement: </label>
+                        <div class="col-6">
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox"
+                                        class="form-control form-control-sm form-control-solid"
+                                        formControlName="trc_disc" name="select" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+     
+                    </div>
+                </div>
+                
+
+
+
+
+            </form>
+        </div>
+
+        <div>
+            <ng-template #contentpm let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Projet</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpm"
+                            [columnDefinitions]="columnDefinitionspm" (onAngularGridCreated)="angularGridReadypm($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedpm($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionspm" [dataset]="pms">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+           
+        </div>
+        <div>
+            <ng-template #contenttax let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionstax" (onAngularGridCreated)="angularGridReadytax($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtax($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionstax" [dataset]="datatax">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentacct let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Compte</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridacct" [columnDefinitions]="columnDefinitionsacct" 
+                            (onAngularGridCreated)="angularGridReadyacct($event)" 
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedacct($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsacct" [dataset]="accounts">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openTaxsGrid" class="btn btn-primary" (click)="openacct(contentacct)">Launch demo modal</button>
+
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

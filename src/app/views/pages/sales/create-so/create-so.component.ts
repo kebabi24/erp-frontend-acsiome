@@ -55,6 +55,7 @@ import {
   printSO,
   ConfigService,
   PayMethService,
+  CostlistService,
 } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
@@ -142,6 +143,15 @@ export class CreatesaleorderComponent implements OnInit {
     gridOptionsloc: GridOption = {};
     gridObjloc: any;
     angularGridloc: AngularGridInstance;
+
+
+
+    channels: [];
+    columnDefinitionschannel: Column[] = [];
+    gridOptionschannel: GridOption = {};
+    gridObjchannel: any;
+    angularGridchannel: AngularGridInstance;
+
     seq;
     user;
     row_number;
@@ -183,6 +193,7 @@ export class CreatesaleorderComponent implements OnInit {
       private pricelistService: PricelistService,
       private configService: ConfigService,
       private payMethService: PayMethService,
+      private costlistService: CostlistService
     ) {
       config.autoClose = true;
 
@@ -806,6 +817,7 @@ export class CreatesaleorderComponent implements OnInit {
         so_ex_rate: [this.saleOrder.so_ex_rate],
         so_ex_rate2: [this.saleOrder.so_ex_rate2],
         so_cr_terms: [this.saleOrder.so_cr_terms],
+        so_channel: [this.saleOrder.so_channel],
         print:[true]
       });
   
@@ -909,6 +921,7 @@ export class CreatesaleorderComponent implements OnInit {
       _so.so_ex_rate = controls.so_ex_rate.value;
       _so.so_ex_rate2 = controls.so_ex_rate2.value;
       _so.so_cr_terms = controls.so_cr_terms.value;
+      _so.so_channel = controls.so_channel.value;
      
       _so.so_amt = controls1.tht.value
     _so.so_tax_amt = controls1.tva.value
@@ -2484,6 +2497,145 @@ onChangeTAX() {
   
  
   this.calculatetot();
+}
+
+
+
+handleSelectedRowsChangedchannel(e, args) {
+  const controls = this.soForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjchannel) {
+    args.rows.map((idx) => {
+      const item = this.gridObjchannel.getDataItem(idx);
+      console.log(item);
+      controls.so_channel.setValue(item.ltrc_code || "");
+    });
+  }
+}
+
+angularGridReadychannel(angularGrid: AngularGridInstance) {
+  this.angularGridchannel = angularGrid;
+  this.gridObjchannel = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridchannel() {
+  this.columnDefinitionschannel = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 50,
+      maxWidth: 50,
+  },
+ 
+  {
+      id: "ltrc_code",
+      name: "Code",
+      field: "ltrc_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+  },
+  {
+      id: "ltrc_desc",
+      name: "Designation",
+      field: "ltrc_desc",
+      sortable: true,
+      width: 200,
+      filterable: true,
+      type: FieldType.string,
+  },
+  {
+    id: "ltrc_site",
+    name: "Site ",
+    field: "ltrc_site",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  },
+  
+  {
+    id: "ltrc_curr",
+    name: "Devise",
+    field: "ltrc_curr",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  },
+  
+  {
+    id: "ltrc_um",
+    name: "UM",
+    field: "ltrc_um",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+   
+  },
+
+  {
+    id: "ltrc_trc_code",
+    name: "Code Frais",
+    field: "ltrc_trc_code",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  },
+  {
+    id: "ltrc_type",
+    name: "Type",
+    field: "ltrc_type",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  }, 
+  {
+    id: "ltrc_trmode",
+    name: "Mode Transport",
+    field: "ltrc_trmode",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  }, 
+  ];
+
+  this.gridOptionschannel = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.costlistService
+    .getAll()
+    .subscribe((response: any) => (this.channels = response.data));
+}
+openchannel(content) {
+  this.prepareGridchannel();
+  this.modalService.open(content, { size: "lg" });
 }
 
 calculatetot(){

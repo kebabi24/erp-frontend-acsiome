@@ -231,7 +231,14 @@ prepareGrid() {
       width: 30,
       filterable: true,
     },
-    
+    {
+      id: "so_channel",
+      name: "Liste Frais",
+      field: "so_channel",
+      sortable: true,
+      width: 50,
+      filterable: true,
+    },
     {
       id: "sod_qty_ord",
       name: "Quantite",

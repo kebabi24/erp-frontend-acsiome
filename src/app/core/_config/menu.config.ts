@@ -984,6 +984,26 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion des Transporteurs",
+          bullet: "dot",
+          icon: "flaticon2-lorry",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter Transporteur",
+              page: "/transport/create-transporter",
+            },
+            {
+              title: "Edit Transporteur",
+              page: "/transport/list-edit-transporter",
+            },
+            {
+              title: "Liste des Transporteurs",
+              page: "/transport/list-transporter",
+            },
+          ],
+        },
+        {
           title: "Gestion des utilisateurs",
           bullet: "dot",
           icon: "flaticon-users-1",
@@ -1336,6 +1356,39 @@ export class MenuConfig {
             },
 
             {
+              title: "Paramétrages de Transport",
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              root: true,
+              submenu: [
+                {
+                  title: "Ajouter Code Frais Transport",
+                  page: "/transport/create-cost",
+                },
+                {
+                  title: "Edit Code Frais Transport",
+                  page: "/transport/list-edit-cost",
+                },
+                {
+                  title: "Liste des Codes Frais Transport",
+                  page: "/transport/list-cost",
+                },
+
+                {
+                  title: "Ajouter Liste Frais Transport",
+                  page: "/transport/create-costlist",
+                },
+                {
+                  title: "Edit Liste Frais Transport",
+                  page: "/transport/list-edit-costlist",
+                },
+                {
+                  title: "Liste des Liste Frais Transport",
+                  page: "/transport/list-costlist",
+                },
+              ],
+            },
+            {
               title: "Paramétrages POS",
               bullet: "dot",
               icon: "flaticon-settings-1",
@@ -1401,6 +1454,7 @@ export class MenuConfig {
               ],
             },
     
+           
 
             {
               title: "Configuration Module",

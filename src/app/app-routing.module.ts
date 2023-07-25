@@ -361,6 +361,10 @@ const routes: Routes = [
         path: "deal",
         loadChildren: () => import("./views/pages/deal/deal.module").then((m) => m.DealModule),
       },
+      {
+        path: "transport",
+        loadChildren: () => import("./views/pages/transport/transport.module").then((m) => m.TransportModule),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },
     ],

@@ -1,0 +1,352 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Ajouter un Transporteur" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button (click)="goBackWithoutId()" type="button" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button (click)="reset()" [disabled]="selectedTab !== 0" type="button"
+                class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div>
+                <form [formGroup]="addressForm" class="form">
+
+                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                        (close)="onAlertClose($event)">
+                        Ce Code existe deja
+                    </kt-alert>
+
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Transporteur:</label>
+                            <input type="text" (change)="onChangeCode()"
+                                [className]="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                formControlName="ad_addr">
+                            <div *ngIf="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">FOURNISSEUR :</label>
+                            <div class="input-group input-group-sm">
+    
+                                <input type="text" class="form-control form-control-solid" id="ad_po_mthd" formControlName="ad_po_mthd"  (change)="onChangeVend()"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open3(content3)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
+    
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label class="form-group ">Nom:</label>
+                                <input type="text"
+                                    [className]="addressForm.controls['ad_name'].errors && (addressForm.controls['ad_name'].dirty || addressForm.controls['ad_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="ad_name">
+                                <div *ngIf="addressForm.controls['ad_name'].errors && (addressForm.controls['ad_name'].dirty || addressForm.controls['ad_name'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label class="form-group">Addresse:</label>
+                            
+                                <input type="text"
+                                    [className]="addressForm.controls['ad_line1'].errors && (addressForm.controls['ad_line1'].dirty || addressForm.controls['ad_line1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="ad_line1">
+                                <div *ngIf="addressForm.controls['ad_line1'].errors && (addressForm.controls['ad_line1'].dirty || addressForm.controls['ad_line1'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            
+                        </div>
+                        
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Pays:</label>
+                            <select class="form-control form-control-sm form-control-solid"
+                            id="exampleSelects1" formControlName="ad_country">
+                            <option value=""></option>
+                            <option *ngFor="let elem of ad_country" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                
+
+                        </select>
+                        </div>
+                    
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Wilaya:</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects2" formControlName="ad_state" (change)="onChangeState()">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of ad_state" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                </select>
+                            
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Commune:</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="ad_city">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of ad_city" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                </select>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Post:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_zip">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Contact:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_attn">
+                        </div>
+                        
+
+
+                        <div class="form-group col-2">
+                            <label class="form-group ">Telephone:</label>
+                            
+                                <input type="text"
+                                    [className]="addressForm.controls['ad_phone'].errors && (addressForm.controls['ad_phone'].dirty || addressForm.controls['ad_phone'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="ad_phone">
+                                <div *ngIf="addressForm.controls['ad_phone'].errors && (addressForm.controls['ad_phone'].dirty || addressForm.controls['ad_phone'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Pst:</label>
+                        
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_ext">
+                            
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Fax:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_fax">
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Contact 2:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_attn2">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Tel 2:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_phone2">
+                            
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Pst:</label>
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ad_ext2">
+                        </div>
+
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Fax 2</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid" formControlName="ad_fax2">
+                            
+                        </div>
+
+
+                    </div>
+
+                </form>
+                    
+            </div>
+        </div>
+
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Compte </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="data">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contenttax let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionstax" (onAngularGridCreated)="angularGridReadytax($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtax($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionstax" [dataset]="datatax">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content4 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="datacode">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <div>
+            <ng-template #contentbank let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la banque</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitionsbank" (onAngularGridCreated)="angularGridReadybank($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedbank($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsbank" [dataset]="banks">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la Devise</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="devises">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content1 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la SEQUENCE</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridSeq"
+                            [columnDefinitions]="columnDefinitions1" (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions1" [dataset]="sequences">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le FOURNISSEUR</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro3"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="providers">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>
