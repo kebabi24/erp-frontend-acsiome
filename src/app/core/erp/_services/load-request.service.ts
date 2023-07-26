@@ -75,6 +75,11 @@ export class LoadRequestService {
         return this.http.get(`${API_URL}/findLoadRequestData/${load_request_code}`, { headers: httpHeaders })
     }
 
+    public getLoadRequestCreationData() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findLoadRequestCreationData`, { headers: httpHeaders })
+    }
+
     public getLoadRequest20Details(load_request_code : any ) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/findLoadRequest20Details/${load_request_code}`, { headers: httpHeaders })
@@ -89,6 +94,13 @@ export class LoadRequestService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/updateLoadRequest40/`, {load_requests_codes},{ headers: httpHeaders })
     }
+
+    public createLoadRequestAndLines( loadRequest: any , lines: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createLoadRequestAndLines/`, {loadRequest , lines},{ headers: httpHeaders })
+    }
+
+     
 
     public getLoadRequestsBetweenDates(startDate : any ,endDate : any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

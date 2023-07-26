@@ -30,9 +30,19 @@ export class AddressService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
 
-        return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-        
+       
+    } 
+    public getOne(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
     }
+    public getAllBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findAllBy`,data, { headers: httpHeaders })
+
+      
+        
+    } 
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })

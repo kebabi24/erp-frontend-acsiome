@@ -1,0 +1,268 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Liste des Frais Transport'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="ltrcForm">
+
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                                    (close)="onAlertClose($event)">
+                                    Ce Code existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Liste Frais: *</label>
+                        <input type="text" formControlName="ltrc_code"  (change)="onChangeCode()"
+                            [className]="ltrcForm.controls['ltrc_code'].errors && (ltrcForm.controls['ltrc_code'].dirty || ltrcForm.controls['ltrc_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="ltrcForm.controls['ltrc_code'].errors && (ltrcForm.controls['ltrc_code'].dirty || ltrcForm.controls['ltrc_code'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="ltrc_desc"  id="ltrc_desc"
+                            [className]="ltrcForm.controls['ltrc_desc'].errors && (ltrcForm.controls['ltrc_desc'].dirty || ltrcForm.controls['ltrc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="ltrcForm.controls['ltrc_desc'].errors && (ltrcForm.controls['ltrc_desc'].dirty || ltrcForm.controls['ltrc_desc'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group"> Site:</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"
+                            [className]="ltrcForm.controls['ltrc_site'].errors && (ltrcForm.controls['ltrc_site'].dirty || ltrcForm.controls['ltrc_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                               
+                           
+                            formControlName="ltrc_site" id="ltrc_site" (change)="onChangeSite()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=opensite(contentsite)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="ltrcForm.controls['ltrc_site'].errors && (ltrcForm.controls['ltrc_site'].dirty || ltrcForm.controls['ltrc_site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                
+                
+                    <div class="form-group col-2">
+                        <label class="form-group"> Devise:</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" 
+                            [className]="ltrcForm.controls['ltrc_curr'].errors && (ltrcForm.controls['ltrc_curr'].dirty || ltrcForm.controls['ltrc_curr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                               
+                             formControlName="ltrc_curr" id="ltrc_curr" (change)="onChangeCurr()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=opencurr(contentcurr)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="ltrcForm.controls['ltrc_curr'].errors && (ltrcForm.controls['ltrc_curr'].dirty || ltrcForm.controls['ltrc_curr'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-2">
+                      <label class="form-group">Type:</label>
+          
+                      <select
+                        [className]="ltrcForm.controls['ltrc_type'].errors && (ltrcForm.controls['ltrc_type'].dirty || ltrcForm.controls['ltrc_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="ltrc_type" id="exampleSelects7" >
+                        
+                        <option value="V">Vrac</option>
+                        <option value="U">Unité</option>
+                        
+                        
+                      </select>
+                      <div *ngIf="ltrcForm.controls['ltrc_type'].errors &&(ltrcForm.controls['ltrc_type'].dirty || ltrcForm.controls['ltrc_type'].touched)" class="invalid-feedback" >
+                        Ce Champs est obligatoire
+                      </div>
+                    </div>
+                
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group ">Unite de mesure:</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="ltrc_um"
+                                [className]="ltrcForm.controls['ltrc_um'].errors && (ltrcForm.controls['ltrc_um'].dirty || ltrcForm.controls['ltrc_um'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                (change)="onChangeUm()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openum(contentum)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="ltrcForm.controls['ltrc_um'].errors && (ltrcForm.controls['ltrc_um'].dirty || ltrcForm.controls['ltrc_um'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group ">Code Frais:</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="ltrc_trc_code"
+                                [className]="ltrcForm.controls['ltrc_trc_code'].errors && (ltrcForm.controls['ltrc_trc_code'].dirty || ltrcForm.controls['ltrc_trc_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                (change)="onChangeTrc()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opentrc(contenttrc)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="ltrcForm.controls['ltrc_trc_code'].errors && (ltrcForm.controls['ltrc_trc_code'].dirty || ltrcForm.controls['ltrc_trc_code'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="form-group"> Designation Code Frais: </label>
+                        <input type="text" class="form-control form-control-sm  form-control-solid"
+                        formControlName="trcdesc" aria-describedby="basic-addon2"
+                        >
+                       
+                    </div>
+
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group ">Mode Transport:</label>
+                        <select class="form-control form-control-sm form-control-solid"
+                            formControlName="ltrc_trmode" id="ltrc_trmode">
+                            <option value=""></option>
+                            <option *ngFor="let elem of ltrc_trmode" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un
+                        Article</button>
+                </div>
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
+                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                        (onAngularGridCreated)="gridReady($event)">
+                    </angular-slickgrid>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Site</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpm"
+                            [columnDefinitions]="columnDefinitionssite" (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="sites">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+           
+        </div>
+        <div>
+            <ng-template #contentcurr let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Devise</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionscurr" (onAngularGridCreated)="angularGridReadycurr($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedcurr($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionscurr" [dataset]="currs">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contenttrc let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Code Frais</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridtrc" [columnDefinitions]="columnDefinitionstrc" 
+                            (onAngularGridCreated)="angularGridReadytrc($event)" 
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtrc($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionstrc" [dataset]="trcs">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+         
+
+        </div>
+        <div>
+            <ng-template #contentum let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Um</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridum" [columnDefinitions]="columnDefinitionsum" 
+                            (onAngularGridCreated)="angularGridReadyum($event)" 
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedum($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsum" [dataset]="ums">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+          
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

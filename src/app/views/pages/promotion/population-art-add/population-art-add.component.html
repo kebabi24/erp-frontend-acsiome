@@ -1,0 +1,123 @@
+
+<kt-portlet >
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une population'" [class]="'card-head-lg '" [viewLoading$]="loading$" >
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
+            <button type="button" (click)="onSubmit()" class="btn btn-abracadabra btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body >
+        <div class="example-preview">
+            <div>
+                <div>
+                    {{ time | async }}
+                </div>
+
+                <form [formGroup]="populationForm" class="form">
+
+                    <!-- <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce code customer existe deja - Si vous voulez le mettre à jour<button type="warn" class="btn">Cliquez ici</button>
+                    </kt-alert>   (change)="onChangeCode()" -->
+                    
+                    <div class="row mb-2">
+                      <!-- CODE POPULATION -->
+                      <div class=" form-group col-4">
+                        <!-- <span >Code paramètre:</span> -->
+                            <label class="form-group " id="code" >code de la population:</label>
+                            <input 
+                            
+                            type="text"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="code_population"
+                            (change) = "onChangeCode()"
+                            >
+                            
+                            <div *ngIf="populationForm.controls['code_population'].errors && (populationForm.controls['code_population'].dirty || populationForm.controls['code_population'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                      </div>
+                      <!-- CODE POPULATION END  -->
+
+                      <!-- DESC POPULATION -->
+                      <div class=" form-group col-4">
+                        <!-- <span >Code paramètre:</span> -->
+                            <label class="form-group " >Description de la population:</label>
+                            <input type="text"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="desc_population">
+                      </div>
+                      <!-- DESC POPULATION END  -->
+
+                      <!-- RANK -->
+                      <div class=" form-group col-4">
+                        <!-- <span >Code paramètre:</span> -->
+                            <label class="form-group " >Rang:</label>
+                            <input type="number"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="rank">
+                      </div>
+                      <!-- RANK END  -->
+
+
+                    </div>
+
+                  
+
+                 
+
+                    <!-- ROW 2 -->
+                    <div class="row">
+                        <!-- TYPE -->
+                        <div class="form-group col-2">
+                            <label class="form-group">Combinée :</label>
+                            <span class="switch switch-icon red-switch">
+                                <label>
+                                    <input type="checkbox"
+                                        class="form-control form-control-sm form-control-solid"
+                                        formControlName="selector" name="select" />
+                                    <span></span>
+                                </label>
+                            </span>
+                                 
+                        </div>
+                        <!-- TYPE END -->
+                    </div>
+                    <!-- ROW 2 END -->
+
+
+                    
+                    
+
+
+                </form> 
+                
+                <!-- DETAILS TITLE  -->
+                <div class="row mt-7 mb-7">
+                    <h4>Liste de produits</h4>
+                </div>
+                <!-- DETAILS TITLE END -->
+
+                
+
+                <!-- GRID -->
+                <div class="row"> 
+                        <angular-slickgrid class="col-12" 
+                            gridId="grid" 
+                            [columnDefinitions]="columnDefinitions"
+                            (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions" 
+                            [dataset]="products"
+                            >
+                        </angular-slickgrid>
+                </div>
+                <!-- GRID END -->
+            
+               
+            </div>
+        </div>
+
+    </kt-portlet-body>
+ 

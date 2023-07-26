@@ -223,6 +223,15 @@ prepareGrid() {
       type: FieldType.string,
     },
     {
+      id: "so_channel",
+      name: "Lsite Frais ",
+      field: "so_channel",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
       id: "sod_part",
       name: "Article",
       field: "sod_part",

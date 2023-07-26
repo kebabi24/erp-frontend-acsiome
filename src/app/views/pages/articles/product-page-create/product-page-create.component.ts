@@ -217,29 +217,7 @@ export class ProductPageCreateComponent implements OnInit {
        
 
 
-        this.columnDefinitions = [
-          //  {
-          //    id: 'select',
-          //    field: "pt_part",
-          //    excludeFromColumnPicker: true,
-          //    excludeFromGridMenu: true,
-          //    excludeFromHeaderMenu: true,
-          //    formatter: Formatters.checkmark,
-            
-          //    minWidth: 30,
-          //    maxWidth: 30,
-          //    onCellClick: (e: Event, args: OnEventArgs) => {
-          //      const product_code = args.dataContext.pt_part
-          //      if(!this.productCodes.includes(product_code)){
-          //       this.productCodes.push(product_code)
-          //      }else{
-          //        this.productCodes = this.arrayRemove(this.productCodes,product_code)
-          //      }
-          //      console.log(this.productCodes)
-          //    }
-            
-          //  },
-           
+        this.columnDefinitions = [      
             {
                 id: "id",
                 name: "id",

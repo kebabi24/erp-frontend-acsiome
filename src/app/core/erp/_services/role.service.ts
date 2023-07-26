@@ -91,6 +91,7 @@ export class RoleService {
         return this.http.get(GET_LOCAIONS, { headers: httpHeaders })
     }
     public getAllSites() {
+
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(GET_SITES, { headers: httpHeaders })
     }

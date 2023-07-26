@@ -146,6 +146,29 @@ export class MenuConfig {
             },
           ],
         },
+
+        // PROMO
+        {
+          title: "Promotion",
+          bullet: "dot",
+          icon: "flaticon-event-calendar-symbol",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter population article",
+              page: "/promo/population-art-add",
+            }, 
+            {
+              title: "Ajouter avantage",
+              page: "/promo/advantage-add",
+            }, 
+            {
+              title: "Ajouter promotion",
+              page: "/promo/promo-add",
+            }, 
+            
+          ],
+        },
         
         {
           title: "Gestion des Fournisseurs",
@@ -909,6 +932,10 @@ export class MenuConfig {
           root: true,
           submenu: [
             {
+              title: "Crée demande de chargement",
+              page: "/supervision/create-load-request",
+            },
+            {
               title: "Validation des demandes de chargement",
               page: "/supervision/validate-charge-demande",
             },
@@ -980,6 +1007,26 @@ export class MenuConfig {
             {
               title: "Créer un nouveau service",
               page: "/services/create-new-service",
+            },
+          ],
+        },
+        {
+          title: "Gestion des Transporteurs",
+          bullet: "dot",
+          icon: "flaticon2-lorry",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter Transporteur",
+              page: "/transport/create-transporter",
+            },
+            {
+              title: "Edit Transporteur",
+              page: "/transport/list-edit-transporter",
+            },
+            {
+              title: "Liste des Transporteurs",
+              page: "/transport/list-transporter",
             },
           ],
         },
@@ -1336,6 +1383,39 @@ export class MenuConfig {
             },
 
             {
+              title: "Paramétrages de Transport",
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              root: true,
+              submenu: [
+                {
+                  title: "Ajouter Code Frais Transport",
+                  page: "/transport/create-cost",
+                },
+                {
+                  title: "Edit Code Frais Transport",
+                  page: "/transport/list-edit-cost",
+                },
+                {
+                  title: "Liste des Codes Frais Transport",
+                  page: "/transport/list-cost",
+                },
+
+                {
+                  title: "Ajouter Liste Frais Transport",
+                  page: "/transport/create-costlist",
+                },
+                {
+                  title: "Edit Liste Frais Transport",
+                  page: "/transport/list-edit-costlist",
+                },
+                {
+                  title: "Liste des Liste Frais Transport",
+                  page: "/transport/list-costlist",
+                },
+              ],
+            },
+            {
               title: "Paramétrages POS",
               bullet: "dot",
               icon: "flaticon-settings-1",
@@ -1401,6 +1481,7 @@ export class MenuConfig {
               ],
             },
     
+           
 
             {
               title: "Configuration Module",
