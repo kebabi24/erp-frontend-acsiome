@@ -54,7 +54,23 @@
                       <!-- CODE POP ARTICLE  END  -->
 
                       <!-- CODE POP CLIENT -->
-                      <div class=" form-group col-3">
+                      <div class="form-group col-3">
+                        <label class="form-group">code population client: *</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="pop_c_code" 
+                                [className]="populationForm.controls['pop_c_code'].errors && (populationForm.controls['pop_c_code'].dirty || populationForm.controls['pop_c_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open2(content2)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="populationForm.controls['pop_c_code'].errors && (populationForm.controls['pop_c_code'].dirty || populationForm.controls['pop_c_code'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>   
+                      </div>
+                      
+                      <!-- <div class=" form-group col-3">
                         <label class="form-group " >code population client:</label>
                         <select 
                           formControlName="pop_c_code" 
@@ -64,7 +80,7 @@
                             
                           </select>
                       
-                      </div>
+                      </div> -->
                       <!-- CODE POP CLIENT END  -->
 
                       <!-- SITE -->
@@ -165,19 +181,29 @@
 
                       </div>
 
-                      <div class=" form-group col-3">
-                        <label class="form-group " id="code" >code avantage:</label>
-                        <input 
-                        
-                        type="text"
-                        class="form-control form-control-sm form-control-solid"
-                        formControlName="adv_code"
-                        >
-                        
-                        <div *ngIf="populationForm.controls['adv_code'].errors && (populationForm.controls['adv_code'].dirty || populationForm.controls['adv_code'].touched)"
-                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                     
+                    <div class="form-group col-3">
+                        <label class="form-group">code avantage : *</label>
+                        <div class="input-group input-group-sm">
 
-                  </div>
+                            <input type="text" formControlName="adv_code" 
+                                [className]="populationForm.controls['adv_code'].errors && (populationForm.controls['adv_code'].dirty || populationForm.controls['adv_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open4(content4)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="populationForm.controls['adv_code'].errors && (populationForm.controls['adv_code'].dirty || populationForm.controls['adv_code'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>   
+                      </div>
+                      <div class=" form-group col-3">
+                        <!-- <span >Code paramètre:</span> -->
+                            <label class="form-group " >Rang:</label>
+                            <input type="number"
+                            class="form-control form-control-sm form-control-solid"
+                            formControlName="rank">
+                      </div>
                         
                     </div>
                     <!-- ROW 3 END -->
@@ -218,31 +244,85 @@
             <!-- MODAL ROLE GRID  END -->
 
             <!-- MODAL SITE   -->
-        <div>
-            <ng-template #content8 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir le site:</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
-                            [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedSite($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions6" [dataset]="sites">
-                        </angular-slickgrid>
+            <div>
+                <ng-template #content8 let-c="close" let-d="dismiss">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Choissir le site:</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-        </div>
-        <!-- MODAL SITE  END  -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
+                                [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
+                                (sgOnSelectedRowsChanged)="handleSelectedSite($event.detail.eventData, $event.detail.args)"
+                            
+                                [gridOptions]="gridOptions6" [dataset]="sites">
+                            </angular-slickgrid>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    </div>
+                </ng-template>
+            </div>
+            <!-- MODAL SITE  END  -->
+
+            <!-- MODAL GRID POP CLIENT-->
+            <div>
+                <ng-template #content2 let-c="close" let-d="dismiss">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Choissir le code de population client:</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3"
+                                [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                                (sgOnSelectedRowsChanged)="handleSelectedPopClient($event.detail.eventData, $event.detail.args)"
+                            
+                                [gridOptions]="gridOptions2" [dataset]="popsClient">
+                            </angular-slickgrid>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    </div>
+                </ng-template>
+            </div>
+            <!-- MODAL GRID POP CLIENT END -->
+
+            <!-- MODAL GRID POP CLIENT-->
+            <div>
+                <ng-template #content4 let-c="close" let-d="dismiss">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Choissir le code de avantage:</h4>
+                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3"
+                                [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                                (sgOnSelectedRowsChanged)="handleSelectedAdvantage($event.detail.eventData, $event.detail.args)"
+                            
+                                [gridOptions]="gridOptions4" [dataset]="advantages">
+                            </angular-slickgrid>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    </div>
+                </ng-template>
+            </div>
+            <!-- MODAL GRID POP CLIENT END -->
 
 
         </div>
