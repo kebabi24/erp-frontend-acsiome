@@ -285,7 +285,7 @@ export class EditTransporterComponent implements OnInit {
    *
    * @param id: any
    */
-  goBack(id) {
+  goBack() {
       this.loadingSubject.next(false)
       const url = `/transport/create-transporter`
       this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
