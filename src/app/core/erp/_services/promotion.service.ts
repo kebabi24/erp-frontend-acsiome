@@ -9,6 +9,8 @@ import { environment } from "../../../../environments/environment"
 
 const API_URL = environment.apiUrl + "/promo"
 const GET_SITES = environment.apiUrl + "/sites/"
+const CRM = environment.apiUrl + "/crm"
+
 
 @Injectable()
 export class PromotionService {
@@ -34,24 +36,48 @@ export class PromotionService {
         return this.http.post(`${API_URL}/createAdv/`, {advantage}, { headers: httpHeaders })
     }
 
+     // CREATE PROMOTION
+     public createPromotion(promo : any){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createPromo/`, {promo}, { headers: httpHeaders })
+    }
+
      // GET ALL PRODUCT PAGES
     public getAllPopsArticle() {
          const httpHeaders = this.httpUtils.getHTTPHeaders()
          return this.http.get(`${API_URL}/getPopsArt`, { headers: httpHeaders })
      }
 
-     public getAllSites() {
-        
+     public getAllAdvantages() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/getAdvantages`, { headers: httpHeaders })
+    }
 
+     public getAllSites() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(GET_SITES, { headers: httpHeaders })
     }
 
-    //  // UPDATE PROFILE PRODUCT PAGES
-    // public updateProfileProductPages(profile_code : any , pagesCodes : any) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.post(`${API_URL}/updateProfileProductsPages`, {profile_code:profile_code,pagesCodes:pagesCodes}, { headers: httpHeaders })
-    // }
+      // GET ALL PRODUCT PAGES
+      public getPopsClient() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${CRM}/getPopulations`, { headers: httpHeaders })
+    }
+
+    public getPromo(code: any,) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL}/findPromo/${code}`, { headers: httpHeaders });
+    }
+
+    public getAdv(code: any,) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL}/findAdv/${code}`, { headers: httpHeaders });
+    }
+
+    public getPopArt(code: any,) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL}/findPopArt/${code}`, { headers: httpHeaders });
+    }
 
   
    

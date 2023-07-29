@@ -157,6 +157,10 @@ export class MenuConfig {
             {
               title: "Ajouter population article",
               page: "/promo/population-art-add",
+            },
+            {
+              title: "Ajouter population client",
+              page: "/crm/population-add",
             }, 
             {
               title: "Ajouter avantage",
@@ -166,6 +170,7 @@ export class MenuConfig {
               title: "Ajouter promotion",
               page: "/promo/promo-add",
             }, 
+            
             
           ],
         },

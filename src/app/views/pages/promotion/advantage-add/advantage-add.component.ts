@@ -154,28 +154,22 @@ export class AdvantageAddComponent implements OnInit {
     if(code_adv === "") { 
       this.cantSearch = true 
       this.selectedProducts = []
-    }
+    } 
 
-    controls.type_adv.enable()
-    controls.amount_perc.enable()
-
-    //  this.promotionService.createPopulationAarticle(population_code).subscribe(
-    //      (res: any) => {
-    //        if (res.data) {
-    //          alert("Ce code de population exist déja")
-    //          document.getElementById("code").focus(); 
-    //          controls.desc_population.disable()
-    //          controls.selector.disable()
-    //          controls.rank.disable()     
-    //        } else { 
-    //          this.isExist = true
-    //          this.cantSearch = false
-    //          controls.desc_population.disable()
-    //          controls.selector.disable()
-    //          controls.rank.disable()      
-    //      }
+      this.promotionService.getAdv(code_adv).subscribe(
+          (res: any) => {
+            if (res.data) {
+              alert("Ce code de avantage exist déja")
+              document.getElementById("code").focus(); 
+              controls.type_adv.disable()
+              controls.amount_perc.disable()    
+            } else { 
+              this.isExist = true
+              controls.type_adv.enable()
+              controls.amount_perc.enable()   
+          }
                
-    //  })
+      })
   } 
 
   

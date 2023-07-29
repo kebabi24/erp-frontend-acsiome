@@ -366,7 +366,7 @@ const routes: Routes = [
         loadChildren: () => import("./views/pages/transport/transport.module").then((m) => m.TransportModule),
       },
       {
-        path: "promo",
+         path: "promo",
         loadChildren: () => import("./views/pages/promotion/promotion.module").then((m) => m.PromotionModule),
       },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
