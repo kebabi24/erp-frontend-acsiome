@@ -151,6 +151,19 @@
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                     </div>
+                    <div class="form-group col-1">
+                        <label class="form-group">Liste Frais Transport:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="so_channel" (change)="changeChannel()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openchannel(contentchannel)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="form-group col-2">
                         <label class="form-group">Taxable:</label>
                         <div class="input-group input-group-sm">
@@ -461,6 +474,28 @@
                 </div>
             </ng-template>
         </div>
-
+        <div>
+            <ng-template #contentchannel let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir liste Frais transport</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridc"
+                            [columnDefinitions]="columnDefinitionschannel" (onAngularGridCreated)="angularGridReadychannel($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedchannel($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionschannel" [dataset]="channels">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
     </kt-portlet-body>
 </kt-portlet>

@@ -52,7 +52,7 @@ import { QuoteService, UsersService, ItemService, CodeService, TaxeService, Sale
          SaleShiperService,CustomerService,SequenceService, SiteService,LocationService, MesureService,
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
-         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService} from '../../../core/erp';
+         ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService, CostlistService} from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -250,6 +250,7 @@ const routes: Routes = [
         InvoiceOrderTempService,
         PosCategoryService,
         PsService,
+        CostlistService,
         MobileSettingsService
     ],
 

@@ -84,6 +84,8 @@ export { ProductPage } from "./_models/product-page.model";
 export { Domain } from "./_models/domain.model";
 export { TokenSerie } from "./_models/token-serie.model";
 export { Deal } from "./_models/deal.model";
+export { Transportcost } from "./_models/transportcost.model";
+export { Costlist } from "./_models/costlist.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -172,5 +174,8 @@ export { DashboardCommercialService } from "./_services/dashboard-commercial.ser
 export { DealService } from "./_services/deal.service";
 export { PrintersService } from "./_services/printer.service";
 export { RepertoryService } from "./_services/repertory.service";
+export { TransportcostService } from "./_services/transportcost.service";
+export { CostlistService } from "./_services/costlist.service";
+
 export { PromotionService } from "./_services/promotion.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";
