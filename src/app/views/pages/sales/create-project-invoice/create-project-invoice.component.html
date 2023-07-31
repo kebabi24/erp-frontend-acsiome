@@ -740,7 +740,9 @@
           </td>
           <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
-              <strong><span style="font-size: 11pt">0.00</span></strong>
+              <strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -752,7 +754,9 @@
           </td>
           <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
-              <strong><span style="font-size: 11pt">0.00</span></strong>
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -764,7 +768,9 @@
           </td>
           <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
-              <strong><span style="font-size: 11pt">Exonéré</span></strong>
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -776,7 +782,9 @@
           </td>
           <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
-              <strong><span style="font-size: 11pt">0.00</span></strong>
+              <strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -785,29 +793,9 @@
         <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0.05pt; margin-bottom: 0pt; font-size: 9pt">
-        <strong>&#xa0;</strong>
-      </p>
+
       <table cellspacing="0" cellpadding="0" style="margin-left: 15.28pt; border-collapse: collapse">
         <tr style="height: 9.2pt">
           <td colspan="6" style="width: 403.1pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
@@ -1110,24 +1098,26 @@
                 <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
               <p style="margin-top: 0pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
-                <strong><span style="font-family: 'Times New Roman'">2</span></strong>
+                <strong
+                  ><span style="font-family: 'Times New Roman'">{{ data.id }}</span></strong
+                >
               </p>
             </td>
             <td colspan="2" style="width: 231.88pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 50.02pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 36.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 58.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0.45pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <span style="font-family: 'Times New Roman'">&#xa0;</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_price * data.itdh_qty_inv }}</span>
               </p>
               <p style="margin-top: 0pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">-</p>
             </td>
@@ -1144,7 +1134,9 @@
             </td>
             <td style="width: 133.45pt; border-style: solid; border-width: 0.88pt 1.62pt 1.62pt 0.88pt; vertical-align: top">
               <p style="margin-top: 4.2pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -1531,22 +1523,22 @@
 
           <tr *ngFor="let data of dataset" style="height: 19.7pt">
             <td style="width: 21.68pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
             </td>
             <td colspan="2" style="width: 231.88pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 50.02pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 36.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 58.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 3.75pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">-</p>
+              <p style="margin-top: 3.75pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
             </td>
           </tr>
           <tr style="height: 19.1pt">
@@ -1573,7 +1565,9 @@
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 2.4pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ith_rt_gara }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -2024,25 +2018,25 @@
             <p style="margin-top: 0.4pt; margin-bottom: 0pt; font-size: 10pt">
               <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
-            <p style="margin-top: 0pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 10pt">1</p>
+            <p style="margin-top: 0pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 10pt">{{ data.id }}</p>
           </td>
           <td colspan="2" style="width: 247.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 40.9pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 38.7pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
           </td>
           <td style="width: 68.15pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0.55pt; margin-bottom: 0pt; font-size: 10pt">
               <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
-            <p style="margin-top: 0pt; margin-right: 6.9pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">-</p>
+            <p style="margin-top: 0pt; margin-right: 6.9pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
           </td>
         </tr>
 
@@ -2055,8 +2049,8 @@
             </p>
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 2.65pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>0,00</strong>
+            <p style="text-align: center; font-size: 11.5pt">
+              <strong>{{ tht1 }}</strong>
             </p>
           </td>
         </tr>
@@ -2069,7 +2063,7 @@
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>0,00</strong>
+              <strong>{{ tva1 }}</strong>
             </p>
           </td>
         </tr>
@@ -2082,7 +2076,7 @@
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>0,00</strong>
+              <strong>{{ ttc1 }}</strong>
             </p>
           </td>
         </tr>
@@ -2108,7 +2102,7 @@
         ><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.3pt"> </span></strong><strong>:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>&#xa0;</strong>
@@ -2451,26 +2445,26 @@
         </tr>
         <tr *ngFor="let data of dataset" style="height: 41.9pt">
           <td style="width: 24.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
           </td>
           <td style="width: 205.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 29.55pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 29.5pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
           </td>
           <td style="width: 83.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 104.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0.1pt; margin-bottom: 0pt; font-size: 10pt">
               <strong>&#xa0;</strong>
             </p>
             <p style="margin-top: 0pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-              <span style="letter-spacing: -0.05pt">0,00</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
             </p>
           </td>
         </tr>
@@ -2486,7 +2480,9 @@
           </td>
           <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.45pt; margin-bottom: 0pt; text-align: right; line-height: 16.45pt">
-              <strong><span style="font-size: 14.5pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14.5pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -2499,7 +2495,9 @@
           </td>
           <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.45pt; margin-bottom: 0pt; text-align: right; line-height: 16.3pt">
-              <strong><span style="font-size: 14pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14pt">{{ tva1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -2512,7 +2510,9 @@
           </td>
           <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 3.2pt; margin-right: 1.4pt; margin-bottom: 0pt; text-align: right; font-size: 16pt">
-              <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+              <strong
+                ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -2533,47 +2533,9 @@
         ><strong><span style="letter-spacing: 0.55pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.55pt"> </span></strong><strong>:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0.5pt; margin-bottom: 0pt; font-size: 14pt">
-        <strong>&#xa0;</strong>
-      </p>
+
       <table cellspacing="0" cellpadding="0" style="margin-left: 4.5pt; border: 1pt solid #000000; border-collapse: collapse">
         <tr style="height: 13.1pt">
           <td colspan="5" style="width: 482.1pt; border-bottom-style: solid; border-bottom-width: 1pt; vertical-align: top">
@@ -2913,24 +2875,26 @@
           <tr *ngFor="let data of dataset" style="height: 24.2pt">
             <td style="width: 20.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 5.9pt; margin-left: 5.95pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">1</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ data.id }}</span></strong
+                >
               </p>
             </td>
             <td colspan="3" style="width: 206.08pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 25.88pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 20.02pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 53.28pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 97.68pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
               <p style="margin-top: 6pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
-                <span style="letter-spacing: -0.05pt">0,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_qty_inv * data.itdh_price }}</span>
               </p>
             </td>
           </tr>
@@ -2946,7 +2910,9 @@
             </td>
             <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-right: 1.3pt; margin-bottom: 0pt; text-align: right; line-height: 14.7pt">
-                <strong><span style="font-size: 13pt">0,00</span></strong>
+                <strong
+                  ><span style="font-size: 13pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -2959,7 +2925,9 @@
             </td>
             <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-right: 1.3pt; margin-bottom: 0pt; text-align: right; line-height: 14.7pt">
-                <strong><span style="font-size: 13pt">0,00</span></strong>
+                <strong
+                  ><span style="font-size: 13pt">{{ tva1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -2973,7 +2941,9 @@
             </td>
             <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-right: 1.3pt; margin-bottom: 0pt; text-align: right; line-height: 14.7pt">
-                <strong><span style="font-size: 13pt">0,00</span></strong>
+                <strong
+                  ><span style="font-size: 13pt">{{ ttc1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -2991,40 +2961,10 @@
           ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de</span></strong
           ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>:</strong>
         </p>
-        <p style="margin: 3pt 80.2pt 0pt 6.85pt; line-height: 105%; font-size: 10.5pt">
-          <br /><strong>Cinq</strong><strong><span style="letter-spacing: -0.05pt"> </span></strong><strong>Millions</strong><strong><span style="letter-spacing: -0.05pt"> </span></strong><strong>Six</strong><strong><span style="letter-spacing: -0.05pt"> </span></strong><strong>Cent </strong><strong><span style="letter-spacing: -0.05pt">Quatre</span></strong
-          ><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">Vingt</span></strong
-          ><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong>Cinq</strong><strong><span style="font-family: 'Times New Roman'; letter-spacing: 1.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">Milles</span></strong
-          ><strong> Huit</strong><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong>Cent </strong><strong><span style="letter-spacing: -0.05pt">Vingt</span></strong
-          ><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">Dinars</span></strong>
-        </p>
+        <p style="margin: 3pt 80.2pt 0pt 6.85pt; line-height: 105%; font-size: 10.5pt">{{numberToLetter}</p>
       </div>
 
       <div>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0.1pt; margin-bottom: 0pt; font-size: 7.5pt">
-          <strong>&#xa0;</strong>
-        </p>
         <p style="margin-top: 3.55pt; margin-left: 0.05pt; margin-bottom: 0pt; text-align: center; font-size: 8.5pt">
           <strong><span style="color: #1f3763">1/1</span></strong>
         </p>
@@ -3347,26 +3287,6 @@
             </p>
           </td>
         </tr>
-
-        <tr *ngFor="let data of dataset" style="height: 20.5pt">
-          <td style="width: 17.27pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 3.4pt; margin-left: 3.65pt; margin-bottom: 0pt; font-size: 10.5pt">
-              <strong>1</strong>
-            </p>
-          </td>
-          <td style="width: 190.78pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 45.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 77.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 143.62pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 3.4pt; margin-right: 15.45pt; margin-bottom: 0pt; text-align: right; font-size: 10.5pt">-</p>
-          </td>
-        </tr>
         <tr style="height: 15.7pt">
           <td style="width: 17.27pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
@@ -3387,6 +3307,26 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
           </td>
         </tr>
+        <tr *ngFor="let data of dataset" style="height: 20.5pt">
+          <td style="width: 17.27pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 3.4pt; margin-left: 3.65pt; margin-bottom: 0pt; font-size: 10.5pt">
+              <strong>{{ data.id }}</strong>
+            </p>
+          </td>
+          <td style="width: 190.78pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
+          </td>
+          <td style="width: 45.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+          </td>
+          <td style="width: 77.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
+          </td>
+          <td style="width: 143.62pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 3.4pt; margin-right: 15.45pt; margin-bottom: 0pt; text-align: right; font-size: 10.5pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
+          </td>
+        </tr>
+
         <tr style="height: 15.7pt">
           <td colspan="2" rowspan="3" style="width: 209.05pt; border-top-style: solid; border-top-width: 0.88pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
@@ -3398,7 +3338,9 @@
           </td>
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.25pt; margin-bottom: 0pt; text-align: right; line-height: 13.6pt">
-              <strong><span style="font-size: 12pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 12pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -3410,7 +3352,9 @@
           </td>
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 1.25pt; margin-bottom: 0pt; line-height: 13.6pt">
-              <strong><span style="font-size: 12pt; letter-spacing: -0.05pt">Exonéré</span></strong>
+              <strong
+                ><span style="font-size: 12pt; letter-spacing: -0.05pt">{{ tva }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -3422,7 +3366,9 @@
           </td>
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.25pt; margin-bottom: 0pt; text-align: right; line-height: 13.6pt">
-              <strong><span style="font-size: 12pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 12pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -3438,32 +3384,9 @@
         ><strong> :</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
-      </p>
-      <p style="margin-top: 0.25pt; margin-bottom: 0pt; font-size: 5.5pt">
-        <strong>&#xa0;</strong>
-      </p>
+
       <table cellspacing="0" cellpadding="0" style="margin-left: 5.06pt; border: 0.88pt solid #000000; border-collapse: collapse">
         <tr style="height: 10.9pt">
           <td colspan="2" style="width: 109.01pt; border-bottom-style: solid; border-bottom-width: 0.88pt; vertical-align: top">
@@ -3782,19 +3705,19 @@
           </tr>
           <tr *ngFor="let data of dataset" style="height: 31.25pt">
             <td style="width: 27.2pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
             </td>
             <td style="width: 202.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 70.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 93.3pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 149.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv * data.itdh_price }}</p>
             </td>
           </tr>
 
@@ -3810,7 +3733,9 @@
             </td>
             <td style="width: 148.75pt; border-style: solid; border-width: 2pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 19.5pt">
-                <strong><span style="font-size: 16pt; letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -3826,44 +3751,9 @@
           ><strong> à</strong><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.05pt"> somme </span></strong><strong>de :</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
+          <strong>{{ numberToLetter }}</strong>
         </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
-        </p>
-        <p style="margin-top: 0.4pt; margin-bottom: 0pt; font-size: 9.5pt">
-          <strong>&#xa0;</strong>
-        </p>
+
         <table cellspacing="0" cellpadding="0" style="margin-left: 4.35pt; border: 1pt solid #000000; border-collapse: collapse">
           <tr style="height: 20.3pt">
             <td colspan="5" style="width: 547.05pt; border-bottom-style: solid; border-bottom-width: 1pt; vertical-align: top">
@@ -4217,27 +4107,27 @@
           <tr *ngFor="let data of dataset" style="height: 21pt">
             <td style="width: 29.25pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
-                <strong>1</strong>
+                <strong>{{ data.id }}</strong>
               </p>
             </td>
             <td style="width: 229.61pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 35.66pt; border-style: solid; border-width: 0.75pt 0.75pt 0.75pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 74.21pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">0,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
               </p>
             </td>
           </tr>
@@ -4253,7 +4143,9 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -4562,27 +4454,27 @@
           <tr *ngFor="let data of dataset" style="height: 21pt">
             <td style="width: 29.25pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
-                <strong>1</strong>
+                <strong>{{ data.id }}</strong>
               </p>
             </td>
             <td style="width: 229.61pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 35.66pt; border-style: solid; border-width: 0.75pt 0.75pt 0.75pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 74.21pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">0,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
               </p>
             </td>
           </tr>
@@ -4598,7 +4490,9 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -4913,27 +4807,27 @@
           <tr *ngFor="let data of dataset" style="height: 21pt">
             <td style="width: 29.25pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
-                <strong>1</strong>
+                <strong>{{ data.id }}</strong>
               </p>
             </td>
             <td style="width: 229.61pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 35.66pt; border-style: solid; border-width: 0.75pt 0.75pt 0.75pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 74.21pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">0,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
               </p>
             </td>
           </tr>
@@ -4949,7 +4843,9 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -5264,27 +5160,27 @@
           <tr *ngFor="let data of dataset" style="height: 21pt">
             <td style="width: 29.25pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
-                <strong>1</strong>
+                <strong>{{ data.id }}</strong>
               </p>
             </td>
             <td style="width: 229.61pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 35.66pt; border-style: solid; border-width: 0.75pt 0.75pt 0.75pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
             </td>
             <td style="width: 74.21pt; border-style: solid; border-width: 0.75pt 1.12pt 0.75pt 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">0,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
               </p>
             </td>
           </tr>
@@ -5300,7 +5196,9 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -5312,7 +5210,7 @@
           ><strong><span style="letter-spacing: 0.15pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: 0.1pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.1pt"> </span></strong><strong>:</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
+          <strong>{{ numberToLetter }}</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>&#xa0;</strong>
@@ -5704,29 +5602,31 @@
           </tr>
           <tr *ngFor="let data of dataset" style="height: 18.5pt">
             <td style="width: 23.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
             </td>
             <td style="width: 236.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 1.8pt; margin-left: 1.35pt; margin-bottom: 0pt; font-size: 10.5pt"><span style="letter-spacing: -0.05pt">Superviseur</span> 01</p>
+              <p style="margin-top: 1.8pt; margin-left: 1.35pt; margin-bottom: 0pt; font-size: 10.5pt">
+                <span style="letter-spacing: -0.05pt">{{ data.desc }}</span>
+              </p>
             </td>
             <td style="width: 28.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3.05pt; margin-left: 9.9pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <span style="font-family: 'Times New Roman'">27</span>
+                <span style="font-family: 'Times New Roman'">{{ data.days_nbr }}</span>
               </p>
             </td>
             <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3.05pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 9.5pt">
-                <span style="font-family: 'Times New Roman'">1</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
               </p>
             </td>
             <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3pt; margin-left: 36.9pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <span style="letter-spacing: -0.05pt">22.000,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price }}</span>
               </p>
             </td>
             <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3pt; margin-left: 50.1pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <span style="letter-spacing: -0.05pt">594.000,00</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
               </p>
             </td>
           </tr>
@@ -5742,7 +5642,9 @@
             </td>
             <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 13.4pt; margin-bottom: 0pt; line-height: 16.9pt">
-                <strong><span style="font-size: 14pt; letter-spacing: -0.05pt">16.590.000,00</span></strong>
+                <strong
+                  ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -6133,29 +6035,31 @@
         </tr>
         <tr *ngFor="let data of dataset" style="height: 18.5pt">
           <td style="width: 23.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
           </td>
           <td style="width: 236.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 1.8pt; margin-left: 1.35pt; margin-bottom: 0pt; font-size: 10.5pt"><span style="letter-spacing: -0.05pt">Superviseur</span> 01</p>
+            <p style="margin-top: 1.8pt; margin-left: 1.35pt; margin-bottom: 0pt; font-size: 10.5pt">
+              <span style="letter-spacing: -0.05pt">{{ data.desc }}</span>
+            </p>
           </td>
           <td style="width: 28.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.05pt; margin-left: 9.9pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <span style="font-family: 'Times New Roman'">27</span>
+              <span style="font-family: 'Times New Roman'">{{ data.days_nbr }}</span>
             </p>
           </td>
           <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.05pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 9.5pt">
-              <span style="font-family: 'Times New Roman'">1</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
             </p>
           </td>
           <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3pt; margin-left: 36.9pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <span style="letter-spacing: -0.05pt">22.000,00</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price }}</span>
             </p>
           </td>
           <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3pt; margin-left: 50.1pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <span style="letter-spacing: -0.05pt">594.000,00</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
             </p>
           </td>
         </tr>
@@ -6171,7 +6075,9 @@
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 13.4pt; margin-bottom: 0pt; line-height: 16.9pt">
-              <strong><span style="font-size: 14pt; letter-spacing: -0.05pt">16.590.000,00</span></strong>
+              <strong
+                ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -6188,7 +6094,7 @@
       <br />
       <div>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
+          <strong>{{ numberToLetter }}</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>&#xa0;</strong>
@@ -6565,29 +6471,29 @@
         <tr *ngFor="let data of dataset" style="height: 20.9pt">
           <td style="width: 23pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 10pt">
-              <strong>1</strong>
+              <strong>{{ data.id }}</strong>
             </p>
           </td>
           <td style="width: 220.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 27.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 27.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
           </td>
           <td style="width: 34.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 4.05pt; margin-left: 6.9pt; margin-bottom: 0pt; font-size: 10pt">
-              <span style="font-family: 'Times New Roman'">Jours</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_um }}</span>
             </p>
           </td>
           <td style="width: 98.35pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 103.2pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">
-              <span style="letter-spacing: -0.05pt">0,00</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
             </p>
           </td>
         </tr>
@@ -6605,7 +6511,9 @@
           </td>
           <td style="width: 102.45pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 1.6pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 13.5pt">
-              <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+              <strong
+                ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -6618,7 +6526,9 @@
           </td>
           <td style="width: 102.45pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 1.35pt; margin-bottom: 0pt; line-height: 14.75pt">
-              <strong><span style="font-size: 13.5pt; letter-spacing: -0.05pt">Exonéré</span></strong>
+              <strong
+                ><span style="font-size: 13.5pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -6632,7 +6542,9 @@
           </td>
           <td style="width: 102.45pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; line-height: 15.95pt">
-              <strong><span style="font-size: 13.5pt; letter-spacing: -0.05pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 13.5pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -6647,7 +6559,7 @@
         ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de:</span></strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>&#xa0;</strong>
@@ -6994,14 +6906,14 @@
           <tr *ngFor="let data of dataset" style="height: 26.15pt">
             <td style="width: 24.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 6.25pt; margin-left: 0.75pt; margin-bottom: 0pt; text-align: center; font-size: 10.5pt">
-                <strong>1</strong>
+                <strong>{{ data.id }}</strong>
               </p>
             </td>
             <td colspan="2" style="width: 313.05pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 133.9pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv * data.itdh_price }}</p>
             </td>
           </tr>
 
@@ -7016,7 +6928,9 @@
             </td>
             <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
               <p style="margin-top: 8.05pt; margin-left: 1pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -7029,7 +6943,9 @@
             </td>
             <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
               <p style="margin-top: 3.15pt; margin-left: 1pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -7043,7 +6959,9 @@
             </td>
             <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
               <p style="margin-top: 3.15pt; margin-left: 1pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -7069,7 +6987,7 @@
           ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>:</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
+          <strong>{{ numberToLetter }}</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>&#xa0;</strong>
@@ -7466,36 +7384,7 @@
             </p>
           </td>
         </tr>
-
-        <tr *ngFor="let data of dataset" style="height: 15.15pt">
-          <td style="width: 22.88pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0.5pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-              <strong>1</strong>
-            </p>
-          </td>
-          <td style="width: 229.32pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 25.52pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 1.35pt; margin-left: 1.6pt; margin-bottom: 0pt; font-size: 9.5pt">Hours</p>
-          </td>
-          <td style="width: 44.98pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 48.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 86.78pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td style="width: 95.12pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0.65pt; margin-right: 7.85pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">-</p>
-          </td>
-        </tr>
         <tr style="height: 15.65pt">
-          <td style="width: 22.88pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
           <td style="width: 229.32pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 1.9pt; margin-left: 1.25pt; margin-bottom: 0pt; font-size: 8.5pt">
               <strong
@@ -7503,22 +7392,33 @@
               ><span style="letter-spacing: -0.1pt">:</span><span style="letter-spacing: -0.4pt"> </span><span style="letter-spacing: -0.05pt">F</span><span style="letter-spacing: -0.1pt">é</span><span style="letter-spacing: -0.05pt">vi</span><span style="letter-spacing: -0.1pt">er</span><span style="letter-spacing: -0.5pt"> </span>2023<span style="letter-spacing: -0.45pt"> </span>&amp;<span style="letter-spacing: -0.4pt"> </span><span style="letter-spacing: -0.05pt">Mars</span><span style="letter-spacing: -0.4pt"> </span>2023
             </p>
           </td>
+        </tr>
+        <tr *ngFor="let data of dataset" style="height: 15.15pt">
+          <td style="width: 22.88pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0.5pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
+              <strong>{{ data.id }}</strong>
+            </p>
+          </td>
+          <td style="width: 229.32pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
+          </td>
           <td style="width: 25.52pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 1.35pt; margin-left: 1.6pt; margin-bottom: 0pt; font-size: 9.5pt">{{ data.itdh_um }}</p>
           </td>
           <td style="width: 44.98pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.days_nbr }}</p>
           </td>
-          <td style="width: 48.82pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+          <td style="width: 48.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_hours }}</p>
           </td>
-          <td style="width: 86.78pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+          <td style="width: 86.78pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
-          <td style="width: 95.12pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+          <td style="width: 95.12pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
+            <p style="margin-top: 0.65pt; margin-right: 7.85pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">{{ data.itdh_price * data.days_nbr }}</p>
           </td>
         </tr>
+
         <tr style="height: 21.35pt">
           <td colspan="4" rowspan="3" style="width: 325.44pt; border-top-style: solid; border-top-width: 0.88pt; border-right-style: solid; border-right-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
@@ -7532,7 +7432,7 @@
           </td>
           <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 3.65pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">
-              <strong>0,00</strong>
+              <strong>{{ tht1 }}</strong>
             </p>
           </td>
         </tr>
@@ -7545,7 +7445,9 @@
           </td>
           <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 25.9pt; margin-bottom: 0pt; line-height: 13.15pt">
-              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">Exonéré</span></strong>
+              <strong
+                ><span style="font-size: 12.5pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -7560,7 +7462,7 @@
           </td>
           <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 0.75pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">
-              <strong>0,00</strong>
+              <strong>{{ ttc1 }}</strong>
             </p>
           </td>
         </tr>
@@ -7574,7 +7476,7 @@
         ><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>&#xa0;</strong>
@@ -7937,20 +7839,20 @@
                 <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
               <p style="margin-top: 0pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 12pt">
-                <strong>1</strong>
+                <strong>{{ data.id }}</strong>
               </p>
             </td>
             <td style="width: 249.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 17.5pt; border-style: solid; border-width: 1pt 1pt 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 28.05pt; border-style: solid; border-width: 1pt 1pt 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 67.55pt; border-style: solid; border-width: 1pt 1pt 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 123.04pt; border-style: solid; border-width: 1pt 1.12pt 2pt 1pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 12pt">
@@ -7962,7 +7864,7 @@
               <p style="margin-top: 0.5pt; margin-bottom: 0pt; font-size: 14pt">
                 <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
-              <p style="margin-top: 0pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 12pt">0,00</p>
+              <p style="margin-top: 0pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 12pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
             </td>
           </tr>
           <tr style="height: 21pt">
@@ -7976,7 +7878,9 @@
             </td>
             <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 18.05pt">
-                <strong><span style="font-size: 16pt; letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -7989,7 +7893,9 @@
             </td>
             <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 66.5pt; margin-bottom: 0pt; line-height: 19pt">
-                <strong><span style="font-size: 16pt; letter-spacing: -0.05pt">Exonéré</span></strong>
+                <strong
+                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -8001,7 +7907,9 @@
             </td>
             <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 18.05pt">
-                <strong><span style="font-size: 16pt; letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -8367,23 +8275,25 @@
         <tr *ngFor="let data of dataset" style="height: 13.45pt">
           <td style="width: 23.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 1.5pt; margin-left: 0.75pt; margin-bottom: 0pt; text-align: center; font-size: 8.5pt">
-              <strong><span style="font-family: 'Times New Roman'">1</span></strong>
+              <strong
+                ><span style="font-family: 'Times New Roman'">{{ data.id }}</span></strong
+              >
             </p>
           </td>
           <td style="width: 236.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 28.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.days_nbr }}</p>
           </td>
           <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0.5pt; margin-right: 6.8pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">-</p>
+            <p style="margin-top: 0.5pt; margin-right: 6.8pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
           </td>
         </tr>
 
@@ -8399,7 +8309,9 @@
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 16.35pt">
-              <strong><span style="font-size: 14pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -8413,7 +8325,9 @@
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 15.95pt">
-              <strong><span style="font-size: 14pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14pt">{{ tva1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -8427,7 +8341,9 @@
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 15.95pt">
-              <strong><span style="font-size: 14pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14pt">{{ ttc1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -8447,7 +8363,7 @@
         ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>&#xa0;</strong>
@@ -8823,23 +8739,23 @@
         <tr *ngFor="let data of dataset" style="height: 26.15pt">
           <td style="width: 31.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 6.35pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 10pt">
-              <strong>1</strong>
+              <strong>{{ data.id }}</strong>
             </p>
           </td>
           <td style="width: 239.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 26.7pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 4.95pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">1</p>
+            <p style="margin-top: 4.95pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">{{ data.itdh_um }}</p>
           </td>
           <td style="width: 39.55pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 4.95pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">1</p>
+            <p style="margin-top: 4.95pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">{{ data.days_nbr }}</p>
           </td>
           <td style="width: 99.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 110.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 4.95pt; margin-right: 8.7pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">-</p>
+            <p style="margin-top: 4.95pt; margin-right: 8.7pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">{{ data.itdh_price * data.days_nbr }}</p>
           </td>
         </tr>
 
@@ -8854,7 +8770,9 @@
           </td>
           <td style="width: 110pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.55pt; margin-bottom: 0pt; text-align: right; line-height: 16pt">
-              <strong><span style="font-size: 14pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -8870,7 +8788,9 @@
           </td>
           <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 1.4pt; margin-bottom: 0pt; line-height: 14.9pt">
-              <strong><span style="font-size: 14.5pt; letter-spacing: -0.05pt">Exonéré</span></strong>
+              <strong
+                ><span style="font-size: 14.5pt; letter-spacing: -0.05pt">{{ tva }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -8883,7 +8803,9 @@
           </td>
           <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.55pt; margin-bottom: 0pt; text-align: right; line-height: 14.9pt">
-              <strong><span style="font-size: 14.5pt">0,00</span></strong>
+              <strong
+                ><span style="font-size: 14.5pt">{{ ttc }}</span></strong
+              >
             </p>
           </td>
         </tr>

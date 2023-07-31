@@ -41,6 +41,14 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   styleUrls: ["./create-project-invoice.component.scss"],
 })
 export class CreateProjectInvoiceComponent implements OnInit {
+  numberToLetter: any;
+  tht1: any;
+  tva1: any;
+  timbre1: any;
+  ttc1: any;
+  rmsGr: any;
+  trns: any;
+  rmsGl: any;
   invoiceOrderTemp: InvoiceOrderTemp;
   soForm: FormGroup;
   totForm: FormGroup;
@@ -225,7 +233,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
       const factureContent = document.getElementById("facture" + value);
       this.displayInvoice = true;
       console.log(factureContent);
-
+      // this.numberToLetter = NumberToLetters(Number(controls.ttc.value).toFixed(2), this.curr.cu_desc);
       // Calculate the scaled width and height based on the page width and scale factor
       const scaledWidth = pageWidth * scale;
       const scaledHeight = pageHeight * scale;
@@ -695,48 +703,48 @@ export class CreateProjectInvoiceComponent implements OnInit {
     this.hasFormErrors = false;
     const controls = this.soForm.controls;
     /** check form */
-    if (this.soForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
-      this.message = "Modifiez quelques éléments et réessayez de soumettre.";
-      this.hasFormErrors = true;
+    // if (this.soForm.invalid) {
+    //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
+    //   this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+    //   this.hasFormErrors = true;
 
-      return;
-    }
+    //   return;
+    // }
 
-    if (!this.dataset.length) {
-      this.message = "La liste des article ne peut pas etre vide";
-      this.hasFormErrors = true;
+    // if (!this.dataset.length) {
+    //   this.message = "La liste des article ne peut pas etre vide";
+    //   this.hasFormErrors = true;
 
-      return;
-    }
-    for (var i = 0; i < this.dataset.length; i++) {
-      if (this.dataset[i].itdh_part == "" || this.dataset[i].itdh_part == null) {
-        this.message = "L' article ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].itdh_site == "" || this.dataset[i].itdh_site == null) {
-        this.message = "Le Site ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].itdh_loc == "" || this.dataset[i].itdh_loc == null) {
-        this.message = "L' Emplacement ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].itdh_um == "" || this.dataset[i].itdh_um == null) {
-        this.message = "L' UM ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
+    //   return;
+    // }
+    // for (var i = 0; i < this.dataset.length; i++) {
+    //   if (this.dataset[i].itdh_part == "" || this.dataset[i].itdh_part == null) {
+    //     this.message = "L' article ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].itdh_site == "" || this.dataset[i].itdh_site == null) {
+    //     this.message = "Le Site ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].itdh_loc == "" || this.dataset[i].itdh_loc == null) {
+    //     this.message = "L' Emplacement ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].itdh_um == "" || this.dataset[i].itdh_um == null) {
+    //     this.message = "L' UM ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
 
-      if (this.dataset[i].itdh_qty_inv == 0) {
-        this.message = "La Quantite ne peut pas etre 0";
-        this.hasFormErrors = true;
-        return;
-      }
-    }
+    //   if (this.dataset[i].itdh_qty_inv == 0) {
+    //     this.message = "La Quantite ne peut pas etre 0";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    // }
     // tslint:disable-next-line:prefer-const
     let ith = this.prepareIth();
 
@@ -940,30 +948,62 @@ export class CreateProjectInvoiceComponent implements OnInit {
                 itdh_taxable: detail.sod_taxable,
                 itdh_tax_code: detail.sod_tax_code,
                 itdh_taxc: detail.sod_taxc,
+                itdh_stdby: detail.sod_stdby,
+                itdh_hours: detail.sod_hours,
               },
               { position: "bottom" }
             );
-            this.datasetPrint.push({
-              id: this.dataset.length + 1,
-              itdh_line: this.dataset.length + 1,
+            if (detail.sod_stdby === "X") {
+              for (let i = 0; i <= 1; i++) {
+                this.datasetPrint.push({
+                  id: this.dataset.length + 1,
+                  itdh_line: this.dataset.length + 1,
 
-              itdh_part: detail.sod_part,
-              cmvid: "",
-              desc: detail.sod_desc,
-              itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
-              itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
-              itdh_um: detail.sod_um,
-              itdh_um_conv: detail.sod_um_conv,
-              itdh_price: detail.sod_price,
-              itdh_disc_pct: detail.sod_disc_pct,
-              itdh_site: detail.sod_site,
-              itdh_loc: detail.sod_loc,
-              itdh_type: detail.sod_type,
-              itdh_cc: "",
-              itdh_taxable: detail.sod_taxable,
-              itdh_tax_code: detail.sod_tax_code,
-              itdh_taxc: detail.sod_taxc,
-            });
+                  itdh_part: detail.sod_part,
+                  cmvid: "",
+                  desc: detail.sod_desc,
+                  itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+                  itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
+                  itdh_um: detail.sod_um,
+                  itdh_um_conv: detail.sod_um_conv,
+                  itdh_price: detail.sod_price,
+                  itdh_disc_pct: detail.sod_disc_pct,
+                  itdh_site: detail.sod_site,
+                  itdh_loc: detail.sod_loc,
+                  itdh_type: detail.sod_type,
+                  itdh_cc: "",
+                  itdh_taxable: detail.sod_taxable,
+                  itdh_tax_code: detail.sod_tax_code,
+                  itdh_taxc: detail.sod_taxc,
+                  itdh_stdby: detail.sod_stdby,
+                  itdh_hours: detail.sod_hours,
+                });
+              }
+            } else {
+              this.datasetPrint.push({
+                id: this.dataset.length + 1,
+                itdh_line: this.dataset.length + 1,
+
+                itdh_part: detail.sod_part,
+                cmvid: "",
+                desc: detail.sod_desc,
+                itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+                itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
+                itdh_um: detail.sod_um,
+                itdh_um_conv: detail.sod_um_conv,
+                itdh_price: detail.sod_price,
+                itdh_disc_pct: detail.sod_disc_pct,
+                itdh_site: detail.sod_site,
+                itdh_loc: detail.sod_loc,
+                itdh_type: detail.sod_type,
+                itdh_cc: "",
+                itdh_taxable: detail.sod_taxable,
+                itdh_tax_code: detail.sod_tax_code,
+                itdh_taxc: detail.sod_taxc,
+                itdh_stdby: detail.sod_stdby,
+                itdh_hours: detail.sod_hours,
+              });
+            }
           }
           this.calculatetot();
         });
@@ -2379,10 +2419,10 @@ export class CreateProjectInvoiceComponent implements OnInit {
     let ttc = 0;
     for (var i = 0; i < this.dataset.length; i++) {
       console.log("here here ", this.dataset[i]);
-      tht += round(this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)), 2);
+      tht += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)), 2);
 
-      if (controlsso.ith_taxable.value == true) tva += round(this.dataset[i].itdh_price * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)) * (this.dataset[i].itdh_taxc ? this.dataset[i].itdh_taxc / 100 : 0), 2);
-
+      if (controlsso.ith_taxable.value == true) tva += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)) * (this.dataset[i].itdh_taxc ? Number(this.dataset[i].itdh_taxc) / 100 : 0), 2);
+      console.log(tva);
       if (controlsso.ith_cr_terms.value == "ES") {
         timbre = round((tht + tva) / 100, 2);
         if (timbre > 10000) {
@@ -2390,12 +2430,28 @@ export class CreateProjectInvoiceComponent implements OnInit {
         }
       }
     }
-    ttc = round(tht + tva + timbre, 2);
+    ttc = round(Number(tht) + Number(tva) + Number(timbre), 2);
 
     controls.tht.setValue(tht.toFixed(2));
     controls.tva.setValue(tva.toFixed(2));
     controls.timbre.setValue(timbre.toFixed(2));
     controls.ttc.setValue(ttc.toFixed(2));
+    this.tht1 = tht;
+
+    this.tva1 = this.tht1 * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100);
+    // this.tva = controls.tva.setValue(tva.toFixed(2));
+    this.tva1 = Number(tva);
+    this.timbre1 = controls.timbre.setValue(timbre.toFixed(2));
+    this.ttc1 = ttc;
+
+    console.log(this.numberToLetter);
+    this.rmsGr = controlsso.ith_rt_gara.value;
+    console.log(this.rmsGr);
+    this.rmsGl = controlsso.ith_disc_glb.value;
+    console.log(this.rmsGl);
+    this.trns = controlsso.ith_transport.value;
+    console.log(this.trns);
+    // this.numberToLetter = NumberToLetters(this.ttc1.toFixed(2), this.curr.cu_desc);
   }
 
   handleSelectedRowsChangedlocdet(e, args) {
@@ -2554,7 +2610,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObjbill) {
       args.rows.map((idx) => {
         const item = this.gridObjbill.getDataItem(idx);
-        console.log(item);
+        console.log("itemmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", item);
 
         this.biller = item;
         controls.ith_bill.setValue(item.cm_addr || "");
@@ -2567,6 +2623,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
           console.log(res);
           const { data } = res;
           if (data) {
+            console.log(data);
             this.curr = data;
           }
 
