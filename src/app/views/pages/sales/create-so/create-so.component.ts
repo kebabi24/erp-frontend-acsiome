@@ -2638,6 +2638,22 @@ openchannel(content) {
   this.modalService.open(content, { size: "lg" });
 }
 
+changeChannel(){
+  const controls = this.soForm.controls
+  this.costlistService
+  .getByOne({ltrc_code: controls.so_channel.value})
+  .subscribe((response: any) => {
+if(!response.data){
+    alert("Liste Frais  nexiste pas")
+    controls.so_channel.setValue(null)
+    console.log(response.data.length)
+    document.getElementById("so_channel").focus();
+}
+
+  })
+
+
+}
 calculatetot(){
            const controls = this.totForm.controls 
             const controlsso = this.soForm.controls 

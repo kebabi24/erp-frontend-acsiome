@@ -137,27 +137,24 @@ export class PopulationArticleAddComponent implements OnInit {
       this.selectedProducts = []
     }
 
-    controls.desc_population.enable()
-    controls.selector.enable()
-    controls.rank.enable()   
-
-    //  this.promotionService.createPopulationAarticle(population_code).subscribe(
-    //      (res: any) => {
-    //        if (res.data) {
-    //          alert("Ce code de population exist déja")
-    //          document.getElementById("code").focus(); 
-    //          controls.desc_population.disable()
-    //          controls.selector.disable()
-    //          controls.rank.disable()     
-    //        } else { 
-    //          this.isExist = true
-    //          this.cantSearch = false
-    //          controls.desc_population.disable()
-    //          controls.selector.disable()
-    //          controls.rank.disable()      
-    //      }
+      this.promotionService.getPopArt(population_code).subscribe(
+          (res: any) => {
+            if (res.data) {
+              alert("Ce code de population exist déja")
+              document.getElementById("code").focus(); 
+              controls.desc_population.disable()
+              controls.selector.disable()
+              controls.rank.disable()     
+            } else { 
+              this.isExist = true
+              this.cantSearch = false
+              controls.desc_population.enable()
+              controls.selector.enable()
+              controls.rank.enable()   
+   
+          }
                
-    //  })
+      })
   } 
 
   
