@@ -362,7 +362,7 @@ export class CreateProjectComponent implements OnInit {
 
     //     }
     //     else {
-
+console.log(this.customer)
     _so.so_category = "SO";
     _so.so_cust = controls.pm_cust.value;
     _so.so_ord_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;

@@ -976,7 +976,7 @@ export class CreatesaleorderComponent implements OnInit {
             );
             this.loadingSubject.next(false);
             console.log(this.dataset);
-            //if(controls.print.value == true) this.printpdf(so.so_nbr) //printSO(this.customer, this.dataset, so);
+            if(controls.print.value == true) this.printpdf(so.so_nbr) //printSO(this.customer, this.dataset, so);
             this.router.navigateByUrl("/");
           }
         );
