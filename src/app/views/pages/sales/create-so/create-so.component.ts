@@ -951,10 +951,10 @@ export class CreatesaleorderComponent implements OnInit {
         .subscribe(
           (reponse: any) => {
             so = reponse.data
-          	const arrayOctet = new Uint8Array(reponse.pdf.data)
-            const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-            const fileUrl = URL.createObjectURL(file);
-            window.open(fileUrl)  
+          	// const arrayOctet = new Uint8Array(reponse.pdf.data)
+            // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+            // const fileUrl = URL.createObjectURL(file);
+            // window.open(fileUrl)  
           },
           (error) => {
             this.layoutUtilsService.showActionNotification(

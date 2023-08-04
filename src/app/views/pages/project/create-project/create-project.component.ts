@@ -15,6 +15,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType, HttpUtilsService } 
 import { reverseString } from "@amcharts/amcharts4/.internal/core/utils/Utils";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../../environments/environment";
+import { C } from "@angular/cdk/keycodes";
 const API_URL = environment.apiUrl + "/codes";
 
 @Component({
@@ -75,8 +76,8 @@ export class CreateProjectComponent implements OnInit {
   mvdataView: any;
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
-  mvdataset: any[];
-  sodataset = [];
+  mvdataset : any[];
+  sodataset : any[];
   reqdataset = [];
   project: Project;
   gridService: GridService;
@@ -116,7 +117,28 @@ export class CreateProjectComponent implements OnInit {
 
   httpOptions = this.httpUtils.getHTTPHeaders();
 
-  constructor(config: NgbDropdownConfig, private httpUtils: HttpUtilsService, private projectFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private modalService: NgbModal, private projectService: ProjectService, private taskService: TaskService, private customerService: CustomerService, private qualityControlService: QualityControlService, private providerService: ProviderService, private itemService: ItemService, private bomService: BomService, private saleOrderService: SaleOrderService, private requisitonService: RequisitionService, private psService: PsService, private deviseService: DeviseService, private siteService: SiteService, private dealService: DealService, private http: HttpClient) {
+  constructor(config: NgbDropdownConfig, 
+    private httpUtils: HttpUtilsService, 
+    private projectFB: FormBuilder, 
+    private activatedRoute: ActivatedRoute, 
+    private router: Router, 
+    public dialog: MatDialog, 
+    private layoutUtilsService: LayoutUtilsService, 
+    private modalService: NgbModal, 
+    private projectService: ProjectService, 
+    private taskService: TaskService, 
+    private customerService: CustomerService, 
+    private qualityControlService: QualityControlService, 
+    private providerService: ProviderService, 
+    private itemService: ItemService, 
+    private bomService: BomService, 
+    private saleOrderService: SaleOrderService, 
+    private requisitonService: RequisitionService, 
+    private psService: PsService, 
+    private deviseService: DeviseService,
+    private siteService: SiteService, 
+    private dealService: DealService,
+    private http: HttpClient) {
     config.autoClose = true;
   }
 
@@ -165,7 +187,7 @@ export class CreateProjectComponent implements OnInit {
 
   onChangeCode() {
     this.mvdataset = [];
-    this.sodataset = [];
+    //this.sodataset = [];
     const controls = this.projectForm.controls;
     this.projectService
       .getBy({
@@ -189,8 +211,8 @@ export class CreateProjectComponent implements OnInit {
   reset() {
     this.isExist = false;
     this.project = new Project();
-    this.mvdataset = [];
-    this.sodataset = [];
+   // this.mvdataset = [];
+   // this.sodataset = [];
     this.createForm();
     this.hasFormErrors = false;
   }
@@ -229,6 +251,8 @@ export class CreateProjectComponent implements OnInit {
     _project.pm_cost = controls.pm_cost.value;
     _project.pm_type = controls.pm_type.value;
     _project.pm_doc_list_code = controls.pm_doc_list_code.value;
+    _project.pm_ord_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
+//     
     return _project;
   }
   /**
@@ -237,36 +261,7 @@ export class CreateProjectComponent implements OnInit {
    * @param _project: ProjectModel
    */
   addproject(_project: Project, details: any) {
-    this.sodataset = [];
-    for (let data of details) {
-      this.itemService.getByOne({ pt_part: data.pmd_part }).subscribe((resp: any) => {
-        if (resp.data.pt_phantom) {
-          this.type = "M";
-        } else {
-          this.type = null;
-        }
-        this.sodataset.push({
-          sod_line: data.pmd_line,
-          sod_part: resp.data.pt_part,
-          sod_um: resp.data.pt_um,
-          sod__chr01: data.pmd_task,
-          sod__chr02: data.pmd_bom_code,
-          sod_qty_ord: data.pmd_qty,
-          sod_qty_ret: data.int01,
-          sod_qty_cons: 0,
-          sod_desc: resp.data.pt_desc1,
-          sod_site: resp.data.pt_site,
-          sod_loc: resp.data.pt_loc,
-          sod_um_conv: 1,
-          sod_type: this.type,
-          sod_price: resp.data.pt_price,
-          sod_disc_pct: 0,
-          sod_tax_code: resp.data.pt_taxc,
-          sod_taxc: resp.data.taxe.tx2_tax_pct,
-          sod_taxable: resp.data.pt_taxable,
-        });
-      });
-    }
+   
 
     let l = [];
     this.selectedIndexes.forEach((index) => {
@@ -276,42 +271,106 @@ export class CreateProjectComponent implements OnInit {
       });
     });
 
-    this.loadingSubject.next(true);
+  //  this.loadingSubject.next(true);
     this.projectService.add({ Project: _project, ProjectDetails: details, docs_codes: l }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
-        this.loadingSubject.next(false);
+    //    this.loadingSubject.next(false);
       },
       () => {
-        const controls = this.projectForm.controls;
-        const deal_code = controls.pm_deal.value;
+        // this.sodataset = [];
+        // for (let data of details) {
+        //   this.itemService.getByOne({ pt_part: data.pmd_part }).subscribe((resp: any) => {
+        //     if (resp.data.pt_phantom) {
+        //       this.type = "M";
+        //     } else {
+        //       this.type = null;
+        //     }
+        //     this.sodataset.push({
+        //       sod_line: data.pmd_line,
+        //       sod_part: resp.data.pt_part,
+        //       sod_um: resp.data.pt_um,
+        //       sod__chr01: data.pmd_task,
+        //       sod__chr02: data.pmd_bom_code,
+        //       sod_qty_ord: data.pmd_qty,
+        //       sod_qty_ret: data.int01,
+        //       sod_qty_cons: 0,
+        //       sod_desc: resp.data.pt_desc1,
+        //       sod_site: resp.data.pt_site,
+        //       sod_loc: resp.data.pt_loc,
+        //       sod_um_conv: 1,
+        //       sod_type: this.type,
+        //       sod_price: resp.data.pt_price,
+        //       sod_disc_pct: 0,
+        //       sod_tax_code: resp.data.pt_taxc,
+        //       sod_taxc: resp.data.taxe.tx2_tax_pct,
+        //       sod_taxable: resp.data.pt_taxable,
+        //     });
+        //   });
+        // }
+        // const controls = this.projectForm.controls;
+        // const deal_code = controls.pm_deal.value;
+// console.log(this.sodataset)
+// if(deal_code != null) {
+//   this.dealService.getByOne({ deal_code }).subscribe((res: any) => {
+//     console.log(res);
+//     const { data } = res;
 
-        this.dealService.getByOne({ deal_code }).subscribe((res: any) => {
-          console.log(res);
-          const { data } = res;
+//     if (res.data != null) {
+//       let so = this.prepareSo();
+//       console.log("sooooo", so, this.sodataset);
+//       so.so_cr_terms = res.data.deal_pay_meth;
+//       this.addSo(so, this.sodataset);
+//     } else {
+//       let so = this.prepareSo();
+//       console.log("sooooood", so, this.sodataset);
+//       this.addSo(so, this.sodataset);
+//     }
+//   });
+// } else 
+// {
+//   let so = this.prepareSo();
+//   //console.log("sooooood", so, this.sodataset);
+//   this.loadingSubject.next(true);
+//   let sop = null;
+ 
+//   console.log(this.sodataset)
+//   console.log(details)
+  
+//   this.saleOrderService.add({ saleOrder: so, saleOrderDetail: this.sodataset }).subscribe(
+//     (reponse: any) => (sop = reponse.data),
+//     (error) => {
+//       this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+//       this.loadingSubject.next(false);
+//     },
+//     () => {
+//       this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+//       //this.reset();
+//     }
+//   );
+// }
+      
+       // this.addReq(details);
 
-          if (res.data != null) {
-            let so = this.prepareSo();
-            console.log("sooooo", so);
-            so.so_cr_terms = res.data.deal_pay_meth;
-            this.addSo(so, this.sodataset);
-          } else {
-            let so = this.prepareSo();
-            console.log("sooooood", so);
-            this.addSo(so, this.sodataset);
-          }
-        });
-        this.addReq(details);
+       this.layoutUtilsService.showActionNotification(
+        "Ajout avec succès",
+        MessageType.Create,
+        10000,
+        true,
+        true
+      );
+      this.loadingSubject.next(false);
 
-        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
-
-        this.loadingSubject.next(false);
-        this.reset();
-        this.router.navigateByUrl("/project/create-project");
-        this.reset();
+       // this.loadingSubject.next(false);
+     //   this.reset();
+     //   this.router.navigateByUrl("/project/create-project");
+     //   this.reset();
       }
     );
+
+      //  this.router.navigateByUrl("/project/create-project");
+      //  this.reset();
   }
 
   prepareReq(): any {
@@ -328,78 +387,84 @@ export class CreateProjectComponent implements OnInit {
     return _req;
   }
 
-  prepareSo(): any {
-    const controls = this.projectForm.controls;
-    const _so = new SaleOrder();
-    const date = new Date();
+//   prepareSo(): any {
+//     const controls = this.projectForm.controls;
+//     const _so = new SaleOrder();
+//     const date = new Date();
 
-    // const deal_code = controls.pm_deal.value;
+//     // const deal_code = controls.pm_deal.value;
 
-    // this.dealService.getByOne({ deal_code }).subscribe(
-    //   (res: any) => {
-    //     console.log(res);
-    //     const { data } = res;
+//     // this.dealService.getByOne({ deal_code }).subscribe(
+//     //   (res: any) => {
+//     //     console.log(res);
+//     //     const { data } = res;
 
-    //     if(res.data.length>0) {
+//     //     if(res.data.length>0) {
 
-    //           _so.so_category =  "SO"
-    //           _so.so_cust = controls.pm_cust.value;
-    //           _so.so_ord_date = controls.pm_ord_date.value
-    //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-    //             : null;
-    //           _so.so_due_date = controls.pm_ord_date.value
-    //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
-    //             : null;
+//     //           _so.so_category =  "SO"
+//     //           _so.so_cust = controls.pm_cust.value;
+//     //           _so.so_ord_date = controls.pm_ord_date.value
+//     //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+//     //             : null;
+//     //           _so.so_due_date = controls.pm_ord_date.value
+//     //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+//     //             : null;
 
-    //           _so.so_po = controls.pm_code.value;
-    //           _so.so_amt = controls.pm_amt.value;
-    //           _so.so_cr_terms = res.data.deal_pay_meth;
-    //           _so.so_curr = this.customer.cm_curr
-    //           _so.so_taxable = this.customer.address.ad_taxable
-    //           _so.so_taxc = this.customer.address.ad_taxc
-    //           _so.so_ex_rate = this.ex_rate1
-    //           _so.so_ex_rate2 = this.ex_rate2
+//     //           _so.so_po = controls.pm_code.value;
+//     //           _so.so_amt = controls.pm_amt.value;
+//     //           _so.so_cr_terms = res.data.deal_pay_meth;
+//     //           _so.so_curr = this.customer.cm_curr
+//     //           _so.so_taxable = this.customer.address.ad_taxable
+//     //           _so.so_taxc = this.customer.address.ad_taxc
+//     //           _so.so_ex_rate = this.ex_rate1
+//     //           _so.so_ex_rate2 = this.ex_rate2
 
-    //     }
-    //     else {
-console.log(this.customer)
-    _so.so_category = "SO";
-    _so.so_cust = controls.pm_cust.value;
-    _so.so_ord_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
-    _so.so_due_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
+//     //     }
+//     //     else {
+// console.log(controls.pm_cust.value)
+//     _so.so_category = "SO";
+//     _so.so_cust = controls.pm_cust.value;
+//     _so.so_ord_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
+//     _so.so_due_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
+//     _so.so_po = controls.pm_code.value;
+//     _so.so_amt = controls.pm_amt.value;
+//     _so.so_cr_terms = this.customer.cm_cr_terms;
+//     _so.so_curr = this.customer.cm_curr;
+//     _so.so_taxable = this.customer.address.ad_taxable;
+//     _so.so_taxc = this.customer.address.ad_taxc;
+//     _so.so_ex_rate = this.ex_rate1;
+//     _so.so_ex_rate2 = this.ex_rate2;
 
-    _so.so_po = controls.pm_code.value;
-    _so.so_amt = controls.pm_amt.value;
-    _so.so_cr_terms = this.customer.cm_cr_terms;
-    _so.so_curr = this.customer.cm_curr;
-    _so.so_taxable = this.customer.address.ad_taxable;
-    _so.so_taxc = this.customer.address.ad_taxc;
-    _so.so_ex_rate = this.ex_rate1;
-    _so.so_ex_rate2 = this.ex_rate2;
+//     // }
 
-    // }
+//     // })
 
-    // })
-
-    return _so;
-  }
+//     return _so;
+//   }
   /**
    * Add po
-   *
-   * @param _so: so
    */
-  addSo(_so: any, sodetail: any) {
-    this.loadingSubject.next(true);
-    let so = null;
-
-    this.saleOrderService.add({ saleOrder: _so, saleOrderDetail: sodetail }).subscribe(
-      (reponse: any) => (so = reponse.data),
-      (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
-        this.loadingSubject.next(false);
-      }
-    );
-  }
+   // @param _so: so
+   
+  // addSo(_so: any, details: any) {
+  //   this.loadingSubject.next(true);
+  //   let so = null;
+   
+  //   console.log(this.sodataset)
+  //   console.log(details)
+    
+  //   this.saleOrderService.add({ /*saleOrder: _so, saleOrderDetail:*/ details }).subscribe(
+  //     (reponse: any) => (so = reponse.data),
+  //     (error) => {
+  //       this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+  //       this.loadingSubject.next(false);
+  //     },
+  //     () => {
+  //       this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+  //       this.reset();
+  //     }
+  //   );
+  // }
 
   addReq(detail: any) {
     const controls = this.projectForm.controls;
@@ -602,6 +667,7 @@ console.log(this.customer)
           }
           console.log(args.dataContext.pmd_end, args.dataContext.pmd_start, days);
           this.mvgridService.updateItemById(args.dataContext.id, { ...args.dataContext, int01: days });
+ 
         },
       },
 
@@ -628,7 +694,7 @@ console.log(this.customer)
       {
         id: "int01",
         name: "Nbr Jour",
-        field: "it01",
+        field: "int01",
         sortable: true,
         width: 80,
         filterable: false,
@@ -736,6 +802,7 @@ console.log(this.customer)
       pmd_end: null,
       pmd_part: "",
       descr: "",
+      days:0,
       pmd_vend: "",
     };
     this.mvgridService.addItem(newItem, { position: "bottom" });
