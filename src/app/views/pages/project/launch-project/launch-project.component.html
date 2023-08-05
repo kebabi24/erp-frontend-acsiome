@@ -71,14 +71,14 @@
                 <!-- BUTTON OF DOCUMENT LIST -->
                
 
-
+<!--
                 <br><br><br>
                 <div class="row">
                     <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
                     [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
                 </angular-slickgrid>
                 </div> 
-
+-->
             </form>
           
         </div>
@@ -199,9 +199,9 @@
                     
                     <div class="col-12" *ngFor="let inst of mvdataset; let i = index">
                         <div class="row">
-                            <h5 class="col-2">Code instruction : </h5> <span class="col-2">{{inst.pme_inst}}</span>
-                            <h5 class="col-2">Date Deb : </h5> <span class="col-2">{{inst.pme_start_date}}</span>
-                            <h5 class="col-2">Date Fin: </h5> <span class="col-2">{{inst.pme_end_date}}</span>
+                            <h5 class="col-2">Code instruction : </h5> <span class="col-2">{{inst.pmd_task}}</span>
+                            <h5 class="col-2">Date Deb : </h5> <span class="col-2">{{inst.pmd_start}}</span>
+                            <h5 class="col-2">Date Fin: </h5> <span class="col-2">{{inst.pmd_end}}</span>
                         </div>
 
                     </div>

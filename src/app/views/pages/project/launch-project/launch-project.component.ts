@@ -198,7 +198,7 @@ export class LaunchProjectComponent implements OnInit {
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))       
     this.createForm();
-    this.initmvGrid();
+   // this.initmvGrid();
     this.initcnsGrid();
   }
   createForm() {
@@ -213,18 +213,18 @@ export class LaunchProjectComponent implements OnInit {
   })
 }
 
-prepareCode(): any {
-  const controls = this.empForm.controls
-  const _addReport = new AddReport()
-  _addReport.pmr_pm_code = controls.pmr_pm_code.value
-  _addReport.pmr_inst = controls.pmr_inst.value
-  _addReport.pmr_task = controls.pmr_task.value
-  _addReport.pmr_task_status = controls.pmr_task_status.value
-  _addReport.pmr_close = controls.pmr_close.value
+// prepareCode(): any {
+//   const controls = this.empForm.controls
+//   const _addReport = new AddReport()
+//   _addReport.pmr_pm_code = controls.pmr_pm_code.value
+//   _addReport.pmr_inst = controls.pmr_inst.value
+//   _addReport.pmr_task = controls.pmr_task.value
+//   _addReport.pmr_task_status = controls.pmr_task_status.value
+//   _addReport.pmr_close = controls.pmr_close.value
  
   
-  return _addReport
-}
+//   return _addReport
+// }
 
 
   onChangeCode() {
@@ -388,96 +388,96 @@ prepareCode(): any {
     const url = `/`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
-  initmvGrid() {
-    this.mvcolumnDefinitions = [
+  // initmvGrid() {
+  //   this.mvcolumnDefinitions = [
     
       
 
-      {
-        id: "pme_employe",
-        name: "Code employé",
-        field: "pme_employe",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-      },
-      {
-        id: "emp_lname",
-        name: "Nom",
-        field: "emp_lname",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-      },
-      {
-        id: "emp_fname",
-        name: "Prénom",
-        field: "emp_fname",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-      },
-      {
-        id: "pme_start_date",
-        name: "Date Début",
-        field: "pme_start_date",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.dateIso,
-                editor: {
-          model: Editors.date,
-        },
-      },
-      {
-        id: "pme_end_date",
-        name: "Date Fin",
-        field: "pme_end_date",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.dateIso,
-                editor: {
-          model: Editors.date,
-        },
-      },
+  //     {
+  //       id: "pme_employe",
+  //       name: "Code employé",
+  //       field: "pme_employe",
+  //       sortable: true,
+  //       width: 80,
+  //       filterable: false,
+  //       type: FieldType.string,
+  //     },
+  //     {
+  //       id: "emp_lname",
+  //       name: "Nom",
+  //       field: "emp_lname",
+  //       sortable: true,
+  //       width: 80,
+  //       filterable: false,
+  //       type: FieldType.string,
+  //     },
+  //     {
+  //       id: "emp_fname",
+  //       name: "Prénom",
+  //       field: "emp_fname",
+  //       sortable: true,
+  //       width: 80,
+  //       filterable: false,
+  //       type: FieldType.string,
+  //     },
+  //     {
+  //       id: "pme_start_date",
+  //       name: "Date Début",
+  //       field: "pme_start_date",
+  //       sortable: true,
+  //       width: 80,
+  //       filterable: false,
+  //       type: FieldType.dateIso,
+  //               editor: {
+  //         model: Editors.date,
+  //       },
+  //     },
+  //     {
+  //       id: "pme_end_date",
+  //       name: "Date Fin",
+  //       field: "pme_end_date",
+  //       sortable: true,
+  //       width: 80,
+  //       filterable: false,
+  //       type: FieldType.dateIso,
+  //               editor: {
+  //         model: Editors.date,
+  //       },
+  //     },
     
-      {
-        id: "pme_inst",
-        name: "Instruction",
-        field: "pme_inst",
-        sortable: true,
-        width: 80,
-        filterable: false,
+  //     {
+  //       id: "pme_inst",
+  //       name: "Instruction",
+  //       field: "pme_inst",
+  //       sortable: true,
+  //       width: 80,
+  //       filterable: false,
         
-    },
-    {
-      id: "pme_task",
-      name: "Tâche",
-      field: "pme_task",
-      sortable: true,
-      width: 80,
-      filterable: false,
+  //   },
+  //   {
+  //     id: "pme_task",
+  //     name: "Tâche",
+  //     field: "pme_task",
+  //     sortable: true,
+  //     width: 80,
+  //     filterable: false,
       
-     },
+  //    },
 
 
      
-    ];
+  //   ];
 
-    this.mvgridOptions = {
-      asyncEditorLoading: false,
-      editable: true,
-      enableColumnPicker: true,
-      enableCellNavigation: true,
-      enableRowSelection: true,
-    };
+  //   this.mvgridOptions = {
+  //     asyncEditorLoading: false,
+  //     editable: true,
+  //     enableColumnPicker: true,
+  //     enableCellNavigation: true,
+  //     enableRowSelection: true,
+  //   };
 
-    this.mvdataset = [];
-  }
+  //   this.mvdataset = [];
+  // }
 
 
   initcnsGrid() {
@@ -856,7 +856,7 @@ handleSelectedRowsChanged(e, args) {
       controls.pmr_pm_code.setValue(item.pm_code || "");
       controls.pmdesc.setValue(item.pm_desc || "");
       this.pm_doc_list_code = item.pm_doc_list_code
-      this.getProjectEmployees(item.pm_code)
+      this.getProjectInsts(item.pm_code)
       this.getLaunchSpecifications(item.pm_code)
       this.project_code = item.pm_code
   })
@@ -1263,6 +1263,15 @@ getProjectEmployees(project_code){
       })
 }
 
+getProjectInsts(project_code){
+  this.projectService
+      .getBy({pm_code: project_code})
+      .subscribe((response: any) =>{ 
+        console.log(response.data.details)
+        this.mvdataset = response.data.details
+      //  this.mvdataView.setItems(response.data)
+      })
+}
 getLaunchSpecifications(project_code){
   this.projectService
       .getLaunchSpecifications(project_code)

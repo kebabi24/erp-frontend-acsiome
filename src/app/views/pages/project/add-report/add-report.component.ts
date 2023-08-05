@@ -164,7 +164,7 @@ export class AddReportComponent implements OnInit {
       taskdesc: [{ value: "", disabled: true }],
 
       pmr_task_status: [this.addReport.pmr_task_status, Validators.required],
-      pmr_close: [this.addReport.pmr_close],
+      pmr_close: [false],
     });
   }
 
@@ -437,6 +437,15 @@ export class AddReportComponent implements OnInit {
         },
       },
       {
+        id: "days_nbr",
+        name: "Jours",
+        field: "days_nbr",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.integer,
+      },
+      {
         id: "pmr_mobilisation",
         name: "Mobilisation",
         field: "pmr_mobilisation",
@@ -446,7 +455,7 @@ export class AddReportComponent implements OnInit {
         editor: {
           model: Editors.checkbox,
         },
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkbox,
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
@@ -455,7 +464,7 @@ export class AddReportComponent implements OnInit {
             pmr_demobilisation: false,
             pmr_mobilisation: item.pmr_mobilisation,
             pmr_stndby: false,
-            pmr_separe: false,
+          //  pmr_separe: false,
           };
 
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
@@ -474,7 +483,7 @@ export class AddReportComponent implements OnInit {
         editor: {
           model: Editors.checkbox,
         },
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkbox,
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
@@ -485,7 +494,7 @@ export class AddReportComponent implements OnInit {
             pmr_demobilisation: item.pmr_demobilisation,
             pmr_mobilisation: false,
             pmr_stndby: false,
-            pmr_separe: false,
+           // pmr_separe: false,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
         },
@@ -500,7 +509,7 @@ export class AddReportComponent implements OnInit {
         editor: {
           model: Editors.checkbox,
         },
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkbox,
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
@@ -509,7 +518,7 @@ export class AddReportComponent implements OnInit {
             pmr_demobilisation: false,
             pmr_mobilisation: false,
             pmr_stndby: item.pmr_stndby,
-            pmr_separe: false,
+           // pmr_separe: false,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
         },
@@ -524,7 +533,7 @@ export class AddReportComponent implements OnInit {
         editor: {
           model: Editors.checkbox,
         },
-        formatter: Formatters.checkmark,
+        formatter: Formatters.checkbox,
         cannotTriggerInsert: false,
         // onCellClick: (e: Event, args: OnEventArgs) => {
         //   this.handlecheckbox();
@@ -533,9 +542,9 @@ export class AddReportComponent implements OnInit {
           let item = args.dataView.getItem(args.row);
           let newItem = {
             ...item,
-            pmr_demobilisation: false,
-            pmr_mobilisation: false,
-            pmr_stndby: false,
+            // pmr_demobilisation: false,
+            // pmr_mobilisation: false,
+            // pmr_stndby: false,
             pmr_separe: item.pmr_separe,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
@@ -868,7 +877,7 @@ export class AddReportComponent implements OnInit {
     const timeDifference = Math.abs(d2 - d1);
 
     // Convert the time difference to days
-    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+    const daysDifference = 1 + timeDifference / (1000 * 60 * 60 * 24);
 
     return Math.floor(daysDifference); // Round down to get the whole number of days
   }
