@@ -951,10 +951,10 @@ export class CreatesaleorderComponent implements OnInit {
         .subscribe(
           (reponse: any) => {
             so = reponse.data
-          	const arrayOctet = new Uint8Array(reponse.pdf.data)
-            const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-            const fileUrl = URL.createObjectURL(file);
-            window.open(fileUrl)  
+          	// const arrayOctet = new Uint8Array(reponse.pdf.data)
+            // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+            // const fileUrl = URL.createObjectURL(file);
+            // window.open(fileUrl)  
           },
           (error) => {
             this.layoutUtilsService.showActionNotification(
@@ -976,7 +976,7 @@ export class CreatesaleorderComponent implements OnInit {
             );
             this.loadingSubject.next(false);
             console.log(this.dataset);
-            //if(controls.print.value == true) this.printpdf(so.so_nbr) //printSO(this.customer, this.dataset, so);
+            if(controls.print.value == true) this.printpdf(so.so_nbr) //printSO(this.customer, this.dataset, so);
             this.router.navigateByUrl("/");
           }
         );
@@ -2638,6 +2638,22 @@ openchannel(content) {
   this.modalService.open(content, { size: "lg" });
 }
 
+changeChannel(){
+  const controls = this.soForm.controls
+  this.costlistService
+  .getByOne({ltrc_code: controls.so_channel.value})
+  .subscribe((response: any) => {
+if(!response.data){
+    alert("Liste Frais  nexiste pas")
+    controls.so_channel.setValue(null)
+    console.log(response.data.length)
+    document.getElementById("so_channel").focus();
+}
+
+  })
+
+
+}
 calculatetot(){
            const controls = this.totForm.controls 
             const controlsso = this.soForm.controls 
