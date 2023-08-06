@@ -1273,15 +1273,21 @@ getLaunchSpecifications(project_code){
 }
 
 onCheckClick(val){
-  console.log(val)
-  const index = this.checkedValues.findIndex(detail=>{
-    return detail == val
-  })
-  if(index == -1){this.checkedValues.push(val)}
-  else{
-    this.checkedValues.splice(index, 1);
-  }
+  if(this.checkedValues.length == 0){
+    this.checkedValues.push(val)
     console.log(this.checkedValues)
-}
+    return
+  }else{
+      console.log(val)
+      const index = this.checkedValues.findIndex(detail=>{
+        return detail == val
+      })
+      if(index == -1){this.checkedValues.push(val)}
+      else{
+        this.checkedValues.splice(index, 1);
+      } 
+        console.log(this.checkedValues)
+  }
+ }
 
 }

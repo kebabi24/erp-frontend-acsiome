@@ -119,11 +119,11 @@ export class PromoAddComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
+    this.createPopulationForm()
     this.getPopsArticle()
     this.getSites()
     this.getAdvantages()
     this.getPopsClient()
-    this.createPopulationForm()
     this.init()
   }
 
@@ -167,6 +167,7 @@ export class PromoAddComponent implements OnInit {
       combine  : [ '', Validators.required],
       adv_code  : [ '', Validators.required],
       rank:[ '', Validators.required],
+      description:[ '', Validators.required],
       
    })
      
@@ -185,24 +186,30 @@ export class PromoAddComponent implements OnInit {
           (res: any) => {
             if (res.data) {
               alert("Ce code de population exist déja")
-              document.getElementById("code").focus(); 
-              controls.amount_perc.disable()
-              controls.type_adv.disable()     
+              document.getElementById("code").focus();     
               controls.pop_a_code.disable()     
               controls.pop_c_code.disable()     
+              controls.site.disable()     
+              controls.start_date.disable()     
+              controls.end_date.disable()     
               controls.condition.disable()     
               controls.combine.disable()     
+              controls.adv_code.disable()     
               controls.rank.disable()     
+              controls.description.disable()     
             } else { 
               this.isExist = true
               this.cantSearch = false
-              controls.amount_perc.enable()
-              controls.type_adv.enable()     
               controls.pop_a_code.enable()     
               controls.pop_c_code.enable()     
+              controls.site.enable()     
+              controls.start_date.enable()     
+              controls.end_date.enable()     
               controls.condition.enable()     
               controls.combine.enable()     
+              controls.adv_code.enable()     
               controls.rank.enable()     
+              controls.description.enable()     
           }
                
       })
@@ -224,14 +231,14 @@ export class PromoAddComponent implements OnInit {
    onSubmit() {
      this.hasFormErrors = false
      const controls = this.populationForm.controls
-     if (this.populationForm.invalid) {
-       Object.keys(controls).forEach((controlName) =>
-           controls[controlName].markAsTouched()
-       )
+    //  if (this.populationForm.invalid) {
+    //    Object.keys(controls).forEach((controlName) =>
+    //        controls[controlName].markAsTouched()
+    //    )
 
-         this.hasFormErrors = true
-         return
-       }
+    //      this.hasFormErrors = true
+    //      return
+    //    }
      
     const promo_code = controls.promo_code.value
     const pop_a_code = controls.pop_a_code.value
@@ -243,9 +250,10 @@ export class PromoAddComponent implements OnInit {
     const combine = controls.combine.value
     const adv_code = controls.adv_code.value
     const rank = controls.rank.value
+    const description = controls.description.value
     
     let promo = {
-      promo_code,pop_a_code,pop_c_code,site,condition,combine,adv_code,rank,
+      promo_code,pop_a_code,pop_c_code,site,condition,combine,adv_code,rank, description,
       start_date : start_date.year + '-' +  start_date.month + '-' + start_date.day ,
       end_date : end_date.year + '-' +  end_date.month + '-' + end_date.day 
     }

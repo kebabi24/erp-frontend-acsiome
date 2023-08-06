@@ -124,6 +124,7 @@ export class PopulationArticleAddComponent implements OnInit {
       desc_population: [ {value : '',disabled : !this.isExist}, Validators.required],
       rank: [ {value : '',disabled : !this.isExist}, Validators.required],
       selector: [ {value : '',disabled : !this.isExist}], // use for later 
+      value_type : [ {value : '',disabled : !this.isExist}],
       
    })
      
@@ -145,12 +146,13 @@ export class PopulationArticleAddComponent implements OnInit {
               controls.desc_population.disable()
               controls.selector.disable()
               controls.rank.disable()     
+              controls.value_type.disable()     
             } else { 
-              this.isExist = true
-              this.cantSearch = false
+              this.isExist = false
               controls.desc_population.enable()
               controls.selector.enable()
-              controls.rank.enable()   
+              controls.rank.enable()     
+              controls.value_type.enable()   
    
           }
                
