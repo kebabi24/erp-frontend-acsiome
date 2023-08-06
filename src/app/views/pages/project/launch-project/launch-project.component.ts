@@ -151,6 +151,10 @@ export class LaunchProjectComponent implements OnInit {
     checkedValues = [];
 
     trigger_documents = [];
+    selected_doc : any ; 
+    selected_doc_index: any ; 
+    total_nb_details = 0 ; 
+    showAlert = false 
 
   constructor(
     
@@ -164,18 +168,10 @@ export class LaunchProjectComponent implements OnInit {
     private modalService: NgbModal,
     private employeService: EmployeService,
     private addReportService: AddReportService,
-    private sequenceService: SequenceService,
     private projectService: ProjectService,
-    private providerService: ProviderService,
-    private inventoryTransactionService: InventoryTransactionService,
-    private sctService: CostSimulationService,  
     private itemsService: ItemService,
-    private locationService: LocationService,
     private codeService: CodeService,
-    private inventoryStatusService: InventoryStatusService,
-    private siteService: SiteService,
     private mesureService: MesureService,
-    private locationDetailService: LocationDetailService
   ) {
     config.autoClose = true;
   }
@@ -198,8 +194,6 @@ export class LaunchProjectComponent implements OnInit {
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))       
     this.createForm();
-   // this.initmvGrid();
-    this.initcnsGrid();
   }
   createForm() {
     this.loadingSubject.next(false)
@@ -256,6 +250,12 @@ export class LaunchProjectComponent implements OnInit {
   }
   // save data
   onSubmit() {
+
+    if(this.checkedValues.length < this.total_nb_details ){
+      console.log("nope")
+      this.showAlert = true
+      return 
+    }
     let testsHistory = []
     let totalDetailsNB = 0;
     this.trigger_documents.forEach(doc=>{
@@ -326,7 +326,6 @@ export class LaunchProjectComponent implements OnInit {
   
   
   addDet( _addReport: any ,detail: any, cnsdetail: any, nbr : any) {
-    console.log("here")
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -388,462 +387,8 @@ export class LaunchProjectComponent implements OnInit {
     const url = `/`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
-  // initmvGrid() {
-  //   this.mvcolumnDefinitions = [
-    
-      
+ 
 
-  //     {
-  //       id: "pme_employe",
-  //       name: "Code employé",
-  //       field: "pme_employe",
-  //       sortable: true,
-  //       width: 80,
-  //       filterable: false,
-  //       type: FieldType.string,
-  //     },
-  //     {
-  //       id: "emp_lname",
-  //       name: "Nom",
-  //       field: "emp_lname",
-  //       sortable: true,
-  //       width: 80,
-  //       filterable: false,
-  //       type: FieldType.string,
-  //     },
-  //     {
-  //       id: "emp_fname",
-  //       name: "Prénom",
-  //       field: "emp_fname",
-  //       sortable: true,
-  //       width: 80,
-  //       filterable: false,
-  //       type: FieldType.string,
-  //     },
-  //     {
-  //       id: "pme_start_date",
-  //       name: "Date Début",
-  //       field: "pme_start_date",
-  //       sortable: true,
-  //       width: 80,
-  //       filterable: false,
-  //       type: FieldType.dateIso,
-  //               editor: {
-  //         model: Editors.date,
-  //       },
-  //     },
-  //     {
-  //       id: "pme_end_date",
-  //       name: "Date Fin",
-  //       field: "pme_end_date",
-  //       sortable: true,
-  //       width: 80,
-  //       filterable: false,
-  //       type: FieldType.dateIso,
-  //               editor: {
-  //         model: Editors.date,
-  //       },
-  //     },
-    
-  //     {
-  //       id: "pme_inst",
-  //       name: "Instruction",
-  //       field: "pme_inst",
-  //       sortable: true,
-  //       width: 80,
-  //       filterable: false,
-        
-  //   },
-  //   {
-  //     id: "pme_task",
-  //     name: "Tâche",
-  //     field: "pme_task",
-  //     sortable: true,
-  //     width: 80,
-  //     filterable: false,
-      
-  //    },
-
-
-     
-  //   ];
-
-  //   this.mvgridOptions = {
-  //     asyncEditorLoading: false,
-  //     editable: true,
-  //     enableColumnPicker: true,
-  //     enableCellNavigation: true,
-  //     enableRowSelection: true,
-  //   };
-
-  //   this.mvdataset = [];
-  // }
-
-
-  initcnsGrid() {
-    this.columnDefinitionscns = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.deleteIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.angularGrid.gridService.deleteItem(args.dataContext);
-          }
-        },
-      },
-
-      {
-        id: "tr_line",
-        name: "Ligne",
-        field: "tr_line",
-        minWidth: 50,
-        maxWidth: 50,
-        selectable: true,
-      },
-      {
-        id: "tr_part",
-        name: "Article",
-        field: "tr_part",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-          required: true,
-          validator: statusValidator,
-
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_part)
-          this.itemsService.getByOne({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
-
-            if (resp.data) {
-              console.log(resp.data)
-
-             
-                this.sctService.getByOne({ sct_site: this.site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
-                  (response: any) => {
-                    this.sct = response.data
-           
-                    this.locationDetailService.getByOne({ ld_site: this.site, ld_loc:this.loc, ld_part: resp.data.pt_part, ld_lot: null }).subscribe(
-                      (response: any) => {
-                        this.lddet = response.data
-                        console.log(this.lddet.ld_qty_oh)
-                        if (this.lddet != null) {
-                        this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-CNS" }).subscribe((resstat:any)=>{
-                       //   console.log(resstat)
-                          const { data } = resstat;
-  
-                          if (data) {
-                            this.stat = null
-                          } else {
-                            this.stat = this.lddet.ld_status
-                          }
-                    this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:this.site, tr_loc:this.loc,
-                      tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_mtl_tl, qty_oh: this.lddet.ld_qty_oh, tr_expire: this.lddet.ld_expire})
-                        });
-                      }
-                      else {
-                        this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:this.site, tr_loc:this.loc,
-                          tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: null, tr_price: this.sct.sct_mtl_tl, qty_oh: 0, tr_expire: null})
-                      
-
-                      }     
-     
-                      });     
-                });  
-            
-          }
-
-
-
-    
-
-
-          else {
-            alert("Article Nexiste pas")
-            this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
-          }
-          
-          });
-
-           
-         
-         
-        }
-      },
-      {
-        id: "mvid",
-        field: "cmvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById(
-            "openItemsGrid"
-          ) as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "desc",
-        name: "Description",
-        field: "desc",
-        sortable: true,
-        width: 180,
-        filterable: false,
-      },
-      
-        
-      {
-        id: "tr_serial",
-        name: "Lot/Serie",
-        field: "tr_serial",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-
-            this.locationDetailService.getByOne({ ld_site: this.site, ld_loc: this.loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe(
-              (response: any) => {
-                this.lddet = response.data
-                
-       // console.log(response.data.length)
-                  if (this.lddet != null) {
-                    
-                      this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext ,   qty_oh: this.lddet.ld_qty_oh, tr_status: this.lddet.ld_status, tr_expire: this.lddet.tr_expire})
-                  }
-                  else {
-                        this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext  , tr_serial: null, qty_0h: 0, tr_expire: null});
-      
-                        alert("Lot N' existe pas")
-                  }
-            });     
-        }
-
-      },
-      {
-          id: "mvidlot",
-          field: "cmvidlot",
-          excludeFromHeaderMenu: true,
-          formatter: Formatters.infoIcon,
-          minWidth: 30,
-          maxWidth: 30,
-          onCellClick: (e: Event, args: OnEventArgs) => {
-              this.row_number = args.row;
-              let element: HTMLElement = document.getElementById(
-              "openLocdetsGrid"
-              ) as HTMLElement;
-              element.click();
-          },
-      },
-      {
-          id: "qty_oh",
-          name: "QTE Stock",
-          field: "qty_oh",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          type: FieldType.float,
-          
-      },
-      {
-          id: "tr_qty_loc",
-          name: "QTE",
-          field: "tr_qty_loc",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          type: FieldType.float,
-          editor: {
-              model: Editors.float,
-              params: { decimalPlaces: 2 },
-              required: true,
-              
-              
-          },
-      
-        onCellChange: (e: Event, args: OnEventArgs) => {
-              console.log(args.dataContext.tr_qty_loc)
-              console.log(args.dataContext.tr_um_conv)
-              
-              if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
-                  console.log('here')
-               alert ("Qte monquante")
-               this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
-            //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
-           
-             
-          }
-      
-           // meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
-          }
-          
-      },
-      
-        {
-          id: "tr_um",
-          name: "UM",
-          field: "tr_um",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          editor: {
-              model: Editors.text,
-              required: true,
-              validator: statusValidator,
-
-          },
-          onCellChange: (e: Event, args: OnEventArgs) => {
-            console.log(args.dataContext.tr_um)
-            this.itemsService.getBy({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
-              
-            if   (args.dataContext.tr_um == resp.data.pt_um )  {
-              
-              this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: 1 })
-            } else { 
-              //console.log(resp.data.pt_um)
-
-
-
-                this.mesureService.getBy({um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
-                console.log(res)
-                const { data } = res;
-      
-              if (data) {
-                //alert ("Mouvement Interdit Pour ce Status")
-                this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: res.data.um_conv })
-                this.angularGrid.gridService.highlightRow(1, 1500);
-
-                if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
-                  console.log('here')
-                  alert ("Qte monquante")
-                  this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
-                  
-              
-                } else {
-              
-                  this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um: null })
-
-                }
-
-
-
-
-              } else {
-                this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
-                  console.log(res)
-                  const { data } = res;
-                  if (data) {
-                    if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
-                      console.log('here')
-                      alert ("Qte monquante")
-                      this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
-                      
-                  
-                    } else {
-                  
-                      this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um: null })
-    
-                    }
-          
-                  } else {
-                    this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
-              
-                    alert("UM conversion manquante")
-                    
-                  }  
-                })
-
-              }
-                })
-
-              }
-              })
-    
-            }
-
-          
-      },
-    
-     
-      {
-        id: "mvidlot",
-        field: "cmvidlot",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-            this.row_number = args.row;
-            let element: HTMLElement = document.getElementById(
-            "openUmsGrid"
-            ) as HTMLElement;
-            element.click();
-        },
-      },
-      {
-        id: "tr_um_conv",
-        name: "Conv UM",
-        field: "tr_um_conv",
-        sortable: true,
-        width: 80,
-        filterable: false,
-       // editor: {
-       //     model: Editors.float,
-        //},
-        
-      },
-              
-      
-    ];
-
-    this.gridOptionscns = {
-      asyncEditorLoading: false,
-      editable: true,
-      enableColumnPicker: true,
-      enableCellNavigation: true,
-      enableRowSelection: true,
-      formatterOptions: {
-        
-        
-        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-        displayNegativeNumberWithParentheses: true,
-  
-        // Defaults to undefined, minimum number of decimals
-        minDecimal: 2,
-  
-        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
-        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
-      },
-    };
-
-    this.cnsdataset = [];
-  }
-
-  addNewItem() {
-    const newId = this.mvdataset.length+1;
-
-    const newItem = {
-      id: newId,
-      pmr_internal: true,
-      pmr_addReport : "",
-      fname: null,
-      lname: null,
-      job  : null,
-      level: null,
-    };
-    this.mvgridService.addItem(newItem, { position: "bottom" });
-  }
 
  
 
@@ -1231,7 +776,6 @@ openDocumentListPopup(content100){
     this.projectService
     .getSpecificationData(this.pm_doc_list_code)
     .subscribe((response: any) => {
-      console.log(response.data)
       this.specificationHeader = response.data.specification
       this.specificationDetails = response.data.specificationDetails
 
@@ -1248,6 +792,14 @@ openDocumentListPopup(content100){
 
 }
 
+openTestPopup(content , index){
+  this.selected_doc = this.trigger_documents[index]
+  this.selected_doc_index = index
+
+  this.modalService.open(content, { size: "lg" })
+
+}
+
 showInstructionsPopup(content101){
   this.modalService.open(content101, { size: "lg" })
 }
@@ -1257,7 +809,6 @@ getProjectEmployees(project_code){
   this.projectService
       .getEmpProject(project_code)
       .subscribe((response: any) =>{ 
-        console.log(response.data)
         this.mvdataset = response.data
         this.mvdataView.setItems(response.data)
       })
@@ -1267,36 +818,43 @@ getProjectInsts(project_code){
   this.projectService
       .getBy({pm_code: project_code})
       .subscribe((response: any) =>{ 
-        console.log(response.data.details)
         this.mvdataset = response.data.details
       //  this.mvdataView.setItems(response.data)
       })
 }
+
 getLaunchSpecifications(project_code){
   this.projectService
       .getLaunchSpecifications(project_code)
       .subscribe((response: any) =>{ 
         console.log(response.data)
         this.trigger_documents = response.data
+        this.trigger_documents.forEach(doc =>{
+          doc.count  = doc.spec_details.length
+          doc.count_checked = 0 
+          this.total_nb_details += doc.spec_details.length
+        })
       })
 }
 
 onCheckClick(val){
   if(this.checkedValues.length == 0){
     this.checkedValues.push(val)
-    console.log(this.checkedValues)
+    this.trigger_documents[this.selected_doc_index].count_checked = 1 
     return
   }else{
-      console.log(val)
       const index = this.checkedValues.findIndex(detail=>{
         return detail == val
       })
-      if(index == -1){this.checkedValues.push(val)}
+      if(index == -1){
+        this.checkedValues.push(val)
+        this.trigger_documents[this.selected_doc_index].count_checked += 1 
+      }
       else{
         this.checkedValues.splice(index, 1);
+        this.trigger_documents[this.selected_doc_index].count_checked = -1 
       } 
-        console.log(this.checkedValues)
   }
- }
+}
 
 }
