@@ -464,7 +464,7 @@ export class AddReportComponent implements OnInit {
             pmr_demobilisation: false,
             pmr_mobilisation: item.pmr_mobilisation,
             pmr_stndby: false,
-          //  pmr_separe: false,
+            //  pmr_separe: false,
           };
 
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
@@ -494,7 +494,7 @@ export class AddReportComponent implements OnInit {
             pmr_demobilisation: item.pmr_demobilisation,
             pmr_mobilisation: false,
             pmr_stndby: false,
-           // pmr_separe: false,
+            // pmr_separe: false,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
         },
@@ -518,7 +518,7 @@ export class AddReportComponent implements OnInit {
             pmr_demobilisation: false,
             pmr_mobilisation: false,
             pmr_stndby: item.pmr_stndby,
-           // pmr_separe: false,
+            // pmr_separe: false,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
         },
@@ -897,6 +897,7 @@ export class AddReportComponent implements OnInit {
       pmr_stndby: false,
       pmr_separe: false,
       days_nbr: 0,
+      pmr_duration: 0,
     };
     this.mvgridService.addItem(newItem, { position: "bottom" });
   }

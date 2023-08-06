@@ -42,13 +42,14 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class CreateProjectInvoiceComponent implements OnInit {
   numberToLetter: any;
-  tht1: any;
-  tva1: any;
-  timbre1: any;
-  ttc1: any;
-  rmsGr: any;
-  trns: any;
-  rmsGl: any;
+  tht1: number = 0;
+  tva1: number = 0;
+  timbre1: number = 0;
+  ttc1: number = 0;
+  rmsGr: number = 0;
+  trns: number = 0;
+  rmsGl: number = 0;
+  fDays: boolean;
   invoiceOrderTemp: InvoiceOrderTemp;
   soForm: FormGroup;
   totForm: FormGroup;
@@ -70,7 +71,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
   gridOptions1: GridOption = {};
   gridObj1: any;
   angularGrid1: AngularGridInstance;
-
+  currSeq: string;
   customers: [];
   columnDefinitions2: Column[] = [];
   gridOptions2: GridOption = {};
@@ -271,6 +272,12 @@ export class CreateProjectInvoiceComponent implements OnInit {
     this.gridService = angularGrid.gridService;
   }
 
+  onChangeDays() {
+    const controls = this.soForm.controls;
+    const val = controls.fDays.value;
+    this.fDays = val;
+  }
+
   initGrid() {
     this.columnDefinitions = [
       {
@@ -323,6 +330,9 @@ export class CreateProjectInvoiceComponent implements OnInit {
         sortable: true,
         width: 180,
         filterable: false,
+        editor: {
+          model: Editors.text,
+        },
       },
       {
         id: "itdh_site",
@@ -650,7 +660,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
       ith_taxable: [this.invoiceOrderTemp.ith_taxable],
       ith_type: [this.invoiceOrderTemp.ith_type],
-
+      fDays: [this.fDays],
       ith_disc_glb: [this.invoiceOrderTemp.ith_disc_glb, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       ith_transport: [this.invoiceOrderTemp.ith_transport, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       ith_rt_gara: [this.invoiceOrderTemp.ith_rt_gara, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
@@ -675,13 +685,16 @@ export class CreateProjectInvoiceComponent implements OnInit {
       tva: [{ value: 0.0, disabled: true }],
       timbre: [{ value: 0.0, disabled: true }],
       ttc: [{ value: 0.0, disabled: true }],
+      ith_disc_glb: [this.invoiceOrderTemp.ith_disc_glb, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      ith_transport: [this.invoiceOrderTemp.ith_transport, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      ith_rt_gara: [this.invoiceOrderTemp.ith_rt_gara, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     });
   }
   onChangeSeq() {
     const controls = this.soForm.controls;
     console.log(this.user.usrd_profile);
     this.sequencesService.getBy({ seq_seq: controls.ith_category.value, seq_type: "IV", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-      console.log(response);
+      console.log(response.data);
       if (response.data.length == 0) {
         alert("Sequence nexiste pas");
         controls.ith_category.setValue("");
@@ -934,7 +947,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
                 cmvid: "",
                 desc: detail.sod_desc,
                 itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
-                itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
+                itdh_qty_cons: this.fDays ? detail.sod_qty_cons - detail.sod_qty_val : detail.sod_qty_ret - detail.sod_qty_val,
                 itdh_um: detail.sod_um,
                 itdh_um_conv: detail.sod_um_conv,
                 itdh_price: detail.sod_price,
@@ -953,57 +966,57 @@ export class CreateProjectInvoiceComponent implements OnInit {
               },
               { position: "bottom" }
             );
-            if (detail.sod_stdby === "X") {
-              for (let i = 0; i <= 1; i++) {
-                this.datasetPrint.push({
-                  id: this.dataset.length + 1,
-                  itdh_line: this.dataset.length + 1,
+            // if (detail.sod_stdby === "X") {
+            //   for (let i = 0; i <= 1; i++) {
+            //     this.datasetPrint.push({
+            //       id: this.dataset.length + 1,
+            //       itdh_line: this.dataset.length + 1,
 
-                  itdh_part: detail.sod_part,
-                  cmvid: "",
-                  desc: detail.sod_desc,
-                  itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
-                  itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
-                  itdh_um: detail.sod_um,
-                  itdh_um_conv: detail.sod_um_conv,
-                  itdh_price: detail.sod_price,
-                  itdh_disc_pct: detail.sod_disc_pct,
-                  itdh_site: detail.sod_site,
-                  itdh_loc: detail.sod_loc,
-                  itdh_type: detail.sod_type,
-                  itdh_cc: "",
-                  itdh_taxable: detail.sod_taxable,
-                  itdh_tax_code: detail.sod_tax_code,
-                  itdh_taxc: detail.sod_taxc,
-                  itdh_stdby: detail.sod_stdby,
-                  itdh_hours: detail.sod_hours,
-                });
-              }
-            } else {
-              this.datasetPrint.push({
-                id: this.dataset.length + 1,
-                itdh_line: this.dataset.length + 1,
+            //       itdh_part: detail.sod_part,
+            //       cmvid: "",
+            //       desc: detail.sod_desc,
+            //       itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+            //       itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
+            //       itdh_um: detail.sod_um,
+            //       itdh_um_conv: detail.sod_um_conv,
+            //       itdh_price: detail.sod_price,
+            //       itdh_disc_pct: detail.sod_disc_pct,
+            //       itdh_site: detail.sod_site,
+            //       itdh_loc: detail.sod_loc,
+            //       itdh_type: detail.sod_type,
+            //       itdh_cc: "",
+            //       itdh_taxable: detail.sod_taxable,
+            //       itdh_tax_code: detail.sod_tax_code,
+            //       itdh_taxc: detail.sod_taxc,
+            //       itdh_stdby: detail.sod_stdby,
+            //       itdh_hours: detail.sod_hours,
+            //     });
+            //   }
+            // } else {
+            //   this.datasetPrint.push({
+            //     id: this.dataset.length + 1,
+            //     itdh_line: this.dataset.length + 1,
 
-                itdh_part: detail.sod_part,
-                cmvid: "",
-                desc: detail.sod_desc,
-                itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
-                itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
-                itdh_um: detail.sod_um,
-                itdh_um_conv: detail.sod_um_conv,
-                itdh_price: detail.sod_price,
-                itdh_disc_pct: detail.sod_disc_pct,
-                itdh_site: detail.sod_site,
-                itdh_loc: detail.sod_loc,
-                itdh_type: detail.sod_type,
-                itdh_cc: "",
-                itdh_taxable: detail.sod_taxable,
-                itdh_tax_code: detail.sod_tax_code,
-                itdh_taxc: detail.sod_taxc,
-                itdh_stdby: detail.sod_stdby,
-                itdh_hours: detail.sod_hours,
-              });
-            }
+            //     itdh_part: detail.sod_part,
+            //     cmvid: "",
+            //     desc: detail.sod_desc,
+            //     itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+            //     itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
+            //     itdh_um: detail.sod_um,
+            //     itdh_um_conv: detail.sod_um_conv,
+            //     itdh_price: detail.sod_price,
+            //     itdh_disc_pct: detail.sod_disc_pct,
+            //     itdh_site: detail.sod_site,
+            //     itdh_loc: detail.sod_loc,
+            //     itdh_type: detail.sod_type,
+            //     itdh_cc: "",
+            //     itdh_taxable: detail.sod_taxable,
+            //     itdh_tax_code: detail.sod_tax_code,
+            //     itdh_taxc: detail.sod_taxc,
+            //     itdh_stdby: detail.sod_stdby,
+            //     itdh_hours: detail.sod_hours,
+            //   });
+            // }
           }
           this.calculatetot();
         });
@@ -1621,7 +1634,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
                 cmvid: "",
                 desc: detail.item.pt_desc1,
                 itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
-                itdh_qty_cons: detail.sod_qty_cons - detail.sod_qty_ret,
+                itdh_qty_cons: this.fDays ? detail.sod_qty_cons - detail.sod_qty_val : detail.sod_qty_ret - detail.sod_qty_val,
                 itdh_um: detail.sod_um,
                 itdh_um_conv: detail.sod_um_conv,
                 itdh_price: detail.sod_price,
@@ -1635,6 +1648,8 @@ export class CreateProjectInvoiceComponent implements OnInit {
                 itdh_taxable: detail.sod_taxable,
                 itdh_tax_code: detail.sod_tax_code,
                 itdh_taxc: detail.sod_taxc,
+                itdh_stdby: detail.sod_stndby,
+                itdh_hours: detail.dec01,
               },
               { position: "bottom" }
             );
@@ -2297,6 +2312,9 @@ export class CreateProjectInvoiceComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObj1.getDataItem(idx);
         controls.ith_category.setValue(item.seq_seq || "");
+        let seq = item.seq_seq + "-" + item.seq_curr_val + 1;
+        this.currSeq = seq;
+        console.log(this.currSeq);
       });
     }
   }
@@ -2430,27 +2448,34 @@ export class CreateProjectInvoiceComponent implements OnInit {
         }
       }
     }
-    ttc = round(Number(tht) + Number(tva) + Number(timbre), 2);
 
-    controls.tht.setValue(tht.toFixed(2));
-    controls.tva.setValue(tva.toFixed(2));
-    controls.timbre.setValue(timbre.toFixed(2));
-    controls.ttc.setValue(ttc.toFixed(2));
     this.tht1 = tht;
 
-    this.tva1 = this.tht1 * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100);
-    // this.tva = controls.tva.setValue(tva.toFixed(2));
-    this.tva1 = Number(tva);
-    this.timbre1 = controls.timbre.setValue(timbre.toFixed(2));
-    this.ttc1 = ttc;
+    this.rmsGr = controls.ith_rt_gara.value;
 
-    console.log(this.numberToLetter);
-    this.rmsGr = controlsso.ith_rt_gara.value;
-    console.log(this.rmsGr);
-    this.rmsGl = controlsso.ith_disc_glb.value;
-    console.log(this.rmsGl);
-    this.trns = controlsso.ith_transport.value;
-    console.log(this.trns);
+    this.rmsGl = controls.ith_disc_glb.value;
+
+    this.trns = controls.ith_transport.value;
+
+    this.tht1 = Number(this.tht1) + round(Number(this.tht1) * (this.rmsGr / 100), 2);
+    this.tht1 = Number(this.tht1) - round(Number(this.tht1) * (this.rmsGl / 100), 2);
+    this.tht1 = Number(this.tht1) + Number(this.trns);
+
+    this.tva1 = Number(this.tht1) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100);
+
+    // this.tva = controls.tva.setValue(tva.toFixed(2));
+
+    this.timbre1 = Number(controls.timbre.setValue(timbre.toFixed(2)));
+
+    ttc = round(Number(this.tht1) + Number(tva), 2);
+    this.ttc1 = Number(ttc);
+    console.log(ttc);
+    controls.tht.setValue(this.tht1.toFixed(2));
+
+    // controls.tva.setValue(tva.toFixed(2));
+
+    controls.ttc.setValue(this.ttc1.toFixed(2));
+    this.tva1 = tva;
     // this.numberToLetter = NumberToLetters(this.ttc1.toFixed(2), this.curr.cu_desc);
   }
 

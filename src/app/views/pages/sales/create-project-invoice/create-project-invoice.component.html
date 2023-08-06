@@ -88,24 +88,6 @@
             </select>
             <div *ngIf="soForm.controls['ith_cr_terms'].errors && (soForm.controls['ith_cr_terms'].dirty || soForm.controls['ith_cr_terms'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
           </div>
-          <div class="form-group col-2">
-            <label class="form-group">Remise globale:</label>
-            <div class="input-group input-group-sm">
-              <input type="number" class="form-control form-control-solid" formControlName="ith_disc_glb" aria-describedby="basic-addon2" />
-            </div>
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">Transport :</label>
-            <div class="input-group input-group-sm">
-              <input type="number" class="form-control form-control-solid" formControlName="ith_transport" aria-describedby="basic-addon2" />
-            </div>
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">Retenue de garantie :</label>
-            <div class="input-group input-group-sm">
-              <input type="number" class="form-control form-control-solid" formControlName="ith_rt_gara" aria-describedby="basic-addon2" />
-            </div>
-          </div>
         </div>
         <div class="row">
           <div class="form-group col-1">
@@ -199,6 +181,18 @@
           </div>
 
           <div class="form-group col-2">
+            <label class="form-group">Jours consommé?</label>
+            <div class="input-group input-group-sm">
+              <span class="switch switch-icon">
+                <label>
+                  <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="fDays" (change)="onChangeDays()" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group col-2">
             <label class="form-group">Imprimer:</label>
             <div class="input-group input-group-sm">
               <span class="switch switch-icon">
@@ -221,7 +215,27 @@
 
       <form class="form" [formGroup]="totForm">
         <h3 class="card-title text-center">Totaux:</h3>
+
         <div class row col-6>
+          <div class="form-group-sm row">
+            <label class="col-9 col-form-label text-right">Remise globale:</label>
+            <div class="col-2">
+              <input class="form-control" type="number" style="text-align: right" formControlName="ith_disc_glb" (change)="calculatetot()" />
+            </div>
+          </div>
+
+          <div class="form-group-sm row">
+            <label class="col-9 col-form-label text-right">Transport :</label>
+            <div class="col-2">
+              <input class="form-control" type="number" style="text-align: right" formControlName="ith_transport" (change)="calculatetot()" />
+            </div>
+          </div>
+          <div class="form-group-sm row">
+            <label class="col-9 col-form-label text-right">Retenue de garantie :</label>
+            <div class="col-2">
+              <input class="form-control" type="number" style="text-align: right" formControlName="ith_rt_gara" (change)="calculatetot()" />
+            </div>
+          </div>
           <div class="form-group-sm row">
             <label class="col-9 col-form-label text-right">Total HT</label>
             <div class="col-2">
@@ -571,7 +585,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -783,7 +799,7 @@
           <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
@@ -959,7 +975,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -1128,8 +1146,7 @@
             </td>
             <td colspan="3" style="width: 146.25pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt 1.62pt; vertical-align: top">
               <p style="margin-top: 4.2pt; margin-left: 1.05pt; margin-bottom: 0pt; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME</span></strong
-                ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">REPORTER</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
               </p>
             </td>
             <td style="width: 133.45pt; border-style: solid; border-width: 0.88pt 1.62pt 1.62pt 0.88pt; vertical-align: top">
@@ -1381,7 +1398,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -1544,23 +1563,21 @@
           <tr style="height: 19.1pt">
             <td colspan="6" style="width: 401.92pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 1.95pt; margin-left: 0.95pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-                ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-                ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
               </p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 2.4pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
           <tr style="height: 19.1pt">
             <td colspan="6" style="width: 401.92pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 1.95pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">Retenue</span></strong
-                ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">garantie</span></strong
-                ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong>05%</strong>
+                <strong><span style="letter-spacing: -0.05pt">Retenue de garantie</span></strong>
               </p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
@@ -1574,43 +1591,42 @@
           <tr style="height: 19.1pt">
             <td colspan="6" style="width: 401.92pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 1.95pt; margin-left: 130.15pt; margin-bottom: 0pt; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">MONTANT</span></strong
-                ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-                ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-                ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">MONTANT TOTAL HORS TAXES</span></strong>
               </p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 2.4pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
           <tr style="height: 21.35pt">
             <td colspan="6" style="width: 401.92pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 3.15pt; margin-right: 1.65pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-                ><strong><span style="letter-spacing: 0.15pt"> </span></strong><strong>19</strong><strong><span style="letter-spacing: 0.15pt"> </span></strong><strong>% </strong><strong><span style="letter-spacing: 0.4pt">&#xa0;</span></strong
-                ><strong><span style="letter-spacing: -0.05pt">Exonéré</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
               </p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 3.6pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
           <tr style="height: 21.35pt">
             <td colspan="6" style="width: 401.92pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 3.15pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">Net</span></strong
-                ><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>payer</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-                ><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">Net à payer HORS TAXES</span></strong>
               </p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 3.6pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">0,00</span></strong>
+                <strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                >
               </p>
             </td>
           </tr>
@@ -1873,7 +1889,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -2043,9 +2061,7 @@
         <tr style="height: 20.3pt">
           <td colspan="6" style="width: 422.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 2.2pt; margin-left: 0.6pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-              ><strong><span style="letter-spacing: -0.95pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-              ><strong><span style="letter-spacing: -0.95pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -2057,8 +2073,7 @@
         <tr style="height: 22.8pt">
           <td colspan="6" style="width: 422.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.4pt; margin-right: 1.8pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-              ><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong>19</strong><strong><span style="letter-spacing: -0.5pt"> </span></strong><strong>%</strong>
+              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
             </p>
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -2070,8 +2085,7 @@
         <tr style="height: 22.8pt">
           <td colspan="6" style="width: 422.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.4pt; margin-left: 0.75pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>Net</strong><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">payer</span></strong
-              ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TTC</span></strong>
+              <strong>Net à payer TTC</strong>
             </p>
           </td>
           <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -2316,7 +2330,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -2475,7 +2491,7 @@
           </td>
           <td colspan="3" style="width: 143.4pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0.65pt; margin-left: 20.95pt; margin-bottom: 0pt; font-size: 12.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL </span></strong><strong>HORS</strong><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -2489,8 +2505,7 @@
         <tr style="height: 18.95pt">
           <td colspan="3" style="width: 143.4pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0.65pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-              ><strong> 19%</strong>
+              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
             </p>
           </td>
           <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -2504,8 +2519,7 @@
         <tr style="height: 24.85pt">
           <td colspan="3" style="width: 143.4pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 4.6pt; margin-left: 40.15pt; margin-bottom: 0pt; font-size: 14.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-              ><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TTC</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL TTC</span></strong>
             </p>
           </td>
           <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -2738,7 +2752,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -2904,8 +2920,7 @@
             </td>
             <td colspan="3" style="width: 100.18pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
               <p style="margin-top: 2.15pt; margin-left: 11.15pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-                ><strong><span style="letter-spacing: 0.65pt"> </span></strong><strong>HORS</strong><strong><span style="letter-spacing: 0.65pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
               </p>
             </td>
             <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
@@ -2919,8 +2934,7 @@
           <tr style="height: 17.05pt">
             <td colspan="3" style="width: 100.18pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
               <p style="margin-top: 2.15pt; margin-left: 30.6pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-                ><strong><span style="letter-spacing: 0.6pt"> </span></strong><strong>19%</strong>
+                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
               </p>
             </td>
             <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
@@ -2934,9 +2948,7 @@
           <tr style="height: 17.05pt">
             <td colspan="3" style="width: 100.18pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
               <p style="margin-top: 2.15pt; margin-left: 19.8pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">Net</span></strong
-                ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">payer</span></strong
-                ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TTC</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">Net à payer TTC</span></strong>
               </p>
             </td>
             <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
@@ -3172,7 +3184,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -3333,7 +3347,7 @@
           </td>
           <td colspan="2" style="width: 123.7pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.4pt; margin-left: 19.25pt; margin-bottom: 0pt; font-size: 10.5pt">
-              <strong>TOTAL HORS </strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong>TOTAL HORS TAXES</strong>
             </p>
           </td>
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
@@ -3347,7 +3361,7 @@
         <tr style="height: 15.7pt">
           <td colspan="2" style="width: 123.7pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.4pt; margin-left: 0.95pt; margin-bottom: 0pt; text-align: center; font-size: 10.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA </span></strong><strong>19%</strong>
+              <strong><span style="letter-spacing: -0.05pt">TVA </span></strong>
             </p>
           </td>
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
@@ -3361,7 +3375,7 @@
         <tr style="height: 15.7pt">
           <td colspan="2" style="width: 123.7pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.4pt; margin-left: 19.25pt; margin-bottom: 0pt; font-size: 10.5pt">
-              <strong>TOTAL HORS </strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong>TOTAL HORS TAXES</strong>
             </p>
           </td>
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
@@ -3588,7 +3602,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -3727,8 +3743,7 @@
             </td>
             <td colspan="2" style="width: 164pt; border-style: solid; border-width: 2pt; vertical-align: top">
               <p style="margin-top: 1.85pt; margin-left: 25.6pt; margin-bottom: 0pt; font-size: 14pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-                ><strong><span style="letter-spacing: -0.15pt"> </span></strong><strong>HORS</strong><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
               </p>
             </td>
             <td style="width: 148.75pt; border-style: solid; border-width: 2pt; vertical-align: top">
@@ -3970,7 +3985,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -4137,8 +4154,7 @@
             </td>
             <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME</span></strong
-                ><strong><span style="letter-spacing: -0.7pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong>REPORTER</strong>
+                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
               </p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
@@ -4329,7 +4345,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -4484,8 +4502,7 @@
             </td>
             <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME</span></strong
-                ><strong><span style="letter-spacing: -0.7pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong>REPORTER</strong>
+                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
               </p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
@@ -4682,7 +4699,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -4837,8 +4856,7 @@
             </td>
             <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME</span></strong
-                ><strong><span style="letter-spacing: -0.7pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong>REPORTER</strong>
+                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
               </p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
@@ -5035,7 +5053,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -5190,8 +5210,7 @@
             </td>
             <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME</span></strong
-                ><strong><span style="letter-spacing: -0.7pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong>REPORTER</strong>
+                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
               </p>
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
@@ -5442,7 +5461,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -5637,7 +5658,7 @@
             </td>
             <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
               <p style="margin-top: 1.7pt; margin-left: 14.5pt; margin-bottom: 0pt; font-size: 12pt">
-                <strong>SOMME</strong><strong><span style="letter-spacing: 1.05pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: 1.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">REPORTER</span></strong>
+                <strong>SOMME A REPORTER</strong>
               </p>
             </td>
             <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
@@ -5892,7 +5913,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -6070,7 +6093,7 @@
           </td>
           <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 1.7pt; margin-left: 14.5pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong>SOMME</strong><strong><span style="letter-spacing: 1.05pt"> </span></strong><strong>A</strong><strong><span style="letter-spacing: 1.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">REPORTER</span></strong>
+              <strong>SOMME A REPORTER</strong>
             </p>
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
@@ -6337,7 +6360,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -6504,9 +6529,7 @@
           </td>
           <td colspan="4" style="width: 190.9pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 3.5pt; margin-left: 47.7pt; margin-bottom: 0pt; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-              ><strong><span style="letter-spacing: -0.95pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-              ><strong><span style="letter-spacing: -0.95pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 102.45pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
@@ -6520,8 +6543,7 @@
         <tr style="height: 17.3pt">
           <td colspan="4" style="width: 190.9pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0.15pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-              ><strong><span style="letter-spacing: -0.9pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">19%</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
             </p>
           </td>
           <td style="width: 102.45pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -6535,9 +6557,7 @@
         <tr style="height: 18.5pt">
           <td colspan="4" style="width: 190.9pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 1.35pt; margin-left: 47.7pt; margin-bottom: 0pt; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-              ><strong><span style="letter-spacing: -0.95pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-              ><strong><span style="letter-spacing: -0.95pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 102.45pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -6800,7 +6820,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -6923,7 +6945,7 @@
             </td>
             <td style="width: 120.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
               <p style="margin-top: 8.9pt; margin-left: 15.3pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <strong>TOTAL</strong><strong><span style="letter-spacing: 0.75pt"> </span></strong><strong>HORS</strong><strong><span style="letter-spacing: 0.9pt"> </span></strong><strong>TAXES</strong>
+                <strong>TOTAL HORS TAXES</strong>
               </p>
             </td>
             <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -6937,8 +6959,7 @@
           <tr style="height: 23.4pt">
             <td style="width: 120.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
               <p style="margin-top: 4pt; margin-left: 20.1pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-                ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong>19</strong><strong><span style="letter-spacing: 0.55pt"> </span></strong><strong>%</strong><strong><span style="letter-spacing: 0.5pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">Exonéré</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
               </p>
             </td>
             <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -6952,9 +6973,7 @@
           <tr style="height: 23.4pt">
             <td style="width: 120.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
               <p style="margin-top: 4pt; margin-left: 23.9pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <strong><span style="letter-spacing: -0.05pt">Net</span></strong
-                ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">Payer</span></strong
-                ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>TTC</strong>
+                <strong><span style="letter-spacing: -0.05pt">Net à Payer TTC</span></strong>
               </p>
             </td>
             <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -7232,7 +7251,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -7425,9 +7446,7 @@
           </td>
           <td colspan="2" style="width: 135.68pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 5.05pt; margin-left: 42.1pt; margin-bottom: 0pt; font-size: 11pt">
-              <strong><span style="letter-spacing: -0.05pt">Prix</span></strong
-              ><strong><span style="letter-spacing: 0.3pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">tot</span></strong
-              ><strong><span style="letter-spacing: 0.15pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">H.T</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">Prix tot H.T</span></strong>
             </p>
           </td>
           <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
@@ -7439,8 +7458,7 @@
         <tr style="height: 15.6pt">
           <td colspan="2" style="width: 135.68pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; line-height: 12.75pt">
-              <strong><span style="font-size: 11pt; letter-spacing: -0.05pt">TVA</span></strong
-              ><strong><span style="font-size: 11pt; letter-spacing: 0.3pt"> </span></strong><strong><span style="font-size: 11pt; letter-spacing: -0.05pt">19%</span></strong>
+              <strong><span style="font-size: 11pt; letter-spacing: -0.05pt">TVA</span></strong>
             </p>
           </td>
           <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
@@ -7454,10 +7472,7 @@
         <tr style="height: 18.5pt">
           <td colspan="2" style="width: 135.68pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
             <p style="margin-top: 2.2pt; margin-left: 8.65pt; margin-bottom: 0pt; font-size: 11pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-              ><strong><span style="letter-spacing: 0.3pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">HORS</span></strong
-              ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong
-              ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">(DZD)</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES (DZD)</span></strong>
             </p>
           </td>
           <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
@@ -7708,7 +7723,9 @@
             </td>
             <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-                <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+                <strong
+                  ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+                >
               </p>
             </td>
             <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -7887,8 +7904,7 @@
           <tr style="height: 21pt">
             <td colspan="3" style="width: 114.05pt; border-style: solid; border-width: 2pt; vertical-align: top">
               <p style="margin-top: 0.4pt; margin-left: 31.85pt; margin-bottom: 0pt; font-size: 14pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-                ><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">19%</span></strong>
+                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
               </p>
             </td>
             <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
@@ -8152,7 +8168,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -8303,8 +8321,7 @@
           </td>
           <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 1.15pt; margin-left: 18.85pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong
-              ><strong><span style="letter-spacing: 1.2pt"> </span></strong><strong>HORS</strong><strong><span style="letter-spacing: 1.2pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
@@ -8318,9 +8335,7 @@
         <tr style="height: 18.5pt">
           <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0.75pt; margin-left: 46.45pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong
-              ><strong><span style="letter-spacing: -1pt"> </span></strong><strong><span style="letter-spacing: -0.1pt">19</span></strong
-              ><strong><span style="letter-spacing: -0.05pt">%</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
             </p>
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -8334,9 +8349,7 @@
         <tr style="height: 18.5pt">
           <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0.75pt; margin-left: 41.5pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTA</span></strong
-              ><strong><span style="letter-spacing: -0.1pt">L</span></strong
-              ><strong><span style="letter-spacing: -1.1pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TTC</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong>
             </p>
           </td>
           <td style="width: 98.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -8599,7 +8612,9 @@
           </td>
           <td style="width: 132.88pt; border-right-style: solid; border-right-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 3.25pt; margin-bottom: 0pt; line-height: 10.75pt">
-              <strong><span style="font-size: 12pt; color: #333e4f">N°: XXX/2023</span></strong>
+              <strong
+                ><span style="font-size: 12pt; color: #333e4f">N°: {{ currSeq }}/2023</span></strong
+              >
             </p>
           </td>
           <td style="width: 210.95pt; border-left-style: solid; border-left-width: 0.75pt; vertical-align: top">
@@ -8765,7 +8780,7 @@
           </td>
           <td colspan="2" style="width: 138.9pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 0.05pt; margin-left: 18.7pt; margin-bottom: 0pt; font-size: 12.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL </span></strong><strong>HORS</strong><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 110pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
@@ -8782,8 +8797,7 @@
           </td>
           <td colspan="3" style="width: 166.6pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; line-height: 14.35pt">
-              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TVA</span></strong
-              ><strong><span style="font-size: 12.5pt"> 19%</span></strong>
+              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TVA</span></strong>
             </p>
           </td>
           <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
@@ -8797,8 +8811,7 @@
         <tr style="height: 17.4pt">
           <td colspan="3" style="width: 166.6pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 32.6pt; margin-bottom: 0pt; line-height: 14.35pt">
-              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TOTAL </span></strong><strong><span style="font-size: 12.5pt">HORS</span></strong
-              ><strong><span style="font-size: 12.5pt; letter-spacing: 0.05pt"> </span></strong><strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TAXES</span></strong>
+              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
             </p>
           </td>
           <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
