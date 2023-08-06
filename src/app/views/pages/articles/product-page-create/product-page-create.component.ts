@@ -78,6 +78,9 @@ export class ProductPageCreateComponent implements OnInit {
     alertWarning: any
     productCodes : any [] = []
     selectedProductsIndexes : any[] = []
+    pageIsEdited = false
+
+
     
    
     constructor(
@@ -108,9 +111,6 @@ export class ProductPageCreateComponent implements OnInit {
     }
     
     
-    
- 
-
     //create form
     createForm() {
         this.loadingSubject.next(false)
@@ -128,13 +128,11 @@ export class ProductPageCreateComponent implements OnInit {
         this.hasFormErrors = false
     }
 
-
     onChangeCode() {
         const controls = this.productPageForm.controls
         const product_page_code = controls.product_page_code.value
         this.itemService.getProductPageByCode({product_page_code : product_page_code}).subscribe(
             (res: any) => {
-              console.log("response " + Object.keys(res.data));
            
               if (res.data.productPage) {
                 alert("Ce code cluster existe déjà")
@@ -149,7 +147,7 @@ export class ProductPageCreateComponent implements OnInit {
     
     }
 
-      angularGridReady(angularGrid: AngularGridInstance) {
+    angularGridReady(angularGrid: AngularGridInstance) {
         this.angularGrid = angularGrid;
           this.dataView = angularGrid.dataView;
           this.grid = angularGrid.slickGrid;
@@ -157,9 +155,7 @@ export class ProductPageCreateComponent implements OnInit {
           this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
           this.grid.invalidate();
           this.grid.render();
-      }
-
-      
+    }
 
     updateItemMetadata(previousItemMetadata: any) {
         const newCssClass = 'highlight-bg';
@@ -428,6 +424,13 @@ export class ProductPageCreateComponent implements OnInit {
         )
     }
 
+    editProductPage(){
+      const controls = this.productPageForm.controls
+      const product_page_code = controls.product_page_code.value
+      const description = controls.description.value
+      
+    }
+
  
 
     /**
@@ -455,18 +458,19 @@ export class ProductPageCreateComponent implements OnInit {
     
 
     getCurrentPageData(){
-      console.log("hey")
       const controls = this.productPageForm.controls
       this.isExist = false 
       this.selectedProductsIndexes = []
       this.itemService.getPageProducts(controls.product_page_code.value).subscribe(
         (reponse) => {
+          const page = reponse['page']
           reponse['products_codes'].forEach(prod => {
             const index = this.getIndexOfProduct(prod.product_code)
             this.selectedProductsIndexes.push(index)
           });
-          console.log(this.selectedProductsIndexes)
-           this.prepareGrid()
+          this.grid.setSelectedRows(this.selectedProductsIndexes);
+          controls.description.setValue(page.description)
+          this.pageIsEdited = true
         })
     }
 

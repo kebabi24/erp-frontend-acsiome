@@ -166,7 +166,7 @@
                             <div class="col-12" *ngFor="let detail of $any(doc.spec_details); let i = index">
                                 <label class="ml-5 mr-10 col-2">{{detail.mpd_label}}</label>
                                 <input
-                                type="checkbox"
+                                type="checkbox" 
                                 class="mb-5 mt-1"
                                 (change)="onCheckClick(detail.mpd_label)"
                                 />
