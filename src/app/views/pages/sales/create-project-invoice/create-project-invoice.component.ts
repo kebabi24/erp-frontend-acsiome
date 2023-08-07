@@ -616,6 +616,8 @@ export class CreateProjectInvoiceComponent implements OnInit {
                   itdh_taxable: detail.item.pt_taxable,
                   itdh_tax_code: detail.item.taxe.tx2_tax_code,
                   itdh_taxc: detail.item.taxe.tx2_tax_pct,
+                  itdh_stdby: Number(detail.sod_stndby),
+                  itdh_hours: detail.dec01,
                 },
                 { position: "bottom" }
               );
@@ -984,8 +986,8 @@ export class CreateProjectInvoiceComponent implements OnInit {
                 itdh_taxable: detail.sod_taxable,
                 itdh_tax_code: detail.sod_tax_code,
                 itdh_taxc: detail.sod_taxc,
-                itdh_stdby: detail.sod_stdby,
-                itdh_hours: detail.sod_hours,
+                itdh_stdby: Number(detail.sod_stndby),
+                itdh_hours: detail.dec01,
               },
               { position: "bottom" }
             );
@@ -1678,7 +1680,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
                 itdh_taxable: detail.sod_taxable,
                 itdh_tax_code: detail.sod_tax_code,
                 itdh_taxc: detail.sod_taxc,
-                itdh_stdby: detail.sod_stndby,
+                itdh_stdby: Number(detail.sod_stndby),
                 itdh_hours: detail.dec01,
               },
               { position: "bottom" }
@@ -1707,7 +1709,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
               itdh_taxable: detail.sod_taxable,
               itdh_tax_code: detail.sod_tax_code,
               itdh_taxc: detail.sod_taxc,
-              itdh_stdby: detail.sod_stndby,
+              itdh_stdby: Number(detail.sod_stndby),
               itdh_hours: detail.dec01,
             });
           }
@@ -2466,6 +2468,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
   }
 
   calculatetot() {
+    console.log(this.dataset);
     const item = localStorage.getItem("customer");
     const cus = JSON.parse(item);
     const curr1 = localStorage.getItem("currency");
@@ -2478,9 +2481,9 @@ export class CreateProjectInvoiceComponent implements OnInit {
     let timbre = 0;
     let ttc = 0;
     for (var i = 0; i < this.dataset.length; i++) {
-      tht += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)), 2);
+      tht += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * (Number(this.dataset[i].itdh_qty_cons) + Number(this.dataset[i].itdh_stdby))), 2);
 
-      if (controlsso.ith_taxable.value == true) tva += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)) * (this.dataset[i].itdh_taxc ? Number(this.dataset[i].itdh_taxc) / 100 : 0), 2);
+      if (controlsso.ith_taxable.value == true) tva += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * Number(this.dataset[i].itdh_qty_inv) * (Number(this.dataset[i].itdh_qty_cons) + Number(this.dataset[i].itdh_stdby)) * (this.dataset[i].itdh_taxc ? Number(this.dataset[i].itdh_taxc) / 100 : 0), 2);
 
       if (controlsso.ith_cr_terms.value == "ES") {
         timbre = round((tht + tva) / 100, 2);
@@ -2506,7 +2509,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     if (cus.cm_taxable == true) tva += round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2);
     if (cus.cm_taxable == true) tva -= round(Number(this.tht1) * (this.rmsGl / 100) * (cus.cm_taxc / 100), 2);
     // console.log(round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2));
-    this.tva1 = Number(this.tht1) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100);
+    this.tva1 = round(Number(this.tht1) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100), 2);
 
     this.timbre1 = Number(controls.timbre.setValue(timbre.toFixed(2)));
 

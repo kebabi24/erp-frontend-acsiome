@@ -722,7 +722,7 @@
           </td>
           <td style="width: 22pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
-              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons }}</span>
             </p>
           </td>
           <td style="width: 22.65pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
@@ -737,7 +737,7 @@
           </td>
           <td style="width: 83.7pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 4.85pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-              <span style="font-family: Carlito">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+              <span style="font-family: Carlito">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
             </p>
           </td>
         </tr>
@@ -1124,17 +1124,17 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 50.02pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 36.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
             </td>
             <td style="width: 58.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0.45pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <span style="font-family: 'Times New Roman'">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
               </p>
               <p style="margin-top: 0pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">-</p>
             </td>
@@ -1547,16 +1547,16 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 50.02pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 36.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
             </td>
             <td style="width: 58.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 3.75pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
+              <p style="margin-top: 3.75pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
             </td>
           </tr>
           <tr style="height: 19.1pt">
@@ -2041,10 +2041,10 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 40.9pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
           </td>
           <td style="width: 38.7pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
           </td>
           <td style="width: 68.15pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
@@ -2053,7 +2053,7 @@
             <p style="margin-top: 0.55pt; margin-bottom: 0pt; font-size: 10pt">
               <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
-            <p style="margin-top: 0pt; margin-right: 6.9pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
+            <p style="margin-top: 0pt; margin-right: 6.9pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
           </td>
         </tr>
 
@@ -2466,10 +2466,10 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 29.55pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
           </td>
           <td style="width: 29.5pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
           </td>
           <td style="width: 83.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
@@ -2479,7 +2479,7 @@
               <strong>&#xa0;</strong>
             </p>
             <p style="margin-top: 0pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
             </p>
           </td>
         </tr>
@@ -2899,17 +2899,17 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 25.88pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 20.02pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
             </td>
             <td style="width: 53.28pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 97.68pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
               <p style="margin-top: 6pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_qty_inv * data.itdh_price }}</span>
+                <span style="letter-spacing: -0.05pt">{{ (data.itdh_qty_cons + data.itdh_stdby) * data.itdh_price }}</span>
               </p>
             </td>
           </tr>
@@ -2972,7 +2972,7 @@
           ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de</span></strong
           ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>:</strong>
         </p>
-        <p style="margin: 3pt 80.2pt 0pt 6.85pt; line-height: 105%; font-size: 10.5pt">{{numberToLetter}</p>
+        <p style="margin: 3pt 80.2pt 0pt 6.85pt; line-height: 105%; font-size: 10.5pt">{{ numberToLetter }}</p>
       </div>
 
       <div>
@@ -3330,13 +3330,13 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 45.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
           </td>
           <td style="width: 77.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 143.62pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 3.4pt; margin-right: 15.45pt; margin-bottom: 0pt; text-align: right; font-size: 10.5pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
+            <p style="margin-top: 3.4pt; margin-right: 15.45pt; margin-bottom: 0pt; text-align: right; font-size: 10.5pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
           </td>
         </tr>
 
@@ -3366,7 +3366,7 @@
           <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 1.25pt; margin-bottom: 0pt; line-height: 13.6pt">
               <strong
-                ><span style="font-size: 12pt; letter-spacing: -0.05pt">{{ tva }}</span></strong
+                ><span style="font-size: 12pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
               >
             </p>
           </td>
@@ -3726,13 +3726,13 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 70.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
             </td>
             <td style="width: 93.3pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 149.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv * data.itdh_price }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ (data.itdh_qty_cons + data.itdh_stdby) * data.itdh_price }}</p>
             </td>
           </tr>
 
@@ -4133,7 +4133,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -4143,7 +4143,7 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
               </p>
             </td>
           </tr>
@@ -4159,7 +4159,7 @@
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -4481,7 +4481,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -4491,7 +4491,7 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
               </p>
             </td>
           </tr>
@@ -4507,7 +4507,7 @@
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -4835,7 +4835,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -4845,7 +4845,7 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
               </p>
             </td>
           </tr>
@@ -4861,7 +4861,7 @@
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -5189,7 +5189,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -5199,7 +5199,7 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
               </p>
             </td>
           </tr>
@@ -5215,7 +5215,7 @@
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
               <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -5631,12 +5631,12 @@
             </td>
             <td style="width: 28.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3.05pt; margin-left: 9.9pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <span style="font-family: 'Times New Roman'">{{ data.days_nbr }}</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons + data.itdh_stdby }}</span>
               </p>
             </td>
             <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3.05pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 9.5pt">
-                <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons }}</span>
               </p>
             </td>
             <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -5646,7 +5646,7 @@
             </td>
             <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3pt; margin-left: 50.1pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
               </p>
             </td>
           </tr>
@@ -5663,7 +5663,7 @@
             <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-left: 13.4pt; margin-bottom: 0pt; line-height: 16.9pt">
                 <strong
-                  ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                  ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -6066,12 +6066,12 @@
           </td>
           <td style="width: 28.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.05pt; margin-left: 9.9pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <span style="font-family: 'Times New Roman'">{{ data.days_nbr }}</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons + data.itdh_stdby }}</span>
             </p>
           </td>
           <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.05pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 9.5pt">
-              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons }}</span>
             </p>
           </td>
           <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -6081,7 +6081,7 @@
           </td>
           <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3pt; margin-left: 50.1pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
             </p>
           </td>
         </tr>
@@ -6098,7 +6098,7 @@
           <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 13.4pt; margin-bottom: 0pt; line-height: 16.9pt">
               <strong
-                ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc }}</span></strong
+                ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
@@ -6502,7 +6502,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 27.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
           </td>
           <td style="width: 27.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -6517,7 +6517,7 @@
           </td>
           <td style="width: 103.2pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">
-              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * data.itdh_qty_inv }}</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
             </p>
           </td>
         </tr>
@@ -6934,7 +6934,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 133.9pt; border-style: solid; border-width: 1pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv * data.itdh_price }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ (data.itdh_qty_cons + data.itdh_stdby) * data.itdh_price }}</p>
             </td>
           </tr>
 
@@ -7426,7 +7426,7 @@
             <p style="margin-top: 1.35pt; margin-left: 1.6pt; margin-bottom: 0pt; font-size: 9.5pt">{{ data.itdh_um }}</p>
           </td>
           <td style="width: 44.98pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.days_nbr }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
           </td>
           <td style="width: 48.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_hours }}</p>
@@ -7435,7 +7435,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 95.12pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0.65pt; margin-right: 7.85pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">{{ data.itdh_price * data.days_nbr }}</p>
+            <p style="margin-top: 0.65pt; margin-right: 7.85pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
           </td>
         </tr>
 
@@ -8802,7 +8802,7 @@
           <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-left: 1.4pt; margin-bottom: 0pt; line-height: 14.9pt">
               <strong
-                ><span style="font-size: 14.5pt; letter-spacing: -0.05pt">{{ tva }}</span></strong
+                ><span style="font-size: 14.5pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
               >
             </p>
           </td>
@@ -8816,7 +8816,7 @@
           <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-right: 1.55pt; margin-bottom: 0pt; text-align: right; line-height: 14.9pt">
               <strong
-                ><span style="font-size: 14.5pt">{{ ttc }}</span></strong
+                ><span style="font-size: 14.5pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
