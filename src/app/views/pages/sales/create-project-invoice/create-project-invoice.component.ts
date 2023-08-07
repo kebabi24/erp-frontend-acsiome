@@ -157,6 +157,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
   stat: any;
   curr: any;
   cfg: any;
+  cust: any[] = [];
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -273,9 +274,29 @@ export class CreateProjectInvoiceComponent implements OnInit {
   }
 
   onChangeDays() {
+    let tab = [];
     const controls = this.soForm.controls;
     const val = controls.fDays.value;
     this.fDays = val;
+    if (this.fDays) {
+      console.log(this.fDays);
+    } else {
+      console.log(this.fDays);
+    }
+    // console.log(this.dataView.setItems(this.datasetPrint));
+    let newDetails;
+    for (let i of this.datasetPrint) {
+      console.log(typeof i.itdh_qty_cons);
+      console.log(typeof i.idth_qty_ret);
+      console.log(typeof i.idth_qty_ret);
+
+      newDetails = { ...i, itdh_qty_cons: this.fDays ? Number(i.itdh_qty_cons) - Number(i.idth_qty_ret) : Number(i.idth_qty_ret) - Number(i.idth_qty_ret) };
+      tab.push(newDetails);
+    }
+    this.dataset = tab;
+    this.dataView.setItems(this.dataset);
+    console.log("tab", tab);
+    this.calculatetot();
   }
 
   initGrid() {
@@ -887,6 +908,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
           const { data } = res;
           if (data) {
             this.curr = data;
+            localStorage.setItem("currency", JSON.stringify(data));
           }
         });
 
@@ -932,6 +954,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
             //console.log(res);
             const { data } = res;
             this.customer = res.data;
+            localStorage.setItem("customer", JSON.stringify(res.data));
             controls.name.setValue(this.customer.address.ad_name);
           });
           for (const object in details) {
@@ -1041,6 +1064,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     this.deviseService.getBy({ cu_curr }).subscribe(
       (res: any) => {
         const { data } = res;
+        localStorage.setItem("currency", JSON.stringify(data));
         console.log(res);
         if (!data) {
           this.layoutUtilsService.showActionNotification("cette devise n'existe pas!", MessageType.Create, 10000, true, true);
@@ -1118,6 +1142,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
         } else {
           this.error = false;
           this.customer = res.data;
+          localStorage.setItem("customer", JSON.stringify(res.data));
           controls.ith_cust.setValue(data.cm_addr || "");
           controls.name.setValue(data.address.ad_name || "");
           controls.ith_bill.setValue(data.cm_bill || "");
@@ -1133,6 +1158,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
             const { data } = res;
             if (data) {
               this.curr = data;
+              localStorage.setItem("currency", JSON.stringify(data));
             }
           });
 
@@ -1193,6 +1219,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObj2) {
       args.rows.map((idx) => {
         const item = this.gridObj2.getDataItem(idx);
+        localStorage.setItem("customer", JSON.stringify(item));
         console.log(item);
         const date = new Date();
 
@@ -1225,6 +1252,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
             const { data } = res;
             if (data) {
               this.curr = data;
+              localStorage.setItem("currency", JSON.stringify(data));
             }
             if (item.cm_curr == "DA") {
               controls.ith_ex_rate.setValue(1);
@@ -1615,11 +1643,13 @@ export class CreateProjectInvoiceComponent implements OnInit {
             //console.log(res);
             this.customer = res.data;
             console.log(this.customer);
+            localStorage.setItem("customer", JSON.stringify(res.data));
             controls.name.setValue(this.customer.address.ad_name);
           });
 
           this.deviseService.getBy({ cu_curr: saleOrder.so_curr }).subscribe((resc: any) => {
             this.curr = resc.data;
+            localStorage.setItem("currency", JSON.stringify(resc.data));
           });
 
           for (const object in details) {
@@ -1661,9 +1691,14 @@ export class CreateProjectInvoiceComponent implements OnInit {
               cmvid: "",
               desc: detail.item.pt_desc1,
               itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv,
+              itdh_qty_cons: this.fDays ? detail.sod_qty_cons - detail.sod_qty_val : detail.sod_qty_ret - detail.sod_qty_val,
               itdh_um: detail.sod_um,
+              idth_qty_val: detail.sod_qty_val,
+              idth_qty_ret: detail.sod_qty_ret,
               itdh_um_conv: detail.sod_um_conv,
               itdh_price: detail.sod_price,
+              itdh__chr01: detail.sod__chr01,
+              itdh__chr02: detail.sod__chr02,
               itdh_disc_pct: detail.sod_disc_pct,
               itdh_site: detail.sod_site,
               itdh_loc: detail.sod_loc,
@@ -1672,6 +1707,8 @@ export class CreateProjectInvoiceComponent implements OnInit {
               itdh_taxable: detail.sod_taxable,
               itdh_tax_code: detail.sod_tax_code,
               itdh_taxc: detail.sod_taxc,
+              itdh_stdby: detail.sod_stndby,
+              itdh_hours: detail.dec01,
             });
           }
           this.calculatetot();
@@ -2429,6 +2466,11 @@ export class CreateProjectInvoiceComponent implements OnInit {
   }
 
   calculatetot() {
+    const item = localStorage.getItem("customer");
+    const cus = JSON.parse(item);
+    const curr1 = localStorage.getItem("currency");
+    const curr = JSON.parse(curr1);
+    console.log(cus);
     const controls = this.totForm.controls;
     const controlsso = this.soForm.controls;
     let tht = 0;
@@ -2436,11 +2478,10 @@ export class CreateProjectInvoiceComponent implements OnInit {
     let timbre = 0;
     let ttc = 0;
     for (var i = 0; i < this.dataset.length; i++) {
-      console.log("here here ", this.dataset[i]);
       tht += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)), 2);
 
       if (controlsso.ith_taxable.value == true) tva += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * Number(this.dataset[i].itdh_qty_cons)) * (this.dataset[i].itdh_taxc ? Number(this.dataset[i].itdh_taxc) / 100 : 0), 2);
-      console.log(tva);
+
       if (controlsso.ith_cr_terms.value == "ES") {
         timbre = round((tht + tva) / 100, 2);
         if (timbre > 10000) {
@@ -2460,23 +2501,23 @@ export class CreateProjectInvoiceComponent implements OnInit {
     this.tht1 = Number(this.tht1) + round(Number(this.tht1) * (this.rmsGr / 100), 2);
     this.tht1 = Number(this.tht1) - round(Number(this.tht1) * (this.rmsGl / 100), 2);
     this.tht1 = Number(this.tht1) + Number(this.trns);
-
+    if (cus.cm_taxable == true) tva += round(Number(this.trns) * (cus.cm_taxc / 100), 2);
+    // if (cus.cm_taxable == true) tva += ((Number(this.tht1) - round(Number(this.tht1) * (this.rmsGr / 100), 2)) * (cus.cm_taxc / 100), 2);
+    if (cus.cm_taxable == true) tva += round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2);
+    if (cus.cm_taxable == true) tva -= round(Number(this.tht1) * (this.rmsGl / 100) * (cus.cm_taxc / 100), 2);
+    // console.log(round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2));
     this.tva1 = Number(this.tht1) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100);
-
-    // this.tva = controls.tva.setValue(tva.toFixed(2));
 
     this.timbre1 = Number(controls.timbre.setValue(timbre.toFixed(2)));
 
     ttc = round(Number(this.tht1) + Number(tva), 2);
     this.ttc1 = Number(ttc);
-    console.log(ttc);
-    controls.tht.setValue(this.tht1.toFixed(2));
 
-    // controls.tva.setValue(tva.toFixed(2));
+    controls.tht.setValue(this.tht1.toFixed(2));
 
     controls.ttc.setValue(this.ttc1.toFixed(2));
     this.tva1 = tva;
-    // this.numberToLetter = NumberToLetters(this.ttc1.toFixed(2), this.curr.cu_desc);
+    this.numberToLetter = NumberToLetters(this.ttc1.toFixed(2), curr.cu_desc);
   }
 
   handleSelectedRowsChangedlocdet(e, args) {
@@ -2649,6 +2690,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
           const { data } = res;
           if (data) {
             console.log(data);
+            localStorage.setItem("currency", JSON.stringify(data));
             this.curr = data;
           }
 
