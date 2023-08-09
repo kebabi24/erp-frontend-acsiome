@@ -2351,7 +2351,9 @@ export class CreateProjectInvoiceComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObj1.getDataItem(idx);
         controls.ith_category.setValue(item.seq_seq || "");
-        let seq = item.seq_seq + "-" + item.seq_curr_val + 1;
+        let number = Number(item.seq_curr_val) + 1;
+        console.log(typeof number);
+        let seq = item.seq_seq + "-" + number;
         this.currSeq = seq;
         console.log(this.currSeq);
       });
