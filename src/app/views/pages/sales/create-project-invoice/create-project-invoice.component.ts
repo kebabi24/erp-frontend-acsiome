@@ -2503,25 +2503,27 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
     this.trns = controls.ith_transport.value;
 
-    this.tht1 = Number(this.tht1) + round(Number(this.tht1) * (this.rmsGr / 100), 2);
-    this.tht1 = Number(this.tht1) - round(Number(this.tht1) * (this.rmsGl / 100), 2);
-    this.tht1 = Number(this.tht1) + Number(this.trns);
     if (cus.cm_taxable == true) tva += round(Number(this.trns) * (cus.cm_taxc / 100), 2);
-    // if (cus.cm_taxable == true) tva += ((Number(this.tht1) - round(Number(this.tht1) * (this.rmsGr / 100), 2)) * (cus.cm_taxc / 100), 2);
-    if (cus.cm_taxable == true) tva += round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2);
+
+    if (cus.cm_taxable == true) tva -= round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2);
     if (cus.cm_taxable == true) tva -= round(Number(this.tht1) * (this.rmsGl / 100) * (cus.cm_taxc / 100), 2);
     // console.log(round(Number(this.tht1) * (this.rmsGr / 100) * (cus.cm_taxc / 100), 2));
-    this.tva1 = round(Number(this.tht1) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100), 2);
+    this.tva1 = (round(Number(this.tht1)) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100), 2);
 
     this.timbre1 = Number(controls.timbre.setValue(timbre.toFixed(2)));
 
     ttc = round(Number(this.tht1) + Number(tva), 2);
     this.ttc1 = Number(ttc);
-
+    this.ttc1 = Number(this.ttc1) - round(Number(this.ttc1) * (this.rmsGr / 100), 2);
+    this.ttc1 = Number(this.ttc1) - round(Number(this.ttc1) * (this.rmsGl / 100), 2);
+    this.ttc1 = Number(this.ttc1) + Number(this.trns);
     controls.tht.setValue(this.tht1.toFixed(2));
 
     controls.ttc.setValue(this.ttc1.toFixed(2));
     this.tva1 = tva;
+    this.rmsGl = this.tht1 * (controls.ith_disc_glb.value / 100);
+    this.rmsGr = -(this.tht1 * (controls.ith_rt_gara.value / 100));
+
     this.numberToLetter = NumberToLetters(this.ttc1.toFixed(2), curr.cu_desc);
   }
 

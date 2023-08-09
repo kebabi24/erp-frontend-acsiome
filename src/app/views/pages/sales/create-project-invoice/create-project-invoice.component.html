@@ -218,27 +218,27 @@
 
         <div class row col-6>
           <div class="form-group-sm row">
+            <label class="col-9 col-form-label text-right">Total HT</label>
+            <div class="col-2">
+              <input class="form-control" type="number" style="text-align: right" formControlName="tht" />
+            </div>
+          </div>
+          <div class="form-group-sm row">
+            <label class="col-9 col-form-label text-right">Remise </label>
+            <div class="col-2">
+              <input class="form-control" type="number" style="text-align: right" formControlName="ith_disc_glb" (change)="calculatetot()" />
+            </div>
+          </div>
+          <div class="form-group-sm row">
             <label class="col-9 col-form-label text-right">Transport :</label>
             <div class="col-2">
               <input class="form-control" type="number" style="text-align: right" formControlName="ith_transport" (change)="calculatetot()" />
             </div>
           </div>
           <div class="form-group-sm row">
-            <label class="col-9 col-form-label text-right">Retenue de garantie :</label>
+            <label class="col-9 col-form-label text-right">Retenue de garantie</label>
             <div class="col-2">
               <input class="form-control" type="number" style="text-align: right" formControlName="ith_rt_gara" (change)="calculatetot()" />
-            </div>
-          </div>
-          <div class="form-group-sm row">
-            <label class="col-9 col-form-label text-right">Remise globale:</label>
-            <div class="col-2">
-              <input class="form-control" type="number" style="text-align: right" formControlName="ith_disc_glb" (change)="calculatetot()" />
-            </div>
-          </div>
-          <div class="form-group-sm row">
-            <label class="col-9 col-form-label text-right">Total HT</label>
-            <div class="col-2">
-              <input class="form-control" type="number" style="text-align: right" formControlName="tht" />
             </div>
           </div>
 
@@ -722,7 +722,7 @@
           </td>
           <td style="width: 22pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
-              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons }}</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
             </p>
           </td>
           <td style="width: 22.65pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
@@ -737,7 +737,7 @@
           </td>
           <td style="width: 83.7pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 4.85pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-              <span style="font-family: Carlito">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+              <span style="font-family: Carlito">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
             </p>
           </td>
         </tr>
@@ -764,7 +764,35 @@
         <tr style="height: 13pt">
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <strong>RETENUE DE GARANTIE 10%</strong>
+              <strong>Remise globale </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
             </p>
           </td>
           <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
@@ -792,7 +820,7 @@
         <tr style="height: 13pt">
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <strong>TOTAL HORS TAXES</strong>
+              <strong>TOTAL</strong>
             </p>
           </td>
           <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
@@ -1124,7 +1152,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 50.02pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 36.42pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
@@ -1134,24 +1162,97 @@
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0.45pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <span style="font-family: 'Times New Roman'">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
               <p style="margin-top: 0pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">-</p>
             </td>
           </tr>
-          <tr style="height: 22.75pt">
-            <td colspan="3" style="width: 254.49pt; border-top-style: solid; border-top-width: 0.88pt; border-right-style: solid; border-right-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="3" style="width: 146.25pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 4.2pt; margin-left: 1.05pt; margin-bottom: 0pt; font-size: 11pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 133.45pt; border-style: solid; border-width: 0.88pt 1.62pt 1.62pt 0.88pt; vertical-align: top">
-              <p style="margin-top: 4.2pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -1556,7 +1657,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
             </td>
             <td style="width: 133.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-              <p style="margin-top: 3.75pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
+              <p style="margin-top: 3.75pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
             </td>
           </tr>
           <tr style="height: 19.1pt">
@@ -1639,10 +1740,11 @@
             <td style="width: 134.7pt"></td>
           </tr>
         </table>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">&#xa0;</p>
-        <p style="margin-top: 9.2pt; margin-left: 7.95pt; margin-bottom: 0pt; font-size: 12pt">
-          <strong><span style="letter-spacing: -0.05pt">Arrêtée </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.05pt"> présente facture</span></strong
-          ><strong> à</strong><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.05pt"> somme </span></strong><strong>de :</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
+        </p>
+        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
+          <strong>{{ numberToLetter }}</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>&#xa0;</strong>
@@ -2053,43 +2155,96 @@
             <p style="margin-top: 0.55pt; margin-bottom: 0pt; font-size: 10pt">
               <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
-            <p style="margin-top: 0pt; margin-right: 6.9pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
+            <p style="margin-top: 0pt; margin-right: 6.9pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
           </td>
         </tr>
 
-        <tr style="height: 20.3pt">
-          <td colspan="6" style="width: 422.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 2.2pt; margin-left: 0.6pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="text-align: center; font-size: 11.5pt">
-              <strong>{{ tht1 }}</strong>
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
             </p>
           </td>
-        </tr>
-        <tr style="height: 22.8pt">
-          <td colspan="6" style="width: 422.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 3.4pt; margin-right: 1.8pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
-            </p>
-          </td>
-          <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 3.85pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>{{ tva1 }}</strong>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
-        <tr style="height: 22.8pt">
-          <td colspan="6" style="width: 422.6pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 3.4pt; margin-left: 0.75pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>Net à payer TTC</strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
             </p>
           </td>
-          <td style="width: 138.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 3.85pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong>{{ ttc1 }}</strong>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -2109,10 +2264,8 @@
       <p style="margin-top: 0.55pt; margin-bottom: 0pt; font-size: 9.5pt">
         <span style="font-family: 'Times New Roman'">&#xa0;</span>
       </p>
-      <p style="margin-top: 0pt; margin-left: 7.45pt; margin-bottom: 0pt; font-size: 12.5pt">
-        <strong>Arrêtée</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.15pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-        ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>facture</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">somme</span></strong
-        ><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.3pt"> </span></strong><strong>:</strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>{{ numberToLetter }}</strong>
@@ -2466,7 +2619,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 29.55pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 29.5pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
@@ -2479,52 +2632,96 @@
               <strong>&#xa0;</strong>
             </p>
             <p style="margin-top: 0pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
             </p>
           </td>
         </tr>
 
-        <tr style="height: 18.95pt">
-          <td colspan="2" rowspan="3" style="width: 231.18pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td colspan="3" style="width: 143.4pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0.65pt; margin-left: 20.95pt; margin-bottom: 0pt; font-size: 12.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.45pt; margin-bottom: 0pt; text-align: right; line-height: 16.45pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
               <strong
-                ><span style="font-size: 14.5pt">{{ tht1 }}</span></strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 18.95pt">
-          <td colspan="3" style="width: 143.4pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0.65pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
             </p>
           </td>
-          <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.45pt; margin-bottom: 0pt; text-align: right; line-height: 16.3pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 14pt">{{ tva1 }}</span></strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 24.85pt">
-          <td colspan="3" style="width: 143.4pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 4.6pt; margin-left: 40.15pt; margin-bottom: 0pt; font-size: 14.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL TTC</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
             </p>
           </td>
-          <td style="width: 104.1pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 3.2pt; margin-right: 1.4pt; margin-bottom: 0pt; text-align: right; font-size: 16pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
@@ -2539,11 +2736,8 @@
       <p style="margin-top: 0.2pt; margin-bottom: 0pt; font-size: 8.5pt">
         <strong>&#xa0;</strong>
       </p>
-      <p style="margin-top: 2.85pt; margin-left: 5.05pt; margin-bottom: 0pt; font-size: 11.5pt">
-        <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-        ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-        ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-        ><strong><span style="letter-spacing: 0.55pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.55pt"> </span></strong><strong>:</strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>{{ numberToLetter }}</strong>
@@ -2899,7 +3093,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
             </td>
             <td style="width: 25.88pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 20.02pt; border-style: solid; border-width: 0.88pt 0.88pt 1.62pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons + data.itdh_stdby }}</p>
@@ -2913,47 +3107,92 @@
               </p>
             </td>
           </tr>
-          <tr style="height: 17.05pt">
-            <td colspan="4" rowspan="3" style="width: 227.74pt; border-top-style: solid; border-top-width: 0.88pt; border-right-style: solid; border-right-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="3" style="width: 100.18pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 2.15pt; margin-left: 11.15pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-right: 1.3pt; margin-bottom: 0pt; text-align: right; line-height: 14.7pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="font-size: 13pt">{{ tht1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 17.05pt">
-            <td colspan="3" style="width: 100.18pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 2.15pt; margin-left: 30.6pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
               </p>
             </td>
-            <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-right: 1.3pt; margin-bottom: 0pt; text-align: right; line-height: 14.7pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
                 <strong
-                  ><span style="font-size: 13pt">{{ tva1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 17.05pt">
-            <td colspan="3" style="width: 100.18pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 2.15pt; margin-left: 19.8pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <strong><span style="letter-spacing: -0.05pt">Net à payer TTC</span></strong>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
               </p>
             </td>
-            <td style="width: 96.92pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-right: 1.3pt; margin-bottom: 0pt; text-align: right; line-height: 14.7pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
                 <strong
-                  ><span style="font-size: 13pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -2965,14 +3204,12 @@
       </div>
 
       <div>
-        <p style="margin-top: 3.25pt; margin-left: 6.85pt; margin-bottom: 0pt; font-size: 9.5pt">
-          <strong>Arrêtée</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-          ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-          ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">somme</span></strong
-          ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de</span></strong
-          ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong>:</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
         </p>
-        <p style="margin: 3pt 80.2pt 0pt 6.85pt; line-height: 105%; font-size: 10.5pt">{{ numberToLetter }}</p>
+        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
+          <strong>{{ numberToLetter }}</strong>
+        </p>
       </div>
 
       <div>
@@ -3330,29 +3567,101 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 45.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 77.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 143.62pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 3.4pt; margin-right: 15.45pt; margin-bottom: 0pt; text-align: right; font-size: 10.5pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
+            <p style="margin-top: 3.4pt; margin-right: 15.45pt; margin-bottom: 0pt; text-align: right; font-size: 10.5pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
           </td>
         </tr>
 
-        <tr style="height: 15.7pt">
-          <td colspan="2" rowspan="3" style="width: 209.05pt; border-top-style: solid; border-top-width: 0.88pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
+            </p>
           </td>
-          <td colspan="2" style="width: 123.7pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
-            <p style="margin-top: 0.4pt; margin-left: 19.25pt; margin-bottom: 0pt; font-size: 10.5pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
             </p>
           </td>
-          <td style="width: 143pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.25pt; margin-bottom: 0pt; text-align: right; line-height: 13.6pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
               <strong
-                ><span style="font-size: 12pt">{{ tht1 }}</span></strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
@@ -3389,12 +3698,8 @@
       <p style="margin-top: 0.2pt; margin-bottom: 0pt; font-size: 10pt">
         <span style="font-family: 'Times New Roman'">&#xa0;</span>
       </p>
-      <p style="margin-top: 3.15pt; margin-left: 7.65pt; margin-bottom: 0pt; font-size: 9pt">
-        <strong><span style="letter-spacing: -0.05pt">Arrêtée la</span></strong
-        ><strong> </strong><strong><span style="letter-spacing: -0.05pt">présente facture</span></strong
-        ><strong> à</strong><strong><span style="letter-spacing: -0.05pt"> la</span></strong
-        ><strong> </strong><strong><span style="letter-spacing: -0.05pt">somme de</span></strong
-        ><strong> :</strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>{{ numberToLetter }}</strong>
@@ -3736,19 +4041,91 @@
             </td>
           </tr>
 
-          <tr style="height: 22.45pt">
-            <td colspan="2" style="width: 230.3pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="2" style="width: 164pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 1.85pt; margin-left: 25.6pt; margin-bottom: 0pt; font-size: 14pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 148.75pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 19.5pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -3760,9 +4137,8 @@
         <p style="margin-top: 0.5pt; margin-bottom: 0pt; font-size: 9.5pt">
           <strong><span style="font-family: 'Times New Roman'">&#xa0;</span></strong>
         </p>
-        <p style="margin-top: 2.55pt; margin-left: 7.4pt; margin-bottom: 0pt; font-size: 12pt">
-          <strong><span style="letter-spacing: -0.05pt">Arrêtée </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.05pt"> présente facture</span></strong
-          ><strong> à</strong><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.05pt"> somme </span></strong><strong>de :</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>{{ numberToLetter }}</strong>
@@ -4133,7 +4509,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -4143,23 +4519,96 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
             </td>
           </tr>
-          <tr style="height: 20.5pt">
-            <td colspan="2" style="width: 259.99pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -4481,7 +4930,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -4491,23 +4940,96 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
             </td>
           </tr>
-          <tr style="height: 20.5pt">
-            <td colspan="2" style="width: 259.99pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -4835,7 +5357,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -4845,23 +5367,96 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
             </td>
           </tr>
-          <tr style="height: 20.5pt">
-            <td colspan="2" style="width: 259.99pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -5189,7 +5784,7 @@
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_um }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
             </td>
             <td style="width: 22.55pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -5199,33 +5794,103 @@
             </td>
             <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-right: 0.95pt; margin-bottom: 0pt; text-align: right; font-size: 8pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
             </td>
           </tr>
-          <tr style="height: 20.5pt">
-            <td colspan="2" style="width: 259.99pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.12pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="4" style="width: 157.22pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 4.55pt; margin-left: 42.3pt; margin-bottom: 0pt; font-size: 8pt">
-                <strong><span style="letter-spacing: -0.05pt">SOMME A REPORTER</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 116.72pt; border-style: solid; border-width: 0.75pt 1.12pt 1.12pt; vertical-align: top">
-              <p style="margin-top: 3.95pt; margin-right: 1.05pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
           </tr>
         </table>
-        <p style="margin-top: 3.15pt; margin-left: 78.6pt; margin-bottom: 0pt; font-size: 9.5pt">
-          <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-          ><strong><span style="letter-spacing: 0.1pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-          ><strong><span style="letter-spacing: 0.1pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-          ><strong><span style="letter-spacing: 0.15pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: 0.1pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.1pt"> </span></strong><strong>:</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>{{ numberToLetter }}</strong>
@@ -5636,7 +6301,7 @@
             </td>
             <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3.05pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 9.5pt">
-                <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons }}</span>
+                <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
               </p>
             </td>
             <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -5646,24 +6311,96 @@
             </td>
             <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 3pt; margin-left: 50.1pt; margin-bottom: 0pt; font-size: 9.5pt">
-                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+                <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
             </td>
           </tr>
 
-          <tr style="height: 19pt">
-            <td colspan="2" style="width: 261.62pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-              <p style="margin-top: 1.7pt; margin-left: 14.5pt; margin-bottom: 0pt; font-size: 12pt">
-                <strong>SOMME A REPORTER</strong>
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-left: 13.4pt; margin-bottom: 0pt; line-height: 16.9pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -6071,7 +6808,7 @@
           </td>
           <td style="width: 28.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.05pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 9.5pt">
-              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_cons }}</span>
+              <span style="font-family: 'Times New Roman'">{{ data.itdh_qty_inv }}</span>
             </p>
           </td>
           <td style="width: 78.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
@@ -6081,43 +6818,111 @@
           </td>
           <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3pt; margin-left: 50.1pt; margin-bottom: 0pt; font-size: 9.5pt">
-              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
             </p>
           </td>
         </tr>
 
-        <tr style="height: 19pt">
-          <td colspan="2" style="width: 261.62pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 1.7pt; margin-left: 14.5pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong>SOMME A REPORTER</strong>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-left: 13.4pt; margin-bottom: 0pt; line-height: 16.9pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
               <strong
-                ><span style="font-size: 14pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
         </tr>
       </table>
       <div>
-        <p style="margin-top: 3.2pt; margin-left: 7.75pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-          ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-          ><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-          ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">somme</span></strong
-          ><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong>:</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
+        </p>
+        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
+          <strong>{{ numberToLetter }}</strong>
         </p>
       </div>
       <br />
       <div>
-        <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>{{ numberToLetter }}</strong>
-        </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>&#xa0;</strong>
         </p>
@@ -6502,7 +7307,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.desc }}</p>
           </td>
           <td style="width: 27.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 27.8pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_stdby }}</p>
@@ -6517,65 +7322,104 @@
           </td>
           <td style="width: 103.2pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 10pt">
-              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</span>
+              <span style="letter-spacing: -0.05pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
             </p>
           </td>
         </tr>
 
-        <tr style="height: 20.2pt">
-          <td colspan="2" rowspan="3" style="width: 244.98pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td colspan="4" style="width: 190.9pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 3.5pt; margin-left: 47.7pt; margin-bottom: 0pt; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 102.45pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 1.6pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 13.5pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
               <strong
-                ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 17.3pt">
-          <td colspan="4" style="width: 190.9pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0.15pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
             </p>
           </td>
-          <td style="width: 102.45pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-left: 1.35pt; margin-bottom: 0pt; line-height: 14.75pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 13.5pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 18.5pt">
-          <td colspan="4" style="width: 190.9pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 1.35pt; margin-left: 47.7pt; margin-bottom: 0pt; font-size: 11.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
             </p>
           </td>
-          <td style="width: 102.45pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; line-height: 15.95pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 13.5pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
         </tr>
       </table>
       <p style="margin-top: 0.3pt; margin-bottom: 0pt">&#xa0;</p>
-      <p style="margin-top: 2.95pt; margin-left: 7.9pt; margin-bottom: 0pt; font-size: 11.5pt">
-        <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-        ><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">la</span></strong
-        ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-        ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-        ><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: -0.65pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">la</span></strong
-        ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de:</span></strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>{{ numberToLetter }}</strong>
@@ -6938,56 +7782,94 @@
             </td>
           </tr>
 
-          <tr style="height: 33.25pt">
-            <td colspan="2" rowspan="3" style="width: 216.68pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
+              </p>
             </td>
-            <td style="width: 120.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 8.9pt; margin-left: 15.3pt; margin-bottom: 0pt; font-size: 10.5pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
               </p>
             </td>
-            <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 8.05pt; margin-left: 1pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 23.4pt">
-            <td style="width: 120.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 4pt; margin-left: 20.1pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
               </p>
             </td>
-            <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 3.15pt; margin-left: 1pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 23.4pt">
-            <td style="width: 120.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 4pt; margin-left: 23.9pt; margin-bottom: 0pt; font-size: 10.5pt">
-                <strong><span style="letter-spacing: -0.05pt">Net à Payer TTC</span></strong>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
               </p>
             </td>
-            <td style="width: 133.15pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-              <p style="margin-top: 3.15pt; margin-left: 1pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
                 <strong
-                  ><span style="letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 0pt">
-            <td style="width: 25.45pt"></td>
-            <td style="width: 192.1pt"></td>
-            <td style="width: 121.95pt"></td>
-            <td style="width: 134.9pt"></td>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
+                >
+              </p>
+            </td>
           </tr>
         </table>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
@@ -6996,13 +7878,8 @@
         <p style="margin-top: 0.35pt; margin-bottom: 0pt; font-size: 10pt">
           <span style="font-family: 'Times New Roman'">&#xa0;</span>
         </p>
-        <p style="margin-top: 0pt; margin-left: 7.15pt; margin-bottom: 0pt; font-size: 10.5pt">
-          <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-          ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.3pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-          ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-          ><strong><span style="letter-spacing: 0.45pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.3pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">somme</span></strong
-          ><strong><span style="letter-spacing: 0.4pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de</span></strong
-          ><strong><span style="letter-spacing: 0.35pt"> </span></strong><strong>:</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>{{ numberToLetter }}</strong>
@@ -7426,7 +8303,7 @@
             <p style="margin-top: 1.35pt; margin-left: 1.6pt; margin-bottom: 0pt; font-size: 9.5pt">{{ data.itdh_um }}</p>
           </td>
           <td style="width: 44.98pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_cons }}</p>
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 48.82pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_hours }}</p>
@@ -7435,7 +8312,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 95.12pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
-            <p style="margin-top: 0.65pt; margin-right: 7.85pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">{{ data.itdh_price * (data.itdh_qty_cons + data.itdh_stdby) }}</p>
+            <p style="margin-top: 0.65pt; margin-right: 7.85pt; margin-bottom: 0pt; text-align: right; font-size: 11pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
           </td>
         </tr>
 
@@ -7468,15 +8345,93 @@
             </p>
           </td>
         </tr>
-        <tr style="height: 18.5pt">
-          <td colspan="2" style="width: 135.68pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-            <p style="margin-top: 2.2pt; margin-left: 8.65pt; margin-bottom: 0pt; font-size: 11pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES (DZD)</span></strong>
+
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 94.38pt; border-style: solid; border-width: 1.62pt; vertical-align: top">
-            <p style="margin-top: 0.75pt; margin-right: 1.2pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">
-              <strong>{{ ttc1 }}</strong>
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
+              >
             </p>
           </td>
         </tr>
@@ -7484,10 +8439,8 @@
       <p style="margin-top: 0.45pt; margin-bottom: 0pt">
         <strong><span style="font-family: 'Times New Roman'">&#xa0;</span></strong>
       </p>
-      <p style="margin-top: 2.9pt; margin-left: 7.3pt; margin-bottom: 0pt">
-        <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-        ><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>présente</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-        ><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.2pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>de</strong><strong><span style="letter-spacing: 0.25pt"> </span></strong><strong>:</strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>{{ numberToLetter }}</strong>
@@ -7880,50 +8833,95 @@
               <p style="margin-top: 0.5pt; margin-bottom: 0pt; font-size: 14pt">
                 <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
-              <p style="margin-top: 0pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 12pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
+              <p style="margin-top: 0pt; margin-left: 0.9pt; margin-bottom: 0pt; text-align: center; font-size: 12pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
             </td>
           </tr>
-          <tr style="height: 21pt">
-            <td colspan="2" rowspan="3" style="width: 277.85pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-            </td>
-            <td colspan="3" style="width: 114.05pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0.4pt; margin-left: 37pt; margin-bottom: 0pt; font-size: 14pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong>
+
+          <tr style="height: 13.45pt">
+            <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+                <span style="font-family: 'Times New Roman'">&#xa0;</span>
               </p>
             </td>
-            <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 18.05pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL HORS TAXES</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
                 <strong
-                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ tht1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ tht1 }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 21pt">
-            <td colspan="3" style="width: 114.05pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0.4pt; margin-left: 31.85pt; margin-bottom: 0pt; font-size: 14pt">
-                <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Remise globale </strong>
               </p>
             </td>
-            <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-left: 66.5pt; margin-bottom: 0pt; line-height: 19pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
                 <strong
-                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
                 >
               </p>
             </td>
           </tr>
-          <tr style="height: 21pt">
-            <td colspan="3" style="width: 114.05pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0.4pt; margin-left: 37pt; margin-bottom: 0pt; font-size: 14pt">
-                <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>Transport </strong>
               </p>
             </td>
-            <td style="width: 122.1pt; border-style: solid; border-width: 2pt; vertical-align: top">
-              <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 18.05pt">
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
                 <strong
-                  ><span style="font-size: 16pt; letter-spacing: -0.05pt">{{ ttc1 }}</span></strong
+                  ><span style="font-size: 11pt">{{ trns }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>RETENUE DE GARANTIE </strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+                <strong>TVA 19%</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+                >
+              </p>
+            </td>
+          </tr>
+          <tr style="height: 13pt">
+            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+                <strong>TOTAL</strong>
+              </p>
+            </td>
+            <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+              <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+                <strong
+                  ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
                 >
               </p>
             </td>
@@ -7932,11 +8930,11 @@
         <p style="margin-top: 0.3pt; margin-bottom: 0pt; font-size: 10pt">
           <span style="font-family: 'Times New Roman'">&#xa0;</span>
         </p>
-        <p style="margin-top: 2.2pt; margin-left: 7.7pt; margin-bottom: 0pt; font-size: 14pt">
-          <strong>Arrêtée la présente facture à</strong><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: -0.05pt"> </span></strong><strong>somme</strong><strong><span style="letter-spacing: -0.1pt"> </span></strong><strong>de :</strong>
+        <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+          <strong>Arrêtée la présente facture à la somme de:</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-          <strong>&#xa0;</strong>
+          <strong>{{ numberToLetter }}</strong>
         </p>
         <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
           <strong>&#xa0;</strong>
@@ -8310,51 +9308,95 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 98.95pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 0.5pt; margin-right: 6.8pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * data.itdh_qty_inv }}</p>
+            <p style="margin-top: 0.5pt; margin-right: 6.8pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
           </td>
         </tr>
 
-        <tr style="height: 18.45pt">
-          <td colspan="2" rowspan="3" style="width: 261.62pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 1.15pt; margin-left: 18.85pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 98.2pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 16.35pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
               <strong
-                ><span style="font-size: 14pt">{{ tht1 }}</span></strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 18.5pt">
-          <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0.75pt; margin-left: 46.45pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong><span style="letter-spacing: -0.05pt">TVA</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
             </p>
           </td>
-          <td style="width: 98.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 15.95pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 14pt">{{ tva1 }}</span></strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 18.5pt">
-          <td colspan="3" style="width: 137.25pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0.75pt; margin-left: 41.5pt; margin-bottom: 0pt; font-size: 12pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
             </p>
           </td>
-          <td style="width: 98.2pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.35pt; margin-bottom: 0pt; text-align: right; line-height: 15.95pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 14pt">{{ ttc1 }}</span></strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
@@ -8363,16 +9405,8 @@
       <p style="margin-top: 0.05pt; margin-bottom: 0pt; font-size: 8.5pt">
         <span style="font-family: 'Times New Roman'">&#xa0;</span>
       </p>
-      <p style="margin-top: 2.85pt; margin-left: 7.45pt; margin-bottom: 0pt; font-size: 12pt">
-        <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-        ><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">la</span></strong
-        ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.1pt">p</span></strong
-        ><strong><span style="letter-spacing: -0.05pt">résente</span></strong
-        ><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong>facture</strong><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong>à</strong><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">la</span></strong
-        ><strong><span style="letter-spacing: -0.55pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">somme</span></strong
-        ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong><span style="letter-spacing: -0.1pt">d</span></strong
-        ><strong><span style="letter-spacing: -0.05pt">e</span></strong
-        ><strong><span style="letter-spacing: -0.6pt"> </span></strong><strong>:</strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>{{ numberToLetter }}</strong>
@@ -8763,60 +9797,101 @@
             <p style="margin-top: 4.95pt; margin-left: 0.65pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">{{ data.itdh_um }}</p>
           </td>
           <td style="width: 39.55pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 4.95pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">{{ data.days_nbr }}</p>
+            <p style="margin-top: 4.95pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 12.5pt">{{ data.itdh_qty_inv }}</p>
           </td>
           <td style="width: 99.1pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.itdh_price }}</p>
           </td>
           <td style="width: 110.75pt; border-style: solid; border-width: 1pt; vertical-align: top">
-            <p style="margin-top: 4.95pt; margin-right: 8.7pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">{{ data.itdh_price * data.days_nbr }}</p>
+            <p style="margin-top: 4.95pt; margin-right: 8.7pt; margin-bottom: 0pt; text-align: right; font-size: 12.5pt">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</p>
           </td>
         </tr>
 
-        <tr style="height: 17.35pt">
-          <td colspan="3" style="width: 300.23pt; border-top-style: solid; border-top-width: 1pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td colspan="2" style="width: 138.9pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 0.05pt; margin-left: 18.7pt; margin-bottom: 0pt; font-size: 12.5pt">
-              <strong><span style="letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13.45pt">
+          <td colspan="2" rowspan="4" style="width: 191.8pt; border-top-style: solid; border-top-width: 0.75pt; border-right-style: solid; border-right-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 7pt">
+              <span style="font-family: 'Times New Roman'">&#xa0;</span>
             </p>
           </td>
-          <td style="width: 110pt; border-style: solid; border-width: 1pt 1.75pt 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.55pt; margin-bottom: 0pt; text-align: right; line-height: 16pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL HORS TAXES</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 12.3pt">
               <strong
-                ><span style="font-size: 14pt">{{ tht1 }}</span></strong
+                ><span style="font-size: 11pt">{{ tht1 }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 17.4pt">
-          <td colspan="2" rowspan="2" style="width: 272.52pt; border-right-style: solid; border-right-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
-          </td>
-          <td colspan="3" style="width: 166.6pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; line-height: 14.35pt">
-              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TVA</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Remise globale </strong>
             </p>
           </td>
-          <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-left: 1.4pt; margin-bottom: 0pt; line-height: 14.9pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 14.5pt; letter-spacing: -0.05pt">{{ tva1 }}</span></strong
+                ><span style="font-size: 11pt">{{ rmsGl }}</span></strong
               >
             </p>
           </td>
         </tr>
-        <tr style="height: 17.4pt">
-          <td colspan="3" style="width: 166.6pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-left: 32.6pt; margin-bottom: 0pt; line-height: 14.35pt">
-              <strong><span style="font-size: 12.5pt; letter-spacing: -0.05pt">TOTAL HORS TAXES</span></strong>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>Transport </strong>
             </p>
           </td>
-          <td style="width: 110pt; border-style: solid; border-width: 1.75pt; vertical-align: top">
-            <p style="margin-top: 0pt; margin-right: 1.55pt; margin-bottom: 0pt; text-align: right; line-height: 14.9pt">
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
               <strong
-                ><span style="font-size: 14.5pt">{{ ttc1 }}</span></strong
+                ><span style="font-size: 11pt">{{ trns }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>RETENUE DE GARANTIE </strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ rmsGr }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin: 0.6pt 41.8pt 0pt 42.8pt; text-align: center; font-size: 9.5pt">
+              <strong>TVA 19%</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-left: 1.55pt; margin-bottom: 0pt; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ tva1 }}</span></strong
+              >
+            </p>
+          </td>
+        </tr>
+        <tr style="height: 13pt">
+          <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0.6pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
+              <strong>TOTAL</strong>
+            </p>
+          </td>
+          <td style="width: 82.95pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <p style="margin-top: 0pt; margin-right: 0.55pt; margin-bottom: 0pt; text-align: right; line-height: 11.85pt">
+              <strong
+                ><span style="font-size: 11pt">{{ ttc1 }}</span></strong
               >
             </p>
           </td>
@@ -8825,16 +9900,11 @@
       <p style="margin-top: 0.5pt; margin-bottom: 0pt; font-size: 11.5pt">
         <strong><em>&#xa0;</em></strong>
       </p>
-      <p style="margin-top: 2.55pt; margin-left: 7.25pt; margin-bottom: 0pt; font-size: 12.5pt">
-        <strong><span style="letter-spacing: -0.05pt">Arrêtée</span></strong
-        ><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">présente</span></strong
-        ><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">facture</span></strong
-        ><strong> à</strong><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong>la</strong><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">somme</span></strong
-        ><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong><span style="letter-spacing: -0.05pt">de</span></strong
-        ><strong><span style="letter-spacing: 0.05pt"> </span></strong><strong>:</strong>
+      <p style="margin-top: 0pt; margin-left: 17.05pt; margin-bottom: 0pt; font-size: 9.5pt">
+        <strong>Arrêtée la présente facture à la somme de:</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
-        <strong>&#xa0;</strong>
+        <strong>{{ numberToLetter }}</strong>
       </p>
       <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 10pt">
         <strong>&#xa0;</strong>
