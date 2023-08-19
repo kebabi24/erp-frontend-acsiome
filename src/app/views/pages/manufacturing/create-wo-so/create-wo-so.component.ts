@@ -73,7 +73,7 @@ error = false;
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
   mvdataset: any[];
-
+  sos : any[];
   
 
   users: [];
@@ -315,6 +315,7 @@ error = false;
 
   addNewItem() {
   const controls = this.woForm.controls
+  console.log("sos", this.sos)
  this.dataset = []
     
  
@@ -327,7 +328,7 @@ error = false;
 this.loadingSubject.next(true);
 
 this.workOrderService
-  .addSoJob({detail:this.mvdataset, profile: this.user.usrd_profile,site: controls.site.value})
+  .addSoJob({detail:this.mvdataset, profile: this.user.usrd_profile,site: controls.site.value, saleOrders: this.sos})
   .subscribe(
    (reponse: any) => this.dataset = reponse.data,
     (error) => {
@@ -420,6 +421,35 @@ this.workOrderService
       },
       
       {
+        id: "rel_date",
+        name: "Date Lancement",
+        field: "rel_date",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        formatter: Formatters.dateIso ,
+        type: FieldType.dateIso,
+        editor: {
+          model: Editors.date,
+        },
+       
+      },
+      {
+        id: "due_date",
+        name: "Date Echéance",
+        field: "due_date",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        formatter: Formatters.dateIso ,
+        type: FieldType.dateIso,
+        editor: {
+          model: Editors.date,
+        },
+       
+      },
+
+      {
         id: "ord_qty",
         name: "Qte vendu",
         field: "ord_qty",
@@ -492,7 +522,8 @@ this.workOrderService
     
     this.saleOrderService.getSojob().subscribe(
       (response: any) => {   
-        this.mvdataset = response.data
+        this.sos = response.data.soss
+        this.mvdataset = response.data.result
        console.log(this.mvdataset)
        this.mvdataView.setItems(this.mvdataset);
         
