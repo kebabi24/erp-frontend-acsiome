@@ -31,6 +31,13 @@ export class WorkOrderService {
             headers: httpHeaders,
           });
     }
+    public addSoJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createsojob`, data, {
+            headers: httpHeaders,
+          });
+    }
+    
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

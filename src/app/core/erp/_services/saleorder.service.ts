@@ -84,5 +84,9 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/Sod/${id}`,data, { headers: httpHeaders })
     }
+    public getSojob() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL+'/allsojob', { headers: httpHeaders })
+    }
     // DELETE
 }
