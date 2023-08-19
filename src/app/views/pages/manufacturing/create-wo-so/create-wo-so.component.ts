@@ -142,6 +142,13 @@ error = false;
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
+
+  gammes: [];
+  columnDefinitionsgamme: Column[] = [];
+  gridOptionsgamme: GridOption = {};
+  gridObjgamme: any;
+  angularGridgamme: AngularGridInstance;
+
   constructor(
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
@@ -157,6 +164,7 @@ error = false;
     private psService: PsService,
     private saleOrderService: SaleOrderService,
     private workOrderService: WorkOrderService,
+    private workRoutingService: WorkRoutingService,
   ) {
     config.autoClose = true;
     
@@ -418,8 +426,27 @@ this.workOrderService
         width: 80,
         filterable: false,
         type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+       
       },
-      
+      {
+        id: "mvid",
+        field: "cmvid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          let element: HTMLElement = document.getElementById(
+            "openGammesGrid"
+          ) as HTMLElement;
+          element.click();
+        },
+      },
+
       {
         id: "rel_date",
         name: "Date Lancement",
@@ -446,13 +473,54 @@ this.workOrderService
         editor: {
           model: Editors.date,
         },
+      },
+
+      {
+        id: "queue_eff",
+        name: "Ordre",
+        field: "queue_eff",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.dateIso,
+        editor: {
+          model: Editors.integer,
+        },
        
       },
 
       {
         id: "ord_qty",
-        name: "Qte vendu",
+        name: "Qte Commandée",
         field: "ord_qty",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+      },
+
+      {
+        id: "qtyoh",
+        name: "Qte Stock",
+        field: "qtyoh",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+      },
+      {
+        id: "sfty_qty",
+        name: "Stock Sécurité",
+        field: "sfty_qty",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.float,
+      },
+      {
+        id: "qtylanch",
+        name: "Qte on Production",
+        field: "qtylanch",
         sortable: true,
         width: 50,
         filterable: false,
@@ -460,7 +528,7 @@ this.workOrderService
       },
       {
         id: "prod_qty",
-        name: "Qte Prévu",
+        name: "Qte à Fabriquée",
         field: "prod_qty",
         sortable: true,
         width: 50,
@@ -519,8 +587,9 @@ this.workOrderService
     
 
  console.log(this.user)
-    
-    this.saleOrderService.getSojob().subscribe(
+ const controls = this.woForm.controls
+    const site = controls.site.value
+    this.saleOrderService.getSojob({site}).subscribe(
       (response: any) => {   
         this.sos = response.data.soss
         this.mvdataset = response.data.result
@@ -928,5 +997,106 @@ this.workOrderService
   //   this.prepareGridvend();
   //   this.modalService.open(contentvend, { size: "lg" });
   // }
+
   
+  handleSelectedRowsChangedgamme(e, args) {
+    let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+    
+    if (Array.isArray(args.rows) && this.gridObjgamme) {
+      args.rows.map((idx) => {
+        const item = this.gridObjgamme.getDataItem(idx);
+    console.log(item)
+    updateItem.gamme = item.ro_routing;
+      
+    this.mvgridService.updateItem(updateItem);
+         
+      });
+    }
+  }
+
+  angularGridReadygamme(angularGrid: AngularGridInstance) {
+    this.angularGridgamme = angularGrid;
+    this.gridObjgamme = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridgamme() {
+    this.columnDefinitionsgamme = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+
+        minWidth: 50,
+        maxWidth: 50,
+      },
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ro_routing",
+        name: "Gamme",
+        field: "ro_routing",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ro_desc",
+        name: "Designation",
+        field: "ro_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+     
+
+
+    ];
+
+    this.gridOptionsgamme = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.workRoutingService
+      .getAllDistinct()
+      .subscribe((response: any) => (this.gammes = response.data));
+  }
+  opengamme(content) {
+    this.prepareGridgamme();
+    this.modalService.open(content, { size: "lg" });
+  }
+
 }
