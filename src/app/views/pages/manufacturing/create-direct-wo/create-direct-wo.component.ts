@@ -144,6 +144,12 @@ export class CreateDirectWoComponent implements OnInit {
   rctwostat: any
   ro_rollup:  any[] = [];
   emp_shift: any[] = [];
+
+
+  product_colors: any[] = [];
+  product_types: any[] = [];
+
+
   desc2: any
   constructor(
     config: NgbDropdownConfig,
@@ -358,6 +364,8 @@ export class CreateDirectWoComponent implements OnInit {
     this.loadingSubject.next(false);
     
     this.user =  JSON.parse(localStorage.getItem('user'))
+    this.getProductColors()
+    this.getProductTypes()
     this.createForm();
   }
 
@@ -382,6 +390,9 @@ export class CreateDirectWoComponent implements OnInit {
       wo_qty_comp: [this.workOrder.wo_qty_comp ],
       emp_shift: [null],
       wo_serial: [this.workOrder.wo_serial ],
+
+      product_type : ["" , Validators.required],
+      product_color  : ["" , Validators.required],
       
       
     });
@@ -416,6 +427,65 @@ export class CreateDirectWoComponent implements OnInit {
      })
   }
 
+  getProductColors() {
+    this.codeService
+        .getBy({
+              code_fldname: "pt_break_cat",
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            this.product_colors = data
+            if (!data) {
+              alert("Erreur bdd")
+              // controls.wo_site.setValue("");
+            } 
+     })
+  }
+
+  getProductTypes() {
+    this.codeService
+        .getBy({
+              code_fldname: "pt_prod_line",
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            this.product_types = data
+            if (!data) {
+              alert("Erreur bdd")
+              // controls.wo_site.setValue("");
+            } 
+     })
+  }
+
+  searchProduct(){
+    const controls = this.woForm.controls
+    controls.product_type.value
+    controls.product_color.value
+
+    this.itemsService
+        .getBy({
+          pt_prod_line : controls.product_type.value,
+          pt_break_cat : controls.product_color.value,
+          pt_dsgn_grp : 'BROY',
+          pt_drwg_loc : 'INTERNE'
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            if(data){
+              if (data.length  == 0) {
+                alert("Aucun produit n'existe avec le type et la couleur sélectionnés")
+              }else{
+                console.log(data)
+                controls.wo_part.setValue(data[0].pt_part);
+              } 
+            }
+            
+     })
+  }
+  
   onSubmit() {
    // alert("ok")
     const controls = this.woForm.controls
