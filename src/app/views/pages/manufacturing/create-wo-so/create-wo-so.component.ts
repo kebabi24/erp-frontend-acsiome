@@ -323,7 +323,7 @@ error = false;
 
   addNewItem() {
   const controls = this.woForm.controls
-  console.log("sos", this.sos)
+  //console.log("sos", this.sos)
  this.dataset = []
     
  
@@ -429,6 +429,23 @@ this.workOrderService
         editor: {
           model: Editors.text,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          this.workRoutingService.getByOne({ro_routing: args.dataContext.gamme }).subscribe((resp:any)=>{
+            if (resp.data) {
+             
+               
+                 this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext ,  gamme: resp.data.ro_routing })
+               
+            } else {
+
+                      alert("Code Gamme N' existe pas")
+                      this.mvgridService.updateItemById(args.dataContext.id,{...args.dataContext , gamme: null })
+              
+            } 
+          })
+        }  
+       
        
       },
       {
@@ -593,7 +610,7 @@ this.workOrderService
       (response: any) => {   
         this.sos = response.data.soss
         this.mvdataset = response.data.result
-       console.log(this.mvdataset)
+      // console.log(this.mvdataset)
        this.mvdataView.setItems(this.mvdataset);
         
          },
