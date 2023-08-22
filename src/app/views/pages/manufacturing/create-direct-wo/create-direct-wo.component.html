@@ -78,6 +78,7 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="row">
 
                         <div class="form-group col-2">
@@ -117,6 +118,47 @@
 
 
                     </div>
+
+
+                    <!-- SEARCH PRODUCT START  -->
+                    
+                    <div class="row">
+
+                        <div class="form-group col-2">
+                            <label class="form-group ">Type de produit:</label>
+                            <select class="form-control form-control-sm form-control-solid"
+                                formControlName="product_type" id="id_prod_type">
+                                <option value=""></option>
+                                <option *ngFor="let elem of product_types" [value]="elem.code_value">
+                                   {{elem.code_cmmt}}</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Couleur de produit:</label>
+                            <select class="form-control form-control-sm form-control-solid"
+                                formControlName="product_color" id="id_prod_color">
+                                <option value=""></option>
+                                <option *ngFor="let elem of product_colors" [value]="elem.code_value">
+                                     {{elem.code_cmmt}}</option>
+                            </select>
+                        </div>
+
+                    
+                        <div class="form-group col-3">
+                            <label class="form-group">Rechercher</label>
+                            <div class="input-group input-group-sm">
+    
+                                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="searchProduct()">Rechercher </button>
+                            </div>    
+                        </div>
+                    
+
+
+                    </div>
+
+                    <!-- SEARCH PRODUCT END  -->
+
                     <div class="row">
                         <div class="form-group col-2">
                             <label class="form-group">N° Palette :</label>
