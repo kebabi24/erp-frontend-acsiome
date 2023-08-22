@@ -106,7 +106,17 @@ export class ListWoComponent implements OnInit {
            
            
           },
-          
+        
+          {
+            id: "wo_queue_eff",
+            name: "Ordre",
+            field: "wo_queue_eff",
+            sortable: true,
+            width: 50,
+            filterable: false,
+           
+           
+          },
           {
             id: "wo_part",
             name: "Article",
