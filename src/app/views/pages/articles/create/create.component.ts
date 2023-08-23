@@ -112,12 +112,14 @@ export class CreateComponent implements OnInit {
   hasFormErrors3 = false;
   hasFormErrors4 = false;
   hasFormErrors5 = false;
+  hasFormErrors6 = false;
 
   form1: FormGroup;
   form2: FormGroup;
   form3: FormGroup;
   form4: FormGroup;
   form5: FormGroup;
+  form6: FormGroup;
 
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -498,7 +500,15 @@ export class CreateComponent implements OnInit {
       int01: [{ value: this.item.int01, disabled: !this.isExist }],
       int02: [{ value: this.item.int02, disabled: !this.isExist }],
     });
-    
+    this.form6 = this.formBuilder.group({
+      pt_salable: [{ value: this.item.pt_salable, disabled: !this.isExist }],
+      pt_inventoryable: [{ value: this.item.pt_inventoryable, disabled: !this.isExist }],
+      pt_consignable: [{ value: this.item.pt_consignable, disabled: !this.isExist }],
+      pt_returnable: [{ value: this.item.pt_returnable, disabled: !this.isExist }],
+      pt_orderable: [{ value: this.item.pt_orderable, disabled: !this.isExist }],
+      pt_loadable: [{ value: this.item.pt_loadable, disabled: !this.isExist }],
+      pt_promotion: [{ value: this.item.pt_promotion, disabled: !this.isExist }],
+    });
     this.sct1 = new CostSimulation();
     // this.sctForm = this.formBuilder.group({
     //   sct_mtl_tl: [0],
@@ -535,6 +545,7 @@ export class CreateComponent implements OnInit {
     const controls3 = this.form3.controls
     const controls4 = this.form4.controls
     const controls5 = this.form5.controls
+    const controls6 = this.form6.controls
 
     this.itemService
         .getByOne({
@@ -634,6 +645,14 @@ export class CreateComponent implements OnInit {
               controls5.pt_break_cat.enable()
               controls5.int01.enable()
               controls5.int02.enable()
+
+              controls6.pt_salable.enable()
+              controls6.pt_inventoryable.enable()
+              controls6.pt_consignable.enable()
+              controls6.pt_returnable.enable()
+              controls6.pt_orderable.enable()
+              controls6.pt_loadable.enable()
+              controls6.pt_promotion.enable()
         
 
             }
@@ -655,11 +674,14 @@ export class CreateComponent implements OnInit {
     this.hasFormErrors2 = false;
     this.hasFormErrors3 = false;
     this.hasFormErrors4 = false;
-
+    this.hasFormErrors5 = false;
+    this.hasFormErrors6 = false;
     const controls1 = this.form1.controls;
     const controls2 = this.form2.controls;
     const controls3 = this.form3.controls;
     const controls4 = this.form4.controls;
+    const controls5 = this.form5.controls;
+    const controls6 = this.form6.controls;
 
     /** check form */
     if (this.form1.invalid) {
@@ -694,6 +716,22 @@ export class CreateComponent implements OnInit {
       this.hasFormErrors4 = true;
       return;
     }
+    if (this.form5.invalid) {
+      Object.keys(controls5).forEach((controlName) =>
+        controls5[controlName].markAsTouched()
+      );
+
+      this.hasFormErrors5 = true;
+      return;
+    }
+    if (this.form6.invalid) {
+      Object.keys(controls6).forEach((controlName) =>
+        controls3[controlName].markAsTouched()
+      );
+
+      this.hasFormErrors6 = true;
+      return;
+    }
     if (this.error) {
       this.hasFormErrors1 = true;
       return;
@@ -714,6 +752,7 @@ export class CreateComponent implements OnInit {
     const controls3 = this.form3.controls;
     const controls4 = this.form4.controls;
     const controls5 = this.form5.controls;
+    const controls6 = this.form6.controls;
 
     const _item = new Item();
     _item.pt_part = controls1.pt_part.value;
@@ -812,6 +851,13 @@ export class CreateComponent implements OnInit {
 
 
 
+    _item.pt_salable = controls6.pt_salable.value;
+    _item.pt_inventoryable = controls6.pt_inventoryable.value;
+    _item.pt_consignable = controls6.pt_consignable.value;
+    _item.pt_returnable = controls6.pt_returnable.value;
+    _item.pt_orderable = controls6.pt_orderable.value;
+    _item.pt_loadable = controls6.pt_loadable.value;
+    _item.pt_promotion = controls6.pt_promotion.value;
 
 
     return _item;
