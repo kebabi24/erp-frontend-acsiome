@@ -559,6 +559,10 @@ export class MenuConfig {
               page: "/sales/create-project-invoice",
             },
             {
+              title: "Imputation Facture Projet",
+              page: "/sales/imput-project-invoice",
+            },
+            {
               title: "Impression Facture en Attente ",
               page: "/sales/print-invoice",
             },

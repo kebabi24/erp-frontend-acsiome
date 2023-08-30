@@ -76,6 +76,7 @@ import { ListSoEditComponent } from './list-so-edit/list-so-edit.component';
 import { ListInvoicesComponent } from './list-invoices/list-invoices.component';
 import { ListPaiementMobComponent } from './list-paiement-mob/list-paiement-mob.component';
 import { ListVisitMobComponent } from './list-visit-mob/list-visit-mob.component';
+import { ImputProjectInvoiceComponent } from './imput-project-invoice/imput-project-invoice.component';
 
 
 const routes: Routes = [
@@ -182,13 +183,17 @@ const routes: Routes = [
             path: "list-visit-mob",
             component: ListVisitMobComponent,
           },
+          {
+            path: "imput-project-invoice",
+          component: ImputProjectInvoiceComponent,
+          },
           
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent],
     imports: [
         CommonModule,
         HttpClientModule,

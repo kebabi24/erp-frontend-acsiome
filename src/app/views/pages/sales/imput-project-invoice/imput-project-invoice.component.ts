@@ -69,12 +69,13 @@ import {
 import { DecimalPipe } from "@angular/common";
 
 @Component({
-  selector: 'kt-input-invoice',
-  templateUrl: './input-invoice.component.html',
-  styleUrls: ['./input-invoice.component.scss']
+  selector: 'kt-imput-project-invoice',
+  templateUrl: './imput-project-invoice.component.html',
+  styleUrls: ['./imput-project-invoice.component.scss']
 })
-export class InputInvoiceComponent implements OnInit {
+export class ImputProjectInvoiceComponent implements OnInit {
 
+  
   invoiceOrder: InvoiceOrder;
   inventoryTransaction: InventoryTransaction;
   ihForm: FormGroup;
@@ -514,6 +515,8 @@ export class InputInvoiceComponent implements OnInit {
     this.totForm = this.totFB.group({
   //    so__chr01: [this.invoiceOrder.ih__chr01],
       tht: [{value: 0.00 , disabled: true}],
+      disc_glb : [{value: 0.00 , disabled: true}],
+      transport:  [{value: 0.00 , disabled: true}],
       tva: [{value: 0.00 , disabled: true}],
       timbre: [{value: 0.00 , disabled: true}],
       ttc: [{value: 0.00 , disabled: true}],
@@ -678,8 +681,12 @@ export class InputInvoiceComponent implements OnInit {
     
     _ih.ih_cr_terms = controls.ih_cr_terms.value;
     _ih.ih_amt = controlstot.tht.value;
+    _ih.ih_disc_glb = controlstot.disc_glb.value;
+    
+    _ih.ih_transport = controlstot.transport.value;
+    
     _ih.ih_tax_amt = controlstot.tva.value;
-    _ih.ih_trl1_amt = controlstot.timbre.value;
+    _ih.ih_trl3_amt = controlstot.timbre.value;
 
 
     
@@ -816,9 +823,11 @@ var j = 0
               controls.ih_nbr.setValue(this.invoiceTemp.ith_nbr )
               controls.ih_bill.setValue(this.invoiceTemp.ith_bill)
               controlst.tht.setValue(Number(this.invoiceTemp.ith_amt).toFixed(2));
+              controlst.disc_glb.setValue(Number(this.invoiceTemp.ith_disc_glb).toFixed(2));
+              controlst.transport.setValue(Number(this.invoiceTemp.ith_transport).toFixed(2));
               controlst.tva.setValue(Number(this.invoiceTemp.ith_tax_amt).toFixed(2));
               controlst.timbre.setValue(Number(this.invoiceTemp.ith_trl1_amt).toFixed(2));
-              let ttc = Number(this.invoiceTemp.ith_amt) + Number(this.invoiceTemp.ith_tax_amt) + Number(this.invoiceTemp.ith_trl1_amt)
+              let ttc = Number(this.invoiceTemp.ith_amt) + Number(this.invoiceTemp.ith_tax_amt) + Number(this.invoiceTemp.ith_trl1_amt) + this.invoiceTemp.ith_transport - (Number(this.invoiceTemp.ith_amt) * Number(this.invoiceTemp.ith_disc_glb) / 100 )
               controlst.ttc.setValue(ttc.toFixed(2));
               
               
@@ -1279,8 +1288,8 @@ this.cfdataset.push(
 })
 
   }
-  console.log("timbre" ,this.invoiceOrder.ih_trl1_amt)
-if(this.invoiceOrder.ih_trl1_amt != 0) {
+  console.log("timbre" ,this.invoiceOrder.ih_trl3_amt)
+if(this.invoiceOrder.ih_trl3_amt != 0) {
   this.codeService.getBy({ code_fldname: "cm_cr_terms", code_value: "ES"  }).subscribe(
     (res: any) => {
   console.log(res.data)
