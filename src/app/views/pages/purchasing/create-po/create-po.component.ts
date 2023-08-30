@@ -56,6 +56,7 @@ import { round } from 'lodash';
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
+import { Console } from "console";
 
 
 @Component({
@@ -1546,7 +1547,9 @@ changeTax(){
     const vp_vend = controls.po_vend.value;
 
     if (Array.isArray(args.rows) && this.gridObj5) {
-      args.rows.map((idx) => {
+      this.dataset = []
+      args.rows.map((idx) => 
+      {
         const item = this.gridObj5.getDataItem(idx);
         controls.po_req_id.setValue(item.rqm_nbr || "");
 
@@ -1584,12 +1587,13 @@ changeTax(){
                     controls.po_vend.setValue(this.vpServer.vp_vend);
                     this.providersService
                       .getBy({ vd_addr: this.vpServer.vp_vend })
-                      .subscribe((res: any) => (this.provider = res.data));
+                      .subscribe((res: any) => {(this.provider = res.data);
                     controls.po_req_id.setValue(this.vpServer.vp_rqm_nbr);
                     controls.po_curr.setValue(this.vpServer.vp_curr);
                     this.deviseService.getBy({cu_curr:this.vpServer.vp_curr}).subscribe((resc:any)=>{  
                       this.curr = resc.data
                    })
+                  })
             
                     for (const object in details) {
                       const detail = details[object];
@@ -1639,17 +1643,42 @@ changeTax(){
                       });
                     }
                   } else {
+                    const date = new Date()
+
+                    this.date = controls.po_ord_date.value
+                    ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
+                    : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+              
                     controls.po_vend.setValue(this.requistionServer.rqm_vend);
                     this.providersService
                       .getBy({ vd_addr: this.requistionServer.rqm_vend })
-                      .subscribe((res: any) => (this.provider = res.data));
-    
+                      .subscribe((res: any) =>{
+                        this.provider = res.data;
+                     console.log(res.data)
+                      console.log("provider", this.provider.vd_cr_tems)
+                     controls.po_cr_terms.setValue(this.provider.vd_cr_terms)
+                     controls.po_curr.setValue(this.provider.vd_curr || "");
+                     controls.po_taxable.setValue(this.provider.address.ad_taxable || "");
+                     controls.po_taxc.setValue(this.provider.address.ad_taxc || "");
+
+                     if (this.provider.vd_curr == 'DA'){
+                      controls.po_ex_rate.setValue(1)
+                      controls.po_ex_rate2.setValue(1)
+            
+                    } else {
+                     
+                      this.deviseService.getExRate({exr_curr1:this.provider.vd_curr, exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{  
+                       controls.po_ex_rate.setValue(res.data.exr_rate)
+                       controls.po_ex_rate2.setValue(res.data.exr_rate2)
+                      
+                    })
+                        }
                       this.deviseService.getBy({cu_curr:this.provider.vd_curr}).subscribe((resc:any)=>{  
                         this.curr = resc.data
                      })
-              
+                    })
                     for (const object in det1) {
-                      console.log(details[object]);
+                      console.log("hna",details[object]);
                       const detail = details[object];
                       this.gridService.addItem(
                         {
@@ -1658,8 +1687,8 @@ changeTax(){
                           pod_req_nbr: item.rqm_nbr,
                           pod_part: detail.rqd_part,
                           cmvid: "",
-                          desc: "",
-                          pod_qty_ord: 0,
+                          desc: detail.rqd_desc,
+                          pod_qty_ord: detail.rqd_req_qty,
                           pod_um: detail.item.pt_um,
                           pod_price: 0,
                           pod_disc_pct: 0,
@@ -1679,7 +1708,7 @@ changeTax(){
                         pod_req_nbr: item.rqm_nbr,
                         pod_part: detail.rqd_part,
                         cmvid: "",
-                        desc: "",
+                        desc:  detail.rqd_desc,
                         pod_qty_ord: 0,
                         pod_um: detail.item.pt_um,
                         pod_price: 0,
@@ -1786,10 +1815,10 @@ changeTax(){
         // for example, display the expand icon only on every 2nd row
         // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
-      multiSelect: false,
+      multiSelect: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: true,
+        selectActiveRow: false,
       },
     };
 
@@ -2362,7 +2391,7 @@ calculatetot(){
 
      console.log(tva)
      if(controlsso.po_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-       if (timbre > 2500) { timbre = 2500} } 
+       if (timbre > 10000) { timbre = 10000} } 
   
    }
  ttc = round(tht + tva + timbre,2)

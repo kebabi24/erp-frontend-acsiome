@@ -2459,7 +2459,7 @@ calculatetot(){
        
             
             if(controlsso.so_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-              if (timbre > 2500) { timbre = 2500} } 
+              if (timbre > 10000) { timbre = 10000} } 
          
           }
         ttc = round(tht + tva + timbre,2)

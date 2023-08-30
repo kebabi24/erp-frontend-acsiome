@@ -52,7 +52,7 @@ import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 import { UnplanifiedReceptComponent } from './unplanified-recept/unplanified-recept.component';
 import { InventoryListComponent } from './inventory-list/inventory-list.component';
-import { LocationDetailService, SequenceService }  from '../../../core/erp';
+import { DomainService, LocationDetailService, SequenceService }  from '../../../core/erp';
 import { PoReceipComponent } from './po-receip/po-receip.component';
 import {PurchaseOrderService, 
         TransferService,
@@ -204,6 +204,7 @@ providers: [
   RequisitionService,
   UsersService,
   LabelService,
+  DomainService
 ],
 })
 export class InventoryTransactionModule { }
