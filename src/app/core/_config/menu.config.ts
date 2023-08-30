@@ -674,6 +674,10 @@ export class MenuConfig {
               page: "/manufacturing/create-order",
             },
             {
+              title: "Création des OFs à partir des Commandes",
+              page: "/manufacturing/create-wo-so",
+            },
+            {
               title: "List des OFs",
               page: "/manufacturing/list-wo",
             },

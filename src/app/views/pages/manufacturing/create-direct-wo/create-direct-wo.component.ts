@@ -60,6 +60,7 @@ import {
   MesureService,
   LabelService,
   Label,
+  EmployeService,
 } from "../../../../core/erp";
 
 @Component({
@@ -144,6 +145,12 @@ export class CreateDirectWoComponent implements OnInit {
   rctwostat: any
   ro_rollup:  any[] = [];
   emp_shift: any[] = [];
+
+
+  product_colors: any[] = [];
+  product_types: any[] = [];
+
+shift: any
   desc2: any
   constructor(
     config: NgbDropdownConfig,
@@ -170,6 +177,7 @@ export class CreateDirectWoComponent implements OnInit {
     private requisitionService: RequisitionService,
     private locationDetailService: LocationDetailService,
     private labelService : LabelService,
+    private employeService: EmployeService
   ) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true })
@@ -177,7 +185,7 @@ export class CreateDirectWoComponent implements OnInit {
     this.codeService
       .getBy({ code_fldname: "emp_shift" })
       .subscribe((response: any) => (this.emp_shift = response.data));
-    
+     
     this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -211,14 +219,14 @@ export class CreateDirectWoComponent implements OnInit {
         maxWidth: 50,
         selectable: true,
       },
-      {
-        id: "tr_part",
-        name: "Article",
-        field: "tr_part",
-        sortable: true,
-        width: 50,
-        filterable: false,
-      },
+      // {
+      //   id: "tr_part",
+      //   name: "Article",
+      //   field: "tr_part",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      // },
 
       {
         id: "desc",
@@ -229,7 +237,14 @@ export class CreateDirectWoComponent implements OnInit {
         filterable: false,
       },
       
-      
+      {
+        id: "break",
+        name: "Couleur",
+        field: "break",
+        sortable: true,
+        width: 100,
+        filterable: false,
+      },
       {
         id: "tr_serial",
         name: "Lot/Serie",
@@ -240,16 +255,16 @@ export class CreateDirectWoComponent implements OnInit {
 
       },
       
-      {
-          id: "tr_loc",
-          name: "Empl",
-          field: "tr_loc",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          type: FieldType.string,
+      // {
+      //     id: "tr_loc",
+      //     name: "Empl",
+      //     field: "tr_loc",
+      //     sortable: true,
+      //     width: 80,
+      //     filterable: false,
+      //     type: FieldType.string,
           
-      },
+      // },
       {
           id: "tr_qty_loc",
           name: "QTE",
@@ -271,34 +286,34 @@ export class CreateDirectWoComponent implements OnInit {
       },
     
    
-    {
-      id: "tr_um_conv",
-      name: "Conv UM",
-      field: "tr_um_conv",
-      sortable: true,
-      width: 80,
-      filterable: false,
-     // editor: {
-     //     model: Editors.float,
-      //},
+    // {
+    //   id: "tr_um_conv",
+    //   name: "Conv UM",
+    //   field: "tr_um_conv",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //  // editor: {
+    //  //     model: Editors.float,
+    //   //},
       
-    },
+    // },
     
-      {
-          id: "tr_price",
-          name: "Prix unitaire",
-          field: "tr_price",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          //type: FieldType.float,
-          formatter: Formatters.decimal,
+      // {
+      //     id: "tr_price",
+      //     name: "Prix unitaire",
+      //     field: "tr_price",
+      //     sortable: true,
+      //     width: 80,
+      //     filterable: false,
+      //     //type: FieldType.float,
+      //     formatter: Formatters.decimal,
           
-      },
+      // },
               
       {
         id: "tr_ref",
-        name: "Palette",
+        name: "BIG BAG",
         field: "tr_ref",
         sortable: true,
         width: 80,
@@ -315,17 +330,17 @@ export class CreateDirectWoComponent implements OnInit {
         width: 80,
         filterable: false,
       },
-      {
-        id: "tr_expire",
-        name: "Expire",
-        field: "tr_expire",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.dateIso,
+      // {
+      //   id: "tr_expire",
+      //   name: "Expire",
+      //   field: "tr_expire",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.dateIso,
        
         
-      },
+      // },
     ];
 
     this.gridOptions = {
@@ -358,6 +373,9 @@ export class CreateDirectWoComponent implements OnInit {
     this.loadingSubject.next(false);
     
     this.user =  JSON.parse(localStorage.getItem('user'))
+   
+    this.getProductColors()
+    this.getProductTypes()
     this.createForm();
   }
 
@@ -366,6 +384,7 @@ export class CreateDirectWoComponent implements OnInit {
     this.loadingSubject.next(false);
     this.workOrder = new WorkOrder();
     const date = new Date;
+    console.log(this.shift, "shiftcreate")
     this.woForm = this.woFB.group({
       wo_ord_date: [{
         year:date.getFullYear(),
@@ -380,13 +399,25 @@ export class CreateDirectWoComponent implements OnInit {
       ref: [{value:null,disabled:true} ],
 
       wo_qty_comp: [this.workOrder.wo_qty_comp ],
-      emp_shift: [null],
+      emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial ],
+
+      product_type : ["" , Validators.required],
+      product_color  : ["" , Validators.required],
       
       
     });
     const controls = this.woForm.controls
     controls.wo_site.setValue(this.user.usrd_site)
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    
+    this.employeService.getBy({emp_userid : this.user.usrd_code}).subscribe((respuser: any)=>{
+      this.shift = respuser.data[0].emp_shift
+      controls.emp_shift.setValue(this.shift)
+      console.log("shift", this.shift)
+    })    
+    
+
   }
   //reste form
   reset() {
@@ -416,6 +447,66 @@ export class CreateDirectWoComponent implements OnInit {
      })
   }
 
+  getProductColors() {
+    this.codeService
+        .getBy({
+              code_fldname: "pt_break_cat",
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            this.product_colors = data
+            if (!data) {
+              alert("Erreur bdd")
+              // controls.wo_site.setValue("");
+            } 
+     })
+  }
+
+  getProductTypes() {
+    this.codeService
+        .getBy({
+              code_fldname: "pt_prod_line",
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            this.product_types = data
+            if (!data) {
+              alert("Erreur bdd")
+              // controls.wo_site.setValue("");
+            } 
+     })
+  }
+
+  searchProduct(){
+    const controls = this.woForm.controls
+    controls.product_type.value
+    controls.product_color.value
+
+    this.itemsService
+        .getBy({
+          pt_prod_line : controls.product_type.value,
+          pt_break_cat : controls.product_color.value,
+          pt_dsgn_grp : 'BROY',
+          pt_drwg_loc : 'INTERNE'
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            if(data){
+              if (data.length  == 0) {
+                alert("Aucun produit n'existe avec le type et la couleur sélectionnés")
+              }else{
+                console.log(data)
+                controls.wo_part.setValue(data[0].pt_part);
+                controls.desc.setValue(data[0].pt_desc1)
+              } 
+            }
+            
+     })
+  }
+  
   onSubmit() {
    // alert("ok")
     const controls = this.woForm.controls
@@ -1539,12 +1630,16 @@ if (item.pt_rctwo_active) {
         this.sct = respo.data
         console.log(this.sct)
     
-
+        this.codeService.getBy({code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat  }).subscribe(
+          (rescode: any) => {
+            console.log(rescode)
+            if (rescode.data.length > 0) {
      this.gridService.addItem(
       {
         id: this.dataset.length + 1,
         tr_line: this.dataset.length + 1,
         tr_part: this.lddet.ld_part,
+        break : respopart.data.pt_break_cat,
         cmvid: "",
         desc: respopart.data.pt_desc1,
         tr_qty_loc: this.lddet.ld_qty_oh,
@@ -1560,7 +1655,11 @@ if (item.pt_rctwo_active) {
       },
       { position: "bottom" }
     );
- 
+    }
+    else {
+      alert("Couleur ne correspond pas au produit ")
+    }
+  });
      });
     }); 
  

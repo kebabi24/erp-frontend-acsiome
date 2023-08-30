@@ -36,7 +36,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { Employe, EmployeService, JobService , CodeService, SiteService} from "../../../../core/erp"
+import { Employe, EmployeService, JobService , CodeService, SiteService,UsersService} from "../../../../core/erp"
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
@@ -71,6 +71,12 @@ export class CreateEmployeeComponent implements OnInit {
     gridOptionssite: GridOption = {}
     gridObjsite: any
     angularGridsite: AngularGridInstance
+
+    datauserid: []
+    columnDefinitionsuserid: Column[] = []
+    gridOptionsuserid: GridOption = {}
+    gridObjuserid: any
+    angularGriduserid: AngularGridInstance
     
     datashift: []
     columnDefinitionsshift: Column[] = []
@@ -124,6 +130,7 @@ export class CreateEmployeeComponent implements OnInit {
       private siteService: SiteService,
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
+      private userService: UsersService,
     
       
   ) {
@@ -426,7 +433,7 @@ createForm() {
       emp_contact_adress: [{ value: this.employe.emp_contact_adress, disabled: !this.isExist }],
       emp_contact_tel: [{ value: this.employe.emp_contact_tel, disabled: !this.isExist }],
       emp_parent_liaison: [{ value: this.employe.emp_parent_liaison, disabled: !this.isExist }],
-
+      emp_userid: [{ value: this.employe.emp_userid, disabled: !this.isExist }],
 
   })
 }
@@ -476,6 +483,7 @@ onChangeCode() {
               controls.emp_contact_adress.enable()
               controls.emp_contact_tel.enable()
               controls.emp_parent_liaison.enable()
+              controls.emp_userid.enable()
         
               
 
@@ -636,6 +644,7 @@ onSubmit() {
       _employe.emp_contact_adress = controls.emp_contact_adress.value
       _employe.emp_contact_tel = controls.emp_contact_tel.value
       _employe.emp_parent_liaison = controls.emp_parent_liaison.value
+      _employe.emp_userid = controls.emp_userid.value
       
 
       return _employe
@@ -1149,4 +1158,109 @@ handleSelectedRowsChanged2(e, args) {
   }
 }
 
+handleSelectedRowsChangeduserid(e, args) {
+  const controls = this.empForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjuserid) {
+    args.rows.map((idx) => {
+      const item = this.gridObjuserid.getDataItem(idx);
+      console.log(item);
+      controls.emp_userid.setValue(item.usrd_code || "");
+    });
+  }
+}
+
+angularGridReadyuserid(angularGrid: AngularGridInstance) {
+  this.angularGriduserid = angularGrid;
+  this.gridObjuserid = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGriduserid() {
+  this.columnDefinitionsuserid = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "usrd_code",
+      name: "code user",
+      field: "usrd_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "usrd_name",
+      name: "nom",
+      field: "usrd_name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionsuserid = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.userService.getAllUsers().subscribe((response: any) => (this.datauserid = response.data));
+}
+openuserid(content) {
+  this.prepareGriduserid();
+  this.modalService.open(content, { size: "lg" });
+}
+onChangeUserid() {
+  const controls = this.empForm.controls; // chof le champs hada wesh men form rah
+  const usrd_code = controls.emp_userid.value;
+ 
+
+  this.userService.getByOne({ usrd_code }).subscribe(
+    (res: any) => {
+      console.log(res);
+      
+      if (res.data == null) {
+        this.layoutUtilsService.showActionNotification(
+          "cet utilisateur n'existe pas!",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.error = true;
+        controls.emp_userid.setValue(null)
+        document.getElementById("userid").focus();
+      }
+    },
+    (error) => console.log(error)
+  );
+}
 }

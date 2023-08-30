@@ -1,0 +1,117 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="false" title="Création OF " [class]="'card-head-lg'" >
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button-->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="woForm">
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    {{message}}
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2" >
+                        <label class="form-group">Site: *</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="site" (change)="onChangesite()" id="site" 
+                                [className]="woForm.controls['site'].errors && (woForm.controls['site'].dirty || woForm.controls['site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="woForm.controls['site'].errors && (woForm.controls['site'].dirty || woForm.controls['site'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="180" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
+                     (onAngularGridCreated)="mvGridReady($event)">
+                    
+                    </angular-slickgrid>
+                </div>
+
+                <br>
+                <div class="row">
+                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Lancer OFs</button>
+                </div>
+                <div class="row">
+                    <angular-slickgrid class="col-12"   gridId="mGrid"
+                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                        (onAngularGridCreated)="gridReady($event)">
+                    </angular-slickgrid>
+                </div>
+            
+            </form>
+           
+           
+
+        </div>
+
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Site </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
+                            [columnDefinitions]="columnDefinitionssite"
+                            (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="datasite">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
+                modal</button>
+        </div>
+        <div>
+            <ng-template #contentgamme let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Gamme </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionsgamme"
+                            (onAngularGridCreated)="angularGridReadygamme($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedgamme($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsgamme" [dataset]="gammes">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openGammesGrid" class="btn btn-primary" (click)="opengamme(contentgamme)">Launch demo
+                modal</button>
+        </div>
+
+        
+    </kt-portlet-body>
+</kt-portlet>
+

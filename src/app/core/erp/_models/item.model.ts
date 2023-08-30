@@ -187,4 +187,11 @@ export class Item extends BaseModel{
     pt_atp_enforcement: String
     pt_atp_family: Boolean
     pt_domain: String
+    pt_salable      : Boolean
+    pt_inventoryable: Boolean
+    pt_consignable  : Boolean
+    pt_returnable   : Boolean
+    pt_orderable    : Boolean
+    pt_loadable     : Boolean
+    pt_promotion    : Boolean
 }

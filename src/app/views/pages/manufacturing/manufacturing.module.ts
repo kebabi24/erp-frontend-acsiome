@@ -63,7 +63,7 @@ import { NgxPermissionsModule } from "ngx-permissions";
 import {BomService, PsService, ItemService,SiteService,WorkOrderService, SequenceService,
         LocationService, MesureService, LocationDetailService, WorkOrderDetailService,CostSimulationService,RequisitionService,
         AddressService,InventoryTransactionService,InventoryStatusService,ReasonService,WorkCenterService,
-        WorkRoutingService, OperationHistoryService, WoroutingService,BomPartService,CodeService, LabelService, SaleOrderService} from '../../../core/erp';
+        WorkRoutingService, OperationHistoryService, WoroutingService,BomPartService,CodeService, LabelService, SaleOrderService, EmployeService, UsersService} from '../../../core/erp';
 
         
 
@@ -87,6 +87,7 @@ import { RoCostComponent } from './ro-cost/ro-cost.component';
 import { BomCostComponent } from './bom-cost/bom-cost.component';
 import { CalcCoutWoComponent } from './calc-cout-wo/calc-cout-wo.component';
 import { CostpriceListComponent } from './costprice-list/costprice-list.component';
+import { CreateWoSoComponent } from './create-wo-so/create-wo-so.component';
 
 
 
@@ -197,6 +198,11 @@ const routes: Routes = [
     path: 'costprice-list',
     component: CostpriceListComponent
   },
+  {
+    path: 'create-wo-so',
+    component: CreateWoSoComponent
+  },
+  
 ]
 
   @NgModule({
@@ -210,7 +216,7 @@ const routes: Routes = [
       CreateNomenclatureComponent, 
       CreateCauseComponent, 
       WorctEntryComponent, 
-      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent
+      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent
     ],
 
     imports: [
@@ -272,6 +278,8 @@ const routes: Routes = [
       RequisitionService,
       LabelService,
       SaleOrderService,
+      EmployeService,
+     
   ],
   
     entryComponents: [
