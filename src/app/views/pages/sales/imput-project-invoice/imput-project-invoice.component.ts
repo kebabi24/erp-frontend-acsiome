@@ -686,7 +686,7 @@ export class ImputProjectInvoiceComponent implements OnInit {
     _ih.ih_transport = controlstot.transport.value;
     
     _ih.ih_tax_amt = controlstot.tva.value;
-    _ih.ih_trl3_amt = controlstot.timbre.value;
+    _ih.ih_trl1_amt = controlstot.timbre.value;
 
 
     
