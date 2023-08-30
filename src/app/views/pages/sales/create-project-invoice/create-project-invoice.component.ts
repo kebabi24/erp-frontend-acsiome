@@ -50,6 +50,9 @@ export class CreateProjectInvoiceComponent implements OnInit {
   trns: number = 0;
   rmsGl: number = 0;
   fDays: boolean;
+  invoiceYear: any;
+  invoiceMonth: any;
+  invoiceDate: any;
   invoiceOrderTemp: InvoiceOrderTemp;
   soForm: FormGroup;
   totForm: FormGroup;
@@ -222,6 +225,10 @@ export class CreateProjectInvoiceComponent implements OnInit {
   generateFacturePDF() {
     console.log(this.dataset);
     const controls = this.soForm.controls;
+    console.log("dateeeeeeeeeeeeeeeeee", controls.ith_inv_date.value);
+    this.invoiceYear = controls.ith_inv_date.value.year;
+    this.invoiceMonth = controls.ith_inv_date.value.month;
+    this.invoiceDate = controls.ith_inv_date.value ? `${controls.ith_inv_date.value.year}/${controls.ith_inv_date.value.month}/${controls.ith_inv_date.value.day}` : null;
     setTimeout(function () {
       const pageWidth = 210;
       const pageHeight = 297;
@@ -275,7 +282,9 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
   onChangeDays() {
     let tab = [];
+    let newDetails;
     const controls = this.soForm.controls;
+
     const val = controls.fDays.value;
     this.fDays = val;
     if (this.fDays) {
@@ -283,20 +292,61 @@ export class CreateProjectInvoiceComponent implements OnInit {
     } else {
       console.log(this.fDays);
     }
-    // console.log(this.dataView.setItems(this.datasetPrint));
-    let newDetails;
-    for (let i of this.datasetPrint) {
-      console.log(typeof i.itdh_qty_cons);
-      console.log(typeof i.idth_qty_ret);
-      console.log(typeof i.idth_qty_ret);
+    const pm_code = controls.ith_po.value;
 
-      newDetails = { ...i, itdh_qty_cons: this.fDays ? Number(i.itdh_qty_cons) - Number(i.idth_qty_ret) : Number(i.idth_qty_ret) - Number(i.idth_qty_ret) };
-      tab.push(newDetails);
-    }
-    this.dataset = tab;
-    this.dataView.setItems(this.dataset);
-    console.log("tab", tab);
-    this.calculatetot();
+    this.projectService.getBy({ pm_code }).subscribe((res: any) => {
+      const { project, details } = res.data;
+      console.log(project, details);
+      if (project != null) {
+        controls.ith_cust.setValue(project.pm_cust);
+        this.saleOrderService.getBy({ so_po: project.pm_code }).subscribe((res: any) => {
+          const { saleOrder, details } = res.data;
+
+          controls.ith_nbr.setValue(saleOrder.so_nbr);
+          controls.ith_curr.setValue(saleOrder.so_curr);
+          controls.ith_cr_terms.setValue(saleOrder.so_cr_terms);
+          controls.ith_taxable.setValue(saleOrder.so_taxable);
+
+          controls.ith_ex_rate.setValue(saleOrder.so_ex_rate);
+          controls.ith_ex_rate2.setValue(saleOrder.so_ex_rate2);
+
+          /* controls.ith_curr.setValue(project.qo_curr)
+        controls.ith_cr_terms.setValue(quoteOrder.qo_cr_terms)
+        controls.ith_taxable.setValue(quoteOrder.qo_taxable)*/
+          this.customersService.getBy({ cm_addr: project.pm_cust }).subscribe((res: any) => {
+            //console.log(res);
+            const { data } = res;
+            this.customer = res.data;
+            localStorage.setItem("customer", JSON.stringify(res.data));
+            controls.name.setValue(this.customer.address.ad_name);
+          });
+          for (const object in details) {
+            const detail = details[object];
+            console.log("detaiiiiiiiiiiiiiil", detail);
+            console.log("days", this.fDays);
+            newDetails = { id: detail.sod_line + 1, itdh_part: detail.sod_part, cmvid: "", desc: detail.sod_desc, itdh_qty_inv: detail.sod_qty_ship - detail.sod_qty_inv, itdh_qty_cons: this.fDays ? detail.sod_qty_cons - detail.sod_qty_val : detail.sod_qty_ret - detail.sod_qty_val, itdh_um: detail.sod_um, itdh_um_conv: detail.sod_um_conv, itdh_price: detail.sod_price, itdh_disc_pct: detail.sod_disc_pct, itdh__chr01: detail.sod__chr01, itdh__chr02: detail.sod__chr02, itdh_site: detail.sod_site, itdh_loc: detail.sod_loc, itdh_type: detail.sod_type, itdh_cc: "", itdh_taxable: detail.sod_taxable, itdh_tax_code: detail.sod_tax_code, itdh_taxc: detail.sod_taxc, itdh_stdby: Number(detail.sod_stndby), itdh_hours: detail.dec01 };
+            tab.push(newDetails);
+          }
+          console.log("taaaaaaaaaaaaaab", tab);
+          this.dataset = tab;
+          this.dataView.setItems(this.dataset);
+          this.calculatetot();
+        });
+      }
+    });
+
+    // for (let i of this.datasetPrint) {
+    //   console.log(typeof i.itdh_qty_cons);
+    //   console.log(typeof i.idth_qty_ret);
+    //   console.log(typeof i.idth_qty_ret);
+
+    //   newDetails = { ...i, itdh_qty_cons: this.fDays ? Number(i.itdh_qty_cons) - Number(i.idth_qty_ret) : Number(i.idth_qty_ret) - Number(i.idth_qty_ret) };
+    //   tab.push(newDetails);
+    // }
+    // this.dataset = tab;
+    // this.dataView.setItems(this.dataset);
+    // console.log("tab", tab);
+    // this.calculatetot();
   }
 
   initGrid() {
@@ -935,7 +985,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
     this.projectService.getBy({ pm_code }).subscribe((res: any) => {
       const { project, details } = res.data;
-      console.log(project);
+      console.log(project, details);
       if (project != null) {
         controls.ith_cust.setValue(project.pm_cust);
         this.saleOrderService.getBy({ so_po: project.pm_code }).subscribe((res: any) => {
@@ -1092,6 +1142,10 @@ export class CreateProjectInvoiceComponent implements OnInit {
   changeRateCurr() {
     const controls = this.soForm.controls; // chof le champs hada wesh men form rah
     const cu_curr = controls.ith_curr.value;
+    console.log("dateeeeeeeeeeeeeeeeee", controls.ith_inv_date.value);
+    this.invoiceYear = controls.ith_inv_date.value.year;
+    this.invoiceMonth = controls.ith_inv_date.value.month;
+    this.invoiceDate = controls.ith_inv_date.value ? `${controls.ith_inv_date.value.year}/${controls.ith_inv_date.value.month}/${controls.ith_inv_date.value.day}` : null;
 
     const date = new Date();
 
