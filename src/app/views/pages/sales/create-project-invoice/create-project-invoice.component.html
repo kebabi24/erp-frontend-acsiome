@@ -226,7 +226,7 @@
           <div class="form-group-sm row">
             <label class="col-9 col-form-label text-right">Remise </label>
             <div class="col-2">
-              <input class="form-control" type="number" style="text-align: right"  formControlName="ith_disc_glb" (change)="calculatetot()" />
+              <input class="form-control" type="number" style="text-align: right" formControlName="ith_disc_glb" (change)="calculatetot()" />
             </div>
           </div>
           <div class="form-group-sm row">
@@ -711,7 +711,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 19.25pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 19.25pt">
           <td style="width: 18.7pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
             <p style="margin-top: 4.95pt; margin-left: 1.5pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
               <strong>{{ data.id }}</strong>
@@ -745,6 +745,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -759,6 +760,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -773,6 +775,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -787,6 +790,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -801,6 +805,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -815,6 +820,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -1136,7 +1142,7 @@
             </td>
           </tr>
 
-          <tr *ngFor="let data of dataset" style="height: 37.2pt">
+          <tr *ngFor="let data of datasetToprint" style="height: 37.2pt">
             <td style="width: 21.68pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 0.4pt; margin-bottom: 0pt; font-size: 11.5pt">
                 <span style="font-family: 'Times New Roman'">&#xa0;</span>
@@ -1163,11 +1169,11 @@
               <p style="margin-top: 0.45pt; margin-bottom: 0pt; font-size: 10.5pt">
                 <span style="font-family: 'Times New Roman'">{{ data.itdh_price * ((data.itdh_qty_cons + data.itdh_stdby) * data.itdh_qty_inv) }}</span>
               </p>
-              <p style="margin-top: 0pt; margin-right: 7pt; margin-bottom: 0pt; text-align: right; font-size: 9.5pt">-</p>
             </td>
           </tr>
 
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
               <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
@@ -1182,6 +1188,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Remise globale </strong>
@@ -1196,6 +1203,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Transport </strong>
@@ -1210,6 +1218,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>RETENUE DE GARANTIE </strong>
@@ -1224,6 +1233,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TVA</strong>
@@ -1238,6 +1248,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL </strong>
@@ -1616,7 +1627,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 37.1pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 37.1pt">
           <td style="width: 23pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0.4pt; margin-bottom: 0pt; font-size: 10pt">
               <span style="font-family: 'Times New Roman'">&#xa0;</span>
@@ -1644,6 +1655,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -1658,6 +1670,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -1672,6 +1685,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -1686,6 +1700,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -1700,6 +1715,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -1714,6 +1730,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -2083,7 +2100,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 41.9pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 41.9pt">
           <td style="width: 24.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
           </td>
@@ -2110,6 +2127,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -2124,6 +2142,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -2138,6 +2157,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -2152,6 +2172,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -2166,6 +2187,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -2180,6 +2202,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -2547,7 +2570,7 @@
             </td>
           </tr>
 
-          <tr *ngFor="let data of dataset" style="height: 24.2pt">
+          <tr *ngFor="let data of datasetToprint" style="height: 24.2pt">
             <td style="width: 20.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
               <p style="margin-top: 5.9pt; margin-left: 5.95pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong
@@ -2575,6 +2598,7 @@
           </tr>
 
           <tr style="height: 13pt">
+            <td colspan="4" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
               <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
@@ -2589,6 +2613,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="4" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Remise globale </strong>
@@ -2603,6 +2628,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="4" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Transport </strong>
@@ -2617,6 +2643,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="4" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>RETENUE DE GARANTIE </strong>
@@ -2631,6 +2658,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="4" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TVA</strong>
@@ -2645,6 +2673,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="4" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL </strong>
@@ -2987,8 +3016,7 @@
           </td>
           <td style="width: 77.72pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0.15pt; margin-left: 18.15pt; margin-bottom: 0pt; font-size: 7.5pt">
-              <strong><span style="font-family: 'Times New Roman'">Prix</span></strong
-              ><strong><span style="font-family: 'Times New Roman'; letter-spacing: -0.15pt"> </span></strong><strong><span style="font-family: 'Times New Roman'">unitaire</span></strong>
+              <strong><span style="font-family: 'Times New Roman'">Prix unitaire</span></strong>
             </p>
           </td>
           <td style="width: 143.62pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
@@ -3019,7 +3047,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 20.5pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 20.5pt">
           <td style="width: 17.27pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 3.4pt; margin-left: 3.65pt; margin-bottom: 0pt; font-size: 10.5pt">
               <strong>{{ data.id }}</strong>
@@ -3040,6 +3068,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="1" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -3054,6 +3083,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="1" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -3068,6 +3098,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="1" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -3082,6 +3113,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="1" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -3096,6 +3128,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="1" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -3110,6 +3143,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="1" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -3454,7 +3488,7 @@
               <p style="margin-top: 0pt; margin-left: 43.5pt; margin-bottom: 0pt; font-size: 11pt">Total.<span style="letter-spacing: -0.05pt"> HT/jour</span></p>
             </td>
           </tr>
-          <tr *ngFor="let data of dataset" style="height: 31.25pt">
+          <tr *ngFor="let data of datasetToprint" style="height: 31.25pt">
             <td style="width: 27.2pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
             </td>
@@ -3473,6 +3507,7 @@
           </tr>
 
           <tr style="height: 13pt">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
               <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
@@ -3487,6 +3522,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Remise globale </strong>
@@ -3501,6 +3537,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Transport </strong>
@@ -3515,6 +3552,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>RETENUE DE GARANTIE </strong>
@@ -3529,6 +3567,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TVA</strong>
@@ -3543,6 +3582,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL </strong>
@@ -3913,7 +3953,7 @@
             </td>
           </tr>
 
-          <tr *ngFor="let data of dataset" style="height: 21pt">
+          <tr *ngFor="let data of datasetToprint" style="height: 21pt">
             <td style="width: 29.25pt; border-style: solid; border-width: 0.75pt; vertical-align: top">
               <p style="margin-top: 5.3pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 8pt">
                 <strong>{{ data.id }}</strong>
@@ -3942,6 +3982,7 @@
           </tr>
 
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
               <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
@@ -3956,6 +3997,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Remise globale </strong>
@@ -3970,6 +4012,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Transport </strong>
@@ -3984,6 +4027,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>RETENUE DE GARANTIE </strong>
@@ -3998,6 +4042,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TVA</strong>
@@ -4012,6 +4057,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="3" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL </strong>
@@ -4406,7 +4452,7 @@
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">&#xa0;</p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 18.5pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 18.5pt">
           <td style="width: 23.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 11pt">{{ data.id }}</p>
           </td>
@@ -4438,6 +4484,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -4452,6 +4499,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -4466,6 +4514,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -4480,6 +4529,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -4494,6 +4544,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -4508,6 +4559,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -4908,7 +4960,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 20.9pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 20.9pt">
           <td style="width: 23pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 3.85pt; margin-left: 0.7pt; margin-bottom: 0pt; text-align: center; font-size: 10pt">
               <strong>{{ data.id }}</strong>
@@ -4939,6 +4991,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -4953,6 +5006,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -4967,6 +5021,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -4981,6 +5036,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -4995,6 +5051,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -5009,6 +5066,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -5374,7 +5432,7 @@
               </p>
             </td>
           </tr>
-          <tr *ngFor="let data of dataset" style="height: 26.15pt">
+          <tr *ngFor="let data of datasetToprint" style="height: 26.15pt">
             <td style="width: 24.45pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 6.25pt; margin-left: 0.75pt; margin-bottom: 0pt; text-align: center; font-size: 10.5pt">
                 <strong>{{ data.id }}</strong>
@@ -5389,7 +5447,8 @@
           </tr>
 
           <tr style="height: 13pt">
-            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
+            <td colspan="2" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
               <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
               </p>
@@ -5403,7 +5462,8 @@
             </td>
           </tr>
           <tr style="height: 13pt">
-            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
+            <td colspan="2" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Remise globale </strong>
               </p>
@@ -5417,7 +5477,8 @@
             </td>
           </tr>
           <tr style="height: 13pt">
-            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
+            <td colspan="2" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Transport </strong>
               </p>
@@ -5431,7 +5492,8 @@
             </td>
           </tr>
           <tr style="height: 13pt">
-            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
+            <td colspan="2" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>RETENUE DE GARANTIE </strong>
               </p>
@@ -5445,7 +5507,8 @@
             </td>
           </tr>
           <tr style="height: 13pt">
-            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
+            <td colspan="2" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TVA</strong>
               </p>
@@ -5459,7 +5522,8 @@
             </td>
           </tr>
           <tr style="height: 13pt">
-            <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
+            <td colspan="1" style="width: 100pt; vertical-align: top"></td>
+            <td colspan="2" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL </strong>
               </p>
@@ -5877,7 +5941,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 15.15pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 15.15pt">
           <td style="width: 22.88pt; border-style: solid; border-width: 0.88pt; vertical-align: top">
             <p style="margin-top: 0.5pt; margin-left: 0.85pt; margin-bottom: 0pt; text-align: center; font-size: 11pt">
               <strong>{{ data.id }}</strong>
@@ -5904,6 +5968,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -5918,6 +5983,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -5932,6 +5998,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -5946,6 +6013,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -5960,6 +6028,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -5974,6 +6043,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="3" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -6348,7 +6418,7 @@
               </p>
             </td>
           </tr>
-          <tr *ngFor="let data of dataset" style="height: 105.1pt">
+          <tr *ngFor="let data of datasetToprint" style="height: 105.1pt">
             <td style="width: 27.2pt; border-style: solid; border-width: 1pt; vertical-align: top">
               <p style="margin-top: 0pt; margin-bottom: 0pt; font-size: 12pt">
                 <span style="font-family: 'Times New Roman'">&#xa0;</span>
@@ -6390,6 +6460,7 @@
           </tr>
 
           <tr style="height: 13pt">
+            <td colspan="2" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
               <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL HORS TAXES</strong>
@@ -6404,6 +6475,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="2" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Remise globale </strong>
@@ -6418,6 +6490,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="2" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>Transport </strong>
@@ -6432,6 +6505,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="2" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>RETENUE DE GARANTIE </strong>
@@ -6446,6 +6520,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="2" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TVA</strong>
@@ -6460,6 +6535,7 @@
             </td>
           </tr>
           <tr style="height: 13pt">
+            <td colspan="2" style="width: 100pt; vertical-align: top"></td>
             <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
               <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
                 <strong>TOTAL </strong>
@@ -6834,7 +6910,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 13.45pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 13.45pt">
           <td style="width: 23.85pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 1.5pt; margin-left: 0.75pt; margin-bottom: 0pt; text-align: center; font-size: 8.5pt">
               <strong
@@ -6860,6 +6936,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -6874,6 +6951,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -6888,6 +6966,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -6902,6 +6981,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -6916,6 +6996,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -6930,6 +7011,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>
@@ -7323,7 +7405,7 @@
             </p>
           </td>
         </tr>
-        <tr *ngFor="let data of dataset" style="height: 26.15pt">
+        <tr *ngFor="let data of datasetToprint" style="height: 26.15pt">
           <td style="width: 31.65pt; border-style: solid; border-width: 1pt; vertical-align: top">
             <p style="margin-top: 6.35pt; margin-left: 0.8pt; margin-bottom: 0pt; text-align: center; font-size: 10pt">
               <strong>{{ data.id }}</strong>
@@ -7347,6 +7429,7 @@
         </tr>
 
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 0.75pt 1.5pt 1.5pt; vertical-align: top">
             <p style="margin-top: 1pt; margin-left: 24.25pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL HORS TAXES</strong>
@@ -7361,6 +7444,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Remise globale </strong>
@@ -7375,6 +7459,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>Transport </strong>
@@ -7389,6 +7474,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>RETENUE DE GARANTIE </strong>
@@ -7403,6 +7489,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TVA</strong>
@@ -7417,6 +7504,7 @@
           </td>
         </tr>
         <tr style="height: 13pt">
+          <td colspan="2" style="width: 100pt; vertical-align: top"></td>
           <td colspan="3" style="width: 125.25pt; border-style: solid; border-width: 1.5pt; vertical-align: top">
             <p style="margin-top: 0.35pt; margin-left: 0.75pt; margin-bottom: 0pt; font-size: 9.5pt">
               <strong>TOTAL </strong>

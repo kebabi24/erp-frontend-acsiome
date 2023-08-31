@@ -20,6 +20,7 @@ import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
 import html2canvas from "html2canvas";
 import { DecimalPipe } from "@angular/common";
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
@@ -68,7 +69,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-
+  datasetToprint: any[];
   sequences: [];
   columnDefinitions1: Column[] = [];
   gridOptions1: GridOption = {};
@@ -224,9 +225,11 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
   generateFacturePDF() {
     console.log(this.dataset);
+
     const controls = this.soForm.controls;
     console.log("dateeeeeeeeeeeeeeeeee", controls.ith_inv_date.value);
     this.invoiceYear = controls.ith_inv_date.value.year;
+    console.log(controls.ith_inv_date.value);
     this.invoiceMonth = controls.ith_inv_date.value.month;
     this.invoiceDate = controls.ith_inv_date.value ? `${controls.ith_inv_date.value.year}/${controls.ith_inv_date.value.month}/${controls.ith_inv_date.value.day}` : null;
     setTimeout(function () {
@@ -758,7 +761,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
       tva: [{ value: 0.0, disabled: true }],
       timbre: [{ value: 0.0, disabled: true }],
       ttc: [{ value: 0.0, disabled: true }],
-      ith_disc_glb: [ 0],
+      ith_disc_glb: [0],
       ith_transport: [0],
       ith_rt_gara: [0],
     });
@@ -1139,12 +1142,16 @@ export class CreateProjectInvoiceComponent implements OnInit {
       (error) => console.log(error)
     );
   }
+  getMonthName(month) {
+    const MonthList = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Décembre"];
+    return MonthList[month];
+  }
   changeRateCurr() {
     const controls = this.soForm.controls; // chof le champs hada wesh men form rah
     const cu_curr = controls.ith_curr.value;
     console.log("dateeeeeeeeeeeeeeeeee", controls.ith_inv_date.value);
     this.invoiceYear = controls.ith_inv_date.value.year;
-    this.invoiceMonth = controls.ith_inv_date.value.month;
+    this.invoiceMonth = this.getMonthName(controls.ith_inv_date.value.month - 1);
     this.invoiceDate = controls.ith_inv_date.value ? `${controls.ith_inv_date.value.year}/${controls.ith_inv_date.value.month}/${controls.ith_inv_date.value.day}` : null;
 
     const date = new Date();
@@ -2536,7 +2543,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     let tva = 0;
     let timbre = 0;
     let ttc = 0;
-    
+
     for (var i = 0; i < this.dataset.length; i++) {
       tht += round(Number(this.dataset[i].itdh_price) * ((100 - this.dataset[i].itdh_disc_pct) / 100) * (Number(this.dataset[i].itdh_qty_inv) * (Number(this.dataset[i].itdh_qty_cons) + Number(this.dataset[i].itdh_stdby))), 2);
 
@@ -2550,102 +2557,97 @@ export class CreateProjectInvoiceComponent implements OnInit {
       }
     }
 
-
     this.tht1 = tht;
 
     this.rmsGr = Number(controls.ith_rt_gara.value);
 
-    console.log(controls.ith_disc_glb.value)
+    console.log(controls.ith_disc_glb.value);
     this.rmsGl = Number(controls.ith_disc_glb.value);
-    console.log(this.rmsGl)
+    console.log(this.rmsGl);
     this.trns = Number(controls.ith_transport.value);
 
-    //this.tht1 = tht - Number(this.tht1) * (this.rmsGl / 100) + this.trns -  Number(this.tht1) * (this.rmsGr / 100) 
+    //this.tht1 = tht - Number(this.tht1) * (this.rmsGl / 100) + this.trns -  Number(this.tht1) * (this.rmsGr / 100)
     if (controlsso.ith_taxable.value == true) {
-      console.log("here", tva)
-  //   console.log(round(Number(this.tht1) * (this.rmsGl / 100) * (cus.cm_taxc / 100), 2));
-    
-    this.taxService.getBy({ tx2_tax_code: cus.address.ad_taxc }).subscribe(
-      (res: any) => {
-        const { data } = res;
-        console.log(data);
-        if (!data) {
-          this.layoutUtilsService.showActionNotification("cette Taxe n'existe pas!", MessageType.Create, 10000, true, true);
-          this.error = true;
-        } else {
-          console.log(this.tht1,tva,this.rmsGl,this.trns,data.tx2_tax_pct)
-   
-          tva = tva - Number(this.tht1) * (Number(Number(this.rmsGl) / 100)) * ((Number(data.tx2_tax_pct) / 100));
-   
-          console.log(tva,"after rmsgl ")
-   
-          tva += round(Number(this.trns) * (data.tx2_tax_pct / 100), 2);
+      console.log("here", tva);
+      //   console.log(round(Number(this.tht1) * (this.rmsGl / 100) * (cus.cm_taxc / 100), 2));
 
-          console.log(tva,"after trns ")
+      this.taxService.getBy({ tx2_tax_code: cus.address.ad_taxc }).subscribe(
+        (res: any) => {
+          const { data } = res;
+          console.log(data);
+          if (!data) {
+            this.layoutUtilsService.showActionNotification("cette Taxe n'existe pas!", MessageType.Create, 10000, true, true);
+            this.error = true;
+          } else {
+            console.log(this.tht1, tva, this.rmsGl, this.trns, data.tx2_tax_pct);
 
-          const thtafter = this.tht1 - (Number(this.tht1) * (this.rmsGl / 100) ) + Number(this.trns); 
-          tva =  tva - Number(thtafter) * (this.rmsGr / 100) * (data.tx2_tax_pct / 100);
-    console.log(tva)
-         // this.tva1 = (round(Number(this.tht1)) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100), 2);
-          console.log("tva",this.tva1, data.tx2_tax_pct)
-          controls.tva.setValue(tva.toFixed(2));
-    
-          this.timbre1 = Number(controls.timbre.setValue(timbre.toFixed(2)));
+            tva = tva - Number(this.tht1) * Number(Number(this.rmsGl) / 100) * (Number(data.tx2_tax_pct) / 100);
 
-    const thtafter2 = this.tht1 - (Number(this.tht1) * (this.rmsGl / 100) ) + Number(this.trns); 
-         
-    ttc = thtafter2 - Number(thtafter2) * (this.rmsGr / 100) // + tva  
-    console.log(ttc , tva)
+            console.log(tva, "after rmsgl ");
 
-    if (controlsso.ith_cr_terms.value == "ES") {
-      timbre = round((ttc + tva) / 100, 2);
-      if (timbre > 10000) {
-        timbre = 10000;
-      }
-    }
-    console.log(timbre, "timbreeeee")
-ttc = Number(ttc) + Number(timbre) + tva
+            tva += round(Number(this.trns) * (data.tx2_tax_pct / 100), 2);
 
-    controls.tht.setValue(this.tht1.toFixed(2));
-    controls.timbre.setValue(timbre.toFixed(2));
+            console.log(tva, "after trns ");
 
-    controls.ttc.setValue(ttc.toFixed(2));
-   
-    this.numberToLetter = NumberToLetters(ttc.toFixed(2), curr.cu_desc);
- 
+            const thtafter = this.tht1 - Number(this.tht1) * (this.rmsGl / 100) + Number(this.trns);
+            tva = tva - Number(thtafter) * (this.rmsGr / 100) * (data.tx2_tax_pct / 100);
+            console.log(tva);
+            // this.tva1 = (round(Number(this.tht1)) * (1 - Number(controls.tva.setValue(tva.toFixed(2))) / 100), 2);
+            console.log("tva", this.tva1, data.tx2_tax_pct);
+            controls.tva.setValue(tva.toFixed(2));
+
+            this.timbre1 = Number(controls.timbre.setValue(timbre.toFixed(2)));
+
+            const thtafter2 = this.tht1 - Number(this.tht1) * (this.rmsGl / 100) + Number(this.trns);
+
+            ttc = thtafter2 - Number(thtafter2) * (this.rmsGr / 100); // + tva
+            console.log(ttc, tva);
+
+            if (controlsso.ith_cr_terms.value == "ES") {
+              timbre = round((ttc + tva) / 100, 2);
+              if (timbre > 10000) {
+                timbre = 10000;
+              }
+            }
+            console.log(timbre, "timbreeeee");
+            ttc = Number(ttc) + Number(timbre) + tva;
+
+            controls.tht.setValue(this.tht1.toFixed(2));
+            controls.timbre.setValue(timbre.toFixed(2));
+
+            controls.ttc.setValue(ttc.toFixed(2));
+
+            this.numberToLetter = NumberToLetters(ttc.toFixed(2), curr.cu_desc);
+          }
+        },
+        (error) => console.log(error)
+      );
+    } else {
+      tva = 0;
+      const thtafter2 = this.tht1 - Number(this.tht1) * (this.rmsGl / 100) + Number(this.trns);
+
+      ttc = thtafter2 - Number(thtafter2) * (this.rmsGr / 100); // + tva
+
+      if (controlsso.ith_cr_terms.value == "ES") {
+        timbre = round((ttc + tva) / 100, 2);
+        if (timbre > 10000) {
+          timbre = 10000;
         }
-      },
-      (error) => console.log(error)
-    );
-    }
-    else {
-tva = 0
-const thtafter2 = this.tht1 - (Number(this.tht1) * (this.rmsGl / 100) ) + Number(this.trns); 
-         
-ttc = thtafter2 - Number(thtafter2) * (this.rmsGr / 100) // + tva  
+      }
+      console.log(timbre, "timbreeeee");
+      ttc = Number(ttc) + Number(timbre) + tva;
 
-if (controlsso.ith_cr_terms.value == "ES") {
-  timbre = round((ttc + tva) / 100, 2);
-  if (timbre > 10000) {
-    timbre = 10000;
+      controls.tht.setValue(this.tht1.toFixed(2));
+      controls.tva.setValue(tva);
+
+      controls.timbre.setValue(timbre.toFixed(2));
+
+      controls.ttc.setValue(ttc.toFixed(2));
+
+      this.numberToLetter = NumberToLetters(ttc.toFixed(2), curr.cu_desc);
+    }
+    this.datasetToprint = this.dataset.filter((item) => item.itdh_price * ((item.itdh_qty_cons + item.itdh_stdby) * item.itdh_qty_inv) > 0);
   }
-}
-console.log(timbre, "timbreeeee")
-ttc = Number(ttc) + Number(timbre) + tva
-
-controls.tht.setValue(this.tht1.toFixed(2));
-controls.tva.setValue(tva);
-
-controls.timbre.setValue(timbre.toFixed(2));
-
-controls.ttc.setValue(ttc.toFixed(2));
-
-this.numberToLetter = NumberToLetters(ttc.toFixed(2), curr.cu_desc);
-
-
-
-    }
-     }
 
   handleSelectedRowsChangedlocdet(e, args) {
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
