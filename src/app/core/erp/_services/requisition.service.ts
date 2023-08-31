@@ -49,6 +49,10 @@ export class RequisitionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })
     }
+    public getAllApp() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findapp`, { headers: httpHeaders })
+    }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

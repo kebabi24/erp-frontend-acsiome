@@ -1156,7 +1156,7 @@ oncreateCF() {
   const controls = this.ihForm.controls;
   const controlst = this.totForm.controls;
   
-  this.calculatetot();
+  //this.calculatetot();
 
   this.cfpl = [];
   this.cfdataset = [];

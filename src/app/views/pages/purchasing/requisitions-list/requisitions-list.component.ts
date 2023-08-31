@@ -112,7 +112,14 @@ draggableGroupingPlugin: any;
           }
       },
       },
-
+      {
+        id: "req.rqm_category",
+        name: "Sequence",
+        field: "req.rqm_category",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
       {
         id: "rqm_nbr",
         name: "N° Demande",
@@ -153,6 +160,23 @@ draggableGroupingPlugin: any;
         filterable: true,
         type: FieldType.string,
       },
+      {
+        id: "req.created_by",
+        name: "Utilisateur",
+        field: "req.created_by",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "req.rqm_rqby_userid",
+        name: "Demandeur",
+        field: "req.rqm_rqby_userid",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      
     ];
 
     this.gridOptions = {

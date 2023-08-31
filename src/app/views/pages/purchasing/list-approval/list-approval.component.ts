@@ -89,7 +89,14 @@ export class ListApprovalComponent implements OnInit {
     prepareGrid() {
       this.columnDefinitions = [
 
-  
+        {
+          id: "req.rqm_category",
+          name: "Sequence",
+          field: "req.rqm_category",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
         {
           id: "rqm_nbr",
           name: "N° Demande",
@@ -130,6 +137,23 @@ export class ListApprovalComponent implements OnInit {
           filterable: true,
           type: FieldType.string,
         },
+        {
+          id: "req.created_by",
+          name: "Utilisateur",
+          field: "req.created_by",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "req.rqm_rqby_userid",
+          name: "Demandeur",
+          field: "req.rqm_rqby_userid",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        
         {
           id: "edit",
           name: "Approuver",
@@ -227,7 +251,7 @@ export class ListApprovalComponent implements OnInit {
   
       // fill the dataset with your data
       this.dataset = [];
-      this.requisitionService.getAll().subscribe(
+      this.requisitionService.getAllApp().subscribe(
         (response: any) => {this.dataset = response.data
         this.dataView.setItems(this.dataset)},
         (error) => {
