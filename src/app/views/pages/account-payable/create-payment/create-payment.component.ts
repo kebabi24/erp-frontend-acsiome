@@ -1692,7 +1692,7 @@ oncreateGL() {
     
   //  console.log(resp.data.bank)
    
-    if (Number( controls.ap_amt.value) * 1 / 100 > 2500  ) { this.timbre = 2500} else { this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
+    if (Number( controls.ap_amt.value) * 1 / 100 > 10000  ) { this.timbre = 10000} else { this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
     this.gridServicecf.addItem(
             {
                 id: i + 1,
@@ -1822,7 +1822,7 @@ this.gridServicecf.addItem(
             
           //  console.log(resp.data.bank)
            
-            if (Number( controls.ap_amt.value) * 1 / 100 > 2500  ) { this.timbre = 2500} else { this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
+            if (Number( controls.ap_amt.value) * 1 / 100 > 10000  ) { this.timbre = 10000} else { this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
             this.gridServicecf.addItem(
                     {
                         id: i + 1,

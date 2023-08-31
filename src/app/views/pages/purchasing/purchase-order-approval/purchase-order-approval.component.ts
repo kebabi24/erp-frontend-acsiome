@@ -701,7 +701,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
         
         // fill the dataset with your data
         this.requisitonService
-            .getNotByAll({})
+            .getAllApp()
            //.getAll() 
            .subscribe((response: any) => (this.requisitions = response.data))
     }

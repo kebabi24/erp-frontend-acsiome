@@ -191,9 +191,9 @@ export class CreatePurchaseOrderComponent implements OnInit {
                   }
             },
             {
-                id: "desc",
+                id: "rqd_desc",
                 name: "Description",
-                field: "desc",
+                field: "rqd_desc",
                 sortable: true,
                 width: 80,
                 filterable: false,
@@ -341,7 +341,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         for(let data of this.dataset){
           delete data.id
           delete data.cmvid
-          delete data.desc
+        
         }
         this.addReq(req, this.dataset)
     }
@@ -416,7 +416,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
             rqd_line: this.dataset.length + 1,
             rqd_part: "",
             cmvid: "",
-            desc: "",
+            
             rqd_req_qty: 0,
             rqd_um: "",
             rqd_cc: "",
@@ -721,7 +721,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
                 const item = this.gridObj4.getDataItem(idx)
                 console.log(item)
                 updateItem.rqd_part = item.pt_part
-                updateItem.desc = item.pt_desc1
+                updateItem.rqd_desc = item.pt_desc1
                 updateItem.rqd_um = item.pt_um
                 this.gridService.updateItem(updateItem);
 

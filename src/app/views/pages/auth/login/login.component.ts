@@ -147,11 +147,12 @@ export class LoginComponent implements OnInit, OnDestroy {
             .subscribe(
                 (res: any) => {
                     const {
-                        data: { user, token },
+                        data: { user, token , domain},
 					} = res
 					this.store.dispatch(new Login({authToken: token}));
                     localStorage.setItem("user", JSON.stringify(user))
                     localStorage.setItem("token", JSON.stringify(token))
+                    localStorage.setItem("domain", JSON.stringify(domain))
                     this.router.navigateByUrl(this.returnUrl) // Main page
                 },
                 (err) =>

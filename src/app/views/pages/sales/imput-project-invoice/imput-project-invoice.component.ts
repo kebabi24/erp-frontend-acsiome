@@ -69,12 +69,13 @@ import {
 import { DecimalPipe } from "@angular/common";
 
 @Component({
-  selector: 'kt-input-invoice',
-  templateUrl: './input-invoice.component.html',
-  styleUrls: ['./input-invoice.component.scss']
+  selector: 'kt-imput-project-invoice',
+  templateUrl: './imput-project-invoice.component.html',
+  styleUrls: ['./imput-project-invoice.component.scss']
 })
-export class InputInvoiceComponent implements OnInit {
+export class ImputProjectInvoiceComponent implements OnInit {
 
+  
   invoiceOrder: InvoiceOrder;
   inventoryTransaction: InventoryTransaction;
   ihForm: FormGroup;
@@ -289,6 +290,25 @@ export class InputInvoiceComponent implements OnInit {
       sortable: true,
       width: 80,
       filterable: false,
+      
+    },
+    {
+      id: "idh_qty_cons",
+      name: "Jour",
+      field: "idh_qty_cons",
+      sortable: true,
+      width: 80,
+      filterable: false,
+      
+    },
+    {
+      id: "idh_stdby",
+      name: "Stdby",
+      field: "idh_stdby",
+      sortable: true,
+      width: 60,
+      filterable: false,
+      type: FieldType.float,
       
     },
     {
@@ -514,6 +534,8 @@ export class InputInvoiceComponent implements OnInit {
     this.totForm = this.totFB.group({
   //    so__chr01: [this.invoiceOrder.ih__chr01],
       tht: [{value: 0.00 , disabled: true}],
+      disc_glb : [{value: 0.00 , disabled: true}],
+      transport:  [{value: 0.00 , disabled: true}],
       tva: [{value: 0.00 , disabled: true}],
       timbre: [{value: 0.00 , disabled: true}],
       ttc: [{value: 0.00 , disabled: true}],
@@ -678,6 +700,10 @@ export class InputInvoiceComponent implements OnInit {
     
     _ih.ih_cr_terms = controls.ih_cr_terms.value;
     _ih.ih_amt = controlstot.tht.value;
+    _ih.ih_disc_glb = controlstot.disc_glb.value;
+    
+    _ih.ih_transport = controlstot.transport.value;
+    
     _ih.ih_tax_amt = controlstot.tva.value;
     _ih.ih_trl1_amt = controlstot.timbre.value;
 
@@ -816,9 +842,11 @@ var j = 0
               controls.ih_nbr.setValue(this.invoiceTemp.ith_nbr )
               controls.ih_bill.setValue(this.invoiceTemp.ith_bill)
               controlst.tht.setValue(Number(this.invoiceTemp.ith_amt).toFixed(2));
+              controlst.disc_glb.setValue(Number(this.invoiceTemp.ith_disc_glb).toFixed(2));
+              controlst.transport.setValue(Number(this.invoiceTemp.ith_transport).toFixed(2));
               controlst.tva.setValue(Number(this.invoiceTemp.ith_tax_amt).toFixed(2));
               controlst.timbre.setValue(Number(this.invoiceTemp.ith_trl1_amt).toFixed(2));
-              let ttc = Number(this.invoiceTemp.ith_amt) + Number(this.invoiceTemp.ith_tax_amt) + Number(this.invoiceTemp.ith_trl1_amt)
+              let ttc = Number(this.invoiceTemp.ith_amt) + Number(this.invoiceTemp.ith_tax_amt) + Number(this.invoiceTemp.ith_trl1_amt) + this.invoiceTemp.ith_transport - (Number(this.invoiceTemp.ith_amt) * Number(this.invoiceTemp.ith_disc_glb) / 100 )
               controlst.ttc.setValue(ttc.toFixed(2));
               
               
@@ -867,6 +895,10 @@ var j = 0
                         cmvid: "",
                         desc: detail.item.pt_desc1,
                         idh_qty_inv: detail.itdh_qty_inv ,
+                        idh_qty_cons: detail.itdh_qty_cons ,
+                        idh_stdby: detail.itdh_stdby ,
+
+
                         idh_um: detail.itdh_um,
                         idh_um_conv: detail.itdh_um_conv,
                         idh_type: detail.itdh_type,
@@ -925,8 +957,8 @@ calculatetot(){
    for (var i = 0; i < this.ihdataset.length; i++) {
      console.log("here",this.ihdataset[i].idh_price)
      console.log("here", this.ihdataset[i].idh_price,this.ihdataset[i].idh_qty_inv, this.ihdataset[i].idh_disc_pct, this.ihdataset[i].idh_taxc   )
-     tht += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv),2)
-     if(this.ihdataset[i].idh_taxable == true) tva += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv) * (this.ihdataset[i].idh_taxc ? this.ihdataset[i].idh_taxc / 100 : 0),2)
+     tht += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv) * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)),2)
+     if(this.ihdataset[i].idh_taxable == true) tva += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)) ) * (this.ihdataset[i].idh_taxc ? this.ihdataset[i].idh_taxc / 100 : 0),2)
     
   
      
@@ -963,8 +995,10 @@ handleSelectedRowsChanged(e, args) {
               controls.ih_bill.setValue(item.ith_bill)
               controlst.tht.setValue(Number(item.ith_amt).toFixed(2));
               controlst.tva.setValue(Number(item.ith_tax_amt).toFixed(2));
+              controlst.disc_glb.setValue(Number(item.ith_disc_glb).toFixed(2));
+              controlst.transport.setValue(Number(item.ith_transport).toFixed(2));
               controlst.timbre.setValue(Number(item.ith_trl1_amt).toFixed(2));
-              let ttc = Number(item.ith_amt) + Number(item.ith_tax_amt) + Number(item.ith_trl1_amt)
+              let ttc = Number(item.ith_amt) + Number(item.ith_tax_amt) + Number(item.ith_trl1_amt) + item.ith_transport - (Number(item.ith_amt) * Number(item.ith_disc_glb) / 100 )
               controlst.ttc.setValue(ttc.toFixed(2));
               
               
@@ -1018,6 +1052,8 @@ handleSelectedRowsChanged(e, args) {
                         cmvid: "",
                         desc: detail.item.pt_desc1,
                         idh_qty_inv: detail.itdh_qty_inv ,
+                        idh_qty_cons: detail.itdh_qty_cons ,
+                        idh_stdby: detail.itdh_stdby ,
                         idh_um: detail.itdh_um,
                         idh_um_conv: detail.itdh_um_conv,
                         idh_type: detail.itdh_type,
@@ -1147,7 +1183,7 @@ oncreateCF() {
   const controls = this.ihForm.controls;
   const controlst = this.totForm.controls;
   
-  this.calculatetot();
+  //this.calculatetot();
 
   this.cfpl = [];
   this.cfdataset = [];
@@ -1279,8 +1315,8 @@ this.cfdataset.push(
 })
 
   }
-  console.log("timbre" ,this.invoiceOrder.ih_trl1_amt)
-if(this.invoiceOrder.ih_trl1_amt != 0) {
+  console.log("timbre" ,this.invoiceOrder.ih_trl3_amt)
+if(this.invoiceOrder.ih_trl3_amt != 0) {
   this.codeService.getBy({ code_fldname: "cm_cr_terms", code_value: "ES"  }).subscribe(
     (res: any) => {
   console.log(res.data)
