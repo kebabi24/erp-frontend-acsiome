@@ -293,6 +293,25 @@ export class ImputProjectInvoiceComponent implements OnInit {
       
     },
     {
+      id: "idh_qty_cons",
+      name: "Jour",
+      field: "idh_qty_cons",
+      sortable: true,
+      width: 80,
+      filterable: false,
+      
+    },
+    {
+      id: "idh_stdby",
+      name: "Stdby",
+      field: "idh_stdby",
+      sortable: true,
+      width: 60,
+      filterable: false,
+      type: FieldType.float,
+      
+    },
+    {
       id: "idh_price",
       name: "Prix unitaire",
       field: "idh_price",
@@ -876,6 +895,10 @@ var j = 0
                         cmvid: "",
                         desc: detail.item.pt_desc1,
                         idh_qty_inv: detail.itdh_qty_inv ,
+                        idh_qty_cons: detail.itdh_qty_cons ,
+                        idh_stdby: detail.itdh_stdby ,
+
+
                         idh_um: detail.itdh_um,
                         idh_um_conv: detail.itdh_um_conv,
                         idh_type: detail.itdh_type,
@@ -934,8 +957,8 @@ calculatetot(){
    for (var i = 0; i < this.ihdataset.length; i++) {
      console.log("here",this.ihdataset[i].idh_price)
      console.log("here", this.ihdataset[i].idh_price,this.ihdataset[i].idh_qty_inv, this.ihdataset[i].idh_disc_pct, this.ihdataset[i].idh_taxc   )
-     tht += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv),2)
-     if(this.ihdataset[i].idh_taxable == true) tva += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv) * (this.ihdataset[i].idh_taxc ? this.ihdataset[i].idh_taxc / 100 : 0),2)
+     tht += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv) * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)),2)
+     if(this.ihdataset[i].idh_taxable == true) tva += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)) ) * (this.ihdataset[i].idh_taxc ? this.ihdataset[i].idh_taxc / 100 : 0),2)
     
   
      
@@ -972,8 +995,10 @@ handleSelectedRowsChanged(e, args) {
               controls.ih_bill.setValue(item.ith_bill)
               controlst.tht.setValue(Number(item.ith_amt).toFixed(2));
               controlst.tva.setValue(Number(item.ith_tax_amt).toFixed(2));
+              controlst.disc_glb.setValue(Number(item.ith_disc_glb).toFixed(2));
+              controlst.transport.setValue(Number(item.ith_transport).toFixed(2));
               controlst.timbre.setValue(Number(item.ith_trl1_amt).toFixed(2));
-              let ttc = Number(item.ith_amt) + Number(item.ith_tax_amt) + Number(item.ith_trl1_amt)
+              let ttc = Number(item.ith_amt) + Number(item.ith_tax_amt) + Number(item.ith_trl1_amt) + item.ith_transport - (Number(item.ith_amt) * Number(item.ith_disc_glb) / 100 )
               controlst.ttc.setValue(ttc.toFixed(2));
               
               
@@ -1027,6 +1052,8 @@ handleSelectedRowsChanged(e, args) {
                         cmvid: "",
                         desc: detail.item.pt_desc1,
                         idh_qty_inv: detail.itdh_qty_inv ,
+                        idh_qty_cons: detail.itdh_qty_cons ,
+                        idh_stdby: detail.itdh_stdby ,
                         idh_um: detail.itdh_um,
                         idh_um_conv: detail.itdh_um_conv,
                         idh_type: detail.itdh_type,
