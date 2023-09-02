@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef,Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
@@ -15,6 +15,8 @@ import {
   Formatters,
   FieldType,
   OnEventArgs,
+  GridStateChange,
+  GridStateService,
 } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
@@ -148,8 +150,9 @@ error = false;
   gridOptionsgamme: GridOption = {};
   gridObjgamme: any;
   angularGridgamme: AngularGridInstance;
-
+  selectedGrid2IDs: any[] = [];
   constructor(
+    private cd: ChangeDetectorRef,
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
     private totFB: FormBuilder,
@@ -321,22 +324,42 @@ error = false;
    
   }
 
+  handleSelectedRowsChanged(e, args) {
+    if (Array.isArray(args.rows) && this.mvgrid) {
+
+      this.selectedGrid2IDs = args.rows.map((idx: number) => {
+        const item = this.mvgrid.getDataItem(idx);
+        return item;
+       
+      });
+ 
+  }
+}
   addNewItem() {
   const controls = this.woForm.controls
   //console.log("sos", this.sos)
  this.dataset = []
     
  
- for (let data of this.mvdataset) {
+ for (let data of this.selectedGrid2IDs) {
   delete data.id;
-  delete data.desc;
+  delete data.desc1;
   delete data.cmvid;
  
 }
-this.loadingSubject.next(true);
 
+console.log(this.selectedGrid2IDs)
+this.loadingSubject.next(true);
+const date = controls.date.value
+    ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+    : null;
+  
+    const date1 = controls.date1.value
+    ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+    : null;
+    
 this.workOrderService
-  .addSoJob({detail:this.mvdataset, profile: this.user.usrd_profile,site: controls.site.value, saleOrders: this.sos})
+  .addSoJob({detail:this.selectedGrid2IDs, profile: this.user.usrd_profile,site: controls.site.value,date,date1})
   .subscribe(
    (reponse: any) => this.dataset = reponse.data,
     (error) => {
@@ -363,6 +386,10 @@ this.workOrderService
   //    console.log(this.provider, po, this.dataset);
   //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
   //this.router.navigateByUrl("/manufacturing/list-wo")
+    this.mvdataset = []   
+    this.selectedGrid2IDs = []    
+  this.mvdataView.setItems(this.mvdataset)
+
     }
   );
 
@@ -391,6 +418,16 @@ this.workOrderService
  
   initmvGrid() {
     this.mvcolumnDefinitions = [
+
+      {
+        id: "woid",
+        name: "id OF",
+        field: "woid",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+      },
       {
         id: "part",
         name: "Code Produit",
@@ -587,6 +624,12 @@ this.workOrderService
       autoFitColumnsOnFirstLoad: false,
      
       enableCellNavigation: true,
+      enableCheckboxSelector: true,
+      enableRowSelection: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false
+      },
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -602,23 +645,30 @@ this.workOrderService
     
     };
     
-
- console.log(this.user)
- const controls = this.woForm.controls
-    const site = controls.site.value
-    this.saleOrderService.getSojob({site}).subscribe(
-      (response: any) => {   
-        this.sos = response.data.soss
-        this.mvdataset = response.data.result
-      // console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
+this.mvdataset = []
+//  console.log(this.user)
+//  const controls = this.woForm.controls
+//     const site = controls.site.value
+//     const date = controls.date.value
+//     ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+//     : null;
+  
+//     const date1 = controls.date1.value
+//     ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+//     : null;
+//     this.saleOrderService.getSojob({site,date,date1}).subscribe(
+//       (response: any) => {   
+//         this.sos = response.data.soss
+//         this.mvdataset = response.data.result
+//       // console.log(this.mvdataset)
+//        this.mvdataView.setItems(this.mvdataset);
         
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+//          },
+//       (error) => {
+//           this.mvdataset = []
+//       },
+//       () => {}
+//   )
   }
   // change() {
   //   this.mvdataset = []
@@ -648,8 +698,17 @@ this.workOrderService
     
     this.woForm = this.poFB.group({
      // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
-      site:[this.user.usrd_site,Validators.required],
-       
+      site:[null,Validators.required],
+      date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      date1: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: date.getDate()
+      }], 
     });
 
    /* this.sequenceService.getBy({ seq_type: "PO", seq_profile: this.user.usrd_profile }).subscribe(
@@ -662,6 +721,42 @@ this.workOrderService
     */
 
   }
+  solist() {
+    this.mvdataset = []
+   
+    const controls = this.woForm.controls
+    const site = controls.site.value
+    const date = controls.date.value
+    ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+    : null;
+  
+    const date1 = controls.date1.value
+    ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+    : null;
+    if(site != null) {
+    this.saleOrderService.getSojob({site,date,date1}).subscribe(
+      (response: any) => {   
+       // this.sos = response.data.soss
+        this.mvdataset = response.data
+      // console.log(this.mvdataset)
+       this.mvdataView.setItems(this.mvdataset);
+        
+         },
+      (error) => {
+          this.mvdataset = []
+      },
+      () => {}
+  )
+    }
+    else {
+      alert ("Site erronée")
+      controls.site.setValue(null);
+      document.getElementById("site").focus();
+      this.mvdataset = []
+      this.mvdataView.setItems(this.mvdataset)
+    }
+  }
+
   //reste form
   reset() {
     // this.purchaseOrder = new PurchaseOrder();
@@ -783,16 +878,7 @@ this.workOrderService
             alert("Site n'existe pas  ")
             controls.site.setValue(null);
             document.getElementById("site").focus();
-          } else {
-           if( this.user.usrd_site != "*" && si_site != this.user.usrd_site){
-            alert("Site n'est pas autorisé pour cet utilisateur ")
-            controls.site.setValue(null);
-            document.getElementById("site").focus();
-             
-
-
-           } 
-          }
+          } 
       
       });
   }
