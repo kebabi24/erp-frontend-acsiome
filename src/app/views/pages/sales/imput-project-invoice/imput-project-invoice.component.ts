@@ -706,7 +706,7 @@ export class ImputProjectInvoiceComponent implements OnInit {
     
     _ih.ih_tax_amt = controlstot.tva.value;
     _ih.ih_trl1_amt = controlstot.timbre.value;
-
+    _ih.ih_tot_amt = controlstot.ttc.value;
 
     
     return _ih;
@@ -846,8 +846,9 @@ var j = 0
               controlst.transport.setValue(Number(this.invoiceTemp.ith_transport).toFixed(2));
               controlst.tva.setValue(Number(this.invoiceTemp.ith_tax_amt).toFixed(2));
               controlst.timbre.setValue(Number(this.invoiceTemp.ith_trl1_amt).toFixed(2));
-              let ttc = Number(this.invoiceTemp.ith_amt) + Number(this.invoiceTemp.ith_tax_amt) + Number(this.invoiceTemp.ith_trl1_amt) + this.invoiceTemp.ith_transport - (Number(this.invoiceTemp.ith_amt) * Number(this.invoiceTemp.ith_disc_glb) / 100 )
-              controlst.ttc.setValue(ttc.toFixed(2));
+              controlst.ttc.setValue(Number(this.invoiceTemp.ith_tot_amt).toFixed(2));
+              // let ttc = Number(this.invoiceTemp.ith_amt) + Number(this.invoiceTemp.ith_tax_amt) + Number(this.invoiceTemp.ith_trl1_amt) + this.invoiceTemp.ith_transport - (Number(this.invoiceTemp.ith_amt) * Number(this.invoiceTemp.ith_disc_glb) / 100 )
+              // controlst.ttc.setValue(ttc.toFixed(2));
               
               
               
@@ -945,36 +946,47 @@ var j = 0
 
 calculatetot(){
   const controls = this.totForm.controls 
-   const controlsso = this.ihForm.controls 
+  const controlsso = this.ihForm.controls 
    
    
-   console.log(this.ihdataset.length)
-   let tht = 0
-   let tva = 0
-   let timbre = 0
-   let ttc = 0
-   console.log(this.ihdataset)
-   for (var i = 0; i < this.ihdataset.length; i++) {
-     console.log("here",this.ihdataset[i].idh_price)
-     console.log("here", this.ihdataset[i].idh_price,this.ihdataset[i].idh_qty_inv, this.ihdataset[i].idh_disc_pct, this.ihdataset[i].idh_taxc   )
-     tht += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv) * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)),2)
-     if(this.ihdataset[i].idh_taxable == true) tva += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)) ) * (this.ihdataset[i].idh_taxc ? this.ihdataset[i].idh_taxc / 100 : 0),2)
+  //  console.log(this.ihdataset.length)
+  //  let tht = 0
+  //  let tva = 0
+    let timbre = 0
+    let ttc = 0
+  //  console.log(this.ihdataset)
+  //  for (var i = 0; i < this.ihdataset.length; i++) {
+  //    console.log("here",this.ihdataset[i].idh_price)
+  //    console.log("here", this.ihdataset[i].idh_price,this.ihdataset[i].idh_qty_inv, this.ihdataset[i].idh_disc_pct, this.ihdataset[i].idh_taxc   )
+  //    tht += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv) * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)),2)
+  //    if(this.ihdataset[i].idh_taxable == true) tva += round((this.ihdataset[i].idh_price * ((100 - this.ihdataset[i].idh_disc_pct) / 100 ) *  this.ihdataset[i].idh_qty_inv * (Number(this.ihdataset[i].idh_qty_cons) + Number(this.ihdataset[i].idh_stdby)) ) * (this.ihdataset[i].idh_taxc ? this.ihdataset[i].idh_taxc / 100 : 0),2)
     
   
      
 
-     console.log(tva)
-     if(controlsso.ih_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-       if (timbre > 10000) { timbre = 10000} } 
+  //    console.log(tva)
+    
   
-   }
-    ttc = round(tht,2) + round(tva,2) + round(timbre,2)
-    console.log(tht,tva,timbre,ttc)
-    controls.tht.setValue(tht.toFixed(2));
-    controls.tva.setValue(tva.toFixed(2));
-    controls.timbre.setValue(timbre.toFixed(2));
-    controls.ttc.setValue(ttc.toFixed(2));
-
+  //  }
+  //   ttc = round(tht,2) + round(tva,2) + round(timbre,2)
+  //   console.log(tht,tva,timbre,ttc)
+  //   controls.tht.setValue(tht.toFixed(2));
+  //   controls.tva.setValue(tva.toFixed(2));
+  //   controls.timbre.setValue(timbre.toFixed(2));
+  //   controls.ttc.setValue(ttc.toFixed(2));
+  let attc = Number(controls.ttc.value)
+  if(controlsso.ih_cr_terms.value == "ES") { timbre = round(Number(controls.ttc.value) / 100,2);
+    if (timbre > 10000) { timbre = 10000} 
+  ttc = attc + timbre
+  controls.ttc.setValue(ttc)
+  controls.timbre.setValue(timbre)
+  } 
+  else {
+timbre = 0
+attc = Number(controls.ttc.value)
+controls.ttc.setValue(attc)
+controls.timbre.setValue(timbre)
+  }
 }
 
 
@@ -998,8 +1010,9 @@ handleSelectedRowsChanged(e, args) {
               controlst.disc_glb.setValue(Number(item.ith_disc_glb).toFixed(2));
               controlst.transport.setValue(Number(item.ith_transport).toFixed(2));
               controlst.timbre.setValue(Number(item.ith_trl1_amt).toFixed(2));
-              let ttc = Number(item.ith_amt) + Number(item.ith_tax_amt) + Number(item.ith_trl1_amt) + item.ith_transport - (Number(item.ith_amt) * Number(item.ith_disc_glb) / 100 )
-              controlst.ttc.setValue(ttc.toFixed(2));
+              controlst.ttc.setValue(Number(item.ith_tot_amt).toFixed(2));
+              // let ttc = Number(item.ith_amt) + Number(item.ith_tax_amt) + Number(item.ith_trl1_amt) + item.ith_transport - (Number(item.ith_amt) * Number(item.ith_disc_glb) / 100 )
+              // controlst.ttc.setValue(ttc.toFixed(2));
               
               
              
