@@ -9,6 +9,7 @@ import { environment } from "../../../../environments/environment"
 
 
 const API_URL_POS_ORDERS = environment.apiUrl + "/pos-order/findAllPosOrders"
+const API_URL_DD_DATA = environment.apiUrl + "/users-mobile/getDashboardData"
 
 @Injectable()
 export class DashboardCommercialService {
@@ -23,6 +24,11 @@ export class DashboardCommercialService {
     public getAllPosOrders(startDate: any , endDate:any , shop:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL_POS_ORDERS, {startDate, endDate, shop},{ headers: httpHeaders })
+    }
+
+    public getDdDashboardData(start_date: any , end_date:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL_DD_DATA, {start_date, end_date},{ headers: httpHeaders })
     }
   
 }
