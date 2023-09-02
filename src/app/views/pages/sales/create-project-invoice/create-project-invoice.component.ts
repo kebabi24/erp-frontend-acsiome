@@ -44,7 +44,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 export class CreateProjectInvoiceComponent implements OnInit {
   numberToLetter: any;
   tht1: number = 0;
-  tva1: number = 0;
+  tva1: any = 0;
   timbre1: number = 0;
   ttc1: number = 0;
   rmsGr: number = 0;
@@ -2518,7 +2518,13 @@ export class CreateProjectInvoiceComponent implements OnInit {
   onChangeTAX() {
     const controls = this.soForm.controls;
     const tax = controls.ith_taxable.value;
-
+    if (tax) {
+      this.tva1 = 0;
+      this.calculatetot();
+    } else {
+      this.tva1 = "Exonérée";
+      console.log(this.tva1);
+    }
     for (var i = 0; i < this.dataset.length; i++) {
       let updateItem = this.gridService.getDataItemByRowIndex(i);
       //  console.log(this.dataset[i].qty_oh)
