@@ -53,6 +53,7 @@ export class InvoiceOrderTemp extends BaseModel {
   ith_pst: Boolean;
   ith_fst_id: String;
   ith_amt: Number;
+  ith_tot_amt: Number;
   ith_tax_amt: Number;
   ith_trl1_amt: Number;
   ith_trl1_cd: String;

@@ -47,6 +47,7 @@ export { InvoiceOrder } from "./_models/invoice-order.model";
 export { Bank } from "./_models/bank.model";
 export { AccountReceivable } from "./_models/account-receivable.model";
 export { AccountShiper } from "./_models/account-shiper.model";
+export { AccountUnplanifed } from "./_models/account-unplanifed.model";
 export { AccountPayable } from "./_models/account-payable.model";
 export { VoucherOrder } from "./_models/voucher-order.model";
 export { Daybook } from "./_models/daybook.model";
@@ -133,6 +134,7 @@ export { InvoiceOrderService } from "./_services/invoice-order.service";
 export { BankService } from "./_services/bank.service";
 export { AccountReceivableService } from "./_services/account-receivable.service";
 export { AccountShiperService } from "./_services/account-shiper.service";
+export { AccountUnplanifedService } from "./_services/account-unplanifed.service";
 export { InvoiceOrderTempService } from "./_services/invoice-order-temp.service";
 
 export { VoucherOrderService } from "./_services/voucher-order.service";

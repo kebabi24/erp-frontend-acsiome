@@ -63,7 +63,7 @@ import { NgxPermissionsModule } from "ngx-permissions";
 import {BomService, PsService, ItemService,SiteService,WorkOrderService, SequenceService,
         LocationService, MesureService, LocationDetailService, WorkOrderDetailService,CostSimulationService,RequisitionService,
         AddressService,InventoryTransactionService,InventoryStatusService,ReasonService,WorkCenterService,
-        WorkRoutingService, OperationHistoryService, WoroutingService,BomPartService,CodeService, LabelService, SaleOrderService} from '../../../core/erp';
+        WorkRoutingService, OperationHistoryService, WoroutingService,BomPartService,CodeService, LabelService, SaleOrderService, EmployeService, UsersService} from '../../../core/erp';
 
         
 
@@ -278,6 +278,8 @@ const routes: Routes = [
       RequisitionService,
       LabelService,
       SaleOrderService,
+      EmployeService,
+     
   ],
   
     entryComponents: [

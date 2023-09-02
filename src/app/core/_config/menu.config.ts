@@ -454,6 +454,10 @@ export class MenuConfig {
               page: "/purchasing/purchase-order-approval",
             },
             {
+              title: "Approbation des Demandes d'achats",
+              page: "/purchasing/list-approval",
+            },
+            {
               title: "Offre Fournisseurs",
               page: "/purchasing/create-vendor-proposal",
             },
@@ -492,6 +496,10 @@ export class MenuConfig {
             {
               title: "Consultations des commandes",
               page: "/purchasing/purchase-list",
+            },
+            {
+              title: "Paiement des Récéption",
+              page: "/purchasing/payment-au",
             },
           ],
         },
@@ -553,6 +561,10 @@ export class MenuConfig {
             {
               title: "Facture Projet ",
               page: "/sales/create-project-invoice",
+            },
+            {
+              title: "Imputation Facture Projet",
+              page: "/sales/imput-project-invoice",
             },
             {
               title: "Impression Facture en Attente ",

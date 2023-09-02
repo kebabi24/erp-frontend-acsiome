@@ -167,7 +167,8 @@ export class CreatesaleorderComponent implements OnInit {
     disc: Number;
     taxable: Boolean;
     cfg : any;
-    curr
+    curr;
+    domain;
     constructor(
       config: NgbDropdownConfig,
       private soFB: FormBuilder,
@@ -543,11 +544,11 @@ export class CreatesaleorderComponent implements OnInit {
           
           obj = {part, promo, cust, classe, date,qty,um,curr,type}
             this.pricelistService.getPrice(obj).subscribe((res:any)=>{
-              console.log(res)
+              console.log("price",res)
               this.price = res.data
-              if (this.price != 0) { 
+              if (this.price != 0 && this.price != null) { 
               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: this.price })
-              }
+              } 
           //    this.dataset[this.row_number].sod_price = this.price
               //console.log(this.row_number,this.dataset[this.row_number].sod_price)
               this.calculatetot();
@@ -564,7 +565,7 @@ export class CreatesaleorderComponent implements OnInit {
           this.pricelistService.getDiscPct(objr).subscribe((resdisc:any)=>{
             console.log(resdisc)
             this.disc = resdisc.data
-            if (this.disc != 0) {
+            if (this.disc != 0 && this.disc != null) {
             //this.dataset[this.row_number].sod_disc_pct = this.disc
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: this.price ,sod_disc_pct: this.disc })
            // console.log(this.row_number,this.dataset[this.row_number].sod_price)
@@ -713,7 +714,7 @@ export class CreatesaleorderComponent implements OnInit {
       this.loading$ = this.loadingSubject.asObservable();
       this.loadingSubject.next(false);
       this.user =  JSON.parse(localStorage.getItem('user'))
-      
+      this.domain =  JSON.parse(localStorage.getItem('domain'))
       this.createForm();
       this.createtotForm();
       
@@ -2671,7 +2672,7 @@ calculatetot(){
          
               
               if(controlsso.so_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-                if (timbre > 2500) { timbre = 2500} } 
+                if (timbre > 10000) { timbre = 10000} } 
            
             }
           ttc = round(tht + tva + timbre,2)
@@ -2694,8 +2695,13 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  img.src = "./assets/media/logos/logoabr.png";
+  doc.addImage(img, 'png', 170, 5, 30, 30)
+  doc.setFontSize(9);
+  if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+  if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+  if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+  if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
   doc.setFontSize(12);
   doc.text( 'Commande N° : ' + nbr  , 70, 40);
   doc.setFontSize(8);
@@ -2735,7 +2741,13 @@ printpdf(nbr) {
     
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
+     // img.src = "./assets/media/logos/logoabr.png";
+      doc.addImage(img, 'png', 170, 5, 30, 30)
+      doc.setFontSize(9);
+      if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+      if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+      if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+      if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
       doc.setFontSize(12);
       doc.text( 'Commande N° : ' + nbr  , 70, 40);
       doc.setFontSize(8);

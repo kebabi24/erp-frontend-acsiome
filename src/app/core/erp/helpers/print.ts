@@ -884,8 +884,8 @@ export function printBc(provider, details, po,curr) {
   } else {
     timbre = 0;
   }
-  if (timbre > 2500) {
-    timbre = 2500;
+  if (timbre > 10000) {
+    timbre = 10000;
   }
  
   const date = new Date();
@@ -8210,8 +8210,8 @@ export function printSO(customer, details, so) {
   console.log(tva);
   if (so.so_cr_terms == "ES") {
     timbre = (total + tva) / 100;
-    if (timbre > 2500) {
-      timbre = 2500;
+    if (timbre > 10000) {
+      timbre = 10000;
     }
   }
   let popupWin;
@@ -9480,8 +9480,8 @@ export function printOc(customer, details, qo) {
   } else {
     timbre = 0;
   }
-  if (timbre > 2500) {
-    timbre = 2500;
+  if (timbre > 10000) {
+    timbre = 10000;
   }
   let popupWin;
   const date = new Date();
@@ -10746,8 +10746,8 @@ export function printBL(customer, details, pshnbr,cr_terms) {
       console.log(tva);
       if (cr_terms == "ES") {
         timbre = (total + tva) / 100;
-        if (timbre > 2500) {
-          timbre = 2500;
+        if (timbre > 10000) {
+          timbre = 10000;
         }
       }
       let popupWin;
@@ -12013,8 +12013,8 @@ export function printIH(customer, details, ih, curr) {
   } else {
     timbre = 0;
   }
-  if (timbre > 2500) {
-    timbre = 2500;
+  if (timbre > 10000) {
+    timbre = 10000;
   }
   let popupWin;
   const date = new Date();

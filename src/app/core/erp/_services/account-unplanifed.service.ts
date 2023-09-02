@@ -8,10 +8,10 @@ import { environment } from "../../../../environments/environment"
 
 // model
 
-const API_URL = environment.apiUrl + "/requisitions"
+const API_URL = environment.apiUrl + "/account-unplanifeds"
 
 @Injectable()
-export class RequisitionService {
+export class AccountUnplanifedService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -24,43 +24,31 @@ export class RequisitionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
-    // READ
-    public findBy(data: any) {
+    public addP(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
+        return this.http.post(API_URL+'/P', data, { headers: httpHeaders })
     }
+    // READ
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
-    }
-    public getOne(id: Number) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
-    }
-    public getByAll(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/findAll`,data, { headers: httpHeaders })
-    }
-    public getNotByAll(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/findNotAll`,data, { headers: httpHeaders })
+        return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
     }
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })
     }
-    public getAllApp() {
+    public getByAll(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL}/findapp`, { headers: httpHeaders })
+        return this.http.post(`${API_URL}/findAll`,data, { headers: httpHeaders })
+    }
+    public getAllwithDetail() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL+'/allwithdetail', { headers: httpHeaders })
     }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
-    }
-    public updatedet(data: any, ids:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(API_URL +`/${ids}`, data, { headers: httpHeaders }) 
     }
     // DELETE
 }

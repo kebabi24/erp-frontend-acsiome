@@ -65,6 +65,7 @@ import {
   PsService,
   PosCategoryService,
   InventoryTransactionService,
+  AccountUnplanifedService,
 } from "../../../core/erp";
 import { CreatePurchaseOrderComponent } from "./create-purchase-order/create-purchase-order.component";
 import { PurchaseOrderApprovalComponent } from "./purchase-order-approval/purchase-order-approval.component";
@@ -87,6 +88,8 @@ import { EditSequenceComponent } from './edit-sequence/edit-sequence.component';
 import { CreateOaComponent } from './create-oa/create-oa.component';
 import { EditPoComponent } from './edit-po/edit-po.component';
 import { CreateOaEmComponent } from './create-oa-em/create-oa-em.component';
+import { ListApprovalComponent } from './list-approval/list-approval.component';
+import { PaymentAuComponent } from './payment-au/payment-au.component';
 
 const routes: Routes = [
   {
@@ -183,6 +186,14 @@ const routes: Routes = [
         path: "edit-requisition/:id",
         component: EditRequisitionComponent,
       },
+      {
+        path: "list-approval",
+        component: ListApprovalComponent,
+      },
+      {
+        path: "payment-au",
+        component: PaymentAuComponent,
+      },
     ],
   },
 ];
@@ -211,7 +222,9 @@ const routes: Routes = [
     EditSequenceComponent,
     CreateOaComponent,
     EditPoComponent,
-    CreateOaEmComponent
+    CreateOaEmComponent,
+    ListApprovalComponent,
+    PaymentAuComponent
   ],
   imports: [
     CommonModule,
@@ -262,6 +275,7 @@ const routes: Routes = [
     PsService,
     InventoryTransactionService,
     PosCategoryService,
+    AccountUnplanifedService,
   ],
 
   entryComponents: [

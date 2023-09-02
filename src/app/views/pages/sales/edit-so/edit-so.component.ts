@@ -162,6 +162,7 @@ error = false;
   soEdit: any
   cfg : any;
   curr
+  domain
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -752,6 +753,8 @@ error = false;
           this.title = this.title + this.soEdit.so_nbr
         })
     })
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain =  JSON.parse(localStorage.getItem('domain'))
 }
 initCode() {
   this.createForm()
@@ -2459,7 +2462,7 @@ calculatetot(){
        
             
             if(controlsso.so_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-              if (timbre > 2500) { timbre = 2500} } 
+              if (timbre > 10000) { timbre = 10000} } 
          
           }
         ttc = round(tht + tva + timbre,2)
@@ -2478,8 +2481,13 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  img.src = "./assets/media/logos/logoabr.png";
+  doc.addImage(img, 'png', 170, 5, 30, 30)
+  doc.setFontSize(9);
+  if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+  if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+  if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+  if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
   doc.setFontSize(12);
   doc.text( 'Commande N° : ' + nbr  , 70, 40);
   doc.setFontSize(8);
@@ -2519,7 +2527,12 @@ printpdf(nbr) {
     
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
+doc.addImage(img, 'png', 170, 5, 30, 30)
+doc.setFontSize(9);
+      if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+      if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+      if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+      if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
       doc.setFontSize(12);
       doc.text( 'Commande N° : ' + nbr  , 70, 40);
       doc.setFontSize(8);
