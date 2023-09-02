@@ -895,7 +895,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     _ith.ith_amt = controls1.tht.value;
     _ith.ith_tax_amt = controls1.tva.value;
     _ith.ith_trl1_amt = controls1.timbre.value;
-
+    _ith.ith_tot_amt  = controls1.ttc.value;
     return _ith;
   }
   /**
@@ -930,7 +930,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
         this.loadingSubject.next(true);
         this.router.navigateByUrl("/sales/create-project-invoice");
 
-        //       this.dataset = [];
+        //      aa this.dataset = [];
       }
     );
   }

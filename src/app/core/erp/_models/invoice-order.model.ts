@@ -55,6 +55,7 @@ export class InvoiceOrder extends BaseModel {
     ih_pst: Boolean
     ih_fst_id: String
     ih_amt: Number
+    ih_tot_amt: Number
     ih_disc_glb: Number
     ih_transport: Number
     ih_tax_amt: Number
