@@ -690,6 +690,10 @@ export class MenuConfig {
               page: "/manufacturing/create-wo-so",
             },
             {
+              title: "Création des OFs Semi-Finis",
+              page: "/manufacturing/create-wo-sf",
+            },
+            {
               title: "List des OFs",
               page: "/manufacturing/list-wo",
             },

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef,Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
@@ -45,11 +45,11 @@ import {
 } from "../../../../core/erp";
 
 @Component({
-  selector: 'kt-create-wo-so',
-  templateUrl: './create-wo-so.component.html',
-  styleUrls: ['./create-wo-so.component.scss']
+  selector: 'kt-create-wo-sf',
+  templateUrl: './create-wo-sf.component.html',
+  styleUrls: ['./create-wo-sf.component.scss']
 })
-export class CreateWoSoComponent implements OnInit {
+export class CreateWoSfComponent implements OnInit {
 
   woForm: FormGroup;
   totForm: FormGroup;
@@ -150,9 +150,9 @@ error = false;
   gridOptionsgamme: GridOption = {};
   gridObjgamme: any;
   angularGridgamme: AngularGridInstance;
-  selectedGrid2IDs: any[] = [];
+ 
   constructor(
-    private cd: ChangeDetectorRef,
+   
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
     private totFB: FormBuilder,
@@ -324,39 +324,30 @@ error = false;
    
   }
 
-  handleSelectedRowsChanged(e, args) {
-    if (Array.isArray(args.rows) && this.mvgrid) {
-
-      this.selectedGrid2IDs = args.rows.map((idx: number) => {
-        const item = this.mvgrid.getDataItem(idx);
-        return item;
-       
-      });
  
-  }
-}
   addNewItem() {
   const controls = this.woForm.controls
   //console.log("sos", this.sos)
  this.dataset = []
     
  
- for (let data of this.selectedGrid2IDs) {
+ for (let data of this.mvdataset) {
   delete data.id;
   delete data.desc1;
   delete data.cmvid;
  
 }
-for (let data of this.selectedGrid2IDs) {
- if (data.rel_date == null || data.due_date == null) {
-  this.message = "Les dates ne peuvent pas etre vide";
-  this.hasFormErrors = true;
 
-  return;
-
- }
+for (let data of this.mvdataset) {
+  if (data.rel_date == null || data.due_date == null) {
+   this.message = "Les dates ne peuvent pas etre vide";
+   this.hasFormErrors = true;
+ 
+   return;
+ 
+  }
 }
-console.log(this.selectedGrid2IDs)
+
 this.loadingSubject.next(true);
 const date = controls.date.value
     ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
@@ -367,7 +358,7 @@ const date = controls.date.value
     : null;
     
 this.workOrderService
-  .addSoJob({detail:this.selectedGrid2IDs, profile: this.user.usrd_profile,site: controls.site.value,date,date1})
+  .addSfJob({detail:this.mvdataset, profile: this.user.usrd_profile,site: controls.site.value,date,date1})
   .subscribe(
    (reponse: any) => this.dataset = reponse.data,
     (error) => {
@@ -395,8 +386,7 @@ this.workOrderService
   //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
   //this.router.navigateByUrl("/manufacturing/list-wo")
     this.mvdataset = []   
-    this.selectedGrid2IDs = []    
-  this.mvdataView.setItems(this.mvdataset)
+    this.mvdataView.setItems(this.mvdataset)
 
     }
   );
@@ -427,16 +417,20 @@ this.workOrderService
   initmvGrid() {
     this.mvcolumnDefinitions = [
 
+      
       {
-        id: "woid",
-        name: "id OF",
-        field: "woid",
+        id: "create",
+        name: "Créer",
+        field: "create",
         sortable: true,
         width: 50,
         filterable: false,
-        type: FieldType.string,
+        type: FieldType.boolean,
+        formatter: Formatters.checkmark,
+        editor: {
+          model: Editors.checkbox,
+        }
       },
-     
       {
         id: "part",
         name: "Code Produit",
@@ -560,6 +554,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
 
       {
@@ -570,6 +565,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "sfty_qty",
@@ -579,6 +575,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "qtylanch",
@@ -588,6 +585,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "prod_qty",
@@ -597,6 +595,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal,
         editor: {
           model: Editors.float,
         },
@@ -629,16 +628,11 @@ this.workOrderService
       enableFiltering: false,
       editable: true,
       autoCommitEdit: true,
+      autoEdit: true,
       showHeaderRow: false, // hide the filter row (header row)
       autoFitColumnsOnFirstLoad: false,
      
       enableCellNavigation: true,
-      enableCheckboxSelector: true,
-      enableRowSelection: true,
-      rowSelectionOptions: {
-        // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: false
-      },
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -732,8 +726,9 @@ this.mvdataset = []
     */
 
   }
-  solist() {
+  wolist() {
     this.mvdataset = []
+    this.dataset = []
    
     const controls = this.woForm.controls
     const site = controls.site.value
@@ -745,7 +740,7 @@ this.mvdataset = []
     ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
     : null;
     if(site != null) {
-    this.saleOrderService.getSojob({site,date,date1}).subscribe(
+    this.workOrderService.getWo({site,date,date1}).subscribe(
       (response: any) => {   
        // this.sos = response.data.soss
         this.mvdataset = response.data
