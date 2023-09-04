@@ -61,7 +61,8 @@ import { AngularSlickgridModule } from 'angular-slickgrid'
 import { CRMDashboardComponent } from './crm-dashboard/crm-dashboard.component';
 import { CommercialDashboardComponent } from './commercial-dashboard/commercial-dashboard.component';
 
-import { CRMService ,DashboardCommercialService} from '../../../core/erp';
+import { CRMService ,DashboardCommercialService } from '../../../core/erp';
+import { DdDashboardComponent } from './dd-dashboard/dd-dashboard.component';
 
 
 
@@ -78,6 +79,10 @@ const routes: Routes = [
     path: 'commercial-dashboard',
     component: CommercialDashboardComponent
   },
+  {
+    path: 'dd-dashboard',
+    component: DdDashboardComponent
+  },
   
 ] 
 @NgModule({
@@ -85,7 +90,8 @@ const routes: Routes = [
     DashboardComponent, 
     ManagerDashboardComponent,
     CRMDashboardComponent,
-    CommercialDashboardComponent
+    CommercialDashboardComponent,
+    DdDashboardComponent
   ],
   imports: [
     CommonModule,
