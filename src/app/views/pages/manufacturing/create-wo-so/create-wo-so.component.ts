@@ -560,6 +560,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
 
       {
@@ -570,6 +571,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "sfty_qty",
@@ -579,6 +581,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "qtylanch",
@@ -588,6 +591,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "prod_qty",
@@ -597,6 +601,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal,
         editor: {
           model: Editors.float,
         },
