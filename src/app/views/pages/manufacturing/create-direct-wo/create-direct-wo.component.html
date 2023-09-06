@@ -61,8 +61,8 @@
                                 [className]="woForm.controls['wo_routing'].errors && (woForm.controls['wo_routing'].dirty || woForm.controls['wo_routing'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 formControlName="wo_routing" id="exampleSelects1">
                                 <option value=""></option>
-                                <option *ngFor="let elem of ro_rollup" [value]="elem.ro_rollup">
-                                    {{elem.ro_code}} {{elem.ro_desc}}</option>
+                                <option *ngFor="let elem of ro_rollup" [value]="elem.ro_routing">
+                                    {{elem.ro_routing}} {{elem.ro_desc}}</option>
 
                             </select>
                             <div *ngIf="woForm.controls['wo_routing'].errors && (woForm.controls['wo_routing'].dirty || woForm.controls['wo_routing'].touched)"

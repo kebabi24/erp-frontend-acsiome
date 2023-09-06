@@ -738,6 +738,10 @@ export class MenuConfig {
             {
               title: "List Prix de Revient OF",
               page: "/manufacturing/costprice-list",
+            },
+            {
+              title: "Etat des Broyages ",
+              page: "/manufacturing/rp-broyage",
             },  
           ],
         },

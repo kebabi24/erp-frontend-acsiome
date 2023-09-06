@@ -64,6 +64,7 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })   
     }
+    
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findOne`,data, { headers: httpHeaders })
@@ -87,4 +88,9 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/calccostwo`,data, { headers: httpHeaders })   
     }
+    public getBrRep(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbrrep`,data, { headers: httpHeaders })   
+    }
+    
 }

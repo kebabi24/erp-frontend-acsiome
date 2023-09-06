@@ -89,6 +89,7 @@ import { CalcCoutWoComponent } from './calc-cout-wo/calc-cout-wo.component';
 import { CostpriceListComponent } from './costprice-list/costprice-list.component';
 import { CreateWoSoComponent } from './create-wo-so/create-wo-so.component';
 import { CreateWoSfComponent } from './create-wo-sf/create-wo-sf.component';
+import { RpBroyageComponent } from './rp-broyage/rp-broyage.component';
 
 
 
@@ -207,6 +208,10 @@ const routes: Routes = [
     path: 'create-wo-sf',
     component: CreateWoSfComponent
   },
+  {
+    path: 'rp-broyage',
+    component: RpBroyageComponent
+  },
   
 ]
 
@@ -221,7 +226,7 @@ const routes: Routes = [
       CreateNomenclatureComponent, 
       CreateCauseComponent, 
       WorctEntryComponent, 
-      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent, CreateWoSfComponent
+      WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent, CreateWoSfComponent, RpBroyageComponent
     ],
 
     imports: [

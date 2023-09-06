@@ -181,7 +181,8 @@ shift: any
   ) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true })
-      .subscribe((response: any) => (this.ro_rollup = response.data));
+      .subscribe((response: any) => { console.log(response.date)
+      this.ro_rollup = response.data});
     this.codeService
       .getBy({ code_fldname: "emp_shift" })
       .subscribe((response: any) => (this.emp_shift = response.data));
@@ -850,7 +851,7 @@ addWod( detail: any, it) {
     _wo.wo_due_date = controls.wo_ord_date.value
     ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
     : null
-    
+    _wo.wo__chr01 = controls.emp_shift.value
     return _wo
   }
   addWo(){

@@ -2628,7 +2628,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
             controls.ttc.setValue(ttc.toFixed(2));
 
-            this.numberToLetter = NumberToLetters(ttc.toFixed(2), curr.cu_desc);
+            this.numberToLetter = NumberToLetters(ttc.toFixed(2), this.curr.cu_desc);
           }
         },
         (error) => console.log(error)
@@ -2655,7 +2655,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
 
       controls.ttc.setValue(ttc.toFixed(2));
 
-      this.numberToLetter = NumberToLetters(ttc.toFixed(2), curr.cu_desc);
+      this.numberToLetter = NumberToLetters(ttc.toFixed(2), this.curr.cu_desc);
     }
     this.datasetToprint = this.dataset.filter((item) => item.itdh_price * ((item.itdh_qty_cons + item.itdh_stdby) * item.itdh_qty_inv) > 0);
   }
