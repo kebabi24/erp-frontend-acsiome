@@ -25,28 +25,28 @@
         </div>
       </form>
       <div id="kt_account_settings_notifications" class="collapse show">
+        <div style="display: flex; flex-direction: row" *ngFor="let printer of allPrinters; let i = index">
+          <input style="width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChange($event, printer)" />
+          <p style="margin-left: 20px">{{ printer.printer_desc }}</p>
+        </div>
         <!--begin::Form-->
-        <form class="form">
-          <!--begin::Card body-->
-          <div class="">
-            <div class="min-w-250px fs-1 fw-bold text-gray-900">Les imprimantes disponibles:</div>
 
-            <div>
-              <ul class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2">
-                <li *ngFor="let printer of allPrinters; let i = index" style="width: 240px; height: 65px; margin-top: 10px">
-                  <button id="{{ i }}" class="nav-link nav-link-border-solid btn btn-outline btn-flex btn-active-color-primary" (click)="addListPrinters(printer, i)" style="width: 240px; height: 65px">
-                    <div class="flex justify-content-center">
-                      <span class="text-gray-900 fw-bold fs-2 d-block" style="margin-left: 5px">{{ printer.printer_desc }}</span>
-                    </div>
-                  </button>
-                  <mat-radio-group [(ngModel)]="selectedOptions">
-                    <mat-radio-button *ngFor="let option of options" [value]="option.id"> Par défaut </mat-radio-button>
-                  </mat-radio-group>
-                </li>
-              </ul>
-            </div>
+        <!--begin::Card body-->
+        <!-- <div class="">
+          <div class="min-w-250px fs-1 fw-bold text-gray-900">Les imprimantes disponibles:</div>
+
+          <div>
+            <ul class="nav flex-wrap nav-pills btn-outline nav-pills-custom gap-2 pb-2 pt-2">
+              <div style="display: flex" class="col-2">
+                <mat-radio-group [(ngModel)]="selectedOptions[printer.printer_desc]">
+                  <mat-radio-button *ngFor="let printer of allPrinters" [value]="printer.printer_code">
+                    {{ printer.printer_desc }}
+                  </mat-radio-button>
+                </mat-radio-group> 
+              </div>
+            </ul>
           </div>
-        </form>
+        </div> -->
       </div>
     </div>
     <div>
