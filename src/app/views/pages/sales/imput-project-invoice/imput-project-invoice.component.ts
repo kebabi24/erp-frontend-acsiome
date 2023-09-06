@@ -665,7 +665,7 @@ export class ImputProjectInvoiceComponent implements OnInit {
       */
     // tslint:disable-next-line:prefer-const
     let ih = this.prepareIh()
-    this.addIh(ih, this.ihdataset,this.cfdataset);
+    this.addIh(ih, this.ihdataset/*,this.cfdataset*/);
 
 
   }
@@ -717,7 +717,7 @@ export class ImputProjectInvoiceComponent implements OnInit {
    *
    * @param _ih: ih
    */
-  addIh(_ih: any, detail: any, cfdetail:any) {
+  addIh(_ih: any, detail: any/*, cfdetail:any*/) {
     var array = []
     var iharray = []
     for (let data of detail) {
@@ -725,17 +725,17 @@ export class ImputProjectInvoiceComponent implements OnInit {
       delete data.cmvid;
      
     }
-    for (let data of cfdetail) {
-      delete data.id;
-      delete data.cmvid;
+    // for (let data of cfdetail) {
+    //   delete data.id;
+    //   delete data.cmvid;
      
-    }
+    // }
     this.loadingSubject.next(true);
     let ih = null;
     const controls = this.ihForm.controls;
 
     this.invoiceOrderTempService
-      .imput({ invoiceOrder: _ih, invoiceOrderDetail: detail, gldetail: cfdetail })
+      .imputproject({ invoiceOrder: _ih, invoiceOrderDetail: detail /*, gldetail: cfdetail*/ })
       .subscribe(
         (reponse: any) => (ih = reponse.data),
         (error) => {
@@ -1228,8 +1228,8 @@ this.cfdataset.push(
    
           for (var j = 0; j < this.ihdataset.length; j++) {
          console.log("jjjjjjjjjjjj")
-            this.ihdataset[j].total_line = this.ihdataset[j].idh_price * this.ihdataset[j].idh_qty_inv;
-            this.ihdataset[j].tax_line = this.ihdataset[j].idh_price * this.ihdataset[j].idh_qty_inv * this.ihdataset[j].idh_taxc / 100;
+            this.ihdataset[j].total_line = this.ihdataset[j].idh_price * this.ihdataset[j].idh_qty_inv *   (Number(this.ihdataset[j].idh_qty_cons) + Number(this.ihdataset[j].idh_stdby)) * ( 1 - (Number(controls.ih_disc_glb) / 100));
+            this.ihdataset[j].tax_line = this.ihdataset[j].idh_price   * this.ihdataset[j].idh_qty_inv *   (Number(this.ihdataset[j].idh_qty_cons) + Number(this.ihdataset[j].idh_stdby))  * ( 1 - (Number(controls.ih_disc_glb) / 100)) * this.ihdataset[j].idh_taxc / 100;
 
 
           }

@@ -907,8 +907,13 @@ export class CreateProjectInvoiceComponent implements OnInit {
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
-
+      
       console.log(data.itdh__chr03);
+    }
+    for (var i=0 ;i< detail.length;i++ ) {
+      if(detail[i].itdh_qty_inv == 0) {
+        delete detail[i]
+      }
     }
     this.loadingSubject.next(true);
     let so = null;

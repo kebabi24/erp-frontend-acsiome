@@ -41,6 +41,10 @@ export class MenuConfig {
               title: "Dashboard CRM",
               page: "/dashboard/crm-dashboard",
             },
+            {
+              title: "Dashboard DD",
+              page: "/dashboard/dd-dashboard",
+            },
           ],
         },
         
@@ -688,6 +692,10 @@ export class MenuConfig {
             {
               title: "Création des OFs à partir des Commandes",
               page: "/manufacturing/create-wo-so",
+            },
+            {
+              title: "Création des OFs Semi-Finis",
+              page: "/manufacturing/create-wo-sf",
             },
             {
               title: "List des OFs",
