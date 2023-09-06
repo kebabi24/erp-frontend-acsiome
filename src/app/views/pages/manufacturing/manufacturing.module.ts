@@ -200,7 +200,7 @@ const routes: Routes = [
 
   
 @NgModule({
-  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,RpBroyageComponent],
+  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent],
 
   imports: [
     CommonModule,
