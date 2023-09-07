@@ -1,9 +1,10 @@
 <kt-portlet>
   <kt-portlet-header [sticky]="true" [title]="'affecter imprimantes a un utilisateur'" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
+      
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Retour</button>
+      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
       <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
-      <button type="button" (click)="goBack()" class="btn btn-success btn-sm mr-2">Retour</button>
-      <button type="button" (click)="reset()" class="btn btn-success btn-sm mr-2">Réinitialiser</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -11,7 +12,7 @@
       <form class="form" [formGroup]="printersForm">
         <div class="row">
           <div class="form-group col-2">
-            <label class="form-group">Code imprimante: *</label>
+            <label class="form-group">Code Utilisateur: *</label>
             <div class="input-group input-group-sm">
               <input type="text" formControlName="usrd_code" [className]="printersForm.controls['usrd_code'].errors && (printersForm.controls['usrd_code'].dirty || printersForm.controls['usrd_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
               <div class="input-group-append">

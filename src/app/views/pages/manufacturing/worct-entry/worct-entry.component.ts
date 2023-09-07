@@ -531,8 +531,9 @@ export class WorctEntryComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    this.createForm();
     this.user = JSON.parse(localStorage.getItem("user"));
+    this.createForm();
+   
     this.currentPrinter = this.user.usrd_dft_printer;
   }
 
@@ -554,7 +555,7 @@ export class WorctEntryComponent implements OnInit {
 
       tr_part: [{ value: this.inventoryTransaction.tr_part, disabled: true }],
       desc: [{ value: "", disabled: true }],
-      printer: [{ value: "", disabled: true }],
+      printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
       tr_so_job: [this.inventoryTransaction.tr_so_job],
       emp_shift: [this.inventoryTransaction.tr_addr],
 

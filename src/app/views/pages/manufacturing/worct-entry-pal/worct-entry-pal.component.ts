@@ -13,6 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, AddressService, SequenceService, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, CodeService, MesureService, WorkOrderService, Label, LabelService, SaleOrderService, PrintersService } from "../../../../core/erp";
+import { validators } from "src/assets/plugins/formvalidation/src/js";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -532,8 +533,9 @@ export class WorctEntryPalComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    this.createForm();
     this.user = JSON.parse(localStorage.getItem("user"));
+    this.createForm();
+    
     this.currentPrinter = this.user.usrd_dft_printer;
   }
 
@@ -576,11 +578,11 @@ export class WorctEntryPalComponent implements OnInit {
       ],
       tr_lot: [this.inventoryTransaction.tr_lot],
       tr_nbr: [{ value: this.inventoryTransaction.tr_nbr, disabled: true }],
-      tr_site: [this.inventoryTransaction.tr_site],
+      tr_site: [this.inventoryTransaction.tr_site, Validators.required],
       tr_loc: [this.inventoryTransaction.tr_loc],
       tr_part: [{ value: this.inventoryTransaction.tr_part, disabled: true }],
       desc: [{ value: "", disabled: true }],
-      printer: [{ value: "", disabled: true }],
+      printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
       tr_so_job: [this.inventoryTransaction.tr_so_job],
       emp_shift: [this.inventoryTransaction.tr_addr],
       tr_rmks: [this.inventoryTransaction.tr_rmks],

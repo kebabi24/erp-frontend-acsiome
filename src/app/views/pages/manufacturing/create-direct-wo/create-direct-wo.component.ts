@@ -324,7 +324,7 @@ export class CreateDirectWoComponent implements OnInit {
       wo_qty_comp: [this.workOrder.wo_qty_comp],
       emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial],
-      printer: [{ value: "", disabled: true }],
+      printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
       product_type: ["", Validators.required],
       product_color: ["", Validators.required],
     });
