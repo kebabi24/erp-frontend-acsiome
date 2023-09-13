@@ -570,11 +570,12 @@ export class UnplanifiedReceptComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    this.createForm();
+    
     this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
+    this.createForm();
   }
 
   //create form
