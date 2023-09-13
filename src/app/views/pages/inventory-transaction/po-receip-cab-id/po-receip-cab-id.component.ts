@@ -47,6 +47,8 @@ import {
   VendorProposal,
   InventoryTransaction,
   PurchaseReceive,
+  Label,
+  LabelService,
   InventoryTransactionService,
   PurchaseReceiveService,
   LocationService,
@@ -78,11 +80,11 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 };
 
 @Component({
-  selector: 'kt-po-receip',
-  templateUrl: './po-receip.component.html',
-  styleUrls: ['./po-receip.component.scss']
+  selector: 'kt-po-receip-cab-id',
+  templateUrl: './po-receip-cab-id.component.html',
+  styleUrls: ['./po-receip-cab-id.component.scss']
 })
-export class PoReceipComponent implements OnInit {
+export class PoReceipCabIdComponent implements OnInit {
   purchaseReceive: PurchaseReceive;
   inventoryTransaction: InventoryTransaction;
   prhForm: FormGroup;
@@ -154,6 +156,9 @@ export class PoReceipComponent implements OnInit {
   prhnbr: String;
   stat: String;
   lddet: any;
+  poEdit:any;
+  address: any;
+  details:any[];
   domain
   constructor(
     config: NgbDropdownConfig,
@@ -179,6 +184,7 @@ export class PoReceipComponent implements OnInit {
     private sequenceService: SequenceService,
     private inventoryStatusService: InventoryStatusService,
     private locationService: LocationService,
+    private labelService: LabelService,
   ) {
     config.autoClose = true;
     this.initGrid();
@@ -583,6 +589,71 @@ export class PoReceipComponent implements OnInit {
           model: Editors.date,
         },
       },
+      {
+        id: "tr_ref",
+        name: "N° Palette",
+        field: "tr_ref",
+        sortable: false,
+      
+        filterable: false,
+       // editor: {
+       //     model: Editors.float,
+        //},
+        
+      },
+      {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+          <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
+               <i class="flaticon2-printer"></i>
+               
+           </a>
+           `;
+        },
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          //   this.angularGrid.gridService.deleteItem(args.dataContext);
+          // }
+          if(args.dataContext.prh_part != null && args.dataContext.prh_rcvd != null && args.dataContext.prh_loc != null) {
+          const controls = this.prhForm.controls
+          const _lb = new Label();
+              _lb.lb_site = controls.prh_site.value
+              _lb.lb_rmks = controls.prh_rmks.value
+              _lb.lb_loc = args.dataContext.prh_loc
+              _lb.lb_part = args.dataContext.prh_part
+              _lb.lb_nbr = this.prhnbr
+              _lb.lb_lot = args.dataContext.prh_serial
+              _lb.lb_date = controls.prh_rcp_date.value
+                  ? `${controls.prh_rcp_date.value.year}/${controls.prh_rcp_date.value.month}/${controls.prh_rcp_date.value.day}`
+                  : null
+              _lb.lb_qty = args.dataContext.prh_rcvd
+              _lb.lb_ld_status = args.dataContext.tr_status
+              _lb.lb_desc = args.dataContext.desc
+
+    
+              let lab = null
+
+              this.labelService.add(_lb).subscribe(
+                (reponse: any) => (lab = reponse.data),
+                (error) => {
+                 alert("Erreur Impression Etiquette")   },
+                () => {
+         
+                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
+                }
+            )
+              }
+              else {
+                alert ("Veuillez verifier les informations")
+              }
+        },
+      },
     ];
 
     this.gridOptions = {
@@ -607,44 +678,159 @@ export class PoReceipComponent implements OnInit {
     this.dataset = [];
   }
   ngOnInit(): void {
-    this.loading$ = this.loadingSubject.asObservable();
-    this.loadingSubject.next(false);
-    this.domain =  JSON.parse(localStorage.getItem('domain'))
+    // this.loading$ = this.loadingSubject.asObservable();
+    // this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
   if (this.user.usrd_site == "*"){
     this.site = null
   } else {
    this.site=  this.user.usrd_site
   }
-    
-    this.createForm();
+  this.domain =  JSON.parse(localStorage.getItem('domain'))
+//const controls = this.prhForm.controls
+  this.loading$ = this.loadingSubject.asObservable()
+      this.loadingSubject.next(true)
+      this.activatedRoute.params.subscribe((params) => {
+          const id = params.id
+          this.poService.getOne(id).subscribe((response: any)=>{
+          
+            this.poEdit = response.data.purchaseOrder,
+            this.details = response.data.details
+            console.log(this.poEdit)
+            // this.addressService.getBy({ad_addr: this.poEdit.po_vend}).subscribe(
+            //   (resp: any) => {this.address = resp.data
+            this.createForm()
+            // controls.prh_nbr.setValue(this.poEdit.po_nbr)
+            this.initGrid();
+            const { purchaseOrder, details } = response.data;
+            const det1 = details;
+            this.dataset=[]
+              for (const object in det1) {
+                console.log(details[object]);
+                const detail = details[object];
+             // console.log(det)
+             var i = 0
+            
+              this.locationService.getByOne({ loc_loc: detail.item.pt_loc, loc_site: detail.item.pt_site }).subscribe(
+                (respon: any) => {
+                  this.location = respon.data
+                 // console.log( this.location.loc_status)
+                  if (this.location == null) {this.stat = null} else {this.stat = this.location.loc_status}
+              this.gridService.addItem(
+                {
+                  id: this.dataset.length + 1,
+                  prh_line: this.dataset.length + 1,
+                  prh_part: detail.pod_part,
+                  cmvid: "",
+                  desc: detail.item.pt_desc1,
+                  qty_received: detail.pod_qty_rcvd,
+                  prh_rcvd: detail.pod_qty_ord - detail.pod_qty_rcvd,
+                  prh_um: detail.item.pt_um,
+                  prh_um_conv: 1,
+                  prh_pur_cost: detail.pod_price,
+                  prh_disc_pct: detail.pod_disc_pct,
+                  prh_taxable: detail.pod_taxable,
+                  prh_taxc: detail.pod_taxc,
+                  prh_tax_code: detail.pod_tax_code,
+                  //prh_site: detail.item.pt_site,
+                  prh_loc: detail.item.pt_loc,
+                  prh_serial: null,
+                  tr_status:  this.stat,
+                  prh_vend_lot: null,
+                  tr_expire: null,
+                },
+                { position: "bottom" }
+              );
+            })
+            i = i + 1
+            }
+            this.loadingSubject.next(false)
+     
+        //  })
+        })
+      })
+    // this.createForm();
     
   }
 
   //create form
   createForm() {
+    
     this.loadingSubject.next(false);
     this.inventoryTransaction = new InventoryTransaction();
     this.purchaseReceive = new PurchaseReceive()
     const date = new Date()
+console.log(this.poEdit.po_nbr)
     this.prhForm = this.prhFB.group({
-      prh_nbr: [this.purchaseReceive.prh_nbr],
-      prh_vend: [this.purchaseReceive.prh_vend],
-      name: "",
+      prh_receiver: [null],
+      prh_nbr: [{value:this.poEdit.po_nbr}],
+      prh_vend: [this.poEdit.po_vend],
+      name: [""],
       prh_rcp_date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
         day: date.getDate()
       }],
       prh_xinvoice: [this.purchaseReceive.prh_xinvoice],
-      prh_curr: [this.purchaseReceive.prh_curr],
+      prh_curr: [this.poEdit.po_curr],
       prh_site: [this.site, Validators.required],
-      prh_ex_rate: [this.purchaseReceive.prh_ex_rate],
-      prh_ex_rate2: [this.purchaseReceive.prh_ex_rate2],
+      prh_ex_rate: [this.poEdit.po_ex_rate],
+      prh_ex_rate2: [this.poEdit.po_ex_rate2],
       
-      prh_rmks: [this.purchaseReceive.prh_rmks],
+      prh_rmks: [this.poEdit.po_rmks],
       print:[true]
     });
+    const controls = this.prhForm.controls
+      this.addressService.getBy({ad_addr: this.poEdit.po_vend}).subscribe(
+        (resp: any) => {this.address = resp.data
+          this.provider = resp.data
+
+    controls.name.setValue(this.address.ad_name)
+        })
+    this.loadingSubject.next(false)
+  
+
+   // const controls = this.prhForm.controls
+    this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe(
+      (response: any) => {
+    this.seq = response.data
+    console.log(this.seq)   
+        if (this.seq) {
+         this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+         console.log(this.seq.seq_prefix)
+         console.log(this.seq.seq_curr_val)
+         
+        console.log(this.prhnbr)
+         const id = Number(this.seq.id)
+      let obj = { }
+      obj = {
+        seq_curr_val: Number(this.seq.seq_curr_val )+1
+      }
+      this.sequenceService.update(id , obj ).subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+          this.message = "Erreur modification Sequence";
+          this.hasFormErrors = true;
+          return;
+     
+        
+        },
+        )
+        console.log("prhnumber",this.prhnbr)
+        controls.prh_receiver.setValue(this.prhnbr)
+      }else {
+        this.message = "Parametrage Monquant pour la sequence";
+        this.hasFormErrors = true;
+        return;
+   
+       }
+  
+      
+      
+    // tslint:disable-next-line:prefer-const
+    
+  })
+  
   }
   //reste form
   reset() {
@@ -676,44 +862,44 @@ export class PoReceipComponent implements OnInit {
 
 
 
-    this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe(
-      (response: any) => {
-    this.seq = response.data
-    console.log(this.seq)   
-        if (this.seq) {
-         this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
-         console.log(this.seq.seq_prefix)
-         console.log(this.seq.seq_curr_val)
+    // this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe(
+    //   (response: any) => {
+    // this.seq = response.data
+    // console.log(this.seq)   
+    //     if (this.seq) {
+    //      this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+    //      console.log(this.seq.seq_prefix)
+    //      console.log(this.seq.seq_curr_val)
          
-        console.log(this.prhnbr)
-         const id = Number(this.seq.id)
-      let obj = { }
-      obj = {
-        seq_curr_val: Number(this.seq.seq_curr_val )+1
-      }
-      this.sequenceService.update(id , obj ).subscribe(
-        (reponse) => console.log("response", Response),
-        (error) => {
-          this.message = "Erreur modification Sequence";
-          this.hasFormErrors = true;
-          return;
+    //     console.log(this.prhnbr)
+    //      const id = Number(this.seq.id)
+    //   let obj = { }
+    //   obj = {
+    //     seq_curr_val: Number(this.seq.seq_curr_val )+1
+    //   }
+    //   this.sequenceService.update(id , obj ).subscribe(
+    //     (reponse) => console.log("response", Response),
+    //     (error) => {
+    //       this.message = "Erreur modification Sequence";
+    //       this.hasFormErrors = true;
+    //       return;
      
         
-        },
-        )
-      }else {
-        this.message = "Parametrage Monquant pour la sequence";
-        this.hasFormErrors = true;
-        return;
+    //     },
+    //     )
+    //   }else {
+    //     this.message = "Parametrage Monquant pour la sequence";
+    //     this.hasFormErrors = true;
+    //     return;
    
-       }
+    //    }
 
       
       
     // tslint:disable-next-line:prefer-const
     let pr = this.prepare()
     this.addIt( this.dataset,pr, this.prhnbr);
-  })
+//  })
 
 
 
@@ -726,6 +912,8 @@ export class PoReceipComponent implements OnInit {
     const controls = this.prhForm.controls;
     const _pr = new PurchaseReceive();
     _pr.prh_nbr = controls.prh_nbr.value
+    _pr.prh_receiver = controls.prh_receiver.value
+
     _pr.prh_vend = controls.prh_vend.value
     _pr.prh_rcp_date = controls.prh_rcp_date.value
     ? `${controls.prh_rcp_date.value.year}/${controls.prh_rcp_date.value.month}/${controls.prh_rcp_date.value.day}`
@@ -757,7 +945,7 @@ export class PoReceipComponent implements OnInit {
     const controls = this.prhForm.controls
     let poNbr = 0
     this.purchaseReceiveService
-      .add({detail, pr,prhnbr})
+      .addCab({detail, pr,prhnbr})
       .subscribe(
        (reponse: any) => (poNbr = reponse.data),
         (error) => {
@@ -945,19 +1133,19 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
       {
         id: this.dataset.length + 1,
         prh_line: this.dataset.length + 1,
-        prh_part: "",
+        prh_part: null,
         cmvid: "",
-        desc: "",
+        desc: null,
         qty_received:0,
         prh_rcvd: 0,
-        prh_um: "",
+        prh_um: null,
         prh_um_conv: 1,
         prh_pur_cost: 0,
        // prh_site: "",
-        prh_loc: "",
-        prh_serial: "",
-        tr_status: "",
-        prh_vend_lot: "",
+        prh_loc: null,
+        prh_serial: null,
+        tr_status: null,
+        prh_vend_lot: null,
         tr_expire: null,
       },
       { position: "bottom" }
@@ -984,9 +1172,9 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
         prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
        // prh_site: this.dataset[i - 1].prh_site,
         prh_loc: this.dataset[i - 1].prh_loc,
-        prh_serial: "",
+        prh_serial: this.dataset[i - 1].prh_serial,
         tr_status:  this.dataset[i - 1].tr_status,
-        prh_vend_lot: "",
+        prh_vend_lot: null,
         tr_expire: null,
       },
       { position: "bottom" }
@@ -2000,7 +2188,6 @@ printpdf(nbr) {
   if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
   if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
   if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
-  //doc.addImage(img, 'png', 5, 5, 210, 30)
   doc.setFontSize(12);
   doc.text( 'RC N° : ' + nbr  , 70, 40);
   doc.setFontSize(8);
@@ -2042,6 +2229,7 @@ printpdf(nbr) {
     
     if ((j % 35 == 0) && (j != 0) ) {
 doc.addPage();
+
 doc.addImage(img, 'png', 170, 5, 30, 30)
 doc.setFontSize(9);
 if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
@@ -2117,7 +2305,7 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
       doc.line(153, i - 5 , 153, i );
      if(this.dataset[j].prh_serial != null) { doc.text(String(this.dataset[j].prh_serial)  , 156 , i  - 1)};
       doc.line(180, i - 5 , 180, i );
-      if(this.dataset[j].prh_ref != null) {doc.text(String(this.dataset[j].prh_ref ), 182 , i  - 1)};
+      if(this.dataset[j].tr_ref != null) {doc.text(String(this.dataset[j].tr_ref ), 182 , i  - 1)};
       doc.line(200, i-5 , 200, i );
      // doc.line(10, i, 200, i );
 
@@ -2160,7 +2348,7 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
     doc.line(153, i - 5 , 153, i );
     if(this.dataset[j].prh_serial != null) {doc.text(String(this.dataset[j].prh_serial) , 156 , i  - 1)};
     doc.line(180, i - 5 , 180, i );
-    if (this.dataset[j].prh_ref) {doc.text(String(this.dataset[j].prh_ref ), 182 , i  - 1)};
+    if (this.dataset[j].tr_ref) {doc.text(String(this.dataset[j].tr_ref ), 182 , i  - 1)};
     doc.line(200, i-5 , 200, i );
     doc.line(10, i, 200, i );
     i = i + 5;

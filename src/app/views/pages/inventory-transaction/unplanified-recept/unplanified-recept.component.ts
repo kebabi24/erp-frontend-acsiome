@@ -1748,7 +1748,7 @@ console.log(updateItem.tr_part)
     
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
-    img.src = "./assets/media/logos/logoabr.png";
+    img.src = "./assets/media/logos/companylogo.png";
     doc.addImage(img, 'png', 170, 5, 30, 30)
     doc.setFontSize(9);
     if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
@@ -1799,7 +1799,7 @@ console.log(updateItem.tr_part)
       
       if ((j % 30 == 0) && (j != 0) ) {
   doc.addPage();
-        img.src = "./assets/media/logos/logoabr.png";
+        img.src = "./assets/media/logos/companylogo.png";
         doc.addImage(img, 'png', 170, 5, 30, 30)
         doc.setFontSize(9);
         if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
