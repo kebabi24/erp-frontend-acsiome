@@ -6,44 +6,7 @@
       <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
     </ng-container>
   </kt-portlet-header>
-  <kt-portlet-body>
-    <div class="example-preview">
-      <form class="form" [formGroup]="prhForm">
-        <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)">
-          {{ message }}
-        </kt-alert>
-        <div class="row">
-          <div class="form-group col-2">
-            <label class="form-group">N° RC:</label>
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="prh_receiver" aria-describedby="basic-addon2" disabled />
-            </div>
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">N° BC:</label>
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="prh_nbr" aria-describedby="basic-addon2" (change)="onChangeOA()" />
-              <div class="input-group-append">
-                <span class="input-group-text" (click)="open5(content5)"> <i class="text-dark-50 flaticon2-search"></i> </span>
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">Fournisseur:</label>
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="prh_vend" aria-describedby="basic-addon2" disabled />
-            </div>
-          </div>
-          <div class="form-group col-3">
-            <label class="form-group">Nom: </label>
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="name" aria-describedby="basic-addon2" disabled />
-            </div>
-          </div>
-
-        </ng-container>
-    </kt-portlet-header>
-    <kt-portlet-body>
+     <kt-portlet-body>
         <div class="example-preview">
 
             <form class="form" [formGroup]="prhForm">
@@ -86,7 +49,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-2">
                         <label class="form-group">Nom:  </label>
                         <div class="input-group input-group-sm">
 
@@ -139,7 +102,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-2">
                         <label class="form-group">Devise:</label>
                         <div class="input-group input-group-sm">
 
@@ -176,10 +139,19 @@
 
                 
                 <div class="row">
-                    <div class="form-group col-9">
+                    <div class="form-group col-6">
                         <label class="form-group">Observation:</label>
                         <textarea class="form-control form-control-sm form-control-solid" formControlName="prh_rmks"
                             rows="2"></textarea>
+                    </div>
+                    <div class="form-group col-2">
+                      <label class="form-group">choix de l'imprimante</label>
+                      <div class="input-group input-group-sm">
+                        <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
+                        <div class="input-group-append">
+                          <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                        </div>
+                      </div>
                     </div>
                     <div class="form-group col-2">
                         <label class="form-group">Imprimer:</label>
@@ -194,6 +166,8 @@
                         </div>
 
                     </div>
+                    
+            
                 </div>
                 <div class="row">
                     <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un
@@ -208,41 +182,7 @@
             </form>
         </div>
 
-        <div class="row">
-          <div class="form-group col-9">
-            <label class="form-group">Observation:</label>
-            <textarea class="form-control form-control-sm form-control-solid" formControlName="prh_rmks" rows="2"></textarea>
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">Imprimer:</label>
-            <div class="input-group input-group-sm">
-              <span class="switch switch-icon">
-                <label>
-                  <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print" />
-                  <span></span>
-                </label>
-              </span>
-            </div>
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">choix de l'imprimante</label>
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
-              <div class="input-group-append">
-                <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un Article</button>
-        </div>
-        <div class="row">
-          <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
-        </div>
-      </form>
-    </div>
-
+  
     <div>
       <ng-template #content4 let-c="close" let-d="dismiss">
         <div class="modal-header">

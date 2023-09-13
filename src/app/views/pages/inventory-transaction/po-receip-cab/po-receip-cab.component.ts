@@ -636,7 +636,8 @@ this.createForm();
 
       prh_rmks: [this.purchaseReceive.prh_rmks],
       print: [true],
-      printer: []
+      printer: [ this.user.usrd_dft_printer ],
+     
     });
 
     const controls = this.prhForm.controls;

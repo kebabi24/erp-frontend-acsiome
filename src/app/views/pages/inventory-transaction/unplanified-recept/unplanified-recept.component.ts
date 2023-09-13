@@ -595,7 +595,7 @@ export class UnplanifiedReceptComponent implements OnInit {
 
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       tr_addr: [this.inventoryTransaction.tr_addr],
-
+      printer :  [this.user.usrd_dft_printer],
       print: [true],
     });
   }
