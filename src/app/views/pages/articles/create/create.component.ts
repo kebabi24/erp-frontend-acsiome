@@ -927,7 +927,7 @@ export class CreateComponent implements OnInit {
   }
 
   prepareSct1(): CostSimulation {
-    const controls = this.sctForm.controls;
+    // const controls = this.sctForm.controls;
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     
@@ -950,7 +950,7 @@ export class CreateComponent implements OnInit {
   }
 
   prepareSct2(): CostSimulation {
-    const controls = this.sctForm1.controls;
+    // const controls = this.sctForm1.controls;
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     _sct.sct_sim     = 'STD-CR'
