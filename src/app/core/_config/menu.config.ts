@@ -807,7 +807,7 @@ export class MenuConfig {
             },
             {
               title: "Calcule paie",
-              page: "/project/employe-salary",
+              page: "/accounting-setting/employe-salary",
             },
           ],
         },
