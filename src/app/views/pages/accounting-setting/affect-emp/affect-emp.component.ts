@@ -820,13 +820,14 @@ handleSelectedRowsChangedemp(e, args) {
   if (Array.isArray(args.rows) && this.gridObjemp) {
       args.rows.map((idx) => {
           const item = this.gridObjemp.getDataItem(idx)
-          console.log(item)
+          console.log( this.job, item.emp_addr ,this.level )
 
 
           this.employeService
           .getByJob({empj_addr: item.emp_addr, empj_job: this.job, empj_level :this.level })
           .subscribe((response: any) => {
-         if (response.data.length = 0) 
+            console.log("hnounou",response.data)
+         if (response.data.length == 0) 
          
 {         
      
@@ -840,7 +841,6 @@ handleSelectedRowsChangedemp(e, args) {
           updateItem.lname = item.emp_lname
           updateItem.job = response.data[0].empj_job
           updateItem.level = response.data[0].empj_level
-          
           this.mvgridService.updateItem(updateItem)
      }
     })

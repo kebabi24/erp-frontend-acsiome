@@ -81,6 +81,24 @@ export class ListEmpTempComponent implements OnInit {
             type: FieldType.string,
           },
           {
+            id: "employe.emp_lname",
+            name: "Nom",
+            field: "employe.emp_lname",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "employe.emp_fname",
+            name: "Prenom",
+            field: "employe.emp_fname",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
             id: "empt_shift",
             name: "Equipe",
             field: "empt_shift",
@@ -153,13 +171,22 @@ export class ListEmpTempComponent implements OnInit {
           
           frozenColumn: 0,
           frozenBottom: true,
+          dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+            var val = undefined;
+            try {
+              val = eval("item." + column.field);
+            } catch (e) {
+              // ignore
+            }
+            return val;
+          },
       }    
       // fill the dataset with your data
       this.dataset = []
       this.employeService.getAllTime().subscribe(
         
           (response: any) => {
-          //  console.log(response.data),
+            console.log(response.data),
             (this.dataset = response.data),
          
           (error) => {

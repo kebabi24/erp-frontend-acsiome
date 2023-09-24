@@ -155,7 +155,7 @@ export class EditEmployeComponent implements OnInit {
       this.employeEdit = response.data.employe
       this.mvdataset = response.data.employeScoreDetail
       this.jbdataset = response.data.employeJobDetail
-      console.log("hereeeeeeeeeeee", this.jbdataset)
+      console.log("hereeeeeeeeeeee", this.employeEdit)
      
                             this.loadingSubject.next(false)
                             this.title = this.title + this.employeEdit.emp_addr
@@ -167,6 +167,7 @@ export class EditEmployeComponent implements OnInit {
         /*      this.bdate.setDate(this.bdate.getDate() + 1)
               this.fdate.setDate(this.fdate.getDate() + 1)
               this.ldate.setDate(this.ldate.getDate() + 1)*/
+             
       this.createForm()
       this.initmvGrid()
       this.initjbGrid()
@@ -177,7 +178,6 @@ export class EditEmployeComponent implements OnInit {
 //create form
 createForm() {
   this.loadingSubject.next(false)
-
   
   
   this.empForm = this.empFB.group({
@@ -200,10 +200,7 @@ createForm() {
     Validators.required,
 ],
 
-emp_blood: [
-  { value: this.employeEdit.emp_blood },
-  Validators.required,
-],
+
 
 emp_birth_date: [{
   year: this.bdate.getFullYear(),
@@ -231,35 +228,25 @@ emp_hab_date: [{
 
 
       
-
+emp_blood: [this.employeEdit.emp_blood , Validators.required],
       emp_line1:  [this.employeEdit.emp_line1, Validators.required,],
       emp_ss_id:  [this.employeEdit.emp_ss_id , Validators.required,],
       emp_country: [this.employeEdit.emp_country ],
       emp_city: [this.employeEdit.emp_city ],
-      
       emp_state: [this.employeEdit.emp_state ],
-
       emp_zip: [this.employeEdit.emp_zip ],
       emp_phone: [this.employeEdit.emp_phone ],
       emp_fax: [this.employeEdit.emp_fax ],
       emp_mail: [this.employeEdit.emp_mail ],
-    
-      emp_job: [this.employeEdit.emp_job ],
-
-      emp_level: [this.employeEdit.emp_level ],
-
       emp_shift:  [this.employeEdit.emp_shift ],
       emp_site:  [this.employeEdit.emp_site ],
       emp_rate:  [this.employeEdit.emp_rate ],
       emp_mrate: [this.employeEdit.emp_mrate ],
       emp_arate: [this.employeEdit.emp_arate ],
-
       emp_dlicence:  [this.employeEdit.emp_dlicence ],
       emp_anem: [this.employeEdit.emp_anem ],
       emp_habiliation: [this.employeEdit.emp_habiliation ],
-
       emp_child_nbr: [this.employeEdit.emp_child_nbr ],
-
       emp_contact_fname:  [this.employeEdit.emp_contact_fname],
       emp_contact_lname:  [this.employeEdit.emp_contact_lname ],
       emp_contact_adress: [ this.employeEdit.emp_contact_adress ],
@@ -584,8 +571,6 @@ onSubmit() {
       _employe.emp_fname = controls.emp_fname.value
       _employe.emp_sex = controls.emp_sex.value
       _employe.emp_familysit = controls.emp_familysit.value
-      _employe.emp_job = controls.emp_job.value
-      _employe.emp_level = controls.emp_level.value
       _employe.emp_birth_date = controls.emp_birth_date.value
       ? `${controls.emp_birth_date.value.year}/${controls.emp_birth_date.value.month}/${controls.emp_birth_date.value.day}`
       : null
