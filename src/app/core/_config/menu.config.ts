@@ -47,7 +47,7 @@ export class MenuConfig {
             },
           ],
         },
-        
+
         {
           title: "POS",
           bullet: "dot",
@@ -74,8 +74,7 @@ export class MenuConfig {
               title: "Pos call center",
               page: "/pos-visitor",
             },
-          ]
-        
+          ],
         },
         {
           title: "Rapports",
@@ -165,20 +164,18 @@ export class MenuConfig {
             {
               title: "Ajouter population client",
               page: "/crm/population-add",
-            }, 
+            },
             {
               title: "Ajouter avantage",
               page: "/promo/advantage-add",
-            }, 
+            },
             {
               title: "Ajouter promotion",
               page: "/promo/promo-add",
-            }, 
-            
-            
+            },
           ],
         },
-        
+
         {
           title: "Gestion des Fournisseurs",
           bullet: "dot",
@@ -590,7 +587,6 @@ export class MenuConfig {
               title: "Liste des Visites",
               page: "/sales/list-visit-mob",
             },
-            
           ],
         },
         {
@@ -725,8 +721,7 @@ export class MenuConfig {
               title: "Déclaration Consomation",
               page: "/manufacturing/woiss-entry",
             },
-            
-            
+
             {
               title: "Cloture OF",
               page: "/manufacturing/edit-wo",
@@ -742,7 +737,7 @@ export class MenuConfig {
             {
               title: "Etat des Broyages ",
               page: "/manufacturing/rp-broyage",
-            },  
+            },
           ],
         },
         {
@@ -859,7 +854,6 @@ export class MenuConfig {
               page: "/project/accident-incident",
             },
 
-
             {
               title: "Sensibilisation",
               page: "/project/sensibilisation",
@@ -867,6 +861,14 @@ export class MenuConfig {
             {
               title: "identification",
               page: "/project/identification",
+            },
+            {
+              title: "Fiche revue exigences client V 01 model",
+              page: "/project/review-customer-req",
+            },
+            {
+              title: "Fiche de suivi d'affaire projet V02 model",
+              page: "/project/business-monitoring-sheet",
             },
 
             {
@@ -1187,7 +1189,6 @@ export class MenuConfig {
               title: "Paramétrage de production",
               icon: "flaticon2-settings",
               submenu: [
-            
                 {
                   title: "Maint Code Nomenclature",
                   page: "/manufacturing/create-nomenclature",
@@ -1492,7 +1493,7 @@ export class MenuConfig {
                 },
               ],
             },
-    
+
             {
               title: "Paramétrages Mobile",
               bullet: "dot",
@@ -1513,8 +1514,6 @@ export class MenuConfig {
                 },
               ],
             },
-    
-           
 
             {
               title: "Configuration Module",

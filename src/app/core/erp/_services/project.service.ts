@@ -16,8 +16,8 @@ const API_URL_SPECIFICATION_DATA = environment.apiUrl + "/qualityControl/findSpe
 const API_URL_PROJECT_TYPE = environment.apiUrl + "/projects/projectTypes";
 const API_URL_TESTS_HISTORY = environment.apiUrl + "/qualityControl/createTestsHistory";
 const API_URL_TESTS_HISTORY_UPDATE = environment.apiUrl + "/qualityControl/createTestsHistoryUpdateStatus";
-const API_URL_SITES = environment.apiUrl + "/sites/"
-const API_URL_EMPS_BY_SITE = environment.apiUrl + "/employes/find"
+const API_URL_SITES = environment.apiUrl + "/sites/";
+const API_URL_EMPS_BY_SITE = environment.apiUrl + "/employes/find";
 
 @Injectable()
 export class ProjectService {
@@ -66,26 +66,32 @@ export class ProjectService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/findall`, data, { headers: httpHeaders });
 
-       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-        
-    }
+    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  }
 
-    public getByAssetDownTypes() {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL}/assetDownTypes`, { headers: httpHeaders })
+  public getByAssetDownTypes() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/assetDownTypes`, { headers: httpHeaders });
 
-       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-        
-    }
-    public getByDet(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/finddet`,data, { headers: httpHeaders })
+    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  }
+  public getByDet(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/finddet`, data, { headers: httpHeaders });
 
     // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
   }
   public getByTask(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/findtask`, data, {
+      headers: httpHeaders,
+    });
+
+    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  }
+  public getPs(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/findPs`, data, {
       headers: httpHeaders,
     });
 
@@ -153,13 +159,22 @@ export class ProjectService {
     return this.http.post(API_URL_TESTS_HISTORY, { testsHistory }, { headers: httpHeaders });
   }
 
-  public createTestsHistoryUpdateStatus(testsHistory: any , update_project_status : any , project_code : any) {
+  public createTestsHistoryUpdateStatus(testsHistory: any, update_project_status: any, project_code: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.post(API_URL_TESTS_HISTORY_UPDATE, { testsHistory, update_project_status,project_code }, { headers: httpHeaders });
+    return this.http.post(API_URL_TESTS_HISTORY_UPDATE, { testsHistory, update_project_status, project_code }, { headers: httpHeaders });
   }
 
   public createAssetDown(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/createAsset`, { data }, { headers: httpHeaders });
+  }
+
+  public sendDataToModelRevue(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/modelRevue`, { data }, { headers: httpHeaders });
+  }
+  public sendDataToModelSuivi(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/modelSuivi`, { data }, { headers: httpHeaders });
   }
 }
