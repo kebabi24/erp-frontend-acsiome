@@ -833,6 +833,7 @@ export class MenuConfig {
               title: "La liste des Projets",
               page: "/project/list-pm",
             },
+            
             {
               title: "Lancer un projet",
               page: "/project/launch-project",
@@ -869,6 +870,39 @@ export class MenuConfig {
               page: "/project/identification",
             },
 
+
+
+            /**/
+            {
+              title: "Gestion des Nomenclatures",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-tools-and-utensils",
+              submenu: [
+           
+                {
+                  title: "Maint Code Nomenclature",
+                  page: "/manufacturing/create-nomenclature",
+                },
+                {
+                  title: "Maint des Nomenclatures",
+                  page: "/manufacturing/create-ps",
+                },
+                {
+                  title: "Liste des Nomenclatures",
+                  page: "/manufacturing/list-ps",
+                },
+                {
+                  title: "Affectation Nomenclature",
+                  page: "/manufacturing/affect-bom",
+                },
+                {
+                  title: "Calcul coût des Nomenclatures",
+                  page: "/manufacturing/bom-cost",
+                },
+              ]
+            },
+            /* */
             {
               title: "Gestion des Listes Outils",
               root: true,

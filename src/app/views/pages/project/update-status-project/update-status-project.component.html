@@ -1,0 +1,72 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Changer Status Projet'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                
+
+                <angular-slickgrid class="col-12"  gridId="gridproject" [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+    
+
+            
+        </div>    
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Changer Status</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  
+                        <form class="form" [formGroup]="projectForm">
+                            <div class="example-preview">
+                                <div class="row">
+                                   
+                                   
+                                        <div class="form-group col-3">
+                                            <label class="form-group">Status:</label>
+                                            <select class="form-control form-control-sm form-control-solid"
+                                                    id="exampleSelects2" formControlName="pm_status">
+                                                    <option value=""></option>
+                                                    <option value="P">Planifier</option>
+                                                    <option value="V">Valider</option>
+                                                    <option value="R">Lancer</option>
+                                                    <option value="A">Annuler</option>
+                                                    <option value="X">Suprimer</option>
+                                                    <option value="C">Cloturer</option>
+            
+            
+                                                </select>
+                                        </div>
+                                   
+            
+                                </div>
+                                
+                            </div>
+                        </form>
+
+
+                  
+                </div>
+                <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-primary" (click)="onSubmit()" (click)="c('Close click')">Valider</button>
+                </div>
+            </ng-template>
+            <button hidden id="openProjectsGrid" class="btn btn-primary" (click)="openchange(content)">Launch demo
+                modal</button>
+
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

@@ -310,7 +310,7 @@ export class LaunchProjectComponent implements OnInit {
         () => {
           this.createForm();
           this.layoutUtilsService.showActionNotification(
-            "résultats enregistr avec succès",
+            "résultats enregistrés avec succès",
             MessageType.Create,
             10000,
             true,

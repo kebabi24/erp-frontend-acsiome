@@ -175,6 +175,7 @@ prepareCode(): any {
   _affectEmp.pme_pm_code = controls.pme_pm_code.value
   _affectEmp.pme_inst = controls.pme_inst.value
   _affectEmp.pme_task = controls.pme_task.value
+  _affectEmp.pme_site = controls.pme_site.value
   _affectEmp.pme_task_status = controls.pme_task_status.value
   _affectEmp.pme_start_time = controls.pme_start_time.value
   _affectEmp.pme_end_time = controls.pme_end_time.value

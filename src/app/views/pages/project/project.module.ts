@@ -56,6 +56,7 @@ import { AccidentIncidentComponent } from "./accident-incident/accident-incident
 import { UpdateProjectComponent } from "./update-project/update-project.component";
 import { ListEmpTempComponent } from "./list-emp-temp/list-emp-temp.component";
 import { EditProjectComponent } from './edit-project/edit-project.component';
+import { UpdateStatusProjectComponent } from './update-status-project/update-status-project.component';
 
 const routes: Routes = [
   {
@@ -110,11 +111,15 @@ const routes: Routes = [
     path: "accident-incident",
     component: AccidentIncidentComponent,
   },
+  {
+    path: "update-status-project",
+    component: UpdateStatusProjectComponent,
+  },
   
 ];
 
 @NgModule({
-  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, AccidentIncidentComponent, AssetDownComponent, ListPmComponent, AddReportComponent, AssignEmployeeComponent, LaunchProjectComponent, EmpTempComponent, UpdateProjectComponent, SensibilisationComponent, IdentificationComponent, ListEmpTempComponent, EditProjectComponent],
+  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, AccidentIncidentComponent, AssetDownComponent, ListPmComponent, AddReportComponent, AssignEmployeeComponent, LaunchProjectComponent, EmpTempComponent, UpdateProjectComponent, SensibilisationComponent, IdentificationComponent, ListEmpTempComponent, EditProjectComponent, UpdateStatusProjectComponent],
 
   imports: [
     CommonModule,
