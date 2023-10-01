@@ -1267,19 +1267,19 @@ export class AddReportComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObjemp.getDataItem(idx);
         console.log(item);
-        if (item.emp_job != this.job || item.emp_level != this.level) {
-          alert("Métier ou Niveai de maitrise ne correspond pas a cet employé");
-          updateItem.pmr_employe = null;
-          this.mvgridService.updateItem(updateItem);
-        } else {
-          updateItem.pmr_employe = item.emp_addr;
-          updateItem.fname = item.emp_fname;
-          updateItem.lname = item.emp_lname;
-          updateItem.job = item.emp_job;
-          updateItem.level = item.emp_level;
+        // if (item.emp_job != this.job || item.emp_level != this.level) {
+        //   alert("Métier ou Niveai de maitrise ne correspond pas a cet employé");
+        //   updateItem.pmr_employe = null;
+        //   this.mvgridService.updateItem(updateItem);
+        // } else {
+        updateItem.pmr_employe = item.emp_addr;
+        updateItem.fname = item.emp_fname;
+        updateItem.lname = item.emp_lname;
+        updateItem.job = item.emp_job;
+        updateItem.level = item.emp_level;
 
-          this.mvgridService.updateItem(updateItem);
-        }
+        this.mvgridService.updateItem(updateItem);
+        // }
       });
     }
   }

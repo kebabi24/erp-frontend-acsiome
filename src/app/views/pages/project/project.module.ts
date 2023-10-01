@@ -38,10 +38,7 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import {ProjectService, TaskService, ItemService,ProviderService, CustomerService,BomService, CostSimulationService,
-  LocationDetailService,InventoryStatusService,MesureService, SiteService, LocationService, InventoryTransactionService,
-        PsService,SaleOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService} 
-from '../../../core/erp';
+import { ProjectService, TaskService, ItemService, ProviderService, CustomerService, BomService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, LocationService, InventoryTransactionService, PsService, SaleOrderService, RequisitionService, EmployeService, AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService } from "../../../core/erp";
 
 import { ListPmComponent } from "./list-pm/list-pm.component";
 import { AddReportComponent } from "./add-report/add-report.component";
@@ -55,8 +52,10 @@ import { AssetDownComponent } from "./asset-down/asset-down.component";
 import { AccidentIncidentComponent } from "./accident-incident/accident-incident.component";
 import { UpdateProjectComponent } from "./update-project/update-project.component";
 import { ListEmpTempComponent } from "./list-emp-temp/list-emp-temp.component";
-import { EditProjectComponent } from './edit-project/edit-project.component';
 import { UpdateStatusProjectComponent } from './update-status-project/update-status-project.component';
+import { EditProjectComponent } from "./edit-project/edit-project.component";
+import { ReviewCustomerReqComponent } from "./review-customer-req/review-customer-req.component";
+import { BusinessMonitoringSheetComponent } from "./business-monitoring-sheet/business-monitoring-sheet.component";
 
 const routes: Routes = [
   {
@@ -76,8 +75,8 @@ const routes: Routes = [
     component: ListPmComponent,
   },
   {
-    path: 'edit-project/:id',
-    component: EditProjectComponent
+    path: "edit-project/:id",
+    component: EditProjectComponent,
   },
   {
     path: "list-emp-temp",
@@ -115,11 +114,18 @@ const routes: Routes = [
     path: "update-status-project",
     component: UpdateStatusProjectComponent,
   },
-  
+
+  {    path: "review-customer-req",
+  component: ReviewCustomerReqComponent,
+},
+{
+  path: "business-monitoring-sheet",
+  component: BusinessMonitoringSheetComponent,
+},
 ];
 
 @NgModule({
-  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, AccidentIncidentComponent, AssetDownComponent, ListPmComponent, AddReportComponent, AssignEmployeeComponent, LaunchProjectComponent, EmpTempComponent, UpdateProjectComponent, SensibilisationComponent, IdentificationComponent, ListEmpTempComponent, EditProjectComponent, UpdateStatusProjectComponent],
+  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, AccidentIncidentComponent, AssetDownComponent, ListPmComponent, AddReportComponent, AssignEmployeeComponent, LaunchProjectComponent, EmpTempComponent, UpdateProjectComponent, SensibilisationComponent, IdentificationComponent, ListEmpTempComponent, EditProjectComponent, UpdateStatusProjectComponent,ReviewCustomerReqComponent, BusinessMonitoringSheetComponent],
 
   imports: [
     CommonModule,
