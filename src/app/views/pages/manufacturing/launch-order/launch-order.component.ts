@@ -133,7 +133,7 @@ export class LaunchOrderComponent implements OnInit {
   details: any;
   ld: any;
   bom: any;
-
+  domain: any;
   constructor(
     config: NgbDropdownConfig,
     private wodFB: FormBuilder,
@@ -266,6 +266,7 @@ export class LaunchOrderComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain"));
     this.createForm();
     
   }
@@ -290,7 +291,7 @@ export class LaunchOrderComponent implements OnInit {
       bom: "",
       qte: 0,
       batch: [{value:0, disabled: true}],
-     
+      palette: [true]
     });
   }
   //reste form
@@ -460,7 +461,7 @@ export class LaunchOrderComponent implements OnInit {
         const bom_parent = this.woServer.wo_bom_code;
         
         this.bomService.getBy({bom_parent}).subscribe((response: any)=>{
-        console.log(response.data.bom_batch)
+        console.log(response.data)
         
           controls.batch.setValue(response.data.bom_batch);
         })
@@ -524,54 +525,91 @@ export class LaunchOrderComponent implements OnInit {
     
        
        
-        const ps_parent = controls.bom.value;
-        
-        this.psService.getBy({ps_parent}).subscribe((response: any)=>{
-                
-          this.details  = response.data;
-         
-          console.log(this.details);
+    const ps_parent = controls.bom.value;
+    
+    this.psService.getBy({ps_parent}).subscribe((response: any)=>{
+            
+      this.details  = response.data;
+    
+      console.log(this.details);
 
-          for (var object = 0; object < this.details.length; object++) {
-            // console.log(this.details[object]);
-             // const detail = this.details[object];
-             
-            var qty = Number(this.details[object].ps_qty_per) * Number (qte) / Number(controls.batch.value) ;
-            let obj = {}
-            obj = {ld_part:this.details[object].ps_comp}
-             this.locationDetailService.getByFifo({ obj, qty  }).subscribe((resp: any)=>{
-             
-              console.log(resp.data)
-  
-              this.ld  = resp.data;
-           
-              for (var object = 0; object < this.ld.length; object++) {
-                 this.gridService.addItem(
-                    {
+      for (var object = 0; object < this.details.length; object++) {
+      // console.log(this.details[object]);
+        // const detail = this.details[object];
         
-                      
-                      id: this.dataset.length + 1,
-                      wod_line: this.dataset.length + 1,
-                      wod_part: this.ld[object].ld_part,
-                      desc: this.ld[object].pt_desc1,
-                      wod_um: this.ld[object].pt_um,
-                      wod_qty_req: this.ld[object].ld_qty_oh,
-                      
-                      wod_site: this.ld[object].ld_site,
-                      wod_loc: this.ld[object].ld_loc,
-                      wod_serial: this.ld[object].ld_lot,
-                      wod_ref: this.ld[object].ld_ref,         
-                      
-                     
-                    },
-                    { position: "bottom" }
-                  );
-                  }
-         
-         
-                })
-                  }
-        });
+        var qty = Number(this.details[object].ps_qty_per) * Number (qte) / Number(controls.batch.value) ;
+        let obj = {}
+        obj = {ld_part:this.details[object].ps_comp}
+        console.log(controls.palette.value)
+    if(controls.palette.value == true) {
+        this.locationDetailService.getByFifo({ obj, qty  }).subscribe((resp: any)=>{
+        
+          console.log(resp.data)
+
+          this.ld  = resp.data;
+      
+          for (var object = 0; object < this.ld.length; object++) {
+            this.gridService.addItem(
+              {
+  
+                
+                id: this.dataset.length + 1,
+                wod_line: this.dataset.length + 1,
+                wod_part: this.ld[object].ld_part,
+                desc: this.ld[object].pt_desc1,
+                wod_um: this.ld[object].pt_um,
+                wod_qty_req: this.ld[object].ld_qty_oh,
+                
+                wod_site: this.ld[object].ld_site,
+                wod_loc: this.ld[object].ld_loc,
+                wod_serial: this.ld[object].ld_lot,
+                wod_ref: this.ld[object].ld_ref,         
+                
+                
+              },
+              { position: "bottom" }
+            );
+          }
+    
+    
+        })
+      }
+      else {
+
+        this.locationDetailService.getByFifoLot({ obj, qty  }).subscribe((resp: any)=>{
+        
+          console.log(resp.data)
+
+          this.ld  = resp.data;
+      
+          for (var object = 0; object < this.ld.length; object++) {
+            this.gridService.addItem(
+              {
+  
+                
+                id: this.dataset.length + 1,
+                wod_line: this.dataset.length + 1,
+                wod_part: this.ld[object].ld_part,
+                desc: this.ld[object].pt_desc1,
+                wod_um: this.ld[object].pt_um,
+                wod_qty_req: this.ld[object].ld_qty_oh,
+                
+                wod_site: this.ld[object].ld_site,
+                wod_loc: this.ld[object].ld_loc,
+                wod_serial: this.ld[object].ld_lot,
+                         
+                
+                
+              },
+              { position: "bottom" }
+            );
+          }
+    
+    
+        })
+      }
+      }
+    });
       
   }
   /**
@@ -610,9 +648,10 @@ export class LaunchOrderComponent implements OnInit {
         controls.routing.setValue(item.wo_routing);
         controls.bom.setValue(item.wo_bom_code);
         const bom_parent = item.wo_bom_code;
+        console.log(bom_parent)
         
         this.bomService.getBy({bom_parent}).subscribe((response: any)=>{
-        console.log(response.data.bom_batch)
+        console.log(response.data)
         
           controls.batch.setValue(response.data.bom_batch);
         })
@@ -789,10 +828,17 @@ console.log(this.details)
     var doc = new jsPDF();
    
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-    var img = new Image()
-    img.src = "./assets/media/logos/company.png";
-    doc.addImage(img, 'png', 5, 5, 210, 30)
-    doc.setFontSize(12);
+   var img = new Image()
+   img.src = "./assets/media/logos/companylogo.png";
+   doc.addImage(img, 'png', 170, 5, 30, 30)
+   doc.setFontSize(9);
+   if (this.domain.dom_name != null) {
+     doc.text(this.domain.dom_name, 10, 10);
+   }
+   if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+   if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+   if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+   doc.setFontSize(12);
     doc.text( 'LP N° : ' + nbr  , 70, 40);
     doc.setFontSize(8);
     
@@ -834,7 +880,16 @@ console.log(this.details)
       
       if ((j % 35 == 0) && (j != 0) ) {
   doc.addPage();
-        doc.addImage(img, 'png', 5, 5, 210, 30)
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, 'png', 170, 5, 30, 30)
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+ 
         doc.setFontSize(12);
         doc.text( 'LP N° : ' + nbr  , 70, 40);
         doc.setFontSize(8);
