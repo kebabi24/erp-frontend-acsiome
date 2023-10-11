@@ -807,6 +807,26 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion des Patients",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon-users-1",
+          submenu: [
+            {
+              title: "Ajouter un Patient",
+              page: "/patient/create-patient",
+            },
+            {
+              title: "Liste des Patients",
+              page: "/patient/list-patient",
+            },
+            {
+              title: "Modification des Patients",
+              page: "/patient/update-patient",
+            },
+          ],
+        },
+        {
           title: "Gestion des projets",
           root: true,
           bullet: "dot",
