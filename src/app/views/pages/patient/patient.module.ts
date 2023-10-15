@@ -52,7 +52,11 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import {CodeService,PatientService,SiteService,UsersService} from '../../../core/erp'
+import {CodeService,PatientService,SiteService,UsersService,AssociationService} from '../../../core/erp';
+import { CreateAssComponent } from './create-ass/create-ass.component';
+import { ListAssComponent } from './list-ass/list-ass.component';
+import { UpdateAssComponent } from './update-ass/update-ass.component';
+import { EditAssComponent } from './edit-ass/edit-ass.component'
 
 const routes: Routes = [
   {
@@ -70,10 +74,26 @@ const routes: Routes = [
   {
     path: "update-patient",
     component: UpdatePatientComponent,
-},
+  },
+  {
+    path: "create-ass",
+    component: CreateAssComponent,
+  },
+  {
+    path: "edit-ass/:id",
+    component: EditAssComponent,
+  },
+  {
+    path: "list-ass",
+    component: ListAssComponent,
+  },
+  {
+    path: "update-ass",
+    component: UpdateAssComponent,
+  },
 ]
 @NgModule({
-  declarations: [PatientComponent, CreatePatientComponent, EditPatientComponent, ListPatientComponent, UpdatePatientComponent],
+  declarations: [PatientComponent, CreatePatientComponent, EditPatientComponent, ListPatientComponent, UpdatePatientComponent, CreateAssComponent, ListAssComponent, UpdateAssComponent, EditAssComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -111,6 +131,7 @@ providers: [
     PatientService,
     SiteService,
     UsersService,
+    AssociationService,
     TypesUtilsService,
     LayoutUtilsService,
 ],

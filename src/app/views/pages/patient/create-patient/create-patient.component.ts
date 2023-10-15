@@ -36,7 +36,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { Patient, PatientService, CodeService, SiteService,UsersService} from "../../../../core/erp"
+import { Patient, PatientService, CodeService, SiteService,UsersService, AssociationService} from "../../../../core/erp"
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
@@ -72,11 +72,11 @@ export class CreatePatientComponent implements OnInit {
     gridObjsite: any
     angularGridsite: AngularGridInstance
 
-    datauserid: []
-    columnDefinitionsuserid: Column[] = []
-    gridOptionsuserid: GridOption = {}
-    gridObjuserid: any
-    angularGriduserid: AngularGridInstance
+    dataass: []
+    columnDefinitionsass: Column[] = []
+    gridOptionsass: GridOption = {}
+    gridObjass: any
+    angularGridass: AngularGridInstance
     
     datashift: []
     columnDefinitionsshift: Column[] = []
@@ -85,28 +85,28 @@ export class CreatePatientComponent implements OnInit {
     angularGridshift: AngularGridInstance
 
 
-  jobs: [];
-  columnDefinitions2: Column[] = [];
-  gridOptions2: GridOption = {};
-  gridObj2: any;
-  angularGrid2: AngularGridInstance;
+    jobs: [];
+    columnDefinitions2: Column[] = [];
+    gridOptions2: GridOption = {};
+    gridObj2: any;
+    angularGrid2: AngularGridInstance;
 
   // grid options
-  mvangularGrid: AngularGridInstance;
-  mvgrid: any;
-  mvgridService: GridService;
-  mvdataView: any;
-  mvcolumnDefinitions: Column[];
-  mvgridOptions: GridOption;
-  mvdataset: any[];
+    mvangularGrid: AngularGridInstance;
+    mvgrid: any;
+    mvgridService: GridService;
+    mvdataView: any;
+    mvcolumnDefinitions: Column[];
+    mvgridOptions: GridOption;
+    mvdataset: any[];
 
-  jbangularGrid: AngularGridInstance;
-  jbgrid: any;
-  jbgridService: GridService;
-  jbdataView: any;
-  jbcolumnDefinitions: Column[];
-  jbgridOptions: GridOption;
-  dataset: any[];
+    jbangularGrid: AngularGridInstance;
+    jbgrid: any;
+    jbgridService: GridService;
+    jbdataView: any;
+    jbcolumnDefinitions: Column[];
+    jbgridOptions: GridOption;
+    dataset: any[];
 
     pat_city: any[] = []
     pat_state: any[] = []
@@ -115,7 +115,7 @@ export class CreatePatientComponent implements OnInit {
     row_number;
     httpOptions = this.httpUtils.getHTTPHeaders()
     leveljbd = [];
-  leveljob = []
+    leveljob = []
   constructor(
       config: NgbDropdownConfig,
       private patFB: FormBuilder,
@@ -128,9 +128,10 @@ export class CreatePatientComponent implements OnInit {
      
       private codeService: CodeService,
       private siteService: SiteService,
+      private associationService: AssociationService,
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
-      private userService: UsersService,
+     
     
       
   ) {
@@ -141,7 +142,7 @@ export class CreatePatientComponent implements OnInit {
       this.codeService
       .getBy({ code_fldname: "ad_country" })
       .subscribe((response: any) => (this.pat_country = response.data))
-  this.codeService
+      this.codeService
       .getBy({ code_fldname: "ad_county" })
       .subscribe((response: any) => (this.pat_county = response.data))
       this.codeService
@@ -349,8 +350,8 @@ createForm() {
       pat_contact_adress: [{ value: this.patient.pat_contact_adress, disabled: !this.isExist }],
       pat_contact_tel: [{ value: this.patient.pat_contact_tel, disabled: !this.isExist }],
       pat_parent_liaison: [{ value: this.patient.pat_parent_liaison, disabled: !this.isExist }],
-      pat_userid: [{ value: this.patient.pat_userid, disabled: !this.isExist }],
-
+      pat_ass: [{ value: this.patient.pat_ass, disabled: !this.isExist }],
+    
   })
 }
 
@@ -389,6 +390,7 @@ onChangeCode() {
               controls.pat_contact_adress.enable()
               controls.pat_contact_tel.enable()
               controls.pat_parent_liaison.enable()
+              controls.pat_ass.enable()
              
           }
    })
@@ -474,7 +476,7 @@ onSubmit() {
       _patient.pat_contact_adress = controls.pat_contact_adress.value
       _patient.pat_contact_tel = controls.pat_contact_tel.value
       _patient.pat_parent_liaison = controls.pat_parent_liaison.value
-      
+      _patient.pat_ass = controls.pat_ass.value
 
       return _patient
   }
@@ -516,8 +518,8 @@ onSubmit() {
                   true
               )
               this.loadingSubject.next(false)
-              
-              this.router.navigateByUrl("/accounting-setting/employe-list")
+              this.reset()
+              this.router.navigateByUrl("/patient/create-patient")
           }
       )
   }
@@ -540,70 +542,65 @@ onSubmit() {
 
 
 
-  handleSelectedRowsChanged3(e, args) {
+  handleSelectedRowsChangedass(e, args) {
     const controls = this.patForm.controls;
-    if (Array.isArray(args.rows) && this.gridObj3) {
-      args.rows.map((idx) => {
-        const item = this.gridObj3.getDataItem(idx);
-        controls.pat_level.setValue(item.jbd_level || "");
-      });
+    if (Array.isArray(args.rows) && this.gridObjass) {
+        args.rows.map((idx) => {
+            const item = this.gridObjass.getDataItem(idx)
+            console.log(item)
+            // TODO : HERE itterate on selected field and change the value of the selected field
+                    controls.pat_ass.setValue(item.ass_code || "")
+        })
     }
 }
-  angularGridReady3(angularGrid: AngularGridInstance) {
-    this.angularGrid3 = angularGrid
-    this.gridObj3 = (angularGrid && angularGrid.slickGrid) || {}
+  angularGridReadyass(angularGrid: AngularGridInstance) {
+    this.angularGridass = angularGrid
+    this.gridObjass = (angularGrid && angularGrid.slickGrid) || {}
 }
 
-prepareGrid3() {
-  const controls = this.patForm.controls;
-    this.columnDefinitions3 = [
+prepareGridass() {
+  
+  this.columnDefinitionsass= [
         {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
 
-            minWidth: 50,
-            maxWidth: 50,
+          minWidth: 50,
+          maxWidth: 50,
         },
+        
         {
-            id: "id",
-            name: "id",
-            field: "id",
-            sortable: true,
-            minWidth: 80,
-            maxWidth: 80,
-        },
-        {
-            id: "jbd_code",
-            name: "Code Métier",
-            field: "jbd_code",
+            id: "ass_code",
+            name: "Code Association",
+            field: "ass_code",
             sortable: true,
             filterable: true,
             type: FieldType.string,
         },
         {
-          id: "jbd_level",
-          name: "Niveau",
-          field: "jbd_level",
+          id: "ass_name",
+          name: "Nom",
+          field: "ass_name",
           sortable: true,
           filterable: true,
           type: FieldType.string,
       },
       
         {
-            id: "jbd_desc",
-            name: "Designation",
-            field: "jbd_desc",
+            id: "ass_contact_fname",
+            name: "Contact Nom",
+            field: "ass_contact_fname",
             sortable: true,
             filterable: true,
             type: FieldType.string,
         },
         {
-          id: "jbd_time_rate",
-          name: "Taux Horaire",
-          field: "jbd_time_rate",
+          id: "ass_contact_lname",
+          name: "Contact Prenom",
+          field: "ass_contact_lname",
           sortable: true,
           filterable: true,
           type: FieldType.string,
@@ -611,34 +608,45 @@ prepareGrid3() {
         
     ]
 
-    this.gridOptions3 = {
-        enableSorting: true,
-        enableCellNavigation: true,
-        enableExcelCopyBuffer: true,
-        enableFiltering: true,
-        autoEdit: false,
-        autoHeight: false,
-        frozenColumn: 0,
-        frozenBottom: true,
-        enableRowSelection: true,
-        enableCheckboxSelector: true,
-        checkboxSelector: {
-        },
-        multiSelect: false,
-        rowSelectionOptions: {
-            selectActiveRow: true,
-        },
-    }
+    this.gridOptionsass = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    }  
 
     // fill the dataset with your data
-    this.codeService
-        .getBy({jbd_code: controls.pat_job.value})
-        .subscribe((response: any) => (this.data = response.data))
+    this.associationService
+        .getAll()
+        .subscribe((response: any) => {this.dataass = response.data
+        console.log(response.data)})
 }
-open3(content) {
+openass(content) {
    
-    this.prepareGrid3()
-    this.modalService.open(content, { size: "lg" })
+    this.prepareGridass()
+    this.modalService.open(content, { size: "xl" })
 }
 
 handleSelectedRowsChangedsite(e, args) {
@@ -851,6 +859,21 @@ console.log(res.data)
   this.hasFormErrors = false
 }
 
+onChangeAss() {
+  const controls = this.patForm.controls;
+  const ass_code = controls.pat_ass.value;
+  
+  this.associationService.getByOne({ ass_code }).subscribe(
+    (res: any) => {
 
+      if (!res.data) {
+
+          alert("Association n'existe pas  ")
+          controls.pat_ass.setValue(null);
+          document.getElementById("pat_ass").focus();
+        }
+    
+    });
+}
 
 }

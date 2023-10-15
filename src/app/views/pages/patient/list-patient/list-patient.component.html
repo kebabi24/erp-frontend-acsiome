@@ -1,1 +1,37 @@
-<p>list-patient works!</p>
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'La liste des Patients'" [class]="'card-head-lg'">  
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridDevise" [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+        <div>
+            <ng-template #contentdet let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Détail Patient </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid"
+                            [columnDefinitions]="columnDefinitionsdet" (onAngularGridCreated)="angularGridReadydet($event)"
+                            
+                            [gridOptions]="gridOptionsdet" [dataset]="datasetdet">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+               
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="opendet(contentdet)">Launch demo
+                modal</button>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

@@ -33,6 +33,6 @@ pat_contact_lname: String
 pat_contact_adress: String
 pat_contact_tel: String
 pat_parent_liaison: String
-pat_userid : String
+pat_ass : String
 
 }

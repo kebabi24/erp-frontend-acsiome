@@ -824,6 +824,27 @@ export class MenuConfig {
               title: "Modification des Patients",
               page: "/patient/update-patient",
             },
+            {
+              title: "Gestion des Association",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-network",
+              submenu: [
+                {
+                  title: "Ajouter une Association",
+                  page: "/patient/create-ass",
+                },
+                {
+                  title: "Liste des Associations",
+                  page: "/patient/list-ass",
+                },
+                {
+                  title: "Modification des Associations",
+                  page: "/patient/update-ass",
+                },
+                
+              ],
+            },
           ],
         },
         {
