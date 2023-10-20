@@ -1,0 +1,424 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div>
+                <ngb-tabset>
+                    <ngb-tab>
+                        <ng-template ngbTabTitle>
+                            Information basique
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasFormErrors"
+                                class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <form [formGroup]="patForm" class="form">
+
+                                
+                                
+                        <div class="row"> 
+                            <div class="form-group col-2">
+                                <label class="form-group">Code: *</label>
+                                
+                                <input type="text" formControlName="pat_code"   [(ngModel)]="patientEdit.pat_code"
+                                class="form-control form-control-sm form-control-solid" disabled>
+                               
+                            </div>
+                        </div>
+                        <div class="row"> 
+        
+                            <div class="form-group col-4">
+                                <label class="form-group">Nom: *</label>
+                                <input type="text" formControlName="pat_lname" 
+                                    [className]="patForm.controls['pat_lname'].errors && (patForm.controls['pat_lname'].dirty || patForm.controls['pat_lname'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="patForm.controls['pat_lname'].errors && (patForm.controls['pat_lname'].dirty || patForm.controls['pat_lname'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+        
+                            <div class="form-group col-4">
+                                <label class="form-group">Prénom: *</label>
+                                <input type="text" formControlName="pat_fname" 
+                                    [className]="patForm.controls['pat_fname'].errors && (patForm.controls['pat_fname'].dirty || patForm.controls['pat_fname'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="patForm.controls['pat_fname'].errors && (patForm.controls['pat_fname'].dirty || patForm.controls['pat_fname'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">DATE Naissance:</label>
+                                <div class="input-group input-group-sm">
+                                    <input
+                                        [className]="patForm.controls['pat_birth_date'].errors && (patForm.controls['pat_birth_date'].dirty || patForm.controls['pat_birth_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                        placeholder="jj-mm-aaaa" name="dd" ngbDatepicker formControlName="pat_birth_date"
+                                        #dd="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="dd.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="patForm.controls['pat_birth_date'].errors && (patForm.controls['pat_birth_date'].dirty || patForm.controls['pat_birth_date'].touched)"
+                                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                                </div>
+        
+                            </div>
+                        </div>
+                        <div class="row"> 
+        
+                            <div class="form-group col-8">
+                                <label class="form-group">Adresse: *</label>
+                                <input type="text" formControlName="pat_line1" 
+                                    [className]="patForm.controls['pat_line1'].errors && (patForm.controls['pat_line1'].dirty || patForm.controls['pat_line1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="patForm.controls['pat_line1'].errors && (patForm.controls['pat_line1'].dirty || patForm.controls['pat_line1'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>
+                       
+                        <div class="row">
+                            <div class="form-group col-2">
+                                <label class="form-group ">Pays:</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="pat_country">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of pat_country" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                   
+
+                                </select>
+                            </div>
+                       
+                            
+                            <div class="form-group col-2">
+                                <label class="form-group ">Wilaya:</label>
+                                    <select class="form-control form-control-sm form-control-solid"
+                                        id="exampleSelects2" formControlName="pat_state" (change)="onChangeState()">
+                                        <option value=""></option>
+                                        <option *ngFor="let elem of pat_state" [value]="elem.code_value">
+                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                    </select>
+                                
+                            </div>
+                            
+                            <div class="form-group col-2">
+                                <label class="form-group ">Commune:</label>
+                                    <select class="form-control form-control-sm form-control-solid"
+                                        id="exampleSelects1" formControlName="pat_city">
+                                        <option value=""></option>
+                                        <option *ngFor="let elem of pat_city" [value]="elem.code_value">
+                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                    </select>
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Post:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_zip">
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                            <div class="form-group col-2">
+                                <label class="form-group ">Téléphone:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_phone">
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Fax:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_fax">
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Email:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_mail">
+                            </div>
+                        </div>
+        
+                        <div class="row"> 
+                            <div class="form-group col-2">
+                                <label class="form-group ">Sexe:</label>
+        
+                                <select
+                                    [className]="patForm.controls['pat_sex'].errors && (patForm.controls['pat_sex'].dirty || patForm.controls['pat_sex'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="pat_sex"  id="exampleSelects7">
+                                    <option value=""></option>
+                                    <option value="M">Masculin</option>
+                                    <option value="F">Feminin</option>
+                                
+                                </select>
+                                <div *ngIf="patForm.controls['pat_sex'].errors && (patForm.controls['pat_sex'].dirty || patForm.controls['pat_sex'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+        
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Situation Familliale:</label>
+        
+                                <select
+                                    [className]="patForm.controls['pat_familysit'].errors && (patForm.controls['pat_familysit'].dirty || patForm.controls['pat_familysit'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="pat_familysit"  id="exampleSelects7">
+                                    <option value=""></option>
+                                    <option value="C">Célébataire</option>
+                                    <option value="M">Marié</option>
+                                    <option value="A">Autre</option>
+                                    
+                                </select>
+                                <div *ngIf="patForm.controls['pat_familysit'].errors && (patForm.controls['pat_familysit'].dirty || patForm.controls['pat_familysit'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+        
+
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">Nombre d'enfant: *</label>
+                                    <input type="number"  step="1" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_child_nbr">
+                            </div>
+                       
+                            <div class="form-group col-2">
+                                <label class="form-group ">Groupe Sanguin:</label>
+        
+                                <select
+                                    [className]="patForm.controls['pat_blood'].errors && (patForm.controls['pat_blood'].dirty || patForm.controls['pat_blood'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    formControlName="pat_blood"  id="exampleSelects7">
+                                    <option value=""></option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    
+                                </select>
+                                <div *ngIf="patForm.controls['pat_blood'].errors && (patForm.controls['pat_blood'].dirty || patForm.controls['pat_blood'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+        
+
+                            </div>
+                            
+                            <div class="form-group col-2">
+                                <label class="form-group">N°Sécurité sociale: *</label>
+                                <input type="text" formControlName="pat_ss_id" 
+                                    [className]="patForm.controls['pat_ss_id'].errors && (patForm.controls['pat_ss_id'].dirty || patForm.controls['pat_ss_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <div *ngIf="patForm.controls['pat_ss_id'].errors && (patForm.controls['pat_ss_id'].dirty || patForm.controls['pat_ss_id'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>    
+                       
+                         
+                        <h3>Données Personne à Contacter </h3>
+                        <div class="row">
+
+                            <div class="form-group col-2">
+                                <label class="form-group ">Nom:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_contact_fname">
+                            </div>
+                        
+                            <div class="form-group col-2">
+                                <label class="form-group ">Prenom:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_contact_lname">
+                            </div>
+                        
+                            <div class="form-group col-4">
+                                <label class="form-group ">Adresse:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_contact_adress">
+                            </div>
+                        
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="form-group col-2">
+                                <label class="form-group ">Lien Parentale:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_parent_liaison">
+                            </div>
+                        
+                            <div class="form-group col-2">
+                                <label class="form-group ">Tel:</label>
+                                
+                                    <input type="text" class="form-control form-control-sm form-control-solid"
+                                        formControlName="pat_contact_tel">
+                            </div>
+                        
+                        
+                        </div>
+                        
+                        <div class="row">
+                            <div class="form-group col-2">
+                                <label class="form-group">Association :</label>
+                                <div class="input-group input-group-sm">
+
+                                    <input type="text" class="form-control form-control-solid" 
+                                        aria-describedby="basic-addon2" formControlName="pat_ass" (change)="onChangeAss()" id="pat_ass">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="openass(contentass)">
+                                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                                    </div>
+                                
+                                </div>
+        
+                                
+                            </div>    
+                        </div>
+                            </form>
+                        </ng-template>
+                    </ngb-tab>
+                    <ngb-tab>
+                        <ng-template ngbTabTitle>
+                        
+                            Données Patient
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasEmployeFormErrors"
+                                class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <form [formGroup]="patForm" class="form">
+
+                               
+                                <div class="form-group col-12 row">
+                                    <label class="col-2 col-form-label text-right"> Detail Patient: </label>
+                                </div>
+                
+                                
+                                <div class="row col-lg-12">
+                                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter </button>
+                                </div>
+                                <div class="row">
+                                    <angular-slickgrid class="col-12" gridHeight="250"  gridId="plagejbGrid" [columnDefinitions]="jbcolumnDefinitions"
+                                     [gridOptions]="jbgridOptions" [dataset]="dataset" (onAngularGridCreated)="jbGridReady($event)">
+                                    </angular-slickgrid>
+                                </div>
+                                <!--div class="row"> 
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Métier : *</label>
+                                        <div class="input-group input-group-sm">
+                
+                                            <input type="text" formControlName="pat_job" (change)="onChangeJob()" id="job"
+                                                [className]="patForm.controls['pat_job'].errors && (patForm.controls['pat_job'].dirty || patForm.controls['pat_job'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open2(content)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="patForm.controls['pat_job'].errors && (patForm.controls['pat_job'].dirty || patForm.controls['pat_job'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
+                                    </div>    
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Niveau : *</label>
+                                        <div class="input-group input-group-sm">
+                
+                                            <input type="text" formControlName="pat_level" (change)="onChangelevel()" id="level"
+                                                [className]="patForm.controls['pat_level'].errors && (patForm.controls['pat_level'].dirty || patForm.controls['pat_level'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content3)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="patForm.controls['pat_level'].errors && (patForm.controls['pat_level'].dirty || patForm.controls['pat_level'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
+                                    </div>    
+                                </div-->
+
+                                
+                            </form>
+                        </ng-template>
+                    </ngb-tab>
+
+                    
+                </ngb-tabset>
+
+
+
+            </div>
+          
+        </div>
+
+       
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Site </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionssite" (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="datasite">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        
+        
+
+        <div>
+            <ng-template #contentass let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Association </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid"
+                            [columnDefinitions]="columnDefinitionsass" (onAngularGridCreated)="angularGridReadyass($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedass($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsass" [dataset]="dataass">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>
+
+

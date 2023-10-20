@@ -87,6 +87,8 @@ export { TokenSerie } from "./_models/token-serie.model";
 export { Deal } from "./_models/deal.model";
 export { Transportcost } from "./_models/transportcost.model";
 export { Costlist } from "./_models/costlist.model";
+export { Patient } from "./_models/patient.model";
+export { Association } from "./_models/association.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -180,4 +182,6 @@ export { TransportcostService } from "./_services/transportcost.service";
 export { CostlistService } from "./_services/costlist.service";
 
 export { PromotionService } from "./_services/promotion.service";
+export { PatientService } from "./_services/patient.service";
+export { AssociationService } from "./_services/association.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

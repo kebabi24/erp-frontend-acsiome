@@ -49,6 +49,11 @@ export class LocationDetailService {
         return this.http.post(`${API_URL}/findfifo`,data, { headers: httpHeaders })
  
     }
+    public getByFifoLot(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findfifolot`,data, { headers: httpHeaders })
+ 
+    }
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })

@@ -47,7 +47,7 @@ export class MenuConfig {
             },
           ],
         },
-        
+
         {
           title: "POS",
           bullet: "dot",
@@ -74,8 +74,7 @@ export class MenuConfig {
               title: "Pos call center",
               page: "/pos-visitor",
             },
-          ]
-        
+          ],
         },
         {
           title: "Rapports",
@@ -169,28 +168,11 @@ export class MenuConfig {
             {
               title: "Ajouter avantage",
               page: "/promo/advantage-add",
-            }, 
+            },
             {
               title: "Ajouter promotion",
               page: "/promo/promo-add",
-            }, 
-            
-            
-          ],
-        },
-
-
-        {
-          title: "Assurance de qualité",
-          bullet: "dot",
-          icon: "flaticon-event-calendar-symbol",
-          root: true,
-          submenu: [
-            {
-              title: "Ajouter  qualité",
-              page: "/quality-assurance/add-quality",
             },
-           
           ],
         },
         
@@ -605,7 +587,6 @@ export class MenuConfig {
               title: "Liste des Visites",
               page: "/sales/list-visit-mob",
             },
-            
           ],
         },
         {
@@ -709,6 +690,10 @@ export class MenuConfig {
               page: "/manufacturing/create-wo-so",
             },
             {
+              title: "Création des OFs Semi-Finis",
+              page: "/manufacturing/create-wo-sf",
+            },
+            {
               title: "List des OFs",
               page: "/manufacturing/list-wo",
             },
@@ -736,8 +721,7 @@ export class MenuConfig {
               title: "Déclaration Consomation",
               page: "/manufacturing/woiss-entry",
             },
-            
-            
+
             {
               title: "Cloture OF",
               page: "/manufacturing/edit-wo",
@@ -749,7 +733,11 @@ export class MenuConfig {
             {
               title: "List Prix de Revient OF",
               page: "/manufacturing/costprice-list",
-            },  
+            },
+            {
+              title: "Etat des Broyages ",
+              page: "/manufacturing/rp-broyage",
+            },
           ],
         },
         {
@@ -814,7 +802,48 @@ export class MenuConfig {
             },
             {
               title: "Calcule paie",
-              page: "/project/employe-salary",
+              page: "/accounting-setting/employe-salary",
+            },
+          ],
+        },
+        {
+          title: "Gestion des Patients",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon-users-1",
+          submenu: [
+            {
+              title: "Ajouter un Patient",
+              page: "/patient/create-patient",
+            },
+            {
+              title: "Liste des Patients",
+              page: "/patient/list-patient",
+            },
+            {
+              title: "Modification des Patients",
+              page: "/patient/update-patient",
+            },
+            {
+              title: "Gestion des Association",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-network",
+              submenu: [
+                {
+                  title: "Ajouter une Association",
+                  page: "/patient/create-ass",
+                },
+                {
+                  title: "Liste des Associations",
+                  page: "/patient/list-ass",
+                },
+                {
+                  title: "Modification des Associations",
+                  page: "/patient/update-ass",
+                },
+                
+              ],
             },
           ],
         },
@@ -840,6 +869,7 @@ export class MenuConfig {
               title: "La liste des Projets",
               page: "/project/list-pm",
             },
+            
             {
               title: "Lancer un projet",
               page: "/project/launch-project",
@@ -866,7 +896,6 @@ export class MenuConfig {
               page: "/project/accident-incident",
             },
 
-
             {
               title: "Sensibilisation",
               page: "/project/sensibilisation",
@@ -875,7 +904,48 @@ export class MenuConfig {
               title: "identification",
               page: "/project/identification",
             },
+            {
+              title: "Fiche revue exigences client V 01 model",
+              page: "/project/review-customer-req",
+            },
+            {
+              title: "Fiche de suivi d'affaire projet V02 model",
+              page: "/project/business-monitoring-sheet",
+            },
 
+
+
+            /**/
+            {
+              title: "Gestion des Nomenclatures",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-tools-and-utensils",
+              submenu: [
+           
+                {
+                  title: "Maint Code Nomenclature",
+                  page: "/manufacturing/create-nomenclature",
+                },
+                {
+                  title: "Maint des Nomenclatures",
+                  page: "/manufacturing/create-ps",
+                },
+                {
+                  title: "Liste des Nomenclatures",
+                  page: "/manufacturing/list-ps",
+                },
+                {
+                  title: "Affectation Nomenclature",
+                  page: "/manufacturing/affect-bom",
+                },
+                {
+                  title: "Calcul coût des Nomenclatures",
+                  page: "/manufacturing/bom-cost",
+                },
+              ]
+            },
+            /* */
             {
               title: "Gestion des Listes Outils",
               root: true,
@@ -1194,7 +1264,6 @@ export class MenuConfig {
               title: "Paramétrage de production",
               icon: "flaticon2-settings",
               submenu: [
-            
                 {
                   title: "Maint Code Nomenclature",
                   page: "/manufacturing/create-nomenclature",
@@ -1499,7 +1568,7 @@ export class MenuConfig {
                 },
               ],
             },
-    
+
             {
               title: "Paramétrages Mobile",
               bullet: "dot",
@@ -1524,8 +1593,6 @@ export class MenuConfig {
                 },
               ],
             },
-    
-           
 
             {
               title: "Configuration Module",

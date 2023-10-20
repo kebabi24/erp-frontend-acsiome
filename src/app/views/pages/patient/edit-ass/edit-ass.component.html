@@ -1,0 +1,170 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div>
+                
+                <form [formGroup]="assForm" class="form">
+
+                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                        (close)="onAlertClose($event)">
+                        Ce Code existe deja
+                    </kt-alert>
+                                
+                    <div class="row"> 
+                        <div class="form-group col-2">
+                            <label class="form-group">Code: *</label>
+                            
+                            <input type="text" formControlName="ass_code"   [(ngModel)]="associationEdit.ass_code"
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                    </div>
+                    <div class="row"> 
+        
+                        <div class="form-group col-4">
+                            <label class="form-group">Nom: *</label>
+                            <input type="text" formControlName="ass_name" 
+                                [className]="assForm.controls['ass_name'].errors && (assForm.controls['ass_name'].dirty || assForm.controls['ass_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <div *ngIf="assForm.controls['ass_name'].errors && (assForm.controls['ass_name'].dirty || assForm.controls['ass_name'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+    
+                       
+                       
+                    </div>
+                    <div class="row"> 
+    
+                        <div class="form-group col-8">
+                            <label class="form-group">Adresse: *</label>
+                            <input type="text" formControlName="ass_line1" 
+                                [className]="assForm.controls['ass_line1'].errors && (assForm.controls['ass_line1'].dirty || assForm.controls['ass_line1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <div *ngIf="assForm.controls['ass_line1'].errors && (assForm.controls['ass_line1'].dirty || assForm.controls['ass_line1'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Pays:</label>
+                            <select class="form-control form-control-sm form-control-solid"
+                                id="exampleSelects1" formControlName="ass_country">
+                                <option value=""></option>
+                                <option *ngFor="let elem of ass_country" [value]="elem.code_value">
+                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                
+
+                            </select>
+                        </div>
+                    
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Wilaya:</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects2" formControlName="ass_state" (change)="onChangeState()">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of ass_state" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                </select>
+                            
+                        </div>
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Commune:</label>
+                                <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects1" formControlName="ass_city">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of ass_city" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                </select>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Post:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_zip">
+                        </div>
+                    </div>
+
+                    <div class="row"> 
+                        <div class="form-group col-2">
+                            <label class="form-group ">Téléphone:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_phone">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Fax:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_fax">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Email:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_mail">
+                        </div>
+                    </div>
+        
+                 
+                       
+                         
+                    <h3>Données Personne à Contacter </h3>
+                    <div class="row">
+
+                        <div class="form-group col-2">
+                            <label class="form-group ">Nom:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_contact_fname">
+                        </div>
+                    
+                        <div class="form-group col-2">
+                            <label class="form-group ">Prenom:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_contact_lname">
+                        </div>
+                    
+                        <div class="form-group col-4">
+                            <label class="form-group ">Adresse:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_contact_adress">
+                        </div>
+                    
+
+                    
+                        <div class="form-group col-2">
+                            <label class="form-group ">Tel:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid"
+                                    formControlName="ass_contact_tel">
+                        </div>
+                    
+                    
+                    </div>
+                        
+                 </form>
+                    
+
+            </div>
+          
+        </div>
+
+            </kt-portlet-body>
+</kt-portlet>
+
+
+

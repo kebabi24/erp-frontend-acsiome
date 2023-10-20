@@ -1,9 +1,9 @@
 <kt-portlet>
   <kt-portlet-header [sticky]="true" [title]="'Ajouter une nouvelle imprimante'" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
+     <button type="button" (click)="goBack()"  class="btn btn-secondary btn-sm mr-2">Retour</button>
+      <button type="button" (click)="reset()"  class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
       <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
-      <button type="button" (click)="goBack()" class="btn btn-success btn-sm mr-2">Retour</button>
-      <button type="button" (click)="reset()" class="btn btn-success btn-sm mr-2">Réinitialiser</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>

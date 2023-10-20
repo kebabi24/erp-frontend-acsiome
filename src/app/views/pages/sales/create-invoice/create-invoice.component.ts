@@ -653,6 +653,7 @@ export class CreateInvoiceComponent implements OnInit {
     _ih.ith_amt = controlstot.tht.value;
     _ih.ith_tax_amt = controlstot.tva.value;
     _ih.ith_trl1_amt = controlstot.timbre.value;
+    _ih.ith_tot_amt = controlstot.ttc.value;
     
     return _ih;
   

@@ -362,10 +362,10 @@ export class CreateProjectComponent implements OnInit {
       );
       this.loadingSubject.next(false);
 
-       // this.loadingSubject.next(false);
-     //   this.reset();
-     //   this.router.navigateByUrl("/project/create-project");
-     //   this.reset();
+       this.loadingSubject.next(false);
+       this.reset();
+       this.router.navigateByUrl("/project/create-project");
+       this.reset();
       }
     );
 

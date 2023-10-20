@@ -347,7 +347,15 @@ error = false;
   delete data.cmvid;
  
 }
+for (let data of this.selectedGrid2IDs) {
+ if (data.rel_date == null || data.due_date == null) {
+  this.message = "Les dates ne peuvent pas etre vide";
+  this.hasFormErrors = true;
 
+  return;
+
+ }
+}
 console.log(this.selectedGrid2IDs)
 this.loadingSubject.next(true);
 const date = controls.date.value
@@ -428,6 +436,7 @@ this.workOrderService
         filterable: false,
         type: FieldType.string,
       },
+     
       {
         id: "part",
         name: "Code Produit",
@@ -551,6 +560,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
 
       {
@@ -561,6 +571,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "sfty_qty",
@@ -570,6 +581,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "qtylanch",
@@ -579,6 +591,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal
       },
       {
         id: "prod_qty",
@@ -588,6 +601,7 @@ this.workOrderService
         width: 50,
         filterable: false,
         type: FieldType.float,
+        formatter: Formatters.decimal,
         editor: {
           model: Editors.float,
         },
@@ -695,10 +709,12 @@ this.mvdataset = []
   createForm() {
     this.loadingSubject.next(false);
     const date = new Date;
-    
+    let site = this.user.usrd_site
+    if (site == "*") { site = null }
+
     this.woForm = this.poFB.group({
      // po_category: [{value: this.purchaseOrder.po_category, disabled:true}, Validators.required],
-      site:[null,Validators.required],
+      site:[site,Validators.required],
       date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,

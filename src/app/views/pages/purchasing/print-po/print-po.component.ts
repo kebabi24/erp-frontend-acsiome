@@ -724,8 +724,8 @@ export class PrintPoComponent implements OnInit {
     var site = ( this.prhServer.po_site != null) ?  this.prhServer.po_site : ""
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
-    img.src = "./assets/media/logos/logoabr.png";
-    doc.addImage(img, 'png', 170, 5, 30, 30)
+    img.src = "./assets/media/logos/companylogo.png";
+    doc.addImage(img, 'png', 150, 5, 50, 30)
     doc.setFontSize(9);
     doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
     doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
@@ -777,8 +777,8 @@ export class PrintPoComponent implements OnInit {
       
       if ((j % 30 == 0) && (j != 0) ) {
   doc.addPage();
-  img.src = "./assets/media/logos/logoabr.png";
-  doc.addImage(img, 'png', 170, 5, 30, 30)
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
   doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );

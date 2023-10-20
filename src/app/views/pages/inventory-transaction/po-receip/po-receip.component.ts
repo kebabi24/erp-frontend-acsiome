@@ -154,7 +154,7 @@ export class PoReceipComponent implements OnInit {
   prhnbr: String;
   stat: String;
   lddet: any;
-
+  domain
   constructor(
     config: NgbDropdownConfig,
     private prhFB: FormBuilder,
@@ -609,6 +609,7 @@ export class PoReceipComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.domain =  JSON.parse(localStorage.getItem('domain'))
     this.user =  JSON.parse(localStorage.getItem('user'))
   if (this.user.usrd_site == "*"){
     this.site = null
@@ -1992,8 +1993,14 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, 'png', 150, 5, 50, 30)
+  doc.setFontSize(9);
+  if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+  if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+  if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+  if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
+  //doc.addImage(img, 'png', 5, 5, 210, 30)
   doc.setFontSize(12);
   doc.text( 'RC N° : ' + nbr  , 70, 40);
   doc.setFontSize(8);
@@ -2035,7 +2042,12 @@ printpdf(nbr) {
     
     if ((j % 35 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
+doc.addImage(img, 'png', 150, 5, 50, 30)
+doc.setFontSize(9);
+if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
       doc.setFontSize(12);
       doc.text( 'RC N° : ' + nbr  , 70, 40);
       doc.setFontSize(8);

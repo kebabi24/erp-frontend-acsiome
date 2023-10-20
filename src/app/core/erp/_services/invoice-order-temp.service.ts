@@ -32,6 +32,10 @@ export class InvoiceOrderTempService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/imput', data, { headers: httpHeaders })
     }
+    public imputproject(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/imputproject', data, { headers: httpHeaders })
+    }
     
     // READ
     public findBy(data: any) {

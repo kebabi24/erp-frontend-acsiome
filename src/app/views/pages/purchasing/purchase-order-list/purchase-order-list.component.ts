@@ -261,19 +261,46 @@ export class PurchaseOrderListComponent implements OnInit {
           formatter: (row, cell, value, columnDef, dataContext) => {
             // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
             return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Changer Status">
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Réceptioner">
             <i class="flaticon2-arrow-up"></i>
         </a>
              `;
           },
         
         minWidth: 50,
-        maxWidth: 50,
+        maxWidth: 80,
         // use onCellClick OR grid.onClick.subscribe which you can see down below
         onCellClick: (e: Event, args: OnEventArgs) => {
            const id = args.dataContext.id
            console.log(args.dataContext.po.po_stat)
            this.router.navigateByUrl(`/inventory-transaction/po-receip-id/${id}`)
+        },
+      },
+      {
+        id: "rctcab",
+        name: "Réceptioner CAB",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        
+          //formatter: Formatters.editIcon,
+          formatter: (row, cell, value, columnDef, dataContext) => {
+            // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+            return `
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Réceptionner CAB">
+            <i class="flaticon2-arrow-up"></i>
+        </a>
+             `;
+          },
+        
+        minWidth: 50,
+        maxWidth: 80,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+           const id = args.dataContext.id
+           console.log(args.dataContext.po.po_stat)
+           this.router.navigateByUrl(`/inventory-transaction/po-receip-cab-id/${id}`)
         },
       },
     ];

@@ -16,11 +16,14 @@ import { MobileServiceService, PrinterModel, RoleService, ItineraryService, Prin
   styleUrls: ["./set-printer.component.scss"],
 })
 export class SetPrinterComponent implements OnInit {
-  options = [{ id: "true", label: "true" }];
+  options = [
+    { id: "true", label: "true" },
+    { id: "false", label: "false" },
+  ];
   printersForm: FormGroup;
   printer: PrinterModel;
   hasFormErrors = false;
-  selectedOptions: string;
+  selectedOptions = {};
   isExist = false;
   message: any;
   loadingSubject = new BehaviorSubject<boolean>(true);
@@ -30,6 +33,7 @@ export class SetPrinterComponent implements OnInit {
   gridObj: any;
   angularGrid: AngularGridInstance;
   users: [];
+  checkPrinter: any[] = [];
   allPrinters: [];
   printersAffected: any[] = [];
   constructor(
@@ -161,9 +165,10 @@ export class SetPrinterComponent implements OnInit {
   }
 
   onSubmit() {
-    this.hasFormErrors = false;
-    const controls = this.printersForm.controls;
-    /** check form */
+    console.log(this.checkPrinter);
+    // this.hasFormErrors = false;
+    // const controls = this.printersForm.controls;
+    // /** check form */
     // if (this.printersForm.invalid) {
     //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
 
@@ -172,25 +177,16 @@ export class SetPrinterComponent implements OnInit {
     // }
 
     // tslint:disable-next-line:prefer-const
-    let printer = this.preparePrinter();
 
-    this.addPrinter(printer);
+    this.addPrinter();
   }
 
-  preparePrinter(): PrinterModel {
+  addPrinter() {
     const controls = this.printersForm.controls;
-    const _printer = new PrinterModel();
-    _printer.printer_code = controls.usrd_code.value;
-    _printer.printer_desc = controls.printer_desc.value;
-    _printer.printer_path = controls.printer_path.value;
-    _printer.printer_type = controls.printer_type.value;
-
-    return _printer;
-  }
-
-  addPrinter(_printer: PrinterModel) {
+    let usrd_code = controls.usrd_code.value;
     this.loadingSubject.next(true);
-    this.printerService.add(_printer).subscribe(
+    console.log({ user_code: usrd_code, printers: this.checkPrinter });
+    this.printerService.affectPrinters({ user_code: usrd_code, printers: this.checkPrinter }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
@@ -216,5 +212,16 @@ export class SetPrinterComponent implements OnInit {
       l.classList.remove("selected");
       this.printersAffected = this.printersAffected.filter((s) => s !== printer);
     }
+  }
+
+  onChange(event: Event, printer: any) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    // Handle the checkbox change event here
+    if (isChecked) {
+      this.checkPrinter.push(printer);
+    } else {
+      this.checkPrinter = this.checkPrinter.filter((s) => s !== printer);
+    }
+    console.log(this.checkPrinter);
   }
 }

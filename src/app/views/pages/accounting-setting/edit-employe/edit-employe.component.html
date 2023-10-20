@@ -25,19 +25,14 @@
                         <ng-template ngbTabContent>
                             <form [formGroup]="empForm" class="form">
 
-                                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                                    (close)="onAlertClose($event)">
-                                    Ce Code existe deja
-                                </kt-alert>
-                                
+                              
                         <div class="row"> 
                             <div class="form-group col-2">
                                 <label class="form-group">Code: *</label>
                                 
                                 <input type="text" formControlName="emp_addr"  [(ngModel)]="employeEdit.emp_addr"
-                                    [className]="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                                <div *ngIf="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) "
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                                class="form-control form-control-sm form-control-solid">
+                                
                             </div>
                         </div>
                         <div class="row"> 
@@ -90,13 +85,13 @@
                             <div class="form-group col-2">
                                 <label class="form-group ">Pays:</label>
                                 <select class="form-control form-control-sm form-control-solid"
-                                id="exampleSelects1" formControlName="emp_country">
-                                <option value=""></option>
-                                <option *ngFor="let elem of emp_country" [value]="elem.code_value">
-                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
-                                   
+                                    id="exampleSelects1" formControlName="emp_country">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of emp_country" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                    
 
-                            </select>
+                                </select>
                             </div>
                        
                             
@@ -195,8 +190,7 @@
         
                                 <select
                                     [className]="empForm.controls['emp_blood'].errors && (empForm.controls['emp_blood'].dirty || empForm.controls['emp_blood'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    formControlName="emp_blood"  id="exampleSelects7">
-                                    <option value=""></option>
+                                    formControlName="emp_blood"  id="exampleSelects99">
                                     <option value="A+">A+</option>
                                     <option value="A-">A-</option>
 

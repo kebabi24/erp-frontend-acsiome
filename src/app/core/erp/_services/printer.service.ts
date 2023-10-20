@@ -16,7 +16,7 @@ export class PrintersService {
   constructor(private http: HttpClient, private httpUtils: HttpUtilsService) {}
 
   // CREATE
-  public add(data: PrinterModel) {
+  public add(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     console.log(data);
     return this.http.post(API_URL, data, { headers: httpHeaders });
@@ -57,5 +57,11 @@ export class PrintersService {
   public delete(id: Number) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders });
+  }
+
+  public affectPrinters(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+
+    return this.http.post(`${API_URL}/affectPrinters`, data, { headers: httpHeaders });
   }
 }

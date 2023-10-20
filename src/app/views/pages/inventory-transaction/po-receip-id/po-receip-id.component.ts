@@ -618,8 +618,7 @@ export class PoReceipIdComponent implements OnInit {
   } else {
    this.site=  this.user.usrd_site
   }
-    
-
+  
 //const controls = this.prhForm.controls
   this.loading$ = this.loadingSubject.asObservable()
       this.loadingSubject.next(true)
@@ -630,8 +629,8 @@ export class PoReceipIdComponent implements OnInit {
             this.poEdit = response.data.purchaseOrder,
             this.details = response.data.details
             console.log(this.poEdit)
-            this.addressService.getBy({ad_addr: this.poEdit.po_vend}).subscribe(
-              (resp: any) => {this.address = resp.data
+            // this.addressService.getBy({ad_addr: this.poEdit.po_vend}).subscribe(
+            //   (resp: any) => {this.address = resp.data
             this.createForm()
             // controls.prh_nbr.setValue(this.poEdit.po_nbr)
             this.initGrid();
@@ -667,9 +666,9 @@ export class PoReceipIdComponent implements OnInit {
                   prh_tax_code: detail.pod_tax_code,
                   //prh_site: detail.item.pt_site,
                   prh_loc: detail.item.pt_loc,
-                  prh_serial: "",
+                  prh_serial: null,
                   tr_status:  this.stat,
-                  prh_vend_lot: "",
+                  prh_vend_lot: null,
                   tr_expire: null,
                 },
                 { position: "bottom" }
@@ -679,7 +678,7 @@ export class PoReceipIdComponent implements OnInit {
             }
             this.loadingSubject.next(false)
      
-          })
+        //  })
         })
       })
     // this.createForm();
@@ -695,9 +694,9 @@ export class PoReceipIdComponent implements OnInit {
     const date = new Date()
 console.log(this.poEdit.po_nbr)
     this.prhForm = this.prhFB.group({
-      //prh_nbr: [{value:this.poEdit.po_nbr}],
+      prh_nbr: [{value:this.poEdit.po_nbr}],
       prh_vend: [this.poEdit.po_vend],
-      name: [this.address.ad_name],
+      name: [""],
       prh_rcp_date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
@@ -712,6 +711,12 @@ console.log(this.poEdit.po_nbr)
       prh_rmks: [this.poEdit.po_rmks],
       print:[true]
     });
+    const controls = this.prhForm.controls
+      this.addressService.getBy({ad_addr: this.poEdit.po_vend}).subscribe(
+        (resp: any) => {this.address = resp.data
+
+    controls.name.setValue(this.address.ad_name)
+        })
     this.loadingSubject.next(false)
   }
   //reste form
@@ -936,9 +941,9 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
               
               //prh_site: detail.item.pt_site,
               prh_loc: detail.item.pt_loc,
-              prh_serial: "",
+              prh_serial: null,
               tr_status: this.stat,
-              prh_vend_lot: "",
+              prh_vend_lot: null,
               tr_expire: null,
             },
             { position: "bottom" }
@@ -960,9 +965,9 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
             prh_pur_cost: detail.pod_price,
             //prh_site: detail.item.pt_site,
             prh_loc: detail.item.pt_loc,
-            prh_serial: "",
+            prh_serial: null,
             tr_status: this.stat,
-            prh_vend_lot: "",
+            prh_vend_lot: null,
             tr_expire: null,
         });
       });
@@ -1013,19 +1018,19 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
       {
         id: this.dataset.length + 1,
         prh_line: this.dataset.length + 1,
-        prh_part: "",
+        prh_part: null,
         cmvid: "",
-        desc: "",
+        desc: null,
         qty_received:0,
         prh_rcvd: 0,
-        prh_um: "",
+        prh_um: null,
         prh_um_conv: 1,
         prh_pur_cost: 0,
        // prh_site: "",
-        prh_loc: "",
-        prh_serial: "",
-        tr_status: "",
-        prh_vend_lot: "",
+        prh_loc: null,
+        prh_serial: null,
+        tr_status: null,
+        prh_vend_lot: null,
         tr_expire: null,
       },
       { position: "bottom" }
@@ -1052,9 +1057,9 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
         prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
        // prh_site: this.dataset[i - 1].prh_site,
         prh_loc: this.dataset[i - 1].prh_loc,
-        prh_serial: "",
+        prh_serial: null,
         tr_status:  this.dataset[i - 1].tr_status,
-        prh_vend_lot: "",
+        prh_vend_lot: null,
         tr_expire: null,
       },
       { position: "bottom" }
@@ -1224,9 +1229,9 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
                   prh_tax_code: detail.pod_tax_code,
                   //prh_site: detail.item.pt_site,
                   prh_loc: detail.item.pt_loc,
-                  prh_serial: "",
+                  prh_serial: null,
                   tr_status:  this.stat,
-                  prh_vend_lot: "",
+                  prh_vend_lot: null,
                   tr_expire: null,
                 },
                 { position: "bottom" }
@@ -1248,9 +1253,9 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
                 prh_tax_code: detail.pod_tax_code,
                 //prh_site: detail.item.pt_site,
                 prh_loc: detail.item.pt_loc,
-                prh_serial: "",
+                prh_serial: null,
                 tr_status:  this.stat,
-                prh_vend_lot: "",
+                prh_vend_lot: null,
                 tr_expire: null,
             });
           });
@@ -2174,7 +2179,7 @@ doc.addPage();
       doc.line(153, i - 5 , 153, i );
      if(this.dataset[j].prh_serial != null) { doc.text(String(this.dataset[j].prh_serial)  , 156 , i  - 1)};
       doc.line(180, i - 5 , 180, i );
-      if(this.dataset[j].prh_ref != null) {doc.text(String(this.dataset[j].prh_ref ), 182 , i  - 1)};
+      if(this.dataset[j].tr_ref != null) {doc.text(String(this.dataset[j].tr_ref ), 182 , i  - 1)};
       doc.line(200, i-5 , 200, i );
      // doc.line(10, i, 200, i );
 
@@ -2217,7 +2222,7 @@ doc.addPage();
     doc.line(153, i - 5 , 153, i );
     if(this.dataset[j].prh_serial != null) {doc.text(String(this.dataset[j].prh_serial) , 156 , i  - 1)};
     doc.line(180, i - 5 , 180, i );
-    if (this.dataset[j].prh_ref) {doc.text(String(this.dataset[j].prh_ref ), 182 , i  - 1)};
+    if (this.dataset[j].tr_ref) {doc.text(String(this.dataset[j].tr_ref ), 182 , i  - 1)};
     doc.line(200, i-5 , 200, i );
     doc.line(10, i, 200, i );
     i = i + 5;

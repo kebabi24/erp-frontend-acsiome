@@ -37,7 +37,7 @@ export class BrandComponent implements OnInit, AfterViewInit {
    * On init
    */
   ngOnInit(): void {
-    this.headerLogo = this.getAsideLogo();
+    //this.headerLogo = this.getAsideLogo();
     this.brandClasses = this.htmlClassService.getClasses('brand', true).toString();
     this.asideSelfMinimizeToggle = this.layoutConfigService.getConfig('aside.self.minimize.toggle');
   }

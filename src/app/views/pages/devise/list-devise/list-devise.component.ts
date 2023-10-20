@@ -153,7 +153,8 @@ export class ListDeviseComponent implements OnInit {
           enableExcelCopyBuffer: true,
           enableFiltering: true,
           autoEdit: false,
-          autoHeight: false,
+          autoHeight: true,
+          enableAutoResize:true,
           frozenColumn: 0,
           frozenBottom: true,
       }
