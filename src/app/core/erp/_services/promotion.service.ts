@@ -79,6 +79,17 @@ export class PromotionService {
         return this.http.get(`${API_URL}/findPopArt/${code}`, { headers: httpHeaders });
     }
 
+    public getPopulationCustomer(code: String) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL}/getPopulationCustomer/${code}`, {
+          headers: httpHeaders,
+        });
+      }
+      public createPopulationCustomer(populationData: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/createPopulationCustomer`, populationData , {headers: httpHeaders});
+      }
+
   
    
      

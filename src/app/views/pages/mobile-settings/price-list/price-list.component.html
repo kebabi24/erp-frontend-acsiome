@@ -1,0 +1,72 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Résultats de la visite'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" *ngIf="!showUpdateButton" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" *ngIf="showUpdateButton" (click)="updateData()" class="btn btn-success btn-sm mr-2">Mettre à jour </button>
+
+
+
+            
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        <div class="example-preview">
+
+            <div class="form-group col-12">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                Cette liste de prix existe déjà - Si vous voulez le mettre à jour<button type="warn" (click)="onUpdatePriceList()" class="btn">Cliquez ici</button>
+                </kt-alert>
+            </div>
+            
+            <form [formGroup]="priceListForm" class="form">
+                <div class="row mb-2">
+                    <!-- CODE POPULATION -->
+                    <div class=" form-group col-4">
+                      <!-- <span >Code paramètre:</span> -->
+                          <label class="form-group" id="code" >code liste de prix:</label>
+                          <input 
+                          
+                          type="text"
+                          class="form-control form-control-sm form-control-solid"
+                          formControlName="pricelist_code"
+                          (change) = "onChangeCode()"
+                          >
+                          
+                          <!-- <div *ngIf="populationForm.controls['pricelist_code'].errors && (populationForm.controls['pricelist_code'].dirty || populationForm.controls['pricelist_code'].touched)"
+                          class="invalid-feedback">Ce Champs est obligatoire</div> -->
+    
+                    </div>
+                </div>
+            </form>
+           
+
+     
+
+       
+            <h1>Liste de produits</h1>
+            <br><br>
+
+            <!-- GRID -->
+            <div class="row"> 
+                <angular-slickgrid class="col-12" 
+                    gridId="grid" 
+                    [columnDefinitions]="columnDefinitions"
+                    (onAngularGridCreated)="angularGridReady($event)"
+                    
+                    [gridOptions]="gridOptions" 
+                    [dataset]="products"
+                    >
+                </angular-slickgrid>
+        </div>
+       
+        </div>
+        
+        
+    
+            
+
+    </kt-portlet-body>
+</kt-portlet>

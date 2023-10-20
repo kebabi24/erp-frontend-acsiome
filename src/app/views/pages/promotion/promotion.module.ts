@@ -56,6 +56,7 @@ import { FullCalendarModule,CalendarOptions } from '@fullcalendar/angular';
 import { PopulationArticleAddComponent } from './population-art-add/population-art-add.component';
 import { AdvantageAddComponent } from './advantage-add/advantage-add.component';
 import { PromoAddComponent } from './promo-add/promo-add.component';
+import { PopulationCustomerAddComponent } from './population-cust-add/population-cust-add.component';
 
 
 
@@ -73,6 +74,10 @@ const routes: Routes = [
           path: "promo-add",
           component: PromoAddComponent,
          },
+         {
+          path: "promo-cust-add",
+          component: PopulationCustomerAddComponent,
+         },
 
         
           
@@ -81,7 +86,8 @@ const routes: Routes = [
   declarations: [
     PopulationArticleAddComponent,
     AdvantageAddComponent,
-    PromoAddComponent
+    PromoAddComponent,
+    PopulationCustomerAddComponent
   ],
   imports: [
         CommonModule,

@@ -114,8 +114,8 @@ export class DdDashboardComponent implements OnInit {
   let date = new Date();
   let startDate = date.getFullYear() +'-'+(date.getMonth()+1).toString().padStart(2, '0')+'-'+"01"
   let endDate = date.getFullYear() +'-'+(date.getMonth()+1).toString().padStart(2, '0')+'-'+date.getDate()
-  startDate ="2023-5-28"
-  endDate ="2023-6-10"
+  // startDate ="2023-5-28"
+  // endDate ="2023-6-10"
   this.getDashboarData(startDate,endDate )
     
        

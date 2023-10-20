@@ -164,7 +164,7 @@ export class MenuConfig {
             },
             {
               title: "Ajouter population client",
-              page: "/crm/population-add",
+              page: "/promo/promo-cust-add",
             }, 
             {
               title: "Ajouter avantage",
@@ -176,6 +176,21 @@ export class MenuConfig {
             }, 
             
             
+          ],
+        },
+
+
+        {
+          title: "Assurance de qualité",
+          bullet: "dot",
+          icon: "flaticon-event-calendar-symbol",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter  qualité",
+              page: "/quality-assurance/add-quality",
+            },
+           
           ],
         },
         
@@ -1502,6 +1517,10 @@ export class MenuConfig {
                 {
                   title: "Motif d'annulation",
                   page: "/mobile-settings/cancelation-reason",
+                },
+                {
+                  title: "Liste de prix",
+                  page: "/mobile-settings/price-list",
                 },
               ],
             },

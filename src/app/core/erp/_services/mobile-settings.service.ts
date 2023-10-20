@@ -70,4 +70,13 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/createPaymentMethods/`, {data},{ headers: httpHeaders })
     }
+    public getPriceList(code: any,) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL_2}/getPriceList/${code}`, { headers: httpHeaders });
+    }
+
+    public createPriceList(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/createPriceList/`, {data},{ headers: httpHeaders })
+    }
 }

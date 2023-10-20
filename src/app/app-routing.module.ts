@@ -369,6 +369,10 @@ const routes: Routes = [
         path: "promo",
         loadChildren: () => import("./views/pages/promotion/promotion.module").then((m) => m.PromotionModule),
       },
+      {
+        path: "quality-assurance",
+        loadChildren: () => import("./views/pages/quality-assurance/quality-assurance.module").then((m) => m.QualityAssuranceModule),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },
     ],
