@@ -175,6 +175,20 @@ export class MenuConfig {
             },
           ],
         },
+
+        {
+          title: "Assurance de qualité",
+          bullet: "dot",
+          icon: "flaticon-event-calendar-symbol",
+          root: true,
+          submenu: [
+            {
+              title: "Ajouter  qualité",
+              page: "/quality-assurance/add-quality",
+            },
+           
+          ],
+        },
         
         {
           title: "Gestion des Fournisseurs",
