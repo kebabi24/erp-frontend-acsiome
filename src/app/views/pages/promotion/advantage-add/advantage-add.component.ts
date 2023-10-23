@@ -57,7 +57,7 @@ export class AdvantageAddComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true)
   loading$ : Observable<boolean>
 
-  populationForm: FormGroup;
+  advForm: FormGroup;
 
   products: any = [];
   isExist = false ;
@@ -119,7 +119,7 @@ export class AdvantageAddComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
-    this.createPopulationForm()
+    this.createAdvForm()
     this.init()
   }
 
@@ -134,22 +134,23 @@ export class AdvantageAddComponent implements OnInit {
     this.loadingSubject.next(false)
   }
 
-  createPopulationForm() {
+  createAdvForm() {
     const date = new Date()
     
     this.loadingSubject.next(false);
-    this.populationForm = this.formBuilder.group({
+    this.advForm = this.formBuilder.group({
 
       code_adv: [ '', Validators.required],
       type_adv: [ {value : '',disabled : !this.isExist}, Validators.required],
       amount_perc: [ {value : '',disabled : !this.isExist}, Validators.required],
+      externe : [ {value : '',disabled : !this.isExist}],
       
    })
      
   }
 
   onChangeCode() {
-    const controls = this.populationForm.controls
+    const controls = this.advForm.controls
     const code_adv = controls.code_adv.value
     if(code_adv === "") { 
       this.cantSearch = true 
@@ -167,6 +168,7 @@ export class AdvantageAddComponent implements OnInit {
               this.isExist = true
               controls.type_adv.enable()
               controls.amount_perc.enable()   
+              controls.externe.enable()   
           }
                
       })
@@ -187,8 +189,8 @@ export class AdvantageAddComponent implements OnInit {
       */
    onSubmit() {
      this.hasFormErrors = false
-     const controls = this.populationForm.controls
-     if (this.populationForm.invalid) {
+     const controls = this.advForm.controls
+     if (this.advForm.invalid) {
        Object.keys(controls).forEach((controlName) =>
            controls[controlName].markAsTouched()
        )
@@ -203,6 +205,7 @@ export class AdvantageAddComponent implements OnInit {
     const adv_code = controls.code_adv.value
     const type_adv = controls.type_adv.value
     const amount_perc = controls.amount_perc.value
+    const externe = controls.externe
 
     
 
@@ -220,9 +223,8 @@ export class AdvantageAddComponent implements OnInit {
       }) 
     }
      let advantage = {
-      adv_code , adv_type: type_adv , amount : amount_perc , product_list : this.product_list
+      adv_code , adv_type: type_adv , amount : amount_perc , product_list : this.product_list ,externe: controls.externe
      }
-     console.log("submit")
      this.promotionService
        .createAdvantage(advantage)
 
@@ -230,7 +232,7 @@ export class AdvantageAddComponent implements OnInit {
          (res: any) => {
            console.log(res);
            this.prepareGrid()
-           this.createPopulationForm()
+           this.createAdvForm()
          },
          (err) =>
            this.layoutUtilsService.showActionNotification(
@@ -241,7 +243,7 @@ export class AdvantageAddComponent implements OnInit {
              true
            ),
          () => {
-           this.createPopulationForm()
+           this.createAdvForm()
            this.layoutUtilsService.showActionNotification(
              "Population ajoutée avec succès",
              MessageType.Create,

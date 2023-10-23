@@ -1,7 +1,6 @@
 
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { NgbDropdownConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarOptions, FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
 
 import {Column, GridOption, AngularGridInstance, FieldType} from "angular-slickgrid"
@@ -27,10 +26,7 @@ import {
 
 import interactionPlugin from '@fullcalendar/interaction'; 
 
-FullCalendarModule.registerPlugins([ // register FullCalendar plugins
-  dayGridPlugin,
-  interactionPlugin
-]);
+
 
 import {
 
@@ -77,6 +73,8 @@ export class PopulationArticleAddComponent implements OnInit {
   dataView: any
 
   selectedProducts: any[];
+  
+ 
 
 
   constructor(
@@ -190,35 +188,44 @@ export class PopulationArticleAddComponent implements OnInit {
     const population_code = controls.code_population.value
     const population_desc = controls.desc_population.value
     const rank = controls.rank.value
+    const type = controls.value_type // type = true => use amount , type = false => use quantity 
 
     let populationData = []
 
     if(this.selectedProducts.length>0){
-      console.log('products selected')
       this.selectedProducts.forEach(index =>{
         const product = this.products[index]
-        populationData.push({
-          population_code :population_code ,
-          description:population_desc,
-          rank : rank, 
-          product_code : product.pt_part , 
-          quantity : product.quantity , 
-          amount : product.amount , 
-          volume : product.volume 
-        })
+        if(type){
+          populationData.push({
+            population_code :population_code ,
+            description:population_desc,
+            rank : rank, 
+            product_code : product.pt_part ,
+            amount : product.amount , 
+            volume : product.volume 
+          })
+
+        }else{
+          populationData.push({
+            population_code :population_code ,
+            description:population_desc,
+            rank : rank, 
+            product_code : product.pt_part , 
+            quantity : product.quantity , 
+            volume : product.volume 
+          })
+        }
       }) 
     }
-    console.log(populationData)
    
      this.promotionService
        .createPopulationArticle(populationData)
 
        .subscribe(
          (res: any) => {
-           console.log(res);
            this.selectedProducts = []
-           this.prepareGrid()
            this.createPopulationForm()
+           this.prepareGrid()
          },
          (err) =>
            this.layoutUtilsService.showActionNotification(
@@ -394,9 +401,10 @@ prepareGrid() {
     ]
 
       this.gridOptions = {
-        autoHeight:true,
+        autoHeight:false,
         asyncEditorLoading: false,
         editable: true,
+        enableAutoResize:true,
         enableAddRow:true,
         enableColumnPicker: true,
         enableCellNavigation: true,

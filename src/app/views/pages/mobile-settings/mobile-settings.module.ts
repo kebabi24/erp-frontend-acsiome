@@ -60,8 +60,9 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 
-import { ItineraryService, MobileServiceService, RoleService, UsersMobileService ,MobileSettingsService } from "../../../core/erp"
+import { ItineraryService, MobileServiceService, RoleService, UsersMobileService ,MobileSettingsService, ItemService } from "../../../core/erp"
 import { CancelationReasonComponent } from './cancelation-reason/cancelation-reason.component';
+import { PriceListComponent } from './price-list/price-list.component';
 
 
 
@@ -78,10 +79,14 @@ const routes: Routes = [
     path: 'cancelation-reason',
     component: CancelationReasonComponent
   },
+  {
+    path: 'price-list',
+    component: PriceListComponent
+  },
   
 ] 
 @NgModule({
-  declarations: [ VisitResultComponent,PaymentMethodComponent,CancelationReasonComponent],
+  declarations: [ VisitResultComponent,PaymentMethodComponent,CancelationReasonComponent, PriceListComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -115,6 +120,7 @@ const routes: Routes = [
     MobileServiceService,
     MobileSettingsService,
     RoleService,
+    ItemService,
     ItineraryService,
     TypesUtilsService,
     LayoutUtilsService,

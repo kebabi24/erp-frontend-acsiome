@@ -1,6 +1,6 @@
 
 <kt-portlet >
-    <kt-portlet-header [sticky]="true" [title]="'Ajouter une population'" [class]="'card-head-lg '" [viewLoading$]="loading$" >
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un avantage'" [class]="'card-head-lg '" [viewLoading$]="loading$" >
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-sm mr-2">Ajouter une catégorie</button> -->
@@ -14,7 +14,7 @@
                     {{ time | async }}
                 </div>
 
-                <form [formGroup]="populationForm" class="form">
+                <form [formGroup]="advForm" class="form">
 
                     <!-- <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
@@ -34,7 +34,7 @@
                             (change) = "onChangeCode()"
                             >
                             
-                            <div *ngIf="populationForm.controls['code_adv'].errors && (populationForm.controls['code_adv'].dirty || populationForm.controls['code_adv'].touched)"
+                            <div *ngIf="advForm.controls['code_adv'].errors && (advForm.controls['code_adv'].dirty || advForm.controls['code_adv'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                       </div>
@@ -71,6 +71,21 @@
                       <!-- RANK END  -->
 
 
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="form-group col-2">
+                            <label class="form-group">Externe :</label>
+                            <span class="switch switch-icon red-switch">
+                                <label>
+                                    <input type="checkbox"
+                                        class="form-control form-control-sm form-control-solid"
+                                        formControlName="externe" name="extern" />
+                                    <span></span>
+                                </label>
+                            </span>
+                                 
+                        </div>
                     </div>
 
                 </form> 

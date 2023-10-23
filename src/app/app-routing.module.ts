@@ -373,6 +373,10 @@ const routes: Routes = [
         path: "patient",
         loadChildren: () => import("./views/pages/patient/patient.module").then((m) => m.PatientModule),
       },
+      {
+        path: "quality-assurance",
+        loadChildren: () => import("./views/pages/quality-assurance/quality-assurance.module").then((m) => m.QualityAssuranceModule),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },
     ],

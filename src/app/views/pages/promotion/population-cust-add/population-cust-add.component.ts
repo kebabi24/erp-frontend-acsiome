@@ -33,23 +33,20 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
 ]);
 
 import {
-
-  CodeService,
-  CustomerMobile,
-  PosCategoryService,
   CustomerMobileService,
-  AddresseMobile,
   CRMService,
+  PromotionService,
 } from "../../../../core/erp"
 import { config } from 'process';
 import * as moment from 'moment';
+import { timingSafeEqual } from 'crypto';
 export type ControlPosition = keyof typeof google.maps.ControlPosition;
 @Component({
-  selector: 'kt-population-add',
-  templateUrl: './population-add.component.html',
-  styleUrls: ['./population-add.component.scss']
+  selector: 'kt-population-cust-add',
+  templateUrl: './population-cust-add.component.html',
+  styleUrls: ['./population-cust-add.component.scss']
 })
-export class PopulationAddComponent implements OnInit {
+export class PopulationCustomerAddComponent implements OnInit {
   hasFormErrors= false
   hasaddresseFormErrors=false
   loadingSubject = new BehaviorSubject<boolean>(true)
@@ -84,9 +81,11 @@ export class PopulationAddComponent implements OnInit {
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
     private crmService : CRMService,
+    private customerMobileService : CustomerMobileService,
     private cdr: ChangeDetectorRef,
     private cl :  FullCalendarModule ,
     private modalService: NgbModal,
+    private promotionService : PromotionService,
     config: NgbDropdownConfig
   
   ) {
@@ -98,7 +97,8 @@ export class PopulationAddComponent implements OnInit {
     //  this.KTCalendarBasic();
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
-    // this.getCustomers()
+    this.getCustomers()
+    this.prepareGrid()
     this.createPopulationForm()
     this.init()
   }
@@ -146,22 +146,16 @@ export class PopulationAddComponent implements OnInit {
       this.cantSearch = true 
       this.selectedCustomers = []
     }
-    this.crmService.getPopulation(population_code).subscribe(
+    this.promotionService.getPopulationCustomer(population_code).subscribe(
         (res: any) => {
           if (res.data) {
             alert("Ce code de population exist déja")
             document.getElementById("code").focus(); 
-            controls.desc_population.disable()
-            controls.client_type.disable()
-            controls.client_region.disable()
-            controls.cm_db.disable()      
+            controls.desc_population.disable() 
           } else { 
             this.isExist = true
             this.cantSearch = false
-            controls.desc_population.enable()
-            controls.client_type.enable()
-            controls.client_region.enable()
-            controls.cm_db.enable()      
+            controls.desc_population.enable()    
         }
                
     })
@@ -209,34 +203,24 @@ export class PopulationAddComponent implements OnInit {
         populationData.push({
           population_code :population_code ,
           population_desc:population_desc,
-          code_element :customer.cm_addr,
-          description : " not ready",
-          type: customer.cm_type
+          code_element :customer.customer_code,
+          description : population_desc,
+          type: ""
         })
       })
     }else{
       console.log('no customer selected')
-      this.customers.forEach(customer =>{
-        console.log(customer)
-        populationData.push({
-          population_code :population_code ,
-          population_desc:population_desc,
-          code_element :customer.cm_addr,
-          description : " not ready",
-          type: customer.cm_type
-        })
-      })
+      alert("Sélectionnez au moins un client")
+      return;
     }
 
    
-    this.crmService
-      .createPopulation(populationData)
+    this.promotionService
+      .createPopulationCustomer(populationData)
 
       .subscribe(
         (res: any) => {
-          console.log(res);
           this.customers=[]
-          this.createPopulationForm()
         },
         (err) =>
           this.layoutUtilsService.showActionNotification(
@@ -248,6 +232,7 @@ export class PopulationAddComponent implements OnInit {
           ),
         () => {
           this.createPopulationForm()
+          this.prepareGrid()
           this.layoutUtilsService.showActionNotification(
             "Population ajoutée avec succès",
             MessageType.Create,
@@ -262,29 +247,16 @@ export class PopulationAddComponent implements OnInit {
   
 
   getCustomers() {
-    let query = {}
-    const controls = this.populationForm.controls
-    let  client_type = controls.client_type.value
-    let  client_class = controls.client_class.value
-
-    if(client_type === 'ts') client_type =''
-    if(client_class === 'ts') client_class =''
-
-    query['client_type'] = client_type
-    query['client_class'] = client_class
-    //client_region
-    // cm_db
-
-    console.log(query)
+   
     this.customers = []
 
-    this.crmService.getCustomers(query).subscribe(
+    this.customerMobileService.getAllCustomers().subscribe(
       (response) => {
         if (response["data"] != null) {
           this.selectedCustomers = []
           this.customers = response["data"]
+          console.log(this.customers)
          
-          console.log('nb of customers returned : \t'+this.customers.length)
         }
       },
       (error) => {
@@ -348,9 +320,9 @@ prepareGrid() {
   this.columnDefinitions = [
 
             {
-                id: "cm_addr",
-                name: "Numéro de téléphone",
-                field: "cm_addr",
+                id: "customer_code",
+                name: "Code",
+                field: "customer_code",
                 sortable: true,
                 minWidth: 100,
                 maxWidth: 300,
@@ -361,9 +333,9 @@ prepareGrid() {
             },
 
             {
-                id: "cm_type",
-                name: "Type de client",
-                field: "cm_type",
+                id: "customer_name",
+                name: "Nom",
+                field: "customer_name",
                 sortable: true,
                 minWidth: 100,
                 maxWidth: 300,
@@ -372,9 +344,9 @@ prepareGrid() {
                 editor: {model: Editors.text}
             },
             {
-              id: "cm_class",
-              name: "Classe de client",
-              field: "cm_class",
+              id: "customer_arabic_name",
+              name: "Nom en arabe",
+              field: "customer_arabic_name",
               sortable: true,
               minWidth: 100,
               maxWidth: 300,
@@ -385,9 +357,9 @@ prepareGrid() {
 
             // ACTION 1
             {
-                id: "cm_region",
-                name: "Région de client",
-                field: "cm_region",
+                id: "customer_phone_one",
+                name: "Numéro de téléphone",
+                field: "customer_phone_one",
                 sortable: true,
                 minWidth: 100,
                 maxWidth: 300,
@@ -396,9 +368,9 @@ prepareGrid() {
                 editor: {model: Editors.text}
             },
             {
-              id: "cm_db",
-              name: "Numéro de carte",
-              field: "cm_db",
+              id: "city",
+              name: "Ville",
+              field: "city",
               sortable: true,
               minWidth: 100,
               maxWidth: 300,
@@ -406,17 +378,7 @@ prepareGrid() {
               type: FieldType.string, 
               editor: {model: Editors.text}
             },
-            {
-              id: "birthdate",
-              name: "date de naissance",
-              field: "birthdate",
-              sortable: true,
-              minWidth: 100,
-              maxWidth: 300,
-              filterable: true,
-              type: FieldType.string, 
-              editor: {model: Editors.text}
-            }, 
+          
       ]
 
       this.gridOptions = {
