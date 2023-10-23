@@ -48,6 +48,7 @@ import {
   InvoiceOrderService,
   AccountReceivable,
   AccountReceivableService,
+  ConfigService,
  
 
 } from "../../../../core/erp";
@@ -143,6 +144,8 @@ export class CreateAccountReceivableComponent implements OnInit {
   find: Boolean;
   rest: number;
   date: String;
+  compta: Boolean = false
+  declared: Boolean = false
   constructor(
     config: NgbDropdownConfig,
     private apFB: FormBuilder,
@@ -158,13 +161,24 @@ export class CreateAccountReceivableComponent implements OnInit {
     private codeService: CodeService,
     private deviseService: DeviseService,
     private bankService: BankService, 
+    private configService : ConfigService,
 
   ) {
     config.autoClose = true;
       this.codeService
         .getBy({ code_fldname: "check_form" })
         .subscribe((response: any) => (this.ar_cr_terms = response.data));
+    this.configService.getOne( 1 ).subscribe(
+      (resp: any) => {
+        console.log(resp.data)
+        if (resp.data.cfg_accounting) { 
+          this.compta = true
+        }
+        if (resp.data.cfg_declared) { 
+          this.declared = true
+        }
         
+      })      
       this.initGrid();
       this.initGridcf();
 

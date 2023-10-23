@@ -50,7 +50,7 @@ import {
 
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { UsersService, CodeService, TaxeService, CustomerService, SequenceService, 
+import { UsersService, CodeService, TaxeService, CustomerService, SequenceService, ConfigService,
   DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,ProjectService} from '../../../core/erp';
 import { CreateNoteComponent } from './create-note/create-note.component';
 import { EditPaymentComponent } from './edit-payment/edit-payment.component';
@@ -141,6 +141,7 @@ providers: [
     ProjectService,
     AccountReceivableService,
     InvoiceOrderService,
+    ConfigService,
 ],
 
 entryComponents: [

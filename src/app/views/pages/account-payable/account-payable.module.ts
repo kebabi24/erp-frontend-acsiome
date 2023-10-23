@@ -71,8 +71,10 @@ import {
     EntityService,
     ProductLineService,
     UsersService,  
+    ConfigService,
     BankService, AccountPayableService,
     DaybookService,
+    LocationDeclaredService,
 } from "../../../core/erp";
 
 import { CreatePaymentComponent } from './create-payment/create-payment.component';
@@ -181,6 +183,9 @@ providers: [
     BankService,
     EntityService,
     DaybookService,
+    ConfigService,
+    UsersService,
+    LocationDeclaredService,
 
 
 ],

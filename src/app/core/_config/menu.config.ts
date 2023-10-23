@@ -845,6 +845,27 @@ export class MenuConfig {
                 
               ],
             },
+            {
+              title: "Gestion des Docteurs",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-network",
+              submenu: [
+                {
+                  title: "Ajouter un Docteur",
+                  page: "/patient/create-doctor",
+                },
+                {
+                  title: "Liste des Docteurs",
+                  page: "/patient/list-doctor",
+                },
+                {
+                  title: "Modification des Docteurs",
+                  page: "/patient/update-doctor",
+                },
+                
+              ],
+            },
           ],
         },
         {

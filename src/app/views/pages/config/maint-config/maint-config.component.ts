@@ -50,6 +50,8 @@ export class MaintConfigComponent implements OnInit {
   pm_module = false
   pay_multiple = false  
   crm= false
+  accounting=false
+  declared = false
   error = false;
 
   constructor(
@@ -85,7 +87,9 @@ export class MaintConfigComponent implements OnInit {
       
         cfg_pm_module: [this.pm_module],
         cfg_pay_multiple: [this.pay_multiple],
-        cfg_crm: [this.crm]
+        cfg_crm: [this.crm],
+        cfg_accounting: [this.accounting],
+        cfg_declared : [this.declared],
        
     })
     let id = 1
@@ -97,13 +101,16 @@ export class MaintConfigComponent implements OnInit {
             this.pm_module = false
             this.pay_multiple = false
             this.crm = false
+            this.accounting = false
+            this.declared = false
           }
           else {
         //    console.log(this.conf.cfg_pm_module)
             this.pm_module = this.conf.cfg_pm_module
             this.pay_multiple = this.conf.cfg_pay_multiple
              this.crm = this.conf.cfg_crm
-            
+             this.accounting = this.conf.cfg_accounting
+             this.declared = this.conf.cfg_declared
           }
          
     
@@ -115,6 +122,8 @@ export class MaintConfigComponent implements OnInit {
       controls.cfg_pm_module.setValue(this.pm_module);
       controls.cfg_pay_multiple.setValue(this.pay_multiple);
       controls.cfg_crm.setValue(this.crm);
+      controls.cfg_accounting.setValue(this.accounting);
+      controls.cfg_declared.setValue(this.declared);
     })
   }
 
@@ -147,6 +156,8 @@ export class MaintConfigComponent implements OnInit {
       _config.cfg_pm_module = controls.cfg_pm_module.value
       _config.cfg_pay_multiple = controls.cfg_pay_multiple.value
       _config.cfg_crm = controls.cfg_crm.value
+      _config.cfg_accounting = controls.cfg_accounting.value
+      _config.cfg_declared = controls.cfg_declared.value
       console.log(controls.cfg_pm_module.value)
       //console.log("hnahnahna",_config)
       return _config
