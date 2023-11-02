@@ -182,9 +182,14 @@ export class MenuConfig {
           icon: "flaticon-event-calendar-symbol",
           root: true,
           submenu: [
+            
             {
-              title: "Ajouter  qualité",
-              page: "/quality-assurance/add-quality",
+              title: "Ajouter paramètre de contrôle",
+              page: "/quality-assurance/add-control-parameter",
+            },
+            {
+              title: "Saisie résultats de contrôle",
+              page: "/quality-assurance/control-results-entry",
             },
            
           ],

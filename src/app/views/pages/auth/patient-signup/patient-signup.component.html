@@ -1,0 +1,158 @@
+<div class="d-flex flex-column-fluid flex-center mt-40">
+  <!--begin::Signin-->
+  <div  class="login-form login-signin">
+
+    
+
+    <div class="text-center">
+      
+      <p class="text-muted font-weight-bold">
+        Nouveau patient, Entrer vos données
+      </p>
+    </div>
+
+    <kt-auth-notice></kt-auth-notice>
+
+    <!--begin::Form-->
+    <form
+      class="form"
+      [formGroup]="loginForm"
+      autocomplete="off"
+      novalidate="novalidate"
+      id="kt_login_form"
+    >
+      <div>
+        {{ time | async }}
+      </div>
+
+     
+
+      <!-- NAME -->
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Nom et prénom:</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Nom et prénom"
+            formControlName="name"
+            autocomplete="off"
+          />
+          <mat-error *ngIf="isControlHasError('user', 'required')">
+            <strong>Ce Champs est obligatoire</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- NAME -->
+
+      <!-- PASSWORD -->
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Mot de passe:</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="mot de passe"
+            formControlName="password"
+            autocomplete="off"
+          />
+          <mat-error *ngIf="isControlHasError('password', 'required')">
+            <strong>Ce Champs est obligatoire</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- PASSWORD -->
+
+      <!-- Tele -->
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Numéro de téléphone:</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Numéro de téléphone"
+            (change)="onChangePhone()"
+            id="phoneN"
+            formControlName="phone"
+            autocomplete="off"
+          />
+          <mat-error *ngIf="isControlHasError('phoneN', 'required')">
+            <strong>{{ "AUTH.VALIDATION.REQUIRED_FIELD" | translate }}</strong>
+          </mat-error>
+          <mat-error *ngIf="isControlHasError('phoneN', 'pattern')">
+            <strong>wrong pattern</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Tele -->
+
+     
+
+      <!-- BIRTHDATE -->
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Date de naissance:</mat-label>
+          <input
+            matInput
+            type="date"
+            formControlName="birthdate"
+          />
+        </mat-form-field>
+      </div>
+      <!-- BIRTHDATE -->
+
+      <!-- SEXE -->
+      <div class="form-group col-6 mt-2 mb-2 ml -0 pl-0">
+        <span class="mb-2 font-weight-light">Sexe:</span>
+        <select
+          formControlName="gender"
+          class="form-control form-control-sm form-control-solid mt-3"
+        >
+          <option value="homme" class="mt-1">Homme</option>
+          <option value="femme">Femme</option>
+        </select>
+      </div>
+      <!-- SEXE -->
+
+     
+      <!-- EMAIL -->
+      <!-- <div class="form-group">
+        <mat-form-field>
+          <mat-label>Email:</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Email"
+            formControlName="email"
+            autocomplete="off"
+          />
+          <mat-error *ngIf="isControlHasError('user', 'required')">
+            <strong>Ce Champs est obligatoire</strong>
+          </mat-error>
+        </mat-form-field>
+      </div> -->
+      <!-- EMAIL -->
+
+      <!--begin::Action-->
+      <div
+        class="form-group d-flex flex-wrap justify-content-between align-items-center"
+      >
+        <button
+          id="kt_login_signin_submit"
+          (click)="submit()"
+          [ngClass]="{
+            'spinner spinner-right spinner-md spinner-light': loading
+          }"
+          class="btn btn-primary font-weight-bold px-9 py-4 my-3"
+        >
+          Enregistrer
+        </button>
+      </div>
+      <!--end::Action-->
+    </form>
+    <!--end::Form-->
+  </div>
+  <!--end::Signin-->
+
+  
+</div>

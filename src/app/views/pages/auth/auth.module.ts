@@ -31,6 +31,10 @@ import {
 } from "../../../core/auth";
 import { NewCustomerComponent } from "./new-customer/new_customer.component";
 import { NewShop } from "./new-shop/new_shop.component";
+import { PatientLoginComponent } from "./patient-login/patient-login.component";
+import { PatientService } from "src/app/core/erp";
+import { PatientSignupComponent } from "./patient-signup/patient-signup.component";
+import { RdvPickComponent } from "./rdv-pick/rdv-pick.component";
 
 const routes: Routes = [
   {
@@ -62,6 +66,18 @@ const routes: Routes = [
       {
         path: "new-shop",
         component: NewShop,
+      },
+      {
+        path: "patient-login",
+        component: PatientLoginComponent,
+      },
+      {
+        path: "patient-signup/:phone",
+        component: PatientSignupComponent,
+      },
+      {
+        path: "rdv-pick/",
+        component: RdvPickComponent, // add phone as a param
       },
     ],
   },
@@ -98,13 +114,16 @@ const routes: Routes = [
     AuthNoticeComponent,
     NewCustomerComponent,
     NewShop,
+    PatientLoginComponent,
+    PatientSignupComponent,
+    RdvPickComponent,
   ],
 })
 export class AuthModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: AuthModule,
-      providers: [AuthService, AuthGuard],
+      providers: [AuthService, AuthGuard,PatientService],
     };
   }
 }

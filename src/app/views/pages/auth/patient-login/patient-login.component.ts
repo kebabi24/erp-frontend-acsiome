@@ -18,21 +18,16 @@ import { Store } from "@ngrx/store"
 import { AppState } from "../../../../core/reducers"
 // Auth
 import { AuthNoticeService, AuthService, Login } from "../../../../core/auth"
+import { PatientService } from "src/app/core/erp/_services/patient.service"
 
-/**
- * ! Just example => Should be removed in development
- */
-const DEMO_PARAMS = {
-    EMAIL: "admin@demo.com",
-    PASSWORD: "demo",
-}
+
 
 @Component({
     selector: "kt-login",
-    templateUrl: "./login.component.html",
+    templateUrl: "./patient-login.component.html",
     encapsulation: ViewEncapsulation.None,
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class PatientLoginComponent implements OnInit, OnDestroy {
     // Public params
     loginForm: FormGroup
     loading = false
@@ -43,7 +38,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private returnUrl: any
 
-    // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
+    isExist = false 
+    phone = " "
+
+  
 
     /**
      * Component constructor
@@ -60,6 +58,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private auth: AuthService,
+        private patientService : PatientService,
         private authNoticeService: AuthNoticeService,
         private translate: TranslateService,
         private store: Store<AppState>,
@@ -83,14 +82,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         // redirect back to the returnUrl before login
         this.route.queryParams.subscribe((params) => {
-            console.log(params)
             this.returnUrl = params.returnUrl || "/"
         })
     }
 
-    /**
-     * On destroy
-     */
     ngOnDestroy(): void {
         this.authNoticeService.setNotice(null)
         this.unsubscribe.next()
@@ -98,21 +93,18 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loading = false
     }
 
-    /**
-     * Form initalization
-     * Default params, validators
-     */
+ 
     initLoginForm() {
         // demo message to show
 
-        this.loginForm = this.fb.group({
-            userName: [
+        this.loginForm = this.fb.group({         
+            phone: [
                 "",
                 Validators.compose([
-                    Validators.required,
-                    Validators.maxLength(320), // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+                  Validators.required, 
+                  Validators.pattern("[0][567][0-9]{8}"),
                 ]),
-            ],
+              ],
             password: [
                 "",
                 Validators.compose([
@@ -123,68 +115,55 @@ export class LoginComponent implements OnInit, OnDestroy {
         })
     }
 
-    /**
-     * Form Submit
-     */
     submit() {
         const controls = this.loginForm.controls
         /** check form */
-        if (this.loginForm.invalid) {
-            Object.keys(controls).forEach((controlName) =>
-                controls[controlName].markAsTouched()
-            )
-            return
-        }
+        // if (this.loginForm.invalid) {
+        //     Object.keys(controls).forEach((controlName) =>
+        //         controls[controlName].markAsTouched()
+        //     )
+        //     return
+        // }
 
-        this.loading = true
+        // this.loading = true
 
-        const authData = {
-            userName: controls.userName.value,
-            password: controls.password.value,
-        }
-        this.auth
-            .login(authData.userName, authData.password)
+        // const authData = {
+        //     userName: controls.userName.value,
+        //     password: controls.password.value,
+        // }
+        // this.auth
+        //     .login(authData.userName, authData.password)
 
-            .subscribe(
-                (res: any) => {
-                    const {
-                        data: { user, token , domain},
-					} = res
-					this.store.dispatch(new Login({authToken: token}));
-                    localStorage.setItem("user", JSON.stringify(user))
-                    localStorage.setItem("token", JSON.stringify(token))
-                    localStorage.setItem("domain", JSON.stringify(domain))
-                    this.router.navigateByUrl(this.returnUrl) // Main page
-                },
-                (err) =>
-                    this.authNoticeService.setNotice(
-                        this.translate.instant(
-                            "Erreur dans l'authentification"
-                        ),
-                        "danger"
-                    ),
-                () => {
-                    this.loading = false
-                    this.cdr.markForCheck()
-                }
-            )
+        //     .subscribe(
+        //         (res: any) => {
+        //             const {
+        //                 data: { user, token , domain},
+		// 			} = res
+		// 			this.store.dispatch(new Login({authToken: token}));
+        //             localStorage.setItem("user", JSON.stringify(user))
+        //             localStorage.setItem("token", JSON.stringify(token))
+        //             localStorage.setItem("domain", JSON.stringify(domain))
+        //             this.router.navigateByUrl(this.returnUrl) // Main page
+        //         },
+        //         (err) =>
+        //             this.authNoticeService.setNotice(
+        //                 this.translate.instant(
+        //                     "Erreur dans l'authentification"
+        //                 ),
+        //                 "danger"
+        //             ),
+        //         () => {
+        //             this.loading = false
+        //             this.cdr.markForCheck()
+        //         }
+        //     )
+        this.goToRdv()
+        
+    }
 
-        // .pipe(
-        // 	tap(res => {
-        // 		console.log(res)
-        // 		// if (user) {
-        // 		// 	this.store.dispatch(new Login({authToken: user.accessToken}));
-        // 		// 	this.router.navigateByUrl(this.returnUrl); // Main page
-        // 		// } else {
-        // 		// 	this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
-        // 		// }
-        // 	}),
-        // 	takeUntil(this.unsubscribe),
-        // 	finalize(() => {
-        // 		this.loading = false;
-        // 		this.cdr.markForCheck();
-        // 	})
-        // )
+    goToRdv(){
+       console.log("heyyyy")
+       this.router.navigateByUrl("/crm/agenda/");
     }
 
     /**
@@ -203,5 +182,26 @@ export class LoginComponent implements OnInit, OnDestroy {
             control.hasError(validationType) &&
             (control.dirty || control.touched)
         return result
+    }
+
+
+    onChangePhone() {
+        const controls = this.loginForm.controls;
+        const phone = controls.phone.value;
+        this.phone = phone
+         this.patientService.getOnePatientByPhone(phone).subscribe((res: any) => {
+           if (res.data) {
+            this.isExist = true
+            // document.getElementById("phone").focus();
+            controls.password.disable()
+           } else {
+               controls.password.enable();
+            }
+        });
+    }
+    
+    goToSignupPage(){
+      this.router.navigateByUrl("/auth/patient-signup/" +this.phone);
+      console.log("Hello")
     }
 }

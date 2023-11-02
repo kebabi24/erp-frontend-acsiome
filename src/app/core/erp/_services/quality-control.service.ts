@@ -20,11 +20,8 @@ export class QualityControlService {
         private httpUtils: HttpUtilsService
     ) {}
 
-    // CREATE
-    // public add(site: Site) {
-    //     const httpHeaders = this.httpUtils.getHTTPHeaders()
-    //     return this.http.post(API_URL, site, { headers: httpHeaders })
-    // }
+  
+    
 
     public findSpecificationByCode(specification_code: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -53,6 +50,36 @@ export class QualityControlService {
         return this.http.get(`${API_URL}/docTriggers/`, { headers: httpHeaders })
    
     }
+
+    public getSpecTestResults(query : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getSpecTestResults/`, {query}, { headers: httpHeaders })
+    }
+
+    public getSpeficitaion(query : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getSpecification/`, {query}, { headers: httpHeaders })
+    }
+
+    public findInspectionRouting(query : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findInspectionRouting/`, {query}, { headers: httpHeaders })
+    }
+
+    public findItemSpecificationDetails(query : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findItemSpecificationDetails/`, {query}, { headers: httpHeaders })
+    }
+
+
+    public createIpAndIpds(ipData : any,ipdsData:any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createIpAndIpds/`, {ipData,ipdsData}, { headers: httpHeaders })
+    }
+
+    
+
+    
     
     
 }
