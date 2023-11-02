@@ -7,12 +7,11 @@ import { HttpUtilsService } from "../../_base/crud"
 import { environment } from "../../../../environments/environment"
 
 // model
-import { Code } from "../_models/code.model"
 
-const API_URL = environment.apiUrl + "/codes"
+const API_URL = environment.apiUrl + "/location-declareds"
 
 @Injectable()
-export class CodeService {
+export class LocationDeclaredService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -21,16 +20,17 @@ export class CodeService {
     ) {}
 
     // CREATE
-    public add(code: Code) {
+    public add(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, code, { headers: httpHeaders })
-    }
-    public addCode(data:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/addcodes`, data, { headers: httpHeaders })
+        return this.http.post(API_URL, data, { headers: httpHeaders })
     }
 
-    // READ 
+    // READ
+    public findBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
+    }
+    // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })
@@ -42,19 +42,18 @@ export class CodeService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+ 
     }
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })
+ 
     }
+   
     // UPDATE
-    public update(id: Number, data:any) {
+    public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
+        return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
     // DELETE
-    public delete(id: Number) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
-    }
 }

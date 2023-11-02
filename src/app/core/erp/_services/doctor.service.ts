@@ -7,12 +7,12 @@ import { HttpUtilsService } from "../../_base/crud"
 import { environment } from "../../../../environments/environment"
 
 // model
-import { Code } from "../_models/code.model"
+import { Doctor } from "../_models/doctor.model"
 
-const API_URL = environment.apiUrl + "/codes"
+const API_URL = environment.apiUrl + "/doctors"
 
 @Injectable()
-export class CodeService {
+export class DoctorService {
     httpOptions = this.httpUtils.getHTTPHeaders()
 
     constructor(
@@ -21,15 +21,10 @@ export class CodeService {
     ) {}
 
     // CREATE
-    public add(code: Code) {
+    public add(doctor: Doctor) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, code, { headers: httpHeaders })
+        return this.http.post(API_URL, doctor, { headers: httpHeaders })
     }
-    public addCode(data:any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(`${API_URL}/addcodes`, data, { headers: httpHeaders })
-    }
-
     // READ 
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -42,10 +37,12 @@ export class CodeService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+        
     }
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })
+        
     }
     // UPDATE
     public update(id: Number, data:any) {

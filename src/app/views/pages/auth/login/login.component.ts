@@ -18,7 +18,7 @@ import { Store } from "@ngrx/store"
 import { AppState } from "../../../../core/reducers"
 // Auth
 import { AuthNoticeService, AuthService, Login } from "../../../../core/auth"
-
+import { environment } from "../../../../../environments/environment"
 /**
  * ! Just example => Should be removed in development
  */
@@ -26,7 +26,7 @@ const DEMO_PARAMS = {
     EMAIL: "admin@demo.com",
     PASSWORD: "demo",
 }
-
+const instance = "Instance : " + environment.Instance 
 @Component({
     selector: "kt-login",
     templateUrl: "./login.component.html",
@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     loading = false
     isLoggedIn$: Observable<boolean>
     errors: any = []
+    // instance: any
 
     private unsubscribe: Subject<any>
 
@@ -120,7 +121,9 @@ export class LoginComponent implements OnInit, OnDestroy {
                     Validators.maxLength(100),
                 ]),
             ],
+           
         })
+        document.getElementById("instance").innerHTML = instance;
     }
 
     /**

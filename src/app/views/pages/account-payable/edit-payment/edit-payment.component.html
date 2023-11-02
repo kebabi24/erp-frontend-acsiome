@@ -264,11 +264,13 @@
                     <!--div class="form-group col-2">
                         <button type="button" (click)="oncreateCF()" class="btn btn-success btn-sm mr-2">Valider Detail </button>
                     </div-->    
-                </div>
-                <button type="button"  class="btn btn-success btn-sm mr-2" (click)="oncreateGL()" >Valider </button>
-
+                    <div class="form-group col-3">
+                    
+                        <button type="button" *ngIf="compta"  class="btn btn-success btn-sm mr-2" (click)="oncreateGL()" >Valider </button>
+                    </div>
+                </div>    
                 <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="200" gridId="mGrid2"
+                    <angular-slickgrid *ngIf="compta" class="col-12" gridHeight="200" gridId="mGrid2"
                         [columnDefinitions]="columnDefinitionscf" [gridOptions]="gridOptionscf" [dataset]="cfdataset"
                         (onAngularGridCreated)="gridReadycf($event)">
                     </angular-slickgrid>

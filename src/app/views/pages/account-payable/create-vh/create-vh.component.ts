@@ -49,7 +49,7 @@ import {
   ProductLineService,
   InventoryStatusService,
   PurchaseReceiveService,
-  LocationService,
+  ConfigService,
   SiteService,
   MesureService,
   SequenceService,
@@ -202,6 +202,8 @@ entity;
   user;
   vhnbr: String;
   total: Number;
+  compta: Boolean = false;
+  declared: Boolean = false;
   constructor(
     config: NgbDropdownConfig,
     private ihFB: FormBuilder,
@@ -225,13 +227,24 @@ entity;
     private productLineService: ProductLineService,
     private taxService: TaxeService,
     private siteService: SiteService,
-    private locationService: LocationService,
+    private configService: ConfigService,
     private locationDetailService: LocationDetailService,
   ) {
     config.autoClose = true;
       this.codeService
         .getBy({ code_fldname: "vd_cr_terms" })
         .subscribe((response: any) => (this.vh_cr_terms = response.data));
+        this.configService.getOne( 1 ).subscribe(
+          (resp: any) => {
+            console.log(resp.data)
+            if (resp.data.cfg_accounting) { 
+              this.compta = true
+            }
+            if (resp.data.cfg_declared) { 
+              this.declared = true
+            }
+            
+          })
       this.initGrid();
       this.initGridih();
       this.initGridcf();
@@ -671,7 +684,7 @@ var prod = args.dataContext.product;
       name: "Sous Compte",
       field: "apd_sub",
       sortable: true,
-      minWidth: 200,
+      minWidth: 80,
       maxWidth: 200,
       filterable: false,
       
@@ -681,7 +694,7 @@ var prod = args.dataContext.product;
       name: "Centre de Cout",
       field: "apd_cc",
       sortable: true,
-      minWidth: 200,
+      minWidth: 80,
       maxWidth: 200,
       filterable: false,
       
@@ -691,7 +704,7 @@ var prod = args.dataContext.product;
       name: "Montant Devise",
       field: "apd_cur_amt",
       sortable: true,
-      minWidth: 200,
+      minWidth: 80,
       maxWidth: 200,
       filterable: false,
       
@@ -701,7 +714,7 @@ var prod = args.dataContext.product;
       name: "Montant ",
       field: "apd_amt",
       sortable: true,
-      minWidth: 200,
+      minWidth: 80,
       maxWidth: 200,
       filterable: false,
       
@@ -711,12 +724,14 @@ var prod = args.dataContext.product;
 
     this.gridOptionscf = {
       asyncEditorLoading: false,
-      editable: true,
-      enableColumnPicker: true,
+      editable: false,
+      enableColumnPicker: false,
       enableSorting: true,
-      enableCellNavigation: true,
-      enableRowSelection: true,
-      enableAutoResize: false,
+      enableCellNavigation: false,
+      enableRowSelection: false,
+      enableAutoResize: true,
+      autoHeight: false,
+      
     
       
       formatterOptions: {
@@ -875,6 +890,8 @@ var prod = args.dataContext.product;
 
       return;
     }
+
+    if(this.compta) {
     if (!this.cfdataset.length) {
       this.message = "Le Detail comptablité ne peut pas etre vide ";
       this.hasFormErrors = true;
@@ -882,6 +899,19 @@ var prod = args.dataContext.product;
       return;
     }
 
+    let amtcf = 0
+    for (var i = 0; i < this.cfdataset.length; i++) {
+      amtcf = amtcf + this.cfdataset[i].apd_amt
+     
+    
+    }
+    if (amtcf != 0) {
+      this.message = "L' Ecriture n'est pas équilibrée ";
+      this.hasFormErrors = true;
+
+      return;
+    }
+  }
     for (var i = 0; i < this.ihdataset.length; i++) {
       console.log(this.ihdataset[i]  )
      if (this.ihdataset[i].vdh_part == "" || this.ihdataset[i].vdh_part == null  ) {
@@ -980,7 +1010,7 @@ var prod = args.dataContext.product;
      // console.log("hhhhhh", as)
       //this.addAs(as,this.pshnbr);
       let ih = this.prepareIh()
-      this.addIh(ih, this.vhnbr,this.ihdataset, this.cfdataset);
+      this.addIh(ih, this.vhnbr,this.ihdataset, this.cfdataset,this.declared);
      
     })
     // tslint:disable-next-line:prefer-const
@@ -1023,7 +1053,7 @@ var prod = args.dataContext.product;
    *
    * @param _ih: ih
    */
-  addIh(_vh: any,vhnbr:any, detail: any, apdetail: any) {
+  addIh(_vh: any,vhnbr:any, detail: any, apdetail: any,declare:any) {
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -1038,7 +1068,7 @@ var prod = args.dataContext.product;
     const controls = this.ihForm.controls;
 
     this.voucherOrderService
-      .add({ voucherOrder: _vh, vh_inv_nbr:vhnbr, voucherOrderDetail: detail, apDetail: apdetail })
+      .add({ voucherOrder: _vh, vh_inv_nbr:vhnbr, voucherOrderDetail: detail, apDetail: apdetail, declared:declare })
       .subscribe(
         (reponse: any) => (vh = reponse.data),
         (error) => {
