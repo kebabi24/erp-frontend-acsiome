@@ -40,6 +40,7 @@ import { Patient, PatientService, CodeService, SiteService,UsersService, Associa
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
+import { filters } from "dist/assets/plugins/formvalidation/src/js";
 const API_URL = environment.apiUrl + "/codes"
 @Component({
   selector: 'kt-create-patient',
@@ -78,13 +79,16 @@ export class CreatePatientComponent implements OnInit {
     gridObjass: any
     angularGridass: AngularGridInstance
     
-    datashift: []
-    columnDefinitionsshift: Column[] = []
-    gridOptionsshift: GridOption = {}
-    gridObjshift: any
-    angularGridshift: AngularGridInstance
-
-
+    datatrait: any [] = []
+    datasettrait: any [] = []
+    columnDefinitionstrait: Column[] = []
+    gridOptionstrait: GridOption = {}
+    gridObjtrait: any
+    angularGridtrait: AngularGridInstance
+    gridtrait: any;
+    gridServicetrait: GridService;
+    dataViewtrait: any;
+    
     jobs: [];
     columnDefinitions2: Column[] = [];
     gridOptions2: GridOption = {};
@@ -100,13 +104,14 @@ export class CreatePatientComponent implements OnInit {
     mvgridOptions: GridOption;
     mvdataset: any[];
 
-    jbangularGrid: AngularGridInstance;
-    jbgrid: any;
-    jbgridService: GridService;
-    jbdataView: any;
-    jbcolumnDefinitions: Column[];
-    jbgridOptions: GridOption;
+    angularGrid: AngularGridInstance;
+    grid: any;
+    gridService: GridService;
+    dataView: any;
+    columnDefinitions: Column[];
+    gridOptions: GridOption;
     dataset: any[];
+    
 
     pat_city: any[] = []
     pat_state: any[] = []
@@ -116,6 +121,7 @@ export class CreatePatientComponent implements OnInit {
     httpOptions = this.httpUtils.getHTTPHeaders()
     leveljbd = [];
     leveljob = []
+    dis:any
   constructor(
       config: NgbDropdownConfig,
       private patFB: FormBuilder,
@@ -155,12 +161,13 @@ export class CreatePatientComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
     this.createForm()
-    this.initjbGrid()
+    this.initGrid()
 }
-initjbGrid() {
-  this.jbcolumnDefinitions = [
+
+initGrid() {
+  this.columnDefinitions = [
     {
-      id: "id",
+      id: "idd",
       field: "id",
       excludeFromHeaderMenu: true,
       formatter: Formatters.deleteIcon,
@@ -168,43 +175,22 @@ initjbGrid() {
       maxWidth: 30,
       onCellClick: (e: Event, args: OnEventArgs) => {
         if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          this.jbangularGrid.gridService.deleteItem(args.dataContext);
+          this.angularGrid.gridService.deleteItem(args.dataContext);
         }
       },
     
     },
     {
-      id: "patd_type",
-      name: "Tytpe",
-      field: "patd_type",
-      sortable: true,
-      width: 50,
-      filterable: false,
-      type: FieldType.string,
-    
-      
-      editor: {
-          model: Editors.singleSelect,
-
-          // We can also add HTML text to be rendered (any bad script will be sanitized) but we have to opt-in, else it will be sanitized
-          enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/pathotype`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-       /*   customStructure: {    
-            value: 'code_value',
-            label: 'code_cmmt',
-            optionLabel: 'code_value', // if selected text is too long, we can use option labels instead
-            //labelSuffix: 'text',
-         },*/
-          editorOptions: {
-            maxHeight: 400
-          }
-        },
+      id: "id",
+      field: "id",
+      name: "Id",
+      excludeFromHeaderMenu: true,
+      minWidth: 30,
+      maxWidth: 30,
     },
-
-   
     {
       id: "patd_disease",
-      name: "Maladie",
+      name: "Code Maladie",
       field: "patd_disease",
       sortable: true,
       width: 50,
@@ -213,8 +199,51 @@ initjbGrid() {
       editor: {
         model: Editors.text,
       },
-    
+      
     },
+    {
+      id: "disease",
+      name: "Maladie",
+      field: "disease",
+      
+        formatter: Formatters.complexObject,
+        exportWithFormatter: true,
+        dataKey: 'value',
+        labelKey: 'label',
+        type: FieldType.object,
+        // sortComparer: SortComparers.objectString, // this sorter requires the dataKey and assume that obj1[dataKey] will be a string so it can sort it that way
+        filterable: true,
+        // filter: Filters.autoComplete,
+        sortable: false,
+        minWidth: 100,
+        editor: {
+          model: Editors.autoComplete,
+          customStructure: {  value: 'value',label: 'label' },
+          collectionAsync:  this.http.get(`${API_URL}/disease`),
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.disease.value,args.dataContext.id)
+          this.gridService.updateItemById(args.dataContext.id,{ ...args.dataContext, patd_disease: args.dataContext.disease.value })
+          console.log(this.dataset)
+   
+        // },
+        
+        },
+    },
+   
+    // {
+    //   id: "patd_disease",
+    //   name: "Maladie",
+    //   field: "patd_disease",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: false,
+    //   type: FieldType.string,
+    //   editor: {
+    //     model: Editors.text,
+    //   },
+    
+    // },
     {
       id: "patd_year",
       name: "Année",
@@ -228,14 +257,13 @@ initjbGrid() {
         model: Editors.integer,
       },
       
-
+     
     },
     {
       id: "patd_cmmt",
       name: "Commentaire",
       field: "patd_cmmt",
       sortable: true,
-      width: 50,
       filterable: false,
       type: FieldType.text,
       
@@ -246,17 +274,60 @@ initjbGrid() {
 
     },
     
+    {
+      id: "traitement",
+      name: "Traitement",
+      field: "traitement",
+      excludeFromColumnPicker: true,
+      excludeFromGridMenu: true,
+      excludeFromHeaderMenu: true,
+      formatter: (row, cell, value, columnDef, dataContext) => {
+        // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+        return `
+        <a class="btn btn-sm btn-clean btn-icon mr-2" title="Ajouter les traitement">
+             <i class="flaticon2-add"></i>
+             
+         </a>
+         `;
+      },
+      minWidth: 50,
+      maxWidth: 50,
+      // use onCellClick OR grid.onClick.subscribe which you can see down below
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        console.log(args.dataContext.patd_disease)
+        this.dis = args.dataContext.patd_disease
+        console.log(this.dis)
+        this.datatrait = []
+          let element: HTMLElement = document.getElementById(
+            "openTraitGrid"
+          ) as HTMLElement;
+          element.click();
+      },
+    },
   ];
 
-  this.jbgridOptions = {
+  this.gridOptions = {
    
     asyncEditorLoading: false,
     editable: true,
     enableAutoResize:true,
-    autoHeight:false,
+    autoHeight:true,
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
+
+    presets: {
+      // the column position in the array is very important and represent
+      // the position that will show in the grid
+      columns: [
+        { columnId: 'idd'},
+        { columnId: 'id'},
+        { columnId: 'disease'},
+        { columnId: 'patd_year'},
+        { columnId: 'patd_cmmt'},
+        { columnId: 'traitement'}
+      ],
+    }
   };
   // this.codeService.getBy({ code_fldname: "pat_type" })
   // .subscribe((response: any) => (this.mvdataset = response.data));
@@ -265,10 +336,10 @@ initjbGrid() {
 }
 
 addNewItem() {
-  this.jbgridService.addItem(
+  this.gridService.addItem(
     {
-      id: this.dataset.length + 1,
-     
+     id: this.dataset.length + 1,
+     disease: null,
      patd_type: null,
      patd_disease: null,
      patd_year: null,
@@ -278,17 +349,11 @@ addNewItem() {
   );
 }
 
-jbGridReady(angularGrid: AngularGridInstance) {
-  this.jbangularGrid = angularGrid;
-  this.jbdataView = angularGrid.dataView;
-  this.jbgrid = angularGrid.slickGrid;
-  this.jbgridService = angularGrid.gridService;
-}
-mvGridReady(angularGrid: AngularGridInstance) {
-  this.mvangularGrid = angularGrid;new Patient
-  this.mvdataView = angularGrid.dataView;
-  this.mvgrid = angularGrid.slickGrid;
-  this.mvgridService = angularGrid.gridService;
+gridReady(angularGrid: AngularGridInstance) {
+  this.angularGrid = angularGrid;
+  this.dataView = angularGrid.dataView;
+  this.grid = angularGrid.slickGrid;
+  this.gridService = angularGrid.gridService;
 }
 //create form
 createForm() {
@@ -431,8 +496,13 @@ onSubmit() {
   
    
   }
+  for (let dataset of this.datasettrait) {
+   // console.log(this.datasettrait)
+    delete dataset.id;
   
-  this.addPatient(patient,this.dataset)
+   
+  }
+  this.addPatient(patient,this.dataset,this.datasettrait)
   
 }
 /**
@@ -493,11 +563,11 @@ onSubmit() {
      *
      * @param _patient: EmployeModel
      */
-    addPatient(_patient: Patient, details: any) {
+    addPatient(_patient: Patient, details: any,traitdetails:any) {
       const controls = this.patForm.controls
       this.loadingSubject.next(true)
       console.log(details)
-      this.patientService.add({ Patient: _patient,  patientDetail: details }).subscribe(
+      this.patientService.add({ Patient: _patient,  patientDetail: details , patientDetailTreatment:traitdetails}).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
               this.layoutUtilsService.showActionNotification(
@@ -750,24 +820,27 @@ onChangesite() {
     });
 }
 
-handleSelectedRowsChangedshift(e, args) {
+// handleSelectedRowsChangedtrait(e, args) {
   
-  const controls = this.patForm.controls;
-  if (Array.isArray(args.rows) && this.gridObjshift) {
-      args.rows.map((idx) => {
-          const item = this.gridObjshift.getDataItem(idx)
-          // TODO : HERE itterate on selected field and change the value of the selected field
-                  controls.pat_shift.setValue(item.code_value || "")
-      })
-  }
-}
-angularGridReadyshift(angularGrid: AngularGridInstance) {
-  this.angularGridshift = angularGrid
-  this.gridObjshift = (angularGrid && angularGrid.slickGrid) || {}
+//   const controls = this.patForm.controls;
+//   if (Array.isArray(args.rows) && this.gridObjtrait) {
+//       args.rows.map((idx) => {
+//           const item = this.gridObjtrait.getDataItem(idx)
+//           // TODO : HERE itterate on selected field and change the value of the selected field
+//                   controls.pat_trait.setValue(item.code_value || "")
+//       })
+//   }
+// }
+angularGridReadytrait(angularGrid: AngularGridInstance) {
+  this.angularGridtrait = angularGrid
+  this.gridObjtrait = (angularGrid && angularGrid.slickGrid) || {}
+  this.dataViewtrait = angularGrid.dataView;
+  this.gridtrait = angularGrid.slickGrid;
+  this.gridServicetrait = angularGrid.gridService;
 }
 
-prepareGridshift() {
-  this.columnDefinitionsshift = [
+prepareGridtrait(disease) {
+  this.columnDefinitionstrait = [
       /*{
           id: "id",
           field: "id",
@@ -777,7 +850,7 @@ prepareGridshift() {
 
           minWidth: 50,
           maxWidth: 50,
-      },*/
+      },
       {
           id: "id",
           name: "id",
@@ -785,71 +858,100 @@ prepareGridshift() {
           sortable: true,
           minWidth: 80,
           maxWidth: 80,
+      },*/
+      {
+          id: "patdt_treatment",
+          name: "Traitment",
+          field: "patdt_treatment",
+          type: FieldType.string,
+          editor: {
+            model: Editors.text,
+          },
+            
       },
       {
-          id: "code_value",
-          name: "Code Equipe",
-          field: "code_value",
-          sortable: true,
-          filterable: true,
+          id: "patdt_doc",
+          name: "Médecin/Clinique",
+          field: "patdt_doc",
           type: FieldType.string,
+          editor: {
+            model: Editors.text,
+          },
+            
       },
+
       {
-          id: "code_cmmt",
-          name: "Designation",
-          field: "code_cmmt",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
+        id: "patdt_cmmt",
+        name: "Commentaire",
+        field: "patdt_cmmt",
+        type: FieldType.text,
+        editor: {
+          model: Editors.longText,
+        },
+        
+  
       },
       
   ]
 
-  this.gridOptionsshift = {
-      enableSorting: true,
-      enableCellNavigation: true,
-      enableExcelCopyBuffer: true,
-      enableFiltering: true,
-      autoEdit: false,
-      autoHeight: false,
-      frozenColumn: 0,
-      frozenBottom: true,
-      enableRowSelection: true,
-      enableCheckboxSelector: true,
-      checkboxSelector: {
-      },
-      multiSelect: false,
-      rowSelectionOptions: {
-          selectActiveRow: true,
-      },
+  this.gridOptionstrait = {
+    asyncEditorLoading: false,
+    editable: true,
+    enableAutoResize:true,
+    autoHeight:false,
+    autoCommitEdit:true,
+    // enableColumnPicker: true,
+    enableCellNavigation: true,
+    // enableRowSelection: true,
+     
   }
 
+  this.datatrait = this.datasettrait.filter(function(value, index, arr){ 
+    return value.patdt_disease == disease;
+  })
   // fill the dataset with your data
-  this.codeService
-      .getBy ({code_fldname: "pat_shift"})
-      .subscribe((response: any) => (this.datashift = response.data))
+  // this.codeService
+  //     .getBy ({code_fldname: "pat_trait"})
+  //     .subscribe((response: any) => (this.datatrait = response.data))
 }
-openshift(contentshift) {
+opentrait(contenttrait) {
   
-  this.prepareGridshift()
-  this.modalService.open(contentshift, { size: "lg" })
-}
-onChangeshift() {
-  const controls = this.patForm.controls;
-  
-  this.codeService.getBy({ code_fldname: "pat_shift", code_value : controls.pat_shift.value}).subscribe(
-    (res: any) => {
-console.log(res.data)
-      if (res.data.length == 0) {
-
-          alert("Equipe n'existe pas  ")
-          controls.pat_shift.setValue(null);
-          document.getElementById("pat_shift").focus();
-        }
-    
-    });
+  this.prepareGridtrait(this.dis)
+  this.modalService.open(contenttrait, { size: "lg" })
 }
 
+addNewTrait() {
+  this.gridServicetrait.addItem(
+    {
+     id: this.datasettrait.length + 1,
+     patdt_disease: this.dis,
+     patdt_treatment: null,
+     patdt_doc: null,
+     patdt_cmmt: null,
+     add : true,
+    },
+    { position: "bottom" }
+  );
+  
+}
+AddTrait() {
+  for(let obj of this.datatrait) {
+    if(obj.add == true) {
+    this.datasettrait.push({
+      id: this.datasettrait.length  + 1 ,
+      patdt_disease: this.dis,
+      patdt_treatment: obj.patdt_treatment,
+      patdt_doc: obj.patdt_doc,
+      patdt_cmmt : obj.patdt_cmmt,
+      ad : false,
+
+    })
+  }
+  
+  this.modalService.dismissAll()
+  }  
+  console.log(this.datasettrait)
+}
 /**
      * Close alert
      *

@@ -11,6 +11,7 @@ import {
   Editors,
   FieldType,
   OnEventArgs,
+  FilterMultiplePassType,
 } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
@@ -29,6 +30,7 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import { DomainService } from "../../../../core/erp"
+import { merge } from "jquery";
 @Component({
   selector: 'kt-list-domain',
   templateUrl: './list-domain.component.html',
@@ -219,7 +221,8 @@ export class ListDomainComponent implements OnInit {
             sortable: true,
             filterable: true,
             formatter: Formatters.checkbox,
-            type: FieldType.string,
+            // type: FieldType.string,
+           
           },
           
           
