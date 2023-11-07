@@ -18,33 +18,51 @@ import { Store } from "@ngrx/store"
 import { AppState } from "../../../../core/reducers"
 // Auth
 import { AuthNoticeService, AuthService, Login } from "../../../../core/auth"
-import { environment } from "../../../../../environments/environment"
-/**
- * ! Just example => Should be removed in development
- */
-const DEMO_PARAMS = {
-    EMAIL: "admin@demo.com",
-    PASSWORD: "demo",
-}
-const instance = "Instance : " + environment.Instance 
+import { PatientService } from "src/app/core/erp/_services/patient.service"
+
+
+
+
+import { NgbDateStruct, NgbDropdownConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CalendarOptions, FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import listPlugin from '@fullcalendar/daygrid';
+import timeGrigPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+import {Column, GridOption, AngularGridInstance, FieldType} from "angular-slickgrid"
+import { Form, FormControl, } from "@angular/forms"
+import { MatDialog ,MatDialogRef} from "@angular/material/dialog"
+import {  BehaviorSubject, Subscription, of, Observer } from "rxjs"
+import { OnEventArgs, GridService, Editors, thousandSeparatorFormatted, Formatters } from 'angular-slickgrid';
+import frLocale from '@fullcalendar/core/locales/fr';
+// import {AngularDateTimePickerModule} from 'angular2-datetimepicker'
+import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {  NgbCalendar, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {  EventInput } from '@fullcalendar/core';
+
+
+
 @Component({
-    selector: "kt-login",
-    templateUrl: "./login.component.html",
+    selector: "kt-rdv-pick",
+    templateUrl: "./rdv-pick.component.html",
     encapsulation: ViewEncapsulation.None,
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class RdvPickComponent implements OnInit, OnDestroy {
     // Public params
     loginForm: FormGroup
     loading = false
     isLoggedIn$: Observable<boolean>
     errors: any = []
-    // instance: any
 
     private unsubscribe: Subject<any>
 
     private returnUrl: any
 
-    // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
+    isExist = false 
+    phone = " "
+
+  
 
     /**
      * Component constructor
@@ -61,6 +79,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private auth: AuthService,
+        private patientService : PatientService,
         private authNoticeService: AuthNoticeService,
         private translate: TranslateService,
         private store: Store<AppState>,
@@ -84,14 +103,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         // redirect back to the returnUrl before login
         this.route.queryParams.subscribe((params) => {
-            console.log(params)
             this.returnUrl = params.returnUrl || "/"
         })
     }
 
-    /**
-     * On destroy
-     */
     ngOnDestroy(): void {
         this.authNoticeService.setNotice(null)
         this.unsubscribe.next()
@@ -99,21 +114,18 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loading = false
     }
 
-    /**
-     * Form initalization
-     * Default params, validators
-     */
+ 
     initLoginForm() {
         // demo message to show
 
-        this.loginForm = this.fb.group({
-            userName: [
+        this.loginForm = this.fb.group({         
+            phone: [
                 "",
                 Validators.compose([
-                    Validators.required,
-                    Validators.maxLength(320), // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+                  Validators.required, 
+                  Validators.pattern("[0][567][0-9]{8}"),
                 ]),
-            ],
+              ],
             password: [
                 "",
                 Validators.compose([
@@ -121,14 +133,9 @@ export class LoginComponent implements OnInit, OnDestroy {
                     Validators.maxLength(100),
                 ]),
             ],
-           
         })
-        document.getElementById("instance").innerHTML = instance;
     }
 
-    /**
-     * Form Submit
-     */
     submit() {
         const controls = this.loginForm.controls
         /** check form */
@@ -172,22 +179,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
             )
 
-        // .pipe(
-        // 	tap(res => {
-        // 		console.log(res)
-        // 		// if (user) {
-        // 		// 	this.store.dispatch(new Login({authToken: user.accessToken}));
-        // 		// 	this.router.navigateByUrl(this.returnUrl); // Main page
-        // 		// } else {
-        // 		// 	this.authNoticeService.setNotice(this.translate.instant('AUTH.VALIDATION.INVALID_LOGIN'), 'danger');
-        // 		// }
-        // 	}),
-        // 	takeUntil(this.unsubscribe),
-        // 	finalize(() => {
-        // 		this.loading = false;
-        // 		this.cdr.markForCheck();
-        // 	})
-        // )
+        
     }
 
     /**
@@ -207,4 +199,28 @@ export class LoginComponent implements OnInit, OnDestroy {
             (control.dirty || control.touched)
         return result
     }
+
+
+    onChangePhone() {
+        const controls = this.loginForm.controls;
+        const phone = controls.phone.value;
+        this.phone = phone
+         this.patientService.getOnePatientByPhone(phone).subscribe((res: any) => {
+           if (res.data) {
+            this.isExist = true
+            // document.getElementById("phone").focus();
+            controls.password.disable()
+           } else {
+               controls.password.enable();
+            }
+        });
+    }
+    
+    goToSignupPage(){
+      this.router.navigateByUrl("/auth/patient-signup/" +this.phone);
+      console.log("Hello")
+    }
+
+    save(){}
+    goBack(){}
 }

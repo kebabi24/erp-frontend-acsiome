@@ -36,29 +36,37 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import {ProjectService, TaskService, ItemService,ProviderService, CustomerService,BomService, CostSimulationService,
+import {ProjectService, TaskService, ItemService,ProviderService,WorkOrderService, CustomerService,BomService, CostSimulationService,
   LocationDetailService,InventoryStatusService,MesureService, SiteService, LocationService, InventoryTransactionService,
-        PsService,SaleOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService} 
+        PsService,SaleOrderService,PurchaseOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService} 
 from '../../../core/erp';
 
 
-import { NewComponent } from "./new/new.component";
+import { ControlResultsEntryComponent } from "./control-results-entry/control-results-entry.component";
+import { AddControlParamaterComponent } from "./add-control-param/add-control-param.component";
 
 const routes: Routes = [
  
  
  
   {
-    path: "add-quality",
-    component: NewComponent,
+    path: "control-results-entry",
+    component: ControlResultsEntryComponent,
+  },
+  {
+    path: "add-control-parameter",
+    component: AddControlParamaterComponent,
   }
  
+
+
+   
  
   
 ];
 
 @NgModule({
-  declarations: [QualityAssuranceComponent,  NewComponent ],
+  declarations: [QualityAssuranceComponent,  ControlResultsEntryComponent , AddControlParamaterComponent ],
 
   imports: [
     CommonModule,
@@ -116,9 +124,12 @@ const routes: Routes = [
     MesureService,
     SiteService,
     DeviseService,
+    WorkOrderService,
     InventoryTransactionService,
     TypesUtilsService,
     LayoutUtilsService,
+    QualityControlService,
+    PurchaseOrderService
   ],
   entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],
 })

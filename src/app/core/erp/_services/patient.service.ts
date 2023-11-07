@@ -28,6 +28,12 @@ export class PatientService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
+
+    public addPatient(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/createPatient', data, { headers: httpHeaders })
+    }
+
     public addC(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/C`, data, { headers: httpHeaders })
@@ -60,6 +66,11 @@ export class PatientService {
     public delete(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
+
+    public getOnePatientByPhone(phone: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findByPhone/${phone}`, { headers: httpHeaders })
     }
     
 }
