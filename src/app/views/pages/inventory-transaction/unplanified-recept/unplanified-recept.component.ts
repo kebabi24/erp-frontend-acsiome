@@ -38,6 +38,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class UnplanifiedReceptComponent implements OnInit {
   currentPrinter: string;
+  PathPrinter: string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   hasFormErrors = false;
@@ -528,7 +529,11 @@ export class UnplanifiedReceptComponent implements OnInit {
             _lb.lb_qty = args.dataContext.tr_qty_loc;
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
+            _lb.lb_printer = this.PathPrinter;
+            _lb.lb_cust = "";
 
+            _lb.lb_addr = this.provider.ad_line1;
+            _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
 
             this.labelService.add(_lb).subscribe(
@@ -573,6 +578,13 @@ export class UnplanifiedReceptComponent implements OnInit {
     
     this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
     this.createForm();
@@ -1722,6 +1734,7 @@ export class UnplanifiedReceptComponent implements OnInit {
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
       });
     }
   }

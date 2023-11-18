@@ -21,6 +21,7 @@ import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOr
 })
 export class CreateDirectWoComponent implements OnInit {
   currentPrinter: string;
+  PathPrinter: string;
   workOrder: WorkOrder;
   woForm: FormGroup;
   hasFormErrors = false;
@@ -295,6 +296,13 @@ export class CreateDirectWoComponent implements OnInit {
 
     this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
     this.getProductColors();
     this.getProductTypes();
     this.createForm();
@@ -451,13 +459,15 @@ export class CreateDirectWoComponent implements OnInit {
     _lb.lb_ld_status = this.rctwostat;
     _lb.lb_desc = this.desc2;
     _lb.lb_rmks = controls.emp_shift.value;
-    // _lb.lb_cust = this.address.ad_addr
-    // _lb.lb_addr = this.address.ad_line1
+    _lb.lb_cust = "";
+    _lb.lb_addr = "";
     // _lb.lb_rmks = controls.emp_shift.value
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
     // _lb.int02   = this.product.int02
-    _lb.lb_printer = this.currentPrinter;
+    
+    _lb.lb_printer = this.PathPrinter;
+
     let lab = null;
 
     this.labelService.add(_lb).subscribe(
@@ -1456,6 +1466,7 @@ export class CreateDirectWoComponent implements OnInit {
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
       });
     }
   }

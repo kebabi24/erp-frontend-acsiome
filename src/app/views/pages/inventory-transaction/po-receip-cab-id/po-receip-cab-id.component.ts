@@ -97,6 +97,7 @@ export class PoReceipCabIdComponent implements OnInit {
 
   site: String;
   currentPrinter: string;
+  PathPrinter: string;
   row_number;
   message = "";
   prhServer;
@@ -527,7 +528,11 @@ export class PoReceipCabIdComponent implements OnInit {
             _lb.lb_qty = args.dataContext.prh_rcvd;
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
+            _lb.lb_printer = this.PathPrinter;
+            // _lb.lb_cust = controls.name.value;
 
+            _lb.lb_addr = this.provider.ad_line1;
+            _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
 
             this.labelService.add(_lb).subscribe(
@@ -575,6 +580,14 @@ export class PoReceipCabIdComponent implements OnInit {
     } else {
       this.site = this.user.usrd_site;
     }
+    this.currentPrinter = this.user.usrd_dft_printer;
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     //const controls = this.prhForm.controls
     this.loading$ = this.loadingSubject.asObservable();
@@ -2148,6 +2161,8 @@ export class PoReceipCabIdComponent implements OnInit {
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
+
       });
     }
   }

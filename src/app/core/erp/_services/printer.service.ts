@@ -36,6 +36,13 @@ export class PrintersService {
 
     // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
   }
+  public getByPrinter(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/findPrinter`, data, { headers: httpHeaders });
+
+    // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  }
+  
   public getBySpec(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/findspec`, data, { headers: httpHeaders });

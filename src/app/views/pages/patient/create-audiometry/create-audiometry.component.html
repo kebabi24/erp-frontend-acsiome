@@ -1,0 +1,169 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une Association'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div>
+                
+                <!--form [formGroup]="audForm" class="form"-->
+                    <form class="kt-form" id="print-section">
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Patient :</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="form-control form-control-solid" 
+                                    aria-describedby="basic-addon2" name="aud_pat_code" [(ngModel)]="aud_pat_code" (change)="onChangePatient()" id="aud_pat_code">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openpat(contentpat)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            
+                            </div>
+    
+                            
+                        </div>    
+                        <div class="form-group col-4">
+                            <label class="form-group ">Nom:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid" name="patient_lname"
+                                [(ngModel)]="patient_lname">
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="form-group ">Prenom:</label>
+                            
+                                <input type="text" class="form-control form-control-sm form-control-solid" name="patient_fname"
+                                [(ngModel)]="patient_fname">
+                        </div>
+                    </div>
+                    <!--div class="row">
+                        <div class="form-group col-lg-2">
+                            <label>Le Code du patient</label>
+                            <input type="text" name="patient_code" class="form-control form-control-sm" placeholder="Le code du patient" [(ngModel)]="patient_code" (change)="getPatientByCode()">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label>Le nom du patient</label>
+                            <input type="text" name="patient_name" class="form-control form-control-sm" placeholder="Le nom du patient" [(ngModel)]="patient_name" (change)="getPatient()">
+                        </div>
+                        <div class="form-group col-lg-1">
+                            <label style="color: white">i</label>
+                            <button type="button" (click)="selectPatient()" class="form-control form-control-sm  btn-danger  btn-circle btn-icon"><i class="flaticon-notes"></i></button>
+                        </div>
+                    </div-->
+                    <div class="row">
+                        <table class="table table-bordered table-hover col-lg-6">
+                            <thead>
+                                <tr>
+                                    <th>Frequence</th>
+                                    <th>125 Hz</th>
+                                    <th>250 Hz</th>
+                                    <th>500 Hz</th>
+                                    <th>1000 Hz</th>
+                                    <th>2000 Hz</th>
+                                    <th>4000 Hz</th>
+                                    <th>8000 Hz</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">O D</th>
+                                    <td *ngFor="let audiogram of audiograms;let i = index">
+                                        <input type="text" [name]="'right_ar'+i" class="form-control form-control-sm" [(ngModel)]="audiograms[i].right_ear_ar" (change)="refreshData()">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th scope="row">O G</th>
+                                    <td *ngFor="let audiogram of audiograms;let i = index">
+                                        <input type="text" [name]="'left_ar'+i" class="form-control form-control-sm" [(ngModel)]="audiograms[i].left_ear_ar" (change)="refreshData()">
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered table-hover col-lg-6">
+                            <thead>
+                                <tr>
+                                    <th>Frequence</th>
+                                    <th>125 Hz</th>
+                                    <th>250 Hz</th>
+                                    <th>500 Hz</th>
+                                    <th>1000 Hz</th>
+                                    <th>2000 Hz</th>
+                                    <th>4000 Hz</th>
+                                    <th>8000 Hz</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">O D</th>
+                                    <td *ngFor="let audiogram of audiograms;let i = index">
+                                        <input type="text" [name]="'right_OS'+i" class="form-control form-control-sm" [(ngModel)]="audiograms[i].right_ear_os" (change)="refreshData()">
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th scope="row">O G</th>
+                                    <td *ngFor="let audiogram of audiograms;let i = index">
+                                        <input type="text" [name]="'left_OS'+i" class="form-control form-control-sm" [(ngModel)]="audiograms[i].left_ear_os" (change)="refreshData()">
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row" id="print-section">
+                        <div class="col-lg-5" id="print-section-left">
+                            <div id="audiogram_left" style="width: 100%; height: 350px"></div>
+                        </div>
+                        <div class="col-lg-2 space">
+
+                        </div>
+                        <div class="col-lg-5" id="print-section-right">
+                            <div id="audiogram_right" style="width: 100%; height: 350px"></div>
+                        </div>
+                    </div>
+
+                   
+                </form>
+            </div>
+        </div>    
+            <div>
+                <ng-template #contentpat let-c="close" let-d="dismiss">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Choissir Patient </h4>
+                        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid"
+                                [columnDefinitions]="columnDefinitionspat" (onAngularGridCreated)="angularGridReadypat($event)"
+                                (sgOnSelectedRowsChanged)="handleSelectedRowsChangedpat($event.detail.eventData, $event.detail.args)"
+                                [gridOptions]="gridOptionspat" [dataset]="datapat">
+                            </angular-slickgrid>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                    </div>
+                </ng-template>
+            </div>
+                  
+    </kt-portlet-body>
+</kt-portlet>
+                
+                

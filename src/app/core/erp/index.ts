@@ -91,6 +91,7 @@ export { Patient } from "./_models/patient.model";
 export { Association } from "./_models/association.model";
 export { Doctor } from "./_models/doctor.model";
 export { LocationDeclared } from "./_models/location-declared.model";
+export { Audiometry } from "./_models/audiometry.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -188,4 +189,6 @@ export { PatientService } from "./_services/patient.service";
 export { AssociationService } from "./_services/association.service";
 export { DoctorService } from "./_services/doctor.service";
 export { LocationDeclaredService } from "./_services/location-declared.service";
+export { DataSharingService } from "./_services/data-sharing.service";
+export { AudiometryService } from "./_services/audiometry.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

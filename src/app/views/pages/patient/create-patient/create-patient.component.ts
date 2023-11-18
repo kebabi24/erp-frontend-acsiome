@@ -40,7 +40,7 @@ import { Patient, PatientService, CodeService, SiteService,UsersService, Associa
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
-import { filters } from "dist/assets/plugins/formvalidation/src/js";
+// import { filters } from "dist/assets/plugins/formvalidation/src/js";
 const API_URL = environment.apiUrl + "/codes"
 @Component({
   selector: 'kt-create-patient',
@@ -122,6 +122,7 @@ export class CreatePatientComponent implements OnInit {
     leveljbd = [];
     leveljob = []
     dis:any
+    log: String
   constructor(
       config: NgbDropdownConfig,
       private patFB: FormBuilder,
@@ -268,6 +269,7 @@ initGrid() {
       type: FieldType.text,
       
       editor: {
+        
         model: Editors.longText,
       },
       
