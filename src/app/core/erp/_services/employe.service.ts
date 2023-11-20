@@ -59,6 +59,15 @@ export class EmployeService {
         
         
     }
+    public getByOne(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findOne`,data, 
+        { headers: httpHeaders }
+        )
+
+        
+        
+    }
     public getByTime(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findtime`,data, { headers: httpHeaders })

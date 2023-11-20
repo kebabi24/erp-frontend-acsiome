@@ -58,7 +58,7 @@ import { EditStatusRefComponent } from './edit-status-ref/edit-status-ref.compon
 import { PoReceipCabIdComponent } from './po-receip-cab-id/po-receip-cab-id.component';
 import { PurchaseOrderService, TransferService, PurchaseReceiveService, InventoryTransactionService,
    DeviseService, ProviderService, CostSimulationService, SiteService, LocationService, InventoryStatusService,
-    RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService } from "../../../core/erp";
+    RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService, EmployeService } from "../../../core/erp";
 const routes: Routes = [
   {
     path: "transfer",
@@ -188,6 +188,7 @@ const routes: Routes = [
     LabelService,
     DomainService,
     PrintersService,
+    EmployeService
   ],
 })
 export class InventoryTransactionModule {}

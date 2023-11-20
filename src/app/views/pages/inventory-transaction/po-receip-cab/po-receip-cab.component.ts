@@ -2142,6 +2142,14 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
         filterable: true,
         type: FieldType.string,
       },
+      {
+        id: "printer_path",
+        name: "Path",
+        field: "printer_path",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
     ];
 
     this.gridOptionsprinter = {

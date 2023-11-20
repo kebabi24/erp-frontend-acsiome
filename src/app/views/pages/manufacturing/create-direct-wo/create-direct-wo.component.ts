@@ -22,6 +22,7 @@ import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOr
 export class CreateDirectWoComponent implements OnInit {
   currentPrinter: string;
   PathPrinter: string;
+ 
   workOrder: WorkOrder;
   woForm: FormGroup;
   hasFormErrors = false;
@@ -458,7 +459,7 @@ export class CreateDirectWoComponent implements OnInit {
     _lb.lb_qty = controls.wo_qty_comp.value;
     _lb.lb_ld_status = this.rctwostat;
     _lb.lb_desc = this.desc2;
-    _lb.lb_rmks = controls.emp_shift.value;
+    _lb.lb_grp = controls.emp_shift.value;
     _lb.lb_cust = "";
     _lb.lb_addr = "";
     // _lb.lb_rmks = controls.emp_shift.value
@@ -1497,6 +1498,14 @@ export class CreateDirectWoComponent implements OnInit {
         id: "printer_desc",
         name: "Designation",
         field: "printer_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "printer_path",
+        name: "Path",
+        field: "printer_path",
         sortable: true,
         filterable: true,
         type: FieldType.string,

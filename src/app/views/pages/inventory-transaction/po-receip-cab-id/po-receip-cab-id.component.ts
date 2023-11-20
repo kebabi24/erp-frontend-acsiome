@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { PurchaseOrderService, ProviderService, ItemService, AddressService, TaxeService, DeviseService, VendorProposal, InventoryTransaction, PurchaseReceive, Label, LabelService, InventoryTransactionService, PurchaseReceiveService, LocationService, SiteService, MesureService, SequenceService, LocationDetailService, CodeService, InventoryStatusService, printReceive, PrintersService } from "../../../../core/erp";
+import { PurchaseOrderService, ProviderService, ItemService, AddressService, TaxeService, DeviseService, VendorProposal, InventoryTransaction, PurchaseReceive, Label, LabelService, InventoryTransactionService, PurchaseReceiveService, LocationService, SiteService, MesureService, SequenceService, LocationDetailService, CodeService, InventoryStatusService, printReceive, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
@@ -38,6 +38,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   styleUrls: ["./po-receip-cab-id.component.scss"],
 })
 export class PoReceipCabIdComponent implements OnInit {
+  employeGrp:string;
   purchaseReceive: PurchaseReceive;
   inventoryTransaction: InventoryTransaction;
   prhForm: FormGroup;
@@ -119,7 +120,7 @@ export class PoReceipCabIdComponent implements OnInit {
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private prhFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private providersService: ProviderService, private purchaseReceiveService: PurchaseReceiveService, private inventoryTransactionService: InventoryTransactionService, private purchaseOrderService: PurchaseOrderService, private poService: PurchaseOrderService, private addressService: AddressService, private itemsService: ItemService, private codeService: CodeService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService, private deviseService: DeviseService, private taxService: TaxeService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private locationService: LocationService, private labelService: LabelService, private printerService: PrintersService) {
+  constructor(config: NgbDropdownConfig, private prhFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private providersService: ProviderService, private purchaseReceiveService: PurchaseReceiveService, private inventoryTransactionService: InventoryTransactionService, private purchaseOrderService: PurchaseOrderService, private poService: PurchaseOrderService, private addressService: AddressService, private itemsService: ItemService, private codeService: CodeService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService, private deviseService: DeviseService, private taxService: TaxeService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private locationService: LocationService, private labelService: LabelService, private printerService: PrintersService,private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -529,7 +530,8 @@ export class PoReceipCabIdComponent implements OnInit {
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
             _lb.lb_printer = this.PathPrinter;
-            // _lb.lb_cust = controls.name.value;
+            _lb.lb_grp = this.employeGrp;
+            _lb.lb_cust = this.provider.ad_name;
 
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
@@ -587,6 +589,13 @@ export class PoReceipCabIdComponent implements OnInit {
         alert("Erreur de récupération path");
       }
     
+    );
+    this.employeService.getByOne({emp_userid: this.user.usrd_code}).subscribe(
+      (reponse: any) => (this.employeGrp = reponse.data.emp_shift, console.log(this.employeGrp)),
+      (error) => {
+        alert("Erreur Employe Shift");
+      },
+     
     );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     //const controls = this.prhForm.controls
@@ -2193,6 +2202,14 @@ export class PoReceipCabIdComponent implements OnInit {
         id: "printer_desc",
         name: "Designation",
         field: "printer_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "printer_path",
+        name: "Path",
+        field: "printer_path",
         sortable: true,
         filterable: true,
         type: FieldType.string,
