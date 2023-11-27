@@ -191,6 +191,10 @@ export class MenuConfig {
               title: "Saisie résultats de contrôle",
               page: "/quality-assurance/control-results-entry",
             },
+            {
+              title: "Ajouter une gamme",
+              page: "/quality-assurance/create-gamme",
+            },
            
           ],
         },

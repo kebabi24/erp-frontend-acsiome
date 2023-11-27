@@ -14,7 +14,7 @@ import {
     Editor,
     Editors,
     AngularGridInstance,
-    FieldType, GridService
+    FieldType, GridService, OnEventArgs, Formatters
 } from "angular-slickgrid"
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -42,8 +42,9 @@ import { Site, SiteService, AccountService , InventoryStatusService, EntityServi
     providers: [NgbDropdownConfig, NgbTabsetConfig],
 })
 export class CreateStrandardSpecificationComponent implements OnInit {
-    site: Site
+    
     specificationForm: FormGroup
+    popupForm: FormGroup
     hasFormErrors = false
     loadingSubject = new BehaviorSubject<boolean>(true)
     loading$: Observable<boolean>
@@ -56,19 +57,28 @@ export class CreateStrandardSpecificationComponent implements OnInit {
     doc_desc : String ;
   
     // GRID 
-  columnDefinitions: Column[] = []
-  columnDefinitions2: Column[] = []
-  gridOptions: GridOption = {}
-  gridOptions2: GridOption = {}
-  gridObj: any
-  angularGrid: AngularGridInstance
-  gridService: GridService
-  message: any
-  column : Column
-  grid: any
-  dataView: any
+    columnDefinitions: Column[] = []
+    columnDefinitions2: Column[] = []
+    gridOptions: GridOption = {}
+    gridOptions2: GridOption = {}
 
-  details: any = []; // dataset
+    gridObj: any
+    angularGrid: AngularGridInstance
+    gridService: GridService
+    message: any
+    column : Column
+    grid: any
+    dataView: any
+
+    
+
+    details: any = []; // dataset
+
+    clickedRowIndex : any ;
+
+    valueIsBool = false;
+    valueIsMinMax = false;
+    valueIsChar = false;
     
 
     
@@ -77,12 +87,12 @@ export class CreateStrandardSpecificationComponent implements OnInit {
     constructor(
         config: NgbDropdownConfig,
         private siteFB: FormBuilder,
+        private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private router: Router,
         public dialog: MatDialog,
         private layoutUtilsService: LayoutUtilsService,
         private modalService: NgbModal,
-        private siteService: SiteService,
         private qualityControlService: QualityControlService
     ) {
         config.autoClose = true
@@ -92,13 +102,14 @@ export class CreateStrandardSpecificationComponent implements OnInit {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
         this.createForm()
+        this.createPopupForm()
         this.prepareGrid()
     }
     //create form
+
     createForm() {
       this.loadingSubject.next(false)
         const date = new Date()
-        this.site = new Site()
         this.specificationForm = this.siteFB.group({
             doc_code: [this.doc_code, Validators.required],
             doc_desc: [this.doc_desc],
@@ -107,8 +118,16 @@ export class CreateStrandardSpecificationComponent implements OnInit {
               month: date.getMonth()+1,
               day: date.getDate()
             }],
-            
+        })
+    }
 
+    createPopupForm() {
+      this.loadingSubject.next(false)
+        this.popupForm = this.fb.group({
+            max: [""],
+            min: [""],
+            char: [""],
+            bool: [""],
         })
     }
     
@@ -136,7 +155,6 @@ export class CreateStrandardSpecificationComponent implements OnInit {
     
     //reste form
     reset() {
-        this.site = new Site()
         this.createForm()
         this.hasFormErrors = false
     }
@@ -178,8 +196,8 @@ export class CreateStrandardSpecificationComponent implements OnInit {
             mpd_tol_type : element.measure_unit,
             mpd_chr01 : element.test_method ,
             mpd_chr02 : element.val_type,
-            mpd_dec01: element.max,
-            mpd_dec02: element.min
+            mpd_dec01: element.min,
+            mpd_dec02: element.max
           })
         });
 
@@ -212,61 +230,7 @@ export class CreateStrandardSpecificationComponent implements OnInit {
       )
         // this.addSite(site)
     }
-    /**
-     * Returns object for saving
-     */
-    prepareSite(): Site {
-        const controls = this.specificationForm.controls
-        const _site = new Site()
-        _site.si_site = controls.si_site.value
-        _site.si_desc= controls.si_desc.value
-        _site.si_entity= controls.si_entity.value
-        _site.si_default= controls.si_default.value
-        _site.si_status= controls.si_status.value
-        _site.si_xfer_cc= controls.si_xfer_cc.value
-        _site.si_xfer_sub= controls.si_xfer_sub.value
-        _site.si_xfer_acct= controls.si_xfer_acct.value
-        _site.si_auto_loc= controls.si_auto_loc.value
-        _site.si_xfer_ownership= controls.si_xfer_ownership.value
-        return _site
-    }
-    /**
-     * Add code
-     *
-     * @param _code: CodeModel
-     */
-    addSite(_site: Site) {
-        this.loadingSubject.next(true)
-        this.siteService.add(_site).subscribe(
-            (reponse) => console.log("response", Response),
-            (error) => {
-                this.layoutUtilsService.showActionNotification(
-                    "Erreur verifier les informations",
-                    MessageType.Create,
-                    10000,
-                    true,
-                    true
-                )
-                this.loadingSubject.next(false)
-            },
-            () => {
-                this.layoutUtilsService.showActionNotification(
-                    "Ajout avec succès",
-                    MessageType.Create,
-                    10000,
-                    true,
-                    true
-                )
-                this.loadingSubject.next(false)
-                this.router.navigateByUrl("/")
-            }
-        )
-    }
-
-    /**
-     * Go back to the list
-     *
-     */
+   
     goBack() {
         this.loadingSubject.next(false)
         const url = `/`
@@ -281,37 +245,16 @@ export class CreateStrandardSpecificationComponent implements OnInit {
       this.gridService = angularGrid.gridService;
     }
     
-    angularGridReady(angularGrid: AngularGridInstance) {
-        this.angularGrid = angularGrid;
-        this.dataView = angularGrid.dataView;
-        this.grid = angularGrid.slickGrid;
-        this.gridService = angularGrid.gridService;
-        this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
-        this.grid.invalidate();
-        this.grid.render();
+
+    mvGridReady(angularGrid: AngularGridInstance) {
+      this.angularGrid = angularGrid;
+      this.dataView = angularGrid.dataView;
+      this.grid = angularGrid.slickGrid;
+      this.gridService = angularGrid.gridService;
     }
     
-    updateItemMetadata(previousItemMetadata: any) {
-      const newCssClass = 'highlight-bg';
-      return (rowNumber: number) => {
-        const item = this.dataView.getItem(rowNumber);
-        let meta = {
-          cssClasses: ''
-        };
-        if (typeof previousItemMetadata === 'object') {
-          meta = previousItemMetadata(rowNumber);
-        }
     
-        if (meta && item && item.etat_service) {
-          const state = item.etat_service;
-          if (state === "true") {
-            meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
-          }
-        }
     
-        return meta;
-      };
-    }
     
     prepareGrid() {
       console.log("Grid length :"+ this.details.length )
@@ -374,20 +317,40 @@ export class CreateStrandardSpecificationComponent implements OnInit {
                   maxWidth: 300,
                   filterable: true,
                   type: FieldType.string, 
-                  editor: {model: Editors.text}
+                  onCellClick: (e: Event, args: OnEventArgs) => {
+                    this.clickedRowIndex = args.dataContext.id
+                    console.log(args.dataContext.id)
+                  },
+                  editor: {model: Editors.singleSelect, 
+                  collection:[{value :"bool", label:"Booléen"},{value :"value", label:"Valeur"},{value :"char", label:"Caractère"}],
+                  elementOptions: {
+                    onClick: (event) => {
+                      switch(event.value){
+                        case 'bool':{
+                          this.valueIsBool = true 
+                          this.valueIsChar = false 
+                          this.valueIsMinMax = false
+                          break;
+                        }
+                        case 'value':{
+                          this.valueIsBool = false 
+                          this.valueIsChar = false 
+                          this.valueIsMinMax = true
+                          break;
+                        }
+                        case 'char':{
+                          this.valueIsBool = false 
+                          this.valueIsChar = true 
+                          this.valueIsMinMax = false
+                          break;
+                        }
+                      }
+                      this.createPopupForm()
+                      document.getElementById("modalButton").click(); 
+                  }} 
+                }
                 },
     
-                {
-                  id: "max",
-                  name: "Max",
-                  field: "max",
-                  sortable: true,
-                  minWidth: 100,
-                  maxWidth: 300,
-                  filterable: true,
-                  type: FieldType.string, 
-                  editor: {model: Editors.text}
-                },
                 {
                   id: "min",
                   name: "Min",
@@ -396,8 +359,21 @@ export class CreateStrandardSpecificationComponent implements OnInit {
                   minWidth: 100,
                   maxWidth: 300,
                   filterable: true,
-                  type: FieldType.string, 
-                  editor: {model: Editors.text}
+                  type: FieldType.integer, 
+                  editor: {model: Editors.integer}
+                },
+                
+                {
+                  id: "max",
+                  name: "Max",
+                  field: "max",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.integer, 
+                  editor: {model: Editors.integer}
+                  
                 },
                 {
                   id: "val",
@@ -405,29 +381,47 @@ export class CreateStrandardSpecificationComponent implements OnInit {
                   field: "val",
                   sortable: true,
                   minWidth: 100,
-                  maxWidth: 300,
+                  maxWidth: 300, 
                   filterable: true,
                   type: FieldType.string, 
                   editor: {model: Editors.text}
+
+                },
+                {
+                  id: "bool",
+                  name: "Booléen",
+                  field: "bool",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300, 
+                  filterable: true,
+                  type: FieldType.boolean, 
+                  editor: {model: Editors.checkbox},
+                  formatter :Formatters.checkmark
                 }
+                
                 
           ]
     
           this.gridOptions = {
             asyncEditorLoading: false,
             editable: true,
-            enableAddRow:true,
             enableColumnPicker: true,
             enableCellNavigation: true,
             enableRowSelection: true,
-            enableCheckboxSelector: true,
-            rowSelectionOptions: {
-              selectActiveRow: false
-            }
+
+            // asyncEditorLoading: false,
+            // editable: true,
+            //  enableAddRow:true,
+            // enableColumnPicker: true,
+            // enableCellNavigation: true,
+            // enableRowSelection: true,
+            // enableCheckboxSelector: true,
+            // rowSelectionOptions: {
+            //   selectActiveRow: false
+            // }
           };
-    
-    
-    
+          this.details = []
     }
     
     addNewItem( ) {
@@ -435,17 +429,50 @@ export class CreateStrandardSpecificationComponent implements OnInit {
       this.gridService.addItem(
         {
           id: this.details.length + 1,
-    
           nb_line: "",
-          code_param: "",
-          measure_unit: "",
-          test_method: "",
-          val_type: "",
-          max: "",
-          min: "",
+           code_param: "",
+           measure_unit: "",
+           test_method: "",
+           val_type: "",
+          max: 0,
+          min: 0,
           
         },
         { position: "bottom" }
       );
     }
+
+    openPopup(content){
+      this.modalService.open(content, { size: "lg" });
+    }
+
+    updateGridLine(){
+      let index = this.details.findIndex(e => e.id == this.clickedRowIndex)
+      this.resetRowValues(index)
+
+      const controls = this.popupForm.controls 
+
+      if(this.valueIsMinMax){
+        this.details[index].max = controls.max.value
+        this.details[index].min = controls.min.value
+      }else if(this.valueIsChar){
+        this.details[index].val = controls.char.value 
+      }else if(this.valueIsBool){
+        this.details[index].bool = controls.bool.value 
+      }
+      this.dataView.setItems(this.details)
+      document.getElementById("btnClosePopup").click(); 
+    }
+
+    resetRowValues(index){
+      this.details[index].max = 0
+      this.details[index].min =0
+      this.details[index].val = ""
+      this.details[index].bool = false 
+    }
+
 }
+
+
+
+

@@ -280,6 +280,9 @@ export class CreateStatusStockComponent implements OnInit {
 
     this.mvdataset = [];
   }
+
+
+  
   addNewItem() {
     const newId = this.mvdataset.length+1;
 

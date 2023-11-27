@@ -157,13 +157,18 @@ export class PatientLoginComponent implements OnInit, OnDestroy {
         //             this.cdr.markForCheck()
         //         }
         //     )
-        this.goToRdv()
+        console.log("hey from signin")
+        this.router.navigateByUrl("/auth/rdv-pick");
+        
+        //this.goToRdv()
+        // this.goToSignupPage()
         
     }
 
     goToRdv(){
        console.log("heyyyy")
-       this.router.navigateByUrl("/crm/agenda/");
+       this.router.navigateByUrl("/auth/rdv-pick/");
+       this.router.navigateByUrl("/auth/patient-signup/")
     }
 
     /**
@@ -191,7 +196,7 @@ export class PatientLoginComponent implements OnInit, OnDestroy {
         this.phone = phone
          this.patientService.getOnePatientByPhone(phone).subscribe((res: any) => {
            if (res.data) {
-            this.isExist = true
+            // this.isExist = true
             // document.getElementById("phone").focus();
             controls.password.disable()
            } else {
