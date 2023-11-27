@@ -296,7 +296,7 @@
                     <ngb-tab>
                         <ng-template ngbTabTitle>
                         
-                            Données Patient
+                            Historique des Maladies Patient
                             <div style="width: 10px;"></div>
                             <a *ngIf="hasEmployeFormErrors"
                                 class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
@@ -309,7 +309,7 @@
 
                                
                                 <div class="form-group col-12 row">
-                                    <label class="col-2 col-form-label text-right"> Detail Patient: </label>
+                                    <label class="col-2 col-form-label text-right"> Detail Maladies: </label>
                                 </div>
                 
                                 
@@ -317,8 +317,8 @@
                                     <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter </button>
                                 </div>
                                 <div class="row">
-                                    <angular-slickgrid class="col-12" gridHeight="250"  gridId="plagejbGrid" [columnDefinitions]="jbcolumnDefinitions"
-                                     [gridOptions]="jbgridOptions" [dataset]="dataset" (onAngularGridCreated)="jbGridReady($event)">
+                                    <angular-slickgrid class="col-12"   gridId="plageGrid" [columnDefinitions]="columnDefinitions"
+                                     [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)">
                                     </angular-slickgrid>
                                 </div>
                                 <!--div class="row"> 
@@ -422,6 +422,36 @@
                 </div>
             </ng-template>
         </div>
+        <div>
+            <ng-template #contenttrait let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ajouter Traitement</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row col-lg-12">
+                        <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewTrait()">Ajouter </button>
+                    </div>
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitionstrait" (onAngularGridCreated)="angularGridReadytrait($event)"
+                           
+                            [gridOptions]="gridOptionstrait" [dataset]="datatrait">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-success" (click)="AddTrait()">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openTraitGrid" class="btn btn-primary" (click)="opentrait(contenttrait)">Launch demo
+                modal</button>
+
+        </div>
+
     </kt-portlet-body>
 </kt-portlet>
 

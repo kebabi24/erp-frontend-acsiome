@@ -37,6 +37,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class WorctEntryComponent implements OnInit {
   currentPrinter: string;
+  PathPrinter: string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   hasFormErrors = false;
@@ -487,7 +488,11 @@ export class WorctEntryComponent implements OnInit {
             _lb.lb_tel = this.address.ad_phone;
             _lb.int01 = this.product.int01;
             _lb.int02 = this.product.int02;
-            _lb.lb_printer = this.currentPrinter;
+            _lb.lb_printer = this.PathPrinter;
+            // _lb.lb_cust = controls.name.value;
+
+            _lb.lb_addr = this.provider.ad_line1;
+            _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
 
             this.labelService.addProd(_lb).subscribe(
@@ -535,6 +540,13 @@ export class WorctEntryComponent implements OnInit {
     this.createForm();
    
     this.currentPrinter = this.user.usrd_dft_printer;
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
   }
 
   //create form
@@ -596,6 +608,7 @@ export class WorctEntryComponent implements OnInit {
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
       });
     }
   }

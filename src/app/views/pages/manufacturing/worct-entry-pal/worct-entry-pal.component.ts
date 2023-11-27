@@ -38,6 +38,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class WorctEntryPalComponent implements OnInit {
   currentPrinter: string;
+  PathPrinter: string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   hasFormErrors = false;
@@ -537,6 +538,13 @@ export class WorctEntryPalComponent implements OnInit {
     this.createForm();
     
     this.currentPrinter = this.user.usrd_dft_printer;
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
   }
 
   onChangeJob() {
@@ -811,7 +819,11 @@ export class WorctEntryPalComponent implements OnInit {
     _lb.int01 = this.product.int01;
     _lb.int02 = this.product.int02;
     _lb.lb_rmks = controls.emp_shift.value;
+    _lb.lb_printer = this.PathPrinter;
+    // _lb.lb_cust = controls.name.value;
 
+    _lb.lb_addr = this.provider.ad_line1;
+    _lb.lb_tel = this.provider.ad_phone;
     let lab = null;
 
     this.labelService.addPAL(_lb).subscribe(
@@ -1771,6 +1783,7 @@ export class WorctEntryPalComponent implements OnInit {
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
       });
     }
   }

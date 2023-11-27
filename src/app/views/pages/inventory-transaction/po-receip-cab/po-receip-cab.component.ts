@@ -39,6 +39,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class PoReceipCabComponent implements OnInit {
   currentPrinter: string;
+  PathPrinter: string;
   purchaseReceive: PurchaseReceive;
   inventoryTransaction: InventoryTransaction;
   prhForm: FormGroup;
@@ -552,7 +553,12 @@ export class PoReceipCabComponent implements OnInit {
             _lb.lb_qty = args.dataContext.prh_rcvd;
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
-            _lb.lb_printer = this.currentPrinter;
+            _lb.lb_printer = this.PathPrinter;
+            _lb.lb_cust = controls.name.value;
+
+            _lb.lb_addr = this.provider.ad_line1;
+            _lb.lb_tel = this.provider.ad_phone;
+      
             let lab = null;
 
             this.labelService.add(_lb).subscribe(
@@ -597,7 +603,13 @@ export class PoReceipCabComponent implements OnInit {
     this.domain =  JSON.parse(localStorage.getItem('domain'))
     this.user =  JSON.parse(localStorage.getItem('user'))
     this.currentPrinter = this.user.usrd_dft_printer;
-   
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
     if (this.user.usrd_site == "*"){
     this.site = null
   } else {
@@ -2095,6 +2107,7 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
       });
     }
   }
@@ -2125,6 +2138,14 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
         id: "printer_desc",
         name: "Designation",
         field: "printer_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "printer_path",
+        name: "Path",
+        field: "printer_path",
         sortable: true,
         filterable: true,
         type: FieldType.string,

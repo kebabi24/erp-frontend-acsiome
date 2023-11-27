@@ -9,6 +9,12 @@ import {
     Editors,
     FieldType,
     OnEventArgs,
+    FilterMultiplePassType,
+    FilterMultiplePassTypeString,
+    Filters,
+    OperatorType,
+    CaseType,
+    CompoundDateFilter
 } from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
@@ -27,6 +33,8 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import { Devise, DeviseService } from "../../../../core/erp"
+import { SPACE } from "@angular/cdk/keycodes"
+import { type } from "os"
 @Component({
   selector: 'kt-list-devise',
   templateUrl: './list-devise.component.html',
@@ -115,7 +123,18 @@ export class ListDeviseComponent implements OnInit {
               sortable: true,
               width: 200,
               filterable: true,
-              type: FieldType.string,
+              type: FieldType.text,
+              filter: {
+                model:  Filters.inputText,
+               
+                operator: OperatorType.contains,
+                enableTrimWhiteSpace: true,
+                
+                 
+
+             },
+              
+            
           },
           {
             id: "cu_rnd_mthd",
@@ -157,6 +176,8 @@ export class ListDeviseComponent implements OnInit {
           enableAutoResize:true,
           frozenColumn: 0,
           frozenBottom: true,
+        
+          
       }
 
       // fill the dataset with your data

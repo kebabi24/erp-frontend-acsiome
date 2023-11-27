@@ -52,7 +52,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import {CodeService,PatientService,SiteService,UsersService,AssociationService, DoctorService} from '../../../core/erp';
+import {CodeService,PatientService,SiteService,UsersService,AssociationService, DoctorService, AudiometryService,SequenceService} from '../../../core/erp';
 import { CreateAssComponent } from './create-ass/create-ass.component';
 import { ListAssComponent } from './list-ass/list-ass.component';
 import { UpdateAssComponent } from './update-ass/update-ass.component';
@@ -60,8 +60,9 @@ import { EditAssComponent } from './edit-ass/edit-ass.component';
 import { CreateDoctorComponent } from './create-doctor/create-doctor.component';
 import { EditDoctorComponent } from './edit-doctor/edit-doctor.component';
 import { ListDoctorComponent } from './list-doctor/list-doctor.component'
-import { UpdateDoctorComponent } from './update-doctor/update-doctor.component'
-
+import { UpdateDoctorComponent } from './update-doctor/update-doctor.component';
+import { CreateAudiometryComponent } from './create-audiometry/create-audiometry.component'
+import { DatePipe } from '@angular/common';
 const routes: Routes = [
   {
       path: "create-patient",
@@ -112,9 +113,13 @@ const routes: Routes = [
     path: "update-doctor",
     component: UpdateDoctorComponent,
   },
+  {
+    path: "create-audiometry",
+    component: CreateAudiometryComponent,
+  },
 ]
 @NgModule({
-  declarations: [PatientComponent, CreatePatientComponent, EditPatientComponent, ListPatientComponent, UpdatePatientComponent, CreateAssComponent, ListAssComponent, UpdateAssComponent, EditAssComponent, CreateDoctorComponent, EditDoctorComponent, ListDoctorComponent,UpdateDoctorComponent],
+  declarations: [PatientComponent, CreatePatientComponent, EditPatientComponent, ListPatientComponent, UpdatePatientComponent, CreateAssComponent, ListAssComponent, UpdateAssComponent, EditAssComponent, CreateDoctorComponent, EditDoctorComponent, ListDoctorComponent,UpdateDoctorComponent, CreateAudiometryComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -154,8 +159,11 @@ providers: [
     UsersService,
     AssociationService,
     DoctorService,
+    SequenceService,
     TypesUtilsService,
     LayoutUtilsService,
+    DatePipe,
+    AudiometryService,
 ],
 entryComponents: [
     ActionNotificationComponent,

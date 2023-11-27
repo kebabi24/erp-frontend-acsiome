@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService } from "../../../../core/erp";
+import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -38,6 +38,8 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class UnplanifiedReceptComponent implements OnInit {
   currentPrinter: string;
+  PathPrinter: string;
+  employeGrp:string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   hasFormErrors = false;
@@ -106,7 +108,7 @@ export class UnplanifiedReceptComponent implements OnInit {
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService) {
+  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -517,6 +519,7 @@ export class UnplanifiedReceptComponent implements OnInit {
           // }
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null) {
             const controls = this.trForm.controls;
+       
             const _lb = new Label();
             _lb.lb_site = args.dataContext.tr_site;
             _lb.lb_rmks = controls.tr_rmks.value;
@@ -528,9 +531,13 @@ export class UnplanifiedReceptComponent implements OnInit {
             _lb.lb_qty = args.dataContext.tr_qty_loc;
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
-
+            _lb.lb_printer = this.PathPrinter;
+            _lb.lb_cust = this.provider.ad_name;
+            _lb.lb_grp = this.employeGrp;
+            _lb.lb_addr = this.provider.ad_line1;
+            _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
-
+console.log(_lb)
             this.labelService.add(_lb).subscribe(
               (reponse: any) => (lab = reponse.data),
               (error) => {
@@ -573,9 +580,24 @@ export class UnplanifiedReceptComponent implements OnInit {
     
     this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
+    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
+      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+      (error) => {
+        alert("Erreur de récupération path");
+      }
+    
+    );
+    this.employeService.getByOne({emp_userid: this.user.usrd_code}).subscribe(
+      (reponse: any) => (this.employeGrp = reponse.data.emp_shift, console.log(this.employeGrp)),
+      (error) => {
+        alert("Erreur Employe Shift");
+      },
+     
+    );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
     this.createForm();
+    console.log(this.PathPrinter)
   }
 
   //create form
@@ -1719,9 +1741,11 @@ export class UnplanifiedReceptComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObjprinter) {
       args.rows.map((idx) => {
         const item = this.gridObjprinter.getDataItem(idx);
+        console.log(item)
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
       });
     }
   }
@@ -1752,6 +1776,14 @@ export class UnplanifiedReceptComponent implements OnInit {
         id: "printer_desc",
         name: "Designation",
         field: "printer_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "printer_path",
+        name: "Path",
+        field: "printer_path",
         sortable: true,
         filterable: true,
         type: FieldType.string,

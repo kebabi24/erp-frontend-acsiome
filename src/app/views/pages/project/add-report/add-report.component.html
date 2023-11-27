@@ -94,7 +94,7 @@
           <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="addNewcnsItem()">Ajouter un Article</button>
         </div>
         <div class="row">
-          <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitionscns" [gridOptions]="gridOptionscns" [dataset]="cnsdataset" (onAngularGridCreated)="gridReadycns($event)"> </angular-slickgrid>
+          <angular-slickgrid class="col-12" gridId="mGrid" [columnDefinitions]="columnDefinitionscns" [gridOptions]="gridOptionscns" [dataset]="cnsdataset" (onAngularGridCreated)="gridReadycns($event)"> </angular-slickgrid>
         </div>
       </form>
     </div>
