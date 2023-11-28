@@ -62,6 +62,22 @@ export class RdvPickComponent implements OnInit, OnDestroy {
     isExist = false 
     phone = " "
 
+
+    calendarOptions: CalendarOptions = {};
+    events: any = [];
+    data: any = [];
+
+    component_name =""
+
+    time = new Observable<string>((observer: Observer<string>) => {
+        setInterval(() => {
+          observer.next("");
+        }, 1000);
+      });
+
+
+
+
   
 
     /**
@@ -100,6 +116,8 @@ export class RdvPickComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
 
         this.initLoginForm()
+        this.getFreeSessions()
+        // this.initCalendar()
 
         // redirect back to the returnUrl before login
         this.route.queryParams.subscribe((params) => {
@@ -201,26 +219,93 @@ export class RdvPickComponent implements OnInit, OnDestroy {
     }
 
 
-    onChangePhone() {
-        const controls = this.loginForm.controls;
-        const phone = controls.phone.value;
-        this.phone = phone
-         this.patientService.getOnePatientByPhone(phone).subscribe((res: any) => {
-           if (res.data) {
-            this.isExist = true
-            // document.getElementById("phone").focus();
-            controls.password.disable()
-           } else {
-               controls.password.enable();
-            }
-        });
-    }
-    
+  
     goToSignupPage(){
       this.router.navigateByUrl("/auth/patient-signup/" +this.phone);
       console.log("Hello")
     }
 
     save(){}
-    goBack(){}
+    goBack(){}  
+
+    initCalendar(){
+        // this.events= [
+        //     { title: '20 RDV', date: '2023-11-08' },
+        //     { title: '16 RDV', date: '2023-11-09' },
+        //     { title: '16 RDV', date: '2023-11-10' },
+        //     { title: '6 RDV', date: '2023-11-11' },
+        //     { title: '12 RDV', date: '2023-11-12' },
+        //     { title: '0 RDV', date: '2023-11-20' },
+        //   ]
+        this.calendarOptions= {
+              
+            plugins: [ dayGridPlugin,listPlugin ,timeGrigPlugin ,interactionPlugin],
+            height : "auto" ,
+            locales: [frLocale ],
+            locale:'fr',
+            themeSystem: 'bootstrap5',
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,dayGridDay'
+            },
+
+            eventTimeFormat:{
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            },
+            displayEventEnd:false,
+            // initialView: 'dayGridMonth',
+            initialView: 'dayGridDay',
+            events: this.events,
+            eventClick : (calDate) =>{
+            //   this.eventClickHandler(calDate)
+            console.log("event clicked")
+            }
+          };
+
+          
+       
+          
+    }
+
+    getFreeSessions(){
+        this.patientService
+        .getFreeSessions()
+  
+        .subscribe(
+            (res: any) => {
+                this.data = res.data
+                this.data.forEach(element => {
+                    this.events.push({
+                     title: element.nb_sessions.toString() +'Séance disponible', date: element.date
+                    })
+                   });
+                   this.calendarOptions.events = this.events
+                  
+            },
+            (err) =>{
+                // this.layoutUtilsService.showActionNotification(
+                //     "Erreur lors de l'ajout de la catégorie",
+                //     MessageType.Create,
+                //     10000,
+                //     true,
+                //     true
+                //   ),
+            },
+            ()=>{
+               this.data.forEach(element => {
+                this.events.push({
+                 title: element.nb_sessions.toString() +'Séance disponible', date: element.date
+                })
+               });
+
+               this.initCalendar()
+            }
+        )
+          
+    }
 }
+

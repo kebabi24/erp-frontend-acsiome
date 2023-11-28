@@ -3,7 +3,7 @@ import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 // Material
 import { MatButtonModule } from "@angular/material/button";
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -35,6 +35,13 @@ import { PatientLoginComponent } from "./patient-login/patient-login.component";
 import { PatientService } from "src/app/core/erp";
 import { PatientSignupComponent } from "./patient-signup/patient-signup.component";
 import { RdvPickComponent } from "./rdv-pick/rdv-pick.component";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatMenuModule } from "@angular/material/menu";
+import { PartialsModule } from "../../partials/partials.module";
+import { NgxPermissionsModule } from "ngx-permissions";
+import { AngularSlickgridModule } from "angular-slickgrid";
+import { FullCalendarModule } from "@fullcalendar/angular";
 
 const routes: Routes = [
   {
@@ -76,7 +83,7 @@ const routes: Routes = [
         component: PatientSignupComponent,
       },
       {
-        path: "rdv-pick/",
+        path: "rdv-pick",
         component: RdvPickComponent, // add phone as a param
       },
     ],
@@ -96,6 +103,25 @@ const routes: Routes = [
     TranslateModule.forChild(),
     StoreModule.forFeature("auth", authReducer),
     EffectsModule.forFeature([AuthEffects]),
+    CommonModule,
+    HttpClientModule,
+    PartialsModule,
+    NgxPermissionsModule.forChild(),
+    RouterModule.forChild(routes),
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule.forChild(),
+    AngularSlickgridModule.forRoot(),
+    MatMenuModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatButtonModule,
+    RouterModule.forChild(routes),
+    MatInputModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    FullCalendarModule,
+    NgbModule,
   ],
   providers: [
     InterceptService,
