@@ -1,13 +1,21 @@
-<!-- <kt-portlet class="main-container">
-  <kt-portlet-header [sticky]="true" [title]="'Agenda'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" style="background-color:beige">
-    <ng-container ktPortletTools>
-        <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
-         <button type="button" (click)="save()" class="btn  btn-sm mr-2">Save </button> 
-    </ng-container>
-</kt-portlet-header>
-<kt-portlet-body class="main-container">
 
 
-</kt-portlet-body>
+<kt-portlet class="main-container">
+  
+  <kt-portlet-header>
 
-</kt-portlet> -->
+  </kt-portlet-header>
+  <kt-portlet-body class="main-container">
+    <div class="example-preview">
+      <div>
+        {{ time | async }}
+      </div>
+            
+           
+            
+      <div>
+          <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
+  </div>  
+  </kt-portlet-body>
+</kt-portlet>

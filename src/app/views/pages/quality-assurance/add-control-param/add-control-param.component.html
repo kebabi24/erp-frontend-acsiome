@@ -1,5 +1,5 @@
 <kt-portlet>
-  <kt-portlet-header [sticky]="true" [title]="'Ajouter qualite'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+  <kt-portlet-header [sticky]="true" [title]="'Ajouter paramètre de contrôle'" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
       <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -35,51 +35,83 @@
           </div>
         </div>
 
-       
-        <div class="row">
-          <div class="form-group col-2">
-            <label class="form-group">L'ordre: *</label>
-            <div class="input-group input-group-sm">
-              <input type="text" formControlName="order" [className]="userForm.controls['order'].errors && (userForm.controls['order'].dirty || userForm.controls['order'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-              <div class="input-group-append">
-                 <span class="input-group-text" (click)="open(content)"> 
-                  
-                  <i class="text-dark-50 flaticon2-search"></i>
-                </span>
-              </div>
-              <div *ngIf="userForm.controls['order'].errors && (userForm.controls['order'].dirty || userForm.controls['order'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-2">
-            <label class="form-group">Document: *</label>
-            <div class="input-group input-group-sm">
-              <input type="text" formControlName="document_code" [className]="userForm.controls['document_code'].errors && (userForm.controls['document_code'].dirty || userForm.controls['document_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-             
-              <div *ngIf="userForm.controls['document_code'].errors && (userForm.controls['document_code'].dirty || userForm.controls['document_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
-            </div>
-          </div>
-        </div>
         <div class="row">
           <div class="form-group col-2">
             <label class="form-group">La gamme: *</label>
             <div class="input-group input-group-sm">
               <input type="text" formControlName="route_code" [className]="userForm.controls['route_code'].errors && (userForm.controls['route_code'].dirty || userForm.controls['route_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-              
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openRouteGrid(contentRoute)"> 
+                 
+                 <i class="text-dark-50 flaticon2-search"></i>
+               </span>
+             </div>
               <div *ngIf="userForm.controls['route_code'].errors && (userForm.controls['route_code'].dirty || userForm.controls['route_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
             </div>
           </div>
+
+          <div class="form-group col-2">
+            <label class="form-group">Operation: *</label>
+            <div class="input-group input-group-sm">
+              <select  formControlName="operation" style="width: 200px;">
+                 <option
+                  *ngFor="let op of dropdownOptions"
+                  [value]="op.code"
+                  class="mt-1"
+                >
+                  {{ op.value }}
+                </option>      
+              </select>
+            </div>
+          </div>
+
         </div>
+
+       
+
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Document: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="document_code" [className]="userForm.controls['document_code'].errors && (userForm.controls['document_code'].dirty || userForm.controls['document_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openDocGrid(contentDoc)"> 
+                 
+                 <i class="text-dark-50 flaticon2-search"></i>
+               </span>
+             </div>
+              <div *ngIf="userForm.controls['document_code'].errors && (userForm.controls['document_code'].dirty || userForm.controls['document_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+        </div>
+      
        
        
         
-        <h2 style="margin-top: 20px ;margin-bottom: 20px;">Details:</h2>
-        <div style="display: flex; flex-direction: row" *ngFor="let item of itemSpecDetails; let i = index">
+        <!-- <div style="display: flex; flex-direction: row" *ngFor="let item of itemSpecDetails; let i = index">
           <input style="width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChange($event, item)" />
           <p style="margin-left: 20px"> {{ item.ipd_label }}</p>
-        </div> 
+        </div>  -->
+        
+        
+        <div  *ngIf="showDetailsGrid" class="row">
+          <h2 style="margin-top: 20px ;margin-bottom: 20px;">Details:</h2>
+          <br><br><br>
+           
+          
+        </div>
+        <div class="row" *ngIf="showDetailsGrid">
+          <button type="button" (click)="addNewItem()" class="btn btn-success btn-sm mr-2 col-3">ajouter un élément </button>
 
+        </div>
+        <div class="row" *ngIf="showDetailsGrid">
+          <angular-slickgrid class="col-12" 
+          gridId="gridDetails" 
+          [columnDefinitions]="columnDefinitionsDetails" 
+          (onAngularGridCreated)="angularGridReadyDetails($event)" 
+          (sgOnSelectedRowsChanged)="handleSelectedRowsChangedDetails($event.detail.eventData, $event.detail.args)"
+           [gridOptions]="gridOptionsDetails" [dataset]="itemSpecDetails"> </angular-slickgrid> 
+        </div>
       </form>
     </div>
 
@@ -139,6 +171,63 @@
     </ng-template>
   </div>
 <!-- GRID PRODUCTS END -->
+
+<!-- GRID DOC -->
+<div>
+  <ng-template #contentDoc let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Choissir le document</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <angular-slickgrid class="col-12" 
+        gridHeight="300" 
+        gridId="gridCode" 
+        [columnDefinitions]="columnDefinitionsDoc" 
+        (onAngularGridCreated)="angularGridReadyDOC($event)"
+        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedDoc($event.detail.eventData, $event.detail.args)"
+        [gridOptions]="gridOptionsDoc" [dataset]="specifications"> </angular-slickgrid>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+      <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+    </div>
+  </ng-template>
+</div>
+<!-- GRID DOC END -->
+
+
+<!-- GRID ROUTE -->
+<div>
+  <ng-template #contentRoute let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Choissir la gamme</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <angular-slickgrid class="col-12" 
+        gridHeight="300" 
+        gridId="gridCode" 
+        [columnDefinitions]="columnDefinitionsRoute" 
+        (onAngularGridCreated)="angularGridReadyRoute($event)"
+        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedRoute($event.detail.eventData, $event.detail.args)"
+        [gridOptions]="gridOptionsRoute" [dataset]="routes"> </angular-slickgrid>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+      <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+    </div>
+  </ng-template>
+</div>
+<!-- GRID ROUTE END -->
 
   
    

@@ -38,12 +38,15 @@ import { AngularSlickgridModule } from "angular-slickgrid";
 
 import {ProjectService, TaskService, ItemService,ProviderService,WorkOrderService, CustomerService,BomService, CostSimulationService,
   LocationDetailService,InventoryStatusService,MesureService, SiteService, LocationService, InventoryTransactionService,
-        PsService,SaleOrderService,PurchaseOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService} 
+        PsService,SaleOrderService,PurchaseOrderService, RequisitionService, EmployeService,AddReportService, SequenceService, DeviseService, 
+        QualityControlService, AffectEmpService, DealService,ToolService,WorkCenterService
+      } 
 from '../../../core/erp';
 
 
 import { ControlResultsEntryComponent } from "./control-results-entry/control-results-entry.component";
 import { AddControlParamaterComponent } from "./add-control-param/add-control-param.component";
+import { CreateGammeComponent } from "./create-gamme/create-gammme.component";
 
 const routes: Routes = [
  
@@ -56,8 +59,14 @@ const routes: Routes = [
   {
     path: "add-control-parameter",
     component: AddControlParamaterComponent,
+
+  },
+  {
+    path: "create-gamme",
+    component: CreateGammeComponent,
   }
- 
+  
+  // 
 
 
    
@@ -66,7 +75,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [QualityAssuranceComponent,  ControlResultsEntryComponent , AddControlParamaterComponent ],
+  declarations: [QualityAssuranceComponent,  ControlResultsEntryComponent , AddControlParamaterComponent ,CreateGammeComponent],
 
   imports: [
     CommonModule,
@@ -129,7 +138,9 @@ const routes: Routes = [
     TypesUtilsService,
     LayoutUtilsService,
     QualityControlService,
-    PurchaseOrderService
+    PurchaseOrderService,
+    ToolService,
+    WorkCenterService,
   ],
   entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],
 })

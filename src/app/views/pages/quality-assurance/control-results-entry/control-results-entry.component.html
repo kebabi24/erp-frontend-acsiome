@@ -16,21 +16,27 @@
               <label class="radio">
                 <input type="radio" name="radios2"  (change)="onChangeType('wo')" />
                 <span></span>
-                WO
+                Fabrication
               </label>
               <label class="radio">
                 <input type="radio" name="radios2"  (change)="onChangeType('pod')"/>
                 <span></span>
-                POD
+                Achat
               </label>
               <label class="radio">
                 <input type="radio" name="radios2"  (change)="onChangeType('pm')"/>
                 <span></span>
-                PM
+                Projet
+              </label>
+              <label class="radio">
+                <input type="radio" name="radios2"  (change)="onChangeType('free')"/>
+                <span></span>
+                Libre
               </label>
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="form-group col-2">
             <label class="form-group">L'ordre: *</label>
@@ -46,12 +52,52 @@
             </div>
           </div>
         </div>
+
+        <div class="row">
+
+          <div class="form-group col-2">
+            <label class="form-group">Produit: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="item_code" [className]="userForm.controls['item_code'].errors && (userForm.controls['item_code'].dirty || userForm.controls['item_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                 <span class="input-group-text" (click)="openPtGrid(contentPT)"> 
+                  
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['item_code'].errors && (userForm.controls['item_code'].dirty || userForm.controls['item_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+
+          <div class="form-group col-2">
+            <label class="form-group">Lot: *</label>
+            <div class="input-group input-group-sm">
+              <input type="text" formControlName="lot" [className]="userForm.controls['lot'].errors && (userForm.controls['lot'].dirty || userForm.controls['lot'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                 <span class="input-group-text" (click)="openLdGrid(contentLD)"> 
+                  
+                  <i class="text-dark-50 flaticon2-search"></i>
+                </span>
+              </div>
+              <div *ngIf="userForm.controls['lot'].errors && (userForm.controls['lot'].dirty || userForm.controls['lot'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+
+        </div>
+
+
+
         <div class="row">
           <div class="form-group col-2">
             <label class="form-group">Document: *</label>
             <div class="input-group input-group-sm">
               <input type="text" formControlName="document_code" [className]="userForm.controls['document_code'].errors && (userForm.controls['document_code'].dirty || userForm.controls['document_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
-             
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openDocGrid(contentDoc)"> 
+                 
+                 <i class="text-dark-50 flaticon2-search"></i>
+               </span>
+             </div>
               <div *ngIf="userForm.controls['document_code'].errors && (userForm.controls['document_code'].dirty || userForm.controls['document_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
             </div>
           </div>
@@ -61,7 +107,14 @@
             <label class="form-group">La gamme: *</label>
             <div class="input-group input-group-sm">
               <input type="text" formControlName="route_code" [className]="userForm.controls['route_code'].errors && (userForm.controls['route_code'].dirty || userForm.controls['route_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openRouteGrid(contentRoute)"> 
+                 
+                 <i class="text-dark-50 flaticon2-search"></i>
+               </span>
+             </div>
               
+             
               <div *ngIf="userForm.controls['route_code'].errors && (userForm.controls['route_code'].dirty || userForm.controls['route_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
             </div>
           </div>
@@ -70,16 +123,50 @@
        
         
         <h2 style="margin-top: 20px ;margin-bottom: 20px;">Details:</h2>
-        <div style="display: flex; flex-direction: row" *ngFor="let item of itemSpecDetails; let i = index">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item" *ngFor="let item of itemSpecDetailsFiltered; let i = index">
+            <h3 class="accordion-header" id="panelsStayOpen-headingOne-{{i}}">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" attr.data-bs-target="#panelsStayOpen-collapseOne-{{i}}" aria-expanded="true" attr.aria-controls="panelsStayOpen-collapseOne-{{i}}">
+                Operation: {{item.operation_title}}
+              </button>
+              <br><br>
+            </h3>
+
+            <div id="panelsStayOpen-collapseOne-{{i}}" class="accordion-collapse collapse " attr.aria-labelledby="panelsStayOpen-headingOne-{{i}}">
+              <div class="accordion-body form" [formGroup]="resultsForm">
+
+                <div class="col-12 test-row row" *ngFor="let test of item.operations; let j = index" >
+                  <div>
+                    Test: {{test.ipd_label}}
+                  </div> 
+                  <div *ngIf="test.isBool" style="margin-left: 20px;">
+                      <span>valeur :</span> <input  style="width: 2.5ex; height: 2.5ex ; margin-left: 10px" type="checkbox" name="{{ test.trimmed_label }}-bool"  formControlName="{{ test.trimmed_label }}-bool">
+                  </div>
+                  <div *ngIf="!test.isBool" style="margin-left: 20px;">
+                      <span>valeur :</span> <input  type="text" style=" margin-left: 10px" name="{{test.trimmed_label }}"  formControlName="{{ test.trimmed_label }}">
+                  </div>
+                  <div style="margin-left: 20px;">
+                    <span>observation :</span> <input  type="text" style=" margin-left: 10px" name="{{test.trimmed_label }}-text-area"  formControlName="{{ test.trimmed_label }}-text-area">    
+                  </div>
+                  <div style="margin-left: 20px;">
+                    <span>résultat du test :</span> <input disabled style="width: 2.5ex; height: 2.5ex ; margin-left: 10px;" type="checkbox" name="{{ test.trimmed_label }}-boolR"  formControlName="{{ test.trimmed_label }}-boolR">
+                </div>
+               </div>
+          </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div style="display: flex; flex-direction: row" *ngFor="let item of itemSpecDetails; let i = index">
           <input style="width: 2.5ex; height: 2.5ex" type="checkbox" (change)="onChange($event, item)" />
           <p style="margin-left: 20px"> {{ item.ipd_label }}</p>
-        </div> 
+        </div>  -->
 
       </form>
     </div>
 
 
-    <!-- GRID WO -->
+   <!-- GRID WO -->
     <div>
       <ng-template #content let-c="close" let-d="dismiss">
         <div class="modal-header">
@@ -105,13 +192,97 @@
         </div>
       </ng-template>
     </div>
-  <!-- GRID WO END -->
+   <!-- GRID WO END -->
 
    <!-- GRID POD -->
-   <div>
-    <ng-template #contentPOD let-c="close" let-d="dismiss">
+    <div>
+      <ng-template #contentPOD let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir l'ordre</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" 
+            gridHeight="300" 
+            gridId="gridCode" 
+            [columnDefinitions]="columnDefinitionsPOD" 
+            (onAngularGridCreated)="angularGridReadyPOD($event)" 
+            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedPOD($event.detail.eventData, $event.detail.args)"
+            [gridOptions]="gridOptionsPOD" [dataset]="podData"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+   <!-- GRID POD END -->
+
+   <!-- GRID PMD -->
+    <div>
+      <ng-template #contentPMD let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir l'ordre</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" 
+            gridHeight="300" 
+            gridId="gridCode" 
+            [columnDefinitions]="columnDefinitionsPMD" 
+            (onAngularGridCreated)="angularGridReadyPMD($event)"
+            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedPMD($event.detail.eventData, $event.detail.args)"
+            [gridOptions]="gridOptionsPMD" [dataset]="pmdData"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+   <!-- GRID PMD END -->
+
+  <!-- GRID DOC -->
+    <div>
+      <ng-template #contentDoc let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le document</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" 
+            gridHeight="300" 
+            gridId="gridCode" 
+            [columnDefinitions]="columnDefinitionsDoc" 
+            (onAngularGridCreated)="angularGridReadyDOC($event)"
+            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedDoc($event.detail.eventData, $event.detail.args)"
+            [gridOptions]="gridOptionsDoc" [dataset]="specifications"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+  <!-- GRID DOC END -->
+
+  <!-- GRID ROUTE -->
+  <div>
+    <ng-template #contentRoute let-c="close" let-d="dismiss">
       <div class="modal-header">
-        <h4 class="modal-title">Choissir l'ordre</h4>
+        <h4 class="modal-title">Choissir la gamme</h4>
         <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -121,10 +292,10 @@
           <angular-slickgrid class="col-12" 
           gridHeight="300" 
           gridId="gridCode" 
-          [columnDefinitions]="columnDefinitionsPOD" 
-          (onAngularGridCreated)="angularGridReadyPOD($event)" 
-          (sgOnSelectedRowsChanged)="handleSelectedRowsChangedPOD($event.detail.eventData, $event.detail.args)"
-           [gridOptions]="gridOptionsPOD" [dataset]="podData"> </angular-slickgrid>
+          [columnDefinitions]="columnDefinitionsRoute" 
+          (onAngularGridCreated)="angularGridReadyRoute($event)"
+          (sgOnSelectedRowsChanged)="handleSelectedRowsChangedRoute($event.detail.eventData, $event.detail.args)"
+          [gridOptions]="gridOptionsRoute" [dataset]="routes"> </angular-slickgrid>
         </div>
       </div>
       <div class="modal-footer">
@@ -133,13 +304,13 @@
       </div>
     </ng-template>
   </div>
-<!-- GRID POD END -->
+<!-- GRID ROUTE END -->
 
- <!-- GRID PMD -->
- <div>
-  <ng-template #contentPMD let-c="close" let-d="dismiss">
+<!-- GRID LD DET -->
+<div>
+  <ng-template #contentLD let-c="close" let-d="dismiss">
     <div class="modal-header">
-      <h4 class="modal-title">Choissir l'ordre</h4>
+      <h4 class="modal-title">Choissir le détail de l'emplacement</h4>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -149,10 +320,10 @@
         <angular-slickgrid class="col-12" 
         gridHeight="300" 
         gridId="gridCode" 
-        [columnDefinitions]="columnDefinitionsPMD" 
-        (onAngularGridCreated)="angularGridReadyPMD($event)"
-        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedPMD($event.detail.eventData, $event.detail.args)"
-         [gridOptions]="gridOptionsPMD" [dataset]="pmdData"> </angular-slickgrid>
+        [columnDefinitions]="columnDefinitionsLD" 
+        (onAngularGridCreated)="angularGridReadyLD($event)"
+        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedLD($event.detail.eventData, $event.detail.args)"
+        [gridOptions]="gridOptionsLD" [dataset]="ldData"> </angular-slickgrid>
       </div>
     </div>
     <div class="modal-footer">
@@ -161,7 +332,35 @@
     </div>
   </ng-template>
 </div>
-<!-- GRID PMD END -->
+<!-- GRID LD DET END -->
+
+<!-- GRID PT -->
+<div>
+  <ng-template #contentPT let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Choissir le produit</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <angular-slickgrid class="col-12" 
+        gridHeight="300" 
+        gridId="gridCode" 
+        [columnDefinitions]="columnDefinitionsPT" 
+        (onAngularGridCreated)="angularGridReadyPT($event)"
+        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedPT($event.detail.eventData, $event.detail.args)"
+        [gridOptions]="gridOptionsPT" [dataset]="ptData"> </angular-slickgrid>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+      <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+    </div>
+  </ng-template>
+</div>
+<!-- GRID PT END -->
 
   
    

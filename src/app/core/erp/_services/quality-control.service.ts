@@ -29,6 +29,22 @@ export class QualityControlService {
    
     }
 
+
+
+
+    public findSpecificationsBy(query : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findSpecificationsBy/`, {query}, { headers: httpHeaders })
+    }
+
+    public findInspectionRoutesBy(query : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findInspectionRoutesBy/`, {query}, { headers: httpHeaders })
+    }
+
+
+    
+
     public createStandardSpecification(standardSpecificationHeader : any,standardSpecificationDetails:any ){
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/createSpecification/`, {standardSpecificationHeader,standardSpecificationDetails}, { headers: httpHeaders })
@@ -75,6 +91,11 @@ export class QualityControlService {
     public createIpAndIpds(ipData : any,ipdsData:any ){
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/createIpAndIpds/`, {ipData,ipdsData}, { headers: httpHeaders })
+    }
+
+    public createQroAndQps(qroData : any,qpsData:any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/createQroAndQps/`, {qroData,qpsData}, { headers: httpHeaders })
     }
 
     
