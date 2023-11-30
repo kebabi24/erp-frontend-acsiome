@@ -102,7 +102,7 @@ export class UnplanifiedReceptComponent implements OnInit {
   domain: any;
   seq: any;
   dataprinter: [];
-
+  domconfig : any;
   columnDefinitionsprinter: Column[] = [];
 
   gridOptionsprinter: GridOption = {};
@@ -596,6 +596,13 @@ console.log(_lb)
     );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
+
+    this.codeService.getByOne({code_fldname: "EDELWEISS"}).subscribe(
+      (reponse: any) => (this.domconfig = true),
+      (error) => {
+       this.domconfig = false      },
+     
+    );
     this.createForm();
     console.log(this.PathPrinter)
   }
@@ -603,6 +610,8 @@ console.log(_lb)
   //create form
   createForm() {
     this.loadingSubject.next(false);
+    
+    
     this.inventoryTransaction = new InventoryTransaction();
     const date = new Date();
     this.trForm = this.trFB.group({
@@ -621,14 +630,34 @@ console.log(_lb)
       printer :  [this.user.usrd_dft_printer],
       print: [true],
     });
+    const controls = this.trForm.controls;
+    console.log(this.domconfig)
+    // if(this.domconfig) {
+      this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+        (reponse: any) => { 
+          if(reponse.data != null) {
+          controls.tr_addr.setValue(reponse.data.code_value),
+          controls.tr_addr.disable() 
+          console.log("hehehehehehehehehehe")
+          }
+        },
+        (error) => {
+       
+        },
+       
+      );
+  
+      
+
+    // }
   }
 
   onChangeVend() {
     const controls = this.trForm.controls;
     this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
-      const { data } = response;
-      console.log(response);
-      if (!data) {
+   //   const { data } = response;
+      console.log(response.data);
+      if (response.data == null) {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
       }
@@ -918,7 +947,13 @@ console.log(_lb)
     };
 
     // fill the dataset with your data
+    console.log(this.domconfig)
+    if (this.domconfig == false) {
     this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
+    }
+    else {
+      this.itemsService.getBy({pt_prod_line: "SQUELETTE", pt_dsgn_grp: "BROY"}).subscribe((response: any) => (this.items = response.data));
+    }
   }
   open4(content) {
     this.prepareGrid4();
@@ -1494,8 +1529,23 @@ console.log(_lb)
     this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
-    this.prepareGrid2();
-    this.modalService.open(content, { size: "lg" });
+
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+       if (reponse.data == null) {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" }); 
+      
+       }
+        console.log(reponse.data)
+      
+      },
+      (error) => {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" }); 
+      },
+    )
+    
   }
 
   printpdf(nbr) {
