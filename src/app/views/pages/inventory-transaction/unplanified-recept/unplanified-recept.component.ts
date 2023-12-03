@@ -103,6 +103,8 @@ export class UnplanifiedReceptComponent implements OnInit {
   seq: any;
   dataprinter: [];
   domconfig : any;
+  prodligne : any;
+  dsgn_grp  : any;
   columnDefinitionsprinter: Column[] = [];
 
   gridOptionsprinter: GridOption = {};
@@ -597,8 +599,18 @@ console.log(_lb)
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
 
-    this.codeService.getByOne({code_fldname: "EDELWEISS"}).subscribe(
-      (reponse: any) => (this.domconfig = true),
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => {
+        if(reponse.data != null) {   
+          console.log("hahahahahahahaha", reponse.data)
+          this.domconfig = true
+          this.prodligne = reponse.data.code_cmmt
+          this.dsgn_grp  = reponse.data.code_desc
+        } else  {
+          this.domconfig = false
+        }
+      },  
+          
       (error) => {
        this.domconfig = false      },
      
@@ -952,7 +964,8 @@ console.log(_lb)
     this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
     }
     else {
-      this.itemsService.getBy({pt_prod_line: "SQUELETTE", pt_dsgn_grp: "BROY"}).subscribe((response: any) => (this.items = response.data));
+      console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp)
+      this.itemsService.getBy({pt_prod_line: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
     }
   }
   open4(content) {
