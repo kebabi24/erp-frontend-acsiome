@@ -207,6 +207,7 @@ export class ListComponent implements OnInit {
             enableFiltering: true,
             autoEdit: false,
             autoHeight: false,
+            enableAutoResize:true,
             frozenColumn: 0,
             frozenBottom: true,
         }
