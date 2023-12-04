@@ -677,7 +677,7 @@ this.createForm();
         );
         controls.prh_receiver.setValue(this.prhnbr);
       } else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
       }
@@ -736,7 +736,7 @@ this.createForm();
     //     },
     //     )
     //   }else {
-    //     this.message = "Parametrage Monquant pour la sequence";
+    //     this.message = "Parametrage Manquant pour la sequence";
     //     this.hasFormErrors = true;
     //     return;
 

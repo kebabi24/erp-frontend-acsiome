@@ -638,7 +638,7 @@ error = false;
           if (args.dataContext.sod_type != "M"){
             if (args.dataContext.sod_qty_ord * args.dataContext.sod_um_conv   > args.dataContext.qty_oh) {
              
-            alert ("Qte monquante")
+            alert ("Qte Manquante")
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_qty_ord: null })
          //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
         

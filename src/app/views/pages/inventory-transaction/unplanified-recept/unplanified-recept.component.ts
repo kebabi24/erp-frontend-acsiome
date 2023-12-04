@@ -740,7 +740,7 @@ console.log(_lb)
         let tr = this.prepare();
         this.addIt(this.dataset, tr, this.trlot);
       } else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
       }

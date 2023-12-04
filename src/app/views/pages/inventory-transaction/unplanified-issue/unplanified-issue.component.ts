@@ -501,7 +501,7 @@ export class UnplanifiedIssueComponent implements OnInit {
                 
                 if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                     console.log('here')
-                 alert ("Qte monquante")
+                 alert ("Qte Manquante")
                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
               //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
              
@@ -549,7 +549,7 @@ export class UnplanifiedIssueComponent implements OnInit {
 
                   if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                     console.log('here')
-                    alert ("Qte monquante")
+                    alert ("Qte Manquante")
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                     
                 
@@ -569,7 +569,7 @@ export class UnplanifiedIssueComponent implements OnInit {
                     if (data) {
                       if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                         console.log('here')
-                        alert ("Qte monquante")
+                        alert ("Qte Manquante")
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                         
                     
@@ -685,7 +685,7 @@ export class UnplanifiedIssueComponent implements OnInit {
     
             //if (args.dataContext.tr_qty_loc > args.dataContext.qty_oh) {
             //    console.log('here')
-            // alert ("Qte monquante")
+            // alert ("Qte Manquante")
             // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
           //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
          
@@ -875,7 +875,7 @@ export class UnplanifiedIssueComponent implements OnInit {
           this.addIt( this.dataset,tr, this.trlot);
 
           }else {
-            this.message = "Parametrage Monquant pour la sequence";
+            this.message = "Parametrage Manquant pour la sequence";
             this.hasFormErrors = true;
             return;
        

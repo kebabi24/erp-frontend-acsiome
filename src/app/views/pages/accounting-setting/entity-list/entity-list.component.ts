@@ -103,7 +103,7 @@ export class EntityListComponent implements OnInit {
           },
           {
               id: "en_entity",
-              name: "Code Entitee",
+              name: "Code Entite",
               field: "en_entity",
               sortable: true,
               filterable: true,

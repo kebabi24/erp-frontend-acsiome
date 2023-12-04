@@ -331,7 +331,7 @@ prepareCode(): any {
           console.log(pme)
           this.addDet(pme, this.mvdataset, this.cnsdataset, this.nbr);
         }else {
-          this.message = "Parametrage Monquant pour la sequence";
+          this.message = "Parametrage Manquant pour la sequence";
           this.hasFormErrors = true;
           return;
      
@@ -763,7 +763,7 @@ prepareCode(): any {
               
               if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                   console.log('here')
-               alert ("Qte monquante")
+               alert ("Qte Manquante")
                this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
             //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
            
@@ -811,7 +811,7 @@ prepareCode(): any {
 
                 if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                   console.log('here')
-                  alert ("Qte monquante")
+                  alert ("Qte Manquante")
                   this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                   
               
@@ -831,7 +831,7 @@ prepareCode(): any {
                   if (data) {
                     if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                       console.log('here')
-                      alert ("Qte monquante")
+                      alert ("Qte Manquante")
                       this.gridServicecns.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                       
                   

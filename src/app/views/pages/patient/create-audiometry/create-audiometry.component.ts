@@ -1877,7 +1877,7 @@ openpat(content) {
         },
         )
       }else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
       
         return;
    

@@ -775,7 +775,7 @@ console.log(this.poEdit.po_nbr)
         },
         )
       }else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
    
