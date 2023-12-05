@@ -650,6 +650,14 @@ console.log(_lb)
           if(reponse.data != null) {
           controls.tr_addr.setValue(reponse.data.code_value),
           controls.tr_addr.disable() 
+
+          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+            //   const { data } = response;
+               console.log("aaaaaaaaaaa",response.data);
+               if (response.data != null) {
+                 this.provider = response.data;
+               }
+             });
           console.log("hehehehehehehehehehe")
           }
         },
@@ -672,6 +680,8 @@ console.log(_lb)
       if (response.data == null) {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
+      } else {
+        this.provider = response.data;
       }
     });
   }
