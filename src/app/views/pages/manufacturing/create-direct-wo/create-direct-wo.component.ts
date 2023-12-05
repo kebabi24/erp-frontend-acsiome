@@ -109,6 +109,8 @@ export class CreateDirectWoComponent implements OnInit {
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
+  domain: any;
+  domconfig : any;
   constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true })
@@ -306,6 +308,24 @@ export class CreateDirectWoComponent implements OnInit {
     );
     this.getProductColors();
     this.getProductTypes();
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    console.log(this.domain);
+
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => {
+        if(reponse.data != null) {   
+          console.log("hahahahahahahaha", reponse.data)
+          this.domconfig = true
+        } else  {
+          this.domconfig = false
+        }
+      },  
+          
+      (error) => {
+       this.domconfig = false      },
+     
+    );
+
     this.createForm();
   }
 
@@ -346,6 +366,20 @@ export class CreateDirectWoComponent implements OnInit {
       controls.emp_shift.setValue(this.shift);
       console.log("shift", this.shift);
     });
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+        if(reponse.data != null) {
+        controls.wo_routing.setValue(reponse.data.code_value),
+        controls.wo_routing.disable() 
+
+        }
+      },
+      (error) => {
+     
+      },
+     
+    );
+
   }
   //reste form
   reset() {

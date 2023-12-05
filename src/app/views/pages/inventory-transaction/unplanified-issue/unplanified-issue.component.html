@@ -53,7 +53,7 @@
                             <label class="form-group">Adresse :</label>
                             <div class="input-group input-group-sm">
 
-                                <input type="text" class="form-control form-control-solid" formControlName="tr_addr"  
+                                <input type="text" class="form-control form-control-solid" formControlName="tr_addr"  (change)="onChangeVend()"
                                     aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" (click)="open2(content2)">

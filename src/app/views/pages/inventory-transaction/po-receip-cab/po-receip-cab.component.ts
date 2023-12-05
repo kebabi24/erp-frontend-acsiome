@@ -111,7 +111,9 @@ export class PoReceipCabComponent implements OnInit {
   lddet: any;
   domain
   dataprinter: [];
-
+  nligne : any;
+  nbrForm: FormGroup;
+ 
   columnDefinitionsprinter: Column[] = [];
 
   gridOptionsprinter: GridOption = {};
@@ -120,6 +122,7 @@ export class PoReceipCabComponent implements OnInit {
   constructor(
     config: NgbDropdownConfig,
     private prhFB: FormBuilder,
+    private nbrFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
@@ -182,7 +185,11 @@ export class PoReceipCabComponent implements OnInit {
           //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //  this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
-          this.addsameItem(args.dataContext.id);
+          this.row_number = args.row;
+          this.nligne =  args.dataContext.id
+           let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
+           element.click();
+       
         },
       },
 
@@ -957,9 +964,14 @@ this.createForm();
       { position: "bottom" }
     );
   }
-  addsameItem(i) {
-    console.log(i);
-    console.log(this.dataset);
+  addsameItem() {
+    
+    const control =this.nbrForm.controls
+    const limit = Number(control.nbrligne.value)
+    var i = this.nligne
+
+    for (var j = 0; j < limit; j++) {
+        
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -968,7 +980,7 @@ this.createForm();
         cmvid: "",
         desc: this.dataset[i - 1].desc,
         qty_received: this.dataset[i - 1].qty_received,
-        prh_rcvd: 0,
+        prh_rcvd: this.dataset[i - 1].prh_rcvd,
         prh_taxable: this.dataset[i - 1].pod_taxable,
         prh_taxc: this.dataset[i - 1].pod_taxc,
         prh_tax_code: this.dataset[i - 1].pod_tax_code,
@@ -980,12 +992,45 @@ this.createForm();
         prh_loc: this.dataset[i - 1].prh_loc,
         prh_serial: this.dataset[i - 1].prh_serial,
         tr_status: this.dataset[i - 1].tr_status,
-        prh_vend_lot: null,
-        tr_expire: null,
+        prh_vend_lot: this.dataset[i - 1].prh_vend_lot,
+        tr_expire: this.dataset[i - 1].tr_expire,
+ 
       },
       { position: "bottom" }
     );
   }
+  this.modalService.dismissAll()
+  }
+ 
+  // addsameItem(i) {
+  //   console.log(i);
+  //   console.log(this.dataset);
+  //   this.gridService.addItem(
+  //     {
+  //       id: this.dataset.length + 1,
+  //       prh_line: this.dataset.length + 1,
+  //       prh_part: this.dataset[i - 1].prh_part,
+  //       cmvid: "",
+  //       desc: this.dataset[i - 1].desc,
+  //       qty_received: this.dataset[i - 1].qty_received,
+  //       prh_rcvd: 0,
+  //       prh_taxable: this.dataset[i - 1].pod_taxable,
+  //       prh_taxc: this.dataset[i - 1].pod_taxc,
+  //       prh_tax_code: this.dataset[i - 1].pod_tax_code,
+
+  //       prh_um: this.dataset[i - 1].prh_um,
+  //       prh_um_conv: this.dataset[i - 1].prh_um_conv,
+  //       prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
+  //       // prh_site: this.dataset[i - 1].prh_site,
+  //       prh_loc: this.dataset[i - 1].prh_loc,
+  //       prh_serial: this.dataset[i - 1].prh_serial,
+  //       tr_status: this.dataset[i - 1].tr_status,
+  //       prh_vend_lot: null,
+  //       tr_expire: null,
+  //     },
+  //     { position: "bottom" }
+  //   );
+  // }
 
   handleSelectedRowsChanged4(e, args) {
     const controls = this.prhForm.controls;
@@ -2177,4 +2222,18 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
+  opennbrligne(content) {
+    this.createnbrForm();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  createnbrForm() {
+    this.loadingSubject.next(false);
+    
+    
+    this.nbrForm = this.nbrFB.group({
+      nbrligne: [1],
+    });
+  }
+ 
 }
