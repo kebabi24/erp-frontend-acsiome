@@ -42,6 +42,8 @@ export class UnplanifiedReceptComponent implements OnInit {
   employeGrp:string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
+  nbrForm: FormGroup;
+ 
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -109,8 +111,10 @@ export class UnplanifiedReceptComponent implements OnInit {
 
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
+
   angularGridprinter: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
+  nligne : any;
+  constructor(config: NgbDropdownConfig, private trFB: FormBuilder,private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -134,6 +138,27 @@ export class UnplanifiedReceptComponent implements OnInit {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
+        },
+      },
+
+      {
+        id: "add",
+        field: "add",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.icon,
+        params: { formatterIcon: "fa fa-plus" },
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          //  this.angularGrid.gridService.deleteItem(args.dataContext);
+          // }
+       
+            this.row_number = args.row;
+           this.nligne =  args.dataContext.id
+            let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
+            element.click();
+        
         },
       },
 
@@ -562,6 +587,8 @@ console.log(_lb)
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      enableAutoResize: true,
+      autoHeight: true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -650,6 +677,14 @@ console.log(_lb)
           if(reponse.data != null) {
           controls.tr_addr.setValue(reponse.data.code_value),
           controls.tr_addr.disable() 
+
+          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+            //   const { data } = response;
+               console.log("aaaaaaaaaaa",response.data);
+               if (response.data != null) {
+                 this.provider = response.data;
+               }
+             });
           console.log("hehehehehehehehehehe")
           this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response1: any) => {
             //   const { data } = response;
@@ -673,6 +708,14 @@ console.log(_lb)
     // }
   }
 
+  createnbrForm() {
+    this.loadingSubject.next(false);
+    
+    
+    this.nbrForm = this.nbrFB.group({
+      nbrligne: [1],
+    });
+  }
   onChangeVend() {
     const controls = this.trForm.controls;
     this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
@@ -681,6 +724,8 @@ console.log(_lb)
       if (response.data == null) {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
+      } else {
+        this.provider = response.data;
       }
       else {this.provider = response.data}
     });
@@ -846,7 +891,7 @@ console.log(_lb)
         desc: "",
         tr_qty_loc: 0,
         tr_um: "",
-        tr_trice: 0,
+        tr_price: 0,
         tr_site: "",
         tr_loc: "",
         tr_serial: null,
@@ -858,6 +903,38 @@ console.log(_lb)
     );
   }
 
+  addsameItem() {
+    
+    const control =this.nbrForm.controls
+    const limit = Number(control.nbrligne.value)
+    var i = this.nligne
+
+    for (var j = 0; j < limit; j++) {
+        
+    this.gridService.addItem(
+      {
+        id: this.dataset.length + 1,
+        tr_line: this.dataset.length + 1,
+        tr_part: this.dataset[i - 1].tr_part,
+        cmvid: "",
+        desc: this.dataset[i - 1].desc,
+        tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
+        tr_um: this.dataset[i - 1].tr_um,
+        tr_um_conv: this.dataset[i - 1].tr_um_conv,
+
+        tr_price: this.dataset[i - 1].tr_price,
+        tr_site: this.dataset[i - 1].tr_site,
+        tr_loc: this.dataset[i - 1].tr_loc,
+        tr_serial: this.dataset[i - 1].tr_serial,
+        tr_ref: null,
+        tr_status: this.dataset[i - 1].tr_status,
+        tr_expire: this.dataset[i - 1].tr_expire,
+      },
+      { position: "bottom" }
+    );
+  }
+  this.modalService.dismissAll()
+  }
   handleSelectedRowsChanged4(e, args) {
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
     if (Array.isArray(args.rows) && this.gridObj4) {
@@ -1888,4 +1965,10 @@ console.log(_lb)
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
+
+  opennbrligne(content) {
+    this.createnbrForm();
+    this.modalService.open(content, { size: "lg" });
+  }
+
 }
