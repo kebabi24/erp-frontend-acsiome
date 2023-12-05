@@ -651,6 +651,15 @@ console.log(_lb)
           controls.tr_addr.setValue(reponse.data.code_value),
           controls.tr_addr.disable() 
           console.log("hehehehehehehehehehe")
+          this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response1: any) => {
+            //   const { data } = response;
+               console.log(response1.data);
+               if (response1.data == null) {
+                 this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
+                 this.error = true;
+               }
+               else {this.provider = response1.data}
+             });
           }
         },
         (error) => {
@@ -673,6 +682,7 @@ console.log(_lb)
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
       }
+      else {this.provider = response.data}
     });
   }
   //reste form
