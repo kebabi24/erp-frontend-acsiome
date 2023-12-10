@@ -1,5 +1,5 @@
 <kt-portlet>
-  <kt-portlet-header [sticky]="true" title="Reception non Planifier" [class]="'card-head-lg'" [viewLoading$]="loading$">
+  <kt-portlet-header [sticky]="true" title="Réception Non Planifiée" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
       <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -72,7 +72,7 @@
           <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un Article</button>
         </div>
         <div class="row">
-          <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
+          <angular-slickgrid class="col-12"  gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
         </div>
       </form>
     </div>
@@ -215,6 +215,33 @@
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
+    </div>
+
+    <div>
+      <ng-template #contentsamepart let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir Nombre ligne</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form" [formGroup]="nbrForm">
+            <div class="row">
+              <div class="form-group col-4">
+                <label class="form-group">Nombre de Ligne:</label>
+                <div class="input-group input-group-sm">
+                  <input type="number" class="form-control form-control-solid" formControlName="nbrligne" aria-describedby="basic-addon2" />
+                </div>
+              </div>
+            </div>
+          </form>    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="addsameItem()">Ok</button>
+        </div>
+      </ng-template>
+      <button hidden id="openNbrLigne" class="btn btn-primary" (click)="opennbrligne(contentsamepart)">Launch demo modal</button>
     </div>
   </kt-portlet-body>
 </kt-portlet>

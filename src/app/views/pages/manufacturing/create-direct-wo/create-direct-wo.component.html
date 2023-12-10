@@ -40,14 +40,13 @@
           <div class="form-group col-2">
             <label class="form-group">Gamme:</label>
 
-                <select
-                    [className]="woForm.controls['wo_routing'].errors && (woForm.controls['wo_routing'].dirty || woForm.controls['wo_routing'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                    formControlName="wo_routing" id="exampleSelects1">
-                    <option value=""></option>
-                    <option *ngFor="let elem of ro_rollup" [value]="elem.ro_routing">
-                        {{elem.ro_routing}} {{elem.ro_desc}}</option>
-                </select>
-            </div>        
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_routing" id="wo_routing"  (change)="onChangeGamme()"/>
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="opengamme(contentgamme)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div> 
+            </div>   
+          </div>       
         </div>
         <div class="row">
           <div class="form-group col-2">

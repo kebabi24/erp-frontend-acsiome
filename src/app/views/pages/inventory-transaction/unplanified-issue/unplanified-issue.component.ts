@@ -151,6 +151,10 @@ export class UnplanifiedIssueComponent implements OnInit {
     trlot: string;
     datasetPrint = [];
     stat: String;
+    domconfig : any;
+    prodligne : any;
+    dsgn_grp  : any;
+    domain    : any;  
     constructor(
       config: NgbDropdownConfig,
       private trFB: FormBuilder,
@@ -752,6 +756,27 @@ export class UnplanifiedIssueComponent implements OnInit {
     ngOnInit(): void {
       this.loading$ = this.loadingSubject.asObservable();
       this.loadingSubject.next(false);
+      this.user = JSON.parse(localStorage.getItem("user"));
+      this.domain = JSON.parse(localStorage.getItem("domain"));
+    console.log(this.domain);
+
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => {
+        if(reponse.data != null) {   
+          console.log("hahahahahahahaha", reponse.data)
+          this.domconfig = true
+          this.prodligne = reponse.data.code_cmmt
+          this.dsgn_grp  = reponse.data.code_desc
+        } else  {
+          this.domconfig = false
+        }
+      },  
+          
+      (error) => {
+       this.domconfig = false      },
+     
+    );
+    
       this.createForm();
       this.user =  JSON.parse(localStorage.getItem('user'))
       
@@ -777,6 +802,33 @@ export class UnplanifiedIssueComponent implements OnInit {
         ref: [null],
      
       });
+      const controls = this.trForm.controls;
+      console.log(this.domconfig)
+      // if(this.domconfig) {
+        this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+          (reponse: any) => { 
+            if(reponse.data != null) {
+            controls.tr_addr.setValue(reponse.data.code_value),
+            controls.tr_addr.disable() 
+  
+            this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+              //   const { data } = response;
+                 console.log("aaaaaaaaaaa",response.data);
+                 if (response.data != null) {
+                   this.provider = response.data;
+                 }
+               });
+            console.log("hehehehehehehehehehe")
+            }
+          },
+          (error) => {
+         
+          },
+         
+        );
+    
+        
+  
     }
     //reste form
     reset() {
@@ -1961,12 +2013,39 @@ console.log(updateItem.tr_part)
       .subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
-    this.prepareGrid2();
-    this.modalService.open(content, { size: "lg" });
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+       if (reponse.data == null) {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" }); 
+      
+       }
+        console.log(reponse.data)
+      
+      },
+      (error) => {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" }); 
+      },
+    )
+   
   }
 
 
-
+  onChangeVend() {
+    const controls = this.trForm.controls;
+    this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
+   //   const { data } = response;
+      console.log(response.data);
+      if (response.data == null) {
+        this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
+        this.error = true;
+      } else {
+        this.provider = response.data;
+      }
+    });
+  }
+ 
   onChangePal() {
     /*kamel palette*/
     const controls = this.trForm.controls

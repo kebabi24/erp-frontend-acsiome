@@ -109,6 +109,8 @@ export class CreateDirectWoComponent implements OnInit {
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
+  domain: any;
+  domconfig : any;
   constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true })
@@ -275,6 +277,8 @@ export class CreateDirectWoComponent implements OnInit {
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      enableAutoResize: true,
+      autoHeight: false,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -306,6 +310,24 @@ export class CreateDirectWoComponent implements OnInit {
     );
     this.getProductColors();
     this.getProductTypes();
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    console.log(this.domain);
+
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => {
+        if(reponse.data != null) {   
+          console.log("hahahahahahahaha", reponse.data)
+          this.domconfig = true
+        } else  {
+          this.domconfig = false
+        }
+      },  
+          
+      (error) => {
+       this.domconfig = false      },
+     
+    );
+
     this.createForm();
   }
 
@@ -346,6 +368,20 @@ export class CreateDirectWoComponent implements OnInit {
       controls.emp_shift.setValue(this.shift);
       console.log("shift", this.shift);
     });
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+        if(reponse.data != null) {
+        controls.wo_routing.setValue(reponse.data.code_value),
+        controls.wo_routing.disable() 
+
+        }
+      },
+      (error) => {
+     
+      },
+     
+    );
+
   }
   //reste form
   reset() {
@@ -1257,8 +1293,22 @@ export class CreateDirectWoComponent implements OnInit {
     this.workRoutingService.getAllDistinct().subscribe((response: any) => (this.gammes = response.data));
   }
   opengamme(content) {
-    this.prepareGridgamme();
-    this.modalService.open(content, { size: "lg" });
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+       if (reponse.data == null) {
+        this.prepareGridgamme();
+        this.modalService.open(content, { size: "lg" }); 
+      
+       }
+        console.log(reponse.data)
+      
+      },
+      (error) => {
+        this.prepareGridgamme();
+        this.modalService.open(content, { size: "lg" }); 
+      },
+    )
+    
   }
 
   handleSelectedRowsChangedbom(e, args) {
@@ -1372,6 +1422,20 @@ export class CreateDirectWoComponent implements OnInit {
   openbom(content) {
     this.prepareGridbom();
     this.modalService.open(content, { size: "lg" });
+  }
+
+
+  onChangeGamme() {
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ ro_routing: controls.wo_routing.value }).subscribe((response: any) => {
+   //   const { data } = response;
+      console.log(response.data);
+      if (response.data == null) {
+        alert("Gamme n'existe pas");
+        controls.wo_routing.setValue(null);
+        document.getElementById("wo_routing").focus();
+      }
+    });
   }
 
   onChangePal() {

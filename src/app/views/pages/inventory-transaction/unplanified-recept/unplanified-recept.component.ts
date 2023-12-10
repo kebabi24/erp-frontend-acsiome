@@ -42,6 +42,8 @@ export class UnplanifiedReceptComponent implements OnInit {
   employeGrp:string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
+  nbrForm: FormGroup;
+ 
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -102,13 +104,17 @@ export class UnplanifiedReceptComponent implements OnInit {
   domain: any;
   seq: any;
   dataprinter: [];
-
+  domconfig : any;
+  prodligne : any;
+  dsgn_grp  : any;
   columnDefinitionsprinter: Column[] = [];
 
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
+
   angularGridprinter: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
+  nligne : any;
+  constructor(config: NgbDropdownConfig, private trFB: FormBuilder,private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -132,6 +138,27 @@ export class UnplanifiedReceptComponent implements OnInit {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
+        },
+      },
+
+      {
+        id: "add",
+        field: "add",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.icon,
+        params: { formatterIcon: "fa fa-plus" },
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          //  this.angularGrid.gridService.deleteItem(args.dataContext);
+          // }
+       
+            this.row_number = args.row;
+           this.nligne =  args.dataContext.id
+            let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
+            element.click();
+        
         },
       },
 
@@ -560,6 +587,8 @@ console.log(_lb)
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      enableAutoResize: true,
+      autoHeight: true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -596,6 +625,23 @@ console.log(_lb)
     );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
+
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => {
+        if(reponse.data != null) {   
+          console.log("hahahahahahahaha", reponse.data)
+          this.domconfig = true
+          this.prodligne = reponse.data.code_cmmt
+          this.dsgn_grp  = reponse.data.code_desc
+        } else  {
+          this.domconfig = false
+        }
+      },  
+          
+      (error) => {
+       this.domconfig = false      },
+     
+    );
     this.createForm();
     console.log(this.PathPrinter)
   }
@@ -603,6 +649,8 @@ console.log(_lb)
   //create form
   createForm() {
     this.loadingSubject.next(false);
+    
+    
     this.inventoryTransaction = new InventoryTransaction();
     const date = new Date();
     this.trForm = this.trFB.group({
@@ -621,16 +669,54 @@ console.log(_lb)
       printer :  [this.user.usrd_dft_printer],
       print: [true],
     });
+    const controls = this.trForm.controls;
+    console.log(this.domconfig)
+    // if(this.domconfig) {
+      this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+        (reponse: any) => { 
+          if(reponse.data != null) {
+          controls.tr_addr.setValue(reponse.data.code_value),
+          controls.tr_addr.disable() 
+
+          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+            //   const { data } = response;
+               console.log("aaaaaaaaaaa",response.data);
+               if (response.data != null) {
+                 this.provider = response.data;
+               }
+             });
+          console.log("hehehehehehehehehehe")
+          }
+        },
+        (error) => {
+       
+        },
+       
+      );
+  
+      
+
+    // }
   }
 
+  createnbrForm() {
+    this.loadingSubject.next(false);
+    
+    
+    this.nbrForm = this.nbrFB.group({
+      nbrligne: [1],
+    });
+  }
   onChangeVend() {
     const controls = this.trForm.controls;
     this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
-      const { data } = response;
-      console.log(response);
-      if (!data) {
+   //   const { data } = response;
+      console.log(response.data);
+      if (response.data == null) {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
+      } else {
+        this.provider = response.data;
       }
     });
   }
@@ -795,7 +881,7 @@ console.log(_lb)
         desc: "",
         tr_qty_loc: 0,
         tr_um: "",
-        tr_trice: 0,
+        tr_price: 0,
         tr_site: "",
         tr_loc: "",
         tr_serial: null,
@@ -807,6 +893,38 @@ console.log(_lb)
     );
   }
 
+  addsameItem() {
+    
+    const control =this.nbrForm.controls
+    const limit = Number(control.nbrligne.value)
+    var i = this.nligne
+
+    for (var j = 0; j < limit; j++) {
+        
+    this.gridService.addItem(
+      {
+        id: this.dataset.length + 1,
+        tr_line: this.dataset.length + 1,
+        tr_part: this.dataset[i - 1].tr_part,
+        cmvid: "",
+        desc: this.dataset[i - 1].desc,
+        tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
+        tr_um: this.dataset[i - 1].tr_um,
+        tr_um_conv: this.dataset[i - 1].tr_um_conv,
+
+        tr_price: this.dataset[i - 1].tr_price,
+        tr_site: this.dataset[i - 1].tr_site,
+        tr_loc: this.dataset[i - 1].tr_loc,
+        tr_serial: this.dataset[i - 1].tr_serial,
+        tr_ref: null,
+        tr_status: this.dataset[i - 1].tr_status,
+        tr_expire: this.dataset[i - 1].tr_expire,
+      },
+      { position: "bottom" }
+    );
+  }
+  this.modalService.dismissAll()
+  }
   handleSelectedRowsChanged4(e, args) {
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
     if (Array.isArray(args.rows) && this.gridObj4) {
@@ -918,7 +1036,14 @@ console.log(_lb)
     };
 
     // fill the dataset with your data
+    console.log(this.domconfig)
+    if (this.domconfig == false) {
     this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
+    }
+    else {
+      console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp)
+      this.itemsService.getBy({pt_prod_line: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+    }
   }
   open4(content) {
     this.prepareGrid4();
@@ -1494,8 +1619,23 @@ console.log(_lb)
     this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
-    this.prepareGrid2();
-    this.modalService.open(content, { size: "lg" });
+
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+       if (reponse.data == null) {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" }); 
+      
+       }
+        console.log(reponse.data)
+      
+      },
+      (error) => {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" }); 
+      },
+    )
+    
   }
 
   printpdf(nbr) {
@@ -1815,4 +1955,10 @@ console.log(_lb)
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
+
+  opennbrligne(content) {
+    this.createnbrForm();
+    this.modalService.open(content, { size: "lg" });
+  }
+
 }
