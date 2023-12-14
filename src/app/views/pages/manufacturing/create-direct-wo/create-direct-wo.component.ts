@@ -277,6 +277,8 @@ export class CreateDirectWoComponent implements OnInit {
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      enableAutoResize: true,
+      autoHeight: false,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -1309,8 +1311,22 @@ export class CreateDirectWoComponent implements OnInit {
     this.workRoutingService.getAllDistinct().subscribe((response: any) => (this.gammes = response.data));
   }
   opengamme(content) {
-    this.prepareGridgamme();
-    this.modalService.open(content, { size: "lg" });
+    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+      (reponse: any) => { 
+       if (reponse.data == null) {
+        this.prepareGridgamme();
+        this.modalService.open(content, { size: "lg" }); 
+      
+       }
+        console.log(reponse.data)
+      
+      },
+      (error) => {
+        this.prepareGridgamme();
+        this.modalService.open(content, { size: "lg" }); 
+      },
+    )
+    
   }
 
   handleSelectedRowsChangedbom(e, args) {
@@ -1424,6 +1440,20 @@ export class CreateDirectWoComponent implements OnInit {
   openbom(content) {
     this.prepareGridbom();
     this.modalService.open(content, { size: "lg" });
+  }
+
+
+  onChangeGamme() {
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ ro_routing: controls.wo_routing.value }).subscribe((response: any) => {
+   //   const { data } = response;
+      console.log(response.data);
+      if (response.data == null) {
+        alert("Gamme n'existe pas");
+        controls.wo_routing.setValue(null);
+        document.getElementById("wo_routing").focus();
+      }
+    });
   }
 
   onChangePal() {

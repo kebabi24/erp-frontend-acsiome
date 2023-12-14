@@ -53,11 +53,11 @@
           <div class="form-group col-2">
             <label class="form-group">Operation: *</label>
             <div class="input-group input-group-sm">
-              <select  formControlName="operation" style="width: 200px;">
+              <select  formControlName="operation" style="width: 200px;" class="dropdown">
                  <option
                   *ngFor="let op of dropdownOptions"
                   [value]="op.code"
-                  class="mt-1"
+                  class="mt-1 dropdown-item"
                 >
                   {{ op.value }}
                 </option>      
@@ -228,6 +228,75 @@
   </ng-template>
 </div>
 <!-- GRID ROUTE END -->
+
+ <!-- POPUP -->
+ <div>
+  <ng-template #contentPopup let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title">Remplir les données</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="row">
+          <form  [formGroup]="popupForm">
+               <div class="row" *ngIf="valueIsMinMax">
+                  <div class="form-group col-2">
+                      <label class="form-group">Min:</label>
+                      <input type="number"
+                      [className]="form-control"
+                      formControlName="min">     
+                   </div>
+                
+              </div> 
+              
+              <div class="row" *ngIf="valueIsMinMax">
+                  <div class="form-group col-2">
+                      <label class="form-group">Max:</label>
+                      <input type="number"
+                      [className]="form-control"
+                      formControlName="max">     
+                   </div> 
+              </div>
+
+              <div class="row" *ngIf="valueIsChar">
+                  <div class="form-group col-2">
+                      <label class="form-group">Caractère:</label>
+                      <input type="text"
+                      [className]="form-control"
+                      formControlName="char">     
+                   </div> 
+              </div>
+
+              
+              <div class="row" *ngIf="valueIsBool">
+                  <div class="form-group col-2">
+                      <label class="form-group">Booléen:</label>
+                      <input type="checkbox" style="width: 2.5ex; height: 2.5ex"
+                      [className]="form-control"
+                      formControlName="bool">     
+                   </div> 
+              </div>
+             
+          </form> 
+      </div>    
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+      <button type="button" id="btnClosePopup" class="btn btn-secondary" (click)="c('Close click')" hidden>Annuller</button>
+      <button type="button" class="btn btn-primary" (click)="updateGridLine()">Ok</button>
+  </div>
+  </ng-template>
+</div>
+<!-- POPUP END -->
+
+<button
+  hidden
+  id="modalButton"
+  class="btn btn-primary"
+  (click)="openPopup(contentPopup)"
+></button>
 
   
    

@@ -806,6 +806,7 @@ export class ControlResultsEntryComponent implements OnInit {
           this.itemSpecDetails.forEach((item) => {
             let trimmed_label = item.ipd_label.split(" ").join("")
             item.trimmed_label = trimmed_label
+            item.ipd_pass = false
             item.isBool = item.ipd_chr02 === "bool"
             this.customeControls[trimmed_label] = new FormControl("");
             this.customeControls[trimmed_label + "-text-area"] =new FormControl("");
@@ -888,13 +889,25 @@ export class ControlResultsEntryComponent implements OnInit {
        )
   }
 
-  onChange(event: Event, item: any) {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    if (isChecked) {
-      this.checkedItemsSpecs.push(item);
-    } else {
-      this.checkedItemsSpecs = this.checkedItemsSpecs.filter((s) => s !== item);
-    }
+  onChange(event: Event, item: any ,test : any) {
+
+    const isChecked = (event.target as HTMLInputElement).checked; 
+    const test_accepted_val = test.ipd_tol // from the test
+    let test_val = test_accepted_val === "true" ? true : false // use for testing 
+    console.log(isChecked.toString() === test_val.toString())
+
+    // search for the element : 
+    const itemIndex = this.itemSpecDetails.findIndex(item =>{
+      //  return item.operation_title == event.method
+   })
+    
+     console.log(item)
+     console.log(test)
+    // if (isChecked) {
+    //   this.checkedItemsSpecs.push(item);
+    // } else {
+    //   this.checkedItemsSpecs = this.checkedItemsSpecs.filter((s) => s !== item);
+    // }
   
   }
 

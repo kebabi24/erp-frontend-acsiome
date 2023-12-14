@@ -41,8 +41,10 @@
             <label class="form-group">Gamme:</label>
 
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_routing" id="wo_routing" />
-             
+              <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_routing" id="wo_routing"  (change)="onChangeGamme()"/>
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="opengamme(contentgamme)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div> 
             </div>   
           </div>       
         </div>
