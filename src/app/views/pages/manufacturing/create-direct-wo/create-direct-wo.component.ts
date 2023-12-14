@@ -439,6 +439,7 @@ export class CreateDirectWoComponent implements OnInit {
 
   searchProduct() {
     const controls = this.woForm.controls;
+    const date = new Date();
     controls.product_type.value;
     controls.product_color.value;
 
@@ -457,7 +458,24 @@ export class CreateDirectWoComponent implements OnInit {
           } else {
             console.log(data);
             controls.wo_part.setValue(data[0].pt_part);
-            controls.desc.setValue(data[0].pt_desc1);
+            controls.desc.setValue(response.data[0].pt_desc1);
+            this.desc2 = response.data[0].pt_desc2;
+            controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
+            this.um = response.data[0].pt_um;
+            this.loc = response.data[0].pt_loc;
+            if (response.data[0].pt_rctwo_active) {
+              this.rctwostat = response.data[0].pt_rctwo_status;
+            } else {
+              this.locationService
+                .getByOne({
+                  loc_loc: this.loc,
+                })
+                .subscribe((resp: any) => {
+                  console.log(resp.data, resp.data.length);
+                  this.rctwostat = resp.data.loc_status;
+                });
+            }
+            
           }
         }
       });

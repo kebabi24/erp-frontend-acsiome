@@ -727,7 +727,7 @@ console.log(_lb)
       } else {
         this.provider = response.data;
       }
-      else {this.provider = response.data}
+      
     });
   }
   //reste form
