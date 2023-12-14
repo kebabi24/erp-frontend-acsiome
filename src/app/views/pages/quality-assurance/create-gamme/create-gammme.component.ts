@@ -499,6 +499,10 @@ export class CreateGammeComponent implements OnInit {
   this.openPGrid(content)
  }
 
+ opemGammeGrid(){
+  
+ }
+
 
 
 }

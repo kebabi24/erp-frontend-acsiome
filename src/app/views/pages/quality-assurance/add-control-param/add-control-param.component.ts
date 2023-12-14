@@ -30,6 +30,8 @@ export class AddControlParamaterComponent implements OnInit {
   loading$: Observable<boolean>;
 
 
+  popupForm: FormGroup
+
 
   
   columnDefinitions: Column[] = [];
@@ -91,6 +93,11 @@ export class AddControlParamaterComponent implements OnInit {
   checkedTests :any[] = [];
   dropdownOptions :any[] = [];
 
+  valueIsBool = false;
+  valueIsMinMax = false;
+  valueIsChar = false;
+  clickedRowIndex : any ;
+
   
 
   constructor(
@@ -104,6 +111,7 @@ export class AddControlParamaterComponent implements OnInit {
        private modalService: NgbModal,
        private woService : WorkOrderService,
        private qualityControlService : QualityControlService,
+       private fb: FormBuilder,
 
           ) {
     config.autoClose = true;
@@ -591,17 +599,46 @@ export class AddControlParamaterComponent implements OnInit {
             editor: {model: Editors.text}
         },
         {
-          id: "ipd_chr02",
+          id: "val_type",
           name: "Type de valeur",
-          field: "ipd_chr02",
+          field: "val_type",
           sortable: true,
           minWidth: 100,
           maxWidth: 300,
           filterable: true,
           type: FieldType.string, 
-          editor: {model: Editors.singleSelect,
-          collection:[{value :"logic", label:"logique"},{value :"value", label:"valeur"}]
-          }
+          onCellClick: (e: Event, args: OnEventArgs) => {
+            this.clickedRowIndex = args.dataContext.id
+            console.log(args.dataContext.id)
+          },
+          editor: {model: Editors.singleSelect, 
+          collection:[{value :"bool", label:"Booléen"},{value :"value", label:"Valeur"},{value :"char", label:"Caractère"}],
+          elementOptions: {
+            onClick: (event) => {
+              switch(event.value){
+                case 'bool':{
+                  this.valueIsBool = true 
+                  this.valueIsChar = false 
+                  this.valueIsMinMax = false
+                  break;
+                }
+                case 'value':{
+                  this.valueIsBool = false 
+                  this.valueIsChar = false 
+                  this.valueIsMinMax = true
+                  break;
+                }
+                case 'char':{
+                  this.valueIsBool = false 
+                  this.valueIsChar = true 
+                  this.valueIsMinMax = false
+                  break;
+                }
+              }
+              this.createPopupForm()
+              document.getElementById("modalButton").click(); 
+          }} 
+        }
         },
         {
           id: "ipd_dec01",
@@ -812,5 +849,17 @@ handleSelectedRowsChangedDetails(e, args){
      { position: "bottom" }
    );
  }
+
+ createPopupForm() {
+  this.loadingSubject.next(false)
+    this.popupForm = this.fb.group({
+        max: [""],
+        min: [""],
+        char: [""],
+        bool: [""],
+    })
+}
+
+openPopup(c){}
 
 }

@@ -27,7 +27,7 @@ import {
   OperatorString,
   SearchTerm,
 } from "angular-slickgrid"
-
+import "jspdf-barcode";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -44,9 +44,10 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { LoadRequestService } from "../../../../core/erp"
+import { LoadRequestService, UsersMobileService } from "../../../../core/erp"
 import { Widget1Data } from "src/app/views/partials/content/widgets/widget1/widget1.component"
 import * as _ from "lodash"
+import jsPDF from "jspdf"
 
 @Component({
   selector: 'kt-load-request-list',
@@ -104,6 +105,12 @@ export class LoadRequestListComponent implements OnInit {
 
  rolesList : any = [];
 
+ load_request_data : any
+ printLines:any[] = []
+ user_mobile : any
+
+ canPrint = false
+
   
   constructor(
       private activatedRoute: ActivatedRoute,
@@ -111,6 +118,7 @@ export class LoadRequestListComponent implements OnInit {
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private loadRequestService: LoadRequestService,
+      private userMobileService: UsersMobileService,
       private fb: FormBuilder,
      
   ) {
@@ -292,7 +300,14 @@ export class LoadRequestListComponent implements OnInit {
   onSelectedRowsChanged(e, args) {
     // console.log('indexs', args.rows);
     const index = args.rows;
+    this.canPrint = true
     this.select_load_code = this.gridService.getDataItemByRowIndex(index).load_request_code
+    this.load_request_data = this.gridService.getDataItemByRowIndex(index)
+    this.userMobileService.getByOne({user_mobile_code :this.load_request_data.user_mobile_code }).subscribe(
+
+      (response: any) => {
+        this.user_mobile = response.data
+      },)
     this.updateData()
    
   }
@@ -527,6 +542,20 @@ angularGridReady3(angularGrid: AngularGridInstance) {
            this.loadRequestDetails = response.data.loadRequestDetails
            this.dataView2.setItems(this.loadRequestLines)
            this.dataView3.setItems(this.loadRequestDetails)
+           console.log(this.loadRequestLines)
+           let i = 1 
+
+           if(this.loadRequestLines.length>0){
+            this.canPrint = true
+            this.loadRequestLines.forEach((line)=>{
+                
+                this.printLines.push({...line,pt_desc1:""})
+                i++
+              
+            })
+          }
+          console.log(this.printLines)
+    
          },
          (error) => {
              this.loadRequestLines = []
@@ -538,7 +567,7 @@ angularGridReady3(angularGrid: AngularGridInstance) {
 
 
 updateDates(){
-  
+  this.canPrint = false
   const controls = this.dataForm.controls
   const date = controls.start_date.value
   const date2 = controls.end_date.value
@@ -592,7 +621,200 @@ updateDates(){
     })
   }
   this.prepareGrid()
-  console.log(this.rolesList)
  }
+
+
+ printpdf() {
+  console.log("pdf");
+  var doc = new jsPDF();
+  
+
+  var img = new Image()
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, 'png', 150, 5, 50, 30)
+  doc.setFontSize(9);
+
+  // if (this.domain.dom_name != null) {
+  //   doc.text(this.domain.dom_name, 10, 10);
+  // }
+  // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.setFontSize(14);
+
+  doc.line(10, 35, 200, 35);
+  doc.setFontSize(12);
+
+
+       doc.barcode(this.select_load_code, {
+        fontSize: 30,
+        textColor: "#000000",
+        x: 100,
+        y: 50,
+        textOptions: { align: "center" } // optional text options
+      })
+
+      doc.setFont("Times-Roman");
+       
+       
+
+       doc.setFontSize(12);
+       doc.text("Demande de chargement : " + this.select_load_code, 70, 60);
+       doc.setFontSize(8);
+
+       doc.setFontSize(8);
+       doc.text("Role    : " + this.load_request_data.role_code, 20, 70);
+       doc.text("Date    : " + this.load_request_data.date_creation, 20, 75);
+       doc.text("Vendeur : " + this.user_mobile.user_mobile_code +' - '+this.user_mobile.username, 20, 80);
+  
+  
+
+       doc.line(10, 85, 195, 85);
+       doc.line(10, 90, 195, 90);
+       doc.line(10, 85, 10, 90);
+       doc.text("N", 12.5, 88.5);
+       doc.line(20, 85, 20, 90);
+       doc.text("Code Article", 25, 88.5);
+       doc.line(45, 85, 45, 90);
+       doc.text("Désignation", 67.5, 88.5);
+       doc.line(100, 85, 100, 90);
+       doc.text("Prix", 107, 88.5);
+       doc.line(120, 85, 120, 90);
+       doc.text("QTE Demandée", 123, 88.5);
+       doc.line(145, 85, 145, 90);
+       doc.text("QTE Validée", 148, 88.5 );
+       doc.line(170, 85, 170, 90);
+       doc.text("QTE Chargée", 173, 88.5 );
+       doc.line(195, 85, 195, 90);
+       var i = 95;
+       doc.setFontSize(6);
+      
+
+   for (let j = 0; j < this.printLines.length  ; j++) {
+    
+    
+     if ((j % 30 == 0) && (j != 0) ) {
+       doc.addPage();
+       img.src = "./assets/media/logos/companylogo.png";
+       doc.addImage(img, 'png', 150, 5, 50, 30)
+       doc.setFontSize(9);
+      //  if (this.domain.dom_name != null) {
+      //    doc.text(this.domain.dom_name, 10, 10);
+      //  }
+      //  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      //  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      //  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+       doc.setFontSize(14);
+       doc.line(10, 35, 200, 35);
+
+       
+       
+       doc.setFontSize(12);
+       doc.text(this.select_load_code, 70, 40);
+       doc.setFontSize(8);
+
+      
+       doc.setFontSize(12);
+       doc.text("Demande de chargement : " + this.select_load_code, 70, 60);
+       doc.setFontSize(8);
+
+       doc.setFontSize(8);
+       doc.text("Role    : " + this.load_request_data.role_code, 20, 70);
+       doc.text("Date    : " + this.load_request_data.date_creation, 20, 75);
+       doc.text("Vendeur : " + this.user_mobile.user_mobile_code +' - '+this.user_mobile.username, 20, 80);
+
+       doc.line(10, 85, 195, 85);
+       doc.line(10, 90, 195, 90);
+       doc.line(10, 85, 10, 90);
+       doc.text("N", 12.5, 88.5);
+       doc.line(20, 85, 20, 90);
+       doc.text("Code Article", 25, 88.5);
+       doc.line(45, 85, 45, 90);
+       doc.text("Désignation", 67.5, 88.5);
+       doc.line(100, 85, 100, 90);
+       doc.text("Prix", 107, 88.5);
+       doc.line(120, 85, 120, 90);
+       doc.text("QTE Demandée", 123, 88.5);
+       doc.line(145, 85, 145, 90);
+       doc.text("QTE Validée", 148, 88.5 );
+       doc.line(170, 85, 170, 90);
+       doc.text("QTE Chargée", 173, 88.5 );
+       doc.line(195, 85, 195, 90);
+       i = 95;
+     }
+
+     if (this.printLines[j].pt_desc1.length > 35) {
+       doc.setFontSize(8);
+
+
+        let line = this.printLines[j]
+
+        let desc1 = line.pt_desc1.substring(0,34);
+        let ind = desc1.lastIndexOf(" ");
+        desc1 = line.pt_desc1.substring(0,ind);
+        let desc2 = line.pt_desc1.substring(ind +1);
+
+       
+        doc.line(10, i - 5, 10, i);
+        doc.text(String(line.line), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(line.product_code, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(String(line.qt_request), 143, i - 1 , { align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(String(line.qt_validated), 168, i - 1, { align: "right" });
+        doc.line(170, i - 5, 170, i);
+        doc.text("", 193, i - 1, { align: "right" });
+        doc.line(195, i - 5, 195, i);
+        
+
+        i = i + 5;
+
+        doc.text(desc2, 47, i - 1);
+
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(145, i - 5, 145, i);
+        doc.line(170, i - 5, 170, i);
+        doc.line(195, i - 5, 195, i);
+  
+        i = i + 5;
+     } else {
+        doc.setFontSize(8);
+        let line = this.printLines[j]
+        doc.line(10, i - 5, 10, i);
+        doc.text(String(line.line), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(line.product_code, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(line.pt_desc1, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(line.pt_price), 118, i - 1 , { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(String(line.qt_request), 143, i - 1 , { align: "right" });
+        doc.line(145, i - 5, 145, i);
+        doc.text(String(line.qt_validated), 168, i - 1 , { align: "right" });
+        doc.line(170, i - 5, 170, i);
+        doc.text("", 193, i - 1 , { align: "right" });
+        doc.line(195, i - 5, 195, i);
+        i = i + 5;
+      }
+      doc.line(10, i - 5, 195, i - 5);
+   }
+
+    doc.line(10, i - 5, 195, i - 5);
+  
+   
+  
+  var blob = doc.output("blob");
+  window.open(URL.createObjectURL(blob));
+}
 
 }
