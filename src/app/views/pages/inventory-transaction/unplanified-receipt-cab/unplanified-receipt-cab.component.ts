@@ -2,23 +2,50 @@ import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
-import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, GridService, EditorValidator, EditorArgs, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
+import {
+  Column,
+  GridOption,
+  Formatter,
+  Editor,
+  Editors,
+  AngularGridInstance,
+  EditorValidator,
+  EditorArgs,
+  GridService,
+  Formatters,
+  FieldType,
+  OnEventArgs,
+} from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 // Layout
-import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
+import {
+  SubheaderService,
+  LayoutConfigService,
+} from "../../../../core/_base/layout";
 // CRUD
-import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
+import {
+  LayoutUtilsService,
+  TypesUtilsService,
+  MessageType,
+} from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
-import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbModal,
+  NgbActiveModal,
+  ModalDismissReasons,
+  NgbModalOptions,
+} from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+
+
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
-  const gridOptions = grid && grid.getOptions ? grid.getOptions() : {};
+  const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
   const translate = gridOptions.i18n;
 
   // to get the editor object, you'll need to use "internalColumnEditor"
@@ -26,17 +53,18 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   const columnEditor = args && args.column && args.column.internalColumnEditor;
 
   if (value == null || value == undefined || !value.length) {
-    return { valid: false, msg: "This is a required field" };
-  }
-  return { valid: true, msg: "" };
+    return { valid: false, msg: 'This is a required field' };
+  } 
+  return { valid: true, msg: '' };
 };
 
 @Component({
-  selector: "kt-unplanified-recept",
-  templateUrl: "./unplanified-recept.component.html",
-  styleUrls: ["./unplanified-recept.component.scss"],
+  selector: 'kt-unplanified-receipt-cab',
+  templateUrl: './unplanified-receipt-cab.component.html',
+  styleUrls: ['./unplanified-receipt-cab.component.scss']
 })
-export class UnplanifiedReceptComponent implements OnInit {
+export class UnplanifiedReceiptCabComponent implements OnInit {
+
   currentPrinter: string;
   PathPrinter: string;
   employeGrp:string;
@@ -56,7 +84,7 @@ export class UnplanifiedReceptComponent implements OnInit {
   gridOptions: GridOption;
   dataset: any[];
   provider: any;
-
+  data: any[];
   items: [];
   columnDefinitions4: Column[] = [];
   gridOptions4: GridOption = {};
@@ -115,7 +143,7 @@ export class UnplanifiedReceptComponent implements OnInit {
   angularGridprinter: AngularGridInstance;
   nligne : any;
   pdl : any;
-  
+  index : any;
   constructor(config: NgbDropdownConfig, private trFB: FormBuilder,private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
@@ -569,6 +597,7 @@ export class UnplanifiedReceptComponent implements OnInit {
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
             console.log(_lb)
+            console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
               (reponse: any) => (lab = reponse.data),
               (error) => {
@@ -576,11 +605,17 @@ export class UnplanifiedReceptComponent implements OnInit {
               },
               () => {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
+                console.log("id", args.dataContext.id)
+                //console.log("dataset",this.dataset[args.dataContext.id])
+                this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
+                console.log(this.index)
+                this.onSubmit()
               }
             );
           } else {
             alert("Veuillez verifier les informations");
           } 
+         
         },
       },
     ];
@@ -588,7 +623,7 @@ export class UnplanifiedReceptComponent implements OnInit {
     this.gridOptions = {
       asyncEditorLoading: false,
       editable: true,
-      enableColumnPicker: true,
+      // enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
       enableAutoResize: true,
@@ -755,6 +790,12 @@ export class UnplanifiedReceptComponent implements OnInit {
   // save data
   onSubmit() {
     this.hasFormErrors = false;
+    console.log("this.dataset",this.dataset)
+    console.log("this.index",this.index)
+    this.data = []
+    this.data.push(this.dataset[this.index])
+    console.log("this.data",this.data)
+    console.log(typeof(this.data))
     const controls = this.trForm.controls;
     /** check form */
     if (this.trForm.invalid) {
@@ -805,7 +846,12 @@ export class UnplanifiedReceptComponent implements OnInit {
       }
     }
     let tr = this.prepare();
-    this.addIt(this.dataset, tr, this.trlot);
+    // let obj = this.dataset[this.index]
+    // console.log(this.dataset[this.index])
+    // console.log("here obj",obj)
+    // this.data = []
+    // this.data.push(obj)
+    this.addIt(this.data, tr, this.trlot);
 
     // this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
     //   this.seq = response.data;
@@ -857,6 +903,7 @@ export class UnplanifiedReceptComponent implements OnInit {
    * @param _it: it
    */
   addIt(detail: any, it, nlot) {
+    console.log("here data", detail)
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -881,9 +928,9 @@ export class UnplanifiedReceptComponent implements OnInit {
         this.loadingSubject.next(false);
         //    console.log(this.provider, po, this.dataset);
         // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
+        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
 
-        this.router.navigateByUrl("/");
+        // this.router.navigateByUrl("/");
       }
     );
   }

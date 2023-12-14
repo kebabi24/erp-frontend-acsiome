@@ -386,6 +386,10 @@ export class MenuConfig {
               page: "/inventory-transaction/unplanified-recept",
             },
             {
+              title: "Entrée non Planifiée Etiquetage",
+              page: "/inventory-transaction/unplanified-receipt-cab",
+            },
+            {
               title: "Modification Statut Stock ",
               page: "/inventory-transaction/edit-status",
             },
