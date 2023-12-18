@@ -53,26 +53,18 @@
                                 </div>
                             </div>
                             <div class="row">    
-                                <div class="form-group col-2">
-                        
-                                    <label class="form-group">Démarage:  </label>
-                                    <div class="input-group input-group-sm">
-                                        
-                                            <select  class='form-control form-control-sm form-control-solid' id="exampleSelects" formControlName="ro_setup" >
-                                            
-                                            </select>
-        
-                                    </div>
-                                </div>
-                        
-                                
-
+                               
                                 <div class="form-group col-2">
                                     <label class="form-group">Centre Charge: *</label>
                                     <div class="input-group input-group-sm">
                                         <input  class='form-control form-control-sm form-control-solid' type="text" [className]="gammeForm.controls['ro_wkctr'].errors && (gammeForm.controls['ro_wkctr'].dirty || gammeForm.controls['ro_wkctr'].touched) ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" 
-                                        #ro_wkctr formControlName="ro_wkctr" required id="ro_wkctr" >
+                                        #ro_wkctr formControlName="ro_wkctr" required id="ro_wkctr"  (change)="onChangeWKCTR()" >
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" (click)="openMachineGrid(contentM)"> 
+                                                <i class="text-dark-50 flaticon2-search"></i>
 
+                                            </span>
+                                        </div>    
                                         <div *ngIf="gammeForm.controls['ro_wkctr'].errors && (gammeForm.controls['ro_wkctr'].dirty || gammeForm.controls['ro_wkctr'].touched)"
                                         class="invalid-feedback">Ce Champs est obligatoire</div>
                                        
@@ -85,7 +77,7 @@
                                     <label class="form-group">Machine: *</label>
                                     <div class="input-group input-group-sm">
                                         <input  class='form-control form-control-sm form-control-solid' type="text" [className]="gammeForm.controls['ro_mch'].errors && (gammeForm.controls['ro_mch'].dirty || gammeForm.controls['ro_mch'].touched) ? 'form-control form-control-sm is-invalid' : 'form-control form-control-sm'" 
-                                        #ro_mch formControlName="ro_mch" required id="ro_mch" >
+                                        #ro_mch formControlName="ro_mch" required id="ro_mch" (change)="onChangeMCH()" >
                                         <div *ngIf="gammeForm.controls['ro_mch'].errors && (gammeForm.controls['ro_mch'].dirty || gammeForm.controls['ro_mch'].touched)"
                                         class="invalid-feedback">Ce Champs est obligatoire</div>
                                        
@@ -120,7 +112,7 @@
                                 <div class="form-group col-2">
                                     <label class="form-group">Unité Chevaugement :  </label>
                                     <div class="input-group input-group-sm">
-                                        <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_men_mch">
+                                        <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_batch">
                                         
                                     </div>
                                 </div>
@@ -148,7 +140,7 @@
                                 
                                     <label class="form-group">Exécution Réglage:  </label>
                                     <div class="input-group input-group-sm">
-                                        <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_run">
+                                        <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_setup_men">
                                         
                                     </div>
 
@@ -181,7 +173,7 @@
                                     
                                     <label class="form-group">Exécution Equipe:  </label>
                                     <div class="input-group input-group-sm">
-                                        <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_setup_men">
+                                        <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_men_mch">
                                         
                                     </div>
                                 </div>
@@ -213,7 +205,7 @@
                                 </div>
 
                                 <div class="form-group col-2">
-                                    <label class="form-group">Temps Production/heure:  </label>
+                                    <label class="form-group">Temps Production/Unité:  </label>
                                     <div class="input-group input-group-sm">
                                         <input type="number" class='form-control form-control-sm form-control-solid'   formControlName="ro_run">
                                         
@@ -226,7 +218,12 @@
                                     <div class="input-group input-group-sm">
                                         
                                         <input type="text" class='form-control form-control-sm form-control-solid'   formControlName="ro_vend">
-                                        
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" (click)="openvend(contentvend)"> 
+                                                <i class="text-dark-50 flaticon2-search"></i>
+
+                                            </span>
+                                        </div>  
                                     </div> 
                                 </div>
                             </div>
@@ -312,5 +309,51 @@
                            
                         </form>
             </div>    
+           
+            <div>
+                <ng-template #contentM let-c="close" let-d="dismiss">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Choissir la machine</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <angular-slickgrid class="col-12" 
+                      gridHeight="300" 
+                      gridId="gridCode" 
+                      [columnDefinitions]="columnDefinitionsM" 
+                      (onAngularGridCreated)="angularGridReadyM($event)"
+                      (sgOnSelectedRowsChanged)="handleSelectedRowsChangedM($event.detail.eventData, $event.detail.args)"
+                      [gridOptions]="gridOptionsM" [dataset]="machinesData"> </angular-slickgrid>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                  </div>
+                </ng-template>
+              </div>
+              <div>
+                <ng-template #contentvend let-c="close" let-d="dismiss">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Fournisseur</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <angular-slickgrid class="col-12" gridHeight="300" gridId="gridvend" [columnDefinitions]="columnDefinitionsvend" (onAngularGridCreated)="angularGridReadyvend($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedvend($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsvend" [dataset]="vends"> </angular-slickgrid>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                  </div>
+                </ng-template>
+                <button hidden id="openVendsGrid" class="btn btn-primary" (click)="openvend(contentvend)">Launch demo modal</button>
+              </div>
 </kt-portlet-body>
 </kt-portlet>

@@ -195,7 +195,10 @@ const routes: Routes = [
     path: 'rp-broyage',
     component: RpBroyageComponent
   },
-  
+  {
+    path: "edit-gamme/:id",
+    component: EditGammeComponent,
+  },
 ]
 
   

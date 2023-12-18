@@ -585,7 +585,7 @@ this.workOrderService
       },
       {
         id: "qtylanch",
-        name: "Qte on Production",
+        name: "Qte en Production",
         field: "qtylanch",
         sortable: true,
         width: 50,
@@ -595,7 +595,7 @@ this.workOrderService
       },
       {
         id: "prod_qty",
-        name: "Qte à Fabriquée",
+        name: "Qte à Fabriquer",
         field: "prod_qty",
         sortable: true,
         width: 50,
@@ -765,7 +765,7 @@ this.mvdataset = []
   )
     }
     else {
-      alert ("Site erronée")
+      alert ("Site erroné")
       controls.site.setValue(null);
       document.getElementById("site").focus();
       this.mvdataset = []
@@ -795,7 +795,7 @@ this.mvdataset = []
     }
 
     if (!this.dataset.length) {
-      this.message = "La liste des article ne peut pas etre vide";
+      this.message = "La liste des articles ne peut pas etre vide";
       this.hasFormErrors = true;
 
       return;

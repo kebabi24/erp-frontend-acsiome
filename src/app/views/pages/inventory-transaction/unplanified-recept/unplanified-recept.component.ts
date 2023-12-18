@@ -15,6 +15,8 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+
+// import { CreateComponent } from "../../articles/create/create.component";
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
@@ -115,8 +117,31 @@ export class UnplanifiedReceptComponent implements OnInit {
   angularGridprinter: AngularGridInstance;
   nligne : any;
   pdl : any;
-  
-  constructor(config: NgbDropdownConfig, private trFB: FormBuilder,private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
+  exec : Boolean = true
+  currentDialog = null;
+  constructor(config: NgbDropdownConfig, 
+                private trFB: FormBuilder,
+                private nbrFB: FormBuilder, 
+                private activatedRoute: ActivatedRoute, 
+                private router: Router, 
+                public dialog: MatDialog, 
+                private modalService: NgbModal, 
+                private layoutUtilsService: LayoutUtilsService, 
+                private inventoryTransactionService: InventoryTransactionService, 
+                private sctService: CostSimulationService, 
+                private itemsService: ItemService, 
+                private siteService: SiteService, 
+                private addressService: AddressService, 
+                private locationService: LocationService, 
+                private locationDetailService: LocationDetailService, 
+                private codeService: CodeService, 
+                private mesureService: MesureService, 
+                private sequenceService: SequenceService, 
+                private inventoryStatusService: InventoryStatusService, 
+                private labelService: LabelService, 
+                private domainService: DomainService, 
+                private printerService: PrintersService, 
+                private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -673,6 +698,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       printer :  [this.user.usrd_dft_printer],
       print: [true],
     });
+   
     const controls = this.trForm.controls;
     console.log(this.domconfig)
     // if(this.domconfig) {
@@ -697,30 +723,6 @@ export class UnplanifiedReceptComponent implements OnInit {
         },
        
       );
-  
-      this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-        this.seq = response.data;
-  
-        if (this.seq) {
-          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-  
-          this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-            (reponse) => console.log("response", Response),
-            (error) => {
-              this.message = "Erreur modification Sequence";
-              this.hasFormErrors = true;
-              return;
-            }
-          );
-  
-        } else {
-          this.message = "Parametrage Manquant pour la sequence";
-          this.hasFormErrors = true;
-          return;
-        }
-      });
-  
-      
 
     // }
   }
@@ -749,6 +751,7 @@ export class UnplanifiedReceptComponent implements OnInit {
   //reste form
   reset() {
     this.inventoryTransaction = new InventoryTransaction();
+    document.getElementById("button").removeAttribute("disabled");
     this.createForm();
     this.hasFormErrors = false;
   }
@@ -756,7 +759,10 @@ export class UnplanifiedReceptComponent implements OnInit {
   onSubmit() {
     this.hasFormErrors = false;
     const controls = this.trForm.controls;
+    const button = document.getElementById("button");
     /** check form */
+    button.setAttribute("disabled", "");
+
     if (this.trForm.invalid) {
       Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
       this.message = "Modifiez quelques éléments et réessayez de soumettre.";
@@ -804,9 +810,57 @@ export class UnplanifiedReceptComponent implements OnInit {
         return;
       }
     }
-    let tr = this.prepare();
-    this.addIt(this.dataset, tr, this.trlot);
+    
+    console.log(this.domconfig)
+    // if(this.domconfig) {
+      this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+        (reponse: any) => { 
+          if(reponse.data != null) {
+          controls.tr_addr.setValue(reponse.data.code_value),
+          controls.tr_addr.disable() 
 
+          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+            //   const { data } = response;
+               console.log("aaaaaaaaaaa",response.data);
+               if (response.data != null) {
+                 this.provider = response.data;
+               }
+             });
+          console.log("hehehehehehehehehehe")
+          }
+        },
+        (error) => {
+       
+        },
+       
+      );
+  
+      this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
+        this.seq = response.data;
+  
+        if (this.seq) {
+          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+  
+          this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
+            (reponse) => console.log("response", Response),
+            (error) => {
+              this.message = "Erreur modification Sequence";
+              this.hasFormErrors = true;
+              return;
+            }
+          );
+  
+          let tr = this.prepare();
+          this.addIt(this.dataset, tr, this.trlot);
+      
+        } else {
+          this.message = "Parametrage Manquant pour la sequence";
+          this.hasFormErrors = true;
+          return;
+        }
+      });
+  
+   
     // this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
     //   this.seq = response.data;
 
@@ -832,6 +886,7 @@ export class UnplanifiedReceptComponent implements OnInit {
     // });
 
     // tslint:disable-next-line:prefer-const
+
   }
 
   prepare() {
@@ -1995,4 +2050,8 @@ export class UnplanifiedReceptComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
+  // openpart() {
+  //   //this.modalService.open(content, { size: "xl" });
+  //   this.currentDialog = this.modalService.open(CreateComponent, {centered: true,size: "xl"});
+  // }
 }

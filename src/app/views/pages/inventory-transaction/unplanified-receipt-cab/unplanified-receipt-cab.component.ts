@@ -605,7 +605,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               },
               () => {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
-                console.log("id", args.dataContext.id)
+                //console.log("id", args.dataContext.id)
                 //console.log("dataset",this.dataset[args.dataContext.id])
                 this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
                 console.log(this.index)

@@ -3,7 +3,7 @@
     <ng-container ktPortletTools>
       <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+      <button type="button" id="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -71,6 +71,7 @@
         <div class="row">
           <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un Article</button>
         </div>
+       
         <div class="row">
           <angular-slickgrid class="col-12"  gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
         </div>
@@ -243,5 +244,7 @@
       </ng-template>
       <button hidden id="openNbrLigne" class="btn btn-primary" (click)="opennbrligne(contentsamepart)">Launch demo modal</button>
     </div>
+
+
   </kt-portlet-body>
 </kt-portlet>
