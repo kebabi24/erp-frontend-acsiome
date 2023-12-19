@@ -725,9 +725,19 @@ export class MenuConfig {
               page: "/manufacturing/list-wo",
             },
             {
-              title: "Lancement OF",
+              title: "Lancement OF avec Liste",
               page: "/manufacturing/launch-order",
             },
+            {
+              title: "Lancement OF",
+              page: "/manufacturing/release-wo",
+            },
+            {
+              title: "Allocation Palette Par OF",
+              page: "/manufacturing/label-allocation",
+            },
+            
+            
             {
               title: "Déclaration Operation",
               page: "/manufacturing/create-op",

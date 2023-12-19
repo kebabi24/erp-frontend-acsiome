@@ -495,6 +495,20 @@ this.workOrderService
        
       },
       {
+        id: "bo_chg",
+        name: "Unité Chevauchement",
+        field: "bo_chg",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        
+        type: FieldType.number,
+        editor: {
+          model: Editors.integer,
+        },
+       
+      },
+      {
         id: "mvid",
         field: "cmvid",
         excludeFromHeaderMenu: true,
@@ -1126,6 +1140,7 @@ this.mvdataset = []
         const item = this.gridObjgamme.getDataItem(idx);
     console.log(item)
     updateItem.gamme = item.ro_routing;
+    updateItem.qty_chg = item.ro_batch;
       
     this.mvgridService.updateItem(updateItem);
          
@@ -1166,6 +1181,15 @@ this.mvdataset = []
         filterable: true,
         type: FieldType.string,
       },
+      
+      {
+        id: "ro_op",
+        name: "Opération",
+        field: "ro_op",
+        sortable: true,
+        filterable: true,
+        type: FieldType.number,
+      },
       {
         id: "ro_desc",
         name: "Designation",
@@ -1174,8 +1198,33 @@ this.mvdataset = []
         filterable: true,
         type: FieldType.string,
       },
+      
+      {
+        id: "ro_batch",
+        name: "Unité de Chevauchement",
+        field: "ro_batch",
+        sortable: true,
+        filterable: true,
+        type: FieldType.number,
+      },
      
+      {
+        id: "ro_wkctr",
+        name: "Centre de Charge",
+        field: "ro_wkctr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
 
+      {
+        id: "ro_mch",
+        name: "Machine",
+        field: "ro_mch",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
 
     ];
 
@@ -1210,7 +1259,7 @@ this.mvdataset = []
 
     // fill the dataset with your data
     this.workRoutingService
-      .getAllDistinct()
+      .getAll()
       .subscribe((response: any) => (this.gammes = response.data));
   }
   opengamme(content) {
