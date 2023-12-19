@@ -76,7 +76,7 @@ const routes: Routes = [
     component: UnplanifiedReceptComponent,
   },
   {
-    path: "unplanified-recept-cab",
+    path: "unplanified-receipt-cab",
     component: UnplanifiedReceiptCabComponent,
   },
   {
