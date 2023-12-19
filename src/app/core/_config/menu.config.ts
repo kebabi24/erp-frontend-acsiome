@@ -384,6 +384,7 @@ export class MenuConfig {
             {
               title: "Entrée non Planifiée ",
               page: "/inventory-transaction/unplanified-recept",
+              
             },
             {
               title: "Entrée non Planifiée Etiquetage",
