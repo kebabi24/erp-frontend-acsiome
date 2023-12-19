@@ -40,7 +40,7 @@ import {
   NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
 
-import {WorkRouting, WorkRoutingService, WorkCenter, WorkCenterService } from "../../../../core/erp"
+import {WorkRouting, WorkRoutingService, WorkCenter, WorkCenterService,ProviderService } from "../../../../core/erp"
 
 @Component({
   selector: 'kt-create-gamme',
@@ -56,9 +56,22 @@ export class CreateGammeComponent implements OnInit {
   loading$: Observable<boolean>
   isExist = false 
 
-  
+    
+  columnDefinitionsM: Column[] = [];
+  gridOptionsM: GridOption = {};
+  dataViewM: any
+  angularGridM: AngularGridInstance;
+  gridObjM: any;
+  machinesData :  [];
   gammeForm: FormGroup;
   hasFormErrors: boolean = false;
+  
+  vends: [];
+  columnDefinitionsvend: Column[] = [];
+  gridOptionsvend: GridOption = {};
+  gridObjvend: any;
+  angularGridvend: AngularGridInstance;
+
   constructor(
     config: NgbDropdownConfig,
     private activatedRoute: ActivatedRoute,
@@ -66,8 +79,10 @@ export class CreateGammeComponent implements OnInit {
     private gammeFB: FormBuilder,
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
-    private workcenterService: WorkCenterService,
-    private workroutingService: WorkRoutingService
+    private workroutingService: WorkRoutingService,
+    private modalService: NgbModal,
+    private workCenterService : WorkCenterService,
+    private providerService : ProviderService,
     ) { config.autoClose = true}
     
     
@@ -98,8 +113,8 @@ export class CreateGammeComponent implements OnInit {
       ro_tran_qty: [{value: this.workRouting.ro_tran_qty,  disabled: !this.isExist } ],
       ro_setup: [{value: this.workRouting.ro_setup,  disabled: !this.isExist } ],
       ro_setup_men: [{value: this.workRouting.ro_setup_men,  disabled: !this.isExist } ],
-      ro_men_mch: [{value: this.workRouting.ro_men_mch,  disabled: !this.isExist } ],
-   
+      ro_men_mch: [{value:this.workRouting.ro_men_mch,  disabled: !this.isExist } ],
+      ro_batch: [{value: 1,  disabled: !this.isExist } ],
       ro_run:  [{value: this.workRouting.ro_run,  disabled: !this.isExist } ],
       ro_move: [{value: this.workRouting.ro_move,  disabled: !this.isExist } ],
      
@@ -144,6 +159,7 @@ export class CreateGammeComponent implements OnInit {
                   controls.ro_queue.enable()
                   controls.ro_wait.enable()
                   controls.ro_setup.enable()
+                  controls.ro_batch.enable()
                   controls.ro_run.enable()
                   controls.ro_move.enable()
                   controls.ro_start.enable()
@@ -192,6 +208,7 @@ prepareCode(): WorkRouting {
   _workrouting.ro_desc = controls.ro_desc.value
   _workrouting.ro_wkctr = controls.ro_wkctr.value
   _workrouting.ro_mch = controls.ro_mch.value
+  _workrouting.ro_batch = controls.ro_batch.value
   _workrouting.ro_queue = controls.ro_queue.value
   _workrouting.ro_wait = controls.ro_wait.value
   _workrouting.ro_mch_op = controls.ro_mch_op.value
@@ -263,4 +280,243 @@ addCode(_workrouting: WorkRouting) {
   const url = `/`
   this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
  }
+
+
+
+ // *********** GRID MACHINE START ********************
+ prepareGridMachine() {
+  this.columnDefinitionsM = [
+  
+    {
+      id: "wc_wkctr",
+      name: "Centre de Charge",
+      field: "wc_wkctr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "wc_mch",
+      name: "Code Machine",
+      field: "wc_mch",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "wc_desc",
+      name: "Description",
+      field: "wc_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionsM = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+    
+      hideSelectAllCheckbox: true,
+
+     
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+  };
+
+  this.workCenterService.getAll().subscribe((response: any) => (this.machinesData = response.data));
+ 
+}
+
+handleSelectedRowsChangedM(e, args){
+  const controls = this.gammeForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjM) {
+    args.rows.map((idx) => {
+      const machine = this.gridObjM.getDataItem(idx);
+      controls.ro_wkctr.setValue(machine.wc_wkctr)
+      controls.ro_mch.setValue(machine.wc_mch || "");
+      
+    });
+  }
+}
+
+angularGridReadyM(angularGrid: AngularGridInstance) {
+  this.angularGridM = angularGrid;
+  this.gridObjM = (angularGrid && angularGrid.slickGrid) || {};
+  this.dataViewM = angularGrid.dataView;
+}
+
+openMachineGrid(content){
+  this.prepareGridMachine()
+  this.modalService.open(content, { size: "lg" });
+}
+// *********** GRID MACHINE END ********************
+
+onChangeWKCTR() {
+  const controls  = this.gammeForm.controls
+  this.workCenterService
+      .getBy({
+            wc_wkctr: controls.ro_wkctr.value,
+            
+      })
+      .subscribe((response: any) => {
+        //  const {data} = response.data;
+         // console.log(response.data)
+          if (response.data.length == 0) {
+            alert("Centre de charge n'existe pas")
+
+             controls.ro_wkctr.setValue(null) 
+             document.getElementById("ro_wkctr").focus(); 
+          }             
+    })
+}
+onChangeMCH() {
+  const controls  = this.gammeForm.controls
+  this.workCenterService
+      .getBy({
+            wc_wkctr: controls.ro_wkctr.value,
+            wc_mch: controls.ro_mch.value,
+            
+      })
+      .subscribe((response: any) => {
+        //  const {data} = response.data;
+         // console.log(response.data)
+          if (response.data.length == 0) {
+            alert("Machine n'existe pas")
+
+             controls.ro_mch.setValue(null) 
+             document.getElementById("ro_mch").focus(); 
+          }             
+    })
+}
+
+handleSelectedRowsChangedvend(e, args) {
+ const controls = this.gammeForm.controls
+  if (Array.isArray(args.rows) && this.gridObjvend) {
+    args.rows.map((idx) => {
+      const item = this.gridObjvend.getDataItem(idx);
+
+      controls.ro_vend.setValue(item.vd_addr);
+
+      
+    });
+  }
+}
+
+angularGridReadyvend(angularGrid: AngularGridInstance) {
+  this.angularGridvend = angularGrid;
+  this.gridObjvend = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridvend() {
+  this.columnDefinitionsvend = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "vd_addr",
+      name: "code",
+      field: "vd_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_name",
+      name: "Fournisseur",
+      field: "address.ad_name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_phone",
+      name: "Numero telephone",
+      field: "address.ad_phone",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_taxable",
+      name: "A Taxer",
+      field: "address.ad_taxable",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_taxc",
+      name: "Taxe",
+      field: "address.ad_taxc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionsvend = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+      var val = undefined;
+      try {
+        val = eval("item." + column.field);
+      } catch (e) {
+        // ignore
+      }
+      return val;
+    },
+  };
+
+  // fill the dataset with your data
+  this.providerService.getAll().subscribe((response: any) => (this.vends = response.data));
+}
+openvend(content) {
+  this.prepareGridvend();
+  this.modalService.open(content, { size: "lg" });
+}
+
 }

@@ -33,6 +33,10 @@ export class LabelService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/prodpal`, label, { headers: httpHeaders })
     }
+    public Allocation(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/allocation`, data, { headers: httpHeaders })
+    }
     // READ
     // READ
     public getAll() {
@@ -46,6 +50,13 @@ export class LabelService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
+    public getByAll(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findby`,data, { headers: httpHeaders })
 
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         

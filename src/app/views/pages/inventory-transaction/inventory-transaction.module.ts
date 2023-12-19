@@ -58,7 +58,10 @@ import { EditStatusRefComponent } from './edit-status-ref/edit-status-ref.compon
 import { PoReceipCabIdComponent } from './po-receip-cab-id/po-receip-cab-id.component';
 import { PurchaseOrderService, TransferService, PurchaseReceiveService, InventoryTransactionService,
    DeviseService, ProviderService, CostSimulationService, SiteService, LocationService, InventoryStatusService,
-    RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService, EmployeService } from "../../../core/erp";
+    RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService, EmployeService ,ProductLineService} from "../../../core/erp";
+import { UnplanifiedReceiptCabComponent } from './unplanified-receipt-cab/unplanified-receipt-cab.component';
+// import { CreateComponent } from "../articles/create/create.component";
+
 const routes: Routes = [
   {
     path: "transfer",
@@ -71,6 +74,10 @@ const routes: Routes = [
   {
     path: "unplanified-recept",
     component: UnplanifiedReceptComponent,
+  },
+  {
+    path: "unplanified-recept-cab",
+    component: UnplanifiedReceiptCabComponent,
   },
   {
     path: "inventory-list",
@@ -130,7 +137,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -152,7 +159,9 @@ const routes: Routes = [
         })
       : [],
   ],
-
+  // entryComponents: [
+  //   CreateComponent
+  // ],
   providers: [
     ModuleGuard,
     InterceptService,
@@ -188,7 +197,8 @@ const routes: Routes = [
     LabelService,
     DomainService,
     PrintersService,
-    EmployeService
+    EmployeService,
+    ProductLineService,
   ],
 })
 export class InventoryTransactionModule {}

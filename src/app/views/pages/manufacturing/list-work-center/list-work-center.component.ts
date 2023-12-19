@@ -232,7 +232,7 @@ export class ListWorkCenterComponent implements OnInit {
           enableExcelCopyBuffer: true,
           enableFiltering: true,
           autoEdit: false,
-          autoHeight: false,
+          autoHeight: true,
           frozenColumn: 0,
           frozenBottom: true,
       }
