@@ -983,6 +983,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         .subscribe(
          (reponse: any) => {
           console.log(reponse)
+          this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
           // const arrayOctet = new Uint8Array(reponse.pdf.data)
           // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
           // const fileUrl = URL.createObjectURL(file);
@@ -1007,10 +1008,11 @@ export class UnplanifiedIssueComponent implements OnInit {
               true
             );
             this.loadingSubject.next(false);
+            
             this.goBack()
         //    console.log(this.provider, po, this.dataset);
         //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-        if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
+       
 
           // this.router.navigateByUrl("/");
           
@@ -2299,7 +2301,7 @@ doc.addPage();
       doc.line(45, i - 5, 45, i);
       doc.text(desc1, 47, i - 1);
       doc.line(100, i - 5, 100, i);
-      doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_qty_loc.toFixed(2))), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
       doc.text(this.dataset[j].tr_um, 123, i - 1);
       doc.line(130, i - 5, 130, i);
@@ -2309,7 +2311,7 @@ doc.addPage();
       doc.line(170, i - 5, 170, i);
       doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
+      doc.text(String(Number((Number(this.dataset[j].tr_price) * Number((this.dataset[j].tr_qty_loc).toFixed(2))))), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       // doc.line(10, i, 200, i );
 
@@ -2338,17 +2340,17 @@ doc.addPage();
       doc.line(45, i - 5, 45, i);
       doc.text(this.dataset[j].desc, 47, i - 1);
       doc.line(100, i - 5, 100, i);
-      doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
       doc.text(this.dataset[j].tr_um, 123, i - 1);
       doc.line(130, i - 5, 130, i);
-      doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_price)), 148, i - 1, { align: "right" });
       doc.line(150, i - 5, 150, i);
       doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
       doc.line(170, i - 5, 170, i);
       doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
+      doc.text(String(Number(Number((this.dataset[j].tr_price)) * Number((this.dataset[j].tr_qty_loc)))), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       doc.line(10, i, 205, i);
       i = i + 5;
