@@ -254,6 +254,8 @@ export class LabelAllocationComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: false,
+      
+        
       },
       {
         id: "mvid",
@@ -277,6 +279,7 @@ export class LabelAllocationComponent implements OnInit {
     this.gridOptions = {
       asyncEditorLoading: false,
       editable: true,
+      
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
@@ -293,7 +296,8 @@ export class LabelAllocationComponent implements OnInit {
       },
     };
     this.dataset = [];
-     }
+     
+  }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
