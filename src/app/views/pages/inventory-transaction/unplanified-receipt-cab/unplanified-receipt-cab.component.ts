@@ -596,7 +596,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
-            
+            console.log(_lb)
+           // console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
               (reponse: any) => (lab = reponse.data),
               (error) => {
@@ -934,7 +935,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       }
     );
   }
+  onPrint() {
+    const controls = this.trForm.controls;
 
+    if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
+
+  }
   /**
    * Go back to the list
    *
