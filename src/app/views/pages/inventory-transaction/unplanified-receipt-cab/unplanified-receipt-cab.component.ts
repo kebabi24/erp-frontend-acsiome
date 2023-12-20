@@ -335,17 +335,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           element.click();
         },
       },
-      {
-        id: "tr_um_conv",
-        name: "Conv UM",
-        field: "tr_um_conv",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        // editor: {
-        //     model: Editors.float,
-        //},
-      },
+      // {
+      //   id: "tr_um_conv",
+      //   name: "Conv UM",
+      //   field: "tr_um_conv",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   // editor: {
+      //   //     model: Editors.float,
+      //   //},
+      // },
 
       {
         id: "tr_price",
@@ -361,91 +361,91 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
         formatter: Formatters.decimal,
       },
-      {
-        id: "tr_site",
-        name: "Site",
-        field: "tr_site",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
-            console.log(response.data);
+      // {
+      //   id: "tr_site",
+      //   name: "Site",
+      //   field: "tr_site",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
+      //       console.log(response.data);
 
-            if (response.data) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
-            } else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
+      //       if (response.data) {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
+      //       } else {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
 
-              // this.gridService.onItemUpdated;
-              alert("Site N'existe pas");
-            }
-          });
-        },
-      },
-      {
-        id: "mvids",
-        field: "cmvids",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "tr_loc",
-        name: "Emplacement",
-        field: "tr_loc",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_loc);
+      //         // this.gridService.onItemUpdated;
+      //         alert("Site N'existe pas");
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvids",
+      //   field: "cmvids",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "tr_loc",
+      //   name: "Emplacement",
+      //   field: "tr_loc",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.tr_loc);
 
-          this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
-            this.location = response.data;
-            if (response.data) {
-              this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-                console.log(resstat);
-                const { data } = resstat;
+      //     this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
+      //       this.location = response.data;
+      //       if (response.data) {
+      //         this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+      //           console.log(resstat);
+      //           const { data } = resstat;
 
-                if (data) {
-                  this.stat = null;
-                } else {
-                  this.stat = this.location.loc_status;
-                }
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
-              });
-            } else {
-              alert("Emplacement Nexiste pas");
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
-            }
-          });
-        },
-      },
-      {
-        id: "mvidl",
-        field: "cmvidl",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openLocsGrid") as HTMLElement;
-          element.click();
-        },
-      },
+      //           if (data) {
+      //             this.stat = null;
+      //           } else {
+      //             this.stat = this.location.loc_status;
+      //           }
+      //           this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
+      //         });
+      //       } else {
+      //         alert("Emplacement Nexiste pas");
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvidl",
+      //   field: "cmvidl",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openLocsGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
 
       {
         id: "tr_serial",
@@ -477,84 +477,84 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
       },
-      {
-        id: "tr_status",
-        name: "Status",
-        field: "tr_status",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-          required: true,
-          validator: statusValidator,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_status);
+      // {
+      //   id: "tr_status",
+      //   name: "Status",
+      //   field: "tr_status",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //     required: true,
+      //     validator: statusValidator,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.tr_status);
 
-          this.inventoryStatusService.getBy({ is_status: args.dataContext.tr_status }).subscribe((ress: any) => {
-            console.log(ress.data.inventoryStatus);
-            if (ress.data.inventoryStatus) {
-              this.inventoryStatusService.getAllDetails({ isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-UNP" }).subscribe((res: any) => {
-                console.log(res);
-                const { data } = res;
+      //     this.inventoryStatusService.getBy({ is_status: args.dataContext.tr_status }).subscribe((ress: any) => {
+      //       console.log(ress.data.inventoryStatus);
+      //       if (ress.data.inventoryStatus) {
+      //         this.inventoryStatusService.getAllDetails({ isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-UNP" }).subscribe((res: any) => {
+      //           console.log(res);
+      //           const { data } = res;
 
-                if (data) {
-                  alert("Mouvement Interdit Pour ce Status");
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-                } else {
-                  let obj = {};
-                  obj = {
-                    ld_site: args.dataContext.tr_site,
-                    ld_loc: args.dataContext.tr_loc,
-                    ld_part: args.dataContext.tr_part,
-                    ld_lot: args.dataContext.tr_serial,
-                  };
-                  status = args.dataContext.tr_status;
-                  console.log(status);
-                  this.locationDetailService.getByStatus({ obj, status }).subscribe((response: any) => {
-                    console.log(response.data.length != 0);
-                    if (response.data.length != 0) {
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-                      alert("lot existe avec un autre status");
-                    } else {
-                      console.log("here");
-                    }
-                  });
-                }
-              });
-            } else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-              alert("Status N' existe pas");
-            }
-          });
-        },
-      },
-      {
-        id: "mvidlot",
-        field: "cmvidlot",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openStatussGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "tr_expire",
-        name: "Expire",
-        field: "tr_expire",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.dateIso,
-        editor: {
-          model: Editors.date,
-        },
-      },
+      //           if (data) {
+      //             alert("Mouvement Interdit Pour ce Status");
+      //             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
+      //           } else {
+      //             let obj = {};
+      //             obj = {
+      //               ld_site: args.dataContext.tr_site,
+      //               ld_loc: args.dataContext.tr_loc,
+      //               ld_part: args.dataContext.tr_part,
+      //               ld_lot: args.dataContext.tr_serial,
+      //             };
+      //             status = args.dataContext.tr_status;
+      //             console.log(status);
+      //             this.locationDetailService.getByStatus({ obj, status }).subscribe((response: any) => {
+      //               console.log(response.data.length != 0);
+      //               if (response.data.length != 0) {
+      //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
+      //                 alert("lot existe avec un autre status");
+      //               } else {
+      //                 console.log("here");
+      //               }
+      //             });
+      //           }
+      //         });
+      //       } else {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
+      //         alert("Status N' existe pas");
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvidlot",
+      //   field: "cmvidlot",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openStatussGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "tr_expire",
+      //   name: "Expire",
+      //   field: "tr_expire",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.dateIso,
+      //   editor: {
+      //     model: Editors.date,
+      //   },
+      // },
       {
         id: "id",
         field: "id",
@@ -596,8 +596,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
-            console.log(_lb)
-            console.log(10 * 100.02)
+            
             this.labelService.add(_lb).subscribe(
               (reponse: any) => (lab = reponse.data),
               (error) => {
@@ -613,7 +612,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               }
             );
           } else {
-            alert("Veuillez verifier les informations");
+            alert("Etiquette dèjà imprimée");
           } 
          
         },
@@ -798,6 +797,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     console.log(typeof(this.data))
     const controls = this.trForm.controls;
     /** check form */
+    
     if (this.trForm.invalid) {
       Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
       this.message = "Modifiez quelques éléments et réessayez de soumettre.";

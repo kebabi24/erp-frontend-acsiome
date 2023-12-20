@@ -120,6 +120,11 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_site',
               formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -134,6 +139,11 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_loc',
               formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -149,6 +159,11 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_part',
               formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -163,6 +178,27 @@ export class InventoryListComponent implements OnInit {
             
           }, 
           {
+            id: "item.pt_break_cat",
+            name: "COULEUR",
+            field: "item.pt_break_cat",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            grouping: {
+              getter: 'item.pt_break_cat',
+              formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: false,
+              collapsed: false,
+            }
+            
+          }, 
+          {
             id: "ld_lot",
             name: "Lot",
             field: "ld_lot",
@@ -172,6 +208,11 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_lot',
               formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -182,8 +223,9 @@ export class InventoryListComponent implements OnInit {
             field: "ld_qty_oh",
             sortable: true,
             filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             type: FieldType.float,
-            filter: { model: Filters.input,operator: OperatorType.rangeInclusive}
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
             
             
           }, 
@@ -197,6 +239,11 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_status',
               formatter: (g) => `Status: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
@@ -244,34 +291,39 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_expire',
               formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
               aggregateCollapsed: false,
               collapsed: false,
             }
           }, 
-          {
-            id: "ld_qty_frz",
-            name: "Qte Friz",
-            field: "ld_qty_frz",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "ld_qty_frz",
+          //   name: "Qte Friz",
+          //   field: "ld_qty_frz",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
             
-          },
+          // },
           
-          {
-            id: "ld_date_frz",
-            name: "Date Friz",
-            field: "ld_date_frz",
-            sortable: true,
-            filterable: true,
-            type: FieldType.date,
-            grouping: {
-              getter: 'ld_date_frz',
-              formatter: (g) => `Date Friz: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
+          // {
+          //   id: "ld_date_frz",
+          //   name: "Date Friz",
+          //   field: "ld_date_frz",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.date,
+          //   grouping: {
+          //     getter: 'ld_date_frz',
+          //     formatter: (g) => `Date Friz: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregateCollapsed: false,
+          //     collapsed: false,
+          //   }
+          // },
           
 
       ]
