@@ -807,45 +807,45 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       return;
     }
 
-    if (!this.dataset.length) {
-      this.message = "La liste des article ne peut pas etre vide";
-      this.hasFormErrors = true;
+    // if (!this.dataset.length) {
+    //   this.message = "La liste des article ne peut pas etre vide";
+    //   this.hasFormErrors = true;
 
-      return;
-    }
-    for (var i = 0; i < this.dataset.length; i++) {
-      console.log(this.dataset[i]);
-      if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null) {
-        this.message = "L' article ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_site == "" || this.dataset[i].tr_site == null) {
-        this.message = "Le Site ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_loc == "" || this.dataset[i].tr_loc == null) {
-        this.message = "L' Emplacement ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null) {
-        this.message = "L' UM ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null) {
-        this.message = "Le Status ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_qty_loc == 0) {
-        this.message = "La Quantite ne peut pas etre 0";
-        this.hasFormErrors = true;
-        return;
-      }
-    }
+    //   return;
+    // }
+    // for (var i = 0; i < this.dataset.length; i++) {
+    //   console.log(this.dataset[i]);
+    //   if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null) {
+    //     this.message = "L' article ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_site == "" || this.dataset[i].tr_site == null) {
+    //     this.message = "Le Site ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_loc == "" || this.dataset[i].tr_loc == null) {
+    //     this.message = "L' Emplacement ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null) {
+    //     this.message = "L' UM ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null) {
+    //     this.message = "Le Status ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_qty_loc == 0) {
+    //     this.message = "La Quantite ne peut pas etre 0";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    // }
     let tr = this.prepare();
     // let obj = this.dataset[this.index]
     // console.log(this.dataset[this.index])

@@ -799,7 +799,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         
         tr_rmks: [this.inventoryTransaction.tr_rmks],
         tr_addr: [this.inventoryTransaction.tr_addr],
-        print:[true],
+        print:[false],
         ref: [null],
      
       });
