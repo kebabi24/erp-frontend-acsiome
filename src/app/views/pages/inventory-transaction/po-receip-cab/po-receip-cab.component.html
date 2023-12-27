@@ -6,183 +6,127 @@
       <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
     </ng-container>
   </kt-portlet-header>
-     <kt-portlet-body>
-        <div class="example-preview">
+  <kt-portlet-body>
+    <div class="example-preview">
+      <form class="form" [formGroup]="prhForm">
+        <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)">
+          {{ message }}
+        </kt-alert>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">N° RC:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="prh_receiver" aria-describedby="basic-addon2" disabled />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">N° BC:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="prh_nbr" aria-describedby="basic-addon2" (change)="onChangeOA()" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="open5(content5)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Fournisseur:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="prh_vend" aria-describedby="basic-addon2" disabled />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Nom: </label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="name" aria-describedby="basic-addon2" disabled />
+            </div>
+          </div>
 
-            <form class="form" [formGroup]="prhForm">
-                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
-                    (close)="onAlertClose($event)">
-                    {{message}}
-                </kt-alert>
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">N° RC:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="prh_receiver" 
-                                aria-describedby="basic-addon2" disabled>
-                          
-                        </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">N° BC:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="prh_nbr" 
-                                aria-describedby="basic-addon2"  
-                                (change)="onChangeOA()">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="open5(content5)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
-                         </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Fournisseur:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="prh_vend"
-                                aria-describedby="basic-addon2" disabled >
-                           
-                        </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Nom:  </label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="name"
-                                aria-describedby="basic-addon2"  disabled >
-                           
-                        </div>
-
-                    </div>
-                    
-                    <div class="form-group col-2">
-                        <label class="form-group">Date de creation:</label>
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-sm form-control-solid" formControlName="prh_rcp_date"
-                                 placeholder="jj-mm-aaaa" name="prh_rcp_date" ngbDatepicker f
-                                #prh_rcp_date="ngbDatepicker">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" (click)="prh_rcp_date.toggle()" type="button">
-                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                </button>
-                            </div>
-                            
-                        </div>
-
-
-                    </div>
-                    
-                </div>
-                <div class="row">   
-                    <div class="form-group col-2">
-                        <label class="form-group">Site:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid" id="prh_site" formControlName="prh_site" (change)="onChangesite()"
-                                aria-describedby="basic-addon2" >
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="opensite(contentsite)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">N° BL/Facture:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="prh_xinvoice"
-                                aria-describedby="basic-addon2" >
-                            
-                        </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Devise:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="text" class="form-control form-control-solid"  formControlName="prh_curr"
-                                aria-describedby="basic-addon2" >
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="opencurr(contentcurr)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Taux Change:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="number" class="form-control form-control-solid"  formControlName="prh_ex_rate"
-                                aria-describedby="basic-addon2">
-                        </div>
-
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Taux Change:</label>
-                        <div class="input-group input-group-sm">
-
-                            <input type="number" class="form-control form-control-solid"  formControlName="prh_ex_rate2"
-                                aria-describedby="basic-addon2">
-                        </div>
-
-                    </div>
-
-                    
-                </div>
-
-                
-                <div class="row">
-                    <div class="form-group col-6">
-                        <label class="form-group">Observation:</label>
-                        <textarea class="form-control form-control-sm form-control-solid" formControlName="prh_rmks"
-                            rows="2"></textarea>
-                    </div>
-                    <div class="form-group col-2">
-                      <label class="form-group">choix de l'imprimante</label>
-                      <div class="input-group input-group-sm">
-                        <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
-                        <div class="input-group-append">
-                          <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Imprimer:</label>
-                        <div class="input-group input-group-sm">
-
-                            <span class="switch switch-icon">
-                                <label>
-                                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print"/>
-                                    <span></span>
-                                </label>
-                            </span>
-                        </div>
-
-                    </div>
-                    
-            
-                </div>
-                <div class="row">
-                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un
-                        Article</button>
-                </div>
-                <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
-                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
-                        (onAngularGridCreated)="gridReady($event)">
-                    </angular-slickgrid>
-                </div>
-            </form>
+          <div class="form-group col-2">
+            <label class="form-group">Date de creation:</label>
+            <div class="input-group input-group-sm">
+              <input class="form-control form-control-sm form-control-solid" formControlName="prh_rcp_date" placeholder="jj-mm-aaaa" name="prh_rcp_date" ngbDatepicker f #prh_rcp_date="ngbDatepicker" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" (click)="prh_rcp_date.toggle()" type="button">
+                  <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-2">
+            <label class="form-group">Site:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" id="prh_site" formControlName="prh_site" (change)="onChangesite()" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="opensite(contentsite)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">N° BL/Facture:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="prh_xinvoice" aria-describedby="basic-addon2" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Devise:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="prh_curr" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="opencurr(contentcurr)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Taux Change:</label>
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" formControlName="prh_ex_rate" aria-describedby="basic-addon2" />
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Taux Change:</label>
+            <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-solid" formControlName="prh_ex_rate2" aria-describedby="basic-addon2" />
+            </div>
+          </div>
         </div>
 
-  
+        <div class="row">
+          <div class="form-group col-6">
+            <label class="form-group">Observation:</label>
+            <textarea class="form-control form-control-sm form-control-solid" formControlName="prh_rmks" rows="2"></textarea>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">choix de l'imprimante</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Imprimer:</label>
+            <div class="input-group input-group-sm">
+              <span class="switch switch-icon">
+                <label>
+                  <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print" />
+                  <span></span>
+                </label>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un Article</button>
+        </div>
+        <div class="row">
+          <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
+        </div>
+      </form>
+    </div>
+
     <div>
       <ng-template #content4 let-c="close" let-d="dismiss">
         <div class="modal-header">
@@ -361,7 +305,7 @@
                 </div>
               </div>
             </div>
-          </form>    
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="addsameItem()">Ok</button>
@@ -369,6 +313,5 @@
       </ng-template>
       <button hidden id="openNbrLigne" class="btn btn-primary" (click)="opennbrligne(contentsamepart)">Launch demo modal</button>
     </div>
-
   </kt-portlet-body>
 </kt-portlet>

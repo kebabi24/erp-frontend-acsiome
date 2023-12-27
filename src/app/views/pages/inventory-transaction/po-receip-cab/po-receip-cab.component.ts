@@ -15,7 +15,12 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 import { PurchaseOrderService, ProviderService, ItemService, AddressService, TaxeService, DeviseService, VendorProposal, InventoryTransaction, PurchaseReceive, Label, LabelService, InventoryTransactionService, PurchaseReceiveService, LocationService, SiteService, MesureService, SequenceService, LocationDetailService, CodeService, InventoryStatusService, printReceive, PrintersService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
-
+// import PDFDocument from "pdfkit";
+import fs from "fs";
+import bwipjs from "bwip-js";
+import print from "print-js";
+import printJS from "print-js";
+import blobStream from "blob-stream";
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
@@ -38,6 +43,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   styleUrls: ["./po-receip-cab.component.scss"],
 })
 export class PoReceipCabComponent implements OnInit {
+  // declare printJS: any;
   currentPrinter: string;
   PathPrinter: string;
   purchaseReceive: PurchaseReceive;
@@ -109,45 +115,17 @@ export class PoReceipCabComponent implements OnInit {
   prhnbr: String;
   stat: String;
   lddet: any;
-  domain
+  domain;
   dataprinter: [];
-  nligne : any;
+  nligne: any;
   nbrForm: FormGroup;
- 
+
   columnDefinitionsprinter: Column[] = [];
 
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
-  constructor(
-    config: NgbDropdownConfig,
-    private prhFB: FormBuilder,
-    private nbrFB: FormBuilder,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    public dialog: MatDialog,
-    private modalService: NgbModal,
-    private layoutUtilsService: LayoutUtilsService,
-    private providersService: ProviderService,
-    private purchaseReceiveService: PurchaseReceiveService,
-    private inventoryTransactionService: InventoryTransactionService,
-    private purchaseOrderService: PurchaseOrderService,
-    private poService: PurchaseOrderService,
-    private addressService: AddressService,
-    private itemsService: ItemService,
-    private codeService: CodeService,
-    private siteService: SiteService,
-    private mesureService: MesureService,
-    private locationDetailService: LocationDetailService,
-    private deviseService: DeviseService,
-    private taxService: TaxeService,
-    private sequenceService: SequenceService,
-    private inventoryStatusService: InventoryStatusService,
-    private locationService: LocationService,
-    private labelService: LabelService,
-    private printerService: PrintersService
-  ) {
-  
+  constructor(config: NgbDropdownConfig, private prhFB: FormBuilder, private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private providersService: ProviderService, private purchaseReceiveService: PurchaseReceiveService, private inventoryTransactionService: InventoryTransactionService, private purchaseOrderService: PurchaseOrderService, private poService: PurchaseOrderService, private addressService: AddressService, private itemsService: ItemService, private codeService: CodeService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService, private deviseService: DeviseService, private taxService: TaxeService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private locationService: LocationService, private labelService: LabelService, private printerService: PrintersService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -186,10 +164,9 @@ export class PoReceipCabComponent implements OnInit {
           //  this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           this.row_number = args.row;
-          this.nligne =  args.dataContext.id
-           let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
-           element.click();
-       
+          this.nligne = args.dataContext.id;
+          let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
+          element.click();
         },
       },
 
@@ -544,12 +521,102 @@ export class PoReceipCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          printJS("/assets/output12.pdf");
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.prh_part != null && args.dataContext.prh_rcvd != null && args.dataContext.prh_loc != null) {
             const controls = this.prhForm.controls;
             const _lb = new Label();
+            // const pageWidth = 284; // Width of the page in points
+            // const pageHeight = 426; // Height of the page in points
+            // const doc = new PDFDocument();
+            // var stream = doc.pipe(blobStream());
+
+            // doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
+
+            // const time = new Date().toLocaleTimeString();
+
+            // // // Draw the barcode image on the PDF document
+            // doc.image("./edel.jpg", 50, 0, {
+            //   fit: [180, 150], // Adjust the size of the barcode image as needed
+            // });
+
+            // doc
+            //   .rect(10, 80, 265, 80)
+            //   .stroke()
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("CLIENT : " + controls.lb_cust.value, 20, 90)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("ADRESSE :" + this.provider.ad_line1, 20, 115)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("TEL :" + this.provider.ad_phone, 20, 140);
+
+            // // // Define the second rectangle and its text lines
+            // doc
+            //   .rect(10, 170, 265, 130)
+            //   .stroke()
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("PRODUIT :" + args.dataContext.desc, 20, 180)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("MICRONAGE/ LAIZE :" + "", 20, 203)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("QTE :" + args.dataContext.prh_rcvd, 20, 228)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("N° Lot:" + args.dataContext.prh_serial, 20, 253)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("GROUPE:" + "", 20, 278);
+
+            // // // Define the third rectangle and its text lines
+            // doc
+            //   .rect(10, 310, 265, 70)
+            //   .stroke()
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("BARCODE:" + "", 20, 320)
+            //   .font("Helvetica-Bold")
+            //   .fontSize(12)
+            //   .text("FABRIQUE EN ALGERIE", 75, 405)
+            //   .text("Time:" + time, 180, 320);
+
+            // bwipjs.toBuffer(
+            //   {
+            //     bcid: "code128", // Barcode type (replace with the desired barcode format)
+            //     text: "", // Barcode data
+            //     scale: 3, // Scaling factor for the barcode image
+            //     includetext: true, // Include the barcode text
+            //     height: 10,
+            //     width: 60,
+            //   },
+            //   function (err, png) {
+            //     if (err) {
+            //       console.log(err);
+            //       return;
+            //     }
+
+            //     // Load the barcode image from the generated PNG buffer
+
+            //     // Draw the barcode image on the PDF document
+            //     doc.image(png, 50, 335, {
+            //       fit: [5400, 40], // Adjust the size of the barcode image as needed
+            //     });
+            //     // Save the PDF document
+            //     console.log("create file");
+            //     doc.pipe(fs.createWriteStream("output12.pdf"));
+            //     doc.end();
+            //   }
+            // );
+            // stream.on("finish", function () {
+            //   doc.pipe(fs.createWriteStream("output12.pdf"));
+            // });
             _lb.lb_site = controls.prh_site.value;
             _lb.lb_rmks = controls.prh_rmks.value;
             _lb.lb_loc = args.dataContext.prh_loc;
@@ -565,18 +632,19 @@ export class PoReceipCabComponent implements OnInit {
 
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
-      
+
             let lab = null;
 
-            this.labelService.add(_lb).subscribe(
-              (reponse: any) => (lab = reponse.data),
-              (error) => {
-                alert("Erreur Impression Etiquette");
-              },
-              () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
-              }
-            );
+            // this.labelService.add(_lb).subscribe(
+            //   (reponse: any) => (lab = reponse.data),
+            //   (error) => {
+            //     alert("Erreur Impression Etiquette");
+            //   },
+            //   () => {
+            //     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
+            //   }
+            // );
+            // printJS("/assets/output12.pdf");
           } else {
             alert("Veuillez verifier les informations");
           }
@@ -607,26 +675,26 @@ export class PoReceipCabComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    this.domain =  JSON.parse(localStorage.getItem('domain'))
-    this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
-    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
-      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+    this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
+      (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
         alert("Erreur de récupération path");
       }
-    
     );
-    if (this.user.usrd_site == "*"){
-    this.site = null
-  } else {
-   this.site=  this.user.usrd_site
-  }
-    
- 
-this.createForm();
-  }
+    if (this.user.usrd_site == "*") {
+      this.site = null;
+    } else {
+      this.site = this.user.usrd_site;
+    }
 
+    this.createForm();
+  }
+  printJsS() {
+    printJS("/assets/output12.pdf");
+  }
   //create form
   createForm() {
     this.loadingSubject.next(false);
@@ -655,8 +723,7 @@ this.createForm();
 
       prh_rmks: [this.purchaseReceive.prh_rmks],
       print: [true],
-      printer: [ this.user.usrd_dft_printer ],
-     
+      printer: [this.user.usrd_dft_printer],
     });
 
     const controls = this.prhForm.controls;
@@ -965,43 +1032,40 @@ this.createForm();
     );
   }
   addsameItem() {
-    
-    const control =this.nbrForm.controls
-    const limit = Number(control.nbrligne.value)
-    var i = this.nligne
+    const control = this.nbrForm.controls;
+    const limit = Number(control.nbrligne.value);
+    var i = this.nligne;
 
     for (var j = 0; j < limit; j++) {
-        
-    this.gridService.addItem(
-      {
-        id: this.dataset.length + 1,
-        prh_line: this.dataset.length + 1,
-        prh_part: this.dataset[i - 1].prh_part,
-        cmvid: "",
-        desc: this.dataset[i - 1].desc,
-        qty_received: this.dataset[i - 1].qty_received,
-        prh_rcvd: this.dataset[i - 1].prh_rcvd,
-        prh_taxable: this.dataset[i - 1].pod_taxable,
-        prh_taxc: this.dataset[i - 1].pod_taxc,
-        prh_tax_code: this.dataset[i - 1].pod_tax_code,
+      this.gridService.addItem(
+        {
+          id: this.dataset.length + 1,
+          prh_line: this.dataset.length + 1,
+          prh_part: this.dataset[i - 1].prh_part,
+          cmvid: "",
+          desc: this.dataset[i - 1].desc,
+          qty_received: this.dataset[i - 1].qty_received,
+          prh_rcvd: this.dataset[i - 1].prh_rcvd,
+          prh_taxable: this.dataset[i - 1].pod_taxable,
+          prh_taxc: this.dataset[i - 1].pod_taxc,
+          prh_tax_code: this.dataset[i - 1].pod_tax_code,
 
-        prh_um: this.dataset[i - 1].prh_um,
-        prh_um_conv: this.dataset[i - 1].prh_um_conv,
-        prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
-        // prh_site: this.dataset[i - 1].prh_site,
-        prh_loc: this.dataset[i - 1].prh_loc,
-        prh_serial: this.dataset[i - 1].prh_serial,
-        tr_status: this.dataset[i - 1].tr_status,
-        prh_vend_lot: this.dataset[i - 1].prh_vend_lot,
-        tr_expire: this.dataset[i - 1].tr_expire,
- 
-      },
-      { position: "bottom" }
-    );
+          prh_um: this.dataset[i - 1].prh_um,
+          prh_um_conv: this.dataset[i - 1].prh_um_conv,
+          prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
+          // prh_site: this.dataset[i - 1].prh_site,
+          prh_loc: this.dataset[i - 1].prh_loc,
+          prh_serial: this.dataset[i - 1].prh_serial,
+          tr_status: this.dataset[i - 1].tr_status,
+          prh_vend_lot: this.dataset[i - 1].prh_vend_lot,
+          tr_expire: this.dataset[i - 1].tr_expire,
+        },
+        { position: "bottom" }
+      );
+    }
+    this.modalService.dismissAll();
   }
-  this.modalService.dismissAll()
-  }
- 
+
   // addsameItem(i) {
   //   console.log(i);
   //   console.log(this.dataset);
@@ -1943,196 +2007,207 @@ this.createForm();
     };
 
     // fill the dataset with your data
-    this.codeService
-        .getBy({ code_fldname: "pt_um" })
-        .subscribe((response: any) => (this.ums = response.data))
-}
-openum(content) {
-    this.prepareGridum()
-    this.modalService.open(content, { size: "lg" })
-}
-
-printpdf(nbr) {
-  //const controls = this.totForm.controls 
-  const controls = this.prhForm.controls 
-  console.log("pdf")
-  var doc = new jsPDF();
- 
- // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-  var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
-  doc.setFontSize(9);
-  if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
-  if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
-  if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
-  if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
-  doc.setFontSize(12);
-  doc.text( 'RC N° : ' + nbr  , 70, 40);
-  doc.setFontSize(8);
-  
-  doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 50 )
-  doc.text('Nom             : ' + this.provider.ad_name, 20 , 55)
-  doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 60)
-  if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 65)}
-      if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
-      if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
-      if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
-      doc.text('Site        : ' + controls.prh_site.value, 180 , 50)
-
-    
-  doc.line(10, 85, 200, 85);
-  doc.line(10, 90, 200, 90);
-  doc.line(10, 85, 10, 90);
-  doc.text('LN', 12.5 , 88.5);
-  doc.line(20, 85, 20, 90);
-  doc.text('Code Article', 25 , 88.5);
-  doc.line(45, 85, 45, 90);
-  doc.text('Désignation', 67.5 , 88.5);
-  doc.line(100, 85, 100, 90);
-  doc.text('QTE', 107 , 88.5);
-  doc.line(120, 85, 120, 90);
-  doc.text('UM', 123 , 88.5);
-  doc.line(130, 85, 130, 90);
-  doc.text('Prix', 132 , 88.5);
-  doc.line(140, 85, 140, 90);
-  doc.text('Empl', 142 , 88.5);
-  doc.line(153, 85, 153, 90);
-  doc.text('Lot/Serie', 158 , 88.5);
-  doc.line(180, 85, 180, 90);
-  doc.text('Réference', 182 , 88.5);
-  doc.line(200, 85, 200, 90);
-  var i = 95;
-  doc.setFontSize(6);
-  for (let j = 0; j < this.dataset.length  ; j++) {
-    
-    if ((j % 35 == 0) && (j != 0) ) {
-doc.addPage();
-doc.addImage(img, 'png', 150, 5, 50, 30)
-doc.setFontSize(9);
-if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
-if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
-if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
-if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
-      doc.setFontSize(12);
-      doc.text( 'RC N° : ' + nbr  , 70, 40);
-      doc.setFontSize(8);
-   
-      doc.text('Code Fournisseur : ' + this.provider.vd_addr, 20 , 50 )
-  doc.text('Nom             : ' + this.provider.ad_name, 20 , 55)
-  doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 60)
-  if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 65)}
-      if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
-      if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
-      if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
-      doc.text('Site        : ' + controls.prh_site.value, 180 , 50)
-
-
-    
-
-
-
-      doc.line(10, 85, 200, 85);
-      doc.line(10, 90, 200, 90);
-      doc.line(10, 85, 10, 90);
-      doc.text('LN', 12.5 , 88.5);
-      doc.line(20, 85, 20, 90);
-      doc.text('Code Article', 25 , 88.5);
-      doc.line(45, 85, 45, 90);
-      doc.text('Désignation', 67.5 , 88.5);
-      doc.line(100, 85, 100, 90);
-      doc.text('QTE', 107 , 88.5);
-      doc.line(120, 85, 120, 90);
-      doc.text('UM', 123 , 88.5);
-      doc.line(130, 85, 130, 90);
-      doc.text('Prix', 132 , 88.5);
-      doc.line(140, 85, 140, 90);
-      doc.text('Empl', 142 , 88.5);
-      doc.line(153, 85, 153, 90);
-      doc.text('Lot/Série', 152 , 88.5);
-      doc.line(180, 85, 180, 90);
-      doc.text('Réf', 182 , 88.5);
-      doc.line(200, 85, 200, 90);
-      i = 95;
-      doc.setFontSize(6);
-
-    }
-
-
-
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35)
-      let ind = desc1.indexOf(' ')
-      desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-      let desc2 = this.dataset[j].desc.substring(35+ind)
-
-      doc.line(10, i - 5, 10, i );
-      doc.text(String(("000"+ this.dataset[j].prh_line)).slice(-3), 12.5 , i  - 1);
-      doc.line(20, i - 5, 20, i);
-      doc.text(this.dataset[j].prh_part, 25 , i  - 1);
-      doc.line(45, i - 5 , 45, i );
-      doc.text(desc1, 47 , i  - 1);
-      doc.line(100, i - 5, 100, i );
-      doc.text( String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118 , i  - 1 , { align: 'right' });
-      doc.line(120, i - 5 , 120, i );
-      doc.text(this.dataset[j].prh_um, 123 , i  - 1);
-      doc.line(130, i - 5, 130, i );
-      doc.text( String((this.dataset[j].prh_pur_cost)), 132 , i  - 1 );
-      doc.line(140, i - 5, 140, i );
-      doc.text(String(this.dataset[j].prh_loc)  , 141 , i  - 1);
-      doc.line(153, i - 5 , 153, i );
-     if(this.dataset[j].prh_serial != null) { doc.text(String(this.dataset[j].prh_serial)  , 156 , i  - 1)};
-      doc.line(180, i - 5 , 180, i );
-      if(this.dataset[j].tr_ref != null) {doc.text(String(this.dataset[j].tr_ref ), 182 , i  - 1)};
-      doc.line(200, i-5 , 200, i );
-     // doc.line(10, i, 200, i );
-
-      i = i + 5;
-
-      doc.text(desc2, 47 , i  - 1);
-      
-      doc.line(10, i - 5, 10, i );
-      doc.line(20, i - 5, 20, i);
-      doc.line(45, i - 5 , 45, i );
-      doc.line(100, i - 5, 100, i );
-      doc.line(120, i - 5 , 120, i );
-      doc.line(130, i - 5, 130, i );
-      doc.line(140, i - 5, 140, i );
-      doc.line(153, i - 5 , 153, i );
-      doc.line(180, i - 5 , 180, i );
-      doc.line(200, i-5 , 200, i );
-      doc.line(10, i, 200, i );
-
-      i = i + 5 ;
-      
-    } else {
-
-
-    
-    doc.line(10, i - 5, 10, i );
-    doc.text(String(("000"+ this.dataset[j].prh_line)).slice(-3), 12.5 , i  - 1);
-    doc.line(20, i - 5, 20, i);
-    doc.text(this.dataset[j].prh_part, 25 , i  - 1);
-    doc.line(45, i - 5 , 45, i );
-    doc.text(this.dataset[j].desc, 47 , i  - 1);
-    doc.line(100, i - 5, 100, i );
-    doc.text( String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118 , i  - 1 , { align: 'right' });
-    doc.line(120, i - 5 , 120, i );
-    doc.text(this.dataset[j].prh_um, 123 , i  - 1);
-    doc.line(130, i - 5, 130, i );
-    doc.text( String(this.dataset[j].prh_pur_cost), 132 , i  - 1 );
-    doc.line(140, i - 5, 140, i );
-    doc.text(String(this.dataset[j].prh_loc)  , 141 , i  - 1);
-    doc.line(153, i - 5 , 153, i );
-    if(this.dataset[j].prh_serial != null) {doc.text(String(this.dataset[j].prh_serial) , 156 , i  - 1)};
-    doc.line(180, i - 5 , 180, i );
-    if (this.dataset[j].tr_ref) {doc.text(String(this.dataset[j].tr_ref ), 182 , i  - 1)};
-    doc.line(200, i-5 , 200, i );
-    doc.line(10, i, 200, i );
-    i = i + 5;
-    }
+    this.codeService.getBy({ code_fldname: "pt_um" }).subscribe((response: any) => (this.ums = response.data));
+  }
+  openum(content) {
+    this.prepareGridum();
+    this.modalService.open(content, { size: "lg" });
   }
 
+  printpdf(nbr) {
+    //const controls = this.totForm.controls
+    const controls = this.prhForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF();
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image();
+    img.src = "./assets/media/logos/companylogo.png";
+    doc.addImage(img, "png", 150, 5, 50, 30);
+    doc.setFontSize(9);
+    if (this.domain.dom_name != null) {
+      doc.text(this.domain.dom_name, 10, 10);
+    }
+    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.setFontSize(12);
+    doc.text("RC N° : " + nbr, 70, 40);
+    doc.setFontSize(8);
+
+    doc.text("Code Fournisseur : " + this.provider.ad_addr, 20, 50);
+    doc.text("Nom             : " + this.provider.ad_name, 20, 55);
+    doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+    if (this.provider.ad_misc2_id != null) {
+      doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
+    }
+    if (this.provider.ad_gst_id != null) {
+      doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
+    }
+    if (this.provider.ad_pst_id) {
+      doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
+    }
+    if (this.provider.ad_misc1_id != null) {
+      doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
+    }
+    doc.text("Site        : " + controls.prh_site.value, 180, 50);
+
+    doc.line(10, 85, 200, 85);
+    doc.line(10, 90, 200, 90);
+    doc.line(10, 85, 10, 90);
+    doc.text("LN", 12.5, 88.5);
+    doc.line(20, 85, 20, 90);
+    doc.text("Code Article", 25, 88.5);
+    doc.line(45, 85, 45, 90);
+    doc.text("Désignation", 67.5, 88.5);
+    doc.line(100, 85, 100, 90);
+    doc.text("QTE", 107, 88.5);
+    doc.line(120, 85, 120, 90);
+    doc.text("UM", 123, 88.5);
+    doc.line(130, 85, 130, 90);
+    doc.text("Prix", 132, 88.5);
+    doc.line(140, 85, 140, 90);
+    doc.text("Empl", 142, 88.5);
+    doc.line(153, 85, 153, 90);
+    doc.text("Lot/Serie", 158, 88.5);
+    doc.line(180, 85, 180, 90);
+    doc.text("Réference", 182, 88.5);
+    doc.line(200, 85, 200, 90);
+    var i = 95;
+    doc.setFontSize(6);
+    for (let j = 0; j < this.dataset.length; j++) {
+      if (j % 35 == 0 && j != 0) {
+        doc.addPage();
+        doc.addImage(img, "png", 150, 5, 50, 30);
+        doc.setFontSize(9);
+        if (this.domain.dom_name != null) {
+          doc.text(this.domain.dom_name, 10, 10);
+        }
+        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(12);
+        doc.text("RC N° : " + nbr, 70, 40);
+        doc.setFontSize(8);
+
+        doc.text("Code Fournisseur : " + this.provider.vd_addr, 20, 50);
+        doc.text("Nom             : " + this.provider.ad_name, 20, 55);
+        doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+        if (this.provider.ad_misc2_id != null) {
+          doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
+        }
+        if (this.provider.ad_gst_id != null) {
+          doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
+        }
+        if (this.provider.ad_pst_id) {
+          doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
+        }
+        if (this.provider.ad_misc1_id != null) {
+          doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
+        }
+        doc.text("Site        : " + controls.prh_site.value, 180, 50);
+
+        doc.line(10, 85, 200, 85);
+        doc.line(10, 90, 200, 90);
+        doc.line(10, 85, 10, 90);
+        doc.text("LN", 12.5, 88.5);
+        doc.line(20, 85, 20, 90);
+        doc.text("Code Article", 25, 88.5);
+        doc.line(45, 85, 45, 90);
+        doc.text("Désignation", 67.5, 88.5);
+        doc.line(100, 85, 100, 90);
+        doc.text("QTE", 107, 88.5);
+        doc.line(120, 85, 120, 90);
+        doc.text("UM", 123, 88.5);
+        doc.line(130, 85, 130, 90);
+        doc.text("Prix", 132, 88.5);
+        doc.line(140, 85, 140, 90);
+        doc.text("Empl", 142, 88.5);
+        doc.line(153, 85, 153, 90);
+        doc.text("Lot/Série", 152, 88.5);
+        doc.line(180, 85, 180, 90);
+        doc.text("Réf", 182, 88.5);
+        doc.line(200, 85, 200, 90);
+        i = 95;
+        doc.setFontSize(6);
+      }
+
+      if (this.dataset[j].desc.length > 35) {
+        let desc1 = this.dataset[j].desc.substring(35);
+        let ind = desc1.indexOf(" ");
+        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
+        let desc2 = this.dataset[j].desc.substring(35 + ind);
+
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].prh_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].prh_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
+        doc.line(140, i - 5, 140, i);
+        doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+        doc.line(153, i - 5, 153, i);
+        if (this.dataset[j].prh_serial != null) {
+          doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
+        }
+        doc.line(180, i - 5, 180, i);
+        if (this.dataset[j].tr_ref != null) {
+          doc.text(String(this.dataset[j].tr_ref), 182, i - 1);
+        }
+        doc.line(200, i - 5, 200, i);
+        // doc.line(10, i, 200, i );
+
+        i = i + 5;
+
+        doc.text(desc2, 47, i - 1);
+
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(130, i - 5, 130, i);
+        doc.line(140, i - 5, 140, i);
+        doc.line(153, i - 5, 153, i);
+        doc.line(180, i - 5, 180, i);
+        doc.line(200, i - 5, 200, i);
+        doc.line(10, i, 200, i);
+
+        i = i + 5;
+      } else {
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].prh_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(this.dataset[j].desc, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].prh_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
+        doc.line(140, i - 5, 140, i);
+        doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+        doc.line(153, i - 5, 153, i);
+        if (this.dataset[j].prh_serial != null) {
+          doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
+        }
+        doc.line(180, i - 5, 180, i);
+        if (this.dataset[j].tr_ref) {
+          doc.text(String(this.dataset[j].tr_ref), 182, i - 1);
+        }
+        doc.line(200, i - 5, 200, i);
+        doc.line(10, i, 200, i);
+        i = i + 5;
+      }
+    }
 
     // doc.line(10, i - 5, 200, i - 5);
 
@@ -2229,11 +2304,9 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
 
   createnbrForm() {
     this.loadingSubject.next(false);
-    
-    
+
     this.nbrForm = this.nbrFB.group({
       nbrligne: [1],
     });
   }
- 
 }
