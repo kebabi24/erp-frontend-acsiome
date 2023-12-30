@@ -60,9 +60,15 @@ import { HttpClient } from "@angular/common/http"
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   const defaultPageSize = 100;
-  const API_URL = environment.apiUrl + "/codes"
+  const API_URL_codes = environment.apiUrl + "/codes"
+  const API_URL_stats = environment.apiUrl + "/inventory-status"
 const myCustomTimeFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
 value.substring(11,19)  ;
+const myyearFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
+value.substring(1,4)  ;
+const mymonthFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
+value.substring(6,7)  ;
+
 
 @Component({
   selector: 'kt-transaction-list',
@@ -154,16 +160,59 @@ export class TransactionListComponent implements OnInit {
 
       this.columnDefinitions = [
           
-          {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
+          // {
+          //   id: "id",
+          //   field: "id",
+          //   excludeFromColumnPicker: true,
+          //   excludeFromGridMenu: true,
+          //   excludeFromHeaderMenu: true,
     
-            minWidth: 50,
-            maxWidth: 50,
-          },
+          //   minWidth: 50,
+          //   maxWidth: 50,
+          // },
+          
+          // {
+          //   id: "tr_effdate",
+          //   name: "ANNEE",
+          //   field: "tr_effdate",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.dateIso,
+          //   formatter: myyearFormatter,
+          //   filter: {         
+          //     model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+              
+          //    },
+          //   grouping: {
+          //     getter: 'tr_effdate',
+          //     formatter: (g) => `Annee: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [new Aggregators.Sum('tr_qty_loc')],
+          //     aggregateCollapsed: true,
+              
+          //     collapsed:true
+          //   }
+          // },
+          // {
+          //   id: "createdAt",
+          //   name: "MOIS",
+          //   field: "createdAt",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.dateIso,
+          //   formatter: mymonthFormatter,
+          //   filter: {         
+          //     model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+              
+          //    },
+          //   grouping: {
+          //     getter: 'createdAt',
+          //     formatter: (g) => `Mois: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [new Aggregators.Sum('tr_qty_loc')],
+          //     aggregateCollapsed: true,
+             
+          //     collapsed:true
+          //   }
+          // },
           {
             id: "tr_site",
             name: "Site",
@@ -171,6 +220,12 @@ export class TransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            
+            filter: {
+  
+              model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+              
+             },
             grouping: {
               getter: 'tr_site',
               formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
@@ -180,8 +235,9 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+            
+              collapsed:true
             }
           }, 
           {
@@ -191,6 +247,10 @@ export class TransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            filter: {
+             model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+              
+             },
             grouping: {
               getter: 'tr_loc',
               formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
@@ -200,8 +260,9 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+             
+              collapsed:true
             }
           },
           {
@@ -210,8 +271,12 @@ export class TransactionListComponent implements OnInit {
             field: "tr_addr",
             sortable: true,
             filterable: true,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
             type: FieldType.string,
+            filter: {
+
+             model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+              
+             },
             grouping: {
               getter: 'tr_addr',
               formatter: (g) => `Adresse: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
@@ -220,9 +285,9 @@ export class TransactionListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('tr_qty_loc')
               ],
-              aggregateCollapsed: false,
-          
-              collapsed: false,
+              aggregateCollapsed: true,
+             
+              collapsed:true
             }
           }, 
           {
@@ -235,15 +300,17 @@ export class TransactionListComponent implements OnInit {
             type: FieldType.string,
             grouping: {
               getter: 'tr_part',
+             
               formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('tr_qty_loc')
               ],
-              aggregateCollapsed: false,
-          
-              collapsed: false,
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+            
+              collapsed:true
             }
           }, 
           {
@@ -252,6 +319,8 @@ export class TransactionListComponent implements OnInit {
             field: "item.pt_desc1",
             sortable: true,
             filterable: true,
+            filter: { model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+
             type: FieldType.string,
             grouping: {
               getter: 'item.pt_desc1',
@@ -261,10 +330,77 @@ export class TransactionListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('tr_qty_loc')
               ],
-              aggregateCollapsed: false,
+              aggregateCollapsed: true,
           
-              collapsed: false,
+             
+              collapsed:true
             }
+          }, 
+          {
+            id: "item.pt_draw",
+            name: "FAMILLE",
+            field: "item.pt_draw",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.contains },
+            grouping: {
+              getter: 'item.pt_draw',
+              formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+             
+              collapsed:true
+            }
+            
+          }, 
+          {
+            id: "item.pt_break_cat",
+            name: "COULEUR",
+            field: "item.pt_break_cat",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/colors`),model: Filters.multipleSelect , operator: OperatorType.contains },
+            grouping: {
+              getter: 'item.pt_break_cat',
+              formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+            
+              collapsed:true
+            }
+            
+          }, 
+          {
+            id: "item.pt_group",
+            name: "Etat",
+            field: "item.pt_group",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.contains},
+            grouping: {
+              getter: 'item.pt_group',
+              formatter: (g) => `Etat: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+            
+              collapsed:true
+            }
+            
           }, 
           {
             id: "tr_serial",
@@ -277,13 +413,15 @@ export class TransactionListComponent implements OnInit {
             grouping: {
               getter: 'tr_serial',
               formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('tr_qty_loc')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              
+              collapsed:true
             }
           },
           {
@@ -312,6 +450,17 @@ export class TransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            filter: {
+
+              
+              // collectionAsync: this.elem,
+              collectionAsync:  this.http.get(`${API_URL_stats}/find`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+           
+           
+             
+               model: Filters.multipleSelect,
+              
+             },
             grouping: {
               getter: 'tr_status',
               formatter: (g) => `Status: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
@@ -320,8 +469,9 @@ export class TransactionListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('tr_qty_loc')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+             
+              collapsed:true
             }
           }, 
 
@@ -337,26 +487,16 @@ export class TransactionListComponent implements OnInit {
               getter: 'tr_ref',
               formatter: (g) => `Reference: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+           
+              collapsed:true
             }
           }, 
-          // {
-          //   id: 'finish', name: 'Finish', field: 'tr_effdate', nameKey: 'FINISH', formatter: Formatters.dateIso, sortable: true, minWidth: 75, width: 120, exportWithFormatter: true,
-          //   type: FieldType.date,
-          //   filterable: true,
-          //   filter: {
-          //     model: Filters.dateRange,
-    
-          //     // override any of the Flatpickr options through "filterOptions"
-          //    // editorOptions: { minDate: 'today' } as FlatpickrOption
-          //   }
-          // },
+          
           {
             id: "tr_effdate",
             name: "Date Effet",
@@ -388,40 +528,12 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
-            }
-          },
-          {
-            id: "tr_date",
-            name: "Date Saisie",
-            field: "tr_date",
-            sortable: true,
-            filterable: true,
-            type: FieldType.date,
-            formatter: Formatters.dateIso,
-//            filter: { model: Filters.dateRange },
-  //          type: FieldType.date,
-    //        filterable: true,
-            filter: {
-              model: Filters.dateRange,
-             
-              // override any of the Flatpickr options through "filterOptions"
-          //    editorOptions: { minDate: 'today' } as FlatpickrOption
-            },
-            grouping: {
-              getter: 'tr_date',
-              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('tr_qty_loc')
-              ],
+              aggregateCollapsed: true,
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              collapsed:true
             }
           },
+
           {
             id: "createdAt",
             name: "Heure",
@@ -434,18 +546,7 @@ export class TransactionListComponent implements OnInit {
   //          type: FieldType.date,
     //        filterable: true,
           },
-          {
-            id: "createdAta",
-            name: "Heure",
-            field: "createdAt",
-            sortable: true,
-            filterable: true,
-            type: FieldType.dateIso,
-            formatter: Formatters.dateTimeIso,
-//            filter: { model: Filters.dateRange },
-  //          type: FieldType.date,
-    //        filterable: true,
-          },
+          
           {
             id: "tr_expire",
             name: "Expire Le",
@@ -462,8 +563,9 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              
+              collapsed:true
             }
           }, 
           {
@@ -473,31 +575,16 @@ export class TransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
-           /* filter: {
-
-              
-             // collectionAsync: this.elem,
-              collection: [{value: '', label: ''},{value: 'ISS-SO', label: 'ISS-SO'},{value: 'ISS-TR', label: 'ISS-TR'},{value: 'ISS-UNP', label: 'ISS-UNP'},{value: 'ISS-WO', label: 'ISS-WO'}, {value: 'ISS-CHL', label: 'ISS-CHL'}, {value: 'CYC-RCNT', label: 'CYC-RCNT'}, {value: 'RCT-WO', label: 'RCT-WO'}, {value: 'RCT-PO', label: 'RCT-PO'} , {value: 'RCT-UNP', label: 'RCT-UNP'}],
-              customStructure: {
-              value: 'value',
-              label: 'label',
-              optionLabel: 'value', // if selected text is too long, we can use option labels instead
-              labelSuffix: 'text',
-           },
-            
-              model: Filters.multipleSelect,
-              searchTerm
-              s: []
-            },*/
+          
             filter: {
 
               
               // collectionAsync: this.elem,
-              collectionAsync:  this.http.get(`${API_URL}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+              collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
            
-           
+              model: Filters.multipleSelect , operator: OperatorType.contains
              
-               model: Filters.multipleSelect,
+              
               
              },
             //filter: {model: Filters.multipleSelect , operator: OperatorType.contains },
@@ -510,8 +597,9 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              
+              collapsed:true
             }
           },
           {
@@ -531,8 +619,9 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              
+              collapsed:true
             }
           },
           {
@@ -552,8 +641,9 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              
+              collapsed:true
             }
           }, 
           
@@ -570,23 +660,21 @@ export class TransactionListComponent implements OnInit {
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
+        enableAutoResizeColumnsByCellContent:true,
         autoHeight: false,
         enableSorting: true,
         exportOptions: {
           sanitizeDataExport: true
         },
-        // presets: {
-        //   filters: [
+        presets: {
+          filters: [
            
-        //     // { columnId: 'complete', searchTerms: ['5'], operator: '>' },
-        //     { columnId: 'tr_effdate', operator: '>=', searchTerms: [this.datefilter] },
-        //     // { columnId: 'effort-driven', searchTerms: [true] },
-        //   ],
-        //   // sorters: [
-        //   //   { columnId: 'duration', direction: 'DESC' },
-        //   //   { columnId: 'complete', direction: 'ASC' }
-        //   // ],
-        // },
+          ],
+          sorters: [
+           
+          ],
+          
+        },
        
      
         gridMenu: {

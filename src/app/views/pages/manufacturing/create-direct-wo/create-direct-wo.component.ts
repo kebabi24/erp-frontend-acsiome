@@ -96,7 +96,7 @@ export class CreateDirectWoComponent implements OnInit {
   rctwostat: any;
   ro_rollup: any[] = [];
   emp_shift: any[] = [];
-
+  globalState: boolean = false;
   product_colors: any[] = [];
   product_types: any[] = [];
 
@@ -440,6 +440,7 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   searchProduct() {
+    this.globalState = false;
     const controls = this.woForm.controls;
     const date = new Date();
     controls.product_type.value;
@@ -485,6 +486,7 @@ export class CreateDirectWoComponent implements OnInit {
 
   onSubmit() {
     // alert("ok")
+    this.globalState = true;
     const controls = this.woForm.controls;
     let tr = this.prepareTr();
     this.trdataset = [];
@@ -1491,14 +1493,19 @@ export class CreateDirectWoComponent implements OnInit {
 
                 this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                   console.log(respopart);
-
+                  this.labelService.getBy({lb_ref: ref}).subscribe((respopal: any) => {
+                  if (respopart.data.pt_prod_line != controls.product_type.value && respopal.data.label.lb__log01 != true)
+                  {
+                    alert("Type ne correspond pas au produit broyé");
+                  }
+                  else {
                   this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
                     this.sct = respo.data;
                     console.log(this.sct);
 
                     this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
                       console.log(rescode);
-                      if (rescode.data.length > 0) {
+                      if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true) {
                         this.gridService.addItem(
                           {
                             id: this.dataset.length + 1,
@@ -1523,8 +1530,11 @@ export class CreateDirectWoComponent implements OnInit {
                       } else {
                         alert("Couleur ne correspond pas au produit ");
                       }
+                      
                     });
                   });
+                };
+                });
                 });
               }
             });

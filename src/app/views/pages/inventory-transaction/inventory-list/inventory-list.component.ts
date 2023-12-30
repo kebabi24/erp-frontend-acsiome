@@ -125,8 +125,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
           }, 
           {
@@ -144,8 +144,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
           }, 
           {
@@ -164,8 +164,9 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
+              lazyTotalsCalculation:true,
             }
           }, 
           {
@@ -193,8 +194,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
             
           }, 
@@ -213,8 +214,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
           }, 
           {
@@ -244,8 +245,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
           }, 
 
@@ -260,8 +261,8 @@ export class InventoryListComponent implements OnInit {
             grouping: {
               getter: 'ld_ref',
               formatter: (g) => `Reference: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
           }, 
           // {
@@ -296,8 +297,8 @@ export class InventoryListComponent implements OnInit {
                // new Aggregators.Avg('tr_qty_loc'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
-              aggregateCollapsed: false,
-              collapsed: false,
+              aggregateCollapsed: true,
+              collapsed: true,
             }
           }, 
           // {
