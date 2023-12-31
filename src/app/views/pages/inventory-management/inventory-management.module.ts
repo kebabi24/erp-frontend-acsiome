@@ -78,6 +78,7 @@ import { InventoryByStatuslistComponent } from './inventory-by-statuslist/invent
 import { LoadingVansComponent } from "./loading-vans/loading-vans.component";
 import { UnloadingVansComponent } from "./unloading-vans/unloading-vans.component";
 import { LoadRequestListComponent } from "./load-request-list/load-request-list.component";
+import { LoadingVansScanComponent } from "./loading-vans-scan/loading-vans-scan.component";
 
 const routes: Routes = [
   {
@@ -136,13 +137,19 @@ const routes: Routes = [
     path: "load-request-list",
     component: LoadRequestListComponent,
   },
+  {
+    path: "loading-vans-scan",
+    component: LoadingVansScanComponent,
+  },
+
+  
 
 
   
 ];
 
 @NgModule({
-  declarations: [LoadingVansComponent,InventoryManagementComponent,LoadRequestListComponent, PhysicalInventoryTagComponent, PhysicalInventoryTagEntryComponent, TagGapAnalysisComponent, PhysicalInventoryTagReentryComponent, FreezeInventoryComponent, ValidateTagComponent, InventoryOfDateComponent, InventoryActivitylistComponent, InventoryByLoclistComponent, OutOFStocklistComponent, InventoryByStatuslistComponent , UnloadingVansComponent],
+  declarations: [LoadingVansComponent,InventoryManagementComponent, LoadingVansScanComponent ,LoadRequestListComponent, PhysicalInventoryTagComponent, PhysicalInventoryTagEntryComponent, TagGapAnalysisComponent, PhysicalInventoryTagReentryComponent, FreezeInventoryComponent, ValidateTagComponent, InventoryOfDateComponent, InventoryActivitylistComponent, InventoryByLoclistComponent, OutOFStocklistComponent, InventoryByStatuslistComponent , UnloadingVansComponent],
   imports: [
     CommonModule,
     HttpClientModule,
