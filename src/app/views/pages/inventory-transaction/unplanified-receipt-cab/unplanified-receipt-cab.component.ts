@@ -71,7 +71,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   nbrForm: FormGroup;
-  printbuttonState: boolean = true;
+  printbuttonState: boolean = false;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -175,7 +175,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * (-1);
               this.onSubmit()
             // }
-            }else{alert("ligne déjà supprimée")}
+            }else{alert("ligne supprimée")}
             this.angularGrid.gridService.deleteItem(args.dataContext);
             
           }
@@ -219,6 +219,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.tr_ref)
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else {
           console.log(args.dataContext.tr_part);
           this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
             if (resp.data) {
@@ -246,6 +249,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
             }
           });
+        };
         },
       },
       {
@@ -256,9 +260,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else {
           this.row_number = args.row;
           let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
-          element.click();
+          element.click();}
         },
       },
       {
@@ -281,7 +287,6 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.float,
           params: { decimalPlaces: 2 },
         },
-        onCellChange: (e: Event, args: OnEventArgs) => {this.printbuttonState = false},
       },
       {
         id: "tr_um",
@@ -296,7 +301,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           validator: statusValidator,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_um);
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else{
           this.itemsService.getBy({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
             if (args.dataContext.tr_um == resp.data.pt_um) {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: 1 });
@@ -327,7 +333,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 }
               });
             }
-          });
+          });}
         },
       },
 
@@ -339,9 +345,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else{
           this.row_number = args.row;
           let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
-          element.click();
+          element.click();}
         },
       },
       // {
@@ -369,6 +377,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
         formatter: Formatters.decimal,
+       
       },
       // {
       //   id: "tr_site",
@@ -467,12 +476,14 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else{
           this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
             console.log(response.data);
             if (response.data.length != 0) {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
             }
-          });
+          });}
         },
       },
       {
@@ -585,7 +596,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           // }
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.trForm.controls;
-       
+            this.printbuttonState=true;
             const _lb = new Label();
             _lb.lb__dec01 = args.dataContext.tr_line,
             _lb.lb_site = args.dataContext.tr_site;
@@ -967,6 +978,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls = this.trForm.controls;
+    if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
+      else{
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -987,6 +1001,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       { position: "bottom" }
     );
   }
+}
 
   addsameItem() {
     

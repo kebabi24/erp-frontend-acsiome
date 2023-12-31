@@ -860,6 +860,12 @@ export class UnplanifiedIssueComponent implements OnInit {
   
         return;
       }
+      if (controls.tr_addr.value == null) {
+        this.message = "addresse ne peut pas etre vide";
+        this.hasFormErrors = true;
+  
+        return;
+      }
 
 
       for (var i = 0; i < this.dataset.length; i++) {
@@ -1032,6 +1038,9 @@ export class UnplanifiedIssueComponent implements OnInit {
   
     // add new Item to Datatable
     addNewItem() {
+      const controls = this.trForm.controls;
+      if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
+      else{
       this.gridService.addItem(
         {
           id: this.dataset.length + 1,
@@ -1052,6 +1061,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         },
         { position: "bottom" }
       );
+    }
     }
     
     
@@ -2056,10 +2066,13 @@ console.log(updateItem.tr_part)
   }
  
   onChangePal() {
+    
     /*kamel palette*/
     const controls = this.trForm.controls
     const ref = controls.ref.value
   var bol = false
+  if (controls.tr_addr.value == null){alert('veuillez remplir adresse')}
+  else{
     for(let ob of this.dataset) {
 
       if(ob.tr_ref == ref) {
@@ -2157,6 +2170,7 @@ console.log(updateItem.tr_part)
   else {
     alert ("Palette déja scannée")
   }
+}
   controls.ref.setValue(null)
   document.getElementById("ref").focus();
   

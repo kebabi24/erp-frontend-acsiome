@@ -314,16 +314,16 @@ export class TransactionListComponent implements OnInit {
             }
           }, 
           {
-            id: "item.pt_desc1",
+            id: "tr_desc",
             name: "Description",
-            field: "item.pt_desc1",
+            field: "tr_desc",
             sortable: true,
             filterable: true,
             filter: { model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
 
             type: FieldType.string,
             grouping: {
-              getter: 'item.pt_desc1',
+              getter: 'tr_desc',
               formatter: (g) => `Description: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
@@ -331,73 +331,73 @@ export class TransactionListComponent implements OnInit {
                 new Aggregators.Sum('tr_qty_loc')
               ],
               aggregateCollapsed: true,
-          
+              lazyTotalsCalculation:true,
              
               collapsed:true
             }
           }, 
           {
-            id: "item.pt_draw",
+            id: "tr__chr01",
             name: "FAMILLE",
-            field: "item.pt_draw",
+            field: "tr__chr01",
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.contains },
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
             grouping: {
-              getter: 'item.pt_draw',
+              getter: 'tr__chr01',
               formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('tr_qty_loc')
               ],
               aggregateCollapsed: true,
-             
+              lazyTotalsCalculation:true,
               collapsed:true
             }
             
           }, 
           {
-            id: "item.pt_break_cat",
+            id: "tr__chr02",
             name: "COULEUR",
-            field: "item.pt_break_cat",
+            field: "tr__chr02",
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/colors`),model: Filters.multipleSelect , operator: OperatorType.contains },
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/colors`),model: Filters.multipleSelect , operator: OperatorType.inContains },
             grouping: {
-              getter: 'item.pt_break_cat',
+              getter: 'tr__chr02',
               formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('tr_qty_loc')
               ],
               aggregateCollapsed: true,
-            
+              lazyTotalsCalculation:true,
               collapsed:true
             }
             
           }, 
           {
-            id: "item.pt_group",
+            id: "tr__chr03",
             name: "Etat",
-            field: "item.pt_group",
+            field: "tr__chr03",
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.contains},
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
             grouping: {
-              getter: 'item.pt_group',
+              getter: 'tr__chr03',
               formatter: (g) => `Etat: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('tr_qty_loc')
               ],
               aggregateCollapsed: true,
-            
+              lazyTotalsCalculation:true,
               collapsed:true
             }
             
@@ -425,9 +425,9 @@ export class TransactionListComponent implements OnInit {
             }
           },
           {
-            id: "item.pt_um",
+            id: "tr_um",
             name: "UM",
-            field: "item.pt_um",
+            field: "tr_um",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -450,17 +450,7 @@ export class TransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {
-
-              
-              // collectionAsync: this.elem,
-              collectionAsync:  this.http.get(`${API_URL_stats}/find`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-           
-           
-             
-               model: Filters.multipleSelect,
-              
-             },
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
             grouping: {
               getter: 'tr_status',
               formatter: (g) => `Status: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
@@ -583,7 +573,7 @@ export class TransactionListComponent implements OnInit {
               // collectionAsync: this.elem,
               collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
            
-              model: Filters.multipleSelect , operator: OperatorType.contains
+              model: Filters.multipleSelect , operator: OperatorType.equal
              
               
               

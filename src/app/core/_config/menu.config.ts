@@ -391,7 +391,7 @@ export class MenuConfig {
               
             },
             {
-              title: "Entrée non Planifiée Etiquetage",
+              title: "Réception non Planifiée Etiquetage",
               page: "/inventory-transaction/unplanified-receipt-cab",
             },
             {

@@ -965,6 +965,9 @@ export class UnplanifiedReceptComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls = this.trForm.controls;
+    if(controls.tr_addr.value==null){alert('veuillez remplir addresse')}
+    else {
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -985,7 +988,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       { position: "bottom" }
     );
   }
-
+}
   addsameItem() {
     
     const control =this.nbrForm.controls
