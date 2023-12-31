@@ -61,13 +61,13 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   const defaultPageSize = 100;
   const API_URL_codes = environment.apiUrl + "/codes"
-  const API_URL_stats = environment.apiUrl + "/inventory-status"
+  
 const myCustomTimeFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
 value.substring(11,19)  ;
-const myyearFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
-value.substring(1,4)  ;
-const mymonthFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
-value.substring(6,7)  ;
+const myyearFormatter: Formatter = (row: number, cell: number, valueYEAR: any, columnDef: Column, dataContext: any, grid?: any) =>
+valueYEAR.substring(0,4)  ;
+const mymonthFormatter: Formatter = (row: number, cell: number, valueMONTH: any, columnDef: Column, dataContext: any, grid?: any) =>
+valueMONTH.substring(5,7)  ;
 
 
 @Component({
@@ -157,7 +157,7 @@ export class TransactionListComponent implements OnInit {
     const currentMonth = currentDate.getMonth() + 1;
     const currentDay = currentDate.getDate();
  this.datefilter =  String(currentYear) + '-' + String(currentMonth) + '-' + '01'
-
+     
       this.columnDefinitions = [
           
           // {
@@ -171,48 +171,42 @@ export class TransactionListComponent implements OnInit {
           //   maxWidth: 50,
           // },
           
-          // {
-          //   id: "tr_effdate",
-          //   name: "ANNEE",
-          //   field: "tr_effdate",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.dateIso,
-          //   formatter: myyearFormatter,
-          //   filter: {         
-          //     model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+          {
+            id: "dec01",
+            name: "Année",
+            field: "dec01",
+            sortable: true,
+            filterable: true,
+                      
+            type: FieldType.float,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'dec01',
+              formatter: (g) => `Annee: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('tr_qty_loc')],
+              aggregateCollapsed: true,
               
-          //    },
-          //   grouping: {
-          //     getter: 'tr_effdate',
-          //     formatter: (g) => `Annee: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [new Aggregators.Sum('tr_qty_loc')],
-          //     aggregateCollapsed: true,
-              
-          //     collapsed:true
-          //   }
-          // },
-          // {
-          //   id: "createdAt",
-          //   name: "MOIS",
-          //   field: "createdAt",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.dateIso,
-          //   formatter: mymonthFormatter,
-          //   filter: {         
-          //     model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
-              
-          //    },
-          //   grouping: {
-          //     getter: 'createdAt',
-          //     formatter: (g) => `Mois: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [new Aggregators.Sum('tr_qty_loc')],
-          //     aggregateCollapsed: true,
+              collapsed:true
+            }
+          },
+          {
+            id: "dec02",
+            name: "MOIS",
+            field: "dec02",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            grouping: {
+              getter: 'dec02',
+              formatter: (g) => `Mois: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('tr_qty_loc')],
+              aggregateCollapsed: true,
              
-          //     collapsed:true
-          //   }
-          // },
+              collapsed:true
+            }
+          },
           {
             id: "tr_site",
             name: "Site",
@@ -531,7 +525,7 @@ export class TransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            filter: {model: Filters.compoundInput , operator: OperatorType.contains },
             formatter: myCustomTimeFormatter,
 //            filter: { model: Filters.dateRange },
   //          type: FieldType.date,
@@ -712,7 +706,7 @@ export class TransactionListComponent implements OnInit {
         () => {}
         
     )
-    console.log(this.dataset)
+    
 }
 onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
@@ -749,7 +743,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
 
   trlist(){
     const controls = this.trForm.controls
-    console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+    
     this.dataset = []
     const date = controls.date.value
     ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
@@ -758,14 +752,13 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     const date1 = controls.date1.value
     ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
     : null;
-    console.log(date)
-    console.log(date1)
+    
     let obj= {date,date1}
     this.inventoryTransactionService.getByDate(obj).subscribe(
       (res: any) => {
     
       //(response: any) => (this.dataset = response.data),
-      console.log(res.data)
+      console.log(res.data.tr_gl_date)
       this.dataset  = res.data;
       this.dataview.setItems(this.dataset)
         
