@@ -917,7 +917,7 @@ export class CreateComponent implements OnInit {
                   true
                 );
                 this.loadingSubject.next(false);
-                this.router.navigateByUrl("/articles/list");
+               // this.router.navigateByUrl("/articles/list");
               }
             );
           }
