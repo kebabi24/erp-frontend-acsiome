@@ -850,6 +850,10 @@ export class ControlResultsEntryComponent implements OnInit {
   onSubmit() {
     this.hasFormErrors = false;
     const controls = this.userForm.controls;
+
+      let date =  Date.now()
+      let today = new Date(date)
+      const dt = today.getFullYear().toString()+'-'+(today.getMonth()+1).toString()+'-'+(today.getDate()).toString()
    
       let testsHistory = []
       this.checkedItemsSpecs.forEach(item => {
@@ -859,12 +863,12 @@ export class ControlResultsEntryComponent implements OnInit {
           mph_op : item.ipd_op,
           mph_procedure : item.ip_nbr , 
           mph_test : item.ipd_test,
-          // mph_date : "date",
-          mph_cmt : "comment",
-          mph_rsult : "string ",
+          mph_date : dt,
+          mph_cmt : item.mph_cmt,
+          mph_rsult : item.ipd_pass,
           mph_lot : "lot",
           mph_wr_nbr : controls.order.value,
-          mph_pass : true
+          mph_pass : item.ipd_pass
         })
       });
       this.qualityControlService.createTestHistory(
@@ -889,26 +893,45 @@ export class ControlResultsEntryComponent implements OnInit {
        )
   }
 
-  onChange(event: Event, item: any ,test : any) {
+  onChangeBool(event: Event, i: any ,j : any) {
+    if(this.itemSpecDetailsFiltered[i].operations[j].ipd_tol==="true" && event){
+      this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= true
+      this.checkedItemsSpecs.push(this.itemSpecDetailsFiltered[i].operations[j])
+      return 
+    }
 
-    const isChecked = (event.target as HTMLInputElement).checked; 
-    const test_accepted_val = test.ipd_tol // from the test
-    let test_val = test_accepted_val === "true" ? true : false // use for testing 
-    console.log(isChecked.toString() === test_val.toString())
+    if(this.itemSpecDetailsFiltered[i].operations[j].ipd_tol==="false" && !event){
+      this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= false
+      this.checkedItemsSpecs.push(this.itemSpecDetailsFiltered[i].operations[j])
+      return 
+    }
+    this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= false
+    this.checkedItemsSpecs.push(this.itemSpecDetailsFiltered[i].operations[j])
+   
+  }
 
-    // search for the element : 
-    const itemIndex = this.itemSpecDetails.findIndex(item =>{
-      //  return item.operation_title == event.method
-   })
-    
-     console.log(item)
-     console.log(test)
-    // if (isChecked) {
-    //   this.checkedItemsSpecs.push(item);
-    // } else {
-    //   this.checkedItemsSpecs = this.checkedItemsSpecs.filter((s) => s !== item);
-    // }
-  
+  onChangeOthers(event: any, i: any ,j : any) {
+    if(this.itemSpecDetailsFiltered[i].operations[j].ipd_chr02 ==="char"){
+      if(this.itemSpecDetailsFiltered[i].operations[j].ipd_tol === event){
+        this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= true
+      }else{
+        this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= false
+      }
+    }else{ // type = value
+      let typedValue = parseInt(event)
+      let min  = parseFloat(this.itemSpecDetailsFiltered[i].operations[j].ipd_dec01)
+      let max  = parseFloat(this.itemSpecDetailsFiltered[i].operations[j].ipd_dec02)
+      if(typedValue >= min && max >= typedValue){
+        this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= true
+      }else{
+        this.itemSpecDetailsFiltered[i].operations[j].ipd_pass= false
+      }
+
+    }
+  }
+
+  onAddDescription(event: any, i: any ,j : any){
+    this.itemSpecDetailsFiltered[i].operations[j].mph_cmt = event
   }
 
   onChangeType(val :any){

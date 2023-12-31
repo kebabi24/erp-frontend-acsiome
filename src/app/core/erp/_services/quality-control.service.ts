@@ -97,7 +97,13 @@ export class QualityControlService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/createQroAndQps/`, {qroData,qpsData}, { headers: httpHeaders })
     }
+    
 
+
+    public getAllGammes( ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/getAllGammes/`, { headers: httpHeaders })
+    }
     
 
     
