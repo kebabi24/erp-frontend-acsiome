@@ -71,7 +71,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   nbrForm: FormGroup;
- 
+  printbuttonState: boolean = true;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -125,6 +125,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   row_number;
   message = "";
   prhServer;
+  qty:any;
   location: any;
   sct: any;
   datasetPrint = [];
@@ -153,6 +154,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
+    
+
   }
 
   initGrid() {
@@ -164,9 +167,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         formatter: Formatters.deleteIcon,
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
+        onCellClick: (e: Event, args: OnEventArgs) => { 
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            /*ajouter ligne tr_hist de suppression*/
+            if (args.dataContext.tr_qty_loc > 0){
+              this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.tr_line});
+              args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * (-1);
+              this.onSubmit()
+            // }
+            }else{alert("ligne déjà supprimée")}
             this.angularGrid.gridService.deleteItem(args.dataContext);
+            
           }
         },
       },
@@ -179,13 +190,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         params: { formatterIcon: "fa fa-plus" },
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          //  this.angularGrid.gridService.deleteItem(args.dataContext);
-          // }
-       
+        onCellClick: (e: Event, args: OnEventArgs) => { 
+          
             this.row_number = args.row;
-           this.nligne =  args.dataContext.id
+            this.nligne =  args.dataContext.id
             let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
             element.click();
         
@@ -273,6 +281,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.float,
           params: { decimalPlaces: 2 },
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {this.printbuttonState = false},
       },
       {
         id: "tr_um",
@@ -562,15 +571,15 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
-                 <i class="flaticon2-printer"></i>
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+                 <i class="flaticon2-printer" ></i>
                  
              </a>
              `;
         },
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
+        onCellClick: (e: Event, args: OnEventArgs) => { this.printbuttonState=true
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
@@ -906,9 +915,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
    */
   addIt(detail: any, it, nlot) {
     console.log("here data", detail)
-    for (let data of detail) {
-      delete data.id;
-      delete data.cmvid;
+    console.log(this.dataset,"dataset")
+    let oldid:any;
+    for (let dat of detail) {
+     
+      delete dat.id;
+      delete dat.cmvid;
     }
     this.loadingSubject.next(true);
     const controls = this.trForm.controls;
@@ -928,6 +940,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
+               
         //    console.log(this.provider, po, this.dataset);
         // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
         // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
@@ -940,7 +953,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const controls = this.trForm.controls;
 
     if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-
+    this.goBack()
   }
   /**
    * Go back to the list
@@ -1005,6 +1018,34 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       { position: "bottom" }
     );
   }
+  this.modalService.dismissAll()
+  }
+  addnegativeItem() {
+    
+    var i = this.nligne
+     
+    this.gridService.addItem(
+      {
+        id: this.dataset.length + 1,
+        tr_line: this.dataset.length + 1,
+        tr_part: this.dataset[i - 1].tr_part,
+        cmvid: "",
+        desc: this.dataset[i - 1].desc,
+        tr_qty_loc: this.dataset[i - 1].tr_qty_loc * (-1),
+        tr_um: this.dataset[i - 1].tr_um,
+        tr_um_conv: this.dataset[i - 1].tr_um_conv,
+
+        tr_price: this.dataset[i - 1].tr_price,
+        tr_site: this.dataset[i - 1].tr_site,
+        tr_loc: this.dataset[i - 1].tr_loc,
+        tr_serial: this.dataset[i - 1].tr_serial,
+        tr_ref: this.dataset[i - 1].tr_ref,
+        tr_status: this.dataset[i - 1].tr_status,
+        tr_expire: this.dataset[i - 1].tr_expire,
+      },
+      { position: "bottom" }
+    );
+ 
   this.modalService.dismissAll()
   }
   handleSelectedRowsChanged4(e, args) {
@@ -2043,6 +2084,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
+ 
 
   opennbrligne(content) {
     this.createnbrForm();
