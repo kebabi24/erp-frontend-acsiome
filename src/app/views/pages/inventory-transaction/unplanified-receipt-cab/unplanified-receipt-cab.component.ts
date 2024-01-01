@@ -15,6 +15,7 @@ import {
   Formatters,
   FieldType,
   OnEventArgs,
+  AutoCompleteEditor,
 } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
@@ -40,6 +41,7 @@ import {
 import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+import { MatAutocomplete } from "@angular/material/autocomplete";
 
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -276,6 +278,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         filterable: false,
       },
       {
+        id: "tr_batch",
+        name: "Code",
+        field: "tr_batch",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
         id: "tr_qty_loc",
         name: "QTE",
         field: "tr_qty_loc",
@@ -484,6 +497,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
             }
           });}
+        },
+      },
+      {
+        id: "tr_grade",
+        name: "Qualité",
+        field: "tr_grade",
+        sortable: false,
+
+        filterable: false,
+        editor: {
+          model: Editors.text,
         },
       },
       {

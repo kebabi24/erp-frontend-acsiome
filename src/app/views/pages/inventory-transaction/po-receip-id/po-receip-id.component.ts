@@ -268,6 +268,15 @@ export class PoReceipIdComponent implements OnInit {
         filterable: false,
       },
       {
+        id: "tr_batch",
+        name: "Code",
+        field: "tr_batch",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
+      },
+      {
         id: "qty_received",
         name: "QTE OA Récept",
         field: "qty_received",
@@ -562,7 +571,15 @@ export class PoReceipIdComponent implements OnInit {
           model: Editors.text,
         },
       },
-      
+      {
+        id: "tr_grade",
+        name: "Code",
+        field: "tr_grade",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
+      },
       {
         id: "tr_status",
         name: "Status",

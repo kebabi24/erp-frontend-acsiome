@@ -259,6 +259,15 @@ export class UnplanifiedReceptComponent implements OnInit {
         filterable: false,
       },
       {
+        id: "tr_batch",
+        name: "Code",
+        field: "tr_batch",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
+      },
+      {
         id: "tr_qty_loc",
         name: "QTE",
         field: "tr_qty_loc",
@@ -443,7 +452,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       //     element.click();
       //   },
       // },
-
+ 
       {
         id: "tr_serial",
         name: "Lot/Serie",
@@ -462,6 +471,15 @@ export class UnplanifiedReceptComponent implements OnInit {
             }
           });
         },
+      },
+      {
+        id: "tr_grade",
+        name: "Qualité",
+        field: "tr_grade",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
       },
       {
         id: "tr_ref",
