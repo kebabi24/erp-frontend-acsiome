@@ -296,10 +296,20 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         width: 80,
         filterable: false,
         type: FieldType.float,
+       
         editor: {
           model: Editors.float,
           params: { decimalPlaces: 2 },
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          if( args.dataContext.tr_ref != null && args.dataContext.tr_ref != ""){alert('Modification interdite') 
+          this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+        } else {
+          this.gridService.updateItemById(args.dataContext.id, {  ...args.dataContext, qty: args.dataContext.tr_qty_loc })
+        }
+
+        }
       },
       {
         id: "tr_um",
@@ -648,7 +658,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 alert("Erreur Impression Etiquette");
               },
               () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty : args.dataContext.tr_qty_loc});
                 //console.log("id", args.dataContext.id)
                 //console.log("dataset",this.dataset[args.dataContext.id])
                 this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
@@ -672,7 +682,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       enableRowSelection: true,
       enableAutoResize: true,
       autoHeight: false,
-      autoCommitEdit:true,
+      autoCommitEdit: true,
+     
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -838,8 +849,26 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     console.log("this.dataset",this.dataset)
     console.log("this.index",this.index)
     this.data = []
-    this.data.push(this.dataset[this.index])
-    console.log("this.data",this.data)
+    let obj = {
+     
+      tr_line: this.dataset[this.index].tr_line,
+      tr_part: this.dataset[this.index].tr_part,
+      desc: this.dataset[this.index].desc,
+      tr_qty_loc: this.dataset[this.index].tr_qty_loc,
+      tr_um: this.dataset[this.index].tr_um,
+      tr_um_conv: this.dataset[this.index].tr_um_conv,
+      tr_price: this.dataset[this.index].tr_price,
+      tr_site: this.dataset[this.index].tr_site,
+      tr_loc: this.dataset[this.index].tr_loc,
+      tr_serial: this.dataset[this.index].tr_serial,
+      tr_ref: this.dataset[this.index].tr_ref,
+      tr_status: this.dataset[this.index].tr_status,
+      tr_expire: this.dataset[this.index].tr_expire,
+    }
+   // this.data.push(this.dataset[this.index])
+   this.data.push(obj)
+     
+   console.log("this.data",this.data)
     console.log(typeof(this.data))
     const controls = this.trForm.controls;
     /** check form */
@@ -950,13 +979,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
    */
   addIt(detail: any, it, nlot) {
     console.log("here data", detail)
-    console.log(this.dataset,"dataset")
-    let oldid:any;
-    for (let dat of detail) {
-     
-      delete dat.id;
-      delete dat.cmvid;
-    }
+    // for (let data of detail) {
+    //   delete data.id;
+    //   delete data.cmvid;
+    // }
     this.loadingSubject.next(true);
     const controls = this.trForm.controls;
 
@@ -1004,11 +1030,24 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   addNewItem() {
     const controls = this.trForm.controls;
     if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
-      else{
+     else {
+    var maxObj = null
+    var iddd = 0
+    if (this.dataset.length> 0) {
+     maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1)
+     iddd = maxObj.id + 1
+
+  } else {
+    iddd = 1
+
+  }
     this.gridService.addItem(
       {
-        id: this.dataset.length + 1,
-        tr_line: this.dataset.length + 1,
+        id: iddd,
+        tr_line: iddd,
         tr_part: "",
         cmvid: "",
         desc: "",
@@ -1021,6 +1060,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         tr_ref: null,
         tr_status: null,
         tr_expire: null,
+        qty:0,
       },
       { position: "bottom" }
     );
@@ -1033,12 +1073,18 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const limit = Number(control.nbrligne.value)
     var i = this.nligne
 
+    const maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1)
+    var iddd = maxObj.id + 1
+
     for (var j = 0; j < limit; j++) {
         
     this.gridService.addItem(
       {
-        id: this.dataset.length + 1,
-        tr_line: this.dataset.length + 1,
+        id: iddd,
+        tr_line: iddd,
         tr_part: this.dataset[i - 1].tr_part,
         cmvid: "",
         desc: this.dataset[i - 1].desc,
@@ -1053,9 +1099,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         tr_ref: null,
         tr_status: this.dataset[i - 1].tr_status,
         tr_expire: this.dataset[i - 1].tr_expire,
+        qty: 0
       },
       { position: "bottom" }
     );
+    iddd ++ 
   }
   this.modalService.dismissAll()
   }

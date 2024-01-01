@@ -70,6 +70,17 @@ export class CreateDirectWoComponent implements OnInit {
   gridObjvend: any;
   angularGridvend: AngularGridInstance;
 
+  emps: [];
+  columnDefinitionsemp: Column[] = [];
+  gridOptionsemp: GridOption = {};
+  gridObjemp: any;
+  angularGridemp: AngularGridInstance;
+  dataViewemp: any
+  gridServiceemp: GridService
+  selectedIndexes : any[]
+  selectedIndexes2 : any[]
+
+
   seq: any;
   nof: any;
   row_number;
@@ -111,6 +122,7 @@ export class CreateDirectWoComponent implements OnInit {
   angularGridprinter: AngularGridInstance;
   domain: any;
   domconfig : any;
+  user1 : any;
   constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true })
@@ -346,7 +358,8 @@ export class CreateDirectWoComponent implements OnInit {
         },
       ],
       wo_site: [this.workOrder.wo_site, Validators.required],
-      wo_part: [this.workOrder.wo_part, Validators.required],
+      wo_user1: [this.workOrder.wo_user1, Validators.required],
+      wo_part: [{value:this.workOrder.wo_part,disabled:true}, Validators.required],
       desc: [{ value: null, disabled: true }],
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
@@ -615,6 +628,7 @@ export class CreateDirectWoComponent implements OnInit {
     console.log("alllllllllllllllo")
     const _wo = new WorkOrder();
     _wo.wo_site = controls.wo_site.value
+    _wo.wo_user1 = this.user1
     _wo.wo_part = controls.wo_part.value
     _wo.wo_routing = controls.wo_routing.value
     _wo.wo_ord_date = controls.wo_ord_date.value
@@ -1629,4 +1643,160 @@ export class CreateDirectWoComponent implements OnInit {
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
+
+
+  
+  
+  angularGridReadyemp(angularGrid: AngularGridInstance) {
+    this.angularGridemp = angularGrid
+    this.gridObjemp = (angularGrid && angularGrid.slickGrid) || {}
+  
+    this.gridServiceemp = angularGrid.gridService;
+     this.dataViewemp = angularGrid.dataView;
+  
+  }
+
+
+
+  // GRID IN
+  prepareGridemp() {
+    this.columnDefinitionsemp = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ]
+
+    this.gridOptionsemp = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: false,
+      },
+      presets:{
+        sorters:  [ { columnId: 'id', direction: 'ASC' }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2  // (recommended) select by your data object IDs
+          //dataContextIds
+      }
+     
+    }
+  }
+
+    // fill the dataset with your data
+    this.employeService
+        .getAll()
+        .subscribe((response: any) => (this.emps = response.data))
+  }
+
+  handleSelectedRowsChangedemp(e, args) {
+    this.selectedIndexes =[]
+    this.selectedIndexes = args.rows;
+    
+  }
+  openemp(content) {
+    this.prepareGridemp();
+    this.modalService.open(content, { size: "lg" });
+  }
+  addit(){
+    // this.itinerary.push({})
+    const controls = this.woForm.controls
+    var l : String
+    l = ""
+    console.log(l.length)
+    this.selectedIndexes.forEach(index => {
+   
+      if(index == 0) {
+        l =  this.emps[index]['emp_addr'] 
+      } else {
+      l = l + "," + this.emps[index]['emp_addr'] 
+      }  
+      //id: index,
+
+
+    });
+   
+    console.log(l)
+    controls.wo_user1.setValue(l)
+    this.user1 = l
+  } 
 }

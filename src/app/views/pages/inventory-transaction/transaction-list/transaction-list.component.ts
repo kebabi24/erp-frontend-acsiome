@@ -57,6 +57,7 @@ import {
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
+import { findLastKey } from "lodash"
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   const defaultPageSize = 100;
@@ -648,6 +649,7 @@ export class TransactionListComponent implements OnInit {
         enableAutoResizeColumnsByCellContent:true,
         autoHeight: false,
         enableSorting: true,
+        
         exportOptions: {
           sanitizeDataExport: true
         },

@@ -398,6 +398,10 @@ export class MenuConfig {
               title: "Modification Statut Stock ",
               page: "/inventory-transaction/edit-status",
             },
+            {
+              title: "Controle Palette ",
+              page: "/inventory-transaction/edit-status-ref",
+            },
 
             {
               title: "Consultation Stocks ",
