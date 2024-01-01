@@ -51,7 +51,7 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import { UsersService } from "../../../core/erp"
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from "@circlon/angular-tree-component";
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 const routes: Routes = [

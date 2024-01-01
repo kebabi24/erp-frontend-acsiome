@@ -19,7 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from "@circlon/angular-tree-component";
 import { environment } from 'src/environments/environment';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FakeApiService } from 'src/app/core/_base/layout';

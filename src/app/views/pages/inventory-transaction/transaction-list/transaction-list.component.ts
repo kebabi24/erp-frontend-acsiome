@@ -57,6 +57,7 @@ import {
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
+import { findLastKey } from "lodash"
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   const defaultPageSize = 100;
@@ -223,6 +224,7 @@ export class TransactionListComponent implements OnInit {
               aggregateCollapsed: false,
           
               collapsed: false,
+              lazyTotalsCalculation:true
             }
           }, 
           {
@@ -254,7 +256,7 @@ export class TransactionListComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
             grouping: {
-              getter: 'item.pt_desc1',
+              getter: 'pt_desc1',
               formatter: (g) => `Description: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
@@ -572,6 +574,7 @@ export class TransactionListComponent implements OnInit {
         enableFiltering: true,
         autoHeight: false,
         enableSorting: true,
+        
         exportOptions: {
           sanitizeDataExport: true
         },

@@ -165,7 +165,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+
+
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
+            console.log(this.index)
+            this.onSubmit()
+
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
         },
@@ -627,7 +633,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       enableCellNavigation: true,
       enableRowSelection: true,
       enableAutoResize: true,
-      autoHeight: true,
+      autoHeight: false,
+      autoCommitEdit: true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -793,8 +800,26 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     console.log("this.dataset",this.dataset)
     console.log("this.index",this.index)
     this.data = []
-    this.data.push(this.dataset[this.index])
-    console.log("this.data",this.data)
+    let obj = {
+     
+      tr_line: this.dataset[this.index].tr_line,
+      tr_part: this.dataset[this.index].tr_part,
+      desc: this.dataset[this.index].desc,
+      tr_qty_loc: this.dataset[this.index].tr_qty_loc,
+      tr_um: this.dataset[this.index].tr_um,
+      tr_um_conv: this.dataset[this.index].tr_um_conv,
+      tr_price: this.dataset[this.index].tr_price,
+      tr_site: this.dataset[this.index].tr_site,
+      tr_loc: this.dataset[this.index].tr_loc,
+      tr_serial: this.dataset[this.index].tr_serial,
+      tr_ref: this.dataset[this.index].tr_ref,
+      tr_status: this.dataset[this.index].tr_status,
+      tr_expire: this.dataset[this.index].tr_expire,
+    }
+   // this.data.push(this.dataset[this.index])
+   this.data.push(obj)
+     
+   console.log("this.data",this.data)
     console.log(typeof(this.data))
     const controls = this.trForm.controls;
     /** check form */
@@ -904,10 +929,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
    */
   addIt(detail: any, it, nlot) {
     console.log("here data", detail)
-    for (let data of detail) {
-      delete data.id;
-      delete data.cmvid;
-    }
+    // for (let data of detail) {
+    //   delete data.id;
+    //   delete data.cmvid;
+    // }
     this.loadingSubject.next(true);
     const controls = this.trForm.controls;
 

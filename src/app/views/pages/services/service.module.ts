@@ -48,7 +48,7 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import { ItineraryService, MobileServiceService, RoleService, UsersMobileService } from "../../../core/erp"
-import { TreeModule } from '@circlon/angular-tree-component';
+import { TreeModule } from "@circlon/angular-tree-component";
 import { CreateNewServiceComponent } from './create-new-service/create-new-service.component';
 
 const routes: Routes = [
