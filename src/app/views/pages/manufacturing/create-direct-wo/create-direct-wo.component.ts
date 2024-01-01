@@ -561,6 +561,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_status: this.rctwostat,
           tr_expire: null,
           tr_ref: lab.lb_ref,
+          tr_user1:controls.wo_user1.value
         });
         console.log(this.trdataset);
         this.addTR(this.trdataset, tr);

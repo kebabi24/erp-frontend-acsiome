@@ -568,7 +568,7 @@ export class TransactionListComponent implements OnInit {
               // collectionAsync: this.elem,
               collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
            
-              model: Filters.multipleSelect , operator: OperatorType.equal
+              model: Filters.multipleSelect , operator: OperatorType.inContains
              
               
               
