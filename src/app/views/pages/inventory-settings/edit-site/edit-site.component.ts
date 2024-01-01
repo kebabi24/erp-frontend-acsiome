@@ -378,7 +378,7 @@ changeEntity(field) {
   this.entityService.getBy({en_entity}).subscribe(
     (res: any) => {
       const { data } = res;
-      const message = "Cette Entitee n'existe pas!";
+      const message = "Cette Entite n'existe pas!";
       if (!data.length) {
         this.layoutUtilsService.showActionNotification(
           message,
@@ -596,7 +596,7 @@ prepareGridentity() {
       },
       {
           id: "en_entity",
-          name: "Entitee",
+          name: "Entite",
           field: "en_entity",
           sortable: true,
           filterable: true,

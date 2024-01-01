@@ -15,6 +15,7 @@ import {
   Formatters,
   FieldType,
   OnEventArgs,
+  AutoCompleteEditor,
 } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
@@ -40,6 +41,7 @@ import {
 import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+import { MatAutocomplete } from "@angular/material/autocomplete";
 
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -71,7 +73,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   nbrForm: FormGroup;
- 
+  printbuttonState: boolean = false;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -125,6 +127,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   row_number;
   message = "";
   prhServer;
+  qty:any;
   location: any;
   sct: any;
   datasetPrint = [];
@@ -153,6 +156,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
+    
+
   }
 
   initGrid() {
@@ -164,15 +169,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         formatter: Formatters.deleteIcon,
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-
-
+        onCellClick: (e: Event, args: OnEventArgs) => { 
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
-            console.log(this.index)
-            this.onSubmit()
-
+            /*ajouter ligne tr_hist de suppression*/
+            if (args.dataContext.tr_qty_loc > 0){
+              this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.tr_line});
+              args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * (-1);
+              this.onSubmit()
+            // }
+            }else{alert("ligne supprimée")}
             this.angularGrid.gridService.deleteItem(args.dataContext);
+            
           }
         },
       },
@@ -185,13 +192,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         params: { formatterIcon: "fa fa-plus" },
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          //  this.angularGrid.gridService.deleteItem(args.dataContext);
-          // }
-       
+        onCellClick: (e: Event, args: OnEventArgs) => { 
+          
             this.row_number = args.row;
-           this.nligne =  args.dataContext.id
+            this.nligne =  args.dataContext.id
             let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
             element.click();
         
@@ -217,6 +221,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.tr_ref)
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else {
           console.log(args.dataContext.tr_part);
           this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
             if (resp.data) {
@@ -244,6 +251,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
             }
           });
+        };
         },
       },
       {
@@ -254,9 +262,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else {
           this.row_number = args.row;
           let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
-          element.click();
+          element.click();}
         },
       },
       {
@@ -266,6 +276,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         sortable: true,
         width: 180,
         filterable: false,
+      },
+      {
+        id: "tr_batch",
+        name: "Code",
+        field: "tr_batch",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor: {
+          model: Editors.text,
+        },
       },
       {
         id: "tr_qty_loc",
@@ -293,7 +314,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           validator: statusValidator,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_um);
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else{
           this.itemsService.getBy({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
             if (args.dataContext.tr_um == resp.data.pt_um) {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: 1 });
@@ -324,7 +346,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 }
               });
             }
-          });
+          });}
         },
       },
 
@@ -336,22 +358,24 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else{
           this.row_number = args.row;
           let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
-          element.click();
+          element.click();}
         },
       },
-      {
-        id: "tr_um_conv",
-        name: "Conv UM",
-        field: "tr_um_conv",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        // editor: {
-        //     model: Editors.float,
-        //},
-      },
+      // {
+      //   id: "tr_um_conv",
+      //   name: "Conv UM",
+      //   field: "tr_um_conv",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   // editor: {
+      //   //     model: Editors.float,
+      //   //},
+      // },
 
       {
         id: "tr_price",
@@ -366,92 +390,93 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
         formatter: Formatters.decimal,
+       
       },
-      {
-        id: "tr_site",
-        name: "Site",
-        field: "tr_site",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
-            console.log(response.data);
+      // {
+      //   id: "tr_site",
+      //   name: "Site",
+      //   field: "tr_site",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
+      //       console.log(response.data);
 
-            if (response.data) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
-            } else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
+      //       if (response.data) {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
+      //       } else {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
 
-              // this.gridService.onItemUpdated;
-              alert("Site N'existe pas");
-            }
-          });
-        },
-      },
-      {
-        id: "mvids",
-        field: "cmvids",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "tr_loc",
-        name: "Emplacement",
-        field: "tr_loc",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_loc);
+      //         // this.gridService.onItemUpdated;
+      //         alert("Site N'existe pas");
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvids",
+      //   field: "cmvids",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "tr_loc",
+      //   name: "Emplacement",
+      //   field: "tr_loc",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.tr_loc);
 
-          this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
-            this.location = response.data;
-            if (response.data) {
-              this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-                console.log(resstat);
-                const { data } = resstat;
+      //     this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
+      //       this.location = response.data;
+      //       if (response.data) {
+      //         this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+      //           console.log(resstat);
+      //           const { data } = resstat;
 
-                if (data) {
-                  this.stat = null;
-                } else {
-                  this.stat = this.location.loc_status;
-                }
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
-              });
-            } else {
-              alert("Emplacement Nexiste pas");
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
-            }
-          });
-        },
-      },
-      {
-        id: "mvidl",
-        field: "cmvidl",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openLocsGrid") as HTMLElement;
-          element.click();
-        },
-      },
+      //           if (data) {
+      //             this.stat = null;
+      //           } else {
+      //             this.stat = this.location.loc_status;
+      //           }
+      //           this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
+      //         });
+      //       } else {
+      //         alert("Emplacement Nexiste pas");
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvidl",
+      //   field: "cmvidl",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openLocsGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
 
       {
         id: "tr_serial",
@@ -464,12 +489,25 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
+          else{
           this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
             console.log(response.data);
             if (response.data.length != 0) {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
             }
-          });
+          });}
+        },
+      },
+      {
+        id: "tr_grade",
+        name: "Qualité",
+        field: "tr_grade",
+        sortable: false,
+
+        filterable: false,
+        editor: {
+          model: Editors.text,
         },
       },
       {
@@ -483,84 +521,84 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
       },
-      {
-        id: "tr_status",
-        name: "Status",
-        field: "tr_status",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-          required: true,
-          validator: statusValidator,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_status);
+      // {
+      //   id: "tr_status",
+      //   name: "Status",
+      //   field: "tr_status",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //     required: true,
+      //     validator: statusValidator,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.tr_status);
 
-          this.inventoryStatusService.getBy({ is_status: args.dataContext.tr_status }).subscribe((ress: any) => {
-            console.log(ress.data.inventoryStatus);
-            if (ress.data.inventoryStatus) {
-              this.inventoryStatusService.getAllDetails({ isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-UNP" }).subscribe((res: any) => {
-                console.log(res);
-                const { data } = res;
+      //     this.inventoryStatusService.getBy({ is_status: args.dataContext.tr_status }).subscribe((ress: any) => {
+      //       console.log(ress.data.inventoryStatus);
+      //       if (ress.data.inventoryStatus) {
+      //         this.inventoryStatusService.getAllDetails({ isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-UNP" }).subscribe((res: any) => {
+      //           console.log(res);
+      //           const { data } = res;
 
-                if (data) {
-                  alert("Mouvement Interdit Pour ce Status");
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-                } else {
-                  let obj = {};
-                  obj = {
-                    ld_site: args.dataContext.tr_site,
-                    ld_loc: args.dataContext.tr_loc,
-                    ld_part: args.dataContext.tr_part,
-                    ld_lot: args.dataContext.tr_serial,
-                  };
-                  status = args.dataContext.tr_status;
-                  console.log(status);
-                  this.locationDetailService.getByStatus({ obj, status }).subscribe((response: any) => {
-                    console.log(response.data.length != 0);
-                    if (response.data.length != 0) {
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-                      alert("lot existe avec un autre status");
-                    } else {
-                      console.log("here");
-                    }
-                  });
-                }
-              });
-            } else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-              alert("Status N' existe pas");
-            }
-          });
-        },
-      },
-      {
-        id: "mvidlot",
-        field: "cmvidlot",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openStatussGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "tr_expire",
-        name: "Expire",
-        field: "tr_expire",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.dateIso,
-        editor: {
-          model: Editors.date,
-        },
-      },
+      //           if (data) {
+      //             alert("Mouvement Interdit Pour ce Status");
+      //             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
+      //           } else {
+      //             let obj = {};
+      //             obj = {
+      //               ld_site: args.dataContext.tr_site,
+      //               ld_loc: args.dataContext.tr_loc,
+      //               ld_part: args.dataContext.tr_part,
+      //               ld_lot: args.dataContext.tr_serial,
+      //             };
+      //             status = args.dataContext.tr_status;
+      //             console.log(status);
+      //             this.locationDetailService.getByStatus({ obj, status }).subscribe((response: any) => {
+      //               console.log(response.data.length != 0);
+      //               if (response.data.length != 0) {
+      //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
+      //                 alert("lot existe avec un autre status");
+      //               } else {
+      //                 console.log("here");
+      //               }
+      //             });
+      //           }
+      //         });
+      //       } else {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
+      //         alert("Status N' existe pas");
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvidlot",
+      //   field: "cmvidlot",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openStatussGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "tr_expire",
+      //   name: "Expire",
+      //   field: "tr_expire",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.dateIso,
+      //   editor: {
+      //     model: Editors.date,
+      //   },
+      // },
       {
         id: "id",
         field: "id",
@@ -568,21 +606,21 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
-                 <i class="flaticon2-printer"></i>
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+                 <i class="flaticon2-printer" ></i>
                  
              </a>
              `;
         },
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
+        onCellClick: (e: Event, args: OnEventArgs) => { this.printbuttonState=true
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.trForm.controls;
-       
+            this.printbuttonState=true;
             const _lb = new Label();
             _lb.lb__dec01 = args.dataContext.tr_line,
             _lb.lb_site = args.dataContext.tr_site;
@@ -619,7 +657,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               }
             );
           } else {
-            alert("Veuillez verifier les informations");
+            alert("Etiquette dèjà imprimée");
           } 
          
         },
@@ -635,6 +673,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       enableAutoResize: true,
       autoHeight: false,
       autoCommitEdit: true,
+     
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -823,6 +862,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     console.log(typeof(this.data))
     const controls = this.trForm.controls;
     /** check form */
+    
     if (this.trForm.invalid) {
       Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
       this.message = "Modifiez quelques éléments et réessayez de soumettre.";
@@ -831,45 +871,45 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       return;
     }
 
-    if (!this.dataset.length) {
-      this.message = "La liste des article ne peut pas etre vide";
-      this.hasFormErrors = true;
+    // if (!this.dataset.length) {
+    //   this.message = "La liste des article ne peut pas etre vide";
+    //   this.hasFormErrors = true;
 
-      return;
-    }
-    for (var i = 0; i < this.dataset.length; i++) {
-      console.log(this.dataset[i]);
-      if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null) {
-        this.message = "L' article ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_site == "" || this.dataset[i].tr_site == null) {
-        this.message = "Le Site ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_loc == "" || this.dataset[i].tr_loc == null) {
-        this.message = "L' Emplacement ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null) {
-        this.message = "L' UM ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null) {
-        this.message = "Le Status ne peut pas etre vide";
-        this.hasFormErrors = true;
-        return;
-      }
-      if (this.dataset[i].tr_qty_loc == 0) {
-        this.message = "La Quantite ne peut pas etre 0";
-        this.hasFormErrors = true;
-        return;
-      }
-    }
+    //   return;
+    // }
+    // for (var i = 0; i < this.dataset.length; i++) {
+    //   console.log(this.dataset[i]);
+    //   if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null) {
+    //     this.message = "L' article ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_site == "" || this.dataset[i].tr_site == null) {
+    //     this.message = "Le Site ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_loc == "" || this.dataset[i].tr_loc == null) {
+    //     this.message = "L' Emplacement ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_um == "" || this.dataset[i].tr_um == null) {
+    //     this.message = "L' UM ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_status == "" || this.dataset[i].tr_status == null) {
+    //     this.message = "Le Status ne peut pas etre vide";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    //   if (this.dataset[i].tr_qty_loc == 0) {
+    //     this.message = "La Quantite ne peut pas etre 0";
+    //     this.hasFormErrors = true;
+    //     return;
+    //   }
+    // }
     let tr = this.prepare();
     // let obj = this.dataset[this.index]
     // console.log(this.dataset[this.index])
@@ -951,6 +991,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
+               
         //    console.log(this.provider, po, this.dataset);
         // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
         // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
@@ -963,7 +1004,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const controls = this.trForm.controls;
 
     if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-
+    this.goBack()
   }
   /**
    * Go back to the list
@@ -977,6 +1018,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls = this.trForm.controls;
+    if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
+     else {
     var maxObj = null
     var iddd = 0
     if (this.dataset.length> 0) {
@@ -1010,6 +1054,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       { position: "bottom" }
     );
   }
+}
 
   addsameItem() {
     
@@ -1048,6 +1093,34 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     );
     iddd ++ 
   }
+  this.modalService.dismissAll()
+  }
+  addnegativeItem() {
+    
+    var i = this.nligne
+     
+    this.gridService.addItem(
+      {
+        id: this.dataset.length + 1,
+        tr_line: this.dataset.length + 1,
+        tr_part: this.dataset[i - 1].tr_part,
+        cmvid: "",
+        desc: this.dataset[i - 1].desc,
+        tr_qty_loc: this.dataset[i - 1].tr_qty_loc * (-1),
+        tr_um: this.dataset[i - 1].tr_um,
+        tr_um_conv: this.dataset[i - 1].tr_um_conv,
+
+        tr_price: this.dataset[i - 1].tr_price,
+        tr_site: this.dataset[i - 1].tr_site,
+        tr_loc: this.dataset[i - 1].tr_loc,
+        tr_serial: this.dataset[i - 1].tr_serial,
+        tr_ref: this.dataset[i - 1].tr_ref,
+        tr_status: this.dataset[i - 1].tr_status,
+        tr_expire: this.dataset[i - 1].tr_expire,
+      },
+      { position: "bottom" }
+    );
+ 
   this.modalService.dismissAll()
   }
   handleSelectedRowsChanged4(e, args) {
@@ -2086,6 +2159,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
+ 
 
   opennbrligne(content) {
     this.createnbrForm();

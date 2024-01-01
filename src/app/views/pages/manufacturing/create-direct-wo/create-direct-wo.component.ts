@@ -107,7 +107,7 @@ export class CreateDirectWoComponent implements OnInit {
   rctwostat: any;
   ro_rollup: any[] = [];
   emp_shift: any[] = [];
-
+  globalState: boolean = false;
   product_colors: any[] = [];
   product_types: any[] = [];
 
@@ -453,7 +453,9 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   searchProduct() {
+    this.globalState = false;
     const controls = this.woForm.controls;
+    const date = new Date();
     controls.product_type.value;
     controls.product_color.value;
 
@@ -472,7 +474,24 @@ export class CreateDirectWoComponent implements OnInit {
           } else {
             console.log(data);
             controls.wo_part.setValue(data[0].pt_part);
-            controls.desc.setValue(data[0].pt_desc1);
+            controls.desc.setValue(response.data[0].pt_desc1);
+            this.desc2 = response.data[0].pt_desc2;
+            controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
+            this.um = response.data[0].pt_um;
+            this.loc = response.data[0].pt_loc;
+            if (response.data[0].pt_rctwo_active) {
+              this.rctwostat = response.data[0].pt_rctwo_status;
+            } else {
+              this.locationService
+                .getByOne({
+                  loc_loc: this.loc,
+                })
+                .subscribe((resp: any) => {
+                  console.log(resp.data, resp.data.length);
+                  this.rctwostat = resp.data.loc_status;
+                });
+            }
+            
           }
         }
       });
@@ -480,6 +499,7 @@ export class CreateDirectWoComponent implements OnInit {
 
   onSubmit() {
     // alert("ok")
+    this.globalState = true;
     const controls = this.woForm.controls;
     let tr = this.prepareTr();
     this.trdataset = [];
@@ -710,7 +730,7 @@ export class CreateDirectWoComponent implements OnInit {
   //     this.addIt( this.dataset,wo, this.nof);
 
   //   }else {
-  //     this.message = "Parametrage Monquant pour la sequence";
+  //     this.message = "Parametrage Manquant pour la sequence";
   //     this.hasFormErrors = true;
   //     return;
 
@@ -1487,21 +1507,19 @@ export class CreateDirectWoComponent implements OnInit {
 
                 this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                   console.log(respopart);
-                  this.labelService.getBy({lb_ref: ref}).subscribe((respopal: any) =>{
-                  if(respopart.data.pt_prod_line != controls.product_type.value && respopal.data.label.lb__log01 == false ) {
-                    alert("Type ne correspond pas au produit ");
-
+                  this.labelService.getBy({lb_ref: ref}).subscribe((respopal: any) => {
+                  if (respopart.data.pt_prod_line != controls.product_type.value && respopal.data.label.lb__log01 != true)
+                  {
+                    alert("Type ne correspond pas au produit broyé");
                   }
                   else {
-
                   this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
                     this.sct = respo.data;
                     console.log(this.sct);
 
                     this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
                       console.log(rescode);
-                      console.log("hona houna",respopal)
-                      if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true ) {
+                      if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true) {
                         this.gridService.addItem(
                           {
                             id: this.dataset.length + 1,
@@ -1526,10 +1544,12 @@ export class CreateDirectWoComponent implements OnInit {
                       } else {
                         alert("Couleur ne correspond pas au produit ");
                       }
+                      
                     });
                   });
-                }
-                });});
+                };
+                });
+                });
               }
             });
           }

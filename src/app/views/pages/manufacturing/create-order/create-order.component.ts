@@ -591,7 +591,7 @@ export class CreateOrderComponent implements OnInit {
     this.addIt( this.dataset,wo, this.nof);
 
   }else {
-    this.message = "Parametrage Monquant pour la sequence";
+    this.message = "Parametrage Manquant pour la sequence";
     this.hasFormErrors = true;
     return;
 
