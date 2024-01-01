@@ -955,10 +955,23 @@ export class UnplanifiedReceptComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    var maxObj = null
+    var iddd = 0
+    if (this.dataset.length> 0) {
+     maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1)
+     iddd = maxObj.id + 1
+
+  } else {
+    iddd = 1
+
+  }
     this.gridService.addItem(
       {
-        id: this.dataset.length + 1,
-        tr_line: this.dataset.length + 1,
+        id: iddd,
+        tr_line: iddd,
         tr_part: "",
         cmvid: "",
         desc: "",
@@ -978,16 +991,21 @@ export class UnplanifiedReceptComponent implements OnInit {
 
   addsameItem() {
     
+    
     const control =this.nbrForm.controls
     const limit = Number(control.nbrligne.value)
     var i = this.nligne
-
+    const maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1)
+    var iddd = maxObj.id + 1
     for (var j = 0; j < limit; j++) {
         
     this.gridService.addItem(
       {
-        id: this.dataset.length + 1,
-        tr_line: this.dataset.length + 1,
+        id: iddd,
+        tr_line: iddd,
         tr_part: this.dataset[i - 1].tr_part,
         cmvid: "",
         desc: this.dataset[i - 1].desc,
@@ -1005,6 +1023,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       },
       { position: "bottom" }
     );
+    iddd ++
   }
   this.modalService.dismissAll()
   }
