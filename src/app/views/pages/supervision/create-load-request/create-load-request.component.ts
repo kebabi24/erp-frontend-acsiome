@@ -221,7 +221,8 @@ createForm() {
 printpdf() {
   
   var doc = new jsPDF();
-  
+  let initialY = 65
+  let valueToAddToX = 5
 
   var img = new Image()
   img.src = "./assets/media/logos/companylogo.png";
@@ -241,10 +242,10 @@ printpdf() {
 
 
        doc.barcode(this.saved_data.load_request_code, {
-        fontSize: 30,
+        fontSize: 70,
         textColor: "#000000",
         x: 100,
-        y: 50,
+        y: 60,
         textOptions: { align: "center" } // optional text options
       })
 
@@ -253,36 +254,35 @@ printpdf() {
        
 
        doc.setFontSize(12);
-       doc.text("Demande de chargement : " + this.saved_data.load_request_code, 70, 60);
-       doc.setFontSize(8);
+       doc.text("Demande de chargement : " + this.saved_data.load_request_code, 70, initialY+5);
+       
 
-       doc.setFontSize(8);
-       doc.text("Role    : " + this.saved_data.role_code, 20, 70);
-       doc.text("Date    : " + this.saved_data.date_creation.split("T")[0], 20, 75);
-       doc.text("Vendeur : " + this.user_mobile.user_mobile_code +' - '+this.user_mobile.username, 20, 80);
-  
+       doc.setFontSize(10);
+       doc.text("Role    : " + this.saved_data.role_code, 20, initialY+10);
+       doc.text("Date    : " + this.saved_data.date_creation.split("T")[0], 20,initialY+15);
+       doc.text("Vendeur : " + this.user_mobile.user_mobile_code +' - '+this.user_mobile.username, 20, initialY+20);
+       doc.setFontSize(9);
   
 
-       doc.line(10, 85, 195, 85);
-       doc.line(10, 90, 195, 90);
-       doc.line(10, 85, 10, 90);
-       doc.text("N", 12.5, 88.5);
-       doc.line(20, 85, 20, 90);
-       doc.text("Code Article", 25, 88.5);
-       doc.line(45, 85, 45, 90);
-       doc.text("Désignation", 67.5, 88.5);
-       doc.line(100, 85, 100, 90);
-       doc.text("Prix", 107, 88.5);
-       doc.line(120, 85, 120, 90);
-       doc.text("QTE Demandée", 123, 88.5);
-       doc.line(145, 85, 145, 90);
-       doc.text("QTE Validée", 148, 88.5 );
-       doc.line(170, 85, 170, 90);
-       doc.text("QTE Chargée", 173, 88.5 );
-       doc.line(195, 85, 195, 90);
-       var i = 95;
-       doc.setFontSize(6);
-       let total = 0
+       doc.line(10, initialY+25, 195, initialY+25 ); // 85
+       doc.line(10, initialY+30, 195, initialY+30);  // 90
+       doc.line(10, initialY+25, 10,initialY+30);  // 90 
+       doc.text("N", 12.5,initialY+28.5);  // 88.5
+       doc.line(20, initialY+25, 20, initialY+30);  // 90
+       doc.text("Code Article", 25, initialY+28.5); // 88.5
+       doc.line(45, initialY+25, 45, initialY+30); // 90
+       doc.text("Désignation", 67.5, initialY+28.5); // 88.5
+       doc.line(100, initialY+25, 100, initialY+30); // 90
+       doc.text("Prix", 107, initialY+28.5); // 88.5
+       doc.line(120, initialY+25, 120, initialY+30);  // 90
+       doc.text("QTE Demandée", 123, initialY+28.5); // 88.5
+       doc.line(145, initialY+25, 145, initialY+30); // 90
+       doc.text("QTE Validée", 148, initialY+28.5 );// 88.5
+       doc.line(170, initialY+25, 170,initialY+30);// 90
+       doc.text("QTE Chargée", 173, initialY+28.5 );// 88.5
+       doc.line(195, initialY+25, 195, initialY+30);// 90
+       var i = 95 + valueToAddToX;
+       doc.setFontSize(10);
 
    for (let j = 0; j < this.printLines.length  ; j++) {
     
@@ -317,24 +317,24 @@ printpdf() {
        doc.text("Date    : " + this.saved_data.date_creation.split("T")[0], 20, 75);
        doc.text("Vendeur : " + this.user_mobile.user_mobile_code +' - '+this.user_mobile.username, 20, 80);
 
-       doc.line(10, 85, 195, 85);
-       doc.line(10, 90, 195, 90);
-       doc.line(10, 85, 10, 90);
-       doc.text("N", 12.5, 88.5);
-       doc.line(20, 85, 20, 90);
-       doc.text("Code Article", 25, 88.5);
-       doc.line(45, 85, 45, 90);
-       doc.text("Désignation", 67.5, 88.5);
-       doc.line(100, 85, 100, 90);
-       doc.text("Prix", 107, 88.5);
-       doc.line(120, 85, 120, 90);
-       doc.text("QTE Demandée", 123, 88.5);
-       doc.line(145, 85, 145, 90);
-       doc.text("QTE Validée", 148, 88.5 );
-       doc.line(170, 85, 170, 90);
-       doc.text("QTE Chargée", 173, 88.5 );
-       doc.line(195, 85, 195, 90);
-       i = 95;
+       doc.line(10, initialY+25, 195, initialY+25 ); // 85
+       doc.line(10, initialY+30, 195, initialY+30);  // 90
+       doc.line(10, initialY+25, 10,initialY+30);  // 90 
+       doc.text("N", 12.5,initialY+28.5);  // 88.5
+       doc.line(20, initialY+25, 20, initialY+30);  // 90
+       doc.text("Code Article", 25, initialY+28.5); // 88.5
+       doc.line(45, initialY+25, 45, initialY+30); // 90
+       doc.text("Désignation", 67.5, initialY+28.5); // 88.5
+       doc.line(100, initialY+25, 100, initialY+30); // 90
+       doc.text("Prix", 107, initialY+28.5); // 88.5
+       doc.line(120, initialY+25, 120, initialY+30);  // 90
+       doc.text("QTE Demandée", 123, initialY+28.5); // 88.5
+       doc.line(145, initialY+25, 145, initialY+30); // 90
+       doc.text("QTE Validée", 148, initialY+28.5 );// 88.5
+       doc.line(170, initialY+25, 170,initialY+30);// 90
+       doc.text("QTE Chargée", 173, initialY+28.5 );// 88.5
+       doc.line(195, initialY+25, 195, initialY+30);// 90
+       var i = 95 + valueToAddToX;
      }
 
      if (this.printLines[j].product_name.length > 35) {

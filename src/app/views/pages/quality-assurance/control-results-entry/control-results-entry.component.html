@@ -138,28 +138,30 @@
                 <div class="col-12 test-row row" *ngFor="let test of item.operations; let j = index" >
                    <!-- LABEL -->
                   <div>
-                    Test: {{test.ipd_label}}
+                    <span class="title-white">Test :</span> {{test.ipd_label}}
                   </div> 
                    <!-- LABEL END-->
 
                    <!-- VALUE CASE -->
                    
-                  <div *ngIf="test.isBool" style="margin-left: 20px;">
-                      <span>valeur :</span> <input  (change)="onChange($event, item ,test)" style="width: 2.5ex; height: 2.5ex ; margin-left: 10px" type="checkbox" name="{{ test.trimmed_label }}-bool"  formControlName="{{ test.trimmed_label }}-bool">
+                  <div *ngIf="test.isBool" style="margin-left: 20px; width: 300px;">
+                      <span class="title-white">valeur :</span> <input  (change)="onChangeBool($event.target.checked, i ,j)" style="width: 2.5ex; height: 2.5ex ; margin-left: 10px" type="checkbox" name="{{ test.trimmed_label }}-bool"  formControlName="{{ test.trimmed_label }}-bool">
                   </div>
-                  <div *ngIf="!test.isBool" style="margin-left: 20px;">
-                      <span>valeur :</span> <input  type="text" style=" margin-left: 10px" name="{{test.trimmed_label }}"  formControlName="{{ test.trimmed_label }}">
+                  <div *ngIf="!test.isBool" style="margin-left: 20px;  width: 300px;">
+                      <span class="title-white">valeur :</span> <input  (change)="onChangeOthers($event.target.value, i ,j)" type="text" style=" margin-left: 10px" name="{{test.trimmed_label }}"  formControlName="{{ test.trimmed_label }}">
                   </div>
                   <!-- VALUE CASE END -->
 
                   <!-- NOTE -->
                   <div style="margin-left: 20px;">
-                    <span>observation :</span> <input  type="text" style=" margin-left: 10px" name="{{test.trimmed_label }}-text-area"  formControlName="{{ test.trimmed_label }}-text-area">    
+                    <span class="title-white">Observation :</span> <input (change)="onAddDescription($event.target.value, i ,j)" type="text" style=" margin-left: 10px" name="{{test.trimmed_label }}-text-area"  formControlName="{{ test.trimmed_label }}-text-area">    
                   </div>
                   <!-- NOTE END -->
                   <!-- RESULT BOOL -->
                   <div style="margin-left: 20px;">
-                    <span>résultat du test :</span> <input disabled style="width: 2.5ex; height: 2.5ex ; margin-left: 10px;" type="checkbox" name="{{ test.trimmed_label }}-boolR"  formControlName="{{ test.trimmed_label }}-boolR">
+                    <!-- <span>résultat du test :</span> <input disabled style="width: 2.5ex; height: 2.5ex ; margin-left: 10px;" type="checkbox" name="{{ test.trimmed_label }}-boolR"  formControlName="{{ test.trimmed_label }}-boolR"> -->
+                    <span *ngIf="test.ipd_pass"><span class="title-white">Résultat du test : </span><span>Test satisfait</span></span>
+                    <span *ngIf="!test.ipd_pass"><span class="title-white">Résultat du test :</span><span>Test non satisfait</span></span>
                   </div>
                   <!-- RESULT BOOL END  -->
                </div>

@@ -354,6 +354,10 @@ export class MenuConfig {
               page: "/inventory-management/loading-vans",
             },
             {
+              title: "Chargement Des Vans (scan)",
+              page: "/inventory-management/loading-vans-scan",
+            },
+            {
               title: "Dechargement Des Vans",
               page: "/inventory-management/unloading-vans",
             },

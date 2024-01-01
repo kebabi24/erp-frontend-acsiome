@@ -30,6 +30,14 @@ export class LoadRequestService {
         
     }
 
+    public getLoadRequestInfo(load_request_code: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL_2}/getLoadRequestInfo/${load_request_code}`, { headers: httpHeaders })
+        
+    }
+
+    
+
     // CREATE PRODUCT PAGE
     public createProductPage(productPage : any , productsCodes : any){
         const httpHeaders = this.httpUtils.getHTTPHeaders()

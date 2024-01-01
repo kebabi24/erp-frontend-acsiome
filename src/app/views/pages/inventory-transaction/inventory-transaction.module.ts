@@ -11,6 +11,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
 // Translate Module
 import { TranslateModule } from "@ngx-translate/core";
+// import {} from "ngx-extended-pdf-viewer"
 // NGRX
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
@@ -33,33 +34,28 @@ import { MatTabsModule } from "@angular/material/tabs";
 //bootsrap
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
-import { environment } from "../../../../environments/environment"
-import {
-    NgbProgressbarModule,
-    NgbProgressbarConfig,
-} from "@ng-bootstrap/ng-bootstrap"
-import { NgxPermissionsModule } from "ngx-permissions"
-import { AngularSlickgridModule } from 'angular-slickgrid'
-import { UnplanifiedReceptComponent } from './unplanified-recept/unplanified-recept.component';
-import { InventoryListComponent } from './inventory-list/inventory-list.component';
-import { DomainService, LocationDetailService, SequenceService }  from '../../../core/erp';
-import { PoReceipComponent } from './po-receip/po-receip.component';
+import { environment } from "../../../../environments/environment";
+import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-bootstrap";
+import { NgxPermissionsModule } from "ngx-permissions";
+import { AngularSlickgridModule } from "angular-slickgrid";
+import { UnplanifiedReceptComponent } from "./unplanified-recept/unplanified-recept.component";
+import { InventoryListComponent } from "./inventory-list/inventory-list.component";
+import { DomainService, LocationDetailService, SequenceService } from "../../../core/erp";
+import { PoReceipComponent } from "./po-receip/po-receip.component";
 
-import { TransactionListComponent } from './transaction-list/transaction-list.component';
-import { EditStatusComponent } from './edit-status/edit-status.component';
-import { TransListGrpComponent } from './trans-list-grp/trans-list-grp.component';
-import { ListInvComponent } from './list-inv/list-inv.component';
-import { ListRctComponent } from './list-rct/list-rct.component';
-import { ConsoReportComponent } from './conso-report/conso-report.component';
-import { LabelCreateComponent } from './label-create/label-create.component';
-import { PoReceipIdComponent } from './po-receip-id/po-receip-id.component';
-import { PoReceipCabComponent } from './po-receip-cab/po-receip-cab.component';
-import { EditStatusRefComponent } from './edit-status-ref/edit-status-ref.component';
-import { PoReceipCabIdComponent } from './po-receip-cab-id/po-receip-cab-id.component';
-import { PurchaseOrderService, TransferService, PurchaseReceiveService, InventoryTransactionService,
-   DeviseService, ProviderService, CostSimulationService, SiteService, LocationService, InventoryStatusService,
-    RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService, EmployeService ,ProductLineService} from "../../../core/erp";
-import { UnplanifiedReceiptCabComponent } from './unplanified-receipt-cab/unplanified-receipt-cab.component';
+import { TransactionListComponent } from "./transaction-list/transaction-list.component";
+import { EditStatusComponent } from "./edit-status/edit-status.component";
+import { TransListGrpComponent } from "./trans-list-grp/trans-list-grp.component";
+import { ListInvComponent } from "./list-inv/list-inv.component";
+import { ListRctComponent } from "./list-rct/list-rct.component";
+import { ConsoReportComponent } from "./conso-report/conso-report.component";
+import { LabelCreateComponent } from "./label-create/label-create.component";
+import { PoReceipIdComponent } from "./po-receip-id/po-receip-id.component";
+import { PoReceipCabComponent } from "./po-receip-cab/po-receip-cab.component";
+import { EditStatusRefComponent } from "./edit-status-ref/edit-status-ref.component";
+import { PoReceipCabIdComponent } from "./po-receip-cab-id/po-receip-cab-id.component";
+import { PurchaseOrderService, TransferService, PurchaseReceiveService, InventoryTransactionService, DeviseService, ProviderService, CostSimulationService, SiteService, LocationService, InventoryStatusService, RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService, EmployeService, ProductLineService } from "../../../core/erp";
+import { UnplanifiedReceiptCabComponent } from "./unplanified-receipt-cab/unplanified-receipt-cab.component";
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -131,10 +127,7 @@ const routes: Routes = [
     path: "po-receip-cab-id/:id",
     component: PoReceipCabIdComponent,
   },
-] 
-
-
-
+];
 
 @NgModule({
   declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent],

@@ -13,19 +13,22 @@
       <form class="form" [formGroup]="userForm">
 
         <div class="row">
+
           <div class="form-group col-2">
             <label class="form-group">Code gamme: *</label>
             <div class="input-group input-group-sm">
               <input type="text" formControlName="gamme_code" [className]="userForm.controls['gamme_code'].errors && (userForm.controls['gamme_code'].dirty || userForm.controls['gamme_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
               <div *ngIf="userForm.controls['gamme_code'].errors && (userForm.controls['gamme_code'].dirty || userForm.controls['gamme_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
-            </div>
+            
             <div class="input-group-append">
-              <span class="input-group-text" (click)="opemGammeGrid()"> 
-               
-               <i class="text-dark-50 flaticon2-search"></i>
-             </span>
-           </div>
+                <span class="input-group-text" (click)="opemGammeGrid(contentGamme)"> 
+                 
+                 <i class="text-dark-50 flaticon2-search"></i>
+               </span>
+             </div>
           </div>
+          </div>
+          
           <div class="form-group col-2">
             <label class="form-group">Operation: *</label>
             <div class="input-group input-group-sm">
@@ -183,6 +186,35 @@
     </ng-template>
   </div>
   <!-- GRID PRODUCT END -->
+
+
+  <!-- GRID GAMME -->
+  <div>
+    <ng-template #contentGamme let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Choissir un code gamme</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <angular-slickgrid class="col-12" 
+          gridHeight="300" 
+          gridId="gridCode" 
+          [columnDefinitions]="columnDefinitions" 
+          (onAngularGridCreated)="angularGridReady($event)"
+          (sgOnSelectedRowsChanged)="handleSelectedRowsChangedGamme($event.detail.eventData, $event.detail.args)"
+          [gridOptions]="gridOptions" [dataset]="gammesData"> </angular-slickgrid>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+  <!-- GRID GAMME END -->
 
    
   </kt-portlet-body>

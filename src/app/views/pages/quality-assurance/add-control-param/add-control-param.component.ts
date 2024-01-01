@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
-import { Column, GridOption, Formatter, Editor, Editors, FieldType, OnEventArgs, AngularGridInstance, GridService } from "angular-slickgrid";
+import { Column, GridOption, Formatter, Editor, Editors, FieldType, OnEventArgs, AngularGridInstance, GridService, Formatters } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -76,6 +76,10 @@ export class AddControlParamaterComponent implements OnInit {
 
   doc_exist = false;
   route_exist = false;
+  prod_exist = false;
+  op_exist = false;
+
+  op_number =""
 
   
   
@@ -87,7 +91,7 @@ export class AddControlParamaterComponent implements OnInit {
   specificaiton : any 
   routing : any ;
   route_code :any;
-  itemSpecDetails : [];
+  itemSpecDetails :any[] =[];
   checkedItemsSpecs :any[] = [];
 
   checkedTests :any[] = [];
@@ -97,6 +101,10 @@ export class AddControlParamaterComponent implements OnInit {
   valueIsMinMax = false;
   valueIsChar = false;
   clickedRowIndex : any ;
+
+  valueToAddIsBool = false;
+  valueToAddIsMinMax = false;
+  valueToAddIsChar = false;
 
   
 
@@ -121,6 +129,8 @@ export class AddControlParamaterComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.getRoutes()
+    this.getDocuments()
     this.createForm();
   }
 
@@ -283,22 +293,7 @@ export class AddControlParamaterComponent implements OnInit {
     }
   }
 
-  handleSelectedRowsChangedP(e, args) {
-    const controls = this.userForm.controls;
-    if (Array.isArray(args.rows) && this.gridObjProducts) {
-      args.rows.map((idx) => {
-        const p = this.gridObjProducts.getDataItem(idx);
-        controls.product_code.setValue(p.pt_part || "");
-        this.getRoutes()
-          this.part = p.pt_part
-          // if(p.pt_part){
-            // this.part = p.pt_part
-        //   this.getSpecificationTestResults()
-        // }
-      });
-    }
-  }
-
+ 
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = (angularGrid && angularGrid.slickGrid) || {};
@@ -348,24 +343,7 @@ export class AddControlParamaterComponent implements OnInit {
      );
   }
 
-  getItemsSpecificationDetails(){
-    if(this.doc_exist && this.route_exist){
-    this.qualityControlService.findItemSpecificationDetails(
-      {
-        ipd_part :  this.spec_test_result.ip_part,
-        ipd_routing : this.route_code,
-        ipd_op :  this.spec_test_result.ipd_op,
-        ipd_nbr : this.specification_code,
-      }
-      ).subscribe((response: any) => {
-          this.itemSpecDetails = response.data 
-          console.log(this.itemSpecDetails)
-          this.showDetailsGrid = true
-          this.prepareGridDetails()
-      }
-     );
-    }
-  }
+  
 
  // GRID WO END 
 
@@ -398,10 +376,10 @@ export class AddControlParamaterComponent implements OnInit {
 
     
       let ipData = {
-        ip_part :  this.spec_test_result.ip_part,
-        ip_routing : this.spec_test_result.ip_routing,
-        ip_op :  this.spec_test_result.ip_op,
-        ip_nbr : this.spec_test_result.ip_nbr ,
+        ip_part :  this.part,
+        ip_routing : this.route_code,
+        ip_op :  this.op_number,
+        ip_nbr : this.specification_code,
       }
 
       let ipdsData = []
@@ -550,30 +528,19 @@ export class AddControlParamaterComponent implements OnInit {
   prepareGridDetails() {
     this.columnDefinitionsDetails = [
     
-      {
-        id: "ipd_op",
-        name: "Numero",
-        field: "ipd_op",
-        sortable: true,
-        minWidth: 100,
-        maxWidth: 100,
-        filterable: true,
-        type: FieldType.string,
-        editor: {model: Editors.text}
+      // {
+      //   id: "ipd_op",
+      //   name: "Numero",
+      //   field: "ipd_op",
+      //   sortable: true,
+      //   minWidth: 100,
+      //   maxWidth: 100,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   editor: {model: Editors.text}
 
-        },
-
-        {
-            id: "ipd_nbr",
-            name: "code paramètre",
-            field: "ipd_nbr",
-            sortable: true,
-            minWidth: 100,
-            maxWidth: 300,
-            filterable: true,
-            type: FieldType.string, 
-            editor: {model: Editors.text}
-        },
+      //   },
+       
         {
           id: "ipd_tol_type",
           name: "unité de mesure",
@@ -599,9 +566,9 @@ export class AddControlParamaterComponent implements OnInit {
             editor: {model: Editors.text}
         },
         {
-          id: "val_type",
+          id: "ipd_chr02",
           name: "Type de valeur",
-          field: "val_type",
+          field: "ipd_chr02",
           sortable: true,
           minWidth: 100,
           maxWidth: 300,
@@ -674,6 +641,18 @@ export class AddControlParamaterComponent implements OnInit {
           filterable: true,
           type: FieldType.string, 
           editor: {model: Editors.text}
+        },
+        {
+          id: "bool",
+          name: "Booléen",
+          field: "bool",
+          sortable: true,
+          minWidth: 100,
+          maxWidth: 300, 
+          filterable: true,
+          type: FieldType.boolean, 
+          editor: {model: Editors.checkbox},
+          formatter :Formatters.checkmark
         }
     
     ];
@@ -697,21 +676,7 @@ export class AddControlParamaterComponent implements OnInit {
    
   }
 
-  handleSelectedRowsChangedDoc(e, args){
-    const controls = this.userForm.controls;
-    if (Array.isArray(args.rows) && this.gridObjDoc) {
-      args.rows.map((idx) => {
-        const doc = this.gridObjDoc.getDataItem(idx);
-        if(doc.mp_nbr){
-          this.specification_code = doc.mp_nbr
-          controls.document_code.setValue(this.specification_code || "");
-          this.doc_exist = true
-          this.getItemsSpecificationDetails()
-          this.showDetailsGrid = true
-        }
-      });
-    }
-  }
+  
 
   angularGridReadyDOC(angularGrid: AngularGridInstance) {
     this.angularGridDoc = angularGrid;
@@ -800,33 +765,6 @@ export class AddControlParamaterComponent implements OnInit {
   this.dataViewRoute = angularGrid.dataView;
 }
 
-handleSelectedRowsChangedRoute(e, args){
-  const controls = this.userForm.controls;
-  if (Array.isArray(args.rows) && this.gridObjRoute) {
-    args.rows.map((idx) => {
-      const route = this.gridObjRoute.getDataItem(idx);
-      this.route_code = route.qro_routing
-      controls.route_code.setValue(this.route_code || "");
-      // if(route.qro_routing){
-      //   this.route_code = route.qro_routing
-      //   this.route_exist = true
-      //   this.getItemsSpecificationDetails()
-      // }
-      let l = this.routes.filter((el)=>{return el.qro_routing === this.route_code})
-      if(l != null){
-        this.dropdownOptions = []
-        l.forEach(el => {
-          this.dropdownOptions.push({
-            code : el.qro_op,
-            value : el.qro_op,
-          })
-        });
-      }
-      this.getDocuments()
-    });
-  }
-}
-
 handleSelectedRowsChangedDetails(e, args){
   this.checkedTests = []
   this.checkedTests = args.rows;
@@ -860,6 +798,102 @@ handleSelectedRowsChangedDetails(e, args){
     })
 }
 
-openPopup(c){}
+openPopup(c){
+  this.modalService.open(c, { size: "lg" });
+}
+
+
+
+// GRID CLICK HANDLERS 
+handleSelectedRowsChangedRoute(e, args){
+  const controls = this.userForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjRoute) {
+    args.rows.map((idx) => {
+      const route = this.gridObjRoute.getDataItem(idx);
+      this.route_code = route.qro_routing
+      controls.route_code.setValue(this.route_code || "");
+      // if(route.qro_routing){
+      this.route_code = route.qro_routing
+      this.route_exist = true
+      this.getItemsSpecificationDetails()
+      // }
+      let l = this.routes.filter((el)=>{return el.qro_routing === this.route_code})
+      if(l != null){
+        this.dropdownOptions = []
+        l.forEach(el => {
+          this.dropdownOptions.push({
+            code : el.qro_op,
+            value : el.qro_op,
+          })
+        });
+      }
+    });
+  }
+}
+
+handleSelectedRowsChangedDoc(e, args){
+  const controls = this.userForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjDoc) {
+    args.rows.map((idx) => {
+      const doc = this.gridObjDoc.getDataItem(idx);
+      if(doc.mp_nbr){
+        this.specification_code = doc.mp_nbr
+        controls.document_code.setValue(this.specification_code || "");
+        this.doc_exist = true
+        this.getItemsSpecificationDetails()
+        
+      }
+    });
+  }
+}
+
+handleSelectedRowsChangedP(e, args) {
+  const controls = this.userForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjProducts) {
+    args.rows.map((idx) => {
+      const p = this.gridObjProducts.getDataItem(idx);
+      controls.product_code.setValue(p.pt_part || "");
+      
+        this.part = p.pt_part
+        this.prod_exist = true
+        
+    });
+  }
+}
+
+onChangeOp(op){
+  this.op_number = op
+}
+
+// this.route_code ,  this.specification_code  , this.part , this.op_number
+getItemsSpecificationDetails(){
+  if(this.doc_exist && this.route_exist){
+  this.qualityControlService.findItemSpecificationDetails(
+    {
+      ipd_part : this.part,
+      ipd_routing : this.route_code,
+      ipd_op :   this.op_number,
+      ipd_nbr : this.specification_code,
+    }
+    ).subscribe((response: any) => {
+        this.itemSpecDetails = response.data 
+        console.log(this.itemSpecDetails)
+        this.showDetailsGrid = true
+        this.itemSpecDetails.forEach(elem =>{
+          if(elem.ipd_chr02 =="bool"){
+            if(elem.ipd_tol =="true") elem.bool = true
+            else elem.bool = false
+
+          }
+        })
+        
+        this.prepareGridDetails()
+    }
+   );
+  }
+}
+
+
+
 
 }
