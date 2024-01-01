@@ -296,10 +296,20 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         width: 80,
         filterable: false,
         type: FieldType.float,
+       
         editor: {
           model: Editors.float,
           params: { decimalPlaces: 2 },
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          if( args.dataContext.tr_ref != null && args.dataContext.tr_ref != ""){alert('Modification interdite') 
+          this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+        } else {
+          this.gridService.updateItemById(args.dataContext.id, {  ...args.dataContext, qty: args.dataContext.tr_qty_loc })
+        }
+
+        }
       },
       {
         id: "tr_um",
@@ -648,7 +658,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 alert("Erreur Impression Etiquette");
               },
               () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty : args.dataContext.tr_qty_loc});
                 //console.log("id", args.dataContext.id)
                 //console.log("dataset",this.dataset[args.dataContext.id])
                 this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
@@ -1050,6 +1060,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         tr_ref: null,
         tr_status: null,
         tr_expire: null,
+        qty:0,
       },
       { position: "bottom" }
     );
@@ -1088,6 +1099,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         tr_ref: null,
         tr_status: this.dataset[i - 1].tr_status,
         tr_expire: this.dataset[i - 1].tr_expire,
+        qty: 0
       },
       { position: "bottom" }
     );
