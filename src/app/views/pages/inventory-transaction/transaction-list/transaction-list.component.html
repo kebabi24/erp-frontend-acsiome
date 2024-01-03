@@ -51,10 +51,7 @@
                         </div>
                     </div>    
                     
-                    <!-- <br />
-                    <span *ngIf="metrics" style="margin-right: 10px">
-                      <b>Metrics:</b> {{metrics.itemCount}} of    {{metrics.totalItemCount}} items
-                    </span> -->
+                     <br/>
                     
                     <div class="btn-group" role="group">
                     
@@ -85,8 +82,11 @@
                 </div>
                 
             <div class="row">
-                
-                <angular-slickgrid class="col-12" gridHeight="500"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                <span *ngIf="metrics" style="margin-right: 10px">
+                    <b>Metrics:</b> {{metrics.itemCount}} of    {{metrics.totalItemCount}} items
+                  </span> 
+                  
+                <angular-slickgrid class="col-12"   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
                     [gridOptions]="gridOptions" [dataset]="dataset"
                     (onRowCountChanged)="refreshMetrics($event.detail.eventData, $event.detail.args)">

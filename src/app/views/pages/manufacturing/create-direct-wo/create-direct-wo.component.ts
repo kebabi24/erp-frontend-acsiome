@@ -272,9 +272,9 @@ export class CreateDirectWoComponent implements OnInit {
         filterable: false,
       },
       {
-        id: "tr__chr05",
+        id: "tr_program",
         name: "Heure",
-        field: "tr__chr05",
+        field: "tr_program",
         sortable: true,
         width: 80,
         filterable: false,
@@ -881,7 +881,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_serial: null,
           tr_status: null,
           tr_expire: null,
-          tr__chr05: null,
+          tr_program: null,
         },
         { position: "bottom" }
       );
@@ -1542,7 +1542,7 @@ export class CreateDirectWoComponent implements OnInit {
                             tr_serial: this.lddet.ld_lot,
                             tr_status: this.stat,
                             tr_expire: this.lddet.ld_expire,
-                            tr__chr05: timedate,
+                            tr_program: timedate,
                           },
                           { position: "bottom" }
                         );
