@@ -29,6 +29,8 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  GridStateChange,
+  Metrics,
 } from "angular-slickgrid"
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -83,11 +85,13 @@ export class TransactionListComponent implements OnInit {
   dataset: any[] = []
   draggableGroupingPlugin: any;
   angularGrid: AngularGridInstance;
-
+  metrics!: Metrics;
+  WithPagination = true;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   grid: any;
   gridService: GridService;
   dataview: any;
+  
   tr_type: any[] = [];
   trForm: FormGroup;
   elem: any[] = [];
@@ -161,17 +165,17 @@ export class TransactionListComponent implements OnInit {
      
       this.columnDefinitions = [
           
-          // {
-          //   id: "id",
-          //   field: "id",
-          //   excludeFromColumnPicker: true,
-          //   excludeFromGridMenu: true,
-          //   excludeFromHeaderMenu: true,
+          {
+            id: "id",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
     
-          //   minWidth: 50,
-          //   maxWidth: 50,
-          // },
-          
+            minWidth: 50,
+            maxWidth: 50,
+          },
+         
           {
             id: "dec01",
             name: "Année",
@@ -208,58 +212,58 @@ export class TransactionListComponent implements OnInit {
               collapsed:true
             }
           },
-          {
-            id: "tr_site",
-            name: "Site",
-            field: "tr_site",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "tr_site",
+          //   name: "Site",
+          //   field: "tr_site",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
             
-            filter: {
+          //   filter: {
   
-              model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+          //     model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
               
-             },
-            grouping: {
-              getter: 'tr_site',
-              formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('tr_qty_loc')
-              ],
+          //    },
+          //   grouping: {
+          //     getter: 'tr_site',
+          //     formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('tr_qty_loc'),
+          //       new Aggregators.Sum('tr_qty_loc')
+          //     ],
               
-              aggregateCollapsed: true,
+          //     aggregateCollapsed: true,
             
-              collapsed:true
-            }
-          }, 
-          {
-            id: "tr_loc",
-            name: "Emplacement",
-            field: "tr_loc",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            filter: {
-             model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+          //     collapsed:true
+          //   }
+          // }, 
+          // {
+          //   id: "tr_loc",
+          //   name: "Emplacement",
+          //   field: "tr_loc",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
+          //   filter: {
+          //    model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
               
-             },
-            grouping: {
-              getter: 'tr_loc',
-              formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('tr_qty_loc')
-              ],
+          //    },
+          //   grouping: {
+          //     getter: 'tr_loc',
+          //     formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('tr_qty_loc'),
+          //       new Aggregators.Sum('tr_qty_loc')
+          //     ],
               
-              aggregateCollapsed: true,
+          //     aggregateCollapsed: true,
              
-              collapsed:true
-            }
-          },
+          //     collapsed:true
+          //   }
+          // },
           {
             id: "tr_addr",
             name: "Adresse",
@@ -520,40 +524,40 @@ export class TransactionListComponent implements OnInit {
           },
 
           {
-            id: "createdAt",
+            id: "tr_program",
             name: "Heure",
-            field: "createdAt",
+            field: "tr_program",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             filter: {model: Filters.compoundInput , operator: OperatorType.contains },
-            formatter: myCustomTimeFormatter,
+           
 //            filter: { model: Filters.dateRange },
   //          type: FieldType.date,
     //        filterable: true,
           },
           
-          {
-            id: "tr_expire",
-            name: "Expire Le",
-            field: "tr_expire",
-            sortable: true,
-            filterable: true,
-            type: FieldType.dateTimeIso,
-            grouping: {
-              getter: 'tr_expire',
-              formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
-                new Aggregators.Sum('tr_qty_loc')
-              ],
+          // {
+          //   id: "tr_expire",
+          //   name: "Expire Le",
+          //   field: "tr_expire",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.dateTimeIso,
+          //   grouping: {
+          //     getter: 'tr_expire',
+          //     formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('tr_qty_loc'),
+          //       new Aggregators.Sum('tr_qty_loc')
+          //     ],
               
-              aggregateCollapsed: true,
+          //     aggregateCollapsed: true,
               
-              collapsed:true
-            }
-          }, 
+          //     collapsed:true
+          //   }
+          // }, 
           {
             id: "tr_type",
             name: "Type Transaction",
@@ -568,7 +572,7 @@ export class TransactionListComponent implements OnInit {
               // collectionAsync: this.elem,
               collectionAsync:  this.http.get(`${API_URL_codes}/trans`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
            
-              model: Filters.multipleSelect , operator: OperatorType.equal
+              model: Filters.multipleSelect , operator: OperatorType.inContains
              
               
               
@@ -637,21 +641,34 @@ export class TransactionListComponent implements OnInit {
       ]
 
       this.gridOptions = {
-      /*  autoResize: {
-          containerId: 'demo-container',
-          sidePadding: 10
-        },*/
         enableDraggableGrouping: true,
         createPreHeaderPanel: true,
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
-        enableAutoResizeColumnsByCellContent:true,
-        autoHeight: false,
         enableSorting: true,
+        enableCellNavigation:true,
+        checkboxSelector: {
+          hideInFilterHeaderRow: false,
+          hideInColumnTitleRow: true,
+         
+        },
+        rowSelectionOptions: {
+         
+          selectActiveRow: false
+        },
+        enableCheckboxSelector:true,
         
+        
+        enableAutoResize: false,
+        showCustomFooter: true, // display some metrics in the bottom custom footer
         exportOptions: {
           sanitizeDataExport: true
+        },
+        enablePagination: true,
+        pagination: {
+          pageSizes: [5, 10, 50,100,1000,50000,999999999],
+          pageSize: 100
         },
         presets: {
           filters: [
@@ -660,6 +677,7 @@ export class TransactionListComponent implements OnInit {
           sorters: [
            
           ],
+          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
           
         },
        
@@ -741,7 +759,41 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
   }
 
 
+  refreshMetrics(e: Event, args: any) {
+    if (args && args.current >= 0) {
+      setTimeout(() => {
+        this.metrics = {
+          startTime: new Date(),
+          endTime: new Date(),
+          itemCount: args && args.current || 0,
+          totalItemCount: this.dataset.length || 0
+        };
+      });
+    }
+  }
+  scrollGridBottom() {
+    this.angularGrid.slickGrid.navigateBottom();
+  }
+  scrollGridDown() {
+    this.angularGrid.slickGrid.navigateDown();
+  }
+  scrollGridLeft() {
+    this.angularGrid.slickGrid.navigateLeft();
+  }
+  scrollGridRight() {
+    this.angularGrid.slickGrid.navigateRight();
+  }
 
+  scrollGridUp() {
+    this.angularGrid.slickGrid.navigateUp();
+  }
+  scrollGridTop() {
+    this.angularGrid.slickGrid.navigateTop();
+  }
+  togglePaginationGrid2() {
+    this.WithPagination = !this.WithPagination;
+    this.angularGrid.paginationService!.togglePaginationVisibility(this.WithPagination);
+  }
 
   trlist(){
     const controls = this.trForm.controls
@@ -761,9 +813,10 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     
       //(response: any) => (this.dataset = response.data),
       console.log(res.data.tr_gl_date)
+      
       this.dataset  = res.data;
       this.dataview.setItems(this.dataset)
-        
+      
     //this.dataset = res.data
     this.loadingSubject.next(false) 
   })

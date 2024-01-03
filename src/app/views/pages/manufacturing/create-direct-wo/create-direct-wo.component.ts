@@ -529,8 +529,8 @@ export class CreateDirectWoComponent implements OnInit {
     _lb.lb_ld_status = this.rctwostat;
     _lb.lb_desc = this.desc2;
     _lb.lb_grp = controls.emp_shift.value;
-    _lb.lb_cust = "";
-    _lb.lb_addr = "";
+    _lb.lb_cust = controls.wo_routing.value;
+    _lb.lb_addr = controls.wo_user1.value;
     // _lb.lb_rmks = controls.emp_shift.value
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
@@ -561,6 +561,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_status: this.rctwostat,
           tr_expire: null,
           tr_ref: lab.lb_ref,
+          tr_user1:controls.wo_user1.value
         });
         console.log(this.trdataset);
         this.addTR(this.trdataset, tr);
