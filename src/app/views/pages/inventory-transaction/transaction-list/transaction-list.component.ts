@@ -29,6 +29,8 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  GridStateChange,
+  Metrics,
 } from "angular-slickgrid"
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -83,11 +85,13 @@ export class TransactionListComponent implements OnInit {
   dataset: any[] = []
   draggableGroupingPlugin: any;
   angularGrid: AngularGridInstance;
-
+  metrics!: Metrics;
+  WithPagination = true;
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   grid: any;
   gridService: GridService;
   dataview: any;
+  
   tr_type: any[] = [];
   trForm: FormGroup;
   elem: any[] = [];
@@ -161,17 +165,17 @@ export class TransactionListComponent implements OnInit {
      
       this.columnDefinitions = [
           
-          // {
-          //   id: "id",
-          //   field: "id",
-          //   excludeFromColumnPicker: true,
-          //   excludeFromGridMenu: true,
-          //   excludeFromHeaderMenu: true,
+          {
+            id: "id",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
     
-          //   minWidth: 50,
-          //   maxWidth: 50,
-          // },
-          
+            minWidth: 50,
+            maxWidth: 50,
+          },
+         
           {
             id: "dec01",
             name: "Année",
@@ -642,17 +646,29 @@ export class TransactionListComponent implements OnInit {
         showPreHeaderPanel: true,
         preHeaderPanelHeight: 40,
         enableFiltering: true,
-        autoHeight: false,
-        autoResize:{calculateAvailableSizeBy:'window'},
         enableSorting: true,
         enableCellNavigation:true,
-        autoFitColumnsOnFirstLoad:false,
-        fullWidthRows:true,
-        // enableAutoResizeColumnsByCellContent:true,
+        checkboxSelector: {
+          hideInFilterHeaderRow: false,
+          hideInColumnTitleRow: true,
+         
+        },
+        rowSelectionOptions: {
+         
+          selectActiveRow: false
+        },
         enableCheckboxSelector:true,
-        syncColumnCellResize:true,
+        
+        
+        enableAutoResize: false,
+        showCustomFooter: true, // display some metrics in the bottom custom footer
         exportOptions: {
           sanitizeDataExport: true
+        },
+        enablePagination: true,
+        pagination: {
+          pageSizes: [5, 10, 50,100,1000,50000,999999999],
+          pageSize: 100
         },
         presets: {
           filters: [
@@ -661,7 +677,7 @@ export class TransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
+          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
           
         },
        
@@ -743,7 +759,41 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
   }
 
 
+  refreshMetrics(e: Event, args: any) {
+    if (args && args.current >= 0) {
+      setTimeout(() => {
+        this.metrics = {
+          startTime: new Date(),
+          endTime: new Date(),
+          itemCount: args && args.current || 0,
+          totalItemCount: this.dataset.length || 0
+        };
+      });
+    }
+  }
+  scrollGridBottom() {
+    this.angularGrid.slickGrid.navigateBottom();
+  }
+  scrollGridDown() {
+    this.angularGrid.slickGrid.navigateDown();
+  }
+  scrollGridLeft() {
+    this.angularGrid.slickGrid.navigateLeft();
+  }
+  scrollGridRight() {
+    this.angularGrid.slickGrid.navigateRight();
+  }
 
+  scrollGridUp() {
+    this.angularGrid.slickGrid.navigateUp();
+  }
+  scrollGridTop() {
+    this.angularGrid.slickGrid.navigateTop();
+  }
+  togglePaginationGrid2() {
+    this.WithPagination = !this.WithPagination;
+    this.angularGrid.paginationService!.togglePaginationVisibility(this.WithPagination);
+  }
 
   trlist(){
     const controls = this.trForm.controls
@@ -763,9 +813,10 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     
       //(response: any) => (this.dataset = response.data),
       console.log(res.data.tr_gl_date)
+      
       this.dataset  = res.data;
       this.dataview.setItems(this.dataset)
-        
+      
     //this.dataset = res.data
     this.loadingSubject.next(false) 
   })
