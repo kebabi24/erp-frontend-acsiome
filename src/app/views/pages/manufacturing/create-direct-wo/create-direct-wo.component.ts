@@ -271,16 +271,16 @@ export class CreateDirectWoComponent implements OnInit {
         width: 80,
         filterable: false,
       },
-      // {
-      //   id: "tr_expire",
-      //   name: "Expire",
-      //   field: "tr_expire",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //   type: FieldType.dateIso,
+      {
+        id: "tr__chr05",
+        name: "Heure",
+        field: "tr__chr05",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
 
-      // },
+      },
     ];
 
     this.gridOptions = {
@@ -880,6 +880,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_serial: null,
           tr_status: null,
           tr_expire: null,
+          tr__chr05: null,
         },
         { position: "bottom" }
       );
@@ -1476,6 +1477,8 @@ export class CreateDirectWoComponent implements OnInit {
     /*kamel palette*/
     const controls = this.woForm.controls;
     const ref = controls.ref.value;
+    const timedate = new Date().toLocaleTimeString();
+    console.log(timedate)
     var bol = false;
     for (let ob of this.dataset) {
       if (ob.tr_ref == ref) {
@@ -1538,6 +1541,7 @@ export class CreateDirectWoComponent implements OnInit {
                             tr_serial: this.lddet.ld_lot,
                             tr_status: this.stat,
                             tr_expire: this.lddet.ld_expire,
+                            tr__chr05: timedate,
                           },
                           { position: "bottom" }
                         );
