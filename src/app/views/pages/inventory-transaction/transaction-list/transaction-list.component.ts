@@ -658,9 +658,9 @@ export class TransactionListComponent implements OnInit {
           selectActiveRow: false
         },
         enableCheckboxSelector:true,
+        autoHeight:false,
         
-        
-        enableAutoResize: false,
+        enableAutoResize: true,
         showCustomFooter: true, // display some metrics in the bottom custom footer
         exportOptions: {
           sanitizeDataExport: true

@@ -86,7 +86,7 @@
                 
             <div class="row">
                 
-                <angular-slickgrid class="col-12" gridHeight="500"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                <angular-slickgrid class="col-12"   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
                     [gridOptions]="gridOptions" [dataset]="dataset"
                     (onRowCountChanged)="refreshMetrics($event.detail.eventData, $event.detail.args)">
