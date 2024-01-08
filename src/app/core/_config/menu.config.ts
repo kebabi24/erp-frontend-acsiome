@@ -784,6 +784,10 @@ export class MenuConfig {
               title: "Etat des Broyages ",
               page: "/manufacturing/rp-broyage",
             },
+            {
+              title: "Récap des Broyages ",
+              page: "/manufacturing/Recap-broyage",
+            },
           ],
         },
         {
