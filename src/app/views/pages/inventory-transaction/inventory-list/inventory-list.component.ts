@@ -266,6 +266,34 @@ export class InventoryListComponent implements OnInit {
             }
           }, 
           // {
+          //   id: "ld_grade",
+          //   name: "Taille",
+          //   field: "ld_grade",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
+          //   grouping: {
+          //     getter: 'ld_grade',
+          //     formatter: (g) => `Taille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregateCollapsed: true,
+          //     collapsed: true,
+          //   }
+          // }, 
+          // {
+          //   id: "chr01",
+          //   name: "Couleur",
+          //   field: "chr01",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
+          //   grouping: {
+          //     getter: 'chr01',
+          //     formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregateCollapsed: true,
+          //     collapsed: true,
+          //   }
+          // }, 
+          // {
           //   id: "ld_date",
           //   name: "Date",
           //   field: "ld_date",
