@@ -146,6 +146,7 @@ error = false;
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
+  domain : any;
   constructor(
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
@@ -564,6 +565,7 @@ console.log(resp.data)
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.domain = JSON.parse(localStorage.getItem("domain"));
     this.user =  JSON.parse(localStorage.getItem('user'))
    if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
    console.log(this.site,this.user.usrd_site)
@@ -1210,7 +1212,7 @@ changeTax(){
         this.provider = item;
         controls.po_vend.setValue(item.vd_addr || "");
         controls.po_curr.setValue(item.vd_curr || "");
-        controls.po_taxable.setValue(item.address.ad_taxable || "");
+        controls.po_taxable.setValue(item.address.ad_taxable || false);
         controls.po_taxc.setValue(item.address.ad_taxc || "");
         controls.po_cr_terms.setValue(item.vd_cr_terms || "");
         this.deviseService.getBy({cu_curr:item.vd_curr}).subscribe((res:any)=>{  
@@ -2410,18 +2412,17 @@ printpdf(nbr) {
   var doc = new jsPDF();
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-  var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
-  doc.setFontSize(9);
-  doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
-  doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
-  doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
-  doc.text('Alger. Algérie', 10 , 25 );
-  doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
-  doc.setFontSize(14);
-  doc.text('ABRACADABRA', 135 , 30 );
-  doc.line(10, 35, 200, 35);
+ var img = new Image();
+ img.src = "./assets/media/logos/companylogo.png";
+ doc.addImage(img, "png", 150, 5, 50, 30);
+ doc.setFontSize(9);
+ if (this.domain.dom_name != null) {
+   doc.text(this.domain.dom_name, 10, 10);
+ }
+ if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+ if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+ if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+ 
   doc.setFontSize(12);
   doc.text( 'Bon Commande N° : ' + nbr  , 70, 45);
   doc.setFontSize(8);

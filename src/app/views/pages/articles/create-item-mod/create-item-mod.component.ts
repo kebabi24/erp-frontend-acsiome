@@ -54,6 +54,7 @@ import {
   Editor,
   Editors,
   AngularGridInstance,
+  Formatters,
   FieldType,
   GridService,
 } from "angular-slickgrid";
@@ -72,6 +73,7 @@ import {
   CostSimulationService,
   InventoryStatusService,
   TaxeService,
+  ItemModelService,
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
 
@@ -99,13 +101,14 @@ const myCustomCheckmarkFormatter: Formatter = (
     </div>
 	`;
 };
+
 @Component({
-  selector: "kt-create",
-  templateUrl: "./create.component.html",
-  styleUrls: ["./create.component.scss"],
-  providers: [NgbDropdownConfig, NgbTabsetConfig],
+  selector: 'kt-create-item-mod',
+  templateUrl: './create-item-mod.component.html',
+  styleUrls: ['./create-item-mod.component.scss']
 })
-export class CreateComponent implements OnInit {
+export class CreateItemModComponent implements OnInit {
+
   item: Item;
   hasFormErrors1 = false;
   hasFormErrors2 = false;
@@ -146,6 +149,7 @@ export class CreateComponent implements OnInit {
 
   // selects
   pt_part_type: any[] = [];
+  pt_break_cat: any[] = [];
   pt_draw: any[] = [];
   pt_rev: any[] = [];
   pt_group: any[] = [];
@@ -202,6 +206,13 @@ export class CreateComponent implements OnInit {
   gridObjpl: any;
   gridServicepl: GridService;
   angularGridpl: AngularGridInstance;
+
+  datamod: [];
+  columnDefinitionsmod: Column[] = [];
+  gridOptionsmod: GridOption = {};
+  gridObjmod: any;
+  angularGridmod: AngularGridInstance;
+
   row_number;
   error = false;
   msg: String;
@@ -214,6 +225,7 @@ export class CreateComponent implements OnInit {
   sctForm: FormGroup;
   sctForm1: FormGroup;
 
+  model : any
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -232,11 +244,15 @@ export class CreateComponent implements OnInit {
     private sequenceService: SequenceService,
     private mesureService: MesureService,
     private taxService: TaxeService,
-    private inventoryStatusService: InventoryStatusService
+    private inventoryStatusService: InventoryStatusService,
+    private itemModelService: ItemModelService,
   ) {
     config.autoClose = true;
     this.prepareGrid();
     this.prepareGrid2();
+    this.codeService
+      .getBy({ code_fldname: "pt_break_cat" })
+      .subscribe((response: any) => (this.pt_break_cat = response.data));
     this.codeService
       .getBy({ code_fldname: "pt_part_type" })
       .subscribe((response: any) => (this.pt_part_type = response.data));
@@ -402,7 +418,10 @@ export class CreateComponent implements OnInit {
     this.loadingSubject.next(false);
     this.item = new Item();
     this.form1 = this.formBuilder.group({
-      pt_part: [this.item.pt_part,Validators.required],
+      pt_article: [ this.item.pt_article, Validators.required],
+      pt_break_cat: [{value: this.item.pt_break_cat,disabled: true },Validators.required ],
+
+      pt_part: [{value:this.item.pt_part, disabled:true},Validators.required],
       pt_desc1: [{ value: this.item.pt_desc1, disabled: !this.isExist },Validators.required],
       pt_um: [{ value: this.item.pt_um, disabled: !this.isExist },Validators.required],
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
@@ -416,7 +435,7 @@ export class CreateComponent implements OnInit {
       pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
       pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
       pt_promo: [{ value: this.item.pt_promo, disabled: !this.isExist }],
-      pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
+      
       pt_abc: [{ value: this.item.pt_abc, disabled: !this.isExist },Validators.required],
       pt_avg_int: [{ value: this.item.pt_avg_int, disabled: !this.isExist }],
       pt_lot_ser: [{ value: this.item.pt_lot_ser, disabled: !this.isExist }],
@@ -433,7 +452,7 @@ export class CreateComponent implements OnInit {
       pt_lot_grp: [{ value: this.item.pt_lot_grp, disabled: !this.isExist }],
       pt_rctwo_status: [{ value: this.item.pt_rctwo_status, disabled: !this.isExist }],
       pt_rctwo_active: [{ value: this.item.pt_rctwo_active, disabled: !this.isExist }],
-      pt_article: [{ value: this.item.pt_article, disabled: !this.isExist }],
+     
     });
     this.form2 = this.formBuilder.group({
       pt_ship_wt: [{ value: this.item.pt_ship_wt, disabled: !this.isExist }],
@@ -493,10 +512,10 @@ export class CreateComponent implements OnInit {
       pt_height: [{ value: this.item.pt_height, disabled: !this.isExist }],
       pt_width: [{ value: this.item.pt_width, disabled: !this.isExist }],
       pt_origin: [{ value: this.item.pt_origin, disabled: !this.isExist }],
-     
+      pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
       pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
       pt_model: [{ value: this.item.pt_model, disabled: !this.isExist }],
-      pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
+      // pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
       int01: [{ value: this.item.int01, disabled: !this.isExist }],
       int02: [{ value: this.item.int02, disabled: !this.isExist }],
     });
@@ -546,39 +565,56 @@ export class CreateComponent implements OnInit {
     const controls4 = this.form4.controls
     const controls5 = this.form5.controls
     const controls6 = this.form6.controls
-
+console.log(this.pt_break_cat)
+console.log(controls1.pt_break_cat.value)
+    let index = this.pt_break_cat.findIndex(x => x.code_value == controls1.pt_break_cat.value); 
+console.log(index)
+    const codedesc = this.pt_break_cat[index].code_desc
+    const codecmmt = this.pt_break_cat[index].code_cmmt
     this.itemService
         .getByOne({
-            pt_part: controls1.pt_part.value,
+            pt_article: controls1.pt_article.value,
+            pt_break_cat: controls1.pt_break_cat.value
         })
         .subscribe((response: any) => {
-        
-            if (response.data) {
+        console.log(response.data)
+            if (response.data != null) {
                 this.isExist = true
                 console.log(response.data)
             } else {
              
-              controls1.pt_desc1.enable()
-              controls1.pt_um.enable()
+              controls1.pt_part.setValue(controls1.pt_article.value + codedesc)
+              controls1.pt_desc1.setValue(this.model.mod_desc + " " + codecmmt)
+              controls1.pt_um.setValue(this.model.mod_um)
+              controls1.pt_prod_line.setValue(this.model.mod_prod_line)
+              controls1.pt_part_type.setValue(this.model.mod_part_type)
+              controls1.pt_draw.setValue(this.model.mod_draw)
+              controls1.pt_group.setValue(this.model.mod_group)
+              controls1.pt_dsgn_grp.setValue(this.model.mod_dsgn_grp)
+              controls5.pt_origin.setValue(this.model.mod_origin)
+              controls1.pt_drwg_loc.setValue(this.model.mod_drwg_loc)
+              controls1.pt_status.setValue(this.model.mod_status)
+              controls1.pt_abc.setValue(this.model.mod_abc)
+              controls1.pt_site.setValue(this.model.mod_site)
+              controls1.pt_loc.setValue(this.model.mod_loc)
+              controls5.pt_iss_pol.setValue(this.model.mod_iss_pol)
+
               controls1.pt_desc2.enable()
-              controls1.pt_prod_line.enable()
-              controls1.pt_part_type.enable()
-              controls1.pt_draw.enable()
-              controls1.pt_status.enable()
+              
               controls1.pt_rev.enable()
-              controls1.pt_dsgn_grp.enable()
-              controls1.pt_group.enable()
-              controls1.pt_drwg_loc.enable()
+             
+              
+             
               controls1.pt_drwg_size.enable()
               controls1.pt_promo.enable()
-              controls1.pt_break_cat.enable()
-              controls1.pt_abc.enable()
+              //controls1.pt_break_cat.enable()
+             
               controls1.pt_avg_int.enable()
               controls1.pt_lot_ser.enable()
               controls1.pt_cyc_int.enable()
-              controls1.pt_site.enable()
+             
               controls1.pt_shelflife.enable()
-              controls1.pt_loc.enable()
+              
               controls1.pt_sngl_lot.enable()
               controls1.pt_loc_type.enable()
               controls1.pt_critical.enable()
@@ -588,7 +624,7 @@ export class CreateComponent implements OnInit {
               controls1.pt_lot_grp.enable()
               controls1.pt_rctwo_status.enable()
               controls1.pt_rctwo_active.enable()
-              controls1.pt_article.enable()
+              //controls1.pt_article.enable()
               controls2.pt_ship_wt.enable()
               controls2.pt_ship_wt_um.enable()
               controls2.pt_net_wt.enable()
@@ -626,7 +662,7 @@ export class CreateComponent implements OnInit {
               controls3.pt_network.enable()
               controls3.pt_run_seq1.enable()
               controls3.pt_routing.enable()
-              controls3.pt_iss_pol.enable()
+              // controls3.pt_iss_pol.enable()
               controls3.pt_run_seq2.enable()
               controls3.pt_bom_code.enable()
               controls4.pt_pur_price.enable()
@@ -634,15 +670,15 @@ export class CreateComponent implements OnInit {
               controls4.pt_taxable.enable()
               controls4.pt_taxc.enable()
 
-              controls5.pt_iss_pol.enable()
+             
               controls5.pt_length.enable()
               controls5.pt_height.enable()
               controls5.pt_width.enable()
-              controls5.pt_origin.enable()
-              
+             
+              controls5.pt_drwg_loc.enable()
               controls5.pt_drwg_size.enable()
               controls5.pt_model.enable()
-              controls5.pt_break_cat.enable()
+              // controls5.pt_break_cat.enable()
               controls5.int01.enable()
               controls5.int02.enable()
 
@@ -658,7 +694,13 @@ export class CreateComponent implements OnInit {
             }
         })
 }
-//reste form
+onAlertClose($event) {
+  this.hasFormErrors1 = false;
+  this.hasFormErrors2 = false;
+  this.hasFormErrors3 = false;
+  this.hasFormErrors4 = false;
+}
+
   //reste form
   reset() {
     this.item = new Item();
@@ -827,7 +869,7 @@ export class CreateComponent implements OnInit {
     _item.pt_network = controls3.pt_network.value;
     _item.pt_run_seq1 = controls3.pt_run_seq1.value;
     _item.pt_routing = controls3.pt_routing.value;
-    // _item.pt_iss_pol = controls3.pt_iss_pol.value;
+    _item.pt_iss_pol = controls3.pt_iss_pol.value;
     _item.pt_run_seq2 = controls3.pt_run_seq2.value;
     _item.pt_bom_code = controls3.pt_bom_code.value;
 
@@ -842,9 +884,10 @@ export class CreateComponent implements OnInit {
     _item.pt_height    = controls5.pt_height.value;
     _item.pt_width     = controls5.pt_width.value;
     _item.pt_origin    = controls5.pt_origin.value;
+    // _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
     _item.pt_drwg_size = controls5.pt_drwg_size.value; 
     _item.pt_model     = controls5.pt_model.value;
-    _item.pt_break_cat = controls5.pt_break_cat.value;
+    //_item.pt_break_cat = controls5.pt_break_cat.value;
     _item.int01        = controls5.int01.value;
     _item.int02        = controls5.int02.value;
 
@@ -1046,6 +1089,32 @@ export class CreateComponent implements OnInit {
       (error) => console.log(error)
     );
   }
+  changemod() {
+    const controls = this.form1.controls; // chof le champs hada wesh men form rah
+    const mod_code = controls.pt_article.value;
+    this.itemModelService.getBy({ mod_code}).subscribe(
+      (res: any) => {
+        const { data } = res;
+        if (!data) {
+          this.layoutUtilsService.showActionNotification(
+            "ce Modèle n'existe pas!",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.error = true;
+        } else {
+          this.error = false;
+          this.model = data
+          console.log(this.model)
+          controls.pt_break_cat.enable()
+        }
+      },
+      (error) => console.log(error)
+    );
+  }
+  
   changeCode(field) {
     const controls = this.form1.controls; // chof le champs hada wesh men form rah
 
@@ -2027,5 +2096,216 @@ opentax(contenttax) {
     this.modalService.open(contenttax, { size: "lg" })
 }
 
+handleSelectedRowsChangedmod(e, args) {
+  const controls1 = this.form1.controls;
+  if (Array.isArray(args.rows) && this.gridObjmod) {
+    args.rows.map((idx) => {
+      const item = this.gridObjmod.getDataItem(idx);
+      console.log(item)
+      controls1.pt_article.setValue(item.mod_code || "");
+      this.model = item
+      controls1.pt_break_cat.enable()
+    });
+  }
+}
+
+
+angularGridReadymod(angularGrid: AngularGridInstance) {
+  this.angularGridmod = angularGrid
+  this.gridObjmod = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridmod() {
+  this.columnDefinitionsmod = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 30,
+    },
+    {
+      id: "mod_code",
+      name: "Code Model",
+      field: "mod_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+   
+    {
+      id: "mod_desc",
+      name: "Description",
+      field: "mod_desc",
+      sortable: true,
+      filterable: true,
+      minWidth: 250,
+      type: FieldType.string,
+    },
+    {
+      id: "mod_um",
+      name: "UM",
+      field: "mod_um",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 80,
+    },
+    {
+      id: "mod_prod_line",
+      name: "Famille",
+      field: "mod_prod_line",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+    {
+      id: "mod_part_type",
+      name: "Type ",
+      field: "mod_part_type",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+    {
+      id: "mod_draw",
+      name: "Catégorie",
+      field: "mod_draw",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+
+    {
+      id: "mod_group",
+      name: "Groupe",
+      field: "mod_group",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+    
+    {
+      id: "mod_dsgn_grp",
+      name: "Forme Géometrique",
+      field: "mod_dsgn_grp",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 80,
+    },
+    {
+      id: "mod_origin",
+      name: "Origin",
+      field: "mod_origin",
+      sortable: true,
+      filterable: true,
+      // type: FieldType.text,
+      minWidth: 80,
+    },
+    
+         {
+      id: "mod_drwg_loc",
+      name: "Source",
+      field: "mod_drwg_loc",
+      sortable: true,
+      filterable: true,
+      // type: FieldType.text,
+      minWidth: 80,
+    },
+
+    {
+      id: "mod_status",
+      name: "Statut",
+      field: "mod_status",
+      sortable: true,
+      filterable: true,
+      // type: FieldType.text,
+      minWidth: 80,
+    },
+    {
+      id: "mod_abc",
+      name: "Classe ABC",
+      field: "mod_abc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 80,
+    },
+   
+    {
+      id: "mod_site",
+      name: "Site",
+      field: "mod_site",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 80,
+    },
+    {
+      id: "mod_loc",
+      name: "Emplacement",
+      field: "mod_loc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 80,
+    },
+    
+    {
+      id: "mod_iss_pol",
+      name: "Scan",
+      field: "mod_iss_pol",
+      sortable: true,
+      filterable: true,
+      type: FieldType.boolean,
+      formatter: Formatters.checkmark,
+      minWidth: 80,
+    },
+  ]
+
+  this.gridOptionsmod = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  this.itemModelService
+      .getAll()
+      .subscribe((response: any) => (this.datamod = response.data))
+}
+openmod(content) {
+  this.prepareGridmod()
+  this.modalService.open(content, { size: "lg" })
+}
 
 }

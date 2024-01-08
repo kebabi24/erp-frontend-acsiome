@@ -29,16 +29,50 @@
                                     (close)="onAlertClose($event)">
                                     Modifiez quelques éléments et réessayez de soumettre.
                                 </kt-alert-->
-                                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="3000"
                                     (close)="onAlertClose($event)">
                                     Ce Code existe deja
                                 </kt-alert>
 
                                 <div class="row">
                                     <div class="form-group col-2">
+                                        <label class="form-group ">Modèle :</label>
+
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text"
+                                                [className]="form1.controls['pt_article'].errors && (form1.controls['pt_article'].dirty || form1.controls['pt_article'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                (change)="changemod()" formControlName="pt_article" 
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)=openmod(contentmod)>
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="form1.controls['pt_article'].errors && (form1.controls['pt_article'].dirty || form1.controls['pt_article'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Couleur:</label>
+
+                                        <select
+                                            [className]="form1.controls['pt_break_cat'].errors && (form1.controls['pt_break_cat'].dirty || form1.controls['pt_break_cat'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                            formControlName="pt_break_cat" id="exampleSelectscat" (change)="onChangeCode()">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of pt_break_cat" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                        </select>
+                                        <div *ngIf="form1.controls['pt_break_cat'].errors && (form1.controls['pt_break_cat'].dirty || form1.controls['pt_break_cat'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                                    </div>
+                                </div>
+                                <div class="row">    
+                                    <div class="form-group col-2">
                                         <label class="form-group">Code Article:</label>
 
-                                        <input type="text" formControlName="pt_part" (change)="onChangeCode()"
+                                        <input type="text" formControlName="pt_part" 
                                             [className]="form1.controls['pt_part'].errors && (form1.controls['pt_part'].dirty || form1.controls['pt_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                         <div *ngIf="form1.controls['pt_part'].errors && (form1.controls['pt_part'].dirty || form1.controls['pt_part'].touched)"
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
@@ -187,7 +221,7 @@
                                     </div>
 
 
-                                    <div class="form-group col-2">
+                                    <!--div class="form-group col-2">
                                         <label class="form-group ">Empl Plan:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_drwg_loc" id="exampleSelects5">
@@ -195,7 +229,7 @@
                                             <option *ngFor="let elem of pt_drwg_loc" [value]="elem.code_value">
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
-                                    </div>
+                                    </div-->
 
                                     <div class="form-group col-2">
                                         <label class="form-group ">Taille:</label>
@@ -420,13 +454,7 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-4">
-                                        <label class="form-group">Article:</label>
-
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_article">
-                                    </div>
-
+                                    
                                     <div class="form-group col-2">
                                         <label class="form-group ">Group Lot:</label>
 
@@ -492,12 +520,7 @@
 
                                     </div>
 
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Couleur :</label>
-                                        <input type="text" class="form-control form-control-sm form-control-solid"
-                                            formControlName="pt_break_cat">
-
-                                    </div>
+                                   
 
                                     <div class="form-group col-2">
                                         <label class="form-group ">Grammage :</label>
@@ -681,7 +704,13 @@
                                             formControlName="pt_origin">
                     
                                     </div>
-                                    
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Source:</label>
+                    
+                                        <input type="text" class="form-control form-control-sm form-control-solid"
+                                            formControlName="pt_drwg_loc">
+                    
+                                    </div>
                                     <div class="form-group col-2">
                                         <label class="form-group ">Unité/Sachet:</label>
                     
@@ -1746,4 +1775,28 @@
     </div>
 
 
+    <div>
+        <ng-template #contentmod let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Un Modèle</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridmod"
+                        [columnDefinitions]="columnDefinitionsmod" (onAngularGridCreated)="angularGridReadymod($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedmod($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsmod" [dataset]="datamod">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+
+    </div>
 </kt-portlet>
