@@ -6,21 +6,36 @@ import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
 import {
-  Column,
-  GridOption,
   Formatter,
   Editor,
   Editors,
-  AngularGridInstance,
-  EditorValidator,
-  EditorArgs,
-  GridService,
-  Formatters,
-  FieldType,
   OnEventArgs,
-  GridStateChange,
-  GridStateService,
+  AngularGridInstance,
+  Aggregators,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  FlatpickrOption,
+  GridService,
+  GridOption,
+  Grouping,
+  GroupingGetterFunction,
   GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  MultipleSelectOption,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+  GridStateChange,
+  Metrics,
 } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
@@ -66,7 +81,14 @@ export class RecapBroyageComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-
+  draggableGroupingPlugin: any;
+  
+  metrics!: Metrics;
+  WithPagination = true;
+  selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  
+  
+  dataview: any;
   // grid options
 
 
@@ -128,7 +150,16 @@ export class RecapBroyageComponent implements OnInit {
         filterable: true,
         type: FieldType.float,   
         columnGroup:  'OF',
-        
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'annee',
+              formatter: (g) => `Annee: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
       },
       {
         id: "mois",
@@ -139,7 +170,16 @@ export class RecapBroyageComponent implements OnInit {
         filterable: true,
         type: FieldType.float,   
         columnGroup:  'OF',
-        
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'mois',
+              formatter: (g) => `Mois: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
       },
       {
         id: "date",
@@ -150,9 +190,17 @@ export class RecapBroyageComponent implements OnInit {
         filterable: true,
         formatter: Formatters.dateIso,   
         columnGroup:  'OF',
-        
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'date',
+              formatter: (g) => `date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
       },
-      
       {
         id: "equipe",
         name: "Equipe",
@@ -161,9 +209,18 @@ export class RecapBroyageComponent implements OnInit {
         width: 60,
         filterable: true,   
         columnGroup:  'OF',
-        
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'equipe',
+              formatter: (g) => `Equipe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+              
+            }
       },
-      
       {
         id: "gamme",
         name: "Ligne",
@@ -172,21 +229,17 @@ export class RecapBroyageComponent implements OnInit {
         width: 60,
         filterable: true,   
         columnGroup:  'OF',
-        
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'gamme',
+              formatter: (g) => `Broyeur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
       },
-      {
-        id: "nbr",
-        name: "N° OF",
-        field: "nbr",
-        sortable: true,
-        width: 60,
-        filterable: true,   
-        columnGroup:  'OF',
-        
-      },
-     
-      
-      
       {
         id: "rctpart",
         name: "Famille",
@@ -196,6 +249,16 @@ export class RecapBroyageComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         columnGroup: 'ARTICLE',
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'rctpart',
+              formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
       },
       {
         id: "rctcolor",
@@ -206,16 +269,16 @@ export class RecapBroyageComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         columnGroup: 'ARTICLE',
-      },
-      {
-        id: "rctpal",
-        name: "BIGBAG N°",
-        field: "rctpal",
-        sortable: true,
-        width: 80,
-        filterable: true,
-        type: FieldType.string,
-        columnGroup: 'ARTICLE',
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            
+            grouping: {
+              getter: 'rctcolor',
+              formatter: (g) => `rctcolor: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('rctqty'),new Aggregators.Sum('issqty'),new Aggregators.Sum('dechet'),new Aggregators.Sum('reprise'),new Aggregators.Sum('diff'),new Aggregators.Avg('taux_perte')],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
       },
       {
         id: "rctqty",
@@ -225,6 +288,7 @@ export class RecapBroyageComponent implements OnInit {
         width: 80,
         filterable: true,
         type: FieldType.float,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored,
         columnGroup: 'DETAIL',
       },
       {
@@ -235,6 +299,7 @@ export class RecapBroyageComponent implements OnInit {
         width: 80,
         filterable: true,
         type: FieldType.float,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         columnGroup: 'DETAIL',
       },
       {
@@ -245,6 +310,7 @@ export class RecapBroyageComponent implements OnInit {
         width: 80,
         filterable: true,
         type: FieldType.float,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         columnGroup: 'DETAIL',
       },
       {
@@ -255,6 +321,7 @@ export class RecapBroyageComponent implements OnInit {
         width: 80,
         filterable: true,
         type: FieldType.float,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         columnGroup: 'DETAIL',
       },
       {
@@ -265,16 +332,18 @@ export class RecapBroyageComponent implements OnInit {
         width: 80,
         filterable: true,
         type: FieldType.float,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         columnGroup: 'DETAIL',
       },
       {
         id: "taux_perte",
         name: "% Dechet",
-        field: "Taux perte",
+        field: "taux_perte",
         sortable: true,
         width: 80,
         filterable: true,
         type: FieldType.float,
+        groupTotalsFormatter: GroupTotalFormatters.avgTotals ,
         columnGroup: 'DETAIL',
       },
       
@@ -294,7 +363,14 @@ export class RecapBroyageComponent implements OnInit {
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
       },
-    
+      enableDraggableGrouping: true,
+      enableFiltering: true,
+      enableSorting: true,
+      checkboxSelector: {
+          hideInFilterHeaderRow: false,
+          hideInColumnTitleRow: true,
+         
+        },
       enableCellNavigation: true,
       asyncEditorLoading: false,
       editable: false,
@@ -309,13 +385,62 @@ export class RecapBroyageComponent implements OnInit {
       excelExportOptions: {
         exportWithFormatter: false
       },
-      // registerExternalResources: [new ExcelExportService(), this.compositeEditorInstance],
-      enableFiltering: true,
-      // enableCompositeEditor: true,
-     // when using the cellMenu, you can change some of the default options and all use some of the callback methods
-      enableCellMenu: true,
-    };
+     enableCellMenu: true,
+     rowSelectionOptions: {
+         
+      selectActiveRow: false
+    },
+    
+    autoHeight:false,
+    
+    
+    exportOptions: {
+      sanitizeDataExport: true
+    },
+    enablePagination: true,
+    pagination: {
+      pageSizes: [5, 10, 50,100,1000,50000,999999999],
+      pageSize: 100
+    },
+    presets: {
+      filters: [
+       
+      ],
+      sorters: [
+       
+      ],
+    },
+    gridMenu: {
+      onCommand: (e, args) => {
+        if (args.command === 'toggle-preheader') {
+          // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+          this.clearGrouping();
+        }
+      },
+    },
+    draggableGrouping: {
+      dropPlaceHolderText: 'Drop a column header here to group by the column',
+      // groupIconCssClass: 'fa fa-outdent',
+      deleteIconCssClass: 'fa fa-times',
+      onGroupChanged: (e, args) => this.onGroupChanged(args),
+      onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+  
+  },
+
+
+    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+      var val = undefined;
+      try {
+        val = eval("item." + column.field);
+      } catch (e) {
+        // ignore
+      }
+      return val;
+    },
+
+
   }
+}
   ngOnInit(): void {
     
     this.loading$ = this.loadingSubject.asObservable();
@@ -555,11 +680,78 @@ export class RecapBroyageComponent implements OnInit {
   
     }
   }
+  
   opensite(contentsite) {
     this.prepareGridsite();
     this.modalService.open(contentsite, { size: "lg" });
   }
 
+  onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
+    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+    const caller = change && change.caller || [];
+    const groups = change && change.groupColumns || [];
+
+    if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+      // update all Group By select dropdown
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+    } else if (groups.length === 0 && caller === 'remove-group') {
+      this.clearGroupingSelects();
+    }
+  }
+  clearGroupingSelects() {
+    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+  }
+  
+  collapseAllGroups() {
+    this.dataview.collapseAllGroups();
+  }
+
+  expandAllGroups() {
+    this.dataview.expandAllGroups();
+  }
+  clearGrouping() {
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.draggableGroupingPlugin.clearDroppedGroups();
+    }
+    this.grid.invalidate(); // invalidate all rows and re-render
+  }
+
+
+  refreshMetrics(e: Event, args: any) {
+    if (args && args.current >= 0) {
+      setTimeout(() => {
+        this.metrics = {
+          startTime: new Date(),
+          endTime: new Date(),
+          itemCount: args && args.current || 0,
+          totalItemCount: this.dataset.length || 0
+        };
+      });
+    }
+  }
+  scrollGridBottom() {
+    this.angularGrid.slickGrid.navigateBottom();
+  }
+  scrollGridDown() {
+    this.angularGrid.slickGrid.navigateDown();
+  }
+  scrollGridLeft() {
+    this.angularGrid.slickGrid.navigateLeft();
+  }
+  scrollGridRight() {
+    this.angularGrid.slickGrid.navigateRight();
+  }
+
+  scrollGridUp() {
+    this.angularGrid.slickGrid.navigateUp();
+  }
+  scrollGridTop() {
+    this.angularGrid.slickGrid.navigateTop();
+  }
+  togglePaginationGrid2() {
+    this.WithPagination = !this.WithPagination;
+    this.angularGrid.paginationService!.togglePaginationVisibility(this.WithPagination);
+  }
 
   
 
