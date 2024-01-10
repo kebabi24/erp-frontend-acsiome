@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Transfert D un Article'" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="'Transfert Des Articles'" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -168,7 +168,7 @@
     <br>
 
     <div class="row">
-        <angular-slickgrid class="col-12" gridId="plageGrid" [columnDefinitions]="columnDefinitions"
+        <angular-slickgrid class="col-12" gridHeight="300" gridId="plageGrid" [columnDefinitions]="columnDefinitions"
         [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="GridReady($event)">
         </angular-slickgrid>
     </div>
@@ -542,7 +542,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridda"
                             [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
                             (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptions5" [dataset]="requisitions">
@@ -554,8 +554,8 @@
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
-            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
-                modal</button>
+         
+              
 
         </div>
         
