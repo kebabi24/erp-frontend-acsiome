@@ -1196,6 +1196,7 @@ export class TransferComponent implements OnInit {
           enableCellNavigation: true,
           enableRowSelection: true,
           autoHeight:false,
+          autoCommitEdit:true,
           enableAutoResize:true,
           formatterOptions: {
             

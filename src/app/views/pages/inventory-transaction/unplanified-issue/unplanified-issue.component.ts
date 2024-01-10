@@ -1180,6 +1180,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         enableExcelCopyBuffer: true,
         enableFiltering: true,
         autoEdit: false,
+        autoCommitEdit:true,
         autoHeight: false,
         frozenColumn: 0,
         frozenBottom: true,

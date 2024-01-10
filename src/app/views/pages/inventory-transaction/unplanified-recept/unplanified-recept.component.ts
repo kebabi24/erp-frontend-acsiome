@@ -636,6 +636,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       enableRowSelection: true,
       enableAutoResize: true,
       autoHeight: false,
+      autoCommitEdit:true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
