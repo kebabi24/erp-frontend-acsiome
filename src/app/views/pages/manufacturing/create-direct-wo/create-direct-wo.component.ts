@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, Label, EmployeService, PrintersService } from "../../../../core/erp";
-
+declare var electronPrinter: any;
 @Component({
   selector: "kt-create-direct-wo",
   templateUrl: "./create-direct-wo.component.html",
@@ -22,7 +22,7 @@ import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOr
 export class CreateDirectWoComponent implements OnInit {
   currentPrinter: string;
   PathPrinter: string;
- 
+
   workOrder: WorkOrder;
   woForm: FormGroup;
   hasFormErrors = false;
@@ -110,16 +110,15 @@ export class CreateDirectWoComponent implements OnInit {
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
   domain: any;
-  domconfig : any;
+  domconfig: any;
   constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService) {
     config.autoClose = true;
-    this.workRoutingService.getBy({ ro_rollup: true })
-      .subscribe((response: any) => { console.log(response.date)
-      this.ro_rollup = response.data});
-    this.codeService
-      .getBy({ code_fldname: "emp_shift" })
-      .subscribe((response: any) => (this.emp_shift = response.data));
-     
+    this.workRoutingService.getBy({ ro_rollup: true }).subscribe((response: any) => {
+      console.log(response.date);
+      this.ro_rollup = response.data;
+    });
+    this.codeService.getBy({ code_fldname: "emp_shift" }).subscribe((response: any) => (this.emp_shift = response.data));
+
     this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -301,31 +300,30 @@ export class CreateDirectWoComponent implements OnInit {
 
     this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
-    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
-      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+    this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
+      (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
         alert("Erreur de récupération path");
       }
-    
     );
     this.getProductColors();
     this.getProductTypes();
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
 
-    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
-        if(reponse.data != null) {   
-          console.log("hahahahahahahaha", reponse.data)
-          this.domconfig = true
-        } else  {
-          this.domconfig = false
+        if (reponse.data != null) {
+          console.log("hahahahahahahaha", reponse.data);
+          this.domconfig = true;
+        } else {
+          this.domconfig = false;
         }
-      },  
-          
+      },
+
       (error) => {
-       this.domconfig = false      },
-     
+        this.domconfig = false;
+      }
     );
 
     this.createForm();
@@ -368,20 +366,14 @@ export class CreateDirectWoComponent implements OnInit {
       controls.emp_shift.setValue(this.shift);
       console.log("shift", this.shift);
     });
-    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
-      (reponse: any) => { 
-        if(reponse.data != null) {
-        controls.wo_routing.setValue(reponse.data.code_value),
-        controls.wo_routing.disable() 
-
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+          controls.wo_routing.setValue(reponse.data.code_value), controls.wo_routing.disable();
         }
       },
-      (error) => {
-     
-      },
-     
+      (error) => {}
     );
-
   }
   //reste form
   reset() {
@@ -502,13 +494,19 @@ export class CreateDirectWoComponent implements OnInit {
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
     // _lb.int02   = this.product.int02
-    
+
     _lb.lb_printer = this.PathPrinter;
 
     let lab = null;
 
     this.labelService.add(_lb).subscribe(
-      (reponse: any) => (lab = reponse.data),
+      (blob) => {
+        // console.log(blob);
+        // const url = window.URL.createObjectURL(blob);
+        // window.open(url);
+        // saveAs(blob, "ticket.pdf");
+        console.log(electronPrinter);
+      },
       (error) => {
         alert("Erreur Impression Etiquette");
       },
@@ -588,26 +586,20 @@ export class CreateDirectWoComponent implements OnInit {
         // this.router.navigateByUrl("/");
       }
     );
-}
+  }
 
-  prepare(){
+  prepare() {
     const controls = this.woForm.controls;
-    console.log("alllllllllllllllo")
+    console.log("alllllllllllllllo");
     const _wo = new WorkOrder();
-    _wo.wo_site = controls.wo_site.value
-    _wo.wo_part = controls.wo_part.value
-    _wo.wo_routing = controls.wo_routing.value
-    _wo.wo_ord_date = controls.wo_ord_date.value
-    ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
-    : null
-    _wo.wo_rel_date = controls.wo_ord_date.value
-    ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
-    : null
-    _wo.wo_due_date = controls.wo_ord_date.value
-    ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
-    : null
-    _wo.wo__chr01 = controls.emp_shift.value
-    return _wo
+    _wo.wo_site = controls.wo_site.value;
+    _wo.wo_part = controls.wo_part.value;
+    _wo.wo_routing = controls.wo_routing.value;
+    _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
+    _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
+    _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
+    _wo.wo__chr01 = controls.emp_shift.value;
+    return _wo;
   }
   // save data
   //   onSubmit() {
@@ -759,7 +751,6 @@ export class CreateDirectWoComponent implements OnInit {
     );
   }
 
- 
   addWo() {
     const controls = this.woForm.controls;
     this.hasFormErrors = false;
@@ -1293,22 +1284,19 @@ export class CreateDirectWoComponent implements OnInit {
     this.workRoutingService.getAllDistinct().subscribe((response: any) => (this.gammes = response.data));
   }
   opengamme(content) {
-    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
-      (reponse: any) => { 
-       if (reponse.data == null) {
-        this.prepareGridgamme();
-        this.modalService.open(content, { size: "lg" }); 
-      
-       }
-        console.log(reponse.data)
-      
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
+      (reponse: any) => {
+        if (reponse.data == null) {
+          this.prepareGridgamme();
+          this.modalService.open(content, { size: "lg" });
+        }
+        console.log(reponse.data);
       },
       (error) => {
         this.prepareGridgamme();
-        this.modalService.open(content, { size: "lg" }); 
-      },
-    )
-    
+        this.modalService.open(content, { size: "lg" });
+      }
+    );
   }
 
   handleSelectedRowsChangedbom(e, args) {
@@ -1424,11 +1412,10 @@ export class CreateDirectWoComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
-
   onChangeGamme() {
     const controls = this.woForm.controls;
     this.workRoutingService.getByOne({ ro_routing: controls.wo_routing.value }).subscribe((response: any) => {
-   //   const { data } = response;
+      //   const { data } = response;
       console.log(response.data);
       if (response.data == null) {
         alert("Gamme n'existe pas");

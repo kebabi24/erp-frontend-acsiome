@@ -36,6 +36,7 @@
               "node_modules/angular-slickgrid/lib/multiple-select/multiple-select.css",
               "node_modules/angular-slickgrid/styles/css/slickgrid-theme-bootstrap.css",
               "src/styles.scss"
+              
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -49,6 +50,8 @@
               "node_modules/clipboard/dist/clipboard.js",
               "node_modules/apexcharts/dist/apexcharts.min.js",
               "src/assets/js/layout/extended/examples.js"
+           
+
             ],
             "es5BrowserSupport": true
           },
