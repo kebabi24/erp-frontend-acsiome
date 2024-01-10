@@ -316,7 +316,7 @@ export class TransferComponent implements OnInit {
               let tr = this.prepare()
               this.addIt( this.dataset,tr, this.trlot);
             }else {
-              this.message = "Parametrage Monquant pour la sequence";
+              this.message = "Parametrage Manquant pour la sequence";
               this.hasFormErrors = true;
               return;
          
@@ -924,7 +924,7 @@ export class TransferComponent implements OnInit {
                 const controls = this.trForm.controls
                 if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                     console.log('here')
-                 alert ("Qte monquante")
+                 alert ("Qte Manquante")
                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
               //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
              
@@ -982,7 +982,7 @@ export class TransferComponent implements OnInit {
 
                   if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                     console.log('here')
-                    alert ("Qte monquante")
+                    alert ("Qte Manquante")
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                    
                
@@ -1002,7 +1002,7 @@ export class TransferComponent implements OnInit {
                     if (data) {
                       if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                         console.log('here')
-                        alert ("Qte monquante")
+                        alert ("Qte Manquante")
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                        
                    
@@ -1922,7 +1922,7 @@ if (this.lddet != null)
          
                 if (updateItem.tr_qty_loc * Number(res.data.um_conv) >  updateItem.qty_oh) {
                   console.log('here')
-                  alert ("Qte monquante")
+                  alert ("Qte Manquante")
                    updateItem.tr_qty_loc = null 
            
              
@@ -1944,7 +1944,7 @@ if (this.lddet != null)
 
                     if (updateItem.tr_qty_loc * Number(res.data.um_conv) >  updateItem.qty_oh) {
                       console.log('here')
-                      alert ("Qte monquante")
+                      alert ("Qte Manquante")
                       updateItem.tr_qty_loc = null 
                  
                     } else {

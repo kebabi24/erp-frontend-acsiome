@@ -53,6 +53,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid';
 
 import {CodeService,
          ItemService,
+         ItemModelService,
          SiteService, 
          SequenceService,
          LocationService, 
@@ -68,7 +69,12 @@ import { EditCostComponent } from './edit-cost/edit-cost.component'
 import { ProductPageCreateComponent } from "./product-page-create/product-page-create.component";
 import { CreateSpecComponent } from './create-spec/create-spec.component';
 import { ListUpdateComponent } from './list-update/list-update.component';
-import { UpdateComponent } from './update/update.component'
+import { UpdateComponent } from './update/update.component';
+import { CreateModComponent } from './create-mod/create-mod.component';
+import { ListModComponent } from './list-mod/list-mod.component';
+import { EditModComponent } from './edit-mod/edit-mod.component';
+import { UpdateModComponent } from './update-mod/update-mod.component';
+import { CreateItemModComponent } from './create-item-mod/create-item-mod.component'
 
 
 const routes: Routes = [
@@ -110,6 +116,27 @@ const routes: Routes = [
                 path: "page",
                 component: ProductPageCreateComponent,
             },
+            {
+                path: "create-mod",
+                component: CreateModComponent,
+            },
+            {
+                path: "list-mod",
+                component: ListModComponent,
+            },
+            {
+                path: "edit-mod/:id",
+                component: EditModComponent,
+            },
+            {
+                path: "update-mod",
+                component: UpdateModComponent,
+            },
+            {
+                path: "create-item-mod",
+                component: CreateItemModComponent,
+            },
+
         ],
     },
 ]
@@ -125,6 +152,11 @@ const routes: Routes = [
         CreateSpecComponent,
         ListUpdateComponent,
         UpdateComponent,
+        CreateModComponent,
+        ListModComponent,
+        EditModComponent,
+        UpdateModComponent,
+        CreateItemModComponent,
     ],
     imports: [
         CommonModule,
@@ -172,7 +204,8 @@ const routes: Routes = [
         TaxeService,
         InventoryStatusService,
         CostSimulationService,
-        CustomerMobileService
+        CustomerMobileService,
+        ItemModelService,
     ],
 
     entryComponents: [

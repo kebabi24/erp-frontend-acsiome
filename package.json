@@ -9,7 +9,7 @@
     "build": "ng build --prod",
     "electron": "ng build && electron .",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint ": "ng lint",
     "e2e": "ng e2e",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "rtl": "webpack",

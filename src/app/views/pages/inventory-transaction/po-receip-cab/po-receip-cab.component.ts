@@ -240,6 +240,15 @@ export class PoReceipCabComponent implements OnInit {
         filterable: false,
       },
       {
+        id: "tr_batch",
+        name: "Code",
+        field: "tr_batch",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
+      },
+      {
         id: "qty_received",
         name: "QTE OA Récept",
         field: "qty_received",
@@ -499,7 +508,15 @@ export class PoReceipCabComponent implements OnInit {
           model: Editors.text,
         },
       },
-
+      {
+        id: "tr_grade",
+        name: "Qualité",
+        field: "tr_grade",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
+      },
       {
         id: "tr_status",
         name: "Status",
@@ -702,7 +719,7 @@ export class PoReceipCabComponent implements OnInit {
         );
         controls.prh_receiver.setValue(this.prhnbr);
       } else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
       }
@@ -761,7 +778,7 @@ export class PoReceipCabComponent implements OnInit {
     //     },
     //     )
     //   }else {
-    //     this.message = "Parametrage Monquant pour la sequence";
+    //     this.message = "Parametrage Manquant pour la sequence";
     //     this.hasFormErrors = true;
     //     return;
 

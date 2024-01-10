@@ -294,7 +294,7 @@ export class RpBroyageComponent implements OnInit {
       enableCellNavigation: true,
       asyncEditorLoading: false,
       editable: false,
-      
+      enableCheckboxSelector:true,
       enableAutoSizeColumns: true,
       enableAutoResize: true,
       showCustomFooter: true,

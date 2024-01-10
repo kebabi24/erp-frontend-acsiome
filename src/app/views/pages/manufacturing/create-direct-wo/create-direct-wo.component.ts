@@ -70,6 +70,16 @@ export class CreateDirectWoComponent implements OnInit {
   gridObjvend: any;
   angularGridvend: AngularGridInstance;
 
+  emps: [];
+  columnDefinitionsemp: Column[] = [];
+  gridOptionsemp: GridOption = {};
+  gridObjemp: any;
+  angularGridemp: AngularGridInstance;
+  dataViewemp: any;
+  gridServiceemp: GridService;
+  selectedIndexes: any[];
+  selectedIndexes2: any[];
+
   seq: any;
   nof: any;
   row_number;
@@ -96,7 +106,7 @@ export class CreateDirectWoComponent implements OnInit {
   rctwostat: any;
   ro_rollup: any[] = [];
   emp_shift: any[] = [];
-
+  globalState: boolean = false;
   product_colors: any[] = [];
   product_types: any[] = [];
 
@@ -111,6 +121,7 @@ export class CreateDirectWoComponent implements OnInit {
   angularGridprinter: AngularGridInstance;
   domain: any;
   domconfig: any;
+  user1: any;
   constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService) {
     config.autoClose = true;
     this.workRoutingService.getBy({ ro_rollup: true }).subscribe((response: any) => {
@@ -258,16 +269,15 @@ export class CreateDirectWoComponent implements OnInit {
         width: 80,
         filterable: false,
       },
-      // {
-      //   id: "tr_expire",
-      //   name: "Expire",
-      //   field: "tr_expire",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //   type: FieldType.dateIso,
-
-      // },
+      {
+        id: "tr_program",
+        name: "Heure",
+        field: "tr_program",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
     ];
 
     this.gridOptions = {
@@ -344,7 +354,8 @@ export class CreateDirectWoComponent implements OnInit {
         },
       ],
       wo_site: [this.workOrder.wo_site, Validators.required],
-      wo_part: [this.workOrder.wo_part, Validators.required],
+      wo_user1: [this.workOrder.wo_user1, Validators.required],
+      wo_part: [{ value: this.workOrder.wo_part, disabled: true }, Validators.required],
       desc: [{ value: null, disabled: true }],
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
@@ -432,7 +443,9 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   searchProduct() {
+    this.globalState = false;
     const controls = this.woForm.controls;
+    const date = new Date();
     controls.product_type.value;
     controls.product_color.value;
 
@@ -451,7 +464,23 @@ export class CreateDirectWoComponent implements OnInit {
           } else {
             console.log(data);
             controls.wo_part.setValue(data[0].pt_part);
-            controls.desc.setValue(data[0].pt_desc1);
+            controls.desc.setValue(response.data[0].pt_desc1);
+            this.desc2 = response.data[0].pt_desc2;
+            controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
+            this.um = response.data[0].pt_um;
+            this.loc = response.data[0].pt_loc;
+            if (response.data[0].pt_rctwo_active) {
+              this.rctwostat = response.data[0].pt_rctwo_status;
+            } else {
+              this.locationService
+                .getByOne({
+                  loc_loc: this.loc,
+                })
+                .subscribe((resp: any) => {
+                  console.log(resp.data, resp.data.length);
+                  this.rctwostat = resp.data.loc_status;
+                });
+            }
           }
         }
       });
@@ -459,6 +488,7 @@ export class CreateDirectWoComponent implements OnInit {
 
   onSubmit() {
     // alert("ok")
+    this.globalState = true;
     const controls = this.woForm.controls;
     let tr = this.prepareTr();
     this.trdataset = [];
@@ -488,8 +518,8 @@ export class CreateDirectWoComponent implements OnInit {
     _lb.lb_ld_status = this.rctwostat;
     _lb.lb_desc = this.desc2;
     _lb.lb_grp = controls.emp_shift.value;
-    _lb.lb_cust = "";
-    _lb.lb_addr = "";
+    _lb.lb_cust = controls.wo_routing.value;
+    _lb.lb_addr = controls.wo_user1.value;
     // _lb.lb_rmks = controls.emp_shift.value
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
@@ -526,6 +556,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_status: this.rctwostat,
           tr_expire: null,
           tr_ref: lab.lb_ref,
+          tr_user1: controls.wo_user1.value,
         });
         console.log(this.trdataset);
         this.addTR(this.trdataset, tr);
@@ -593,6 +624,7 @@ export class CreateDirectWoComponent implements OnInit {
     console.log("alllllllllllllllo");
     const _wo = new WorkOrder();
     _wo.wo_site = controls.wo_site.value;
+    _wo.wo_user1 = this.user1;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -688,7 +720,7 @@ export class CreateDirectWoComponent implements OnInit {
   //     this.addIt( this.dataset,wo, this.nof);
 
   //   }else {
-  //     this.message = "Parametrage Monquant pour la sequence";
+  //     this.message = "Parametrage Manquant pour la sequence";
   //     this.hasFormErrors = true;
   //     return;
 
@@ -837,6 +869,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_serial: null,
           tr_status: null,
           tr_expire: null,
+          tr_program: null,
         },
         { position: "bottom" }
       );
@@ -1429,6 +1462,8 @@ export class CreateDirectWoComponent implements OnInit {
     /*kamel palette*/
     const controls = this.woForm.controls;
     const ref = controls.ref.value;
+    const timedate = new Date().toLocaleTimeString();
+    console.log(timedate);
     var bol = false;
     for (let ob of this.dataset) {
       if (ob.tr_ref == ref) {
@@ -1460,39 +1495,45 @@ export class CreateDirectWoComponent implements OnInit {
 
                 this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                   console.log(respopart);
+                  this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
+                    if (respopart.data.pt_prod_line != controls.product_type.value && respopal.data.label.lb__log01 != true) {
+                      alert("Type ne correspond pas au produit broyé");
+                    } else {
+                      this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
+                        this.sct = respo.data;
+                        console.log(this.sct);
 
-                  this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
-                    this.sct = respo.data;
-                    console.log(this.sct);
-
-                    this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
-                      console.log(rescode);
-                      if (rescode.data.length > 0) {
-                        this.gridService.addItem(
-                          {
-                            id: this.dataset.length + 1,
-                            tr_line: this.dataset.length + 1,
-                            tr_part: this.lddet.ld_part,
-                            break: respopart.data.pt_break_cat,
-                            cmvid: "",
-                            desc: respopart.data.pt_desc1,
-                            tr_qty_loc: this.lddet.ld_qty_oh,
-                            tr_loc: this.lddet.ld_loc,
-                            tr_um: respopart.data.pt_um,
-                            tr_um_conv: 1,
-                            tr_price: this.sct.sct_mtl_tl,
-                            cmvids: "",
-                            tr_ref: ref,
-                            tr_serial: this.lddet.ld_lot,
-                            tr_status: this.stat,
-                            tr_expire: this.lddet.ld_expire,
-                          },
-                          { position: "bottom" }
-                        );
-                      } else {
-                        alert("Couleur ne correspond pas au produit ");
-                      }
-                    });
+                        this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
+                          console.log(rescode);
+                          if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true) {
+                            this.gridService.addItem(
+                              {
+                                id: this.dataset.length + 1,
+                                tr_line: this.dataset.length + 1,
+                                tr_part: this.lddet.ld_part,
+                                break: respopart.data.pt_break_cat,
+                                cmvid: "",
+                                desc: respopart.data.pt_desc1,
+                                tr_qty_loc: this.lddet.ld_qty_oh,
+                                tr_loc: this.lddet.ld_loc,
+                                tr_um: respopart.data.pt_um,
+                                tr_um_conv: 1,
+                                tr_price: this.sct.sct_mtl_tl,
+                                cmvids: "",
+                                tr_ref: ref,
+                                tr_serial: this.lddet.ld_lot,
+                                tr_status: this.stat,
+                                tr_expire: this.lddet.ld_expire,
+                                tr_program: timedate,
+                              },
+                              { position: "bottom" }
+                            );
+                          } else {
+                            alert("Couleur ne correspond pas au produit ");
+                          }
+                        });
+                      });
+                    }
                   });
                 });
               }
@@ -1587,5 +1628,148 @@ export class CreateDirectWoComponent implements OnInit {
   openprinter(contentprinter) {
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
+  }
+
+  angularGridReadyemp(angularGrid: AngularGridInstance) {
+    this.angularGridemp = angularGrid;
+    this.gridObjemp = (angularGrid && angularGrid.slickGrid) || {};
+
+    this.gridServiceemp = angularGrid.gridService;
+    this.dataViewemp = angularGrid.dataView;
+  }
+
+  // GRID IN
+  prepareGridemp() {
+    this.columnDefinitionsemp = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsemp = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+
+    // fill the dataset with your data
+    this.employeService.getAll().subscribe((response: any) => (this.emps = response.data));
+  }
+
+  handleSelectedRowsChangedemp(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+  openemp(content) {
+    this.prepareGridemp();
+    this.modalService.open(content, { size: "lg" });
+  }
+  addit() {
+    // this.itinerary.push({})
+    const controls = this.woForm.controls;
+    var l: String;
+    l = "";
+    console.log(l.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l = this.emps[index]["emp_addr"];
+      } else {
+        l = l + "," + this.emps[index]["emp_addr"];
+      }
+      //id: index,
+    });
+
+    console.log(l);
+    controls.wo_user1.setValue(l);
+    this.user1 = l;
   }
 }

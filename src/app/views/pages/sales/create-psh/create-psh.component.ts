@@ -489,7 +489,7 @@ export class CreatePshComponent implements OnInit {
           
           if (args.dataContext.psh_qty_ship * args.dataContext.psh_um_conv   > args.dataContext.qty_oh) {
              
-           alert ("Qte monquante")
+           alert ("Qte Manquante")
            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , psh_qty_ship: null })
         //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
        
@@ -820,7 +820,7 @@ export class CreatePshComponent implements OnInit {
         },
         )
       }else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
    

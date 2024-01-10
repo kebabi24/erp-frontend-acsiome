@@ -306,129 +306,129 @@ export class UnplanifiedIssueComponent implements OnInit {
           filterable: false,
         },
         
-        {
-          id: "tr_site",
-          name: "Site",
-          field: "tr_site",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          editor: {
-            model: Editors.text,
-            required: true,
-            validator: statusValidator,
+        // {
+        //   id: "tr_site",
+        //   name: "Site",
+        //   field: "tr_site",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //   editor: {
+        //     model: Editors.text,
+        //     required: true,
+        //     validator: statusValidator,
 
-          },
-          onCellChange: (e: Event, args: OnEventArgs) => {
+        //   },
+        //   onCellChange: (e: Event, args: OnEventArgs) => {
 
-            this.siteService.getByOne({ si_site: args.dataContext.tr_site,}).subscribe(
-              (response: any) => {
+        //     this.siteService.getByOne({ si_site: args.dataContext.tr_site,}).subscribe(
+        //       (response: any) => {
                 
-            console.log(response.data)
+        //     console.log(response.data)
 
-                  if (response.data) {
+        //           if (response.data) {
                     
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_site: response.data.si_site})
-                  }
-                  else {
-                        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , tr_site: null});
+        //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_site: response.data.si_site})
+        //           }
+        //           else {
+        //                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , tr_site: null});
       
-                       // this.gridService.onItemUpdated;
-                        alert("Site N'existe pas")
-                  }
-            });     
-        }
+        //                // this.gridService.onItemUpdated;
+        //                 alert("Site N'existe pas")
+        //           }
+        //     });     
+        // }
 
-        },
-        {
-            id: "mvids",
-            field: "cmvids",
-            excludeFromHeaderMenu: true,
-            formatter: Formatters.infoIcon,
-            minWidth: 30,
-            maxWidth: 30,
-            onCellClick: (e: Event, args: OnEventArgs) => {
-                this.row_number = args.row;
-                let element: HTMLElement = document.getElementById(
-                "openSitesGrid"
-                ) as HTMLElement;
-                element.click();
-            },
-        },
-        {
-          id: "tr_loc",
-          name: "Emplacement",
-          field: "tr_loc",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          editor: {
-            model: Editors.text,
-            required: true,
-            validator: statusValidator,
+        // },
+        // {
+        //     id: "mvids",
+        //     field: "cmvids",
+        //     excludeFromHeaderMenu: true,
+        //     formatter: Formatters.infoIcon,
+        //     minWidth: 30,
+        //     maxWidth: 30,
+        //     onCellClick: (e: Event, args: OnEventArgs) => {
+        //         this.row_number = args.row;
+        //         let element: HTMLElement = document.getElementById(
+        //         "openSitesGrid"
+        //         ) as HTMLElement;
+        //         element.click();
+        //     },
+        // },
+        // {
+        //   id: "tr_loc",
+        //   name: "Emplacement",
+        //   field: "tr_loc",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //   editor: {
+        //     model: Editors.text,
+        //     required: true,
+        //     validator: statusValidator,
 
-          },
+        //   },
 
 
-          onCellChange: (e: Event, args: OnEventArgs) => {
-            console.log(args.dataContext.tr_site)
-            console.log(args.dataView.tr_site)
+        //   onCellChange: (e: Event, args: OnEventArgs) => {
+        //     console.log(args.dataContext.tr_site)
+        //     console.log(args.dataView.tr_site)
               
-              this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe(
-                (response: any) => {
-                  this.location = response.data
-                  if (response.data) {
+        //       this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe(
+        //         (response: any) => {
+        //           this.location = response.data
+        //           if (response.data) {
 
-                      this.locationDetailService.getByOne({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: null }).subscribe(
-                        (response: any) => {
-                          this.lddet = response.data
-                        //  console.log(this.lddet[0].ld_qty_oh)
-                 if (this.lddet){
-                          this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-UNP" }).subscribe((resstat:any)=>{
-                      //      console.log(resstat)
-                            const { data } = resstat;
+        //               this.locationDetailService.getByOne({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: null }).subscribe(
+        //                 (response: any) => {
+        //                   this.lddet = response.data
+        //                 //  console.log(this.lddet[0].ld_qty_oh)
+        //          if (this.lddet){
+        //                   this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-UNP" }).subscribe((resstat:any)=>{
+        //               //      console.log(resstat)
+        //                     const { data } = resstat;
     
-                            if (data) {
-                              this.stat = null
-                            } else {
-                              this.stat = this.lddet.ld_status
-                            }
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,   tr_status: this.stat, qty_oh: this.lddet.ld_qty_oh, tr_expire: this.lddet.ld_expire})
-                          });     
-                        }
-                        else {
-                          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,   tr_status: null, qty_oh: 0, tr_expire: null})
+        //                     if (data) {
+        //                       this.stat = null
+        //                     } else {
+        //                       this.stat = this.lddet.ld_status
+        //                     }
+        //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,   tr_status: this.stat, qty_oh: this.lddet.ld_qty_oh, tr_expire: this.lddet.ld_expire})
+        //                   });     
+        //                 }
+        //                 else {
+        //                   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,   tr_status: null, qty_oh: 0, tr_expire: null})
                        
-                        }
-                        });     
-                      }
-                      else {
-                        alert("Emplacement Nexiste pas")
-                        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_loc: null, qty_oh: 0, tr_status: null })
-                      }
+        //                 }
+        //                 });     
+        //               }
+        //               else {
+        //                 alert("Emplacement Nexiste pas")
+        //                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_loc: null, qty_oh: 0, tr_status: null })
+        //               }
                        
-          });
+        //   });
 
-        }
+        // }
 
 
 
-        },
-        {
-            id: "mvidl",
-            field: "cmvidl",
-            excludeFromHeaderMenu: true,
-            formatter: Formatters.infoIcon,
-            minWidth: 30,
-            maxWidth: 30,
-            onCellClick: (e: Event, args: OnEventArgs) => {
-                this.row_number = args.row;
-                let element: HTMLElement = document.getElementById(
-                "openLocsGrid"
-                ) as HTMLElement;
-                element.click();
-            },
-        },       
+        // },
+        // {
+        //     id: "mvidl",
+        //     field: "cmvidl",
+        //     excludeFromHeaderMenu: true,
+        //     formatter: Formatters.infoIcon,
+        //     minWidth: 30,
+        //     maxWidth: 30,
+        //     onCellClick: (e: Event, args: OnEventArgs) => {
+        //         this.row_number = args.row;
+        //         let element: HTMLElement = document.getElementById(
+        //         "openLocsGrid"
+        //         ) as HTMLElement;
+        //         element.click();
+        //     },
+        // },       
         {
           id: "tr_serial",
           name: "Lot/Serie",
@@ -474,16 +474,16 @@ export class UnplanifiedIssueComponent implements OnInit {
                 element.click();
             },
         },
-        {
-            id: "qty_oh",
-            name: "QTE Stock",
-            field: "qty_oh",
-            sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.float,
+        // {
+        //     id: "qty_oh",
+        //     name: "QTE Stock",
+        //     field: "qty_oh",
+        //     sortable: true,
+        //     width: 80,
+        //     filterable: false,
+        //     type: FieldType.float,
             
-        },
+        // },
         {
             id: "tr_qty_loc",
             name: "QTE",
@@ -506,7 +506,7 @@ export class UnplanifiedIssueComponent implements OnInit {
                 
                 if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                     console.log('here')
-                 alert ("Qte monquante")
+                 alert ("Qte Manquante")
                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
               //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
              
@@ -554,7 +554,7 @@ export class UnplanifiedIssueComponent implements OnInit {
 
                   if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                     console.log('here')
-                    alert ("Qte monquante")
+                    alert ("Qte Manquante")
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                     
                 
@@ -574,7 +574,7 @@ export class UnplanifiedIssueComponent implements OnInit {
                     if (data) {
                       if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                         console.log('here')
-                        alert ("Qte monquante")
+                        alert ("Qte Manquante")
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                         
                     
@@ -619,18 +619,18 @@ export class UnplanifiedIssueComponent implements OnInit {
               element.click();
           },
         },
-        {
-          id: "tr_um_conv",
-          name: "Conv UM",
-          field: "tr_um_conv",
-          sortable: true,
-          width: 80,
-          filterable: false,
-         // editor: {
-         //     model: Editors.float,
-          //},
+        // {
+        //   id: "tr_um_conv",
+        //   name: "Conv UM",
+        //   field: "tr_um_conv",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //  // editor: {
+        //  //     model: Editors.float,
+        //   //},
           
-        },
+        // },
         {
           id: "tr_ref",
           name: "Palette",
@@ -644,91 +644,91 @@ export class UnplanifiedIssueComponent implements OnInit {
           
         },
         
-        {
-            id: "tr_price",
-            name: "Prix unitaire",
-            field: "tr_price",
-            sortable: true,
-            width: 80,
-            filterable: false,
-            //type: FieldType.float,
-            editor: {
-                model: Editors.float,
-                params: { decimalPlaces: 2 }
-            },
-            formatter: Formatters.decimal,
+        // {
+        //     id: "tr_price",
+        //     name: "Prix unitaire",
+        //     field: "tr_price",
+        //     sortable: true,
+        //     width: 80,
+        //     filterable: false,
+        //     //type: FieldType.float,
+        //     editor: {
+        //         model: Editors.float,
+        //         params: { decimalPlaces: 2 }
+        //     },
+        //     formatter: Formatters.decimal,
             
-        },
+        // },
                 
-        {
-          id: "tr_status",
-          name: "Status",
-          field: "tr_status",
-          sortable: true,
-          width: 80,
-          filterable: false,
-         /* editor: {
-            model: Editors.text,
-            required: true,
-            validator: statusValidator,
+        // {
+        //   id: "tr_status",
+        //   name: "Status",
+        //   field: "tr_status",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //  /* editor: {
+        //     model: Editors.text,
+        //     required: true,
+        //     validator: statusValidator,
 
-          },
-          onCellChange: (e: Event, args: OnEventArgs) => {
-            console.log(args.dataContext.tr_status)
+        //   },
+        //   onCellChange: (e: Event, args: OnEventArgs) => {
+        //     console.log(args.dataContext.tr_status)
             
-            this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "ISS-UNP" }).subscribe((res:any)=>{
-            console.log(res)
-            const { data } = res;
+        //     this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "ISS-UNP" }).subscribe((res:any)=>{
+        //     console.log(res)
+        //     const { data } = res;
   
-          if (data) {
-            alert ("Mouvement Interdit Pour ce Status")
-            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //   if (data) {
+        //     alert ("Mouvement Interdit Pour ce Status")
+        //     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
             
-          }
-            })
+        //   }
+        //     })
 
     
-            //if (args.dataContext.tr_qty_loc > args.dataContext.qty_oh) {
-            //    console.log('here')
-            // alert ("Qte monquante")
-            // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
-          //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
+        //     //if (args.dataContext.tr_qty_loc > args.dataContext.qty_oh) {
+        //     //    console.log('here')
+        //     // alert ("Qte Manquante")
+        //     // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
+        //   //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
          
            
-        },
-        */
+        // },
+        // */
 
 
 
 
-        },
-        {
-          id: "mvidlot",
-          field: "cmvidlot",
-          excludeFromHeaderMenu: true,
-          formatter: Formatters.infoIcon,
-          minWidth: 30,
-          maxWidth: 30,
-          onCellClick: (e: Event, args: OnEventArgs) => {
-              this.row_number = args.row;
-              let element: HTMLElement = document.getElementById(
-              "openStatussGrid"
-              ) as HTMLElement;
-              element.click();
-          },
-        },
-        {
-          id: "tr_expire",
-          name: "Expire",
-          field: "tr_expire",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          formatter: Formatters.dateIso,
+        // },
+        // {
+        //   id: "mvidlot",
+        //   field: "cmvidlot",
+        //   excludeFromHeaderMenu: true,
+        //   formatter: Formatters.infoIcon,
+        //   minWidth: 30,
+        //   maxWidth: 30,
+        //   onCellClick: (e: Event, args: OnEventArgs) => {
+        //       this.row_number = args.row;
+        //       let element: HTMLElement = document.getElementById(
+        //       "openStatussGrid"
+        //       ) as HTMLElement;
+        //       element.click();
+        //   },
+        // },
+        // {
+        //   id: "tr_expire",
+        //   name: "Expire",
+        //   field: "tr_expire",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //   formatter: Formatters.dateIso,
           
-          type: FieldType.dateIso,
+        //   type: FieldType.dateIso,
           
-        },
+        // },
       ];
   
       this.gridOptions = {
@@ -799,7 +799,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         
         tr_rmks: [this.inventoryTransaction.tr_rmks],
         tr_addr: [this.inventoryTransaction.tr_addr],
-        print:[true],
+        print:[false],
         ref: [null],
      
       });
@@ -835,12 +835,14 @@ export class UnplanifiedIssueComponent implements OnInit {
     reset() {
       this.inventoryTransaction = new InventoryTransaction();
       this.createForm();
+      
       this.hasFormErrors = false;
     }
     // save data
     onSubmit() {
       this.hasFormErrors = false;
       const controls = this.trForm.controls;
+      
       /** check form */
       if (this.trForm.invalid) {
         Object.keys(controls).forEach((controlName) =>
@@ -854,6 +856,12 @@ export class UnplanifiedIssueComponent implements OnInit {
   
       if (!this.dataset.length) {
         this.message = "La liste des article ne peut pas etre vide";
+        this.hasFormErrors = true;
+  
+        return;
+      }
+      if (controls.tr_addr.value == null) {
+        this.message = "addresse ne peut pas etre vide";
         this.hasFormErrors = true;
   
         return;
@@ -928,7 +936,7 @@ export class UnplanifiedIssueComponent implements OnInit {
           this.addIt( this.dataset,tr, this.trlot);
 
           }else {
-            this.message = "Parametrage Monquant pour la sequence";
+            this.message = "Parametrage Manquant pour la sequence";
             this.hasFormErrors = true;
             return;
        
@@ -981,6 +989,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         .subscribe(
          (reponse: any) => {
           console.log(reponse)
+          this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
           // const arrayOctet = new Uint8Array(reponse.pdf.data)
           // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
           // const fileUrl = URL.createObjectURL(file);
@@ -1005,11 +1014,14 @@ export class UnplanifiedIssueComponent implements OnInit {
               true
             );
             this.loadingSubject.next(false);
+            
+            this.goBack()
         //    console.log(this.provider, po, this.dataset);
         //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-        if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
+       
 
-          this.router.navigateByUrl("/");
+          // this.router.navigateByUrl("/");
+          
           }
         );
     }
@@ -1026,6 +1038,9 @@ export class UnplanifiedIssueComponent implements OnInit {
   
     // add new Item to Datatable
     addNewItem() {
+      const controls = this.trForm.controls;
+      if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
+      else{
       this.gridService.addItem(
         {
           id: this.dataset.length + 1,
@@ -1046,6 +1061,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         },
         { position: "bottom" }
       );
+    }
     }
     
     
@@ -2050,10 +2066,13 @@ console.log(updateItem.tr_part)
   }
  
   onChangePal() {
+    
     /*kamel palette*/
     const controls = this.trForm.controls
     const ref = controls.ref.value
   var bol = false
+  if (controls.tr_addr.value == null){alert('veuillez remplir adresse')}
+  else{
     for(let ob of this.dataset) {
 
       if(ob.tr_ref == ref) {
@@ -2151,6 +2170,7 @@ console.log(updateItem.tr_part)
   else {
     alert ("Palette déja scannée")
   }
+}
   controls.ref.setValue(null)
   document.getElementById("ref").focus();
   
@@ -2295,7 +2315,7 @@ doc.addPage();
       doc.line(45, i - 5, 45, i);
       doc.text(desc1, 47, i - 1);
       doc.line(100, i - 5, 100, i);
-      doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_qty_loc.toFixed(2))), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
       doc.text(this.dataset[j].tr_um, 123, i - 1);
       doc.line(130, i - 5, 130, i);
@@ -2305,7 +2325,7 @@ doc.addPage();
       doc.line(170, i - 5, 170, i);
       doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
+      doc.text(String(Number((Number(this.dataset[j].tr_price) * Number((this.dataset[j].tr_qty_loc).toFixed(2))))), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       // doc.line(10, i, 200, i );
 
@@ -2334,17 +2354,17 @@ doc.addPage();
       doc.line(45, i - 5, 45, i);
       doc.text(this.dataset[j].desc, 47, i - 1);
       doc.line(100, i - 5, 100, i);
-      doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
       doc.text(this.dataset[j].tr_um, 123, i - 1);
       doc.line(130, i - 5, 130, i);
-      doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_price)), 148, i - 1, { align: "right" });
       doc.line(150, i - 5, 150, i);
       doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
       doc.line(170, i - 5, 170, i);
       doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
+      doc.text(String(Number(Number((this.dataset[j].tr_price)) * Number((this.dataset[j].tr_qty_loc)))), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       doc.line(10, i, 205, i);
       i = i + 5;

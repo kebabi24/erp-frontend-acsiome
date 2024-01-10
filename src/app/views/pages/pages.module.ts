@@ -27,7 +27,7 @@ import { SettingPrintersComponent } from './setting-printers/setting-printers.co
 @NgModule({
   declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent, SettingPrintersComponent],
   exports: [],
-  imports: [CommonModule, HttpClientModule, FormsModule, CoreModule, PartialsModule, AngularSlickgridModule.forRoot(), MailModule, ECommerceModule, UserManagementModule, ProvidersModule, TreeModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, CoreModule, PartialsModule, AngularSlickgridModule.forRoot(), MailModule, ECommerceModule, UserManagementModule, ProvidersModule, /*TreeModule*/],
   providers: [],
 })
 export class PagesModule {}

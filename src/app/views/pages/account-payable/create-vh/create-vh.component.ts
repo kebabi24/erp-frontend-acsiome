@@ -848,7 +848,7 @@ var prod = args.dataContext.product;
       this.entityService.getBy({en_entity}).subscribe(
         (res: any) => {
           const { data } = res;
-          const message = "Cette Entitee n'existe pas!";
+          const message = "Cette Entite n'existe pas!";
           if (!data.length) {
             alert (" Entité n'existe pas ")
             controls.vh_entity.setValue(null);
@@ -961,7 +961,7 @@ var prod = args.dataContext.product;
         },
         )
       }else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
    
@@ -995,7 +995,7 @@ var prod = args.dataContext.product;
           },
           )
         }else {
-          this.message = "Parametrage Monquant pour la sequence";
+          this.message = "Parametrage Manquant pour la sequence (AP)";
           this.hasFormErrors = true;
           return;
      

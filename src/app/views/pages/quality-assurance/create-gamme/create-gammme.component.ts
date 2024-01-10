@@ -29,6 +29,12 @@ export class CreateGammeComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
 
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {};
+  gridObj: any;
+  dataView: any
+  angularGrid: AngularGridInstance;
+
 
   columnDefinitionsTO: Column[] = [];
   gridOptionsTO: GridOption = {};
@@ -65,6 +71,7 @@ export class CreateGammeComponent implements OnInit {
 
   specifications :any[] = [];
   routes :any[] = [];
+  gammesData :  [];
 
 
 
@@ -280,7 +287,7 @@ export class CreateGammeComponent implements OnInit {
         {
             id: "qps_qty",
             name: "Quantité",
-            field: "qps_qty ",
+            field: "qps_qty",
             sortable: true,
             minWidth: 100,
             maxWidth: 300,
@@ -499,10 +506,66 @@ export class CreateGammeComponent implements OnInit {
   this.openPGrid(content)
  }
 
- opemGammeGrid(){
-  
+ opemGammeGrid(content){
+  this.prepareGridGamme();
+  this.modalService.open(content, { size: "lg" });
  }
 
+ prepareGridGamme() {
+  this.columnDefinitions = [
+    {
+      id: "qro_routing",
+      name: "Code",
+      field: "qro_routing",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "qro_desc",
+      name: "Description",
+      field: "qro_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
 
+  this.gridOptions = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: { hideSelectAllCheckbox: true},
+    multiSelect: false,
+    rowSelectionOptions: {selectActiveRow: true},
+  };
+
+  // fill the dataset with your data
+  this.qualityControlService.getAllGammes().subscribe((response: any) => (this.gammesData = response.data));
+}
+
+angularGridReady(angularGrid: AngularGridInstance) {
+  this.angularGrid = angularGrid;
+  this.gridObj = (angularGrid && angularGrid.slickGrid) || {};
+  this.dataView = angularGrid.dataView;
+}
+
+handleSelectedRowsChangedGamme(e, args){
+  const controls = this.userForm.controls;
+  if (Array.isArray(args.rows) && this.gridObj) {
+    args.rows.map((idx) => {
+      const gamme = this.gridObj.getDataItem(idx);
+      controls.gamme_code.setValue(gamme.qro_routing || "");
+      
+    });
+  }
+}
 
 }
