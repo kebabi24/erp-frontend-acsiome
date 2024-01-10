@@ -142,27 +142,14 @@ export class PoReceipCabComponent implements OnInit {
   }
 
   test() {
-    const options: PosPrintOptions = {
-      preview: false,
-      margin: "0 0 0 0",
-      copies: 1,
-      printerName: "XP-80C",
-      timeOutPerLine: 400,
-      boolean: false,
-      pageSize: "80mm", // page size
-    };
-    const data: PosPrintData[] = [
+    const data = [
       {
-        type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-        value: "SAMPLE HEADING",
-        style: { fontWeight: "700", textAlign: "center", fontSize: "24px" },
-      },
-    ];
-    // PosPrinter.print(data, options)
-    //   .then(console.log)
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+          type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+          value: 'SAMPLE HEADING',
+          style: {fontWeight: "700", textAlign: 'center', fontSize: "24px"}
+      }
+  ]
+  ElectronPrinter.print(data,"data")
   }
 
   initGrid() {
@@ -603,7 +590,14 @@ export class PoReceipCabComponent implements OnInit {
                 // const url = window.URL.createObjectURL(blob);
                 // window.open(url);
                 // saveAs(blob, "ticket.pdf");
-                ElectronPrinter();
+                const data = [
+                  {
+                      type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+                      value: 'SAMPLE HEADING',
+                      style: {fontWeight: "700", textAlign: 'center', fontSize: "24px"}
+                  }
+              ]
+              ElectronPrinter.print(data,"data")
               },
               (error) => {
                 alert("Erreur Impression Etiquette");
