@@ -21,33 +21,22 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 // Layout
-import {
-  SubheaderService,
-  LayoutConfigService,
-} from "../../../../core/_base/layout";
+import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
 // CRUD
-import {
-  LayoutUtilsService,
-  TypesUtilsService,
-  MessageType,
-} from "../../../../core/_base/crud";
+import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
-import {
-  NgbModal,
-  NgbActiveModal,
-  ModalDismissReasons,
-  NgbModalOptions,
-} from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+declare var electronPrinter: any;
 import { MatAutocomplete } from "@angular/material/autocomplete";
 
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
-  const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
+  const gridOptions = grid && grid.getOptions ? grid.getOptions() : {};
   const translate = gridOptions.i18n;
 
   // to get the editor object, you'll need to use "internalColumnEditor"
@@ -55,21 +44,20 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   const columnEditor = args && args.column && args.column.internalColumnEditor;
 
   if (value == null || value == undefined || !value.length) {
-    return { valid: false, msg: 'This is a required field' };
-  } 
-  return { valid: true, msg: '' };
+    return { valid: false, msg: "This is a required field" };
+  }
+  return { valid: true, msg: "" };
 };
 
 @Component({
-  selector: 'kt-unplanified-receipt-cab',
-  templateUrl: './unplanified-receipt-cab.component.html',
-  styleUrls: ['./unplanified-receipt-cab.component.scss']
+  selector: "kt-unplanified-receipt-cab",
+  templateUrl: "./unplanified-receipt-cab.component.html",
+  styleUrls: ["./unplanified-receipt-cab.component.scss"],
 })
 export class UnplanifiedReceiptCabComponent implements OnInit {
-
   currentPrinter: string;
   PathPrinter: string;
-  employeGrp:string;
+  employeGrp: string;
   inventoryTransaction: InventoryTransaction;
   trForm: FormGroup;
   nbrForm: FormGroup;
@@ -135,19 +123,19 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   domain: any;
   seq: any;
   dataprinter: [];
-  domconfig : any;
-  prodligne : any;
-  dsgn_grp  : any;
+  domconfig: any;
+  prodligne: any;
+  dsgn_grp: any;
   columnDefinitionsprinter: Column[] = [];
 
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
 
   angularGridprinter: AngularGridInstance;
-  nligne : any;
-  pdl : any;
-  index : any;
-  constructor(config: NgbDropdownConfig, private trFB: FormBuilder,private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
+  nligne: any;
+  pdl: any;
+  index: any;
+  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -632,8 +620,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             const controls = this.trForm.controls;
             this.printbuttonState=true;
             const _lb = new Label();
-            _lb.lb__dec01 = args.dataContext.tr_line,
-            _lb.lb_site = args.dataContext.tr_site;
+            (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             _lb.lb_rmks = controls.tr_rmks.value;
             _lb.lb_loc = args.dataContext.tr_loc;
             _lb.lb_part = args.dataContext.tr_part;
@@ -650,10 +637,16 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
-            console.log(_lb)
-           // console.log(10 * 100.02)
+            console.log(_lb);
+            // console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
-              (reponse: any) => (lab = reponse.data),
+              (blob) => {
+                // console.log(blob);
+                // const url = window.URL.createObjectURL(blob);
+                // window.open(url);
+                // saveAs(blob, "ticket.pdf");
+                console.log(electronPrinter);
+              },
               (error) => {
                 alert("Erreur Impression Etiquette");
               },
@@ -661,9 +654,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty : args.dataContext.tr_qty_loc});
                 //console.log("id", args.dataContext.id)
                 //console.log("dataset",this.dataset[args.dataContext.id])
-                this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.id}) 
-                console.log(this.index)
-                this.onSubmit()
+                this.index = this.dataset.findIndex((el) => {
+                  return el.tr_line == args.dataContext.id;
+                });
+                console.log(this.index);
+                this.onSubmit();
               }
             );
           } else {
@@ -701,51 +696,48 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    
+
     this.user = JSON.parse(localStorage.getItem("user"));
     this.currentPrinter = this.user.usrd_dft_printer;
-    this.printerService.getByPrinter({printer_code:this.currentPrinter}).subscribe(
-      (reponse: any) => (this.PathPrinter = reponse.data.printer_path, console.log(this.PathPrinter)),
+    this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
+      (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
         alert("Erreur de récupération path");
       }
-    
     );
-    this.employeService.getByOne({emp_userid: this.user.usrd_code}).subscribe(
-      (reponse: any) => (this.employeGrp = reponse.data.emp_shift, console.log(this.employeGrp)),
+    this.employeService.getByOne({ emp_userid: this.user.usrd_code }).subscribe(
+      (reponse: any) => ((this.employeGrp = reponse.data.emp_shift), console.log(this.employeGrp)),
       (error) => {
         alert("Erreur Employe Shift");
-      },
-     
+      }
     );
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
 
-    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
-        if(reponse.data != null) {   
-          console.log("hahahahahahahaha", reponse.data)
-          this.domconfig = true
-          this.prodligne = reponse.data.code_cmmt.split(",")
-          this.dsgn_grp  = reponse.data.code_desc.split(",")
-        } else  {
-          this.domconfig = false
+        if (reponse.data != null) {
+          console.log("hahahahahahahaha", reponse.data);
+          this.domconfig = true;
+          this.prodligne = reponse.data.code_cmmt.split(",");
+          this.dsgn_grp = reponse.data.code_desc.split(",");
+        } else {
+          this.domconfig = false;
         }
-      },  
-          
+      },
+
       (error) => {
-       this.domconfig = false      },
-     
+        this.domconfig = false;
+      }
     );
     this.createForm();
-    console.log(this.PathPrinter)
+    console.log(this.PathPrinter);
   }
 
   //create form
   createForm() {
     this.loadingSubject.next(false);
-    
-    
+
     this.inventoryTransaction = new InventoryTransaction();
     const date = new Date();
     this.trForm = this.trFB.group({
@@ -761,65 +753,57 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       tr_addr: [this.inventoryTransaction.tr_addr],
-      printer :  [this.user.usrd_dft_printer],
+      printer: [this.user.usrd_dft_printer],
       print: [true],
     });
     const controls = this.trForm.controls;
-    console.log(this.domconfig)
+    console.log(this.domconfig);
     // if(this.domconfig) {
-      this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
-        (reponse: any) => { 
-          if(reponse.data != null) {
-          controls.tr_addr.setValue(reponse.data.code_value),
-          controls.tr_addr.disable() 
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+          controls.tr_addr.setValue(reponse.data.code_value), controls.tr_addr.disable();
 
           this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
             //   const { data } = response;
-               console.log("aaaaaaaaaaa",response.data);
-               if (response.data != null) {
-                 this.provider = response.data;
-               }
-             });
-          console.log("hehehehehehehehehehe")
-          }
-        },
-        (error) => {
-       
-        },
-       
-      );
-  
-      this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-        this.seq = response.data;
-  
-        if (this.seq) {
-          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-  
-          this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-            (reponse) => console.log("response", Response),
-            (error) => {
-              this.message = "Erreur modification Sequence";
-              this.hasFormErrors = true;
-              return;
+            console.log("aaaaaaaaaaa", response.data);
+            if (response.data != null) {
+              this.provider = response.data;
             }
-          );
-  
-        } else {
-          this.message = "Parametrage Manquant pour la sequence";
-          this.hasFormErrors = true;
-          return;
+          });
+          console.log("hehehehehehehehehehe");
         }
-      });
-  
-      
+      },
+      (error) => {}
+    );
+
+    this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
+      this.seq = response.data;
+
+      if (this.seq) {
+        this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+
+        this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+            this.message = "Erreur modification Sequence";
+            this.hasFormErrors = true;
+            return;
+          }
+        );
+      } else {
+        this.message = "Parametrage Manquant pour la sequence";
+        this.hasFormErrors = true;
+        return;
+      }
+    });
 
     // }
   }
 
   createnbrForm() {
     this.loadingSubject.next(false);
-    
-    
+
     this.nbrForm = this.nbrFB.group({
       nbrligne: [1],
     });
@@ -827,7 +811,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   onChangeVend() {
     const controls = this.trForm.controls;
     this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
-   //   const { data } = response;
+      //   const { data } = response;
       console.log(response.data);
       if (response.data == null) {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
@@ -1068,10 +1052,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 }
 
   addsameItem() {
-    
-    const control =this.nbrForm.controls
-    const limit = Number(control.nbrligne.value)
-    var i = this.nligne
+    const control = this.nbrForm.controls;
+    const limit = Number(control.nbrligne.value);
+    var i = this.nligne;
 
     const maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
@@ -1167,7 +1150,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               updateItem.tr_price = this.sct.sct_mtl_tl;
 
               updateItem.tr_status = this.stat;
-              if (this.pdl == null) {this.pdl = item.pt_prod_line }
+              if (this.pdl == null) {
+                this.pdl = item.pt_prod_line;
+              }
               this.gridService.updateItem(updateItem);
             });
           });
@@ -1246,18 +1231,16 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    console.log(this.domconfig)
+    console.log(this.domconfig);
     if (this.domconfig == false) {
-    this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
-    }
-    else {
-      if(this.pdl == null) {
-      //this.prodligne = ["SQUELETTE", "BOBINE"] 
-      console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp)
-      this.itemsService.getBy({pt_prod_line: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+      this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
+    } else {
+      if (this.pdl == null) {
+        //this.prodligne = ["SQUELETTE", "BOBINE"]
+        console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp);
+        this.itemsService.getBy({ pt_prod_line: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       } else {
-        this.itemsService.getBy({pt_prod_line: this.pdl, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
-
+        this.itemsService.getBy({ pt_prod_line: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       }
     }
   }
@@ -1835,23 +1818,19 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
-
-    this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
-      (reponse: any) => { 
-       if (reponse.data == null) {
-        this.prepareGrid2();
-        this.modalService.open(content, { size: "lg" }); 
-      
-       }
-        console.log(reponse.data)
-      
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
+      (reponse: any) => {
+        if (reponse.data == null) {
+          this.prepareGrid2();
+          this.modalService.open(content, { size: "lg" });
+        }
+        console.log(reponse.data);
       },
       (error) => {
         this.prepareGrid2();
-        this.modalService.open(content, { size: "lg" }); 
-      },
-    )
-    
+        this.modalService.open(content, { size: "lg" });
+      }
+    );
   }
 
   printpdf(nbr) {
@@ -1859,11 +1838,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const controlss = this.trForm.controls;
     console.log("pdf");
     var doc = new jsPDF();
-    
-   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-    var img = new Image()
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, 'png', 150, 5, 50, 30)
+    doc.addImage(img, "png", 150, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
       doc.text(this.domain.dom_name, 10, 10);
@@ -1917,14 +1896,14 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     doc.line(205, 85, 205, 90);
     var i = 95;
     doc.setFontSize(6);
-    let total = 0
-    for (let j = 0; j < this.dataset.length  ; j++) {
-      total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
-      
-      if ((j % 30 == 0) && (j != 0) ) {
-  doc.addPage();
+    let total = 0;
+    for (let j = 0; j < this.dataset.length; j++) {
+      total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc);
+
+      if (j % 30 == 0 && j != 0) {
+        doc.addPage();
         img.src = "./assets/media/logos/companylogo.png";
-        doc.addImage(img, 'png', 150, 5, 50, 30)
+        doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);
@@ -2097,7 +2076,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObjprinter) {
       args.rows.map((idx) => {
         const item = this.gridObjprinter.getDataItem(idx);
-        console.log(item)
+        console.log(item);
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
@@ -2177,5 +2156,4 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.createnbrForm();
     this.modalService.open(content, { size: "lg" });
   }
-
 }
