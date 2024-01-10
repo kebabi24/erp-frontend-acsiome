@@ -154,6 +154,13 @@ export class TransferComponent implements OnInit {
     lddet: any;
     rqm: boolean;
     statusref: any;
+    requisitions: [];
+    columnDefinitions5: Column[] = [];
+    gridOptions5: GridOption = {};
+    gridObj5: any;
+    angularGrid5: AngularGridInstance;
+    requistionServer;
+  
     constructor(
       config: NgbDropdownConfig,
       private trFB: FormBuilder,
@@ -657,12 +664,8 @@ export class TransferComponent implements OnInit {
                 
               
                 for (var object = 0; object < det1.length; object++) {
-                  const detail = details[object];
-                 console.log(detail)
-
-
-
-
+                    const detail = details[object];
+                    console.log(detail)
                       this.gridService.addItem(
                         {
                           id: detail.rqd_line, //this.dataset.length + 1,
@@ -730,7 +733,7 @@ export class TransferComponent implements OnInit {
             name: "Article",
             field: "tr_part",
             sortable: true,
-            width: 50,
+            minWidth: 80,
             filterable: false,
             editor: {
               model: Editors.text,
@@ -1197,6 +1200,7 @@ export class TransferComponent implements OnInit {
           enableRowSelection: true,
           autoHeight:false,
           enableAutoResize:true,
+          enableAutoResizeColumnsByCellContent:true,
           formatterOptions: {
             
             
@@ -2223,5 +2227,171 @@ if (this.lddet != null)
       this.modalService.open(content, { size: "lg" })
   }
 
+  
+
+  /*choisir demande achat*/
+  handleSelectedRowsChanged5(e, args) {
+    const controls = this.trForm.controls;
+
+    const rqm_nbr = controls.tr_so_job.value;
+    
+    if (Array.isArray(args.rows) && this.gridObj5) {
+      this.dataset = []
+      args.rows.map((idx) => 
+      {
+        const item = this.gridObj5.getDataItem(idx);
+        controls.tr_so_job.setValue(item.rqm_nbr || "");
+
+
+        this.requisitionService.findBy({ rqm_nbr: item.rqm_nbr }).subscribe(
+          (res: any) => {
+            const { requisition, details } = res.data;
+            const det1 = details;
+            this.requistionServer = requisition;
+            const {
+              sequence: { seq_appr3_lev },
+              rqm_aprv_stat,
+            } = this.requistionServer;
+            console.log(
+              seq_appr3_lev,
+              rqm_aprv_stat,
+              rqm_aprv_stat !== `${seq_appr3_lev}`
+            );
+            if (rqm_aprv_stat !== `${seq_appr3_lev}`) {
+              this.hasFormErrors = true;
+              this.message = "Cette Demande D'Achat n'est pas encore validée";
+              return;
+            }
+                    for (const object in det1) {
+                      console.log("hna",details[object]);
+                      const detail = details[object];
+                      this.gridService.addItem(
+                        {
+                          id: this.dataset.length + 1,
+                          tr_line: this.dataset.length + 1,
+                          tr_part: detail.rqd_part,
+                          cmvid: "",
+                          desc: detail.rqd_desc,
+                          tr_qty_loc: detail.rqd_req_qty,
+                          tr_um: detail.item.pt_um,
+                          tr_price: detail.item.pt_price,
+                          pod_disc_pct: 0,
+                          
+                          tr_type: detail.item.pt_type,
+                          tr_cc: "",
+                          // pod_taxable: detail.item.pt_taxable,
+                          // pod_tax_code: detail.item.pt_taxc,
+                          // pod_taxc: detail.item.taxe.tx2_tax_pct,
+                        },
+                        { position: "bottom" }
+                      );
+                  }
+                },
+                (error) => {
+                  this.message = ` erreur`;
+                  this.hasFormErrors = true;
+                },
+                () => {}
+              );
+          },
+          (error) => {
+            this.message = `Demande avec ce numero ${rqm_nbr} n'existe pas`;
+            this.hasFormErrors = true;
+          },
+          () => {}
+        );
+    
+     
+    }
+   // this.calculatetot();
+  }
+
+  angularGridReady5(angularGrid: AngularGridInstance) {
+    this.angularGrid5 = angularGrid;
+    this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGrid5() {
+    this.columnDefinitions5 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "rqm_nbr",
+        name: "N° Demande",
+        field: "rqm_nbr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "rqm_req_date",
+        name: "Date",
+        field: "rqm_req_date",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "rqm_total",
+        name: "Total",
+        field: "rqm_total",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+      },
+      {
+        id: "rqm_status",
+        name: "status",
+        field: "rqm_status",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions5 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+    };
+
+    // fill the dataset with your data
+    this.requisitionService
+      .getByAll({ rqm_aprv_stat: "3", rqm_open: true })
+      .subscribe((response: any) => (this.requisitions = response.data));
+  }
+  open5(content) {
+    this.prepareGrid5();
+    this.modalService.open(content, { size: "lg" });
+  }
   
 }
