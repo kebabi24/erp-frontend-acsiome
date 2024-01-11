@@ -113,6 +113,10 @@ export class LoadingVansComponent implements OnInit {
       })
   }
 
+  resetForm(){
+
+  }
+
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
       observer.next("");
@@ -162,6 +166,7 @@ export class LoadingVansComponent implements OnInit {
       let sum = 0 
       loadRequest.selectedProducts.forEach(product => {
         if(product.lots.length >0){
+
           product.lots.forEach(lot =>{
             sum += +lot.qt_effected
             details.push({
@@ -172,6 +177,7 @@ export class LoadingVansComponent implements OnInit {
               "pt_price":product.pt_price,
             })
           })
+
           lines.push({
             "product_code":product.product_code,
             "load_request_code":this.load_request_code,
@@ -185,10 +191,10 @@ export class LoadingVansComponent implements OnInit {
      this.inventoryManagementService.createLoadRequestDetails(details,lines).subscribe(
 
       (response: any) => {
-        console.log(response)
         this.loadRequestData = []
         this.load_request_code = ""
         this.role_code = ""
+        this.createForm()
       },
       (error) => {
         // this.loadRequestData = []
@@ -280,13 +286,13 @@ export class LoadingVansComponent implements OnInit {
         this.load_request_code = ""
         this.role_code = ""
 
+        this.createForm()
         let detail = detailss
 
         // isstr        
         this.inventoryTransactionService.addTr({nlot , it ,detail}).subscribe(
 
           (response: any) => {
-            console.log(response)
           },
           (error) => {
             // this.loadRequestData = []
@@ -347,9 +353,6 @@ export class LoadingVansComponent implements OnInit {
     if(this.loadRequestData[indexPage].unselectedProducts[indexProduct].length == 0){
       this.loadRequestData[indexPage].hasAddProduct = false
     }
-    // console.log(indexProduct)
-    // console.log(this.loadRequestData[indexPage].unselectedProducts)
-    // console.log(this.loadRequestData[indexPage].selectedProducts)
   }
 
   
@@ -391,10 +394,24 @@ export class LoadingVansComponent implements OnInit {
     this.inventoryManagementService.getLoadRequestData(load_request_code).subscribe(
   
         (response: any) => {
-          this.loadRequestData = response.loadRequestData
+          let data = response.loadRequestData
+
+          data.forEach(page => {
+            if(page.selectedProducts.length > 0){
+              page.selectedProducts.forEach(prod=>{
+                prod.lots.forEach(lot => {
+                  lot.lineIsOld = true
+                });
+              })
+            }
+          });
+
+          
+
+          this.loadRequestData = data
+          console.log(this.loadRequestData)
           this.loadRequest = response.data
           this.role = response.role
-          console.log(response)
           this.showSpinner = false
         },
         (error) => {
@@ -631,7 +648,8 @@ export class LoadingVansComponent implements OnInit {
         this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.push({
         lot_code : this.gridService.getDataItemByRowIndex(index).ld_lot,
         qnt_lot : this.gridService.getDataItemByRowIndex(index).ld_qty_oh,
-        qt_effected : this.gridService.getDataItemByRowIndex(index).qty_selected
+        qt_effected : this.gridService.getDataItemByRowIndex(index).qty_selected,
+        lineIsOld : false,
         })
       }
       
