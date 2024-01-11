@@ -334,12 +334,36 @@ export class MenuConfig {
               page: "/articles/add",
             },
             {
+              title: "Ajouter Article via Modèle",
+              page: "/articles/create-item-mod",
+            },
+            {
               title: "MAINT Cout Article",
               page: "/articles/edit-cost",
             },
             {
               title: "Créer une page de produits",
               page: "/articles/page",
+            },
+
+            {
+              title: "Gestion des Modèles",
+              icon: "flaticon2-delivery-package",
+              submenu: [
+                {
+                  title: "Ajouter Un Modèle",
+                  page: "/articles/create-mod",
+                },
+                {
+                  title: "Liste des Modèles",
+                  page: "/articles/list-mod",
+                },
+                {
+                  title: "Modification des Modèle",
+                  page: "/articles/update-mod",
+                },
+                
+              ],
             },
           ],
         },
@@ -391,12 +415,16 @@ export class MenuConfig {
               
             },
             {
-              title: "Entrée non Planifiée Etiquetage",
+              title: "Réception non Planifiée Etiquetage",
               page: "/inventory-transaction/unplanified-receipt-cab",
             },
             {
               title: "Modification Statut Stock ",
               page: "/inventory-transaction/edit-status",
+            },
+            {
+              title: "Controle Palette ",
+              page: "/inventory-transaction/edit-status-ref",
             },
 
             {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+declare var ElectronPrinter: any;
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
@@ -15,12 +16,15 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 import { PurchaseOrderService, ProviderService, ItemService, AddressService, TaxeService, DeviseService, VendorProposal, InventoryTransaction, PurchaseReceive, Label, LabelService, InventoryTransactionService, PurchaseReceiveService, LocationService, SiteService, MesureService, SequenceService, LocationDetailService, CodeService, InventoryStatusService, printReceive, PrintersService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+import { PosPrintData, PosPrintOptions, PosPrinter } from "electron-pos-printer";
 // import PDFDocument from "pdfkit";
-import fs from "fs";
-import bwipjs from "bwip-js";
-import print from "print-js";
-import printJS from "print-js";
-import blobStream from "blob-stream";
+// import fs from "fs";
+// import bwipjs from "bwip-js";
+
+// import print from "print-js";
+// import printJS from "print-js";
+// import blobStream from "blob-stream";
+// import { saveAs } from "file-saver";
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
@@ -44,6 +48,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class PoReceipCabComponent implements OnInit {
   // declare printJS: any;
+
   currentPrinter: string;
   PathPrinter: string;
   purchaseReceive: PurchaseReceive;
@@ -136,6 +141,17 @@ export class PoReceipCabComponent implements OnInit {
     this.gridService = angularGrid.gridService;
   }
 
+  test() {
+    const data = [
+      {
+          type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+          value: 'SAMPLE HEADING',
+          style: {fontWeight: "700", textAlign: 'center', fontSize: "24px"}
+      }
+  ]
+  ElectronPrinter.print(data,"data")
+  }
+
   initGrid() {
     this.columnDefinitions = [
       {
@@ -209,6 +225,15 @@ export class PoReceipCabComponent implements OnInit {
         sortable: true,
         width: 180,
         filterable: false,
+      },
+      {
+        id: "tr_batch",
+        name: "Code",
+        field: "tr_batch",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
       },
       {
         id: "qty_received",
@@ -470,7 +495,15 @@ export class PoReceipCabComponent implements OnInit {
           model: Editors.text,
         },
       },
-
+      {
+        id: "tr_grade",
+        name: "Qualité",
+        field: "tr_grade",
+        sortable: true,
+        width: 180,
+        filterable: false,
+        editor:{model:Editors.text}
+      },
       {
         id: "tr_status",
         name: "Status",
@@ -521,102 +554,13 @@ export class PoReceipCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          printJS("/assets/output12.pdf");
+          // printJS("/assets/output12.pdf");
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.prh_part != null && args.dataContext.prh_rcvd != null && args.dataContext.prh_loc != null) {
             const controls = this.prhForm.controls;
             const _lb = new Label();
-            // const pageWidth = 284; // Width of the page in points
-            // const pageHeight = 426; // Height of the page in points
-            // const doc = new PDFDocument();
-            // var stream = doc.pipe(blobStream());
-
-            // doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-
-            // const time = new Date().toLocaleTimeString();
-
-            // // // Draw the barcode image on the PDF document
-            // doc.image("./edel.jpg", 50, 0, {
-            //   fit: [180, 150], // Adjust the size of the barcode image as needed
-            // });
-
-            // doc
-            //   .rect(10, 80, 265, 80)
-            //   .stroke()
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("CLIENT : " + controls.lb_cust.value, 20, 90)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("ADRESSE :" + this.provider.ad_line1, 20, 115)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("TEL :" + this.provider.ad_phone, 20, 140);
-
-            // // // Define the second rectangle and its text lines
-            // doc
-            //   .rect(10, 170, 265, 130)
-            //   .stroke()
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("PRODUIT :" + args.dataContext.desc, 20, 180)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("MICRONAGE/ LAIZE :" + "", 20, 203)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("QTE :" + args.dataContext.prh_rcvd, 20, 228)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("N° Lot:" + args.dataContext.prh_serial, 20, 253)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("GROUPE:" + "", 20, 278);
-
-            // // // Define the third rectangle and its text lines
-            // doc
-            //   .rect(10, 310, 265, 70)
-            //   .stroke()
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("BARCODE:" + "", 20, 320)
-            //   .font("Helvetica-Bold")
-            //   .fontSize(12)
-            //   .text("FABRIQUE EN ALGERIE", 75, 405)
-            //   .text("Time:" + time, 180, 320);
-
-            // bwipjs.toBuffer(
-            //   {
-            //     bcid: "code128", // Barcode type (replace with the desired barcode format)
-            //     text: "", // Barcode data
-            //     scale: 3, // Scaling factor for the barcode image
-            //     includetext: true, // Include the barcode text
-            //     height: 10,
-            //     width: 60,
-            //   },
-            //   function (err, png) {
-            //     if (err) {
-            //       console.log(err);
-            //       return;
-            //     }
-
-            //     // Load the barcode image from the generated PNG buffer
-
-            //     // Draw the barcode image on the PDF document
-            //     doc.image(png, 50, 335, {
-            //       fit: [5400, 40], // Adjust the size of the barcode image as needed
-            //     });
-            //     // Save the PDF document
-            //     console.log("create file");
-            //     doc.pipe(fs.createWriteStream("output12.pdf"));
-            //     doc.end();
-            //   }
-            // );
-            // stream.on("finish", function () {
-            //   doc.pipe(fs.createWriteStream("output12.pdf"));
-            // });
             _lb.lb_site = controls.prh_site.value;
             _lb.lb_rmks = controls.prh_rmks.value;
             _lb.lb_loc = args.dataContext.prh_loc;
@@ -630,21 +574,39 @@ export class PoReceipCabComponent implements OnInit {
             _lb.lb_printer = this.PathPrinter;
             _lb.lb_cust = controls.name.value;
 
-            _lb.lb_addr = this.provider.ad_line1;
-            _lb.lb_tel = this.provider.ad_phone;
+            // _lb.lb_addr = this.provider.ad_line1;
+            // _lb.lb_tel = this.provider.ad_phone;
 
             let lab = null;
-
-            // this.labelService.add(_lb).subscribe(
-            //   (reponse: any) => (lab = reponse.data),
-            //   (error) => {
-            //     alert("Erreur Impression Etiquette");
-            //   },
-            //   () => {
-            //     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
-            //   }
-            // );
-            // printJS("/assets/output12.pdf");
+            // this.labelService.getPdf({}).subscribe((blob) => {
+            //   const url = window.URL.createObjectURL(blob);
+            //   window.open(url);
+            //   // saveAs(blob, "ticket.pdf");
+            // });
+            console.log(ElectronPrinter);
+            this.labelService.add(_lb).subscribe(
+              (blob) => {
+                // console.log(blob);
+                // const url = window.URL.createObjectURL(blob);
+                // window.open(url);
+                // saveAs(blob, "ticket.pdf");
+                const data = [
+                  {
+                      type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+                      value: 'SAMPLE HEADING',
+                      style: {fontWeight: "700", textAlign: 'center', fontSize: "24px"}
+                  }
+              ]
+              ElectronPrinter.print(data,"data")
+              },
+              (error) => {
+                alert("Erreur Impression Etiquette");
+              },
+              () => {
+                // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
+              }
+            );
+            // printJS("/assets/ticket.pdf");
           } else {
             alert("Veuillez verifier les informations");
           }
@@ -692,9 +654,9 @@ export class PoReceipCabComponent implements OnInit {
 
     this.createForm();
   }
-  printJsS() {
-    printJS("/assets/output12.pdf");
-  }
+  // printJsS() {
+  //   printJS("/assets/output12.pdf");
+  // }
   //create form
   createForm() {
     this.loadingSubject.next(false);
@@ -751,7 +713,7 @@ export class PoReceipCabComponent implements OnInit {
         );
         controls.prh_receiver.setValue(this.prhnbr);
       } else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
       }
@@ -810,7 +772,7 @@ export class PoReceipCabComponent implements OnInit {
     //     },
     //     )
     //   }else {
-    //     this.message = "Parametrage Monquant pour la sequence";
+    //     this.message = "Parametrage Manquant pour la sequence";
     //     this.hasFormErrors = true;
     //     return;
 
@@ -825,7 +787,12 @@ export class PoReceipCabComponent implements OnInit {
     // let pr = this.prepare()
     //this.addIt( this.dataset,pr);
   }
-
+  loadPdf() {
+    this.labelService.getPdf({}).subscribe((blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    });
+  }
   prepare() {
     const controls = this.prhForm.controls;
     const _pr = new PurchaseReceive();

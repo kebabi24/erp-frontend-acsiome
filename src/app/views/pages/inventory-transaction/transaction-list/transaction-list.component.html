@@ -50,11 +50,47 @@
                         <button type="button"  (click)="trlist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
                         </div>
                     </div>    
+                    
+                     <br/>
+                    
+                    <div class="btn-group" role="group">
+                    
+                    <button class="btn btn-sm btn-outline-secondary" data-test="scroll-bottom-btn" (click)="scrollGridBottom()">
+                    <i class="fa fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" data-test="scroll-down-btn" (click)="scrollGridDown()">
+                    <i class="fa fa-arrow-down"></i>
+                    </button>
+                        <button class="btn btn-sm btn-outline-secondary" data-test="scroll-left-btn" (click)="scrollGridLeft()">
+                        <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" data-test="scroll-right-btn" (click)="scrollGridRight()">
+                        <i class="fa fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" data-test="scroll-up-btn" (click)="scrollGridUp()">
+                            <i class="fa fa-arrow-up"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" data-test="scroll-top-btn" (click)="scrollGridTop()">
+                            <i class="fa fa-chevron-up"></i>
+                        </button>
+                        <div class="col-sm-4 col-md-3" style="max-width: 190px;">
+                            Pagination: <input type="checkbox" (change)="togglePaginationGrid2()" [checked]="WithPagination"
+                                   data-test="toggle-pagination-grid2" />
+                            
+                        </div>
+                    </div>
                 </div>
+                
             <div class="row">
-                <angular-slickgrid class="col-12" gridHeight="1000"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                <span *ngIf="metrics" style="margin-right: 10px">
+                    <b>Metrics:</b> {{metrics.itemCount}} of    {{metrics.totalItemCount}} items
+                  </span> 
+                  
+                <angular-slickgrid class="col-12"   gridId="gridMesure" [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
-                    [gridOptions]="gridOptions" [dataset]="dataset">
+                    [gridOptions]="gridOptions" [dataset]="dataset"
+                    (onRowCountChanged)="refreshMetrics($event.detail.eventData, $event.detail.args)">
+                    
                 </angular-slickgrid>
             </div>
         </form>

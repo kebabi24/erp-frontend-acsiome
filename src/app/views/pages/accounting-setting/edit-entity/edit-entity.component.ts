@@ -46,7 +46,7 @@ export class EditEntityComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true)
   loading$: Observable<boolean>
   entityEdit: any
-  title: String = 'Modifier Entitee - '
+  title: String = 'Modifier Entite - '
 
   fdebitEdit: any
   fcreditEdit: any

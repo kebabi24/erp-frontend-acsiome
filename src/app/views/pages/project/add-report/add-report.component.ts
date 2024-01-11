@@ -251,7 +251,7 @@ export class AddReportComponent implements OnInit {
         console.log(pme);
         this.addDet(pme, this.mvdataset, this.cnsdataset, this.nbr);
       } else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
       }
@@ -752,7 +752,7 @@ export class AddReportComponent implements OnInit {
 
           if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv > args.dataContext.qty_oh) {
             console.log("here");
-            alert("Qte monquante");
+            alert("Qte Manquante");
             this.gridServicecns.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: null });
             //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
           }
@@ -792,7 +792,7 @@ export class AddReportComponent implements OnInit {
 
                   if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) > args.dataContext.qty_oh) {
                     console.log("here");
-                    alert("Qte monquante");
+                    alert("Qte Manquante");
                     this.gridServicecns.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: "1", tr_um: null });
                   } else {
                     this.gridServicecns.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um: null });
@@ -804,7 +804,7 @@ export class AddReportComponent implements OnInit {
                     if (data) {
                       if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) > args.dataContext.qty_oh) {
                         console.log("here");
-                        alert("Qte monquante");
+                        alert("Qte Manquante");
                         this.gridServicecns.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: "1", tr_um: null });
                       } else {
                         this.gridServicecns.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um: null });

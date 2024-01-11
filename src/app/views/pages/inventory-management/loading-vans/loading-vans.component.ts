@@ -137,7 +137,7 @@ export class LoadingVansComponent implements OnInit {
     this.currentPageIndex = this.loadRequestData.findIndex(page =>{
       return page.page_code === page_code
     })
-    const ld_loc = this.loadRequest.role_loc
+    const ld_loc = this.loadRequest.role_loc_from;
     const ld_site = this.loadRequest.role_site
     this.inventoryManagementService.getProductLots(ld_loc,ld_site,product_code).subscribe(
       (response: any) => {
@@ -391,6 +391,7 @@ export class LoadingVansComponent implements OnInit {
   // FORMS DATA FUNCTIONS 
   prepareLoadRequestData(load_request_code){
     this.showSpinner = true
+    
     this.inventoryManagementService.getLoadRequestData(load_request_code).subscribe(
   
         (response: any) => {
@@ -564,7 +565,7 @@ export class LoadingVansComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false
+        selectActiveRow: true
       },
       formatterOptions: {
         

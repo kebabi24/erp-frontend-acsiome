@@ -655,7 +655,7 @@ export class ImputProjectInvoiceComponent implements OnInit {
         },
         )
       }else {
-        this.message = "Parametrage Monquant pour la sequence";
+        this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
         return;
    

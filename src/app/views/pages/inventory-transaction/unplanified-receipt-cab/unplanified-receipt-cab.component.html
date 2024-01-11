@@ -3,7 +3,7 @@
       <ng-container ktPortletTools>
         <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
         <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-        <button type="button" (click)="onPrint()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+        <button type="button" (click)="onPrint()" class="btn btn-success btn-sm mr-2">Imprimer Bon</button>
       </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
@@ -81,7 +81,7 @@
         <ng-template #content4 let-c="close" let-d="dismiss">
           <div class="modal-header">
             <h4 class="modal-title">Choissir l'article</h4>
-            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <button type="button" class="close" aria-label="Close"  (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -142,7 +142,7 @@
         <ng-template #contentum let-c="close" let-d="dismiss">
           <div class="modal-header">
             <h4 class="modal-title">Choissir UM</h4>
-            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <button type="button" class="close" aria-label="Close"  (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>

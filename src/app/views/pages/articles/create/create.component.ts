@@ -493,7 +493,7 @@ export class CreateComponent implements OnInit {
       pt_height: [{ value: this.item.pt_height, disabled: !this.isExist }],
       pt_width: [{ value: this.item.pt_width, disabled: !this.isExist }],
       pt_origin: [{ value: this.item.pt_origin, disabled: !this.isExist }],
-      pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
+     
       pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
       pt_model: [{ value: this.item.pt_model, disabled: !this.isExist }],
       pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
@@ -639,7 +639,7 @@ export class CreateComponent implements OnInit {
               controls5.pt_height.enable()
               controls5.pt_width.enable()
               controls5.pt_origin.enable()
-              controls5.pt_drwg_loc.enable()
+              
               controls5.pt_drwg_size.enable()
               controls5.pt_model.enable()
               controls5.pt_break_cat.enable()
@@ -827,7 +827,7 @@ export class CreateComponent implements OnInit {
     _item.pt_network = controls3.pt_network.value;
     _item.pt_run_seq1 = controls3.pt_run_seq1.value;
     _item.pt_routing = controls3.pt_routing.value;
-    _item.pt_iss_pol = controls3.pt_iss_pol.value;
+    // _item.pt_iss_pol = controls3.pt_iss_pol.value;
     _item.pt_run_seq2 = controls3.pt_run_seq2.value;
     _item.pt_bom_code = controls3.pt_bom_code.value;
 
@@ -842,7 +842,6 @@ export class CreateComponent implements OnInit {
     _item.pt_height    = controls5.pt_height.value;
     _item.pt_width     = controls5.pt_width.value;
     _item.pt_origin    = controls5.pt_origin.value;
-    _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
     _item.pt_drwg_size = controls5.pt_drwg_size.value; 
     _item.pt_model     = controls5.pt_model.value;
     _item.pt_break_cat = controls5.pt_break_cat.value;
