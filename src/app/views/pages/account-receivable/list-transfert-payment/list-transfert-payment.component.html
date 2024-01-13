@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'La liste des paiements  '" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="'La liste des Transferts de Caisses '" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
             
 
@@ -8,7 +8,7 @@
     <kt-portlet-body>
         <div class="example-preview">
             <div class="row">
-                <angular-slickgrid class="col-12" gridId="gridCode" [columnDefinitions]="columnDefinitions"
+                <angular-slickgrid class="col-12"  gridId="gridCode" [columnDefinitions]="columnDefinitions"
                     [gridOptions]="gridOptions" [dataset]="dataset">
                 </angular-slickgrid>
             </div>

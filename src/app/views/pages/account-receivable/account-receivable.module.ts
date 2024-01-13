@@ -51,12 +51,16 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import { UsersService, CodeService, TaxeService, CustomerService, SequenceService, ConfigService,
-  DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,ProjectService} from '../../../core/erp';
+  DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,ProjectService, MobileServiceService, RoleService, UsersMobileService,MobileSettingsService, SiteService, LoadRequestService} from '../../../core/erp';
 import { CreateNoteComponent } from './create-note/create-note.component';
 import { EditPaymentComponent } from './edit-payment/edit-payment.component';
 import { ListPaymentRapComponent } from './list-payment-rap/list-payment-rap.component';
 import { ListPaymentComponent } from './list-payment/list-payment.component';
 import { CreateProjectPaymentComponent } from './create-project-payment/create-project-payment.component';
+import { CreateVendorPaymentComponent } from './create-vendor-payment/create-vendor-payment.component';
+import { TransfertArComponent } from './transfert-ar/transfert-ar.component';
+import { ListVendorPaymentComponent } from './list-vendor-payment/list-vendor-payment.component';
+import { ListTransfertPaymentComponent } from './list-transfert-payment/list-transfert-payment.component';
 
   const routes: Routes = [
     {
@@ -90,13 +94,29 @@ import { CreateProjectPaymentComponent } from './create-project-payment/create-p
                 path: "edit-payment/:id",
                 component: EditPaymentComponent,
               },
+              {
+                path: "create-vendor-payment",
+                component: CreateVendorPaymentComponent,
+              },
+              {
+                path: "transfert-ar",
+                component: TransfertArComponent,
+              },
+              {
+                path: "list-vendor-payment",
+                component: ListVendorPaymentComponent,
+              },
+              {
+                path: "list-transfert-payment",
+                component: ListTransfertPaymentComponent,
+              },
           
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -142,6 +162,12 @@ providers: [
     AccountReceivableService,
     InvoiceOrderService,
     ConfigService,
+    MobileServiceService,
+    RoleService,
+    UsersMobileService,
+    MobileSettingsService,
+    SiteService,
+    LoadRequestService
 ],
 
 entryComponents: [

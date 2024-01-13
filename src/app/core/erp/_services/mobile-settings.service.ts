@@ -56,6 +56,11 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllPayment/`, data,{ headers: httpHeaders })
     }   
+    public   getAllPaymentService(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllPaymentService/`, data,{ headers: httpHeaders })
+    }   
+    
     public   getAllVisites(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllVisit/`, data,{ headers: httpHeaders })
