@@ -78,6 +78,7 @@ import { RpBroyageComponent } from './rp-broyage/rp-broyage.component';
 import { BomService, PsService, ItemService, SiteService, WorkOrderService, SequenceService, LocationService, MesureService, LocationDetailService, WorkOrderDetailService, CostSimulationService, RequisitionService, AddressService, InventoryTransactionService, InventoryStatusService, ReasonService, WorkCenterService, WorkRoutingService, OperationHistoryService, WoroutingService, BomPartService, CodeService, LabelService, SaleOrderService, EmployeService, UsersService, PrintersService } from "../../../core/erp";
 import { ReleaseWoComponent } from './release-wo/release-wo.component';
 import { LabelAllocationComponent } from './label-allocation/label-allocation.component';
+import { RecapBroyageComponent } from './recap-broyage/recap-broyage.component';
 
 
 const routes: Routes = [
@@ -198,6 +199,10 @@ const routes: Routes = [
     component: RpBroyageComponent
   },
   {
+    path: 'Recap-broyage',
+    component: RecapBroyageComponent
+  },
+  {
     path: "edit-gamme/:id",
     component: EditGammeComponent,
   },
@@ -213,7 +218,7 @@ const routes: Routes = [
 
   
 @NgModule({
-  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent, ReleaseWoComponent, LabelAllocationComponent],
+  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent, ReleaseWoComponent, LabelAllocationComponent, RecapBroyageComponent],
 
   imports: [
     CommonModule,

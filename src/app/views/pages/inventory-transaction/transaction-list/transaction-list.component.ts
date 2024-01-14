@@ -661,7 +661,6 @@ export class TransactionListComponent implements OnInit {
         autoHeight:false,
         
         enableAutoResize: true,
-        enableAutoSizeColumns: true,
         showCustomFooter: true, // display some metrics in the bottom custom footer
         exportOptions: {
           sanitizeDataExport: true

@@ -961,8 +961,8 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
           );
           this.loadingSubject.next(false);
           console.log(this.dataset);
-          
-          this.router.navigateByUrl("/account-Receivable/create-account-Receivable");
+          this.reset()
+          this.router.navigateByUrl("/account-receivable/create-project-payment");
           this.reset()
         }
       );

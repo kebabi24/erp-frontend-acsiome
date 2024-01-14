@@ -650,6 +650,31 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion des Caisses",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-delivery-package",
+          submenu: [
+            {
+              title: "Recette Vendeur",
+              page: "/account-receivable/create-vendor-payment",
+            },
+            {
+              title: "Liste des Recettes vendeurs",
+              page: "/account-receivable/list-vendor-payment",
+            },
+            {
+              title: "Transfert Entre Caisse",
+              page: "/account-receivable/transfert-ar",
+            },
+            {
+              title: "Liste des Transferts Recettes ",
+              page: "/account-receivable/list-transfert-payment",
+            },
+
+          ]
+        },
+        {
           title: "Gestion des Prévisions",
           root: true,
           bullet: "dot",
@@ -806,6 +831,10 @@ export class MenuConfig {
             {
               title: "Etat des Broyages ",
               page: "/manufacturing/rp-broyage",
+            },
+            {
+              title: "Récap des Broyages ",
+              page: "/manufacturing/Recap-broyage",
             },
           ],
         },

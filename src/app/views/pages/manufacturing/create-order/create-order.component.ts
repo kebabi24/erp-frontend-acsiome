@@ -74,6 +74,7 @@ export class CreateOrderComponent implements OnInit {
 
   part: any;
   gammes: [];
+  rowkctr:any;
   columnDefinitionsgamme: Column[] = [];
   gridOptionsgamme: GridOption = {};
   gridObjgamme: any;
@@ -901,10 +902,10 @@ export class CreateOrderComponent implements OnInit {
     };
 
     // fill the dataset with your data
-   
+   console.log(this.rowkctr)
     this.itemsService
 
-      .getProd({})
+      .getProd({pt_origin:this.rowkctr})
       .subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {
@@ -1044,7 +1045,7 @@ export class CreateOrderComponent implements OnInit {
         const item = this.gridObjgamme.getDataItem(idx);
     console.log(item)
         controls.wo_routing.setValue(item.ro_routing || "");
-        
+        this.rowkctr=item.ro_wkctr;
       });
     }
   }
@@ -1086,6 +1087,14 @@ export class CreateOrderComponent implements OnInit {
         id: "ro_desc",
         name: "Designation",
         field: "ro_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ro_wkctr",
+        name: "Centre de charge",
+        field: "ro_wkctr",
         sortable: true,
         filterable: true,
         type: FieldType.string,

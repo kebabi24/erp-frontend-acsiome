@@ -636,6 +636,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       enableRowSelection: true,
       enableAutoResize: true,
       autoHeight: false,
+      autoCommitEdit:true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -1091,7 +1092,7 @@ export class UnplanifiedReceptComponent implements OnInit {
               updateItem.tr_price = this.sct.sct_mtl_tl;
 
               updateItem.tr_status = this.stat;
-              if (this.pdl == null) {this.pdl = item.pt_prod_line }
+              if (this.pdl == null) {this.pdl = item.pt_draw }
               this.gridService.updateItem(updateItem);
             });
           });
@@ -1178,9 +1179,9 @@ export class UnplanifiedReceptComponent implements OnInit {
       if(this.pdl == null) {
       //this.prodligne = ["SQUELETTE", "BOBINE"] 
       console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp)
-      this.itemsService.getBy({pt_prod_line: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+      this.itemsService.getBy({pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
       } else {
-        this.itemsService.getBy({pt_prod_line: this.pdl, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getBy({pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
 
       }
     }

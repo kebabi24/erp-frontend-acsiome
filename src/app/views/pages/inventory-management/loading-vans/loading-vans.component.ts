@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { InventoryManagementService, printInventory, InventoryTransactionService } from "../../../../core/erp";
+import { InventoryManagementService, printInventory, InventoryTransactionService, RoleService } from "../../../../core/erp";
 
 @Component({
   selector: "kt-loading-vans",
@@ -57,13 +57,16 @@ export class LoadingVansComponent implements OnInit {
 
   showSpinner: Boolean = false;
 
-  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private modalService: NgbModal) {
+  user: any;
+
+  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private roleService: RoleService, private modalService: NgbModal) {
     config.autoClose = true;
     this.prepareGrid();
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.user = JSON.parse(localStorage.getItem("user"));
     this.prepareRoles();
     this.createForm();
     this.createForm2();
@@ -328,6 +331,7 @@ export class LoadingVansComponent implements OnInit {
             page.selectedProducts.forEach((prod) => {
               prod.lots.forEach((lot) => {
                 lot.lineIsOld = true;
+                lot.oldQnty = lot.qt_effected;
               });
             });
           }
@@ -353,16 +357,29 @@ export class LoadingVansComponent implements OnInit {
   }
 
   prepareRoles() {
-    this.inventoryManagementService.getRoles("administrateur").subscribe(
-      (response: any) => {
-        this.roles = response.data;
-        console.log(this.roles);
-      },
-      (error) => {
-        this.roles = [];
-      },
-      () => {}
-    );
+    if ((this.user.usrd_site = "*")) {
+      this.roleService.getAllRoles().subscribe(
+        (response: any) => {
+          this.roles = response.data;
+          console.log(this.roles);
+        },
+        (error) => {
+          this.roles = [];
+        },
+        () => {}
+      );
+    } else {
+      this.roleService.getBy({ role_site: this.user.usrd_site }).subscribe(
+        (response: any) => {
+          this.roles = response.data;
+          console.log(this.roles);
+        },
+        (error) => {
+          this.roles = [];
+        },
+        () => {}
+      );
+    }
   }
 
   prepareLoadRequests(role_code) {
@@ -567,6 +584,7 @@ export class LoadingVansComponent implements OnInit {
           qnt_lot: this.gridService.getDataItemByRowIndex(index).ld_qty_oh,
           qt_effected: this.gridService.getDataItemByRowIndex(index).qty_selected,
           lineIsOld: false,
+          oldQnty: 0,
         });
       }
     });
@@ -589,6 +607,54 @@ export class LoadingVansComponent implements OnInit {
 
     // UPDATED QT VALIDATED IN LOT
     this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = value;
+    console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots);
+
+    // UPDATED QT VALIDATED IN  PRODUCT OBJ
+    let qntEffected = 0;
+    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.forEach((lot) => {
+      // console.log(lot)
+      qntEffected += +lot.qt_effected;
+    });
+    this.loadRequestData[pageIndex].selectedProducts[productIndex].qt_effected = qntEffected;
+    console.log("total : ", qntEffected);
+
+    // const indexPage = this.loadRequestData.findIndex(loadRequest=>{
+    //   return loadRequest.page_code  === pageCode
+    // })
+    // console.log('pageCodeIndex:' + indexPage)
+    // const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
+    //   return product.product_code === prodCode
+    // })
+    // console.log('prodCodeIndex:' + indexProduct)
+    // this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
+    // console.log(this.loadRequestData[indexPage].products[indexProduct])
+  }
+
+  updateQuantity(value, pageCode, productCode, lotCode) {
+    console.log(value);
+
+    // FIND PAGE INDEX IN LOAD REQUEST DATA
+    const pageIndex = this.loadRequestData.findIndex((page) => {
+      return page.page_code === pageCode;
+    });
+
+    // FIND PRODUCT INDEX IN SELECTED PRODUCTS OF THE SELECTED PAGE
+    const productIndex = this.loadRequestData[pageIndex].selectedProducts.findIndex((product) => {
+      return product.product_code === productCode;
+    });
+
+    const lotIndex = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.findIndex((lot) => {
+      return lot.lot_code == lotCode;
+    });
+
+    // UPDATED QT VALIDATED IN LOT
+
+    if (value > 0) {
+      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = value;
+    } else {
+      let oldValue = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].oldQnty;
+      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = oldValue;
+    }
     console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots);
 
     // UPDATED QT VALIDATED IN  PRODUCT OBJ
