@@ -1,0 +1,185 @@
+<kt-portlet>
+    <kt-portlet-header
+      [sticky]="false"
+      title="Transfert recette"
+      [class]="'card-head-lg'"
+      [viewLoading$]="loading$"
+    >
+      <!--ng-container ktPortletTools>
+          <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+          <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+          <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+  
+      </ng-container-->
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <div class="example-preview">
+        <form class="form" [formGroup]="rvForm">
+            <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true"
+            [duration]="300" (close)="onAlertClose($event)">
+            Modifiez quelques éléments et réessayez de soumettre.
+        </kt-alert>
+          <div class="row" style="display: flex; justify-content: center">
+            <div class="form-group col-1">
+                <label class="form-group">Banque:</label>
+                <div class="input-group input-group-sm">
+
+                    <input type="text" class="form-control form-control-solid"  formControlName="bank_code"  id= "bank_code" 
+                        aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <span class="input-group-text"  (click)="openbank(contentbank)">
+                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group col-2">
+              <label class="form-group">Date d'effet:</label>
+              <div class="input-group input-group-sm">
+                <input
+                  class="form-control form-control-sm form-control-solid"
+                  formControlName="calc_date"
+                 
+                  placeholder="jj-mm-aaaa"
+                  name="calc_date"
+                  ngbDatepicker
+                  f
+                  #calc_date="ngbDatepicker"
+                 
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    (click)="calc_date.toggle()"
+                    type="button"
+                  >
+                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-1">
+                <label class="form-group">Role Code:</label>
+                <select 
+                (change)="onSelectRole($event.target.value)"
+                name="role_code"
+                id="role_code"
+                formControlName="role_code"
+                class="form-control form-control-sm form-control-solid">
+                <option value=""></option>
+                <option *ngFor="let elem of roles" [value]="elem.role_code">
+                    {{elem.role_code}} </option>
+                
+                </select> 
+            </div>  
+            <div class="form-group col-2">
+                <label class="form-group">Service Code:</label>
+                <select 
+                (change)="onSelectService()"
+                name="service_code"
+                id="service_code"
+                formControlName="service_code"
+                class="form-control form-control-sm form-control-solid">
+                <option value=""></option>
+                <option *ngFor="let elem of services" [value]="elem.service_code">
+                    {{elem.service_code}} </option>
+                
+                </select> 
+            </div>  
+
+            <div class="form-group col-2">
+              <label class="form-group">Montant système:</label>
+  
+              <div class="input-group input-group-sm">
+                <input
+                  type="text"
+                  formControlName="montant_rl"
+                  [className]="
+                    rvForm.controls['montant_rl'].errors &&
+                    (rvForm.controls['montant_rl'].dirty ||
+                      rvForm.controls['montant_rl'].touched)
+                      ? 'form-control form-control-sm form-control-solid is-invalid'
+                      : 'form-control form-control-sm form-control-solid'
+                  "
+                  aria-describedby="basic-addon2"
+                />
+  
+                <div
+                  *ngIf="
+                    rvForm.controls['montant_rl'].errors &&
+                    (rvForm.controls['montant_rl'].dirty ||
+                      rvForm.controls['montant_rl'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <label class="form-group">Montant Encaissé:</label>
+  
+              <div class="input-group input-group-sm">
+                <input
+                  type="text"
+                  formControlName="montant_tr"
+                  [className]="
+                    rvForm.controls['montant_tr'].errors &&
+                    (rvForm.controls['montant_tr'].dirty ||
+                      rvForm.controls['montant_tr'].touched)
+                      ? 'form-control form-control-sm form-control-solid is-invalid'
+                      : 'form-control form-control-sm form-control-solid'
+                  "
+                  aria-describedby="basic-addon2"
+                />
+  
+                <div
+                  *ngIf="
+                    rvForm.controls['montant_tr'].errors &&
+                    (rvForm.controls['montant_tr'].dirty ||
+                      rvForm.controls['montant_tr'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <button
+                type="button"
+                (click)="onSubmit()"
+                class="btn btn-success btn-sm mr-2 mt-9"
+              >
+                Valider
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div>
+        <ng-template #contentbank let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir la banque</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                        [columnDefinitions]="columnDefinitionsbank" (onAngularGridCreated)="angularGridReadybank($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedbank($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsbank" [dataset]="banks">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+    </kt-portlet-body>
+  </kt-portlet>
+  

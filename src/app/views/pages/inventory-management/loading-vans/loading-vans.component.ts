@@ -33,7 +33,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { InventoryManagementService, printInventory  , InventoryTransactionService} from "../../../../core/erp"
+import { InventoryManagementService, printInventory  , InventoryTransactionService,RoleService} from "../../../../core/erp"
 
 @Component({
   selector: 'kt-loading-vans',
@@ -79,7 +79,7 @@ export class LoadingVansComponent implements OnInit {
 
   showSpinner : Boolean =  false;
   
-
+user: any
 
   constructor(
       config: NgbDropdownConfig,
@@ -90,6 +90,7 @@ export class LoadingVansComponent implements OnInit {
       private layoutUtilsService: LayoutUtilsService,
       private inventoryManagementService: InventoryManagementService,
       private inventoryTransactionService: InventoryTransactionService,
+      private roleService: RoleService,
       private modalService: NgbModal
   ) {
       config.autoClose = true
@@ -98,6 +99,7 @@ export class LoadingVansComponent implements OnInit {
   ngOnInit(): void {
       this.loading$ = this.loadingSubject.asObservable()
       this.loadingSubject.next(false)
+      this.user =  JSON.parse(localStorage.getItem('user'))
       this.prepareRoles()
       this.createForm()
       this.createForm2()
@@ -430,7 +432,8 @@ export class LoadingVansComponent implements OnInit {
   }
 
   prepareRoles(){
-    this.inventoryManagementService.getRoles('administrateur').subscribe(
+    if (this.user.usrd_site = "*") {
+    this.roleService.getAllRoles().subscribe(
         
         (response: any) => {
           this.roles = response.data
@@ -441,6 +444,19 @@ export class LoadingVansComponent implements OnInit {
         },
         () => {}
     )
+      } else {
+        this.roleService.getBy({role_site: this.user.usrd_site}).subscribe(
+        
+          (response: any) => {
+            this.roles = response.data
+            console.log(this.roles)
+          },
+          (error) => {
+            this.roles = []
+          },
+          () => {}
+      )
+      }
   }
 
   prepareLoadRequests(role_code){

@@ -371,7 +371,7 @@ export class LoadingVansScanComponent implements OnInit {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       autoEdit: false,
-      autoHeight: true,
+      autoHeight: false,
       frozenColumn: 0,
       frozenBottom: true,
       enableAutoResize :true,
@@ -432,6 +432,7 @@ export class LoadingVansScanComponent implements OnInit {
     let lot = pal.substring(lot_start_pos , lot_start_pos+lot_length  ) // stop at 8 
     let serie = pal.substring(serie_start_pos , serie_start_pos+serie_length )
     
+    console.log(prod,lot,serie)
     this.itemService.getByOne({pt_part :prod }).subscribe((response: any) => {
       let desc = response.data.pt_desc1
       let price = response.data.pt_price
