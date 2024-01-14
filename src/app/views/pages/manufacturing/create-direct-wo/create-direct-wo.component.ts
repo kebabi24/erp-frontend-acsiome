@@ -1536,8 +1536,10 @@ export class CreateDirectWoComponent implements OnInit {
                       
                     });
                   });
+                }
                 });
-              }
+              })
+            }
             });
           }
         } else {
