@@ -3,8 +3,7 @@ const url = require("url");
 const path = require("path");
 
 let mainWindow
-const patht = path.join(__dirname, "preload.js")
-console.log(patht)
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     fullscreen: true,
