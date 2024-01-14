@@ -402,6 +402,7 @@ export class LoadingVansComponent implements OnInit {
               page.selectedProducts.forEach(prod=>{
                 prod.lots.forEach(lot => {
                   lot.lineIsOld = true
+                  lot.oldQnty = lot.qt_effected
                 });
               })
             }
@@ -651,6 +652,7 @@ export class LoadingVansComponent implements OnInit {
         qnt_lot : this.gridService.getDataItemByRowIndex(index).ld_qty_oh,
         qt_effected : this.gridService.getDataItemByRowIndex(index).qty_selected,
         lineIsOld : false,
+        oldQnty : 0,
         })
       }
       
@@ -678,6 +680,61 @@ export class LoadingVansComponent implements OnInit {
 
     // UPDATED QT VALIDATED IN LOT 
     this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected= value
+    console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots)
+    
+    // UPDATED QT VALIDATED IN  PRODUCT OBJ
+    let qntEffected = 0
+    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.forEach(lot =>{
+      // console.log(lot)
+      qntEffected += +lot.qt_effected 
+    })
+    this.loadRequestData[pageIndex].selectedProducts[productIndex].qt_effected = qntEffected
+    console.log('total : ',qntEffected)
+    
+
+    
+
+    // const indexPage = this.loadRequestData.findIndex(loadRequest=>{
+    //   return loadRequest.page_code  === pageCode
+    // })
+    // console.log('pageCodeIndex:' + indexPage)
+    // const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
+    //   return product.product_code === prodCode
+    // })
+    // console.log('prodCodeIndex:' + indexProduct)
+    // this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
+    // console.log(this.loadRequestData[indexPage].products[indexProduct])
+    
+   
+  }
+
+  updateQuantity(value,pageCode,productCode,lotCode){
+
+    console.log(value)
+
+    // FIND PAGE INDEX IN LOAD REQUEST DATA 
+    const pageIndex = this.loadRequestData.findIndex(page=>{
+      return page.page_code === pageCode
+    })
+
+    // FIND PRODUCT INDEX IN SELECTED PRODUCTS OF THE SELECTED PAGE 
+    const productIndex = this.loadRequestData[pageIndex].selectedProducts.findIndex(product=>{
+      return product.product_code === productCode 
+    }) 
+
+
+    const lotIndex  = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.findIndex(lot=>{
+      return lot.lot_code == lotCode
+    })
+
+    // UPDATED QT VALIDATED IN LOT 
+    
+    if(value>0){
+      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected= value
+    }else{
+      let oldValue = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].oldQnty
+      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected= oldValue
+    }  
     console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots)
     
     // UPDATED QT VALIDATED IN  PRODUCT OBJ

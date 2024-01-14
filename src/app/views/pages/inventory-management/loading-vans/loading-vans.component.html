@@ -69,7 +69,7 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <div class="row mb-5" *ngFor="let productPage of loadRequestData" style="min-width: 800px">
+            <div class="row mb-5" *ngFor="let productPage of loadRequestData" style="min-width: 1000px">
                 <br><br>
 
                 <!-- PAGE CARD -->
@@ -147,6 +147,7 @@
                                                 <th class="pr-0" style="width: 50px"></th>
                                                 <th class="pr-0" style="width: 200px">Code de lot</th>
                                                 <th style="min-width: 200px">Quantité en lot</th>
+                                                <th style="min-width: 200px">Ancienne quantité</th>
                                                 <th style="min-width: 200px">Quantité sélectionnée</th>
                                             </tr>
                                         </thead>
@@ -159,9 +160,17 @@
                                                 <td class="pl-0">
                                                     <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{lot.qnt_lot}}</span>
                                                 </td>
+                                                <!-- NEW -->
+                                                <td class="pl-0" *ngIf="!lot.lineIsOld">
+                                                    <span class="text-dark-75 font-weight-bolder d-block font-size-lg">/</span>
+                                                </td>
                                                 <td class="pl-0" *ngIf="lot.lineIsOld">
-                                                    <span  class="text-dark-75 font-weight-bolder d-block font-size-lg">{{lot.qt_effected}}</span>
-    
+                                                    <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{lot.qt_effected}}</span>
+                                                </td>
+                                                <!-- NEW -->
+                                                <td class="pl-0" *ngIf="lot.lineIsOld">
+                                                    <!-- <span  class="text-dark-75 font-weight-bolder d-block font-size-lg">{{lot.qt_effected}}</span> -->
+                                                    <input  type="number" max="50" (change)="updateQuantity($event.target.value,productPage.page_code,product.product_code,lot.lot_code)" value="{{lot.qnt_lot}}">
                                                 </td>
                                                 <td class="pl-0" *ngIf="!lot.lineIsOld">
                                                     <input  type="number" max="50" (change)="onInputChanged($event.target.value,productPage.page_code,product.product_code,lot.lot_code)" value="{{lot.qnt_lot}}">
