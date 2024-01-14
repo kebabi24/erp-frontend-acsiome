@@ -40,7 +40,7 @@ import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 import { UnplanifiedReceptComponent } from "./unplanified-recept/unplanified-recept.component";
 import { InventoryListComponent } from "./inventory-list/inventory-list.component";
-import { DomainService, LocationDetailService, SequenceService } from "../../../core/erp";
+import { DomainService, LocationDetailService, SequenceService, InventoryManagementService, UnloadRequestService, LoadRequestService } from "../../../core/erp";
 import { PoReceipComponent } from "./po-receip/po-receip.component";
 
 import { TransactionListComponent } from "./transaction-list/transaction-list.component";
@@ -56,7 +56,8 @@ import { EditStatusRefComponent } from "./edit-status-ref/edit-status-ref.compon
 import { PoReceipCabIdComponent } from "./po-receip-cab-id/po-receip-cab-id.component";
 import { PurchaseOrderService, TransferService, PurchaseReceiveService, InventoryTransactionService, DeviseService, ProviderService, CostSimulationService, SiteService, LocationService, InventoryStatusService, RequisitionService, MesureService, UsersService, ItemService, LabelService, PrintersService, EmployeService, ProductLineService } from "../../../core/erp";
 import { UnplanifiedReceiptCabComponent } from "./unplanified-receipt-cab/unplanified-receipt-cab.component";
-import { PoReceiptDetComponent } from './po-receipt-det/po-receipt-det.component';
+import { PoReceiptDetComponent } from "./po-receipt-det/po-receipt-det.component";
+import { LoadingVansV2Component } from "./loading-vans-v2/loading-vans-v2.component";
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -132,10 +133,14 @@ const routes: Routes = [
     path: "po-receipt-det",
     component: PoReceiptDetComponent,
   },
+  {
+    path: "loading-vans-v2",
+    component: LoadingVansV2Component,
+  },
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -197,6 +202,10 @@ const routes: Routes = [
     PrintersService,
     EmployeService,
     ProductLineService,
+    InventoryManagementService,
+    InventoryTransactionService,
+    UnloadRequestService,
+    LoadRequestService,
   ],
 })
 export class InventoryTransactionModule {}

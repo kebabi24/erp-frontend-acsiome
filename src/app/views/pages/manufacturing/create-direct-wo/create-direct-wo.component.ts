@@ -1499,46 +1499,45 @@ export class CreateDirectWoComponent implements OnInit {
 
                 this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                   console.log(respopart);
-                  this.labelService.getBy({lb_ref: ref}).subscribe((respopal: any) => {
-                  if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true)
-                  {
-                    alert("Type ne correspond pas au produit broyé");
-                  }
-                  else {
-                  this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
-                    this.sct = respo.data;
-                    console.log(this.sct);
+                  this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
+                    if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true) {
+                      alert("Type ne correspond pas au produit broyé");
+                    } else {
+                      this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
+                        this.sct = respo.data;
+                        console.log(this.sct);
 
-                    this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
-                      console.log(rescode);
-                      if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true) {
-                        this.gridService.addItem(
-                          {
-                            id: this.dataset.length + 1,
-                            tr_line: this.dataset.length + 1,
-                            tr_part: this.lddet.ld_part,
-                            break: respopart.data.pt_break_cat,
-                            cmvid: "",
-                            desc: respopart.data.pt_desc1,
-                            tr_qty_loc: this.lddet.ld_qty_oh,
-                            tr_loc: this.lddet.ld_loc,
-                            tr_um: respopart.data.pt_um,
-                            tr_um_conv: 1,
-                            tr_price: this.sct.sct_mtl_tl,
-                            cmvids: "",
-                            tr_ref: ref,
-                            tr_serial: this.lddet.ld_lot,
-                            tr_status: this.stat,
-                            tr_expire: this.lddet.ld_expire,
-                            tr_program: timedate,
-                          },
-                          { position: "bottom" }
-                        );
-                      } else {
-                        alert("Couleur ne correspond pas au produit ");
-                      }
-                      
-                    });
+                        this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
+                          console.log(rescode);
+                          if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true) {
+                            this.gridService.addItem(
+                              {
+                                id: this.dataset.length + 1,
+                                tr_line: this.dataset.length + 1,
+                                tr_part: this.lddet.ld_part,
+                                break: respopart.data.pt_break_cat,
+                                cmvid: "",
+                                desc: respopart.data.pt_desc1,
+                                tr_qty_loc: this.lddet.ld_qty_oh,
+                                tr_loc: this.lddet.ld_loc,
+                                tr_um: respopart.data.pt_um,
+                                tr_um_conv: 1,
+                                tr_price: this.sct.sct_mtl_tl,
+                                cmvids: "",
+                                tr_ref: ref,
+                                tr_serial: this.lddet.ld_lot,
+                                tr_status: this.stat,
+                                tr_expire: this.lddet.ld_expire,
+                                tr_program: timedate,
+                              },
+                              { position: "bottom" }
+                            );
+                          } else {
+                            alert("Couleur ne correspond pas au produit ");
+                          }
+                        });
+                      });
+                    }
                   });
                 };
               })
