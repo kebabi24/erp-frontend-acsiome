@@ -16,4 +16,4 @@ declare var KTWizard: any;
 declare var Chart: any;
 declare var KTLayoutExamples: any;
 declare var ClipboardJS: any;
-declare var printJS: any;
+

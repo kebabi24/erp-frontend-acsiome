@@ -19,7 +19,7 @@
                     <div class="row ">
 
                         
-                        <div class="col-3">
+                        <div class="col-4">
                             <label class="form-group">Demande de chargement:</label>
                             <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest()"
                             aria-describedby="basic-addon2">
@@ -37,23 +37,18 @@
                               </span>
                             </div>
                         </div>
-                    </div>
-
-                
-                    <br>
-                    <div class="row">
-                        <div class="col-12">
+                   
+                        <div class="form-group col-6">
                            <h5>Demande de chargement sélectionnée : <span class="text-primary">{{load_request_code}}</span></h5>
                            <h5>Role                               :  <span class="text-primary">{{role_code}}</span></h5>
                            <h5>Vendeur                            :<span class="text-primary">{{username}}</span></h5>
                         </div>  
                     </div>
                     <br>
-                    <br><br>
                     <h5>Liste de palettes</h5>
 
                     <div class="row ">
-                        <div class="col-3">
+                        <div class="col-4">
                             <label class="form-group">Palette:</label>
                             <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal()"
                             aria-describedby="basic-addon2"> 
@@ -64,7 +59,7 @@
 
 
                 </form>
-                <br><br>
+                <br>
                 <angular-slickgrid 
                    gridId="gridS" 
                    [columnDefinitions]="columnDefinitions"

@@ -34,4 +34,10 @@ export class MobileServiceService {
       headers: httpHeaders,
     });
   }
+  public getBy(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_SERVICE}/findby`, data, {
+      headers: httpHeaders,
+    });
+  }
 }

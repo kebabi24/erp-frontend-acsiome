@@ -51,6 +51,11 @@ export class BankService {
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
  
     }
+    public getByAll(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbyall`,data, { headers: httpHeaders })
+ 
+    }
     public getAllDetails(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findDetails`,data, { headers: httpHeaders })
@@ -70,7 +75,36 @@ export class BankService {
         return this.http.post(`${API_URL}/findbankgrp`, data, {
           headers: httpHeaders,
         });
-      }
-    // DELETE
+    }
 
+    public addBkhTransfert(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/addbkhtransfert`, data, {
+        headers: httpHeaders,
+    });
+
+    }  
+    public addBkhPayment(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/addbkhpayment`, data, {
+            headers: httpHeaders,
+        });
+    }
+    public addBkhTransfertC(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/addbkhtransfertc`, data, {
+            headers: httpHeaders,
+        });
+    // DELETE
+    }
+    public getBKHBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbkh`,data, { headers: httpHeaders })
+ 
+    }
+   
+    public getTransfertBy() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL+'/findtransfert', { headers: httpHeaders })
+    }
 }

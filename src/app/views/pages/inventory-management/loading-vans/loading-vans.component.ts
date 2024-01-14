@@ -33,7 +33,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { InventoryManagementService, printInventory  , InventoryTransactionService} from "../../../../core/erp"
+import { InventoryManagementService, printInventory  , InventoryTransactionService,RoleService} from "../../../../core/erp"
 
 @Component({
   selector: 'kt-loading-vans',
@@ -79,7 +79,7 @@ export class LoadingVansComponent implements OnInit {
 
   showSpinner : Boolean =  false;
   
-
+user: any
 
   constructor(
       config: NgbDropdownConfig,
@@ -90,6 +90,7 @@ export class LoadingVansComponent implements OnInit {
       private layoutUtilsService: LayoutUtilsService,
       private inventoryManagementService: InventoryManagementService,
       private inventoryTransactionService: InventoryTransactionService,
+      private roleService: RoleService,
       private modalService: NgbModal
   ) {
       config.autoClose = true
@@ -98,6 +99,7 @@ export class LoadingVansComponent implements OnInit {
   ngOnInit(): void {
       this.loading$ = this.loadingSubject.asObservable()
       this.loadingSubject.next(false)
+      this.user =  JSON.parse(localStorage.getItem('user'))
       this.prepareRoles()
       this.createForm()
       this.createForm2()
@@ -111,6 +113,10 @@ export class LoadingVansComponent implements OnInit {
         role_code :[this.role_code],
         load_request_code:[this.load_request_code]
       })
+  }
+
+  resetForm(){
+
   }
 
   time = new Observable<string>((observer: Observer<string>) => {
@@ -133,7 +139,7 @@ export class LoadingVansComponent implements OnInit {
     this.currentPageIndex = this.loadRequestData.findIndex(page =>{
       return page.page_code === page_code
     })
-    const ld_loc = this.loadRequest.role_loc
+    const ld_loc = this.loadRequest.role_loc_from;
     const ld_site = this.loadRequest.role_site
     this.inventoryManagementService.getProductLots(ld_loc,ld_site,product_code).subscribe(
       (response: any) => {
@@ -162,6 +168,7 @@ export class LoadingVansComponent implements OnInit {
       let sum = 0 
       loadRequest.selectedProducts.forEach(product => {
         if(product.lots.length >0){
+
           product.lots.forEach(lot =>{
             sum += +lot.qt_effected
             details.push({
@@ -172,6 +179,7 @@ export class LoadingVansComponent implements OnInit {
               "pt_price":product.pt_price,
             })
           })
+
           lines.push({
             "product_code":product.product_code,
             "load_request_code":this.load_request_code,
@@ -185,10 +193,10 @@ export class LoadingVansComponent implements OnInit {
      this.inventoryManagementService.createLoadRequestDetails(details,lines).subscribe(
 
       (response: any) => {
-        console.log(response)
         this.loadRequestData = []
         this.load_request_code = ""
         this.role_code = ""
+        this.createForm()
       },
       (error) => {
         // this.loadRequestData = []
@@ -280,13 +288,13 @@ export class LoadingVansComponent implements OnInit {
         this.load_request_code = ""
         this.role_code = ""
 
+        this.createForm()
         let detail = detailss
 
         // isstr        
         this.inventoryTransactionService.addTr({nlot , it ,detail}).subscribe(
 
           (response: any) => {
-            console.log(response)
           },
           (error) => {
             // this.loadRequestData = []
@@ -347,9 +355,6 @@ export class LoadingVansComponent implements OnInit {
     if(this.loadRequestData[indexPage].unselectedProducts[indexProduct].length == 0){
       this.loadRequestData[indexPage].hasAddProduct = false
     }
-    // console.log(indexProduct)
-    // console.log(this.loadRequestData[indexPage].unselectedProducts)
-    // console.log(this.loadRequestData[indexPage].selectedProducts)
   }
 
   
@@ -388,13 +393,29 @@ export class LoadingVansComponent implements OnInit {
   // FORMS DATA FUNCTIONS 
   prepareLoadRequestData(load_request_code){
     this.showSpinner = true
+    
     this.inventoryManagementService.getLoadRequestData(load_request_code).subscribe(
   
         (response: any) => {
-          this.loadRequestData = response.loadRequestData
+          let data = response.loadRequestData
+
+          data.forEach(page => {
+            if(page.selectedProducts.length > 0){
+              page.selectedProducts.forEach(prod=>{
+                prod.lots.forEach(lot => {
+                  lot.lineIsOld = true
+                  lot.oldQnty = lot.qt_effected
+                });
+              })
+            }
+          });
+
+          
+
+          this.loadRequestData = data
+          console.log(this.loadRequestData)
           this.loadRequest = response.data
           this.role = response.role
-          console.log(response)
           this.showSpinner = false
         },
         (error) => {
@@ -411,7 +432,8 @@ export class LoadingVansComponent implements OnInit {
   }
 
   prepareRoles(){
-    this.inventoryManagementService.getRoles('administrateur').subscribe(
+    if (this.user.usrd_site = "*") {
+    this.roleService.getAllRoles().subscribe(
         
         (response: any) => {
           this.roles = response.data
@@ -422,6 +444,19 @@ export class LoadingVansComponent implements OnInit {
         },
         () => {}
     )
+      } else {
+        this.roleService.getBy({role_site: this.user.usrd_site}).subscribe(
+        
+          (response: any) => {
+            this.roles = response.data
+            console.log(this.roles)
+          },
+          (error) => {
+            this.roles = []
+          },
+          () => {}
+      )
+      }
   }
 
   prepareLoadRequests(role_code){
@@ -547,7 +582,7 @@ export class LoadingVansComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false
+        selectActiveRow: true
       },
       formatterOptions: {
         
@@ -631,7 +666,9 @@ export class LoadingVansComponent implements OnInit {
         this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.push({
         lot_code : this.gridService.getDataItemByRowIndex(index).ld_lot,
         qnt_lot : this.gridService.getDataItemByRowIndex(index).ld_qty_oh,
-        qt_effected : this.gridService.getDataItemByRowIndex(index).qty_selected
+        qt_effected : this.gridService.getDataItemByRowIndex(index).qty_selected,
+        lineIsOld : false,
+        oldQnty : 0,
         })
       }
       
@@ -659,6 +696,61 @@ export class LoadingVansComponent implements OnInit {
 
     // UPDATED QT VALIDATED IN LOT 
     this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected= value
+    console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots)
+    
+    // UPDATED QT VALIDATED IN  PRODUCT OBJ
+    let qntEffected = 0
+    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.forEach(lot =>{
+      // console.log(lot)
+      qntEffected += +lot.qt_effected 
+    })
+    this.loadRequestData[pageIndex].selectedProducts[productIndex].qt_effected = qntEffected
+    console.log('total : ',qntEffected)
+    
+
+    
+
+    // const indexPage = this.loadRequestData.findIndex(loadRequest=>{
+    //   return loadRequest.page_code  === pageCode
+    // })
+    // console.log('pageCodeIndex:' + indexPage)
+    // const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
+    //   return product.product_code === prodCode
+    // })
+    // console.log('prodCodeIndex:' + indexProduct)
+    // this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
+    // console.log(this.loadRequestData[indexPage].products[indexProduct])
+    
+   
+  }
+
+  updateQuantity(value,pageCode,productCode,lotCode){
+
+    console.log(value)
+
+    // FIND PAGE INDEX IN LOAD REQUEST DATA 
+    const pageIndex = this.loadRequestData.findIndex(page=>{
+      return page.page_code === pageCode
+    })
+
+    // FIND PRODUCT INDEX IN SELECTED PRODUCTS OF THE SELECTED PAGE 
+    const productIndex = this.loadRequestData[pageIndex].selectedProducts.findIndex(product=>{
+      return product.product_code === productCode 
+    }) 
+
+
+    const lotIndex  = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.findIndex(lot=>{
+      return lot.lot_code == lotCode
+    })
+
+    // UPDATED QT VALIDATED IN LOT 
+    
+    if(value>0){
+      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected= value
+    }else{
+      let oldValue = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].oldQnty
+      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected= oldValue
+    }  
     console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots)
     
     // UPDATED QT VALIDATED IN  PRODUCT OBJ
