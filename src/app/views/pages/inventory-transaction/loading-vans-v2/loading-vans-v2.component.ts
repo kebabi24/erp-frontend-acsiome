@@ -15,11 +15,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { InventoryManagementService, printInventory, InventoryTransactionService } from "../../../../core/erp";
 
 @Component({
-  selector: "kt-loading-vans",
-  templateUrl: "./loading-vans.component.html",
-  styleUrls: ["./loading-vans.component.scss"],
+  selector: "kt-loading-vans-v2",
+  templateUrl: "./loading-vans-v2.component.html",
+  styleUrls: ["./loading-vans-v2.component.scss"],
 })
-export class LoadingVansComponent implements OnInit {
+export class LoadingVansV2Component implements OnInit {
   chargeForm: FormGroup;
   productLotForm: FormGroup;
   hasFormErrors = false;
@@ -125,6 +125,7 @@ export class LoadingVansComponent implements OnInit {
   onSubmit() {
     const details = [];
     const lines = [];
+
     this.loadRequestData.forEach((loadRequest) => {
       let sum = 0;
       loadRequest.selectedProducts.forEach((product) => {
@@ -319,7 +320,7 @@ export class LoadingVansComponent implements OnInit {
   prepareLoadRequestData(load_request_code) {
     this.showSpinner = true;
 
-    this.inventoryManagementService.getLoadRequestData(load_request_code).subscribe(
+    this.inventoryManagementService.getLoadRequestDataV3(load_request_code).subscribe(
       (response: any) => {
         let data = response.loadRequestData;
 
@@ -572,43 +573,25 @@ export class LoadingVansComponent implements OnInit {
     });
   }
 
-  onInputChanged(value, pageCode, productCode, lotCode) {
-    // FIND PAGE INDEX IN LOAD REQUEST DATA
-    const pageIndex = this.loadRequestData.findIndex((page) => {
-      return page.page_code === pageCode;
+  onInputChanged(pageCode, prodCode, lotCode, value) {
+    console.log("lot", lotCode);
+    console.log("value:" + value);
+    console.log(this.loadRequestData);
+    const indexPage = this.loadRequestData.findIndex((loadRequest) => {
+      return loadRequest.page_code === pageCode;
+    });
+    console.log("pageCodeIndex:" + indexPage);
+    const indexProduct = this.loadRequestData[indexPage].selectedProducts.findIndex((product) => {
+      return product.product_code === prodCode;
     });
 
-    // FIND PRODUCT INDEX IN SELECTED PRODUCTS OF THE SELECTED PAGE
-    const productIndex = this.loadRequestData[pageIndex].selectedProducts.findIndex((product) => {
-      return product.product_code === productCode;
+    const indexLot = this.loadRequestData[indexPage].selectedProducts[indexProduct].lots.findIndex((lot) => {
+      return lot.lot_code === lotCode;
     });
+    console.log("indexLot", indexLot);
 
-    const lotIndex = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.findIndex((lot) => {
-      return lot.lot_code == lotCode;
-    });
-
-    // UPDATED QT VALIDATED IN LOT
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = value;
-    console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots);
-
-    // UPDATED QT VALIDATED IN  PRODUCT OBJ
-    let qntEffected = 0;
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.forEach((lot) => {
-      // console.log(lot)
-      qntEffected += +lot.qt_effected;
-    });
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].qt_effected = qntEffected;
-    console.log("total : ", qntEffected);
-
-    // const indexPage = this.loadRequestData.findIndex(loadRequest=>{
-    //   return loadRequest.page_code  === pageCode
-    // })
-    // console.log('pageCodeIndex:' + indexPage)
-    // const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
-    //   return product.product_code === prodCode
-    // })
-    // console.log('prodCodeIndex:' + indexProduct)
-    // this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
-    // console.log(this.loadRequestData[indexPage].products[indexProduct])
+    this.loadRequestData[indexPage].selectedProducts[indexProduct].lots[indexLot].qt_effected = +value;
+    // this.loadRequestData[indexPage].selectedProducts[indexProduct].qt_validated = Number(this.loadRequestData[indexPage].selectedProducts[indexProduct].lots[indexLot - 1].qt_effected) + Number(value);
+    console.log(this.loadRequestData);
   }
 }

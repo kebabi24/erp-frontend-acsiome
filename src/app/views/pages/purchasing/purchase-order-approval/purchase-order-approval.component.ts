@@ -528,7 +528,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 const item = this.gridObj5.getDataItem(idx)
                 
                 
-                controls.rqm_nbr.setValue(item.rqm_nbr || "")
+                controls.rqm_nbr.setValue(item.req.rqm_nbr || "")
 
                 //const controls = this.reqForm.controls
                 const rqm_nbr = controls.rqm_nbr.value
@@ -637,7 +637,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
             {
                 id: "rqm_nbr",
                 name: "N° Demande",
-                field: "rqm_nbr",
+                field: "req.rqm_nbr",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
@@ -645,7 +645,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
             {
                 id: "rqm_req_date",
                 name: "Date",
-                field: "rqm_req_date",
+                field: "req.rqm_req_date",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
@@ -653,7 +653,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
             {
                 id: "rqm_total",
                 name: "Total",
-                field: "rqm_total",
+                field: "req.rqm_total",
                 sortable: true,
                 filterable: true,
                 type: FieldType.float,
@@ -661,7 +661,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
             {
                 id: "rqm_status",
                 name: "status",
-                field: "rqm_status",
+                field: "req.rqm_status",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
@@ -696,14 +696,24 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 // True (Single Selection), False (Multiple Selections)
                 selectActiveRow: true,
             },
-        }
-        
+      
+        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+            var val = undefined;
+            try {
+              val = eval("item." + column.field);
+            } catch (e) {
+              // ignore
+            }
+            return val;
+          },
+        };
+    
         
         // fill the dataset with your data
         this.requisitonService
             .getAllApp()
            //.getAll() 
-           .subscribe((response: any) => (this.requisitions = response.data))
+           .subscribe((response: any) => {(this.requisitions = response.data), console.log(response.data)})
     }
     open5(content) {
         this.prepareGrid5()

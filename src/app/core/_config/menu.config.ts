@@ -164,7 +164,7 @@ export class MenuConfig {
             {
               title: "Ajouter population client",
               page: "/promo/promo-cust-add",
-            }, 
+            },
             {
               title: "Ajouter avantage",
               page: "/promo/advantage-add",
@@ -182,7 +182,6 @@ export class MenuConfig {
           icon: "flaticon-event-calendar-symbol",
           root: true,
           submenu: [
-            
             {
               title: "Ajouter paramètre de contrôle",
               page: "/quality-assurance/add-control-parameter",
@@ -195,10 +194,9 @@ export class MenuConfig {
               title: "Ajouter une gamme",
               page: "/quality-assurance/create-gamme",
             },
-           
           ],
         },
-        
+
         {
           title: "Gestion des Fournisseurs",
           bullet: "dot",
@@ -362,7 +360,6 @@ export class MenuConfig {
                   title: "Modification des Modèle",
                   page: "/articles/update-mod",
                 },
-                
               ],
             },
           ],
@@ -376,6 +373,10 @@ export class MenuConfig {
             {
               title: "Chargement Des Vans",
               page: "/inventory-management/loading-vans",
+            },
+            {
+              title: "Chargement Des Vans 2",
+              page: "/inventory-transaction/loading-vans-v2",
             },
             {
               title: "Chargement Des Vans (scan)",
@@ -412,7 +413,6 @@ export class MenuConfig {
             {
               title: "Entrée non Planifiée ",
               page: "/inventory-transaction/unplanified-recept",
-              
             },
             {
               title: "Réception non Planifiée Etiquetage",
@@ -769,8 +769,7 @@ export class MenuConfig {
               title: "Allocation Palette Par OF",
               page: "/manufacturing/label-allocation",
             },
-            
-            
+
             {
               title: "Déclaration Operation",
               page: "/manufacturing/create-op",
@@ -912,7 +911,6 @@ export class MenuConfig {
                   title: "Modification des Associations",
                   page: "/patient/update-ass",
                 },
-                
               ],
             },
             {
@@ -933,7 +931,6 @@ export class MenuConfig {
                   title: "Modification des Docteurs",
                   page: "/patient/update-doctor",
                 },
-                
               ],
             },
           ],
@@ -960,7 +957,7 @@ export class MenuConfig {
               title: "La liste des Projets",
               page: "/project/list-pm",
             },
-            
+
             {
               title: "Lancer un projet",
               page: "/project/launch-project",
@@ -1004,8 +1001,6 @@ export class MenuConfig {
               page: "/project/business-monitoring-sheet",
             },
 
-
-
             /**/
             {
               title: "Gestion des Nomenclatures",
@@ -1013,7 +1008,6 @@ export class MenuConfig {
               bullet: "dot",
               icon: "flaticon2-tools-and-utensils",
               submenu: [
-           
                 {
                   title: "Maint Code Nomenclature",
                   page: "/manufacturing/create-nomenclature",
@@ -1034,7 +1028,7 @@ export class MenuConfig {
                   title: "Calcul coût des Nomenclatures",
                   page: "/manufacturing/bom-cost",
                 },
-              ]
+              ],
             },
             /* */
             {

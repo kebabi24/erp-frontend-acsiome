@@ -159,8 +159,12 @@
                                                 <td class="pl-0">
                                                     <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{lot.qnt_lot}}</span>
                                                 </td>
-                                                <td class="pl-0">
-                                                    <input type="number" max="50" (change)="onInputChanged($event.target.value,productPage.page_code,product.product_code,lot.lot_code)" value="{{lot.qt_effected}}">
+                                                <td class="pl-0" *ngIf="lot.lineIsOld">
+                                                    <span  class="text-dark-75 font-weight-bolder d-block font-size-lg">{{lot.qt_effected}}</span>
+    
+                                                </td>
+                                                <td class="pl-0" *ngIf="!lot.lineIsOld">
+                                                    <input  type="number" max="50" (change)="onInputChanged($event.target.value,productPage.page_code,product.product_code,lot.lot_code)" value="{{lot.qnt_lot}}">
                                                 </td>
                                             </tr>
                                         </tbody>

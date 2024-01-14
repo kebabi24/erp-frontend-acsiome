@@ -273,6 +273,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
           rqm_category: [this.requisition.rqm_category , Validators.required],
           rqm_nbr: [this.requisition.rqm_nbr ],
           rqm_vend: [this.requisition.rqm_vend ],
+          rqm_type: "S",
+          
           rqm_req_date:[{
             year:date.getFullYear(),
             month: date.getMonth()+1,
@@ -356,6 +358,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         _req.rqm_category =  controls.rqm_category.value
           _req.rqm_nbr=  controls.rqm_nbr.value
           _req.rqm_vend =  controls.rqm_vend.value
+          _req.rqm_type =  controls.rqm_type.value
           _req.rqm_req_date=  controls.rqm_req_date.value ? `${controls.rqm_req_date.value.year}/${controls.rqm_req_date.value.month}/${controls.rqm_req_date.value.day}`: null
           _req.rqm_need_date=  controls.rqm_need_date.value ? `${controls.rqm_need_date.value.year}/${controls.rqm_need_date.value.month}/${controls.rqm_need_date.value.day}`: null
           _req.rqm_rqby_userid=  controls.rqm_rqby_userid.value
