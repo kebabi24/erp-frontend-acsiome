@@ -1535,11 +1535,11 @@ export class CreateDirectWoComponent implements OnInit {
                       });
                     }
                   });
-                }
+                })
+              }
                 });
-              })
-            }
-            });
+              
+          
           }
         } else {
           alert("Palette Nexiste pas");
