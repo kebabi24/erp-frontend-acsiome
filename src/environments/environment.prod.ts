@@ -5,7 +5,7 @@ export const environment = {
   // apiUrl: "http://localhost:3001/api/v1",
  
   // apiUrl: "http://192.168.1.253:3001/api/v1",
-  apiUrl: "http://LOCALHOST:3001/api/v1",
+  apiUrl: "http://localhost:3001/api/v1",
   Instance : "Prod"
   //willda apiUrl: "http://192.168.1.252:3001/api/v1",
 };

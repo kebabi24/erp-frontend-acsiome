@@ -12,14 +12,14 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { InventoryManagementService, printInventory, InventoryTransactionService, RoleService } from "../../../../core/erp";
+import { InventoryManagementService, printInventory, InventoryTransactionService } from "../../../../core/erp";
 
 @Component({
-  selector: "kt-loading-vans",
-  templateUrl: "./loading-vans.component.html",
-  styleUrls: ["./loading-vans.component.scss"],
+  selector: "kt-loading-vans-v2",
+  templateUrl: "./loading-vans-v2.component.html",
+  styleUrls: ["./loading-vans-v2.component.scss"],
 })
-export class LoadingVansComponent implements OnInit {
+export class LoadingVansV2Component implements OnInit {
   chargeForm: FormGroup;
   productLotForm: FormGroup;
   hasFormErrors = false;
@@ -43,9 +43,8 @@ export class LoadingVansComponent implements OnInit {
   currentProductCode: any;
   selectedLotCode: any;
 
-  pageCodeToAddIn =""
-  productCodeToAdd=""
-  productDescToAdd=""
+  pageCodeToAddIn: any;
+  productCodeToAdd: any;
 
   // GRID
   angularGrid: AngularGridInstance;
@@ -56,20 +55,15 @@ export class LoadingVansComponent implements OnInit {
   gridOptions: GridOption;
   dataset: any[];
 
-  showSpinner : Boolean =  false;
+  showSpinner: Boolean = false;
 
-  pageCodeForAddition = ""
-  
-user: any
-
-  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private roleService: RoleService, private modalService: NgbModal) {
+  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private modalService: NgbModal) {
     config.autoClose = true;
     this.prepareGrid();
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
-    this.user = JSON.parse(localStorage.getItem("user"));
     this.prepareRoles();
     this.createForm();
     this.createForm2();
@@ -131,6 +125,7 @@ user: any
   onSubmit() {
     const details = [];
     const lines = [];
+
     this.loadRequestData.forEach((loadRequest) => {
       let sum = 0;
       loadRequest.selectedProducts.forEach((product) => {
@@ -274,66 +269,20 @@ user: any
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
-  addRow(page_code){
-    let indexPage = -1
-    let indexProduct = -1
-    if(this.pageCodeForAddition ==""){
-      indexPage = this.loadRequestData.findIndex(page=>{
-        return page.page_code == page_code;
-      })
-    }else{
-      indexPage = this.loadRequestData.findIndex(page=>{
-        return page.page_code == this.pageCodeForAddition;
-      })
+  addRow() {
+    const indexPage = this.loadRequestData.findIndex((page) => {
+      return page.page_code == this.pageCodeToAddIn;
+    });
+    const indexProduct = this.loadRequestData[indexPage].unselectedProducts.findIndex((product) => {
+      console.log(product.product_code + "\t" + this.productCodeToAdd);
+      return (product.product_code = this.productCodeToAdd);
+    });
+    console.log(indexProduct);
+    this.loadRequestData[indexPage].selectedProducts.push(this.loadRequestData[indexPage].unselectedProducts[indexProduct]);
+    delete this.loadRequestData[indexPage].unselectedProducts[indexProduct];
+    if (this.loadRequestData[indexPage].unselectedProducts[indexProduct].length == 0) {
+      this.loadRequestData[indexPage].hasAddProduct = false;
     }
-    // console.log("indexProduct : "+ indexPage)
-
-    // const indexProduct = this.loadRequestData[indexPage].unselectedProducts.findIndex(product=>{
-       
-    //    return product.product_code == this.productCodeToAdd
-    // })
-    if(this.productDescToAdd == ""){
-      indexProduct = 0
-    }else{
-      indexProduct = this.loadRequestData[indexPage].unselectedProducts.findIndex(product=>{
-        // console.log(product.pt_desc1 + " \t "+ this.productDescToAdd)
-        
-        return product.pt_desc1 == this.productDescToAdd
-      })
-    }
-      
-    // console.log("indexProduct : "+ indexProduct)
-
-    console.log("********************")
-    // SEARCH 
-   
-
-
-    var prod = this.loadRequestData[indexPage].unselectedProducts[indexProduct]
-    console.log(prod.wasAdded)
-    if(prod.wasAdded){
-      alert("Ce produit a déjà été ajouté")
-      return ; 
-    }else{
-      this.loadRequestData[indexPage].selectedProducts.push(
-        // this.loadRequestData[indexPage].unselectedProducts[indexProduct]
-        prod
-      )
-      this.loadRequestData[indexPage].unselectedProducts[indexProduct].wasAdded = true
-    }
-    
-    this.pageCodeForAddition = ""
-    this.productDescToAdd = ""
-    return;
-    
-    delete this.loadRequestData[indexPage].unselectedProducts[indexProduct]
-   
-    if(this.loadRequestData[indexPage].unselectedProducts.length == 0){
-      this.loadRequestData[indexPage].hasAddProduct = false
-    }
-
-    this.pageCodeForAddition = ""
-    this.productDescToAdd = ""
   }
 
   onSelectLot(lot_code) {
@@ -361,20 +310,17 @@ user: any
     // console.log(this.gridService.getDataItemByRowIndex(0))
   }
 
-  onSelectProductToAdd(product_code,page_code ){
-    this.pageCodeToAddIn  = page_code
-    this.pageCodeForAddition = page_code
-    this.productCodeToAdd =product_code
-    this.productDescToAdd = product_code
-    // console.log(this.pageCodeForAddition,this.productCodeToAdd)
-    // console.log("title of selected product is : \t"+ this.productDescToAdd)
+  onSelectProductToAdd(product_code, page_code) {
+    this.pageCodeToAddIn = page_code;
+    this.productCodeToAdd = product_code;
+    console.log(this.pageCodeToAddIn, this.productCodeToAdd);
   }
 
   // FORMS DATA FUNCTIONS
   prepareLoadRequestData(load_request_code) {
     this.showSpinner = true;
 
-    this.inventoryManagementService.getLoadRequestData(load_request_code).subscribe(
+    this.inventoryManagementService.getLoadRequestDataV3(load_request_code).subscribe(
       (response: any) => {
         let data = response.loadRequestData;
 
@@ -383,7 +329,6 @@ user: any
             page.selectedProducts.forEach((prod) => {
               prod.lots.forEach((lot) => {
                 lot.lineIsOld = true;
-                lot.oldQnty = lot.qt_effected;
               });
             });
           }
@@ -409,29 +354,16 @@ user: any
   }
 
   prepareRoles() {
-    if ((this.user.usrd_site = "*")) {
-      this.roleService.getAllRoles().subscribe(
-        (response: any) => {
-          this.roles = response.data;
-          console.log(this.roles);
-        },
-        (error) => {
-          this.roles = [];
-        },
-        () => {}
-      );
-    } else {
-      this.roleService.getBy({ role_site: this.user.usrd_site }).subscribe(
-        (response: any) => {
-          this.roles = response.data;
-          console.log(this.roles);
-        },
-        (error) => {
-          this.roles = [];
-        },
-        () => {}
-      );
-    }
+    this.inventoryManagementService.getRoles("administrateur").subscribe(
+      (response: any) => {
+        this.roles = response.data;
+        console.log(this.roles);
+      },
+      (error) => {
+        this.roles = [];
+      },
+      () => {}
+    );
   }
 
   prepareLoadRequests(role_code) {
@@ -636,97 +568,30 @@ user: any
           qnt_lot: this.gridService.getDataItemByRowIndex(index).ld_qty_oh,
           qt_effected: this.gridService.getDataItemByRowIndex(index).qty_selected,
           lineIsOld: false,
-          oldQnty: 0,
         });
       }
     });
   }
 
-  onInputChanged(value, pageCode, productCode, lotCode) {
-    // FIND PAGE INDEX IN LOAD REQUEST DATA
-    const pageIndex = this.loadRequestData.findIndex((page) => {
-      return page.page_code === pageCode;
+  onInputChanged(pageCode, prodCode, lotCode, value) {
+    console.log("lot", lotCode);
+    console.log("value:" + value);
+    console.log(this.loadRequestData);
+    const indexPage = this.loadRequestData.findIndex((loadRequest) => {
+      return loadRequest.page_code === pageCode;
+    });
+    console.log("pageCodeIndex:" + indexPage);
+    const indexProduct = this.loadRequestData[indexPage].selectedProducts.findIndex((product) => {
+      return product.product_code === prodCode;
     });
 
-    // FIND PRODUCT INDEX IN SELECTED PRODUCTS OF THE SELECTED PAGE
-    const productIndex = this.loadRequestData[pageIndex].selectedProducts.findIndex((product) => {
-      return product.product_code === productCode;
+    const indexLot = this.loadRequestData[indexPage].selectedProducts[indexProduct].lots.findIndex((lot) => {
+      return lot.lot_code === lotCode;
     });
+    console.log("indexLot", indexLot);
 
-    const lotIndex = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.findIndex((lot) => {
-      return lot.lot_code == lotCode;
-    });
-
-    // UPDATED QT VALIDATED IN LOT
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = value;
-    console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots);
-
-    // UPDATED QT VALIDATED IN  PRODUCT OBJ
-    let qntEffected = 0;
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.forEach((lot) => {
-      // console.log(lot)
-      qntEffected += +lot.qt_effected;
-    });
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].qt_effected = qntEffected;
-    console.log("total : ", qntEffected);
-
-    // const indexPage = this.loadRequestData.findIndex(loadRequest=>{
-    //   return loadRequest.page_code  === pageCode
-    // })
-    // console.log('pageCodeIndex:' + indexPage)
-    // const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
-    //   return product.product_code === prodCode
-    // })
-    // console.log('prodCodeIndex:' + indexProduct)
-    // this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
-    // console.log(this.loadRequestData[indexPage].products[indexProduct])
-  }
-
-  updateQuantity(value, pageCode, productCode, lotCode) {
-    console.log(value);
-
-    // FIND PAGE INDEX IN LOAD REQUEST DATA
-    const pageIndex = this.loadRequestData.findIndex((page) => {
-      return page.page_code === pageCode;
-    });
-
-    // FIND PRODUCT INDEX IN SELECTED PRODUCTS OF THE SELECTED PAGE
-    const productIndex = this.loadRequestData[pageIndex].selectedProducts.findIndex((product) => {
-      return product.product_code === productCode;
-    });
-
-    const lotIndex = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.findIndex((lot) => {
-      return lot.lot_code == lotCode;
-    });
-
-    // UPDATED QT VALIDATED IN LOT
-
-    if (value > 0) {
-      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = value;
-    } else {
-      let oldValue = this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].oldQnty;
-      this.loadRequestData[pageIndex].selectedProducts[productIndex].lots[lotIndex].qt_effected = oldValue;
-    }
-    console.log(this.loadRequestData[pageIndex].selectedProducts[productIndex].lots);
-
-    // UPDATED QT VALIDATED IN  PRODUCT OBJ
-    let qntEffected = 0;
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].lots.forEach((lot) => {
-      // console.log(lot)
-      qntEffected += +lot.qt_effected;
-    });
-    this.loadRequestData[pageIndex].selectedProducts[productIndex].qt_effected = qntEffected;
-    console.log("total : ", qntEffected);
-
-    // const indexPage = this.loadRequestData.findIndex(loadRequest=>{
-    //   return loadRequest.page_code  === pageCode
-    // })
-    // console.log('pageCodeIndex:' + indexPage)
-    // const indexProduct = this.loadRequestData[indexPage].products.findIndex(product=>{
-    //   return product.product_code === prodCode
-    // })
-    // console.log('prodCodeIndex:' + indexProduct)
-    // this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value
-    // console.log(this.loadRequestData[indexPage].products[indexProduct])
+    this.loadRequestData[indexPage].selectedProducts[indexProduct].lots[indexLot].qt_effected = +value;
+    // this.loadRequestData[indexPage].selectedProducts[indexProduct].qt_validated = Number(this.loadRequestData[indexPage].selectedProducts[indexProduct].lots[indexLot - 1].qt_effected) + Number(value);
+    console.log(this.loadRequestData);
   }
 }

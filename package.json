@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "ng": "ng",
-    "start": "electron .",
+    "start2": "electron .",
+    "start": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng serve",
     "build": "ng build --prod",
     "electron": "ng build && electron .",
     "test": "ng test",
@@ -85,6 +86,7 @@
     "ngx-mask": "^15.0.2",
     "ngx-perfect-scrollbar": "9.0.0",
     "ngx-permissions": "7.0.3",
+    "nvm": "0.0.4",
     "object-path": "^0.11.5",
     "os": "^0.1.2",
     "path": "^0.12.7",

@@ -222,6 +222,17 @@ export class RpBroyageComponent implements OnInit {
         type: FieldType.float,
         columnGroup: 'ENTREE',
       },
+      {
+        id: "isstime",
+        name: "Heure",
+        field: "isstime",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+        columnGroup: 'ENTREE',
+      },
+      
       
       {
         id: "rctpart",

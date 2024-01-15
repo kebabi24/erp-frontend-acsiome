@@ -430,7 +430,7 @@ export class CreateDirectWoComponent implements OnInit {
   getProductTypes() {
     this.codeService
       .getBy({
-        code_fldname: "pt_prod_line",
+        code_fldname: "pt_draw",
       })
       .subscribe((response: any) => {
         const { data } = response;
@@ -451,7 +451,7 @@ export class CreateDirectWoComponent implements OnInit {
 
     this.itemsService
       .getBy({
-        pt_prod_line: controls.product_type.value,
+        pt_draw: controls.product_type.value,
         pt_break_cat: controls.product_color.value,
         pt_dsgn_grp: "BROY",
         pt_drwg_loc: "INTERNE",
@@ -530,12 +530,16 @@ export class CreateDirectWoComponent implements OnInit {
     let lab = null;
 
     this.labelService.add(_lb).subscribe(
-      (blob) => {
-        // console.log(blob);
-        // const url = window.URL.createObjectURL(blob);
-        // window.open(url);
-        // saveAs(blob, "ticket.pdf");
-        console.log(electronPrinter);
+      (reponse:any) => {(lab = reponse.data)
+        this.labelService.addblob(_lb).subscribe((blob)=>{
+          console.log(blob);
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        // saveAs(blob, lab.lb_ref + ".pdf");
+        //console.log(electronPrinter);
+        },
+        
+      )
       },
       (error) => {
         alert("Erreur Impression Etiquette");
@@ -1496,7 +1500,7 @@ export class CreateDirectWoComponent implements OnInit {
                 this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                   console.log(respopart);
                   this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
-                    if (respopart.data.pt_prod_line != controls.product_type.value && respopal.data.label.lb__log01 != true) {
+                    if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true) {
                       alert("Type ne correspond pas au produit broyé");
                     } else {
                       this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
@@ -1535,11 +1539,13 @@ export class CreateDirectWoComponent implements OnInit {
                       });
                     }
                   });
-                });
-              }
-            });
+                };
+              })
+            })
           }
-        } else {
+        })
+       }
+       } else {
           alert("Palette Nexiste pas");
           //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
         }
