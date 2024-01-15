@@ -91,13 +91,13 @@
                                 (change)="onSelectProductToAdd($event.target.value,productPage.page_code)"
                                 class="form-control form-control-sm form-control-solid">
                                 
-                                <option *ngFor="let product of productPage.unselectedProducts" [value]="product.product_code">
-                                    {{product.product_code }}</option>
+                                <option *ngFor="let product of productPage.unselectedProducts" [value]="product.pt_desc1">
+                                    {{product.product_code}}--{{product.pt_desc1}}</option>
                                 
                                 </select> 
                             </div>
                             
-                            <a (click)="addRow()" class="col-6 btn btn-white text-dark btn-sm font-weight-bolder">
+                            <a (click)="addRow(productPage.page_code)" class="col-6 btn btn-white text-dark btn-sm font-weight-bolder">
                                 Ajouter un produit</a>
                         </div>
                     </div>
