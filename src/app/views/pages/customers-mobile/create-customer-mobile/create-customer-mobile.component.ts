@@ -4,7 +4,7 @@ import { Column, GridOption, AngularGridInstance, FieldType } from "angular-slic
 import { ActivatedRoute, Router } from "@angular/router";
 import { Form, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
-import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
+import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs";
 import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
 
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
@@ -28,6 +28,10 @@ export class CreateCustomerMobileComponent implements OnInit {
   loading$: Observable<boolean>;
   ad_country: any[] = [];
   ad_state: any[] = [];
+  ad_geoarea: any[] = [];
+  currentStates: any[] = [];
+  currentCities: any[] = [];
+  postalCode: any;
   ad_city: any[] = [];
   isExist = false;
 
@@ -81,6 +85,9 @@ export class CreateCustomerMobileComponent implements OnInit {
   ) {
     config.autoClose = true;
     this.codeService.getBy({ code_fldname: "ad_country" }).subscribe((response: any) => (this.ad_country = response.data));
+    this.codeService.getBy({ code_fldname: "ad_city" }).subscribe((response: any) => (this.ad_city = response.data));
+    this.codeService.getBy({ code_fldname: "ad_state" }).subscribe((response: any) => (this.ad_state = response.data));
+    this.codeService.getBy({ code_fldname: "geoarea_code" }).subscribe((response: any) => (this.ad_geoarea = response.data));
   }
 
   ngOnInit(): void {
@@ -90,7 +97,7 @@ export class CreateCustomerMobileComponent implements OnInit {
   }
 
   init() {
-    this.getData();
+    // this.getData();
     this.createCustomerForm();
     // this.createAddresseMobileForm()
     this.loadingSubject.next(false);
@@ -110,7 +117,7 @@ export class CreateCustomerMobileComponent implements OnInit {
       addresse_extended: [{ value: this.customerMobile.addresse_extended, disabled: !this.isExist }],
       city: [{ value: this.customerMobile.city, disabled: !this.isExist }],
       state: [{ value: this.customerMobile.state, disabled: !this.isExist }],
-      postal_code: [{ value: this.customerMobile.postal_code, disabled: !this.isExist }],
+      postal_code: [{ value: this.customerMobile.postal_code, disabled: true }],
       country: [{ value: this.customerMobile.country, disabled: !this.isExist }],
       geoarea_code: [{ value: this.customerMobile.geoarea_code, disabled: !this.isExist }],
       longitude: [{ value: this.customerMobile.longitude, disabled: !this.isExist }],
@@ -147,7 +154,35 @@ export class CreateCustomerMobileComponent implements OnInit {
   //  latitude: [{value : this.addresseMobile.latitude, disabled: !this.isExist}],
   //    })
   //  }
+  onChangeCountry() {
+    console.log("states", this.ad_state);
+    console.log("country changed");
+    const controls = this.customerMobileForm.controls;
+    console.log(controls.country.value);
+    const itemValue = controls.country.value;
+    this.ad_city = this.ad_city.filter((item) => item.code_value === itemValue);
+    // console.log(currentCities);
+  }
+  onChangeCity() {
+    const controls = this.customerMobileForm.controls;
+    console.log(controls.country.value);
+    const itemValue = controls.city.value;
+    this.ad_state = this.ad_state.filter((item) => item.code_value === itemValue);
+  }
+  getPostalCode() {
+    const controls = this.customerMobileForm.controls;
 
+    const itemValue = controls.state.value;
+    this.postalCode = this.ad_state.find((item) => item.code_cmmt === itemValue);
+    console.log(this.postalCode.code_desc);
+
+    controls.postal_code.setValue(this.postalCode.code_desc);
+  }
+  time = new Observable<string>((observer: Observer<string>) => {
+    setInterval(() => {
+      observer.next("");
+    }, 1000);
+  });
   onChangeCode() {
     const controls = this.customerMobileForm.controls;
     // const controls1 = this.addresseForm.controls
@@ -305,7 +340,8 @@ export class CreateCustomerMobileComponent implements OnInit {
     _customerMobile.postal_code = controls.postal_code.value;
     _customerMobile.country = controls.country.value;
     _customerMobile.geoarea_code = controls.geoarea_code.value;
-
+    _customerMobile.longitude = controls.longitude.value;
+    _customerMobile.latitude = controls.latitude.value;
     _customerMobile.cluster_code = controls.cluster_code.value;
     _customerMobile.sub_cluster_code = controls.sub_cluster_code.value;
     _customerMobile.category_code = controls.category_code.value;
@@ -336,14 +372,15 @@ export class CreateCustomerMobileComponent implements OnInit {
 
   // GRIDS
 
-  getData() {
-    this.customerMobileService.getCreateCustomerData().subscribe((response: any) => {
-      this.data = response.data;
-      this.clusters = this.data.clusters;
-      this.categories = this.data.categories;
-      this.sales_channels = this.data.sales_channels;
-    });
-  }
+  // getData() {
+  //   this.customerMobileService.getCreateCustomerData().subscribe((response: any) => {
+  //     this.data = response.data;
+  //     console.log(response.data);
+  //     this.clusters = this.data.clusters;
+  //     this.categories = this.data.categories;
+  //     this.sales_channels = this.data.sales_channels;
+  //   });
+  // }
 
   open(content) {
     this.prepareGrid();
@@ -416,6 +453,9 @@ export class CreateCustomerMobileComponent implements OnInit {
         selectActiveRow: true,
       },
     };
+    this.customerMobileService.getCreateCustomerData().subscribe((response: any) => {
+      this.clusters = response.data.clusters;
+    });
   }
 
   prepareGrid2() {
@@ -512,6 +552,9 @@ export class CreateCustomerMobileComponent implements OnInit {
         selectActiveRow: true,
       },
     };
+    this.customerMobileService.getCreateCustomerData().subscribe((response: any) => {
+      this.categories = response.data.categories;
+    });
   }
 
   prepareGrid4() {
@@ -617,6 +660,9 @@ export class CreateCustomerMobileComponent implements OnInit {
         selectActiveRow: true,
       },
     };
+    this.customerMobileService.getCreateCustomerData().subscribe((response: any) => {
+      this.sales_channels = response.data.sales_channels;
+    });
   }
 
   angularGridReady(angularGrid: AngularGridInstance) {
