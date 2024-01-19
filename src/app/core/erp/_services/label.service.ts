@@ -18,9 +18,13 @@ export class LabelService {
   constructor(private http: HttpClient, private httpUtils: HttpUtilsService) {}
 
   // CREATE
-  public add(label: Label): Observable<Blob> {
+  public addblob(label: Label): Observable<Blob> {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(API_URL, label, { responseType: "blob", headers: httpHeaders });
+  }
+  public add(label: Label){
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/createlab`, label, { headers: httpHeaders });
   }
 
   public addProd(label: Label) {
