@@ -92,16 +92,16 @@ export class CreateNewTokenComponent implements OnInit {
 
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/roles/list-all-roles`;
+    const url = `/token-serie/list-all-tokens`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
-  gridReady(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
-    this.dataView = angularGrid.dataView;
-    this.grid = angularGrid.slickGrid;
-    this.gridService = angularGrid.gridService;
-  }
+  // gridReady(angularGrid: AngularGridInstance) {
+  //   this.angularGrid = angularGrid;
+  //   this.dataView = angularGrid.dataView;
+  //   this.grid = angularGrid.slickGrid;
+  //   this.gridService = angularGrid.gridService;
+  // }
 
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -366,9 +366,9 @@ export class CreateNewTokenComponent implements OnInit {
       enableAutoResize: true,
       autoCommitEdit: true,
       autoEdit: true,
-      autoHeight: true,
+      autoHeight: false,
 
-      enableAddRow: true,
+     // enableAddRow: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
