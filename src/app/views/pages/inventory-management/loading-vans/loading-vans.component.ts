@@ -43,8 +43,9 @@ export class LoadingVansComponent implements OnInit {
   currentProductCode: any;
   selectedLotCode: any;
 
-  pageCodeToAddIn: any;
-  productCodeToAdd: any;
+  pageCodeToAddIn =""
+  productCodeToAdd=""
+  productDescToAdd=""
 
   // GRID
   angularGrid: AngularGridInstance;
@@ -55,9 +56,11 @@ export class LoadingVansComponent implements OnInit {
   gridOptions: GridOption;
   dataset: any[];
 
-  showSpinner: Boolean = false;
+  showSpinner : Boolean =  false;
 
-  user: any;
+  pageCodeForAddition = ""
+  
+user: any
 
   constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private roleService: RoleService, private modalService: NgbModal) {
     config.autoClose = true;
@@ -271,20 +274,66 @@ export class LoadingVansComponent implements OnInit {
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
-  addRow() {
-    const indexPage = this.loadRequestData.findIndex((page) => {
-      return page.page_code == this.pageCodeToAddIn;
-    });
-    const indexProduct = this.loadRequestData[indexPage].unselectedProducts.findIndex((product) => {
-      console.log(product.product_code + "\t" + this.productCodeToAdd);
-      return (product.product_code = this.productCodeToAdd);
-    });
-    console.log(indexProduct);
-    this.loadRequestData[indexPage].selectedProducts.push(this.loadRequestData[indexPage].unselectedProducts[indexProduct]);
-    delete this.loadRequestData[indexPage].unselectedProducts[indexProduct];
-    if (this.loadRequestData[indexPage].unselectedProducts[indexProduct].length == 0) {
-      this.loadRequestData[indexPage].hasAddProduct = false;
+  addRow(page_code){
+    let indexPage = -1
+    let indexProduct = -1
+    if(this.pageCodeForAddition ==""){
+      indexPage = this.loadRequestData.findIndex(page=>{
+        return page.page_code == page_code;
+      })
+    }else{
+      indexPage = this.loadRequestData.findIndex(page=>{
+        return page.page_code == this.pageCodeForAddition;
+      })
     }
+    // console.log("indexProduct : "+ indexPage)
+
+    // const indexProduct = this.loadRequestData[indexPage].unselectedProducts.findIndex(product=>{
+       
+    //    return product.product_code == this.productCodeToAdd
+    // })
+    if(this.productDescToAdd == ""){
+      indexProduct = 0
+    }else{
+      indexProduct = this.loadRequestData[indexPage].unselectedProducts.findIndex(product=>{
+        // console.log(product.pt_desc1 + " \t "+ this.productDescToAdd)
+        
+        return product.pt_desc1 == this.productDescToAdd
+      })
+    }
+      
+    // console.log("indexProduct : "+ indexProduct)
+
+    console.log("********************")
+    // SEARCH 
+   
+
+
+    var prod = this.loadRequestData[indexPage].unselectedProducts[indexProduct]
+    console.log(prod.wasAdded)
+    if(prod.wasAdded){
+      alert("Ce produit a déjà été ajouté")
+      return ; 
+    }else{
+      this.loadRequestData[indexPage].selectedProducts.push(
+        // this.loadRequestData[indexPage].unselectedProducts[indexProduct]
+        prod
+      )
+      this.loadRequestData[indexPage].unselectedProducts[indexProduct].wasAdded = true
+    }
+    
+    this.pageCodeForAddition = ""
+    this.productDescToAdd = ""
+    return;
+    
+    delete this.loadRequestData[indexPage].unselectedProducts[indexProduct]
+   
+    if(this.loadRequestData[indexPage].unselectedProducts.length == 0){
+      this.loadRequestData[indexPage].hasAddProduct = false
+    }
+
+    this.pageCodeForAddition = ""
+    this.productDescToAdd = ""
   }
 
   onSelectLot(lot_code) {
@@ -312,10 +361,13 @@ export class LoadingVansComponent implements OnInit {
     // console.log(this.gridService.getDataItemByRowIndex(0))
   }
 
-  onSelectProductToAdd(product_code, page_code) {
-    this.pageCodeToAddIn = page_code;
-    this.productCodeToAdd = product_code;
-    console.log(this.pageCodeToAddIn, this.productCodeToAdd);
+  onSelectProductToAdd(product_code,page_code ){
+    this.pageCodeToAddIn  = page_code
+    this.pageCodeForAddition = page_code
+    this.productCodeToAdd =product_code
+    this.productDescToAdd = product_code
+    // console.log(this.pageCodeForAddition,this.productCodeToAdd)
+    // console.log("title of selected product is : \t"+ this.productDescToAdd)
   }
 
   // FORMS DATA FUNCTIONS

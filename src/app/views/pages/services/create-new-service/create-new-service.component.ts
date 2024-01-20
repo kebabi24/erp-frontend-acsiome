@@ -213,7 +213,7 @@ export class CreateNewServiceComponent implements OnInit {
     this.mobileService.getAllService().subscribe(
       (response: any) => {
         this.data = response.data;
-        console.log(this.data)
+        console.log(this.data);
         this.dataset = this.data.map((item) => {
           this.services.push(item);
           console.log(item);
@@ -246,9 +246,9 @@ export class CreateNewServiceComponent implements OnInit {
               role_code: item.role_code,
               role_name: item.role_name,
               user_mobile_code: item.user_mobile_code,
-              username: item.userMobile.username,
-              profile_code: item.userMobile.profileMobile.profile_code,
-              profile_name: item.userMobile.profileMobile.profile_name,
+              // username: item.userMobile.username,
+              // profile_code: item.userMobile.profileMobile.profile_code,
+              // profile_name: item.userMobile.profileMobile.profile_name,
               code_service: item.service.service_code,
               etat_service: "Oui",
               service_period_activate_date: item.service.service_period_activate_date,

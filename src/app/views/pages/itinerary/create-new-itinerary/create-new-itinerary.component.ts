@@ -213,12 +213,12 @@ export class CreateNewItineraryComponent implements OnInit {
     this.hasFormErrors = false;
     const controls = this.itineraryForm.controls;
     /** check form */
-    if (this.itineraryForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
+    // if (this.itineraryForm.invalid) {
+    //   Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
 
-      this.hasFormErrors = true;
-      return;
-    }
+    //   this.hasFormErrors = true;
+    //   return;
+    // }
 
     // tslint:disable-next-line:prefer-const
     let itn = this.prepareItinerary();
@@ -228,7 +228,7 @@ export class CreateNewItineraryComponent implements OnInit {
   prepareItinerary(): Itinerary {
     const controls = this.itineraryForm.controls;
     const _itinerary = new Itinerary();
-
+    _itinerary.itinerary_code = controls.itinerary_code.value;
     _itinerary.itinerary_name = controls.itinerary_name.value;
     _itinerary.itinerary_day = controls.itinerary_day.value;
     _itinerary.itinerary_type = controls.itinerary_type.value;
