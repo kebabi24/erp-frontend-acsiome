@@ -1539,17 +1539,17 @@ export class CreateDirectWoComponent implements OnInit {
                       });
                     }
                   });
-                };
-              })
+                });
+              }
             })
           }
-        })
-       }
-       } else {
-          alert("Palette Nexiste pas");
-          //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
         }
-      });
+        else {
+        alert("Palette Nexiste pas");
+        //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+        }
+       })
+       
     } else {
       alert("Palette déja scannée");
     }
