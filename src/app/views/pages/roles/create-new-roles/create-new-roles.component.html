@@ -216,7 +216,7 @@
             <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem(contentit)">Ajouter des itineraires</button>
         </div>
         <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" 
+            <angular-slickgrid class="col-12"  gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" 
                 [gridOptions]="gridOptions2" [dataset]="itinerary">
             </angular-slickgrid>
         </div>

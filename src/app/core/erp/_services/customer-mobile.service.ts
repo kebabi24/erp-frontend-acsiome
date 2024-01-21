@@ -58,7 +58,8 @@ export class CustomerMobileService {
   // GET CLUSTER BY CODE
   public getCreateCustomerData() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
-    return this.http.get(`${API_URL_2}/getDataCreateCustomer/`, { headers: httpHeaders });
+    console.log("hediiiiiiiiiii");
+    return this.http.post(`${API_URL_2}/getDataCreateCustomer/`, { headers: httpHeaders });
   }
 
   // CREATE CLUSTER

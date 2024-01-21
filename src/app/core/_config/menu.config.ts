@@ -310,6 +310,91 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon-user-settings",
+          root: true,
+          submenu: [
+            {
+              title: "Crée demande de chargement",
+              page: "/supervision/create-load-request",
+            },
+            {
+              title: "Validation des demandes de chargement",
+              page: "/supervision/validate-charge-demande",
+            },
+            {
+              title: "Validation des demandes de dechargement",
+              page: "/supervision/validate-decharge-demande",
+            },
+            {
+              title: "Transfert demandes de chargement à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
+            },
+          ],
+        },
+        {
+          title: "Gestion des itinéraires",
+          bullet: "dot",
+          icon: "flaticon2-delivery-truck",
+          root: true,
+          submenu: [
+            {
+              title: "Listes des itinéraires",
+              page: "/itinerary/list-itinerary",
+            },
+            {
+              title: "Ajouter un itinéraire",
+              page: "/itinerary/create-new-itinerary",
+            },
+          ],
+        },
+        {
+          title: "Gestion des roles",
+          bullet: "dot",
+          icon: "fab fa-critical-role",
+          root: true,
+          submenu: [
+            {
+              title: "Créer un nouveau role",
+              page: "/roles/create-new-roles",
+            },
+            {
+              title: "Liste des roles",
+              page: "/roles/list-all-roles",
+            },
+          ],
+        },
+        {
+          title: "Token Series",
+          bullet: "dot",
+          icon: "flaticon2-list-1",
+          root: true,
+          submenu: [
+            {
+              title: "Créer token serie",
+              page: "/token-serie/create-new-token",
+            },
+            {
+              title: "Liste des token",
+              page: "/token-serie/list-all-tokens",
+            },
+          ],
+        },
+
+        {
+          title: "Gestion des services",
+          bullet: "dot",
+          icon: "flaticon2-checking",
+          root: true,
+          submenu: [
+            {
+              title: "Créer un nouveau service",
+              page: "/services/create-new-service",
+            },
+          ],
+        },
+        {
           title: "Gestion des articles",
           bullet: "dot",
           icon: "flaticon2-box-1",
@@ -1149,91 +1234,7 @@ export class MenuConfig {
           ],
         },
 
-        {
-          title: "Supervision",
-          bullet: "dot",
-          icon: "flaticon-user-settings",
-          root: true,
-          submenu: [
-            {
-              title: "Crée demande de chargement",
-              page: "/supervision/create-load-request",
-            },
-            {
-              title: "Validation des demandes de chargement",
-              page: "/supervision/validate-charge-demande",
-            },
-            {
-              title: "Validation des demandes de dechargement",
-              page: "/supervision/validate-decharge-demande",
-            },
-            {
-              title: "Transfert demandes de chargement à la livraison",
-              page: "/supervision/transfer-charge-demande-delivery",
-            },
-          ],
-        },
-        {
-          title: "Gestion des itinéraires",
-          bullet: "dot",
-          icon: "flaticon2-delivery-truck",
-          root: true,
-          submenu: [
-            {
-              title: "Listes des itinéraires",
-              page: "/itinerary/list-itinerary",
-            },
-            {
-              title: "Ajouter un itinéraire",
-              page: "/itinerary/create-new-itinerary",
-            },
-          ],
-        },
-        {
-          title: "Gestion des roles",
-          bullet: "dot",
-          icon: "fab fa-critical-role",
-          root: true,
-          submenu: [
-            {
-              title: "Créer un nouveau role",
-              page: "/roles/create-new-roles",
-            },
-            {
-              title: "Liste des roles",
-              page: "/roles/list-all-roles",
-            },
-          ],
-        },
-        {
-          title: "Token Series",
-          bullet: "dot",
-          icon: "flaticon2-list-1",
-          root: true,
-          submenu: [
-            {
-              title: "Créer token serie",
-              page: "/token-serie/create-new-token",
-            },
-            {
-              title: "Liste des token",
-              page: "/token-serie/list-all-tokens",
-            },
-          ],
-        },
-
-        {
-          title: "Gestion des services",
-          bullet: "dot",
-          icon: "flaticon2-checking",
-          root: true,
-          submenu: [
-            {
-              title: "Créer un nouveau service",
-              page: "/services/create-new-service",
-            },
-          ],
-        },
+        
         {
           title: "Gestion des Transporteurs",
           bullet: "dot",
