@@ -218,6 +218,7 @@ export class VisitResultComponent implements OnInit {
                 },
                 filterable: true,
                 type: FieldType.boolean,
+                formatter: Formatters.checkmark,
                 onCellChange: (e: Event, args: OnEventArgs) => {
                   this.addToUpdatedIds(args.dataContext.id)
                   // this.dataView.getItemById(args.dataContext.id).meta
@@ -245,7 +246,10 @@ export class VisitResultComponent implements OnInit {
         multiSelect: false,
         rowSelectionOptions: {
             selectActiveRow: true,
-        }, 
+        },
+        presets: {
+          sorters: [{ columnId: "rank", direction: "ASC" }],
+        } 
     }
 
 
