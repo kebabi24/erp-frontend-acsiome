@@ -57,7 +57,7 @@ const routes: Routes = [
     TranslateModule.forChild(),
     AngularSlickgridModule.forRoot(),
     AgmCoreModule.forRoot({
-      apiKey: "",
+      apiKey: "AIzaSyDjO63_DbdKo_1MAT3LaN9Wgpslpp0_OnQ",
     }),
     MatMenuModule,
     MatTabsModule,

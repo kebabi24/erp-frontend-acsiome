@@ -91,6 +91,11 @@ export class InventoryManagementService {
     return this.http.post(`${API_URL_2}/findLostProduct/`, { ld_loc: ld_loc, ld_site: ld_site, product_code: product_code }, { headers: httpHeaders });
   }
 
+  public getProductLots2(ld_loc: any, ld_site: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_2}/findLostProduct2/`, { ld_loc: ld_loc, ld_site: ld_site }, { headers: httpHeaders });
+  }
+
   public getLoadRequests(role_code: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL_2}/findAllLoadRequests10/${role_code}`, { headers: httpHeaders });

@@ -309,7 +309,7 @@ export class CreateNewRolesComponent implements OnInit {
 
       if (res.data) {
         //console.log("here")
-        this.router.navigateByUrl(`/roles/edit-role/${res.data.id}`);
+        this.router.navigateByUrl(`/roles/edit-role/${res.data.role_code}`);
         //console.log(res.data.id)
       }
     });

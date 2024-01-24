@@ -6,7 +6,7 @@ import { Itinerary } from "../_models/itinerary.model";
 import { environment } from "src/environments/environment";
 
 const API_ITINERARY = environment.apiUrl + "/itinerary";
-const API_ITINERARY_ROLE = environment.apiUrl + "//role-itinerary";
+const API_ITINERARY_ROLE = environment.apiUrl + "/role-itinerary";
 @Injectable()
 export class ItineraryService {
   httpOptions = this.httpUtils.getHTTPHeaders();
@@ -36,7 +36,10 @@ export class ItineraryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_ITINERARY}/${id}`, { headers: httpHeaders });
   }
-
+  public getBySomething(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_ITINERARY_ROLE}/getItineraryOfRoles`, data, { headers: httpHeaders });
+  }
   public getItineraryByRole(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_ITINERARY_ROLE}/find`, data, { headers: httpHeaders });

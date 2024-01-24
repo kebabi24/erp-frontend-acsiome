@@ -530,16 +530,15 @@ export class CreateDirectWoComponent implements OnInit {
     let lab = null;
 
     this.labelService.add(_lb).subscribe(
-      (reponse:any) => {(lab = reponse.data)
-        this.labelService.addblob(_lb).subscribe((blob)=>{
+      (reponse: any) => {
+        lab = reponse.data;
+        this.labelService.addblob(_lb).subscribe((blob) => {
           console.log(blob);
-        const url = window.URL.createObjectURL(blob);
-        window.open(url);
-        // saveAs(blob, lab.lb_ref + ".pdf");
-        //console.log(electronPrinter);
-        },
-        
-      )
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+          // saveAs(blob, lab.lb_ref + ".pdf");
+          //console.log(electronPrinter);
+        });
       },
       (error) => {
         alert("Erreur Impression Etiquette");
@@ -1539,13 +1538,11 @@ export class CreateDirectWoComponent implements OnInit {
                       });
                     }
                   });
-                };
-              })
-            })
+                });
+              }
+            });
           }
-        })
-       }
-       } else {
+        } else {
           alert("Palette Nexiste pas");
           //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
         }

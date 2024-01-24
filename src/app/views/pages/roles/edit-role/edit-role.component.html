@@ -1,13 +1,11 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Modifier le role'" [class]="'card-head-lg'"
-        [viewLoading$]="loading$">
-        <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
-            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+  <kt-portlet-header [sticky]="true" [title]="'Modifier le role'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <ng-container ktPortletTools>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
 
-
-            <!-- <div ngbDropdown class="d-inline-block">
+      <!-- <div ngbDropdown class="d-inline-block">
                 <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
                         class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
@@ -15,390 +13,290 @@
 
                 </div>
             </div> -->
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div>
+      {{ time | async }}
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <form class="form" [formGroup]="roleForm">
+          <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button> </kt-alert>
+          <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
 
-        </ng-container>
-    </kt-portlet-header>
-    <kt-portlet-body>
-        <div class="row">
-            <div class="col-12">
-                <form class="form" [formGroup]="roleForm" >
-                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                    (close)="onAlertClose($event)">
-                    Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button>
-                    </kt-alert>
-                    <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
-                        (close)="onAlertClose($event)">
-                        Ce Code existe deja
-                    </kt-alert>
-
-                    <div class="row">
-                        
-                        <div class="form-group col-3">
-                            <label class="form-group">Role code : *</label>
-                            <input type="text" formControlName="role_code" (change)="onChangeCode()" id="role"
-                                [className]="roleForm.controls['role_code'].errors && (roleForm.controls['role_code'].dirty || roleForm.controls['role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                            <div *ngIf="roleForm.controls['role_code'].errors && (roleForm.controls['role_code'].dirty || roleForm.controls['role_code'].touched) "
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-
-                        </div>
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Role nom : *</label>
-                            <input type="text" formControlName="role_name"
-                                [className]="roleForm.controls['role_name'].errors && (roleForm.controls['role_name'].dirty || roleForm.controls['role_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                            <div *ngIf="roleForm.controls['role_name'].errors && (roleForm.controls['role_name'].dirty || roleForm.controls['role_name'].touched) "
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-
-                        </div>
-
-                        <div class="form-group col-3">
-                            <label class="form-group">utilisateur: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="user_mobile_code"
-                                    [className]="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open(content)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>
-                            
-                        </div>
-                        
-                        <div class="form-group col-3">
-                            <label class="form-group">Reference de l'appareil: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="device_id"
-                                    [className]="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div *ngIf="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>
-                            
-                        </div>
-                        
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Role controleur: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="controller_role" 
-                                    [className]="roleForm.controls['controller_role'].errors && (roleForm.controls['controller_role'].dirty || roleForm.controls['controller_role'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open3(content3)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['controller_role'].errors && (roleForm.controls['controller_role'].dirty || roleForm.controls['controller_role'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>   
-                        </div>
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Role supérieur: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="upper_role_code" 
-                                    [className]="roleForm.controls['upper_role_code'].errors && (roleForm.controls['upper_role_code'].dirty || roleForm.controls['upper_role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open4(content4)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['upper_role_code'].errors && (roleForm.controls['upper_role_code'].dirty || roleForm.controls['upper_role_code'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>   
-                        </div>
-
-
-                    </div>
-
-
-                    <div class="row">
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Site: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="role_site" 
-                                    [className]="roleForm.controls['role_site'].errors && (roleForm.controls['role_site'].dirty || roleForm.controls['role_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open8(content8)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['role_site'].errors && (roleForm.controls['role_site'].dirty || roleForm.controls['role_site'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>   
-                        </div>
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Emplacement: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="role_loc" 
-                                    [className]="roleForm.controls['role_loc'].errors && (roleForm.controls['role_loc'].dirty || roleForm.controls['role_loc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open6(content6)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['role_loc'].errors && (roleForm.controls['role_loc'].dirty || roleForm.controls['role_loc'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>   
-                        </div>
-
-                        
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Emplacement de: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="role_loc_from" 
-                                    [className]="roleForm.controls['role_loc_from'].errors && (roleForm.controls['role_loc_from'].dirty || roleForm.controls['role_loc_from'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open7(content7)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['role_loc_from'].errors && (roleForm.controls['role_loc_from'].dirty || roleForm.controls['role_loc_from'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>   
-                        </div>
-
-                    </div>
-                
-                    <div class="row">
-                        <div class="form-group col-3">
-                            <label class="form-group">Token serie: *</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" formControlName="token_serie_code" 
-                                    [className]="roleForm.controls['token_serie_code'].errors && (roleForm.controls['token_serie_code'].dirty || roleForm.controls['token_serie_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open5(content5)">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="roleForm.controls['token_serie_code'].errors && (roleForm.controls['token_serie_code'].dirty || roleForm.controls['token_serie_code'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
-                            </div>   
-                        </div>
-
-
-                        <div class="form-group col-3">
-                            <label class="form-group">Adresse de l'imprimante: *</label>
-                            <input type="text" formControlName="printer_adress"  
-                                [className]="roleForm.controls['printer_adress'].errors && (roleForm.controls['printer_adress'].dirty || roleForm.controls['printer_adress'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                            <div *ngIf="roleForm.controls['printer_adress'].errors && (roleForm.controls['printer_adress'].dirty || roleForm.controls['printer_adress'].touched) "
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-
-                        </div>
-                    </div>
-
-                   
-            
-                </form>
-                <br><br><br>
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group"
+                ><b
+                  ><b>Role code : {{ role_code }}</b></b
+                ></label
+              >
             </div>
-        </div>
-        <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
-                [gridOptions]="gridOptions2" [dataset]="itinerary">
-            </angular-slickgrid>
-        </div>
-        <div>
-            <ng-template #content let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir l'utilisateur</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid1" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptions" [dataset]="users">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
-        </div>
 
-        <!-- MODAL ROLE GRID -->
-        <div>
-            <ng-template #content3 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir le role controleur:</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="form-group col-3">
+              <label class="form-group">Role nom : *</label>
+              <input type="text" formControlName="role_name" [className]="roleForm.controls['role_name'].errors && (roleForm.controls['role_name'].dirty || roleForm.controls['role_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" />
+              <div *ngIf="roleForm.controls['role_name'].errors && (roleForm.controls['role_name'].dirty || roleForm.controls['role_name'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+
+            <div class="form-group col-3">
+              <label class="form-group">utilisateur: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="user_mobile_code" [className]="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open(content)"> <i class="text-dark-50 flaticon2-search"></i> </span>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3"
-                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRoleController($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions3" [dataset]="roles">
-                        </angular-slickgrid>
-                    </div>
+                <div *ngIf="roleForm.controls['user_mobile_code'].errors && (roleForm.controls['user_mobile_code'].dirty || roleForm.controls['user_mobile_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+
+            <div class="form-group col-3">
+              <label class="form-group">Reference de l'appareil: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="device_id" [className]="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div *ngIf="roleForm.controls['device_id'].errors && (roleForm.controls['device_id'].dirty || roleForm.controls['device_id'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Role controleur: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="controller_role" [className]="roleForm.controls['controller_role'].errors && (roleForm.controls['controller_role'].dirty || roleForm.controls['controller_role'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open3(content3)"> <i class="text-dark-50 flaticon2-search"></i> </span>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                <div *ngIf="roleForm.controls['controller_role'].errors && (roleForm.controls['controller_role'].dirty || roleForm.controls['controller_role'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+
+            <div class="form-group col-3">
+              <label class="form-group">Role supérieur: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="upper_role_code" [className]="roleForm.controls['upper_role_code'].errors && (roleForm.controls['upper_role_code'].dirty || roleForm.controls['upper_role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open4(content4)"> <i class="text-dark-50 flaticon2-search"></i> </span>
                 </div>
-            </ng-template>
+                <div *ngIf="roleForm.controls['upper_role_code'].errors && (roleForm.controls['upper_role_code'].dirty || roleForm.controls['upper_role_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Site: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="role_site" [className]="roleForm.controls['role_site'].errors && (roleForm.controls['role_site'].dirty || roleForm.controls['role_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open8(content8)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                </div>
+                <div *ngIf="roleForm.controls['role_site'].errors && (roleForm.controls['role_site'].dirty || roleForm.controls['role_site'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+
+            <div class="form-group col-3">
+              <label class="form-group">Emplacement: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="role_loc" [className]="roleForm.controls['role_loc'].errors && (roleForm.controls['role_loc'].dirty || roleForm.controls['role_loc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open6(content6)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                </div>
+                <div *ngIf="roleForm.controls['role_loc'].errors && (roleForm.controls['role_loc'].dirty || roleForm.controls['role_loc'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+
+            <div class="form-group col-3">
+              <label class="form-group">Emplacement de: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="role_loc_from" [className]="roleForm.controls['role_loc_from'].errors && (roleForm.controls['role_loc_from'].dirty || roleForm.controls['role_loc_from'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open7(content7)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                </div>
+                <div *ngIf="roleForm.controls['role_loc_from'].errors && (roleForm.controls['role_loc_from'].dirty || roleForm.controls['role_loc_from'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-3">
+              <label class="form-group">Token serie: *</label>
+              <div class="input-group input-group-sm">
+                <input type="text" formControlName="token_serie_code" [className]="roleForm.controls['token_serie_code'].errors && (roleForm.controls['token_serie_code'].dirty || roleForm.controls['token_serie_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="open5(content5)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                </div>
+                <div *ngIf="roleForm.controls['token_serie_code'].errors && (roleForm.controls['token_serie_code'].dirty || roleForm.controls['token_serie_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+            </div>
+
+            <div class="form-group col-3">
+              <label class="form-group">Adresse de l'imprimante: *</label>
+              <input type="text" formControlName="printer_adress" [className]="roleForm.controls['printer_adress'].errors && (roleForm.controls['printer_adress'].dirty || roleForm.controls['printer_adress'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" />
+              <div *ngIf="roleForm.controls['printer_adress'].errors && (roleForm.controls['printer_adress'].dirty || roleForm.controls['printer_adress'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+            </div>
+          </div>
+          <div>
+            {{ time | async }}
+          </div>
+        </form>
+        <br /><br /><br />
+      </div>
+    </div>
+    <div class="row">
+      <angular-slickgrid class="col-12" gridHeight="300" gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions2" [dataset]="itinerary"> </angular-slickgrid>
+    </div>
+    <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir l'utilisateur</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <!-- MODAL ROLE GRID  END -->
-
-        <!-- MODAL UPPER ROLE   -->
-        <div>
-            <ng-template #content4 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir le role supérieur::</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3"
-                            [columnDefinitions]="columnDefinitions7" (onAngularGridCreated)="angularGridReady7($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedUpperRole($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions7" [dataset]="usrds">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid1" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="users"> </angular-slickgrid>
+          </div>
         </div>
-        <!-- MODAL UPPER ROLE END  -->
-
-        <!-- MODAL TOKEN SERIE  -->
-        <div>
-            <ng-template #content5 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir le token serie:</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
-                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedToken($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions4" [dataset]="tokens">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
-        <!-- MODAL TOKEN SERIE END  -->
+      </ng-template>
+    </div>
 
-        <!-- MODAL LOC   -->
-        <div>
-            <ng-template #content6 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir l'emplacement:</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
-                            [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedLoc($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions5" [dataset]="locs">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
+    <!-- MODAL ROLE GRID -->
+    <div>
+      <ng-template #content3 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le role controleur:</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <!-- MODAL LOC END  -->
-
-        <!-- MODAL LOC  FROM  -->
-        <div>
-            <ng-template #content7 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir l'emplacement:</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
-                            [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedLocFrom($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions5" [dataset]="locs">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3" [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)" (sgOnSelectedRowsChanged)="handleSelectedRoleController($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions3" [dataset]="roles"> </angular-slickgrid>
+          </div>
         </div>
-        <!-- MODAL LOC FROM END  -->
-
-        <!-- MODAL SITE   -->
-        <div>
-            <ng-template #content8 let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Choissir le site:</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4"
-                            [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedSite($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions6" [dataset]="sites">
-                        </angular-slickgrid>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-                </div>
-            </ng-template>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
-        <!-- MODAL SITE  END  -->
+      </ng-template>
+    </div>
+    <!-- MODAL ROLE GRID  END -->
 
+    <!-- MODAL UPPER ROLE   -->
+    <div>
+      <ng-template #content4 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le role supérieur::</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3" [columnDefinitions]="columnDefinitions7" (onAngularGridCreated)="angularGridReady7($event)" (sgOnSelectedRowsChanged)="handleSelectedUpperRole($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions7" [dataset]="usrds"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL UPPER ROLE END  -->
 
-    </kt-portlet-body>
+    <!-- MODAL TOKEN SERIE  -->
+    <div>
+      <ng-template #content5 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le token serie:</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4" [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)" (sgOnSelectedRowsChanged)="handleSelectedToken($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions4" [dataset]="tokens"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL TOKEN SERIE END  -->
+
+    <!-- MODAL LOC   -->
+    <div>
+      <ng-template #content6 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir l'emplacement:</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4" [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)" (sgOnSelectedRowsChanged)="handleSelectedLoc($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions5" [dataset]="locs"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL LOC END  -->
+
+    <!-- MODAL LOC  FROM  -->
+    <div>
+      <ng-template #content7 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir l'emplacement:</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4" [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)" (sgOnSelectedRowsChanged)="handleSelectedLocFrom($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions5" [dataset]="locs"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL LOC FROM END  -->
+
+    <!-- MODAL SITE   -->
+    <div>
+      <ng-template #content8 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir le site:</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="grid4" [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)" (sgOnSelectedRowsChanged)="handleSelectedSite($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions6" [dataset]="sites"> </angular-slickgrid>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL SITE  END  -->
+  </kt-portlet-body>
 </kt-portlet>

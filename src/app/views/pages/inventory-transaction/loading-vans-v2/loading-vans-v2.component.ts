@@ -67,6 +67,12 @@ export class LoadingVansV2Component implements OnInit {
     this.prepareRoles();
     this.createForm();
     this.createForm2();
+
+    // this.currentPageCode = page_code;
+    // this.currentProductCode = product_code;
+    // this.currentPageIndex = this.loadRequestData.findIndex((page) => {
+    //   return page.page_code === page_code;
+    // });
   }
 
   //create form
@@ -96,23 +102,6 @@ export class LoadingVansV2Component implements OnInit {
   }
   // sets grid data for lots
   open(content, product_code, page_code) {
-    this.currentPageCode = page_code;
-    this.currentProductCode = product_code;
-    this.currentPageIndex = this.loadRequestData.findIndex((page) => {
-      return page.page_code === page_code;
-    });
-    const ld_loc = this.loadRequest.role_loc_from;
-    const ld_site = this.loadRequest.role_site;
-    this.inventoryManagementService.getProductLots(ld_loc, ld_site, product_code).subscribe(
-      (response: any) => {
-        this.dataset = response.data;
-        this.dataView.setItems(this.dataset);
-      },
-      (error) => {
-        this.dataset = [];
-      },
-      () => {}
-    );
     this.modalService.open(content, { size: "lg" });
   }
 
@@ -132,13 +121,15 @@ export class LoadingVansV2Component implements OnInit {
         if (product.lots.length > 0) {
           product.lots.forEach((lot) => {
             sum += +lot.qt_effected;
-            details.push({
-              product_code: product.product_code,
-              load_request_code: this.load_request_code,
-              lot: lot.lot_code,
-              qt_effected: lot.qt_effected,
-              pt_price: product.pt_price,
-            });
+            if (lot.qt_effected > 0) {
+              details.push({
+                product_code: product.product_code,
+                load_request_code: this.load_request_code,
+                lot: lot.lot_code,
+                qt_effected: lot.qt_effected,
+                pt_price: product.pt_price,
+              });
+            }
           });
 
           lines.push({
@@ -165,81 +156,87 @@ export class LoadingVansV2Component implements OnInit {
         this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
-      }
-    );
-  }
+        const details = [];
+        const lines = [];
+        let detailss = [];
 
-  onSaveCharge() {
-    const details = [];
-    const lines = [];
-    let detailss = [];
+        this.loadRequestData.forEach((loadRequest) => {
+          let sum = 0;
 
-    this.loadRequestData.forEach((loadRequest) => {
-      let sum = 0;
+          loadRequest.selectedProducts.forEach((product) => {
+            if (product.lots.length > 0) {
+              let i = 1;
+              product.lots.forEach((lot) => {
+                sum += +lot.qt_effected;
 
-      loadRequest.selectedProducts.forEach((product) => {
-        if (product.lots.length > 0) {
-          let i = 1;
-          product.lots.forEach((lot) => {
-            sum += +lot.qt_effected;
+                // CREATE DETAILS LINE
+                details.push({
+                  product_code: product.product_code,
+                  load_request_code: this.load_request_code,
+                  lot: lot.lot_code,
+                  qt_effected: lot.qt_effected,
+                  pt_price: product.pt_price,
+                  line: i,
+                });
+                // DETAIL LINE FOR ISSTR
+                detailss.push({
+                  tr_line: i,
+                  tr_part: product.product_code,
+                  tr_serial: lot.lot_code,
+                  tr_qty_loc: lot.qt_effected,
+                  tr_um: product.pt_um,
+                  tr_status: lot.ld_status,
+                  tr_expire: lot.ld_expire,
+                  tr_um_conv: 1,
+                  tr_ref: null,
+                });
+                i++;
+              });
 
-            // CREATE DETAILS LINE
-            details.push({
-              product_code: product.product_code,
-              load_request_code: this.load_request_code,
-              lot: lot.lot_code,
-              qt_effected: lot.qt_effected,
-              pt_price: product.pt_price,
-              line: i,
-            });
-            // DETAIL LINE FOR ISSTR
-            detailss.push({
-              tr_line: i,
-              tr_part: product.product_code,
-              tr_serial: lot.lot_code,
-              tr_qty_loc: lot.qt_effected,
-              tr_um: product.pt_um,
-              tr_status: lot.ld_status,
-              tr_expire: lot.ld_expire,
-              tr_um_conv: 1,
-              tr_ref: null,
-            });
-            i++;
+              // CREATE LINE
+              lines.push({
+                product_code: product.product_code,
+                load_request_code: this.load_request_code,
+                qt_effected: sum,
+              });
+            }
           });
+        });
 
-          // CREATE LINE
-          lines.push({
-            product_code: product.product_code,
-            load_request_code: this.load_request_code,
-            qt_effected: sum,
-          });
-        }
-      });
-    });
+        // IssTr
+        let nlot = this.load_request_code;
+        let it = {
+          tr_site: this.loadRequest.role_site,
+          tr_loc: this.role.role_loc_from, // loc from , for unload : loc
+          tr_ref_site: this.loadRequest.role_site,
+          tr_ref_loc: this.role.role_loc, // loc , for unload : loc from
+          tr_effdate: new Date(),
+          tr_nbr: nlot,
+        };
 
-    // IssTr
-    let nlot = this.load_request_code;
-    let it = {
-      tr_site: this.loadRequest.role_site,
-      tr_loc: this.role.role_loc_from, // loc from , for unload : loc
-      tr_ref_site: this.loadRequest.role_site,
-      tr_ref_loc: this.role.role_loc, // loc , for unload : loc from
-      tr_effdate: new Date(),
-      tr_nbr: nlot,
-    };
+        this.inventoryManagementService.createLoadRequestDetailsUpdateStatus(details, lines, this.load_request_code).subscribe(
+          (response: any) => {
+            this.loadRequestData = [];
+            this.load_request_code = "";
+            this.role_code = "";
 
-    this.inventoryManagementService.createLoadRequestDetailsUpdateStatus(details, lines, this.load_request_code).subscribe(
-      (response: any) => {
-        this.loadRequestData = [];
-        this.load_request_code = "";
-        this.role_code = "";
+            this.createForm();
+            let detail = detailss;
 
-        this.createForm();
-        let detail = detailss;
-
-        // isstr
-        this.inventoryTransactionService.addTr({ nlot, it, detail }).subscribe(
-          (response: any) => {},
+            // isstr
+            this.inventoryTransactionService.addTr({ nlot, it, detail }).subscribe(
+              (response: any) => {},
+              (error) => {
+                // this.loadRequestData = []
+                console.log(error);
+              },
+              () => {
+                this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
+                this.loadingSubject.next(false);
+                // this.router.navigateByUrl("/customers-mobile/cluster-create")
+              }
+            );
+          },
           (error) => {
             // this.loadRequestData = []
             console.log(error);
@@ -250,18 +247,11 @@ export class LoadingVansV2Component implements OnInit {
             // this.router.navigateByUrl("/customers-mobile/cluster-create")
           }
         );
-      },
-      (error) => {
-        // this.loadRequestData = []
-        console.log(error);
-      },
-      () => {
-        this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
-        this.loadingSubject.next(false);
-        // this.router.navigateByUrl("/customers-mobile/cluster-create")
       }
     );
   }
+
+  onSaveCharge() {}
 
   goBack() {
     this.loadingSubject.next(false);
@@ -339,6 +329,21 @@ export class LoadingVansV2Component implements OnInit {
         this.loadRequest = response.data;
         this.role = response.role;
         this.showSpinner = false;
+        const ld_loc = this.loadRequest.role_loc_from;
+        const ld_site = this.loadRequest.role_site;
+        console.log(ld_loc);
+        console.log(ld_site);
+        this.inventoryManagementService.getProductLots2(ld_loc, ld_site).subscribe(
+          (response: any) => {
+            this.dataset = response.data;
+            // this.dataView.setItems(this.dataset);
+            console.log(this.dataset);
+          },
+          (error) => {
+            this.dataset = [];
+          },
+          () => {}
+        );
       },
       (error) => {
         this.loadRequestData = [];

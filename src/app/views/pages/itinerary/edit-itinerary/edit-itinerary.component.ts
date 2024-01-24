@@ -291,6 +291,7 @@ export class EditItineraryComponent implements OnInit {
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
     console.log(this.dataView);
+    console.log("selected customers", this.selectedCustomers);
     const selectedRows = this.selectedCustomers.map((item) => this.dataView.getIdxById(item.id));
     console.log(selectedRows);
     this.grid.setSelectedRows(selectedRows);
