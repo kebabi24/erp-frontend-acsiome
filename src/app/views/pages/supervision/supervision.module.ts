@@ -61,9 +61,12 @@ import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 
 import { ItineraryService, MobileServiceService, RoleService, UsersMobileService ,MobileSettingsService, LoadRequestService,
-  UnloadRequestService } from "../../../core/erp"
+  UnloadRequestService, 
+  MessageService} from "../../../core/erp"
 import { ValidateDeChargeDemandeComponent } from './validate-decharge-demande/validate-decharge-demande.component';
 import { CreateLoadRequestComponent } from './create-load-request/create-load-request.component';
+import { ListDiffLoadrequestComponent } from './list-diff-loadrequest/list-diff-loadrequest.component';
+import { CreateMessageComponent } from './create-message/create-message.component';
 
 
 
@@ -85,12 +88,20 @@ const routes: Routes = [
     path: 'create-load-request',
     component: CreateLoadRequestComponent
   },
+  {
+    path: 'list-diff-loadrequest',
+    component: ListDiffLoadrequestComponent
+  },
+  {
+    path: 'create-message',
+    component: CreateMessageComponent
+  }
 
   
   
 ] 
 @NgModule({
-  declarations: [ CreateLoadRequestComponent , ValidateChargeDemandeComponent,TransferChargeDemandeToDeliveryComponent,ValidateDeChargeDemandeComponent],
+  declarations: [ CreateLoadRequestComponent , ValidateChargeDemandeComponent,TransferChargeDemandeToDeliveryComponent,ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -132,6 +143,7 @@ const routes: Routes = [
     LayoutUtilsService,
     LoadRequestService,
     UnloadRequestService,
+    MessageService,
 ],
  
 })

@@ -331,6 +331,10 @@ export class MenuConfig {
               title: "Transfert demandes de chargement à la livraison",
               page: "/supervision/transfer-charge-demande-delivery",
             },
+            {
+              title: "Liste des Chargement non Respectés",
+              page: "/supervision/list-diff-loadrequest",
+            },
           ],
         },
         {

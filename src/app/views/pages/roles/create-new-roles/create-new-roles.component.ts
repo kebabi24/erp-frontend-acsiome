@@ -309,7 +309,7 @@ export class CreateNewRolesComponent implements OnInit {
 
       if (res.data) {
         //console.log("here")
-        this.router.navigateByUrl(`/roles/edit-role/${res.data.id}`);
+        this.router.navigateByUrl(`/roles/edit-role/${res.data.role_code}`);
         //console.log(res.data.id)
       }
     });
@@ -366,7 +366,7 @@ export class CreateNewRolesComponent implements OnInit {
     // tslint:disable-next-line:prefer-const
     let role = this.prepareRole();
     //console.log(this.selectedItinerary)
-    this.addRole(role, this.selectedItinerary);
+    this.addRole(role, this.itinerary);
     // const hostname = os.networkInterfaces()
     //console.log(hostname)
   }
@@ -408,7 +408,7 @@ export class CreateNewRolesComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-        this.router.navigateByUrl("/itinerary/list-itinerary");
+        this.router.navigateByUrl("/roles/list-all-roles");
       }
     );
   }
@@ -520,10 +520,10 @@ export class CreateNewRolesComponent implements OnInit {
         // for example, display the expand icon only on every 2nd row
         // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
-      multiSelect: true,
+      multiSelect: false,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
@@ -834,8 +834,9 @@ export class CreateNewRolesComponent implements OnInit {
       enableCellNavigation: true,
       enableRowSelection: true,
       enableCheckboxSelector: true,
+      multiSelect: false,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
@@ -928,7 +929,7 @@ export class CreateNewRolesComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
@@ -1048,7 +1049,7 @@ export class CreateNewRolesComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
@@ -1130,7 +1131,7 @@ export class CreateNewRolesComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }

@@ -2,7 +2,7 @@
   <kt-portlet-header [sticky]="true" [title]="'Chargement Des Vans '" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
       <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
-      <button type="button" (click)="onSaveCharge()" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button>
+      <!-- <button type="button" (click)="onSaveCharge()" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button> -->
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -70,7 +70,7 @@
             </h3>
             <!-- <button type="button" (click)="onSubmit()" class="btn btn-danger btn-sm mr-2">Add Line </button> -->
             <!-- <a (click)="open(content)" class="btn btn-white text-dark btn-sm font-weight-bolder"> -->
-            <div *ngIf="productPage.hasAddProduct" class="row">
+            <!-- <div *ngIf="productPage.hasAddProduct" class="row">
               <div class="col-6">
                 <select *ngIf="productPage.hasAddProduct" (change)="onSelectProductToAdd($event.target.value, productPage.page_code)" class="form-control form-control-sm form-control-solid">
                   <option *ngFor="let product of productPage.unselectedProducts" [value]="product.product_code">
@@ -80,7 +80,7 @@
               </div>
 
               <a (click)="addRow()" class="col-6 btn btn-white text-dark btn-sm font-weight-bolder"> Ajouter un produit</a>
-            </div>
+            </div> -->
           </div>
           <!--end::Header : PAGE HEADER END -->
 
@@ -94,9 +94,9 @@
                   <span class="mr-10"> <span class="text-dark">Nom du produit :</span> {{ product.pt_desc1 }} </span>
                   <span class="mr-10"> <span class="text-dark"> Prix ​​du produit :</span> {{ product.pt_price }} DZ </span>
                 </div>
-                <div class="card-toolbar">
+                <!-- <div class="card-toolbar">
                   <a (click)="open(content, product.product_code, productPage.page_code)" class="btn btn-sm btn-white"> Ajouter une ligne </a>
-                </div>
+                </div> -->
               </div>
               <div class="separator separator-solid separator-white opacity-20"></div>
               <div class="card-body text-white py-5">
