@@ -120,4 +120,10 @@ export class LoadRequestService {
         return this.http.get(`${API_URL_2}/findLoadRequestLinesDetails/${load_request_code}`, { headers: httpHeaders })
         
     }
+
+    public getLoadRequestsLineDiff(data : any ) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/LoadRequestLinesdif/`,data, { headers: httpHeaders })
+    }
+    
 }

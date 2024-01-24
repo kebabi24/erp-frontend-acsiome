@@ -1,0 +1,121 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Message'" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="row">
+            <div class="form-group col-12">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button>
+                </kt-alert>
+            </div>
+            <div class="col-12">
+                
+                <form class="form" [formGroup]="msgForm">
+                    
+                    <div class="row">
+
+                       
+
+                        <div class="form-group col-3">
+                            <label class="form-group">Titre : *</label>
+                            <input type="text" formControlName="title"
+                                [className]="msgForm.controls['title'].errors && (msgForm.controls['title'].dirty || msgForm.controls['title'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <div *ngIf="msgForm.controls['title'].errors && (msgForm.controls['title'].dirty || msgForm.controls['title'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                        </div>
+
+                        
+                        <div class="form-group col-3">
+                            <label class="form-group">Rang : *</label>
+                            <input type="number" formControlName="rank"
+                                [className]="msgForm.controls['rank'].errors && (msgForm.controls['rank'].dirty || msgForm.controls['rank'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                            <div *ngIf="msgForm.controls['rank'].errors && (msgForm.controls['rank'].dirty || msgForm.controls['rank'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                        </div>
+
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-12">
+                          <label class="form-group">Observation:</label>
+                          <textarea  [className]="msgForm.controls['description'].errors && (msgForm.controls['description'].dirty || msgForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="description" rows="6"></textarea>
+                          <div *ngIf="msgForm.controls['description'].errors && (msgForm.controls['description'].dirty || msgForm.controls['description'].touched) "
+                          class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                        </div>
+
+                    </div>    
+
+                    
+                
+                  
+
+            
+                </form>
+                <br><br><br>
+            </div>
+        </div>
+        <br>
+
+
+
+        <div class="row col-lg-12">
+            <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem(contentit)">Selectionner des Roles</button>
+        </div>
+        <div class="row">
+            <angular-slickgrid class="col-12"  gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" 
+                [gridOptions]="gridOptions2" [dataset]="roles">
+            </angular-slickgrid>
+        </div>
+
+       
+        <div>
+            <ng-template #contentit let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir les Roles</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridit"
+                            [columnDefinitions]="columnDefinitionsrole" (onAngularGridCreated)="angularGridReadyrole($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedrole($event.detail.eventData, $event.detail.args)"
+                           
+                            [gridOptions]="gridOptionsrole" [dataset]="ro">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="addro()" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- MODAL ROLE GRID -->
+      
+
+    </kt-portlet-body>
+</kt-portlet>

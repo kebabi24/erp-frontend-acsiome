@@ -82,7 +82,7 @@ export class UnloadingVansComponent implements OnInit {
   showSpinner : Boolean =  false;
 
   locData : any ;
-  
+  stat : any;
 
 
   constructor(
@@ -142,8 +142,10 @@ export class UnloadingVansComponent implements OnInit {
       tr_effdate : new Date(),
       tr_nbr : nlot,
     }
+    console.log( "this.role.role_loc_from" , this.loadRequest.role_site,this.role.role_loc_from)
 
-    this.getLdStatus(this.loadRequest.role_site, this.role.role_loc_from)
+    this.stat = this.getLdStatus(this.loadRequest.role_site, this.role.role_loc_from)
+    console.log( " this.locData" , this.locData)
 
     // the data in comments is not available 
     let details = [] , i = 1 ; 
@@ -154,18 +156,30 @@ export class UnloadingVansComponent implements OnInit {
         tr_serial : product.lot,
         tr_qty_loc : product.qt_effected, 
         tr_um : product.pt_um,
-         tr_status : this.locData,
-         tr_expire : product.date_expiration,
+        tr_status : this.locData,
+        tr_expire : product.date_expiration,
         tr_um_conv : 1, 
         tr_ref : null
       })
       i++
     });
 
-
+    let detail = details;
     this.unloadRequestService.updateUnloadRequestStatus20(this.unload_request_code, this.unloadRequestData).subscribe(
 
       (response: any) => {
+        this.inventoryTransactionService.addTr({ nlot, it, detail }).subscribe(
+          (response: any) => {},
+          (error) => {
+            // this.loadRequestData = []
+            console.log(error);
+          },
+          () => {
+            this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
+            this.loadingSubject.next(false);
+            // this.router.navigateByUrl("/customers-mobile/cluster-create")
+          }
+        );
         // addTr
         // this.inventoryTransactionService.addTr({nlot , it ,details}).subscribe(
 
@@ -302,13 +316,16 @@ export class UnloadingVansComponent implements OnInit {
 
     (response: any) => {
       this.locData = response.data.loc_status
-   
+   console.log(this.locData)
+   return this.locData
     },
     (error) => {
      console.log("error")
     },
     () => {}
-)
+
+    )
+
  }
 
  
