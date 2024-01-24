@@ -27,11 +27,9 @@
 
           <div class="row">
             <div class="form-group col-3">
-              <label class="form-group"
-                ><b
-                  ><b>Role code : {{ role_code }}</b></b
-                ></label
-              >
+              <label class="form-group">Role code: *</label>
+              <input type="text" formControlName="role_code" [className]="roleForm.controls['role_code'].errors && (roleForm.controls['role_code'].dirty || roleForm.controls['role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" />
+              <div *ngIf="roleForm.controls['role_code'].errors && (roleForm.controls['role_code'].dirty || roleForm.controls['role_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
             </div>
 
             <div class="form-group col-3">
