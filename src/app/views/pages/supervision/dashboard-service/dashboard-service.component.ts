@@ -44,12 +44,21 @@ export class DashboardServiceComponent implements OnInit {
   markerLat: any = 0;
   markerLng: any = 0;
   customersSelected: any[] = [];
-  mockCustomers = [
+  serviceCode = [{ code_service: 1 }, { code_service: 2 }];
+  mockCustomers: any[] = [];
+  mockCustomers1 = [
     { id: 1, nom: "client 1", chiffre: 12000, nbr: 12, latitude: "36.73023411061217", longitude: "3.17803021719537" },
     { id: 2, nom: "client 2", chiffre: 90000, nbr: 3, latitude: "36.733667390282335", longitude: "3.1832876324023" },
     { id: 3, nom: "client 3", chiffre: 139000, nbr: 4, latitude: "36.73280834988108", longitude: "3.176377016351361" },
     { id: 4, nom: "client 4", chiffre: 122000, nbr: 11, latitude: "36.73202612582264", longitude: "3.173788803487979" },
     { id: 5, nom: "client 5", chiffre: 142000, nbr: 10, latitude: "36.72936510746935", longitude: "3.172359621946108" },
+  ];
+  mockCustomers2 = [
+    { id: 1, nom: "client 6", chiffre: 12000, nbr: 12, latitude: "36.73023411061217", longitude: "3.17803021719537" },
+    { id: 2, nom: "client 7", chiffre: 90000, nbr: 3, latitude: "36.733667390282335", longitude: "3.1832876324023" },
+    { id: 3, nom: "client 8", chiffre: 139000, nbr: 4, latitude: "36.73280834988108", longitude: "3.176377016351361" },
+    { id: 4, nom: "client 9", chiffre: 122000, nbr: 11, latitude: "36.73202612582264", longitude: "3.173788803487979" },
+    { id: 5, nom: "client 10", chiffre: 142000, nbr: 10, latitude: "36.72936510746935", longitude: "3.172359621946108" },
   ];
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private typesUtilsService: TypesUtilsService, private formBuilder: FormBuilder, public dialog: MatDialog, private subheaderService: SubheaderService, private layoutUtilsService: LayoutUtilsService, private layoutConfigService: LayoutConfigService, private modalService: NgbModal, private itineraryService: ItineraryService, private customerMobileService: CustomerMobileService, private codeMobileService: CodeMobileService, private roleService: RoleService, config: NgbDropdownConfig) {
     config.autoClose = true;
@@ -66,7 +75,7 @@ export class DashboardServiceComponent implements OnInit {
     this.itinerary = new Itinerary();
     const date = new Date();
     this.itineraryForm = this.formBuilder.group({
-      itinerary_type: [this.itinerary.itinerary_type, Validators.required],
+      code_service: [this.itinerary.itinerary_type, Validators.required],
       calc_date: [
         {
           year: date.getFullYear(),
@@ -84,17 +93,23 @@ export class DashboardServiceComponent implements OnInit {
     console.log(date);
   }
   onChangeCode() {
+    // const controls = this.itineraryForm.controls;
+
+    // this.itineraryService.getOne(controls.itinerary_code.value).subscribe((res: any) => {
+    //   console.log("aa", res.data);
+
+    //   if (res.data) {
+    //     console.log(res.data.itinerary_name);
+    //     this.router.navigateByUrl(`/itinerary/edit-itinerary/${res.data.itinerary_code}`);
+    //     //console.log(res.data.id)
+    //   }
+    // });
     const controls = this.itineraryForm.controls;
-
-    this.itineraryService.getOne(controls.itinerary_code.value).subscribe((res: any) => {
-      console.log("aa", res.data);
-
-      if (res.data) {
-        console.log(res.data.itinerary_name);
-        this.router.navigateByUrl(`/itinerary/edit-itinerary/${res.data.itinerary_code}`);
-        //console.log(res.data.id)
-      }
-    });
+    if (controls.code_service.value == 1) {
+      this.mockCustomers = this.mockCustomers1;
+    } else {
+      this.mockCustomers = this.mockCustomers2;
+    }
   }
 
   reset() {
