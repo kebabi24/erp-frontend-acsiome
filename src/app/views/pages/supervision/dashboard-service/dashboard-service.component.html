@@ -1,0 +1,67 @@
+<kt-portlet>
+  <kt-portlet-header [sticky]="true" [title]="'Service roadmap'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <ng-container ktPortletTools>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div class="example-preview">
+      <div class="row">
+        <div class="col-3">
+          <form [formGroup]="itineraryForm" class="form">
+            <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
+
+            <div class="row">
+              <div class="form-group col-6">
+                <label class="form-group">Date de Calcul:</label>
+                <div class="input-group input-group-sm">
+                  <input class="form-control form-control-sm form-control-solid" formControlName="calc_date" (change)="change()" placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f #calc_date="ngbDatepicker" (ngModelChange)="change()" />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" (click)="calc_date.toggle()" type="button">
+                      <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-6">
+                <label class="form-group">Code service</label>
+                <select class="form-control form-control-sm form-control-solid" id="exampleSelects1" formControlName="itinerary_type">
+                  <option value=""></option>
+                  <option *ngFor="let elem of itinerary_type" [value]="elem.code_value">
+                    {{ elem.code_value }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <br />
+          <br />
+        </div>
+        <div class="col-9">
+          <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+            <agm-marker *ngFor="let mark of mockCustomers" [latitude]="mark.latitude" [longitude]="mark.longitude">
+              <agm-info-window
+                >Nom client {{ mark.nom }} <br />
+                Chiffre d'affaire {{ mark.chiffre }} <br />
+                Nombre de visite {{ mark.nbr }} <br
+              /></agm-info-window>
+            </agm-marker>
+          </agm-map>
+        </div>
+
+        <div>
+          {{ time | async }}
+        </div>
+        <div></div>
+      </div>
+    </div> </kt-portlet-body
+></kt-portlet>
