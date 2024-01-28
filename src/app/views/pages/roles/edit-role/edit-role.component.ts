@@ -129,7 +129,7 @@ export class EditRoleComponent implements OnInit {
         this.roleEdit = response.data;
         console.log(this.roleEdit.role_code);
         this.role_code = this.roleEdit.role_code;
-        controls.role_code.setValue(this.role_code);
+        controls.role_code.setValue(this.roleEdit.role_name);
         controls.role_name.setValue(this.roleEdit.role_name);
         controls.user_mobile_code.setValue(this.roleEdit.user_mobile_code);
         controls.device_id.setValue(this.roleEdit.device_id);
@@ -433,25 +433,21 @@ export class EditRoleComponent implements OnInit {
   }
   angularGridReady2(angularGrid: AngularGridInstance) {
     let items: any[] = [];
+    let selectedRowss;
     console.log("***************************************");
     this.angularGrid2 = angularGrid;
     this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {};
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
-    this.selectedItinerariesIds = this.selectedItineray.map((i) => {
-      return this.itinerary.filter((item) => item.itinerary_code === i.itinerary_code);
-    });
-    console.log("idssss", this.selectedItinerariesIds);
-    // console.log(this.dataView);
-    // console.log("here yes", this.selectedItineray);
-    const selectedRows = this.selectedItinerariesIds.map((item) => {
-      item.map((i) => {
-        items.push(this.dataView.getIdxById(i.id));
+    this.itinerary.forEach((element) => {
+      this.selectedItineray.forEach((element2) => {
+        if (element.itinerary_code === element2.itinerary_code) {
+          items.push(this.dataView.getIdxById(element.id));
+        }
       });
-      return items;
     });
-    console.log(selectedRows);
-    this.grid.setSelectedRows(selectedRows);
+
+    this.grid.setSelectedRows(items);
   }
 
   /// ***************

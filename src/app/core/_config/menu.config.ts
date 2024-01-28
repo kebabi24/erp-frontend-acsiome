@@ -335,6 +335,10 @@ export class MenuConfig {
               title: "Liste des Chargement non Respectés",
               page: "/supervision/list-diff-loadrequest",
             },
+            {
+              title: "Service roadmap",
+              page: "/supervision/dashboard-service",
+            },
           ],
         },
         {
@@ -760,8 +764,7 @@ export class MenuConfig {
               title: "Liste des Transferts Recettes ",
               page: "/account-receivable/list-transfert-payment",
             },
-
-          ]
+          ],
         },
         {
           title: "Gestion des Prévisions",
@@ -1238,7 +1241,6 @@ export class MenuConfig {
           ],
         },
 
-        
         {
           title: "Gestion des Transporteurs",
           bullet: "dot",
