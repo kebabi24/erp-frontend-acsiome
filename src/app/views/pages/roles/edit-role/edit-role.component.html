@@ -1,5 +1,5 @@
 <kt-portlet>
-  <kt-portlet-header [sticky]="true" [title]="'Modifier le role'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+  <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
       <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -22,14 +22,13 @@
     <div class="row">
       <div class="col-12">
         <form class="form" [formGroup]="roleForm">
-          <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button> </kt-alert>
-          <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
+          <!--kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce role existe deja - Si vous voulez le mettre à jour<button type="warn" (click)="onChangeRole()" class="btn">Cliquez ici</button> </kt-alert>
+          <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert-->
 
           <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Role code: *</label>
-              <input type="text" formControlName="role_code" [className]="roleForm.controls['role_code'].errors && (roleForm.controls['role_code'].dirty || roleForm.controls['role_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" />
-              <div *ngIf="roleForm.controls['role_code'].errors && (roleForm.controls['role_code'].dirty || roleForm.controls['role_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+              <input type="text" formControlName="role_code" id="role_code"  [(ngModel)]="roleEdit.role_code" class="form-control form-control-sm form-control-solid" aria-describedby="basic-addon2"/>
             </div>
 
             <div class="form-group col-3">
