@@ -38,7 +38,8 @@ export class CreateLoadRequestComponent implements OnInit {
 
   saved_data : any
   user_mobile : any
-
+user;
+domain;
   constructor(
     config: NgbDropdownConfig,
         private profileFB: FormBuilder,
@@ -56,6 +57,8 @@ export class CreateLoadRequestComponent implements OnInit {
   ngOnInit(): void {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
+        this.user =  JSON.parse(localStorage.getItem('user'))       
+        this.domain = JSON.parse(localStorage.getItem("domain"));
         this.prepareRoles()
         this.getLoadRequestCreationData()
         this.createForm()
@@ -146,7 +149,7 @@ resetData(){
 
 // GET ROLES OF THE SUPERVISOR
 prepareRoles(){
-  this.loadRequestService.getRoles('administrateur').subscribe(
+  this.loadRequestService.getRoles(this.user.usrd_code).subscribe(
       
       (response: any) => {
         this.roles = response.data
@@ -229,12 +232,12 @@ printpdf() {
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
 
-  // if (this.domain.dom_name != null) {
-  //   doc.text(this.domain.dom_name, 10, 10);
-  // }
-  // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-  // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-  // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
   doc.setFontSize(14);
 
   doc.line(10, 35, 200, 35);
@@ -292,12 +295,12 @@ printpdf() {
        img.src = "./assets/media/logos/companylogo.png";
        doc.addImage(img, 'png', 150, 5, 50, 30)
        doc.setFontSize(9);
-      //  if (this.domain.dom_name != null) {
-      //    doc.text(this.domain.dom_name, 10, 10);
-      //  }
-      //  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-      //  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-      //  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+       if (this.domain.dom_name != null) {
+         doc.text(this.domain.dom_name, 10, 10);
+       }
+       if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+       if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+       if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
        doc.setFontSize(14);
        doc.line(10, 35, 200, 35);
 

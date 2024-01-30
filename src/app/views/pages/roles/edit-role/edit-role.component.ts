@@ -94,10 +94,20 @@ export class EditRoleComponent implements OnInit {
       });
     });
     console.log("constructor", this.selectedItineray);
-    // this.createForm();
-    this.prepareGrid2();
+    // // this.createForm();
+    // this.roleService.getByOne({ role_code: this.param }).subscribe((response: any) => {
+    //   this.roleEdit = response.data;
+    //   this.initCode()
+    //   this.loadingSubject.next(false)
+    // })
+     this.prepareGrid2();
   }
 
+  initCode() {
+    this.createForm()
+   
+    this.loadingSubject.next(false)
+  }
   ngOnInit(): void {
     this.getRoles();
     this.getTokens();
@@ -106,12 +116,33 @@ export class EditRoleComponent implements OnInit {
     this.getSites();
     this.getUsersd();
 
-    setTimeout(() => {
-      this.createForm();
-    }, 500);
-    setTimeout(() => {
-      this.setData();
-    }, 2000);
+
+
+
+    // this.activatedRoute.params.subscribe((params) => {
+    //   const id = params.role_code;
+    //   this.param = id;
+    // });
+    // this.itineraryService.getBySomething({ role_code: this.param }).subscribe((res: any) => {
+    //   this.selectedItineray = res.data.map((item) => {
+    //     return item;
+    //   });
+    // });
+    console.log("constructor", this.selectedItineray);
+    // this.createForm();
+    this.roleService.getByOne({ role_code: this.param }).subscribe((response: any) => {
+      this.roleEdit = response.data;
+      this.title = this.title + this.roleEdit.role_name;
+      this.initCode()
+      this.loadingSubject.next(false)
+    })
+    // this.prepareGrid2();
+    // setTimeout(() => {
+    //   this.createForm();
+    // }, 500);
+    // setTimeout(() => {
+    //   this.setData();
+    // }, 2000);
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(true);
   }
@@ -120,54 +151,56 @@ export class EditRoleComponent implements OnInit {
       observer.next("");
     }, 1000);
   });
-  setData() {
-    const controls = this.roleForm.controls;
-    this.activatedRoute.params.subscribe((params) => {
-      const id = params.role_code;
-      console.log(id);
-      this.roleService.getByOne({ role_code: id }).subscribe((response: any) => {
-        this.roleEdit = response.data;
-        console.log(this.roleEdit.role_code);
-        this.role_code = this.roleEdit.role_code;
-        controls.role_code.setValue(this.roleEdit.role_name);
-        controls.role_name.setValue(this.roleEdit.role_name);
-        controls.user_mobile_code.setValue(this.roleEdit.user_mobile_code);
-        controls.device_id.setValue(this.roleEdit.device_id);
+  // setData() {
+  //   const controls = this.roleForm.controls;
+  //   this.activatedRoute.params.subscribe((params) => {
+  //     const id = params.role_code;
+  //     console.log(id);
+  //     this.roleService.getByOne({ role_code: id }).subscribe((response: any) => {
+  //       this.roleEdit = response.data;
+  //       console.log(this.roleEdit.role_code);
+  //       this.role_code = this.roleEdit.role_code;
+  //       controls.role_code.setValue(this.roleEdit.role_code);
+  //       controls.role_name.setValue(this.roleEdit.role_name);
+  //       controls.user_mobile_code.setValue(this.roleEdit.user_mobile_code);
+  //       controls.device_id.setValue(this.roleEdit.device_id);
 
-        controls.controller_role.setValue(this.roleEdit.controller_role);
-        controls.upper_role_code.setValue(this.roleEdit.upper_role_code);
-        controls.token_serie_code.setValue(this.roleEdit.token_serie_code);
-        controls.role_loc.setValue(this.roleEdit.role_loc);
-        controls.role_site.setValue(this.roleEdit.role_site);
-        controls.role_loc_from.setValue(this.roleEdit.role_loc_from);
-        controls.printer_adress.setValue(this.roleEdit.printer_adress);
+  //       controls.controller_role.setValue(this.roleEdit.controller_role);
+  //       controls.upper_role_code.setValue(this.roleEdit.upper_role_code);
+  //       controls.token_serie_code.setValue(this.roleEdit.token_serie_code);
+  //       controls.role_loc.setValue(this.roleEdit.role_loc);
+  //       controls.role_site.setValue(this.roleEdit.role_site);
+  //       controls.role_loc_from.setValue(this.roleEdit.role_loc_from);
+  //       controls.printer_adress.setValue(this.roleEdit.printer_adress);
 
-        this.loadingSubject.next(false);
-        this.title = this.title + this.roleEdit.role_name;
-      });
-    });
-  }
+  //       this.loadingSubject.next(false);
+  //       this.title = this.title + this.roleEdit.role_name;
+  //     });
+  //   });
+  // }
   createForm() {
     this.loadingSubject.next(false);
     this.role = new Role();
     this.roleForm = this.roleF.group({
-      role_code: [{ value: this.role.role_code, disabled: true }, Validators.required],
-      role_name: [{ value: this.role.role_name }],
-      user_mobile_code: [this.role.user_mobile_code, Validators.required],
-      device_id: [this.role.device_id, Validators.required],
+      role_code: [{ value: this.roleEdit.role_code, disabled: true }],
+      role_name: [ this.roleEdit.role_name , Validators.required],
+      user_mobile_code: [this.roleEdit.user_mobile_code, Validators.required],
+      device_id: [this.roleEdit.device_id, Validators.required],
 
-      controller_role: [this.role.controller_role, Validators.required],
-      upper_role_code: [this.role.upper_role_code, Validators.required],
+      controller_role: [this.roleEdit.controller_role, Validators.required],
+      upper_role_code: [this.roleEdit.upper_role_code, Validators.required],
 
-      token_serie_code: [this.role.token_serie_code, Validators.required],
+      token_serie_code: [this.roleEdit.token_serie_code, Validators.required],
 
-      role_loc: [this.role.role_loc, Validators.required],
-      role_site: [this.role.device_id, Validators.required],
-      role_loc_from: [this.role.role_loc_from, Validators.required],
+      role_loc: [this.roleEdit.role_loc, Validators.required],
+      role_site: [this.roleEdit.role_site, Validators.required],
+      role_loc_from: [this.roleEdit.role_loc_from, Validators.required],
 
-      printer_adress: [this.role.printer_adress, Validators.required],
-      init: [false],
+      printer_adress: [this.roleEdit.printer_adress, Validators.required],
+      //init: [false],
     });
+
+    
   }
 
   open(content) {
@@ -291,6 +324,7 @@ export class EditRoleComponent implements OnInit {
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: false,
+
       },
       enableCheckboxSelector: true,
       checkboxSelector: {
@@ -304,7 +338,7 @@ export class EditRoleComponent implements OnInit {
         // for example, display the expand icon only on every 2nd row
         // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
-      multiSelect: false,
+      multiSelect: true,
     };
 
     // fill the dataset with your data
@@ -718,13 +752,13 @@ export class EditRoleComponent implements OnInit {
       editable: false,
       enableAddRow: true,
       enableAutoResize: true,
-      autoHeight: true,
+      autoHeight: false,
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
@@ -817,7 +851,7 @@ export class EditRoleComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
@@ -937,7 +971,7 @@ export class EditRoleComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
@@ -950,7 +984,7 @@ export class EditRoleComponent implements OnInit {
   }
 
   angularGridReady6(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
+    this.angularGrid6 = angularGrid;
     this.dataView6 = angularGrid.dataView;
     this.gridObj6 = angularGrid.slickGrid;
     this.gridService6 = angularGrid.gridService;
@@ -1019,7 +1053,7 @@ export class EditRoleComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       rowSelectionOptions: {
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
   }
