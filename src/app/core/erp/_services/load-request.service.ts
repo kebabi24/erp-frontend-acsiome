@@ -83,9 +83,9 @@ export class LoadRequestService {
         return this.http.get(`${API_URL}/findLoadRequestData/${load_request_code}`, { headers: httpHeaders })
     }
 
-    public getLoadRequestCreationData() {
+    public getLoadRequestCreationData(profile_code : any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(`${API_URL}/findLoadRequestCreationData`, { headers: httpHeaders })
+        return this.http.get(`${API_URL}/findLoadRequestCreationData/${profile_code}`, { headers: httpHeaders })
     }
 
     public getLoadRequest20Details(load_request_code : any ) {
