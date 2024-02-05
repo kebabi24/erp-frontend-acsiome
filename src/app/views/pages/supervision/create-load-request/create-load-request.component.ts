@@ -60,7 +60,7 @@ domain;
         this.user =  JSON.parse(localStorage.getItem('user'))       
         this.domain = JSON.parse(localStorage.getItem("domain"));
         this.prepareRoles()
-        // this.getLoadRequestCreationData()
+        this.getLoadRequestCreationData()
         this.createForm()
         
   }
@@ -165,8 +165,8 @@ prepareRoles(){
 
 
 // GET DATA OF THE SELECTED LOADREQUEST
-getLoadRequestCreationData(profile_code: any){
-  this.loadRequestService.getLoadRequestCreationData(profile_code).subscribe(
+getLoadRequestCreationData(){
+  this.loadRequestService.getLoadRequestCreationData().subscribe(
 
       (response: any) => {
         this.loadRequestData = response.loadRequestData
@@ -191,8 +191,8 @@ onSelectRole(role_code){
       this.user_mobile = response.data
 
       console.log(this.user_mobile)
-      let profile_code = this.user_mobile.profile_code
-      this.getLoadRequestCreationData(profile_code)
+     // let profile_code = this.user_mobile.profile_code
+      //this.getLoadRequestCreationData(profile_code)
     },)
 }
 
