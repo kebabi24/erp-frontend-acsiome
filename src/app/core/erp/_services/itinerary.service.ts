@@ -27,6 +27,11 @@ export class ItineraryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_ITINERARY, { headers: httpHeaders });
   }
+
+  public getAllServices(date: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_ITINERARY}/getservices`, date, { headers: httpHeaders });
+  }
   public updateItinerary(id, data) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.put(`${API_ITINERARY}/${id}`, data, { headers: httpHeaders });
