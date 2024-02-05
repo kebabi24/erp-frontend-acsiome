@@ -103,6 +103,7 @@ export class CreateStatusStockComponent implements OnInit {
       is_avail: [{ value: this.status.is_avail, disabled: !this.isExist }],
       is_nettable: [{ value: this.status.is_nettable, disabled: !this.isExist }],
       is_overissue: [{ value: this.status.is_overissue, disabled: !this.isExist }],
+      is_frozen: [{ value: this.status.is_frozen, disabled: !this.isExist }],
     });
   }
 
@@ -124,6 +125,7 @@ export class CreateStatusStockComponent implements OnInit {
                 controls.is_avail.enable()
                 controls.is_nettable.enable()
                 controls.is_overissue.enable()
+                controls.is_frozen.enable()
                 
             }
      })
@@ -167,6 +169,7 @@ export class CreateStatusStockComponent implements OnInit {
     _status.is_avail = controls.is_avail.value;
     _status.is_nettable = controls.is_nettable.value;
     _status.is_overissue = controls.is_overissue.value;
+    _status.is_frozen = controls.is_frozen.value;
     console.log(_status);
     return _status;
   }

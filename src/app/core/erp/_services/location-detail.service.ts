@@ -81,4 +81,12 @@ export class LocationDetailService {
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
     // DELETE
+    public getByStatusInst(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findinstance', data, { headers: httpHeaders })
+    }
+    public updateS(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/up', data, { headers: httpHeaders })
+    }
 }

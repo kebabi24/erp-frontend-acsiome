@@ -247,7 +247,7 @@ prepareGrid() {
             },
             {
                 id: "load_request_code",
-                name: "load Request Code",
+                name: "N° BC ",
                 field: "load_request_code",
                 sortable: true,
                 minWidth: 100,
@@ -258,7 +258,7 @@ prepareGrid() {
             },
             {
                 id: "date_creation",
-                name: "Creation Date",
+                name: "Date Création",
                 field: "date_creation",
                 sortable: true,
                 minWidth: 100,
@@ -268,7 +268,7 @@ prepareGrid() {
             },
             {
               id: "role_code",
-              name: "Role Code",
+              name: "Role ",
               field: "role_code",
               sortable: true,
               minWidth: 70,
@@ -278,7 +278,7 @@ prepareGrid() {
             }, 
             {
               id: "user_mobile_code",
-              name: "User Mobile Code",
+              name: "Vendeur",
               field: "user_mobile_code",
               sortable: true,
               minWidth: 70,
@@ -288,7 +288,7 @@ prepareGrid() {
             }, 
             {
               id: "role_loc",
-              name: "Role Loc",
+              name: "CAMION",
               field: "role_loc",
               sortable: true,
               minWidth: 70,
@@ -298,7 +298,7 @@ prepareGrid() {
             },
             {
               id: "role_site",
-              name: "Role Site",
+              name: "Site",
               field: "role_site",
               sortable: true,
               minWidth: 70,
@@ -340,7 +340,7 @@ prepareGridTwo() {
   this.columnDefinitions2 = [
             {
                 id: "product_code",
-                name: "Product Code",
+                name: "Code Produit",
                 field: "product_code",
                 sortable: true,
                 minWidth: 100,
@@ -350,7 +350,7 @@ prepareGridTwo() {
             },
             {
               id: "product_name",
-              name: "Product Name",
+              name: "Désignation",
               field: "product_name",
               sortable: true,
               minWidth: 100,
@@ -360,7 +360,7 @@ prepareGridTwo() {
             }, 
             {
               id: "pt_price",
-              name: "Product Price",
+              name: "Prix",
               field: "pt_price",
               sortable: true,
               minWidth: 70,
@@ -370,7 +370,7 @@ prepareGridTwo() {
             }, 
             {
               id: "qt_effected",
-              name: "Qty Affected",
+              name: "QTE Affectée",
               field: "qt_effected",
               sortable: true,
               minWidth: 70,
@@ -391,7 +391,7 @@ prepareGridTwo() {
 
             {
               id: "date_experation",
-              name: "Exp Date",
+              name: "Expire LE",
               field: "date_experation",
               sortable: true,
               minWidth: 70,
