@@ -394,9 +394,9 @@ export class CalcCmpComponent implements OnInit {
           );
           this.loadingSubject.next(false);
           console.log(this.dataset);
-          
-          this.router.navigateByUrl("/account-Payable/create-account-Payable");
           this.reset()
+          this.router.navigateByUrl("/general-accounting/calc-cmp");
+         
         }
       );
   }

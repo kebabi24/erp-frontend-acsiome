@@ -59,6 +59,7 @@ import { UnplanifiedReceiptCabComponent } from "./unplanified-receipt-cab/unplan
 import { PoReceiptDetComponent } from "./po-receipt-det/po-receipt-det.component";
 import { LoadingVansV2Component } from "./loading-vans-v2/loading-vans-v2.component";
 import { EditLdStatusComponent } from './edit-ld-status/edit-ld-status.component';
+import { UpdatePriceUnpComponent } from './update-price-unp/update-price-unp.component';
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -142,10 +143,14 @@ const routes: Routes = [
     path: "edit-ld-status",
     component: EditLdStatusComponent,
   },
+  {
+    path: "update-price-unp",
+    component: UpdatePriceUnpComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent],
   imports: [
     CommonModule,
     HttpClientModule,
