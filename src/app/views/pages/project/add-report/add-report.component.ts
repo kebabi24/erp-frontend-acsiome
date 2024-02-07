@@ -935,7 +935,7 @@ export class AddReportComponent implements OnInit {
         console.log(item);
         controls.pmr_pm_code.setValue(item.pm_code || "");
         controls.pmdesc.setValue(item.pm_desc || "");
-        this.siteService.getByOne({ si_default: true }).subscribe((res: any) => {
+        this.siteService.getByOne({ si_cust: item.pm_cust }).subscribe((res: any) => {
           this.site = res.data.si_site;
 
           this.locationService.getByOne({ loc_site: this.site, loc_project: item.pm_code }).subscribe((resp: any) => {
