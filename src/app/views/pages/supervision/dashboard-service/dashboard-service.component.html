@@ -36,6 +36,21 @@
                   </option>
                 </select>
               </div>
+              <div style="display: flex; flex-direction: row; margin-top: 20px" *ngFor="let item of serviceCode; let i = index">
+                <div class="col-6">
+                  <p>{{ item.code_service }}</p>
+                </div>
+                <!-- <div style="display: flex; flex-direction: row" class="col-2">
+                  <mat-radio-group [(ngModel)]="selectedOptions[mpd.id]">
+                    <mat-radio-button *ngFor="let elem of mockCustomers" [value]="elem.id">
+                      {{ option.nom }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div> -->
+                <div class="col-4">
+                  <!-- <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" /> -->
+                </div>
+              </div>
             </div>
           </form>
           <br />

@@ -44,7 +44,7 @@ export class DashboardServiceComponent implements OnInit {
   markerLat: any = 0;
   markerLng: any = 0;
   customersSelected: any[] = [];
-  serviceCode = [{ code_service: 1 }, { code_service: 2 }];
+  serviceCode = [{ code_service: "02-000033" }, { code_service: "02-000033" }];
   mockCustomers: any[] = [];
   mockCustomers1 = [
     { id: 1, nom: "client 1", chiffre: 12000, nbr: 12, latitude: "36.73023411061217", longitude: "3.17803021719537" },
@@ -91,6 +91,7 @@ export class DashboardServiceComponent implements OnInit {
     // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
     const date = controls.calc_date.value ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}` : null;
     console.log(date);
+    this.itineraryService.getAllServices({ date: date }).subscribe((response: any) => (this.itinerary = response.data));
   }
   onChangeCode() {
     // const controls = this.itineraryForm.controls;

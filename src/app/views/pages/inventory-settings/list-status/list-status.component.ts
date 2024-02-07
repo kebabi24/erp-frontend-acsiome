@@ -124,7 +124,8 @@ export class ListStatusComponent implements OnInit {
              field: "is_avail",
              sortable: true,
              filterable: true,
-             type: FieldType.string,
+             type: FieldType.boolean,
+             formatter: Formatters.checkmark
            },
            
            {
@@ -133,7 +134,8 @@ export class ListStatusComponent implements OnInit {
              field: "is_nettable",
              sortable: true,
              filterable: true,
-             type: FieldType.string,
+             type: FieldType.boolean,
+            formatter: Formatters.checkmark
            },
            
            {
@@ -142,8 +144,18 @@ export class ListStatusComponent implements OnInit {
              field: "is_overissue",
              sortable: true,
              filterable: true,
-             type: FieldType.string,
+             type: FieldType.boolean,
+             formatter: Formatters.checkmark
            },
+           {
+            id: "is_frozen",
+            name: "Instance Réception",
+            field: "is_frozen",
+            sortable: true,
+            filterable: true,
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark
+          },
            
            
        ]

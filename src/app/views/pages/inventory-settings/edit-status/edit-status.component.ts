@@ -116,6 +116,7 @@ initCode() {
       is_avail: [this.statusEdit.is_avail],
       is_nettable: [this.statusEdit.is_nettable],
       is_overissue: [this.statusEdit.is_overissue],
+      is_frozen: [this.statusEdit.is_frozen],
       
   })
 }
@@ -161,6 +162,7 @@ prepareStatus(): InventoryStatus {
   _status.is_avail = controls.is_avail.value
   _status.is_nettable = controls.is_nettable.value
   _status.is_overissue = controls.is_overissue.value
+  _status.is_frozen = controls.is_frozen.value
   
   return _status
 }
