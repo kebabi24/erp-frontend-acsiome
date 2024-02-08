@@ -218,9 +218,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
                 this.location = response.data;
 
-                this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
-                  this.sct = response.data;
-
+              
                   this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
                     console.log(resstat);
                     const { data } = resstat;
@@ -230,9 +228,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                     } else {
                       this.stat = this.location.loc_status;
                     }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: this.sct.sct_mtl_tl });
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
                   });
-                });
+                
               });
             } else {
               alert("Article Nexiste pas");
@@ -383,10 +381,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         width: 80,
         filterable: false,
         //type: FieldType.float,
-        editor: {
-          model: Editors.float,
-          params: { decimalPlaces: 2 },
-        },
+        // editor: {
+        //   model: Editors.float,
+        //   params: { decimalPlaces: 2 },
+        // },
         formatter: Formatters.decimal,
        
       },
@@ -970,7 +968,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.loadingSubject.next(true);
     const controls = this.trForm.controls;
 
-    this.inventoryTransactionService.addRCTUNP({ detail, it, nlot }).subscribe(
+    this.inventoryTransactionService.addRCTUNPCab({ detail, it, nlot }).subscribe(
       (reponse: any) => {
         console.log(reponse);
         // const arrayOctet = new Uint8Array(reponse.pdf.data)
@@ -1128,8 +1126,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.locationService.getByOne({ loc_loc: item.pt_loc, loc_site: item.pt_site }).subscribe((response: any) => {
           this.location = response.data;
 
-          this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
-            this.sct = response.data;
+          // this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
+          //   this.sct = response.data;
 
             this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
               console.log(resstat);
@@ -1147,13 +1145,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               updateItem.tr_um_conv = 1;
               updateItem.tr_site = item.pt_site;
               updateItem.tr_loc = item.pt_loc;
-              updateItem.tr_price = this.sct.sct_mtl_tl;
+              updateItem.tr_price = 0 ; //this.sct.sct_mtl_tl;
 
               updateItem.tr_status = this.stat;
               if (this.pdl == null) {this.pdl = item.pt_draw }
               this.gridService.updateItem(updateItem);
             });
-          });
+          //});
         });
       });
     }

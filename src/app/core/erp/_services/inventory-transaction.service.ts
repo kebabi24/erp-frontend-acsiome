@@ -131,4 +131,23 @@ export class InventoryTransactionService {
         return this.http.post(`${API_URL}/findcost`,data, { headers: httpHeaders })
  
     }
+
+    public getByNbr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findnbr`,data, { headers: httpHeaders })
+ 
+    }
+    public getByGroup(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findgroup`,data, { headers: httpHeaders })
+ 
+    }
+    public updatePrice(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/updateprice`, data, { headers: httpHeaders });
+      }
+      public addRCTUNPCab(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/rct-unpcab', data, { headers: httpHeaders })
+    }
 }

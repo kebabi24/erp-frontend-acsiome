@@ -512,6 +512,10 @@ export class MenuConfig {
               page: "/inventory-transaction/unplanified-receipt-cab",
             },
             {
+              title: "Mise A Jour Le Prix Récéption",
+              page: "/inventory-transaction/update-price-unp",
+            },
+            {
               title: "Modification Statut Stock ",
               page: "/inventory-transaction/edit-status",
             },
