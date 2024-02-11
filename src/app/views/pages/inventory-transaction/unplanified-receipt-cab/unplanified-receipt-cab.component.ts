@@ -1,22 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
-
+import { saveAs } from "file-saver";
 // Angular slickgrid
-import {
-  Column,
-  GridOption,
-  Formatter,
-  Editor,
-  Editors,
-  AngularGridInstance,
-  EditorValidator,
-  EditorArgs,
-  GridService,
-  Formatters,
-  FieldType,
-  OnEventArgs,
-  AutoCompleteEditor,
-} from "angular-slickgrid";
+import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs, AutoCompleteEditor } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -29,9 +15,8 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 import { ItemService, AddressService, SequenceService, VendorProposal, InventoryTransaction, InventoryTransactionService, InventoryStatusService, SiteService, LocationService, LocationDetailService, CostSimulationService, printBc, CodeService, MesureService, printReceiveUNP, LabelService, Label, DomainService, PrintersService, EmployeService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
-declare var electronPrinter: any;
+declare var ElectronPrinter3: any;
 import { MatAutocomplete } from "@angular/material/autocomplete";
-
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -48,7 +33,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   }
   return { valid: true, msg: "" };
 };
-
+declare var Edelweiss: any;
 @Component({
   selector: "kt-unplanified-receipt-cab",
   templateUrl: "./unplanified-receipt-cab.component.html",
@@ -115,7 +100,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   row_number;
   message = "";
   prhServer;
-  qty:any;
+  qty: any;
   location: any;
   sct: any;
   datasetPrint = [];
@@ -144,8 +129,6 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
-    
-
   }
 
   initGrid() {
@@ -157,17 +140,20 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         formatter: Formatters.deleteIcon,
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => { 
+        onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             /*ajouter ligne tr_hist de suppression*/
-            if (args.dataContext.tr_qty_loc > 0){
-              this.index =  this.dataset.findIndex((el)=> { return el.tr_line == args.dataContext.tr_line});
-              args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * (-1);
-              this.onSubmit()
-            // }
-            }else{alert("ligne supprimée")}
+            if (args.dataContext.tr_qty_loc > 0) {
+              this.index = this.dataset.findIndex((el) => {
+                return el.tr_line == args.dataContext.tr_line;
+              });
+              args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+              this.onSubmit();
+              // }
+            } else {
+              alert("ligne supprimée");
+            }
             this.angularGrid.gridService.deleteItem(args.dataContext);
-            
           }
         },
       },
@@ -180,13 +166,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         params: { formatterIcon: "fa fa-plus" },
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => { 
-          
-            this.row_number = args.row;
-            this.nligne =  args.dataContext.id
-            let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
-            element.click();
-        
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          this.nligne = args.dataContext.id;
+          let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
+          element.click();
         },
       },
 
@@ -209,37 +193,38 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_ref)
-          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
-          else {
-          console.log(args.dataContext.tr_part);
-          this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
-            if (resp.data) {
-              this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
-                this.location = response.data;
+          console.log(args.dataContext.tr_ref);
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            console.log(args.dataContext.tr_part);
+            this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
+              if (resp.data) {
+                this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
+                  this.location = response.data;
 
-                this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
-                  this.sct = response.data;
+                  this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
+                    this.sct = response.data;
 
-                  this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-                    console.log(resstat);
-                    const { data } = resstat;
+                    this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+                      console.log(resstat);
+                      const { data } = resstat;
 
-                    if (data) {
-                      this.stat = null;
-                    } else {
-                      this.stat = this.location.loc_status;
-                    }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: this.sct.sct_mtl_tl });
+                      if (data) {
+                        this.stat = null;
+                      } else {
+                        this.stat = this.location.loc_status;
+                      }
+                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: this.sct.sct_mtl_tl });
+                    });
                   });
                 });
-              });
-            } else {
-              alert("Article Nexiste pas");
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
-            }
-          });
-        };
+              } else {
+                alert("Article Nexiste pas");
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
+              }
+            });
+          }
         },
       },
       {
@@ -250,11 +235,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
-          else {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
-          element.click();}
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
+            element.click();
+          }
         },
       },
       {
@@ -284,20 +271,19 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         width: 80,
         filterable: false,
         type: FieldType.float,
-       
+
         editor: {
           model: Editors.float,
           params: { decimalPlaces: 2 },
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          
-          if( args.dataContext.tr_ref != null && args.dataContext.tr_ref != ""){alert('Modification interdite') 
-          this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
-        } else {
-          this.gridService.updateItemById(args.dataContext.id, {  ...args.dataContext, qty: args.dataContext.tr_qty_loc })
-        }
-
-        }
+          if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
+            alert("Modification interdite");
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+          } else {
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
+          }
+        },
       },
       {
         id: "tr_um",
@@ -312,39 +298,41 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           validator: statusValidator,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
-          else{
-          this.itemsService.getBy({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
-            if (args.dataContext.tr_um == resp.data.pt_um) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: 1 });
-            } else {
-              //console.log(resp.data.pt_um)
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            this.itemsService.getBy({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
+              if (args.dataContext.tr_um == resp.data.pt_um) {
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: 1 });
+              } else {
+                //console.log(resp.data.pt_um)
 
-              this.mesureService.getBy({ um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
-                console.log(res);
-                const { data } = res;
+                this.mesureService.getBy({ um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
+                  console.log(res);
+                  const { data } = res;
 
-                if (data) {
-                  //alert ("Mouvement Interdit Pour ce Status")
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
-                  this.angularGrid.gridService.highlightRow(1, 1500);
-                } else {
-                  this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
-                    console.log(res);
-                    const { data } = res;
-                    if (data) {
-                      //alert ("Mouvement Interdit Pour ce Status")
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
-                    } else {
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: "1", tr_um: null });
+                  if (data) {
+                    //alert ("Mouvement Interdit Pour ce Status")
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
+                    this.angularGrid.gridService.highlightRow(1, 1500);
+                  } else {
+                    this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
+                      console.log(res);
+                      const { data } = res;
+                      if (data) {
+                        //alert ("Mouvement Interdit Pour ce Status")
+                        this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
+                      } else {
+                        this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: "1", tr_um: null });
 
-                      alert("UM conversion manquante");
-                    }
-                  });
-                }
-              });
-            }
-          });}
+                        alert("UM conversion manquante");
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
         },
       },
 
@@ -356,11 +344,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
-          else{
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
-          element.click();}
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
+            element.click();
+          }
         },
       },
       // {
@@ -388,7 +378,6 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
         formatter: Formatters.decimal,
-       
       },
       // {
       //   id: "tr_site",
@@ -487,14 +476,16 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          if(args.dataContext.tr_ref != null){alert('Modification interdite')}
-          else{
-          this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
-            console.log(response.data);
-            if (response.data.length != 0) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
-            }
-          });}
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
+              console.log(response.data);
+              if (response.data.length != 0) {
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
+              }
+            });
+          }
         },
       },
       {
@@ -612,13 +603,14 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
         minWidth: 30,
         maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => { this.printbuttonState=true
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.printbuttonState = true;
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.trForm.controls;
-            this.printbuttonState=true;
+            this.printbuttonState = true;
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             _lb.lb_rmks = controls.tr_rmks.value;
@@ -640,18 +632,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             console.log(_lb);
             // console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
-              (blob) => {
-                // console.log(blob);
-                // const url = window.URL.createObjectURL(blob);
-                // window.open(url);
-                // saveAs(blob, "ticket.pdf");
-                console.log(electronPrinter);
+              (reponse: any) => {
+                lab = reponse.data;
+                this.labelService.addblob(_lb).subscribe((blob) => {
+                  Edelweiss.print3(lab);
+                });
               },
               (error) => {
                 alert("Erreur Impression Etiquette");
               },
               () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty : args.dataContext.tr_qty_loc});
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
                 //console.log("id", args.dataContext.id)
                 //console.log("dataset",this.dataset[args.dataContext.id])
                 this.index = this.dataset.findIndex((el) => {
@@ -663,8 +654,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             );
           } else {
             alert("Etiquette dèjà imprimée");
-          } 
-         
+          }
         },
       },
     ];
@@ -678,7 +668,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       enableAutoResize: true,
       autoHeight: false,
       autoCommitEdit: true,
-     
+
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -830,11 +820,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   // save data
   onSubmit() {
     this.hasFormErrors = false;
-    console.log("this.dataset",this.dataset)
-    console.log("this.index",this.index)
-    this.data = []
+    console.log("this.dataset", this.dataset);
+    console.log("this.index", this.index);
+    this.data = [];
     let obj = {
-     
       tr_line: this.dataset[this.index].tr_line,
       tr_part: this.dataset[this.index].tr_part,
       desc: this.dataset[this.index].desc,
@@ -848,15 +837,15 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       tr_ref: this.dataset[this.index].tr_ref,
       tr_status: this.dataset[this.index].tr_status,
       tr_expire: this.dataset[this.index].tr_expire,
-    }
-   // this.data.push(this.dataset[this.index])
-   this.data.push(obj)
-     
-   console.log("this.data",this.data)
-    console.log(typeof(this.data))
+    };
+    // this.data.push(this.dataset[this.index])
+    this.data.push(obj);
+
+    console.log("this.data", this.data);
+    console.log(typeof this.data);
     const controls = this.trForm.controls;
     /** check form */
-    
+
     if (this.trForm.invalid) {
       Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
       this.message = "Modifiez quelques éléments et réessayez de soumettre.";
@@ -962,7 +951,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
    * @param _it: it
    */
   addIt(detail: any, it, nlot) {
-    console.log("here data", detail)
+    console.log("here data", detail);
     // for (let data of detail) {
     //   delete data.id;
     //   delete data.cmvid;
@@ -985,7 +974,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-               
+
         //    console.log(this.provider, po, this.dataset);
         // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
         // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
@@ -998,7 +987,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const controls = this.trForm.controls;
 
     if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-    this.goBack()
+    this.goBack();
   }
   /**
    * Go back to the list
@@ -1013,43 +1002,42 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   // add new Item to Datatable
   addNewItem() {
     const controls = this.trForm.controls;
-    if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
-     else {
-    var maxObj = null
-    var iddd = 0
-    if (this.dataset.length> 0) {
-     maxObj = this.dataset.reduce((accumulator, current) => {
-      return accumulator.id > current.id ? accumulator : current;
-    });
-    console.log(maxObj.id + 1)
-     iddd = maxObj.id + 1
-
-  } else {
-    iddd = 1
-
+    if (controls.tr_addr.value == null) {
+      alert("veuillez remplir addresse");
+    } else {
+      var maxObj = null;
+      var iddd = 0;
+      if (this.dataset.length > 0) {
+        maxObj = this.dataset.reduce((accumulator, current) => {
+          return accumulator.id > current.id ? accumulator : current;
+        });
+        console.log(maxObj.id + 1);
+        iddd = maxObj.id + 1;
+      } else {
+        iddd = 1;
+      }
+      this.gridService.addItem(
+        {
+          id: iddd,
+          tr_line: iddd,
+          tr_part: "",
+          cmvid: "",
+          desc: "",
+          tr_qty_loc: 0,
+          tr_um: "",
+          tr_price: 0,
+          tr_site: "",
+          tr_loc: "",
+          tr_serial: null,
+          tr_ref: null,
+          tr_status: null,
+          tr_expire: null,
+          qty: 0,
+        },
+        { position: "bottom" }
+      );
+    }
   }
-    this.gridService.addItem(
-      {
-        id: iddd,
-        tr_line: iddd,
-        tr_part: "",
-        cmvid: "",
-        desc: "",
-        tr_qty_loc: 0,
-        tr_um: "",
-        tr_price: 0,
-        tr_site: "",
-        tr_loc: "",
-        tr_serial: null,
-        tr_ref: null,
-        tr_status: null,
-        tr_expire: null,
-        qty:0,
-      },
-      { position: "bottom" }
-    );
-  }
-}
 
   addsameItem() {
     const control = this.nbrForm.controls;
@@ -1059,41 +1047,39 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const maxObj = this.dataset.reduce((accumulator, current) => {
       return accumulator.id > current.id ? accumulator : current;
     });
-    console.log(maxObj.id + 1)
-    var iddd = maxObj.id + 1
+    console.log(maxObj.id + 1);
+    var iddd = maxObj.id + 1;
 
     for (var j = 0; j < limit; j++) {
-        
-    this.gridService.addItem(
-      {
-        id: iddd,
-        tr_line: iddd,
-        tr_part: this.dataset[i - 1].tr_part,
-        cmvid: "",
-        desc: this.dataset[i - 1].desc,
-        tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
-        tr_um: this.dataset[i - 1].tr_um,
-        tr_um_conv: this.dataset[i - 1].tr_um_conv,
+      this.gridService.addItem(
+        {
+          id: iddd,
+          tr_line: iddd,
+          tr_part: this.dataset[i - 1].tr_part,
+          cmvid: "",
+          desc: this.dataset[i - 1].desc,
+          tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
+          tr_um: this.dataset[i - 1].tr_um,
+          tr_um_conv: this.dataset[i - 1].tr_um_conv,
 
-        tr_price: this.dataset[i - 1].tr_price,
-        tr_site: this.dataset[i - 1].tr_site,
-        tr_loc: this.dataset[i - 1].tr_loc,
-        tr_serial: this.dataset[i - 1].tr_serial,
-        tr_ref: null,
-        tr_status: this.dataset[i - 1].tr_status,
-        tr_expire: this.dataset[i - 1].tr_expire,
-        qty: 0
-      },
-      { position: "bottom" }
-    );
-    iddd ++ 
-  }
-  this.modalService.dismissAll()
+          tr_price: this.dataset[i - 1].tr_price,
+          tr_site: this.dataset[i - 1].tr_site,
+          tr_loc: this.dataset[i - 1].tr_loc,
+          tr_serial: this.dataset[i - 1].tr_serial,
+          tr_ref: null,
+          tr_status: this.dataset[i - 1].tr_status,
+          tr_expire: this.dataset[i - 1].tr_expire,
+          qty: 0,
+        },
+        { position: "bottom" }
+      );
+      iddd++;
+    }
+    this.modalService.dismissAll();
   }
   addnegativeItem() {
-    
-    var i = this.nligne
-     
+    var i = this.nligne;
+
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -1101,7 +1087,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         tr_part: this.dataset[i - 1].tr_part,
         cmvid: "",
         desc: this.dataset[i - 1].desc,
-        tr_qty_loc: this.dataset[i - 1].tr_qty_loc * (-1),
+        tr_qty_loc: this.dataset[i - 1].tr_qty_loc * -1,
         tr_um: this.dataset[i - 1].tr_um,
         tr_um_conv: this.dataset[i - 1].tr_um_conv,
 
@@ -1115,8 +1101,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       },
       { position: "bottom" }
     );
- 
-  this.modalService.dismissAll()
+
+    this.modalService.dismissAll();
   }
   handleSelectedRowsChanged4(e, args) {
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
@@ -1150,7 +1136,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               updateItem.tr_price = this.sct.sct_mtl_tl;
 
               updateItem.tr_status = this.stat;
-              if (this.pdl == null) {this.pdl = item.pt_draw }
+              if (this.pdl == null) {
+                this.pdl = item.pt_draw;
+              }
               this.gridService.updateItem(updateItem);
             });
           });
@@ -1231,16 +1219,14 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     // fill the dataset with your data
     console.log(this.domconfig);
     if (this.domconfig == false) {
-    this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
-    }
-    else {
-      if(this.pdl == null) {
-      //this.prodligne = ["SQUELETTE", "BOBINE"] 
-      console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp)
-      this.itemsService.getBy({pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+      this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
+    } else {
+      if (this.pdl == null) {
+        //this.prodligne = ["SQUELETTE", "BOBINE"]
+        console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp);
+        this.itemsService.getBy({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       } else {
-        this.itemsService.getBy({pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
-
+        this.itemsService.getBy({ pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       }
     }
   }
@@ -2150,7 +2136,6 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.prepareGridprinter();
     this.modalService.open(contentprinter, { size: "lg" });
   }
- 
 
   opennbrligne(content) {
     this.createnbrForm();

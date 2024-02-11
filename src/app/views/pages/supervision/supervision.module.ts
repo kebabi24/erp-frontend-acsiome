@@ -53,6 +53,7 @@ import { CreateLoadRequestComponent } from "./create-load-request/create-load-re
 import { ListDiffLoadrequestComponent } from "./list-diff-loadrequest/list-diff-loadrequest.component";
 import { CreateMessageComponent } from "./create-message/create-message.component";
 import { DashboardServiceComponent } from "./dashboard-service/dashboard-service.component";
+import { MatRadioModule } from "@angular/material/radio";
 
 const routes: Routes = [
   {
@@ -104,6 +105,7 @@ const routes: Routes = [
     MatTabsModule,
     MatButtonModule,
     NgbModule,
+    MatRadioModule,
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forFeature(FakeApiService, {
           passThruUnknownUrl: true,

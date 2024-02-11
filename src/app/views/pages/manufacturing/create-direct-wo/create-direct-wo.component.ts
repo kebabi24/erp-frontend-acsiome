@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
-
+import { saveAs } from "file-saver";
 // Angular slickgrid
 import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, Label, EmployeService, PrintersService } from "../../../../core/erp";
-declare var electronPrinter: any;
+declare var Edelweiss: any;
 @Component({
   selector: "kt-create-direct-wo",
   templateUrl: "./create-direct-wo.component.html",
@@ -533,11 +533,7 @@ export class CreateDirectWoComponent implements OnInit {
       (reponse: any) => {
         lab = reponse.data;
         this.labelService.addblob(_lb).subscribe((blob) => {
-          console.log(blob);
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-          // saveAs(blob, lab.lb_ref + ".pdf");
-          //console.log(electronPrinter);
+          Edelweiss.print3(lab);
         });
       },
       (error) => {

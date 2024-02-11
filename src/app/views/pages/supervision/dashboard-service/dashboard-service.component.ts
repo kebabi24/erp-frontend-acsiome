@@ -37,14 +37,21 @@ export class DashboardServiceComponent implements OnInit {
   angularGrid: AngularGridInstance;
   //selectedRows: any[] = []
   dataset: any[] = [];
+  selectedOptions: string;
   itinerary_type: any[] = [];
   week_days: any[] = [];
+  services: any[] = [];
+  precedentServiceCode: string;
   // roles : any[] = []
   newMarker: boolean = false;
   markerLat: any = 0;
   markerLng: any = 0;
+  customersExist: boolean = false;
   customersSelected: any[] = [];
-  serviceCode = [{ code_service: "02-000033" }, { code_service: "02-000033" }];
+  serviceCode = [
+    { id: 1, code_service: "02-000033", role_code: "RV001" },
+    { id: 2, code_service: "02-000034", role_code: "RV002" },
+  ];
   mockCustomers: any[] = [];
   mockCustomers1 = [
     { id: 1, nom: "client 1", chiffre: 12000, nbr: 12, latitude: "36.73023411061217", longitude: "3.17803021719537" },
@@ -89,9 +96,9 @@ export class DashboardServiceComponent implements OnInit {
   change() {
     const controls = this.itineraryForm.controls;
     // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
-    const date = controls.calc_date.value ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}` : null;
+    const date = controls.calc_date.value ? `${controls.calc_date.value.year}/${controls.calc_date.value.day}/${controls.calc_date.value.month}` : null;
     console.log(date);
-    this.itineraryService.getAllServices({ date: date }).subscribe((response: any) => (this.itinerary = response.data));
+    this.itineraryService.getAllServices({ date: date }).subscribe((response: any) => ((this.services = response.data), console.log(this.services)));
   }
   onChangeCode() {
     // const controls = this.itineraryForm.controls;
@@ -112,11 +119,29 @@ export class DashboardServiceComponent implements OnInit {
       this.mockCustomers = this.mockCustomers2;
     }
   }
-
+  radioButtonChange(event) {
+    this.services.map((item) => {
+      item.clients.map((elem) => {
+        elem.customer_display = false;
+      });
+    });
+    let item;
+    console.log(event.source._value);
+    console.log(this.services);
+    item = this.services.filter((elem) => elem.item.service_code === event.source._value);
+    console.log("item", item);
+    this.mockCustomers = item[0].clients;
+    this.mockCustomers.map((item) => {
+      item.customer_display = true;
+    });
+    this.customersExist = true;
+    console.log("mockCustomers", this.mockCustomers);
+  }
   reset() {
     this.itinerary = new Itinerary();
     this.createForm();
     this.hasFormErrors = false;
+    console.log(this.selectedOptions);
   }
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {

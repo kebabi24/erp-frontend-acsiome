@@ -15,7 +15,8 @@ function createWindow() {
 
     }
   })
-
+  // mainWindow.webContents.printToPDF({ silent: true })
+  // mainWindow.webContents.print({ silent: true })
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, `dist/index.html`),
