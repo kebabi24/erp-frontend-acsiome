@@ -198,6 +198,20 @@
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
 
                         </div>
+                        <div class="form-group col-3">
+                            <label class="form-group">Liste des prix: *</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" formControlName="pricelist_code" 
+                                class="form-control form-control-sm form-control-solid"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openpl(contentpl)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>   
+                        </div>
+
                     </div>
 
                 
@@ -279,12 +293,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3"
-                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
-                            (sgOnSelectedRowsChanged)="handleSelectedRoleController($event.detail.eventData, $event.detail.args)"
-                           
-                            [gridOptions]="gridOptions3" [dataset]="roles">
-                        </angular-slickgrid>
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="grid3" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRoleController($event.detail.eventData, $event.detail.args)"  [gridOptions]="gridOptions" [dataset]="users"> </angular-slickgrid>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -429,6 +438,32 @@
             </ng-template>
         </div>
         <!-- MODAL SITE  END  -->
+
+        <div>
+            <ng-template #contentpl let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Liste des Prix:</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpl"
+                            [columnDefinitions]="columnDefinitionspl" (onAngularGridCreated)="angularGridReadypl($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedpl($event.detail.eventData, $event.detail.args)"
+                           
+                            [gridOptions]="gridOptionspl" [dataset]="pls">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        
 
 
     </kt-portlet-body>

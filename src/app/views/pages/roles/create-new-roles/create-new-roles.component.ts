@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { BehaviorSubject, Observable } from "rxjs";
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
-import { Role, RoleService, ItineraryService, UsersService, TokenSerieService, LocationService } from "../../../../core/erp";
+import { Role, RoleService, ItineraryService, UsersService, TokenSerieService, LocationService, MobileSettingsService} from "../../../../core/erp";
 import * as os from "os";
 import { AngularGridInstance, Column, FieldType, Filters, Formatters, GridOption, GridStateChange, GridService } from "angular-slickgrid";
 import { AnyCnameRecord } from "dns";
@@ -88,7 +88,15 @@ export class CreateNewRolesComponent implements OnInit {
   gridService7: GridService;
   usrds: [];
 
-  constructor(config: NgbDropdownConfig, private roleF: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private roleService: RoleService, private itineraryService: ItineraryService, private locationService: LocationService, private modalService: NgbModal, private cd: ChangeDetectorRef, private tokenSerieService: TokenSerieService, private usersService: UsersService) {
+  gridOptionspl: GridOption = {};
+  columnDefinitionspl: Column[] = [];
+  gridObjpl: any;
+  angularGridpl: AngularGridInstance;
+  dataViewpl: any;
+  gridServicepl: GridService;
+  pls: [];
+
+  constructor(config: NgbDropdownConfig, private roleF: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private roleService: RoleService, private itineraryService: ItineraryService, private locationService: LocationService, private modalService: NgbModal, private cd: ChangeDetectorRef, private tokenSerieService: TokenSerieService, private usersService: UsersService, private mobileSettingsService : MobileSettingsService) {
     config.autoClose = true;
     this.prepareGrid2();
   }
@@ -125,6 +133,7 @@ export class CreateNewRolesComponent implements OnInit {
       role_loc_from: [this.role.role_loc_from, Validators.required],
 
       printer_adress: [this.role.printer_adress, Validators.required],
+      pricelist_code: [this.role.pricelist_code],
     });
   }
 
@@ -228,14 +237,6 @@ export class CreateNewRolesComponent implements OnInit {
         maxWidth: 80,
       },
       {
-        id: "username",
-        name: "Nom d'utilisateur",
-        field: "username",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
         id: "user_mobile_code",
         name: "code d'utilisateur",
         field: "user_mobile_code",
@@ -244,16 +245,24 @@ export class CreateNewRolesComponent implements OnInit {
         type: FieldType.string,
       },
       {
-        id: "fullname",
-        name: "Nom complet",
-        field: "fullname",
+        id: "username",
+        name: "Nom d'utilisateur",
+        field: "username",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
+      // {
+      //   id: "fullname",
+      //   name: "Nom complet",
+      //   field: "fullname",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },
       {
         id: "profile_code",
-        name: "code profil",
+        name: "code profile",
         field: "profile_code",
         sortable: true,
         filterable: true,
@@ -385,7 +394,7 @@ export class CreateNewRolesComponent implements OnInit {
     _role.role_loc_from = controls.role_loc_from.value;
     _role.token_serie_code = controls.token_serie_code.value;
     _role.printer_adress = controls.printer_adress.value;
-
+    _role.pricelist_code = controls.pricelist_code.value;
     return _role;
   }
 
@@ -650,18 +659,20 @@ export class CreateNewRolesComponent implements OnInit {
   }
 
   open3(content) {
-    this.prepareGridRoleController();
+    this.prepareGrid();
     this.modalService.open(content, { size: "lg" });
   }
 
   handleSelectedRoleController(e, args) {
-    const controls = this.roleForm.controls;
-    if (args.rows.length > 0) {
-      let index = args.rows[0];
-      const role = this.gridObj3.getDataItem(index);
-      controls.controller_role.setValue(role.user_mobile_code);
-    }
+    const controls = this.roleForm.controls
+    if (Array.isArray(args.rows) && this.gridObj) {
+      args.rows.map((idx) => {
+        const item = this.gridObj.getDataItem(idx);
+        //const role = this.gridObj3.getDataItem(index);
+      controls.controller_role.setValue(item.user_mobile_code);
+    });
   }
+}
   // controls.so_cust.setValue(saleOrder.so_cust)
 
   open4(content) {
@@ -1162,4 +1173,77 @@ export class CreateNewRolesComponent implements OnInit {
       () => {}
     );
   }
+  openpl(content) {
+    this.prepareGridpl();
+    this.modalService.open(content, { size: "lg" });
+  }
+  prepareGridpl() {
+    this.columnDefinitionspl = [
+      {
+        id: "id",
+        name: "Id",
+        field: "id",
+        sortable: true,
+        minWidth: 30,
+        maxWidth: 50,
+        filterable: true,
+        type: FieldType.string,
+      },
+
+      {
+        id: "pricelist_code",
+        name: "Code Liste des Prix",
+        field: "pricelist_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+
+      {
+        id: "description",
+        name: "Description",
+        field: "description",
+        sortable: true,
+        minWidth: 100,
+        maxWidth: 300,
+        filterable: true,
+        type: FieldType.string,
+      },
+    
+    ];
+
+    this.gridOptionspl = {
+      asyncEditorLoading: false,
+      editable: false,
+      enableAddRow: true,
+      enableAutoResize: true,
+      autoHeight: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+    this.mobileSettingsService
+    .getAllPriceList()
+    .subscribe((response: any) => (this.pls = response.data))
+  }
+  angularGridReadypl(angularGrid: AngularGridInstance) {
+    this.angularGridpl = angularGrid;
+    this.dataViewpl = angularGrid.dataView;
+    this.gridObjpl = angularGrid.slickGrid;
+    this.gridServicepl = angularGrid.gridService;
+  }
+  handleSelectedpl(e, args) {
+    const controls = this.roleForm.controls
+    if (Array.isArray(args.rows) && this.gridObjpl) {
+        args.rows.map((idx) => {
+            const item = this.gridObjpl.getDataItem(idx)
+            controls.pricelist_code.setValue(item.pricelist_code || "")
+        })
+    }
+  }
+
 }
