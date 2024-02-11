@@ -189,6 +189,10 @@ onSelectRole(role_code){
 
     (response: any) => {
       this.user_mobile = response.data
+
+      console.log(this.user_mobile)
+     // let profile_code = this.user_mobile.profile_code
+      //this.getLoadRequestCreationData(profile_code)
     },)
 }
 

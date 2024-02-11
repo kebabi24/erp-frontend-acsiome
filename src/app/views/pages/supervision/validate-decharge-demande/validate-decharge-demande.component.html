@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'validation des demandes de charge'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'Validation des Demandes de Déchargement'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
 
@@ -26,7 +26,7 @@
                     <form class="form" [formGroup]="validationForm">
                         <div class="row ">
                             <div class="col-3">
-                                <label class="form-group">Role Code:</label>
+                                <label class="form-group">Role :</label>
                                 <select 
                                 (change)="onSelectRole($event.target.value)"
                                 name="role_code"
@@ -40,7 +40,7 @@
                                 </select> 
                             </div>  
                             <div class="col-3">
-                                <label class="form-group">Unload Request Code:</label>
+                                <label class="form-group">N° Bon Déchargement:</label>
                                 <select 
                                 (change)="onSelectLoadRequest($event.target.value)"
                                 name="load_request_code"
@@ -90,12 +90,12 @@
                                 <tr class="text-left">
 
                                     <th class="pr-0" style="width: 50px"></th>
-                                    <th class="pr-0" style="width: 150px">Product code</th>
-                                    <th class="pr-0" style="width: 350px">Product name</th>
-                                    <th style="min-width: 150px">Product price</th>
+                                    <th class="pr-0" style="width: 150px">Code Produit </th>
+                                    <th class="pr-0" style="width: 350px">Désignation</th>
+                                    <th style="min-width: 150px">Prix</th>
                                     <th style="min-width: 150px">Lot</th>
-                                    <th style="min-width: 200px">Quantity requested</th>
-                                    <th style="min-width: 150px">Quantity validated</th>
+                                    <th style="min-width: 200px">QTE Demandée</th>
+                                    <th style="min-width: 150px">QTE Validée</th>
                                     <!-- <th class="pr-0 text-right" style="min-width: 150px">action</th> -->
                                 </tr>
                             </thead>

@@ -37,7 +37,7 @@ import { environment } from "../../../../environments/environment";
 import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-bootstrap";
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
-import { RoleService, ItineraryService, TokenSerieService, LocationService, UsersService } from "../../../core/erp";
+import { RoleService, ItineraryService, TokenSerieService, LocationService, UsersService, MobileSettingsService } from "../../../core/erp";
 import { TreeModule } from "@circlon/angular-tree-component";
 import { EditRoleComponent } from "./edit-role/edit-role.component";
 
@@ -97,6 +97,8 @@ const routes: Routes = [
     HttpUtilsService,
     TypesUtilsService,
     LayoutUtilsService,
+    MobileSettingsService,
+
   ],
   entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],
 })
