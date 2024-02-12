@@ -12,6 +12,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { HttpUtilsService } from "../../../../core/_base/crud";
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY } from "@angular/cdk/overlay/overlay-directives";
+import { jsPDF } from "jspdf";
+
+import html2canvas from "html2canvas";
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
@@ -37,9 +40,13 @@ export class AddReportComponent implements OnInit {
   addReport: AddReport;
   empForm: FormGroup;
   row_number;
-
+  taskDesc: string;
   isExist = false;
-
+  startDate: Date;
+  endDate: Date;
+  allDates: Date[] = [];
+  pm_code: string;
+  pm_cust: string;
   emps: [];
   columnDefinitionsemp: Column[] = [];
   gridOptionsemp: GridOption = {};
@@ -250,6 +257,7 @@ export class AddReportComponent implements OnInit {
         let pme = this.prepareCode();
         console.log(pme);
         this.addDet(pme, this.mvdataset, this.cnsdataset, this.nbr);
+        this.generatePdf("file", "example.pdf");
       } else {
         this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
@@ -459,6 +467,14 @@ export class AddReportComponent implements OnInit {
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
+
+          const daysBetweenDates = this.getNumberOfDaysBetweenDates(item.pmr_start_date, item.pmr_end_date);
+          console.log("Number of days between the two dates:", daysBetweenDates);
+          console.log(item.pmr_start_date);
+          const start = item.pmr_start_date.substring(8);
+          console.log("start", start);
+          const end = item.pmr_end_date.substring(8);
+          console.log("end", end);
           let newItem = {
             ...item,
             pmr_demobilisation: false,
@@ -466,11 +482,17 @@ export class AddReportComponent implements OnInit {
             pmr_stndby: false,
             //  pmr_separe: false,
           };
+          if (newItem.pmr_mobilisation === true) {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "M";
+            }
+          } else {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "";
+            }
+          }
 
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
-          console.log(newItem);
-          const daysBetweenDates = this.getNumberOfDaysBetweenDates(item.pmr_start_date, item.pmr_end_date);
-          console.log("Number of days between the two dates:", daysBetweenDates);
         },
       },
       {
@@ -489,6 +511,11 @@ export class AddReportComponent implements OnInit {
           let item = args.dataView.getItem(args.row);
           console.log("demo", item);
           console.log(item.pmr_demobilisation);
+          console.log(item.pmr_start_date);
+          const start = item.pmr_start_date.substring(8);
+          console.log("start", start);
+          const end = item.pmr_end_date.substring(8);
+          console.log("end", end);
           let newItem = {
             ...item,
             pmr_demobilisation: item.pmr_demobilisation,
@@ -496,6 +523,15 @@ export class AddReportComponent implements OnInit {
             pmr_stndby: false,
             // pmr_separe: false,
           };
+          if (newItem.pmr_demobilisation === true) {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "D";
+            }
+          } else {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "";
+            }
+          }
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
         },
       },
@@ -513,6 +549,11 @@ export class AddReportComponent implements OnInit {
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
+          console.log(item.pmr_start_date);
+          const start = item.pmr_start_date.substring(8);
+          console.log("start", start);
+          const end = item.pmr_end_date.substring(8);
+          console.log("end", end);
           let newItem = {
             ...item,
             pmr_demobilisation: false,
@@ -520,6 +561,15 @@ export class AddReportComponent implements OnInit {
             pmr_stndby: item.pmr_stndby,
             // pmr_separe: false,
           };
+          if (newItem.pmr_stndby === true) {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "S";
+            }
+          } else {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "";
+            }
+          }
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
         },
       },
@@ -548,6 +598,23 @@ export class AddReportComponent implements OnInit {
             pmr_separe: item.pmr_separe,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
+          if (newItem.pmr_separe === true) {
+            let copyItem = {
+              ...newItem,
+              id: this.mvdataset.length + 1,
+            };
+            this.mvdataset.push(copyItem);
+          } else {
+            console.log("item", item.id);
+            this.mvdataset = this.mvdataset.map((one) => {
+              if (one.pmr_employe === newItem.pmr_employe) {
+                // Create a new object with the changed property
+                return { ...one, pmr_separe: item.pmr_separe };
+              }
+              return item; // Return unchanged item for other elements
+            });
+            this.mvdataset = this.mvdataset.filter((ielem) => ielem.id !== newItem.id);
+          }
         },
       },
       {
@@ -854,8 +921,8 @@ export class AddReportComponent implements OnInit {
       //enableColumnPicker: true,
       //enableCellNavigation: true,
       enableRowSelection: true,
-      autoHeight:true,
-      enableAutoResize:true,
+      autoHeight: true,
+      enableAutoResize: true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -900,6 +967,37 @@ export class AddReportComponent implements OnInit {
       pmr_separe: false,
       days_nbr: 0,
       pmr_duration: 0,
+      a1: "",
+      a2: "",
+      a3: "",
+      a4: "",
+      a5: "",
+      a6: "",
+      a7: "",
+      a8: "",
+      a9: "",
+      a10: "",
+      a11: "",
+      a12: "",
+      a13: "",
+      a14: "",
+      a15: "",
+      a16: "",
+      a17: "",
+      a18: "",
+      a19: "",
+      a20: "",
+      a21: "",
+      a22: "",
+      a23: "",
+      a24: "",
+      a25: "",
+      a26: "",
+      a27: "",
+      a28: "",
+      a29: "",
+      a30: "",
+      a31: "",
     };
     this.mvgridService.addItem(newItem, { position: "bottom" });
   }
@@ -933,6 +1031,8 @@ export class AddReportComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObj.getDataItem(idx);
         console.log(item);
+        this.pm_code = item.pm_code;
+        this.pm_cust = item.pm_cust;
         controls.pmr_pm_code.setValue(item.pm_code || "");
         controls.pmdesc.setValue(item.pm_desc || "");
         this.siteService.getByOne({ si_cust: item.pm_cust }).subscribe((res: any) => {
@@ -1160,6 +1260,7 @@ export class AddReportComponent implements OnInit {
         // console.log(item);
         controls.pmr_task.setValue(item.pmt_task || "");
         controls.taskdesc.setValue(item.pmt_desc || "");
+        this.taskDesc = item.pmt_desc;
         controls.pmr_task_status.setValue(item.pmt_status || "");
         this.job = item.pmt_job;
         this.level = item.pmt_level;
@@ -1170,7 +1271,73 @@ export class AddReportComponent implements OnInit {
     this.angularGridtask = angularGrid;
     this.gridObjtask = (angularGrid && angularGrid.slickGrid) || {};
   }
+  // generatePDF() {
+  //   setTimeout(function () {
+  //     const pageWidth = 210;
+  //     const pageHeight = 297;
+  //     const scale = 2; // Set the desired scale factor
+  //     const marginTop = 5; // Set the desired top margin
+  //     const marginLeft = -5; // Set the desired left margin
 
+  //     // Get the facture content element
+  //     const content = document.getElementById("file");
+
+  //     // this.numberToLetter = NumberToLetters(Number(controls.ttc.value).toFixed(2), this.curr.cu_desc);
+  //     // Calculate the scaled width and height based on the page width and scale factor
+  //     const scaledWidth = pageWidth * scale;
+  //     const scaledHeight = pageHeight * scale;
+
+  //     // Create a new instance of jsPDF with A4 page size
+  //     const doc = new jsPDF("l", "mm", "a4");
+
+  //     // Convert the facture content to a canvas using html2canvas with specified scale
+  //     html2canvas(content, { scale: scale }).then((canvas) => {
+  //       // Get the canvas data as a base64-encoded PNG image
+  //       const imageData = canvas.toDataURL("image/png");
+
+  //       // Calculate the aspect ratio of the content
+  //       const aspectRatio = canvas.width / canvas.height;
+
+  //       // Calculate the desired width and height based on the scaled dimensions
+  //       const imageWidth = scaledWidth + marginLeft; // Subtracting 20 for padding and left margin
+  //       const imageHeight = imageWidth / aspectRatio;
+
+  //       // Calculate the vertical position to start the content with the top margin
+  //       const verticalPosition = marginTop; // Add 10 for additional padding
+
+  //       // Add the image to the PDF document
+  //       doc.addImage(imageData, "PNG", 10 + marginLeft, verticalPosition, imageWidth, imageHeight); // Add marginLeft to horizontal position
+
+  //       // Save the PDF file
+  //       doc.save("facture_model.pdf");
+  //     });
+  //   }, 1000);
+  // }
+  generatePdf(elementId: string, filename: string) {
+    const element = document.getElementById(elementId);
+
+    html2canvas(element, { scrollY: -window.scrollY, useCORS: true }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+
+      const pdf = new jsPDF("l", "px", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      const imgWidth = pdfWidth - 20; // Adjust for margins
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let yPos = 10; // Start at 10 pixels from top
+
+      // Handle if image height exceeds the page height
+      if (yPos + imgHeight > pdfHeight) {
+        pdf.addPage(); // Add a new page
+        yPos = 10; // Reset yPos for the new page
+      }
+
+      pdf.addImage(imgData, "PNG", 10, yPos, imgWidth, imgHeight);
+      pdf.save(filename);
+    });
+  }
   prepareGridtask() {
     const controls = this.empForm.controls;
     this.columnDefinitionstask = [

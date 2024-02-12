@@ -27,29 +27,17 @@
               </div>
             </div>
             <div class="row">
-              <div class="form-group col-6">
-                <label class="form-group">Code service</label>
-                <select class="form-control form-control-sm form-control-solid" id="exampleSelects1" formControlName="code_service" (change)="onChangeCode()">
-                  <option value=""></option>
-                  <option *ngFor="let elem of serviceCode" [value]="elem.code_service">
-                    {{ elem.code_service }}
-                  </option>
-                </select>
-              </div>
-              <div style="display: flex; flex-direction: row; margin-top: 20px" *ngFor="let item of serviceCode; let i = index">
-                <div class="col-6">
-                  <p>{{ item.code_service }}</p>
-                </div>
-                <!-- <div style="display: flex; flex-direction: row" class="col-2">
-                  <mat-radio-group [(ngModel)]="selectedOptions[mpd.id]">
-                    <mat-radio-button *ngFor="let elem of mockCustomers" [value]="elem.id">
-                      {{ option.nom }}
-                    </mat-radio-button>
-                  </mat-radio-group>
-                </div> -->
-                <div class="col-4">
-                  <!-- <input style="margin-left: 20px" type="text" formControlName="duration" [className]="userForm.controls['duration'].errors && (userForm.controls['duration'].dirty || userForm.controls['duration'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" aria-describedby="basic-addon2" /> -->
-                </div>
+              <div style="margin-top: 20px" class="col-2">
+                <mat-radio-group style="margin-top: 20px">
+                  <mat-radio-button *ngFor="let service of services" [value]="service.item.service_code" (change)="radioButtonChange($event)">
+                    Code service : {{ service.item.service_code }} {{ service.item.role_code }} <br />
+                    <div *ngIf="service.clients[0].customer_display">
+                      <div *ngFor="let customer of mockCustomers">
+                        <span>{{ customer.customer_name }}</span>
+                      </div>
+                    </div>
+                  </mat-radio-button>
+                </mat-radio-group>
               </div>
             </div>
           </form>
@@ -63,10 +51,10 @@
         </div>
         <div class="col-9">
           <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-            <agm-marker *ngFor="let mark of mockCustomers" [latitude]="mark.latitude" [longitude]="mark.longitude">
+            <agm-marker style="background-color: yellow" *ngFor="let mark of mockCustomers" [latitude]="mark.latitude" [longitude]="mark.longitude">
               <agm-info-window
-                >Nom client {{ mark.nom }} <br />
-                Chiffre d'affaire {{ mark.chiffre }} <br />
+                >Nom client {{ mark.customer_name }} <br />
+                Chiffre d'affaire {{ mark.invoices?.amount }} DA <br />
                 Nombre de visite {{ mark.nbr }} <br
               /></agm-info-window>
             </agm-marker>

@@ -1,114 +1,86 @@
-<kt-portlet >
-    <kt-portlet-header [sticky]="true" [title]="'Chargement Des Vans (Scan) '" [class]="'card-head-lg'" [viewLoading$]="loading$">
-        <ng-container ktPortletTools>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
-            <button type="button" (click)="onSaveCharge()" class="btn btn-danger btn-sm mr-2">Ferme Chargement </button>
+<kt-portlet>
+  <kt-portlet-header [sticky]="true" [title]="'Chargement Des Vans (Scan) '" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <ng-container ktPortletTools>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+      <button type="button" (click)="onSaveCharge()" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button>
+      <button type="button" (click)="printing()" class="btn btn-danger btn-sm mr-2">Try to print a file</button>
+    </ng-container>
+  </kt-portlet-header>
+  <kt-portlet-body>
+    <div class="example-preview">
+      <div>
+        {{ time | async }}
+      </div>
 
-        </ng-container>
-        
-    </kt-portlet-header>
-    <kt-portlet-body>
-        <div class="example-preview  ">
-            <div>
-                {{ time | async }}
-              </div>
-
-            <!-- FORM -->
-            <div>
-                <form class="form" [formGroup]="chargeForm">
-                    <div class="row ">
-
-                        
-                        <div class="col-4">
-                            <label class="form-group">Demande de chargement:</label>
-                            <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest()"
-                            aria-describedby="basic-addon2">
-                          
-                        </div>  
-
-                        <div class="form-group col-2">
-                            <label class="form-group">Imprimer:</label>
-                            <div class="input-group input-group-sm">
-                              <span class="switch switch-icon">
-                                <label>
-                                  <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print" />
-                                  <span></span>
-                                </label>
-                              </span>
-                            </div>
-                        </div>
-                   
-                        <div class="form-group col-6">
-                           <h5>Demande de chargement sélectionnée : <span class="text-primary">{{load_request_code}}</span></h5>
-                           <h5>Role                               :  <span class="text-primary">{{role_code}}</span></h5>
-                           <h5>Vendeur                            :<span class="text-primary">{{username}}</span></h5>
-                        </div>  
-                    </div>
-                    <br>
-                    <h5>Liste de palettes</h5>
-
-                    <div class="row ">
-                        <div class="col-4">
-                            <label class="form-group">Palette:</label>
-                            <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal()"
-                            aria-describedby="basic-addon2"> 
-                        </div>  
-                    </div>
-
-                   
-
-
-                </form>
-                <br>
-                <angular-slickgrid 
-                   gridId="gridS" 
-                   [columnDefinitions]="columnDefinitions"
-                   (onAngularGridCreated)="angularGridReady($event)"
-                   [gridOptions]="gridOptions" 
-                   [dataset]="dataset" >
-                </angular-slickgrid>
-
-                
+      <!-- FORM -->
+      <div>
+        <form class="form" [formGroup]="chargeForm">
+          <div class="row">
+            <div class="col-4">
+              <label class="form-group">Demande de chargement:</label>
+              <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest()" aria-describedby="basic-addon2" />
             </div>
-            <!-- FORM END -->
 
-           
+            <div class="form-group col-2">
+              <label class="form-group">Imprimer:</label>
+              <div class="input-group input-group-sm">
+                <span class="switch switch-icon">
+                  <label>
+                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
 
+            <div class="form-group col-6">
+              <h5>
+                Demande de chargement sélectionnée : <span class="text-primary">{{ load_request_code }}</span>
+              </h5>
+              <h5>
+                Role : <span class="text-primary">{{ role_code }}</span>
+              </h5>
+              <h5>
+                Vendeur :<span class="text-primary">{{ username }}</span>
+              </h5>
+            </div>
+          </div>
+          <br />
+          <h5>Liste de palettes</h5>
 
+          <div class="row">
+            <div class="col-4">
+              <label class="form-group">Palette:</label>
+              <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal()" aria-describedby="basic-addon2" />
+            </div>
+          </div>
+        </form>
+        <br />
+        <angular-slickgrid gridId="gridS" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
+      </div>
+      <!-- FORM END -->
+    </div>
+
+    <!-- MODAL -->
+    <div>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Sélectionnez les lots</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-
-        <!-- MODAL -->
-        <div>
-            <ng-template #content let-c="close" let-d="dismiss">
-                <div class="modal-header">
-                    <h4 class="modal-title">Sélectionnez les lots</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300"
-                            gridId="gridS" 
-                            [columnDefinitions]="columnDefinitions"
-                            (onAngularGridCreated)="angularGridReady($event)"
-                            (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
-                            [gridOptions]="gridOptions" 
-                            [dataset]="dataset"
-                            >
-                        </angular-slickgrid>
-                    </div>
-            
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <!-- <button type="button" class="btn btn-primary" (click)="onAddProductLine()">Add Line</button> -->
-                </div>
-            </ng-template>
+        <div class="modal-body">
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="gridS" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
+          </div>
         </div>
-        <!-- MODAL END -->
-
-    </kt-portlet-body>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <!-- <button type="button" class="btn btn-primary" (click)="onAddProductLine()">Add Line</button> -->
+        </div>
+      </ng-template>
+    </div>
+    <!-- MODAL END -->
+  </kt-portlet-body>
 </kt-portlet>
-
-

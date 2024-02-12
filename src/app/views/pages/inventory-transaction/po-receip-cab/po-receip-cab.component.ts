@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-declare var ElectronPrinter: any;
+import { saveAs } from "file-saver";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
@@ -40,7 +40,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   }
   return { valid: true, msg: "" };
 };
-
+declare var Edelweiss: any;
 @Component({
   selector: "kt-po-receip-cab",
   templateUrl: "./po-receip-cab.component.html",
@@ -141,16 +141,16 @@ export class PoReceipCabComponent implements OnInit {
     this.gridService = angularGrid.gridService;
   }
 
-  test() {
-    const data = [
-      {
-          type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-          value: 'SAMPLE HEADING',
-          style: {fontWeight: "700", textAlign: 'center', fontSize: "24px"}
-      }
-  ]
-  ElectronPrinter.print(data,"data")
-  }
+  // test() {
+  //   const data = [
+  //     {
+  //       type: "text", // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
+  //       value: "SAMPLE HEADING",
+  //       style: { fontWeight: "700", textAlign: "center", fontSize: "24px" },
+  //     },
+  //   ];
+  //   ElectronPrinter2.print2(data, "data");
+  // }
 
   initGrid() {
     this.columnDefinitions = [
@@ -233,7 +233,7 @@ export class PoReceipCabComponent implements OnInit {
         sortable: true,
         width: 180,
         filterable: false,
-        editor:{model:Editors.text}
+        editor: { model: Editors.text },
       },
       {
         id: "qty_received",
@@ -502,7 +502,7 @@ export class PoReceipCabComponent implements OnInit {
         sortable: true,
         width: 180,
         filterable: false,
-        editor:{model:Editors.text}
+        editor: { model: Editors.text },
       },
       {
         id: "tr_status",
@@ -583,21 +583,19 @@ export class PoReceipCabComponent implements OnInit {
             //   window.open(url);
             //   // saveAs(blob, "ticket.pdf");
             // });
-            console.log(ElectronPrinter);
+
             this.labelService.add(_lb).subscribe(
-              (blob) => {
-                // console.log(blob);
-                // const url = window.URL.createObjectURL(blob);
-                // window.open(url);
-                // saveAs(blob, "ticket.pdf");
-                const data = [
-                  {
-                      type: 'text',                                       // 'text' | 'barCode' | 'qrCode' | 'image' | 'table
-                      value: 'SAMPLE HEADING',
-                      style: {fontWeight: "700", textAlign: 'center', fontSize: "24px"}
-                  }
-              ]
-              ElectronPrinter.print(data,"data")
+              (reponse: any) => {
+                lab = reponse.data;
+                console.log(lab);
+                this.labelService.addblob(_lb).subscribe((blob) => {
+                  // console.log(blob);
+                  // const url = window.URL.createObjectURL(blob);
+                  // // window.open(url);
+                  // saveAs(blob, lab.lb_ref + ".pdf");
+
+                  Edelweiss.print3(lab);
+                });
               },
               (error) => {
                 alert("Erreur Impression Etiquette");

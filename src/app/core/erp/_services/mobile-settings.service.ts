@@ -84,4 +84,8 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/createPriceList/`, {data},{ headers: httpHeaders })
     }
+    public getAllPriceList() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.get(`${API_URL_2}/getPriceList`, { headers: httpHeaders });
+    }
 }

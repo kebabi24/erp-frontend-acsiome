@@ -15,4 +15,5 @@ export class Role extends BaseModel{
     role_site : String
     role_loc_from:String
     printer_adress : String 
+    pricelist_code : String
 }
