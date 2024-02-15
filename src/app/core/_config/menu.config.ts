@@ -512,6 +512,10 @@ export class MenuConfig {
               page: "/inventory-transaction/unplanified-receipt-cab",
             },
             {
+              title: "Réception Bobines",
+              page: "/inventory-transaction/bobine-receipt-cab",
+            },
+            {
               title: "Mise A Jour Le Prix Récéption",
               page: "/inventory-transaction/update-price-unp",
             },
