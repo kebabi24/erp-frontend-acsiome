@@ -42,7 +42,7 @@ export class LoadingVansScanComponent implements OnInit {
   selected_lot_code: any;
   scanned_codes: any[] = [];
   filteredData: any[] = [];
-
+  user: any;
   printLines: any[] = [];
 
   // GRID
@@ -59,7 +59,7 @@ export class LoadingVansScanComponent implements OnInit {
   userInfo: any;
   role_code: any = "";
   username: any = "";
-
+  userPrinter: any;
   constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private itemService: ItemService, private modalService: NgbModal) {
     config.autoClose = true;
     this.prepareGrid();
@@ -67,6 +67,8 @@ export class LoadingVansScanComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.user = JSON.parse(localStorage.getItem("user"));
+    this.userPrinter = this.user.usrd_dft_printer;
     this.createForm();
   }
 
@@ -581,7 +583,7 @@ export class LoadingVansScanComponent implements OnInit {
 
     // doc.line(10, i - 5, 195, i - 5);
 
-    ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines);
+    ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter);
 
     // saveAs(blob, this.load_request_code + ".pdf");
   }

@@ -594,7 +594,7 @@ export class PoReceipCabComponent implements OnInit {
                   // // window.open(url);
                   // saveAs(blob, lab.lb_ref + ".pdf");
 
-                  Edelweiss.print3(lab);
+                  Edelweiss.print3(lab, this.currentPrinter);
                 });
               },
               (error) => {
