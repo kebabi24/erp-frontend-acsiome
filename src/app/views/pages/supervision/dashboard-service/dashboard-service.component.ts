@@ -23,6 +23,21 @@ export class DashboardServiceComponent implements OnInit {
   @ViewChild("map", { static: true }) map: AgmMap;
   lat = 36.73023411061217;
   lng = 3.17803021719537;
+
+  icon = {
+    url: "./assets/media/location.png",
+    scaledSize: {
+      width: 35,
+      height: 35,
+    },
+  };
+  icon2 = {
+    url: "./assets/media/location2.png",
+    scaledSize: {
+      width: 35,
+      height: 35,
+    },
+  };
   zoom: number = 16;
   itinerary: Itinerary;
   itineraryForm: FormGroup;
