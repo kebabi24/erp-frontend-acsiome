@@ -24,14 +24,14 @@ export class DashboardServiceComponent implements OnInit {
   lat = 36.73023411061217;
   lng = 3.17803021719537;
 
-  icon = {
+  red = {
     url: "./assets/media/location.png",
     scaledSize: {
       width: 35,
       height: 35,
     },
   };
-  icon2 = {
+  green = {
     url: "./assets/media/location2.png",
     scaledSize: {
       width: 35,
