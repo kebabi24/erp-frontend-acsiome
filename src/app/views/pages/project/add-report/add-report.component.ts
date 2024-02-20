@@ -1449,10 +1449,10 @@ export class AddReportComponent implements OnInit {
                   this.mvgridService.updateItem(updateItem)
                 } else {   
                   if (Number(response.data[0].empj_level) < Number(this.level)){alert("niveau de maitrise demandée ne correspond pas a cet employé")
-                  updateItem.pme_employe = null
+                  updateItem.pmr_employe = null
                   this.mvgridService.updateItem(updateItem)}
                   else{
-                      updateItem.pme_employe = item.emp_addr
+                      updateItem.pmr_employe = item.emp_addr
                       updateItem.fname = item.emp_fname
                       updateItem.lname = item.emp_lname
                       updateItem.job = response.data[0].empj_job

@@ -427,5 +427,31 @@
                 </div>
             </ng-template>
         </div>
+        <div>
+            <ng-template #contentps let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Article Nomenclature </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridps"
+                            [columnDefinitions]="columnDefinitionsps"
+                            (onAngularGridCreated)="angularGridReadyps($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedps($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsps" [dataset]="dataps">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="createPs()">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openPssGrid" class="btn btn-primary" (click)="openps(contentps)">Launch demo
+                modal</button>
+        </div>
     </kt-portlet-body>
 </kt-portlet>

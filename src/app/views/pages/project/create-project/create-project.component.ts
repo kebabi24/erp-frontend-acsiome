@@ -8,7 +8,7 @@ import { round } from "lodash";
 
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
-import { Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService, SaleOrderService, Requisition, RequisitionService, SaleOrder, PurchaseOrder, DeviseService, SiteService, DealService, QualityControlService } from "../../../../core/erp";
+import { Bom,Ps, Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService, SaleOrderService, Requisition, RequisitionService, SaleOrder, PurchaseOrder, DeviseService, SiteService, DealService, QualityControlService } from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { LayoutUtilsService, TypesUtilsService, MessageType, HttpUtilsService } from "../../../../core/_base/crud";
@@ -57,6 +57,12 @@ export class CreateProjectComponent implements OnInit {
   gridOptionsbom: GridOption = {};
   gridObjbom: any;
   angularGridbom: AngularGridInstance;
+
+  dataps: [];
+  columnDefinitionsps: Column[] = [];
+  gridOptionsps: GridOption = {};
+  gridObjps: any;
+  angularGridps: AngularGridInstance;
 
   items: [];
   columnDefinitions4: Column[] = [];
@@ -116,7 +122,9 @@ export class CreateProjectComponent implements OnInit {
   selectedTriggersIndexes: any[];
 
   httpOptions = this.httpUtils.getHTTPHeaders();
-
+bom: any
+product : any
+psdataset: any[];
   constructor(config: NgbDropdownConfig, 
     private httpUtils: HttpUtilsService, 
     private projectFB: FormBuilder, 
@@ -636,6 +644,21 @@ export class CreateProjectComponent implements OnInit {
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.row_number = args.row;
           let element: HTMLElement = document.getElementById("openBomsGrid") as HTMLElement;
+          element.click();
+        },
+      },
+      {
+        id: "mvidp",
+        name:"composants",
+        field: "cmvidp",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.editIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          this.bom = args.dataContext.pmd_bom_code
+          let element: HTMLElement = document.getElementById("openPssGrid") as HTMLElement;
           element.click();
         },
       },
@@ -1897,5 +1920,202 @@ export class CreateProjectComponent implements OnInit {
   opendeal(content) {
     this.prepareGriddeal();
     this.modalService.open(content, { size: "lg" });
+  }
+
+
+  handleSelectedRowsChangedps(e, args) {
+    this.product = []
+    const controls = this.projectForm.controls
+    let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObjps) {
+      args.rows.map((idx) => {
+        const item = this.gridObjps.getDataItem(idx);
+
+        updateItem.pmd_bom_code = item.ps_parent + controls.pm_code.value;
+
+        this.mvgridService.updateItem(updateItem);
+
+        this.product.push(item.ps_comp)
+      
+       
+      });
+      
+    }
+  }
+  angularGridReadyps(angularGrid: AngularGridInstance) {
+    this.angularGridps = angularGrid;
+    this.gridObjps = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridps() {
+    this.columnDefinitionsps = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+
+        minWidth: 50,
+        maxWidth: 50,
+      },
+
+      {
+        id: "ps_parent",
+        name: "Code",
+        field: "ps_parent",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ps_comp",
+        name: "Composant",
+        field: "ps_comp",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ps_desc",
+        name: "Designation",
+        field: "item.pt_desc1",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsps = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+    let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+   
+    
+    // fill the dataset with your data
+    this.psService.getBy({ps_parent:this.bom}).subscribe((response: any) => (this.dataps = response.data));
+  }
+  openps(contentps) {
+    this.prepareGridps();
+    this.modalService.open(contentps, { size: "lg" });
+  }
+
+  createPs(){
+     console.log(this.product)
+     const controls = this.projectForm.controls
+
+       const _bom = new Bom()
+      _bom.bom_parent = this.bom + controls.pm_code.value
+      _bom.bom_desc = this.bom +  controls.pm_code.value
+      _bom.bom_batch = 1
+
+        this.bomService.add(_bom).subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+              this.layoutUtilsService.showActionNotification(
+                  "Erreur verifier les informations",
+                  MessageType.Create,
+                  10000,
+                  true,
+                  true
+              )
+              this.loadingSubject.next(false)
+          },
+          () => {
+              this.layoutUtilsService.showActionNotification(
+                  "Ajout avec succès",
+                  MessageType.Create,
+                  10000,
+                  true,
+                  true
+              )
+
+              this.psdataset = []
+              for (let pr of this.product) {
+                this.psdataset.push({ps_comp: pr,ps_qty_per:1})
+              }
+              const detail = this.psdataset
+              const it = new Ps();
+                it.ps_parent = this.bom + controls.pm_code.value
+                this.psService
+                .add({detail, it})
+                .subscribe(
+                 (reponse: any) => console.log(reponse),
+                  (error) => {
+                    this.layoutUtilsService.showActionNotification(
+                      "Erreur verifier les informations",
+                      MessageType.Create,
+                      10000,
+                      true,
+                      true
+                    );
+                    this.loadingSubject.next(false);
+                  },
+                  () => {
+                    this.layoutUtilsService.showActionNotification(
+                      "Ajout avec succès",
+                      MessageType.Create,
+                      10000,
+                      true,
+                      true
+                    );
+                    this.loadingSubject.next(false);
+                //    console.log(this.provider, po, this.dataset);
+                //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
+                 
+                let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+                this.psService
+                .getPrice({
+                  ps_parent: this.bom + controls.pm_code.value,
+                })
+                .subscribe((response: any) => {
+                  console.log(response.data, "here");
+                 // updateItem.pmd_bom_code = item.bom_parent;
+      
+                  updateItem.pmd_bom_cost = response.data;
+                  this.mvgridService.updateItem(updateItem);
+                  this.calculatetot();
+                });
+                  }
+                );
+                
+          }
+          
+      )
+      this.modalService.dismissAll()
   }
 }

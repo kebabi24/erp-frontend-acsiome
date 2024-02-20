@@ -1136,7 +1136,7 @@ export class BobineReceiptCabComponent implements OnInit {
 
             updateItem.tr_status = this.stat;
             if (this.pdl == null) {
-              this.pdl = item.pt_draw;
+              this.pdl = item.pt_break_cat;
             }
             this.gridService.updateItem(updateItem);
           });
@@ -1225,7 +1225,7 @@ export class BobineReceiptCabComponent implements OnInit {
         console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp);
         this.itemsService.getBy({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       } else {
-        this.itemsService.getBy({ pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getByOp({ pt_break_cat: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       }
     }
   }
