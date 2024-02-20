@@ -51,10 +51,11 @@
         </div>
         <div class="col-9">
           <agm-map id="map-container" [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-            <agm-marker style="background-color: yellow" *ngFor="let mark of mockCustomers" [latitude]="mark.latitude" [longitude]="mark.longitude">
+            <agm-marker style="background-color: yellow" *ngFor="let mark of mockCustomers" [iconUrl]="mark.invoices?.amount > 0 ? green : red" [latitude]="mark.latitude" [longitude]="mark.longitude">
               <agm-info-window
                 >Nom client {{ mark.customer_name }} <br />
                 Chiffre d'affaire {{ mark.invoices?.amount }} DA <br />
+
                 Nombre de visite {{ mark.nbr }} <br
               /></agm-info-window>
             </agm-marker>

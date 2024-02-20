@@ -525,7 +525,7 @@ export class CreateDirectWoComponent implements OnInit {
     // _lb.int01   = this.product.int01
     // _lb.int02   = this.product.int02
 
-    _lb.lb_printer = this.PathPrinter;
+    _lb.lb_printer = this.currentPrinter;
 
     let lab = null;
 
@@ -533,7 +533,7 @@ export class CreateDirectWoComponent implements OnInit {
       (reponse: any) => {
         lab = reponse.data;
         this.labelService.addblob(_lb).subscribe((blob) => {
-          Edelweiss.print3(lab);
+          Edelweiss.print3(lab, this.currentPrinter);
         });
       },
       (error) => {

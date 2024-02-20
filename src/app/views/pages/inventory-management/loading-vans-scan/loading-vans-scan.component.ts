@@ -42,7 +42,7 @@ export class LoadingVansScanComponent implements OnInit {
   selected_lot_code: any;
   scanned_codes: any[] = [];
   filteredData: any[] = [];
-
+  user: any;
   printLines: any[] = [];
 
   // GRID
@@ -59,7 +59,7 @@ export class LoadingVansScanComponent implements OnInit {
   userInfo: any;
   role_code: any = "";
   username: any = "";
-
+  userPrinter: any;
   constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private itemService: ItemService, private modalService: NgbModal) {
     config.autoClose = true;
     this.prepareGrid();
@@ -67,6 +67,8 @@ export class LoadingVansScanComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.user = JSON.parse(localStorage.getItem("user"));
+    this.userPrinter = this.user.usrd_dft_printer;
     this.createForm();
   }
 
@@ -96,14 +98,23 @@ export class LoadingVansScanComponent implements OnInit {
   onSubmit() {
     const details = [];
     const lines = [];
-
+    this.filteredData = [];
     const data = _.mapValues(_.groupBy(this.dataset, "code_prod"));
+
     for (const [key, value] of Object.entries(data)) {
       this.filteredData.push({
         prod: key,
         rows: value,
       });
     }
+    this.filteredData.forEach((element) => {
+      lines.push({
+        product_code: element.prod,
+        load_request_code: this.load_request_code,
+        qt_effected: element.rows.length,
+      });
+    });
+    console.log("liinee", lines);
     this.filteredData.forEach((product) => {
       const filteredByLot = _.mapValues(_.groupBy(product.rows, "lot"));
       for (const [key, value] of Object.entries(filteredByLot)) {
@@ -115,14 +126,7 @@ export class LoadingVansScanComponent implements OnInit {
           pt_price: value[0].price,
         });
       }
-
-      product.rows.forEach((lot) => {
-        lines.push({
-          product_code: product.prod,
-          load_request_code: this.load_request_code,
-          qt_effected: product.rows.length,
-        });
-      });
+      console.log("details", details);
     });
 
     this.inventoryManagementService.createLoadRequestDetails(details, lines).subscribe(
@@ -134,6 +138,7 @@ export class LoadingVansScanComponent implements OnInit {
 
         this.loadRequestData = [];
         this.dataset = [];
+        this.printLines = [];
         this.username = "";
         // this.load_request_code = "";
         this.role_code = "";
@@ -381,10 +386,6 @@ export class LoadingVansScanComponent implements OnInit {
     controls.pal.setValue("");
   }
 
-  printing() {
-    ElectronPrinter2.print2("./" + this.load_request_code + ".pdf");
-  }
-
   printpdf() {
     let filteredData = [];
     const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
@@ -580,8 +581,9 @@ export class LoadingVansScanComponent implements OnInit {
     // }
 
     // doc.line(10, i - 5, 195, i - 5);
-
-    ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines);
+    console.log(this.dataset, "DATASET");
+    console.log(this.printLines, "Lines");
+    ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter);
 
     // saveAs(blob, this.load_request_code + ".pdf");
   }
