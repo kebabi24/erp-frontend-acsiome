@@ -94,6 +94,7 @@ export { LocationDeclared } from "./_models/location-declared.model";
 export { Audiometry } from "./_models/audiometry.model";
 export { ItemModel } from "./_models/item-model.model";
 export { Message } from "./_models/message.model";
+export { Barecodeinfos } from "./_models/barecodeinfos.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -195,4 +196,5 @@ export { DataSharingService } from "./_services/data-sharing.service";
 export { AudiometryService } from "./_services/audiometry.service";
 export { ItemModelService } from "./_services/item-model.service";
 export { MessageService } from "./_services/message.service";
+export { BarecodeinfosService } from "./_services/barecodeinfos.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

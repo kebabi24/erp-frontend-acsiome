@@ -63,7 +63,8 @@ import {
   UnloadRequestService,
   LoadRequestService,
   RoleService,
-  UsersMobileService
+  UsersMobileService,
+  BarecodeinfosService
 } from "../../../core/erp";
 import { PhysicalInventoryTagEntryComponent } from './physical-inventory-tag-entry/physical-inventory-tag-entry.component';
 import { TagGapAnalysisComponent } from './tag-gap-analysis/tag-gap-analysis.component';
@@ -197,7 +198,8 @@ const routes: Routes = [
     InventoryTransactionService,
     LoadRequestService,
     RoleService,
-    UsersMobileService
+    UsersMobileService,
+    BarecodeinfosService
   ],
   entryComponents: [
     ActionNotificationComponent,
