@@ -60,6 +60,7 @@ export class AddReportComponent implements OnInit {
   angularGridprov: AngularGridInstance;
 
   dataset: [];
+
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
   gridObj: any;
@@ -86,7 +87,7 @@ export class AddReportComponent implements OnInit {
   mvcolumnDefinitions: Column[];
   mvgridOptions: GridOption;
   mvdataset: any[];
-
+  mvfiledataset: any[] = [];
   items: [];
   columnDefinitions4: Column[] = [];
   gridOptions4: GridOption = {};
@@ -469,12 +470,12 @@ export class AddReportComponent implements OnInit {
           let item = args.dataView.getItem(args.row);
 
           const daysBetweenDates = this.getNumberOfDaysBetweenDates(item.pmr_start_date, item.pmr_end_date);
-          console.log("Number of days between the two dates:", daysBetweenDates);
-          console.log(item.pmr_start_date);
+          // console.log("Number of days between the two dates:", daysBetweenDates);
+          // console.log(item.pmr_start_date);
           const start = item.pmr_start_date.substring(8);
-          console.log("start", start);
+          // console.log("start", start);
           const end = item.pmr_end_date.substring(8);
-          console.log("end", end);
+          // console.log("end", end);
           let newItem = {
             ...item,
             pmr_demobilisation: false,
@@ -482,17 +483,18 @@ export class AddReportComponent implements OnInit {
             pmr_stndby: false,
             //  pmr_separe: false,
           };
-          if (newItem.pmr_mobilisation === true) {
-            for (let index = Number(start); index <= Number(end); index++) {
-              newItem[`a${index}`] = "M";
-            }
-          } else {
-            for (let index = Number(start); index <= Number(end); index++) {
-              newItem[`a${index}`] = "";
-            }
-          }
+          // if (newItem.pmr_mobilisation === true) {
+          //   for (let index = Number(start); index <= Number(end); index++) {
+          //     newItem[`a${index}`] = "M";
+          //   }
+          // } else {
+          //   for (let index = Number(start); index <= Number(end); index++) {
+          //     newItem[`a${index}`] = "";
+          //   }
+          // }
 
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
+          this.changemvfiledataset(newItem, "M");
         },
       },
       {
@@ -509,13 +511,13 @@ export class AddReportComponent implements OnInit {
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
-          console.log("demo", item);
-          console.log(item.pmr_demobilisation);
-          console.log(item.pmr_start_date);
+          // console.log("demo", item);
+          // console.log(item.pmr_demobilisation);
+          // console.log(item.pmr_start_date);
           const start = item.pmr_start_date.substring(8);
-          console.log("start", start);
+          // console.log("start", start);
           const end = item.pmr_end_date.substring(8);
-          console.log("end", end);
+          // console.log("end", end);
           let newItem = {
             ...item,
             pmr_demobilisation: item.pmr_demobilisation,
@@ -523,16 +525,18 @@ export class AddReportComponent implements OnInit {
             pmr_stndby: false,
             // pmr_separe: false,
           };
-          if (newItem.pmr_demobilisation === true) {
-            for (let index = Number(start); index <= Number(end); index++) {
-              newItem[`a${index}`] = "D";
-            }
-          } else {
-            for (let index = Number(start); index <= Number(end); index++) {
-              newItem[`a${index}`] = "";
-            }
-          }
+          // if (newItem.pmr_demobilisation === true) {
+          //   for (let index = Number(start); index <= Number(end); index++) {
+          //     newItem[`a${index}`] = "D";
+          //   }
+          // } else {
+          //   for (let index = Number(start); index <= Number(end); index++) {
+          //     newItem[`a${index}`] = "";
+          //   }
+          // }
+
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
+          this.changemvfiledataset(newItem, "D");
         },
       },
       {
@@ -549,11 +553,11 @@ export class AddReportComponent implements OnInit {
         cannotTriggerInsert: false,
         onCellChange: (e: Event, args: OnEventArgs) => {
           let item = args.dataView.getItem(args.row);
-          console.log(item.pmr_start_date);
+          // console.log(item.pmr_start_date);
           const start = item.pmr_start_date.substring(8);
-          console.log("start", start);
+          // console.log("start", start);
           const end = item.pmr_end_date.substring(8);
-          console.log("end", end);
+          // console.log("end", end);
           let newItem = {
             ...item,
             pmr_demobilisation: false,
@@ -561,16 +565,18 @@ export class AddReportComponent implements OnInit {
             pmr_stndby: item.pmr_stndby,
             // pmr_separe: false,
           };
-          if (newItem.pmr_stndby === true) {
-            for (let index = Number(start); index <= Number(end); index++) {
-              newItem[`a${index}`] = "S";
-            }
-          } else {
-            for (let index = Number(start); index <= Number(end); index++) {
-              newItem[`a${index}`] = "";
-            }
-          }
+          // if (newItem.pmr_stndby === true) {
+          //   for (let index = Number(start); index <= Number(end); index++) {
+          //     newItem[`a${index}`] = "S";
+          //   }
+          // } else {
+          //   for (let index = Number(start); index <= Number(end); index++) {
+          //     newItem[`a${index}`] = "";
+          //   }
+          // }
+
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
+          this.changemvfiledataset(newItem, "S");
         },
       },
       {
@@ -598,23 +604,24 @@ export class AddReportComponent implements OnInit {
             pmr_separe: item.pmr_separe,
           };
           this.mvgridService.updateItemById(args.dataContext.id, newItem);
-          if (newItem.pmr_separe === true) {
-            let copyItem = {
-              ...newItem,
-              id: this.mvdataset.length + 1,
-            };
-            this.mvdataset.push(copyItem);
-          } else {
-            console.log("item", item.id);
-            this.mvdataset = this.mvdataset.map((one) => {
-              if (one.pmr_employe === newItem.pmr_employe) {
-                // Create a new object with the changed property
-                return { ...one, pmr_separe: item.pmr_separe };
-              }
-              return item; // Return unchanged item for other elements
-            });
-            this.mvdataset = this.mvdataset.filter((ielem) => ielem.id !== newItem.id);
-          }
+          this.changemvfiledataset(newItem, "SE");
+          // if (newItem.pmr_separe === true) {
+          //   let copyItem = {
+          //     ...newItem,
+          //     id: this.mvdataset.length + 1,
+          //   };
+          //   this.mvdataset.push(copyItem);
+          // } else {
+          //   console.log("item", item.id);
+          //   this.mvdataset = this.mvdataset.map((one) => {
+          //     if (one.pmr_employe === newItem.pmr_employe) {
+          //       // Create a new object with the changed property
+          //       return { ...one, pmr_separe: item.pmr_separe };
+          //     }
+          //     return item; // Return unchanged item for other elements
+          //   });
+          //   this.mvdataset = this.mvdataset.filter((ielem) => ielem.id !== newItem.id);
+          // }
         },
       },
       {
@@ -950,6 +957,145 @@ export class AddReportComponent implements OnInit {
 
     return Math.floor(daysDifference); // Round down to get the whole number of days
   }
+
+  changemvfiledataset(newItem, mode) {
+    console.log(this.mvfiledataset);
+    let isExist;
+
+    isExist = this.mvfiledataset.find((item) => item.pme_employe === newItem.pme_employe);
+
+    console.log(isExist);
+    if (isExist) {
+      if (newItem.pmr_separe === true) {
+        if (newItem.pmr_mobilisation === true) {
+          const start = newItem.pmr_start_date.substring(8);
+          // console.log("start", start);
+          const end = newItem.pmr_end_date.substring(8);
+          for (let index = Number(start); index <= Number(end); index++) {
+            newItem[`a${index}`] = "M";
+            isExist[`a${index}`] = "";
+          }
+          this.mvfiledataset.push(newItem);
+        }
+
+        // console.log("end", endD);
+
+        if (newItem.pmr_demobilisation === true) {
+          const startD = newItem.pmr_start_date.substring(8);
+          // console.log("start", startD);
+          const endD = newItem.pmr_end_date.substring(8);
+          for (let index = Number(startD); index <= Number(endD); index++) {
+            newItem[`a${index}`] = "D";
+            isExist[`a${index}`] = "";
+          }
+          this.mvfiledataset.push(newItem);
+        }
+
+        if (newItem.pmr_stndby === true) {
+          const startS = newItem.pmr_start_date.substring(8);
+          // console.log("start", startS);
+          const endS = newItem.pmr_end_date.substring(8);
+          // console.log("end", endS);
+          for (let index = Number(startS); index <= Number(endS); index++) {
+            newItem[`a${index}`] = "S";
+            isExist[`a${index}`] = "";
+          }
+          this.mvfiledataset.push(newItem);
+        }
+      } else {
+        if (newItem.pmr_mobilisation === true) {
+          const start = newItem.pmr_start_date.substring(8);
+          // console.log("start", start);
+          const end = newItem.pmr_end_date.substring(8);
+          for (let index = Number(start); index <= Number(end); index++) {
+            newItem[`a${index}`] = "M";
+          }
+          // this.mvfiledataset.push(newItem);
+        }
+        if (newItem.pmr_demobilisation === true) {
+          const startD = newItem.pmr_start_date.substring(8);
+          // console.log("start", startD);
+          const endD = newItem.pmr_end_date.substring(8);
+          for (let index = Number(startD); index <= Number(endD); index++) {
+            isExist[`a${index}`] = "D";
+          }
+          // this.mvfiledataset.push(newItem);
+        }
+        if (newItem.pmr_stndby === true) {
+          const startS = newItem.pmr_start_date.substring(8);
+          // console.log("start", startS);
+          const endS = newItem.pmr_end_date.substring(8);
+          // console.log("end", endS);
+          for (let index = Number(startS); index <= Number(endS); index++) {
+            isExist[`a${index}`] = "S";
+          }
+          // this.mvfiledataset.push(newItem);
+        }
+        if (newItem.pmr_separe === false) {
+          console.log("mvfiledataset", this.mvfiledataset);
+          console.log("newItem", newItem);
+          this.mvfiledataset = this.mvfiledataset.filter((item) => item.id !== newItem.id);
+          // this.mvfiledataset.push(newItem);
+        }
+      }
+    } else {
+      switch (mode) {
+        case "M":
+          const start = newItem.pmr_start_date.substring(8);
+          // console.log("start", start);
+          const end = newItem.pmr_end_date.substring(8);
+          // console.log("end", end);
+          if (newItem.pmr_mobilisation === true) {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "M";
+            }
+          } else {
+            for (let index = Number(start); index <= Number(end); index++) {
+              newItem[`a${index}`] = "";
+            }
+          }
+          this.mvfiledataset.push(newItem);
+          break;
+        case "D":
+          const startD = newItem.pmr_start_date.substring(8);
+          // console.log("start", startD);
+          const endD = newItem.pmr_end_date.substring(8);
+          // console.log("end", endD);
+
+          if (newItem.pmr_demobilisation === true) {
+            for (let index = Number(startD); index <= Number(endD); index++) {
+              newItem[`a${index}`] = "D";
+            }
+          } else {
+            for (let index = Number(startD); index <= Number(endD); index++) {
+              newItem[`a${index}`] = "";
+            }
+          }
+          this.mvfiledataset.push(newItem);
+          break;
+        case "S":
+          const startS = newItem.pmr_start_date.substring(8);
+          // console.log("start", startS);
+          const endS = newItem.pmr_end_date.substring(8);
+          // console.log("end", endS);
+
+          if (newItem.pmr_stndby === true) {
+            for (let index = Number(startS); index <= Number(endS); index++) {
+              newItem[`a${index}`] = "S";
+            }
+          } else {
+            for (let index = Number(startS); index <= Number(endS); index++) {
+              newItem[`a${index}`] = "";
+            }
+          }
+          this.mvfiledataset.push(newItem);
+          break;
+        // Add more cases as needed
+        default:
+          console.log("nothing");
+      }
+    }
+  }
   addNewItem() {
     const newId = this.mvdataset.length + 1;
 
@@ -1035,7 +1181,7 @@ export class AddReportComponent implements OnInit {
         this.pm_cust = item.pm_cust;
         controls.pmr_pm_code.setValue(item.pm_code || "");
         controls.pmdesc.setValue(item.pm_desc || "");
-        this.siteService.getByOne({ si_default: true }).subscribe((res: any) => {
+        this.siteService.getByOne({ si_cust: item.pm_cust }).subscribe((res: any) => {
           this.site = res.data.si_site;
 
           this.locationService.getByOne({ loc_site: this.site, loc_project: item.pm_code }).subscribe((resp: any) => {
@@ -1436,19 +1582,26 @@ export class AddReportComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObjemp.getDataItem(idx);
         console.log(item);
-        // if (item.emp_job != this.job || item.emp_level != this.level) {
-        //   alert("Métier ou Niveai de maitrise ne correspond pas a cet employé");
-        //   updateItem.pmr_employe = null;
-        //   this.mvgridService.updateItem(updateItem);
-        // } else {
-        updateItem.pmr_employe = item.emp_addr;
-        updateItem.fname = item.emp_fname;
-        updateItem.lname = item.emp_lname;
-        updateItem.job = item.emp_job;
-        updateItem.level = item.emp_level;
-
-        this.mvgridService.updateItem(updateItem);
-        // }
+        this.employeService.getByJob({ empj_addr: item.emp_addr, empj_job: this.job }).subscribe((response: any) => {
+          if (response.data.length == 0) {
+            alert("Métier demandé ne correspond pas a cet employé");
+            updateItem.pme_employe = null;
+            this.mvgridService.updateItem(updateItem);
+          } else {
+            if (Number(response.data[0].empj_level) < Number(this.level)) {
+              alert("niveau de maitrise demandée ne correspond pas a cet employé");
+              updateItem.pme_employe = null;
+              this.mvgridService.updateItem(updateItem);
+            } else {
+              updateItem.pme_employe = item.emp_addr;
+              updateItem.fname = item.emp_fname;
+              updateItem.lname = item.emp_lname;
+              updateItem.job = response.data[0].empj_job;
+              updateItem.level = response.data[0].empj_level;
+              this.mvgridService.updateItem(updateItem);
+            }
+          }
+        });
       });
     }
   }

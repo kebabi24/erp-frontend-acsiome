@@ -44,12 +44,14 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { LocationDetail, LocationDetailService} from "../../../../core/erp"
-
+import { LocationDetail, LocationDetailService, CodeService} from "../../../../core/erp"
+import { HttpUtilsService } from "../../../../core/_base/crud"
+import { environment } from "../../../../../environments/environment"
+import { HttpClient } from "@angular/common/http"
 
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
-
+  const API_URL_codes = environment.apiUrl + "/codes"
 
 @Component({
   selector: 'kt-inventory-list',
@@ -75,6 +77,8 @@ export class InventoryListComponent implements OnInit {
 
   
   constructor(
+      private http: HttpClient,
+      private httpUtils: HttpUtilsService,
       private activatedRoute: ActivatedRoute,
       private router: Router,
       public dialog: MatDialog,
@@ -122,7 +126,7 @@ export class InventoryListComponent implements OnInit {
               formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
@@ -141,7 +145,7 @@ export class InventoryListComponent implements OnInit {
               formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
@@ -161,7 +165,7 @@ export class InventoryListComponent implements OnInit {
               formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
@@ -179,26 +183,71 @@ export class InventoryListComponent implements OnInit {
             
           }, 
           {
+            id: "item.pt_draw",
+            name: "FAMILLE",
+            field: "item.pt_draw",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+            grouping: {
+              getter: 'item.pt_draw',
+              formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          }, 
+          {
             id: "item.pt_break_cat",
             name: "COULEUR",
             field: "item.pt_break_cat",
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/colors`),model: Filters.multipleSelect , operator: OperatorType.inContains },
             grouping: {
               getter: 'item.pt_break_cat',
               formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
-              collapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
             }
             
           }, 
+          {
+            id: "item.pt_group",
+            name: "Etat",
+            field: "item.pt_group",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
+            grouping: {
+              getter: 'item.pt_group',
+              formatter: (g) => `Etat: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          },
           {
             id: "ld_lot",
             name: "Lot",
@@ -211,7 +260,7 @@ export class InventoryListComponent implements OnInit {
               formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
@@ -242,15 +291,13 @@ export class InventoryListComponent implements OnInit {
               formatter: (g) => `Status: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
-
-
           {
             id: "ld_ref",
             name: "Reference",
@@ -322,7 +369,7 @@ export class InventoryListComponent implements OnInit {
               formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('tr_qty_loc'),
+               // new Aggregators.Avg('ld_qty_oh'),
                 new Aggregators.Sum('ld_qty_oh')
               ],
               aggregateCollapsed: true,
@@ -405,7 +452,7 @@ export class InventoryListComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.locationDetailService.getAll().subscribe(
+      this.locationDetailService.getAll().subscribe( 
         
           (response: any) => {this.dataset = response.data
             console.log(this.dataset)

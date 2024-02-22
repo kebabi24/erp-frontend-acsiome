@@ -631,7 +631,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               (reponse: any) => {
                 lab = reponse.data;
                 this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss.print3(lab);
+                  Edelweiss.print3(lab, this.currentPrinter);
                 });
               },
               (error) => {

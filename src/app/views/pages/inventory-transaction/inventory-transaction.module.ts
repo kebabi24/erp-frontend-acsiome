@@ -60,6 +60,7 @@ import { PoReceiptDetComponent } from "./po-receipt-det/po-receipt-det.component
 import { LoadingVansV2Component } from "./loading-vans-v2/loading-vans-v2.component";
 import { EditLdStatusComponent } from './edit-ld-status/edit-ld-status.component';
 import { UpdatePriceUnpComponent } from './update-price-unp/update-price-unp.component';
+import { BobineReceiptCabComponent } from './bobine-receipt-cab/bobine-receipt-cab.component';
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -78,6 +79,10 @@ const routes: Routes = [
   {
     path: "unplanified-receipt-cab",
     component: UnplanifiedReceiptCabComponent,
+  },
+  {
+    path: "bobine-receipt-cab",
+    component: BobineReceiptCabComponent,
   },
   {
     path: "inventory-list",
@@ -150,7 +155,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent],
   imports: [
     CommonModule,
     HttpClientModule,
