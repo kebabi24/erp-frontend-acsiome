@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { InventoryManagementService, printInventory, InventoryTransactionService, ItemService, LoadRequestService } from "../../../../core/erp";
+import { InventoryManagementService, printInventory, InventoryTransactionService, ItemService, LoadRequestService,BarecodeinfosService } from "../../../../core/erp";
 import * as _ from "lodash";
 import jsPDF from "jspdf";
 import { toJSDate } from "@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar";
@@ -59,10 +59,31 @@ export class LoadingVansScanComponent implements OnInit {
   userInfo: any;
   role_code: any = "";
   username: any = "";
+
+
+  code_start_pos : number
+  code_length : number
+  lot_start_pos : number
+  lot_length : number
+  serie_start_pos : number
+  serie_length : number
   userPrinter: any;
-  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private itemService: ItemService, private modalService: NgbModal) {
+  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private  barecodeinfosService : BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
+  
+
     config.autoClose = true;
+
+    this.barecodeinfosService.getAll().subscribe((response: any) => {
+     // console.log(response.data)
+      this.code_start_pos = response.data[0].start
+      this.code_length =    response.data[0].length
+      this.lot_start_pos = response.data[1].start
+      this.lot_length = response.data[1].length
+      this.serie_start_pos = response.data[2].start
+      this.serie_length = response.data[2].length
+    })
     this.prepareGrid();
+   
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
@@ -70,6 +91,7 @@ export class LoadingVansScanComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.userPrinter = this.user.usrd_dft_printer;
     this.createForm();
+   
   }
 
   //create form
@@ -322,7 +344,7 @@ export class LoadingVansScanComponent implements OnInit {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
-      console.log(response);
+      //console.log(response);
       this.loadRequestInfo = response.data.loadRequest;
       this.userInfo = response.data.userMobile;
       this.role_code = response.data.loadRequest.role_code;
@@ -336,12 +358,7 @@ export class LoadingVansScanComponent implements OnInit {
       alert("Scannez une demande de chargement et réessayez");
       return;
     }
-    let code_start_pos = 0,
-      code_length = 6;
-    let lot_start_pos = 6,
-      lot_length = 3;
-    let serie_start_pos = 9,
-      serie_length = 5;
+    
     let pal = controls.pal.value;
 
     // CHECK IF THE CODE WAS SCANNED BEFORE
@@ -353,11 +370,12 @@ export class LoadingVansScanComponent implements OnInit {
     }
 
     this.scanned_codes.push(pal);
-    let prod = pal.substring(code_start_pos, code_start_pos + code_length);
-    let lot = pal.substring(lot_start_pos, lot_start_pos + lot_length); // stop at 8
-    let serie = pal.substring(serie_start_pos, serie_start_pos + serie_length);
+    let prod = pal.substring(this.code_start_pos, this.code_start_pos + this.code_length);
+    //console.log(this.code_start_pos , this.code_length)
+    let lot = pal.substring(this.lot_start_pos, this.lot_start_pos + this.lot_length); // stop at 8
+    let serie = pal.substring(this.serie_start_pos, this.serie_start_pos + this.serie_length);
 
-    console.log(prod, lot, serie);
+    //console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
       let desc = response.data.pt_desc1;
       let price = response.data.pt_price;

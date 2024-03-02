@@ -20,6 +20,7 @@ export class Location extends BaseModel{
     loc_cap_um: String
     loc_phys_addr: String
     loc_xfer_ownership: Boolean
+    loc_default: Boolean
     loc_domain: String
     oid_loc_mstr: Number
 

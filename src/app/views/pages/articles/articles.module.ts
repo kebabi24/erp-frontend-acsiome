@@ -74,7 +74,8 @@ import { CreateModComponent } from './create-mod/create-mod.component';
 import { ListModComponent } from './list-mod/list-mod.component';
 import { EditModComponent } from './edit-mod/edit-mod.component';
 import { UpdateModComponent } from './update-mod/update-mod.component';
-import { CreateItemModComponent } from './create-item-mod/create-item-mod.component'
+import { CreateItemModComponent } from './create-item-mod/create-item-mod.component';
+import { CreateStdItemComponent } from './create-std-item/create-std-item.component'
 
 
 const routes: Routes = [
@@ -136,6 +137,10 @@ const routes: Routes = [
                 path: "create-item-mod",
                 component: CreateItemModComponent,
             },
+            {
+                path: "create-std-item",
+                component: CreateStdItemComponent,
+            },
 
         ],
     },
@@ -157,6 +162,7 @@ const routes: Routes = [
         EditModComponent,
         UpdateModComponent,
         CreateItemModComponent,
+        CreateStdItemComponent,
     ],
     imports: [
         CommonModule,

@@ -57,5 +57,6 @@ export class Taxe extends BaseModel {
     tx2_stx_sub:  String 
     tx2_register:  String 
     tx2_usage_tax_point: Boolean 
+    tx2_default: Boolean
 
 }

@@ -15,10 +15,13 @@
       <div>
         <form class="form" [formGroup]="chargeForm">
           <div class="row">
-            <div class="col-4">
+            <div class="form-group col-4">
               <label class="form-group">Demande de chargement:</label>
-              <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest()" aria-describedby="basic-addon2" />
-            </div>
+              <div class="input-group input-group-sm">
+
+                <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest()" aria-describedby="basic-addon2" />
+              </div>  
+              </div>
 
             <div class="form-group col-2">
               <label class="form-group">Imprimer:</label>
@@ -48,9 +51,11 @@
           <h5>Liste de palettes</h5>
 
           <div class="row">
-            <div class="col-4">
+            <div class="form-group col-6">
               <label class="form-group">Palette:</label>
-              <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal()" aria-describedby="basic-addon2" />
+              <div class="input-group input-group-sm">
+                <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal()" aria-describedby="basic-addon2" />
+              </div>  
             </div>
           </div>
         </form>
