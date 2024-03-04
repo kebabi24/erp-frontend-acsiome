@@ -182,7 +182,7 @@ prepareGrid() {
             {
               id: "service_next_number ",
               name: "Numéro suivant",
-              field: "service_next_number ",
+              field: "service_next_number",
               sortable: true,
               minWidth: 100,
               maxWidth: 300,
@@ -297,7 +297,12 @@ prepareGrid() {
         enableCheckboxSelector: true,
         rowSelectionOptions: {
           selectActiveRow: false
-        }
+        },
+        presets: {
+          sorters: [
+            { columnId: 'token_code', direction: 'ASC' }
+          ],
+        },
       };
 
 

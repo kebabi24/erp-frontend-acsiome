@@ -327,6 +327,7 @@ export class EditRoleComponent implements OnInit {
       enableFiltering: true,
       autoEdit: false,
       autoHeight: false,
+      enableAutoResize:true,
       frozenColumn: 0,
       frozenBottom: true,
       enableRowSelection: true,
