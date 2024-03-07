@@ -75,11 +75,11 @@ export class LoadingVansScanComponent implements OnInit {
 
     this.barecodeinfosService.getAll().subscribe((response: any) => {
      // console.log(response.data)
-      this.code_start_pos = response.data[0].start
+      this.code_start_pos = Number(response.data[0].start ) - 1
       this.code_length =    response.data[0].length
-      this.lot_start_pos = response.data[1].start
+      this.lot_start_pos = Number(response.data[1].start) - 1
       this.lot_length = response.data[1].length
-      this.serie_start_pos = response.data[2].start
+      this.serie_start_pos = Number(response.data[2].start )- 1
       this.serie_length = response.data[2].length
     })
     this.prepareGrid();
