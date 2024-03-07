@@ -61,7 +61,8 @@ import { ProviderCAlistComponent } from './provider-calist/provider-calist.compo
 import {BankService} from '../../../core/erp';
 import { BalanceGeneraleComponent } from './balance-generale/balance-generale.component';
 import { CreateRepComponent } from './create-rep/create-rep.component';
-import { ListRepComponent } from './list-rep/list-rep.component'
+import { ListRepComponent } from './list-rep/list-rep.component';
+import { CreateStdProviderComponent } from './create-std-provider/create-std-provider.component'
 
 
 const routes: Routes = [
@@ -107,6 +108,10 @@ const routes: Routes = [
 	            path: "list-rep",
 	            component: ListRepComponent,
             },
+            {
+	            path: "create-std-provider",
+	            component: CreateStdProviderComponent,
+            },
  
         ],
     },
@@ -124,6 +129,7 @@ const routes: Routes = [
         BalanceGeneraleComponent,
         CreateRepComponent,
         ListRepComponent,
+        CreateStdProviderComponent,
     ],
     imports: [
         CommonModule,
