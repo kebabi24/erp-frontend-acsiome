@@ -41,7 +41,12 @@ export class CreateLoadRequestComponent implements OnInit {
   user_mobile: any;
   user;
   domain;
-  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer) {
+  ld: [];
+  columnDefinitionsld: Column[] = [];
+  gridOptionsld: GridOption = {};
+  gridObjld: any;
+  angularGridld: AngularGridInstance;
+  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer) {
     config.autoClose = true;
   }
 
@@ -132,6 +137,83 @@ export class CreateLoadRequestComponent implements OnInit {
       this.sum += `Code lot : ${element.ld_lot}: Quantité :${element.ld_qty_oh} ||  `;
     });
     return this.sum;
+  }
+  prepareGridld() {
+    this.columnDefinitionsld = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ld_lot",
+        name: "lot",
+        field: "ld_lot",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ld_qty_oh",
+        name: "Quantité stock",
+        field: "ld_qty_oh",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ld_expire",
+        name: "Date d'expiration",
+        field: "ld_expire",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsld = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+  }
+  openld(content, ld) {
+    console.log(ld);
+    this.ld = ld;
+    this.prepareGridld();
+    this.modalService.open(content, { size: "lg" });
+  }
+  angularGridReadysite(angularGrid: AngularGridInstance) {
+    this.angularGridld = angularGrid;
+    this.gridObjld = (angularGrid && angularGrid.slickGrid) || {};
   }
   resetData() {
     for (const page of this.loadRequestData) {
