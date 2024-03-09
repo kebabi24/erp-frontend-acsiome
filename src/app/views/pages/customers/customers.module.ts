@@ -63,6 +63,7 @@ import { CustomerReclamationComponent } from "./customer-reclamation/customer-re
 import { CustomerSatisfactionComponent } from "./customer-satisfaction/customer-satisfaction.component";
 import { CreateRepComponent } from './create-rep/create-rep.component';
 import { ListRepComponent } from './list-rep/list-rep.component';
+import { CreateStdCustomerComponent } from './create-std-customer/create-std-customer.component';
 const routes: Routes = [
   {
       path: "",
@@ -118,6 +119,10 @@ const routes: Routes = [
             path: "list-rep",
             component: ListRepComponent,
           },
+          {
+            path: "create-std-customer",
+            component: CreateStdCustomerComponent,
+          },
       ],
   },
 ]
@@ -136,6 +141,7 @@ const routes: Routes = [
         CustomerSatisfactionComponent,
         CreateRepComponent,
         ListRepComponent,
+        CreateStdCustomerComponent,
     ],
     imports: [
         CommonModule,
