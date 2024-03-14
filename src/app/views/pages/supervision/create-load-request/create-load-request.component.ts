@@ -6,7 +6,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { AngularGridInstance, Column, FieldType, GridOption, OnEventArgs, GridService, Editors, thousandSeparatorFormatted, Formatters } from "angular-slickgrid";
-
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { BehaviorSubject, Observable } from "rxjs";
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
 import { MobileServiceService, MobileService, RoleService, ItineraryService, LoadRequestService, UsersMobileService } from "../../../../core/erp";
@@ -18,6 +18,7 @@ import "jspdf-barcode";
 @Component({
   selector: "kt-create-load-request",
   encapsulation: ViewEncapsulation.None,
+
   templateUrl: "./create-load-request.component.html",
   styleUrls: ["./create-load-request.component.scss"],
 })
@@ -28,19 +29,24 @@ export class CreateLoadRequestComponent implements OnInit {
   isExist = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
-
+  sum: string = "";
   role_code: any;
   load_request_code: any;
   roles: any[] = [];
   loadRequests: any[] = [];
   loadRequestData: any[] = [];
   printLines: any[] = [];
-
+  qty: number = 0;
   saved_data: any;
   user_mobile: any;
   user;
   domain;
-  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService) {
+  ld: [];
+  columnDefinitionsld: Column[] = [];
+  gridOptionsld: GridOption = {};
+  gridObjld: any;
+  angularGridld: AngularGridInstance;
+  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer) {
     config.autoClose = true;
   }
 
@@ -50,7 +56,7 @@ export class CreateLoadRequestComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.domain = JSON.parse(localStorage.getItem("domain"));
     this.prepareRoles();
-    this.getLoadRequestCreationData();
+    // this.getLoadRequestCreationData();
     this.createForm();
   }
 
@@ -65,31 +71,31 @@ export class CreateLoadRequestComponent implements OnInit {
     };
 
     for (const page of this.loadRequestData) {
-      for (const product of page.products) {
-        if (product.qt_request > 0 && product.qt_request > 0) {
+      for (const product of page.productPageDetails) {
+        if (product.item.pt_ord_min > 0 && product.item.pt_ord_min > 0) {
           lines.push({
             date_creation: new Date(),
             line: i,
-            product_code: product.product_code,
-            qt_request: product.qt_request,
-            qt_validated: product.qt_validated,
+            product_code: product.item.pt_part,
+            qt_request: 0,
+            qt_validated: product.item.pt_ord_min,
             qt_effected: 0,
-            pt_price: product.pt_price,
+            pt_price: product.item.priceLists.length > 0 ? product.item.priceLists[0].salesprice : product.item.pt_price,
           });
           this.printLines.push({
             line: i,
-            product_code: product.product_code,
-            product_name: product.pt_desc1,
-            qt_request: product.qt_request,
-            qt_validated: product.qt_validated,
+            product_code: product.item.pt_part,
+            product_name: product.item.pt_desc1,
+            qt_request: 0,
+            qt_validated: product.item.pt_ord_min,
             qt_effected: 0,
-            pt_price: product.pt_price,
+            pt_price: product.item.priceLists.length > 0 ? product.item.priceLists[0].salesprice : product.item.pt_price,
           });
           i++;
         }
       }
     }
-
+    console.log("liiiines", lines);
     this.loadRequestService.createLoadRequestAndLines(loadRequest, lines).subscribe(
       (response: any) => {
         const controls = this.validationForm.controls;
@@ -118,7 +124,97 @@ export class CreateLoadRequestComponent implements OnInit {
     const url = `/service`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
+  getSum(column): number {
+    let sum = 0;
+    column.forEach((element) => {
+      sum = Number(sum) + Number(element.ld_qty_oh);
+    });
+    return sum;
+  }
+  returnData(column): string {
+    this.sum = "";
+    column.forEach((element) => {
+      this.sum += `Code lot : ${element.ld_lot}: Quantité :${element.ld_qty_oh} ||  `;
+    });
+    return this.sum;
+  }
+  prepareGridld() {
+    this.columnDefinitionsld = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ld_lot",
+        name: "lot",
+        field: "ld_lot",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ld_qty_oh",
+        name: "Quantité stock",
+        field: "ld_qty_oh",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ld_expire",
+        name: "Date d'expiration",
+        field: "ld_expire",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
 
+    this.gridOptionsld = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+  }
+  openld(content, ld) {
+    console.log(ld);
+    this.ld = ld;
+    this.prepareGridld();
+    this.modalService.open(content, { size: "lg" });
+  }
+  angularGridReadysite(angularGrid: AngularGridInstance) {
+    this.angularGridld = angularGrid;
+    this.gridObjld = (angularGrid && angularGrid.slickGrid) || {};
+  }
   resetData() {
     for (const page of this.loadRequestData) {
       for (const product of page.products) {
@@ -143,18 +239,18 @@ export class CreateLoadRequestComponent implements OnInit {
   }
 
   // GET DATA OF THE SELECTED LOADREQUEST
-  getLoadRequestCreationData() {
-    this.loadRequestService.getLoadRequestCreationData().subscribe(
-      (response: any) => {
-        this.loadRequestData = response.loadRequestData;
-        console.log(response.loadRequestData);
-      },
-      (error) => {
-        this.loadRequestData = [];
-      },
-      () => {}
-    );
-  }
+  // getLoadRequestCreationData() {
+  //   this.loadRequestService.getLoadRequestCreationData().subscribe(
+  //     (response: any) => {
+  //       this.loadRequestData = response.loadRequestData;
+  //       console.log(response.loadRequestData);
+  //     },
+  //     (error) => {
+  //       this.loadRequestData = [];
+  //     },
+  //     () => {}
+  //   );
+  // }
 
   onSelectRole(role_code) {
     this.role_code = role_code;
@@ -169,21 +265,29 @@ export class CreateLoadRequestComponent implements OnInit {
       // let profile_code = this.user_mobile.profile_code
       //this.getLoadRequestCreationData(profile_code)
     });
+    this.loadRequestService.getLoadRequestDataByRole(this.role_code).subscribe(
+      (response: any) => {
+        this.loadRequestData = response.loadRequestData;
+        console.log(response.loadRequestData);
+      },
+      (error) => {
+        this.loadRequestData = [];
+      },
+      () => {}
+    );
   }
 
   onInputChanged(pageCode, prodCode, value) {
-    console.log("value:" + value);
     const indexPage = this.loadRequestData.findIndex((loadRequest) => {
-      return loadRequest.page_code === pageCode;
+      return loadRequest.product_page_code === pageCode;
     });
-    console.log("pageCodeIndex:" + indexPage);
-    const indexProduct = this.loadRequestData[indexPage].products.findIndex((product) => {
+
+    const indexProduct = this.loadRequestData[indexPage].productPageDetails.findIndex((product) => {
       return product.product_code === prodCode;
     });
-    console.log("prodCodeIndex:" + indexProduct);
-    this.loadRequestData[indexPage].products[indexProduct].qt_validated = +value;
-    this.loadRequestData[indexPage].products[indexProduct].qt_request = this.loadRequestData[indexPage].products[indexProduct].qt_validated;
-    console.log(this.loadRequestData[indexPage].products[indexProduct]);
+
+    this.loadRequestData[indexPage].productPageDetails[indexProduct].item.pt_ord_min = +value;
+    // this.loadRequestData[indexPage].products[indexProduct].qt_request = this.loadRequestData[indexPage].products[indexProduct].qt_validated;
   }
 
   createForm() {

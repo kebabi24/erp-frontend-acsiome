@@ -20,6 +20,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HttpClientInMemoryWebApiModule } from "angular-in-memory-web-api";
 // Translate Module
 import { TranslateModule } from "@ngx-translate/core";
+import { NgbPopoverModule } from "@ng-bootstrap/ng-bootstrap";
 // NGRX
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
@@ -106,6 +107,7 @@ const routes: Routes = [
     MatButtonModule,
     NgbModule,
     MatRadioModule,
+    NgbPopoverModule,
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forFeature(FakeApiService, {
           passThruUnknownUrl: true,
