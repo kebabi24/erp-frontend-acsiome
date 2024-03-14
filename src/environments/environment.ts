@@ -6,15 +6,9 @@ export const environment = {
   production: false,
   isMockEnabled: true, // You have to switch this, when your real back-end is done
   authTokenKey: "authce9d77b308c149d5992a80073637e4d5",
-<<<<<<< HEAD
  
   // apiUrl: "http://10.10.130.9:3001/api/v1",
   apiUrl: "http://localhost:3001/api/v1",
-=======
-  //apiUrl: "http://localhost:3236/api/v1",
-  // apiUrl: "http://10.10.130.9:3001/api/v1",
-   apiUrl: "http://localhost:3001/api/v1",
->>>>>>> 82ab39db1c85ac695d65f0a38664f6d74bb838ce
   Instance: "Prod",
 };
 
