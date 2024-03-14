@@ -524,6 +524,10 @@ export class MenuConfig {
               page: "/inventory-transaction/edit-status",
             },
             {
+              title: "Modification Statut palettes ",
+              page: "/inventory-transaction/edit-ld-status",
+            },
+            {
               title: "Controle Palette ",
               page: "/inventory-transaction/edit-status-ref",
             },
@@ -902,6 +906,14 @@ export class MenuConfig {
             {
               title: "Broyage",
               page: "/manufacturing/create-direct-wo",
+            },
+            {
+              title: "Déclaration bobine",
+              page: "/manufacturing/create-bobine-wo",
+            },
+            {
+              title: "Consommation extrusion",
+              page: "/manufacturing/iss-bobine-wo",
             },
             {
               title: "Déclaration Production",

@@ -876,11 +876,11 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
               desc: detail.item.pt_desc1,
               qty_received: detail.pod_qty_rcvd,
               prh_rcvd: detail.pod_qty_ord - detail.pod_qty_rcvd ,
-              prh_um: detail.item.pt_um,
+              prh_um: detail.pod_um,
               prh_taxable: detail.pod_taxable,
               prh_taxc: detail.pod_taxc,
               prh_tax_code: detail.pod_tax_code,
-              prh_um_conv: 1,
+              prh_um_conv: detail.pod_um_conv,
               prh_pur_cost: detail.pod_price,
               
               //prh_site: detail.item.pt_site,
@@ -904,8 +904,8 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
             prh_taxc: detail.pod_taxc,
             prh_tax_code: detail.pod_tax_code,
               
-            prh_um: detail.item.pt_um,
-            prh_um_conv: 1,
+            prh_um: detail.pod_um,
+            prh_um_conv: detail.pod_um_conv,
             prh_pur_cost: detail.pod_price,
             //prh_site: detail.item.pt_site,
             prh_loc: detail.item.pt_loc,
@@ -1164,8 +1164,8 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
                   desc: detail.item.pt_desc1,
                   qty_received: detail.pod_qty_rcvd,
                   prh_rcvd: detail.pod_qty_ord - detail.pod_qty_rcvd,
-                  prh_um: detail.item.pt_um,
-                  prh_um_conv: 1,
+                  prh_um: detail.pod_um,
+                  prh_um_conv: detail.pod_um_conv,
                   prh_pur_cost: detail.pod_price,
                   prh_disc_pct: detail.pod_disc_pct,
                   prh_taxable: detail.pod_taxable,
@@ -1188,8 +1188,8 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
                 desc: detail.item.pt_desc1,
                 qty_received: detail.pod_qty_rcvd,
                 prh_rcvd: detail.pod_qty_ord,
-                prh_um: detail.item.pt_um,
-                prh_um_conv: 1,
+                prh_um: detail.pod_um,
+                prh_um_conv: detail.pod_um_conv,
                 prh_pur_cost: detail.pod_price,
                 prh_disc_pct: detail.pod_disc_pct,
                 prh_taxable: detail.pod_taxable,
@@ -1884,6 +1884,7 @@ console.log(updateItem.prh_part)
           if (data) {
             //alert ("Mouvement Interdit Pour ce Status")
             updateItem.prh_um_conv = res.data.um_conv 
+            updateItem.prh_pur_cost = res.data.um_conv * updateItem.prh_pur_cost
             this.angularGrid.gridService.highlightRow(1, 1500);
           } else {
             this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: updateItem.prh_um, um_part: updateItem.prh_part  }).subscribe((res:any)=>{
@@ -1892,6 +1893,7 @@ console.log(updateItem.prh_part)
               if (data) {
                 //alert ("Mouvement Interdit Pour ce Status")
                 updateItem.prh_um_conv = res.data.um_conv
+                updateItem.prh_pur_cost = res.data.um_conv / updateItem.prh_pur_cost
                 
               } else {
                 updateItem.prh_um_conv = 1

@@ -50,6 +50,7 @@ import {
   CodeService,
   SiteService,
   LocationService,
+  MesureService,
   printBc,
 } from "../../../../core/erp";
 import { round } from 'lodash';
@@ -168,6 +169,7 @@ error = false;
     private deviseService: DeviseService,
     private siteService: SiteService,
     private locationService: LocationService,
+    private mesureService: MesureService,
     private taxService: TaxeService
   ) {
     config.autoClose = true;
@@ -312,6 +314,51 @@ console.log(resp.data)
         editor: {
           model: Editors.text,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          console.log(args.dataContext.pod_part)
+          this.itemsService.getByOne({pt_part: args.dataContext.pod_part }).subscribe((resp:any)=>{
+            console.log(args.dataContext.pod_part, resp.data.pt_um )
+          if   (args.dataContext.pod_um == resp.data.pt_um )  {
+            
+            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_um_conv: 1, pod_price: resp.data.pt_pur_price })
+            this.calculatetot();
+          } else { 
+            //console.log(resp.data.pt_um)
+
+
+
+              this.mesureService.getBy({um_um: args.dataContext.pod_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.pod_part  }).subscribe((res:any)=>{
+              console.log(res)
+              const { data } = res;
+    
+            if (data) {
+              //alert ("Mouvement Interdit Pour ce Status")
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_um_conv: res.data.um_conv, pod_price: args.dataContext.pod_price * res.data.um_conv })
+              this.angularGrid.gridService.highlightRow(1, 1500);
+              this.calculatetot();
+            } else {
+              this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: args.dataContext.pod_um, um_part: args.dataContext.pod_part  }).subscribe((res:any)=>{
+                console.log(res)
+                const { data } = res;
+                if (data) {
+                  //alert ("Mouvement Interdit Pour ce Status")
+                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_um_conv: res.data.um_conv, pod_price: args.dataContext.pod_price / res.data.um_conv })
+                  this.calculatetot();
+                } else {
+                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , pod_um_conv: "1" , pod_um: null});
+           
+                  alert("UM conversion manquante")
+                  
+                }  
+              })
+
+            }
+              })
+
+            }
+            })
+  
+          }
       },
       {
         id: "mvid",
@@ -2058,7 +2105,6 @@ changeTax(){
 
 
 
-
   handleSelectedRowsChangedum(e, args) {
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
     if (Array.isArray(args.rows) && this.gridObjum) {
@@ -2067,8 +2113,72 @@ changeTax(){
         updateItem.pod_um = item.code_value;
      
         this.gridService.updateItem(updateItem);
+
+/*********/
+console.log(updateItem.pod_part)
+
+      this.itemsService.getBy({pt_part: updateItem.pod_part }).subscribe((resp:any)=>{
+                      
+        if   (updateItem.pod_um == resp.data.pt_um )  {
+          
+          updateItem.pod_um_conv = 1
+          updateItem.pod_price = resp.data.pt_pur_price
+          this.calculatetot();
+        } else { 
+          //console.log(resp.data.pt_um)
+
+
+
+            this.mesureService.getBy({um_um: updateItem.pod_um, um_alt_um: resp.data.pt_um, um_part: updateItem.pod_part  }).subscribe((res:any)=>{
+            console.log(res)
+            const { data } = res;
+
+          if (data) {
+            //alert ("Mouvement Interdit Pour ce Status")
+            updateItem.pod_um_conv = res.data.um_conv 
+            updateItem.pod_price = updateItem.pod_price * res.data.um_conv
+            this.calculatetot();
+            this.angularGrid.gridService.highlightRow(1, 1500);
+          } else {
+            this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: updateItem.pod_um, um_part: updateItem.pod_part  }).subscribe((res:any)=>{
+              console.log(res)
+              const { data } = res;
+              if (data) {
+                //alert ("Mouvement Interdit Pour ce Status")
+                updateItem.pod_um_conv = res.data.um_conv
+                updateItem.pod_price = updateItem.pod_price / res.data.um_conv
+                this.calculatetot();
+              } else {
+                updateItem.pod_um_conv = 1
+                updateItem.pod_um = null
+        
+                alert("UM conversion manquante")
+                
+              }  
+            })
+
+          }
+            })
+
+          }
+          })
+
+
+
       });
-    }}
+    } 
+  
+  }
+  // handleSelectedRowsChangedum(e, args) {
+  //   let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  //   if (Array.isArray(args.rows) && this.gridObjum) {
+  //     args.rows.map((idx) => {
+  //       const item = this.gridObjum.getDataItem(idx);
+  //       updateItem.pod_um = item.code_value;
+     
+  //       this.gridService.updateItem(updateItem);
+  //     });
+  //   }}
 angularGridReadyum(angularGrid: AngularGridInstance) {
     this.angularGridum = angularGrid
     this.gridObjum = (angularGrid && angularGrid.slickGrid) || {}
