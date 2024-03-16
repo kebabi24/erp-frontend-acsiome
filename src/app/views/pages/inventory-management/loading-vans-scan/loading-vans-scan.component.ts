@@ -98,6 +98,7 @@ export class LoadingVansScanComponent implements OnInit {
       pal: [],
       print: [true],
     });
+    document.getElementById("load_request_code").focus();
   }
 
   time = new Observable<string>((observer: Observer<string>) => {
@@ -339,11 +340,16 @@ export class LoadingVansScanComponent implements OnInit {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
-      //console.log(response);
-      this.loadRequestInfo = response.data.loadRequest;
-      this.userInfo = response.data.userMobile;
-      this.role_code = response.data.loadRequest.role_code;
-      this.username = response.data.userMobile.username;
+      if (response.data.length > 0) {
+        //console.log(response);
+        this.loadRequestInfo = response.data.loadRequest;
+        this.userInfo = response.data.userMobile;
+        this.role_code = response.data.loadRequest.role_code;
+        this.username = response.data.userMobile.username;
+        document.getElementById("pal").focus();
+      } else {
+        document.getElementById("load_request_code").focus();
+      }
     });
   }
 
