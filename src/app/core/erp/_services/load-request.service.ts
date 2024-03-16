@@ -115,4 +115,9 @@ export class LoadRequestService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/LoadRequestLinesdif/`, data, { headers: httpHeaders });
   }
+  public getLoadRequestsLineWithCode(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    console.log(data);
+    return this.http.post(`${API_URL}/getLoadRequestWithCode/`, data, { headers: httpHeaders });
+  }
 }
