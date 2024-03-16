@@ -336,7 +336,7 @@ export class LoadingVansScanComponent implements OnInit {
     this.grid.render();
   }
 
-  onScanLoadRequest() {
+  onScanLoadRequest(content3) {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
@@ -348,6 +348,7 @@ export class LoadingVansScanComponent implements OnInit {
         this.username = response.data.userMobile.username;
         document.getElementById("pal").focus();
       } else {
+        this.modalService.open(content3, { size: "lg" });
         document.getElementById("load_request_code").focus();
       }
     });
