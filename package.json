@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start2": "electron .",
-    "start": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve",
+    "start": "node --max_old_space_size=12288 node_modules/@angular/cli/bin/ng serve",
     "build": "node --max_old_space_size=12288 node_modules/@angular/cli/bin/ng build --prod --aot=true --buildOptimizer=true",
     "electron": "ng build && electron .",
     "test": "ng test",
@@ -14,7 +14,7 @@
     "e2e": "ng e2e",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "rtl": "webpack",
-    "pack": "electron-packager . edelweiss --platform=win32 --arch=ia32"
+    "pack": "electron-packager . PrimaGlaces --platform=win32 --arch=ia32"
   },
   "private": true,
   "dependencies": {
