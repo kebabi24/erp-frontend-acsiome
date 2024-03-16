@@ -1378,6 +1378,125 @@
                             </form-->
 
                         </ng-template>
+                        /*kamel*/
+
+                        <ngb-tab>
+                            <ng-template ngbTabTitle>
+                                Données Distribution
+                                <div style="width: 10px;"></div>
+                                <a *ngIf="hasFormErrors5"
+                                    class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                    <i class="flaticon2-information"></i>
+                                    <span class="pulse-ring"></span>
+                                </a>
+                            </ng-template>
+                            <ng-template ngbTabContent>
+                                <form [formGroup]="form6" class="form">
+                        
+                                    
+                        
+                                    <div class="row">
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Vendable:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_salable" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                   
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Inventoryable:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_inventoryable" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Consignable:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_consignable" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Retournable:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_returnable" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Commandable:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_orderable" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Chargeable:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_loadable" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-2">
+                                            <label class="form-group ">Article Promotion:</label>
+                        
+                                            <span class="switch switch-icon">
+                                                <label>
+                                                    <input type="checkbox"
+                                                        class="form-control form-control-sm form-control-solid"
+                                                        formControlName="pt_promotion" name="select" />
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                        
+                                        </div>
+                                    </div>
+                                </form>
+                            </ng-template>
+                        </ngb-tab>
+                        /*kamel*/
                     </ngb-tab>
 
                 </ngb-tabset>

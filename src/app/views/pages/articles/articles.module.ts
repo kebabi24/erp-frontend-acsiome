@@ -75,7 +75,9 @@ import { ListModComponent } from './list-mod/list-mod.component';
 import { EditModComponent } from './edit-mod/edit-mod.component';
 import { UpdateModComponent } from './update-mod/update-mod.component';
 import { CreateItemModComponent } from './create-item-mod/create-item-mod.component';
-import { CreateStdItemComponent } from './create-std-item/create-std-item.component'
+import { CreateStdItemComponent } from './create-std-item/create-std-item.component';
+import { ListStdUpdateComponent } from './list-std-update/list-std-update.component';
+import { EditStdItemComponent } from './edit-std-item/edit-std-item.component'
 
 
 const routes: Routes = [
@@ -138,8 +140,12 @@ const routes: Routes = [
                 component: CreateItemModComponent,
             },
             {
-                path: "create-std-item",
-                component: CreateStdItemComponent,
+                path: "edit-std-item/:id",
+                component: EditStdItemComponent,
+            },
+            {
+                path: "list-std-update",
+                component: ListStdUpdateComponent,
             },
 
         ],
@@ -163,6 +169,8 @@ const routes: Routes = [
         UpdateModComponent,
         CreateItemModComponent,
         CreateStdItemComponent,
+        ListStdUpdateComponent,
+        EditStdItemComponent,
     ],
     imports: [
         CommonModule,
