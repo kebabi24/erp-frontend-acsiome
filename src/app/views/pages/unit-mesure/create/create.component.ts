@@ -224,6 +224,7 @@ export class CreateComponent implements OnInit {
         args.rows.map((idx) => {
             const item = this.gridObj4.getDataItem(idx)
             controls.um_part.setValue(item.pt_part || "")
+            controls.um_conv.enable()
         })
     }
 }
