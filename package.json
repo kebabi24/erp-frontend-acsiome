@@ -6,8 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start2": "electron .",
-    "start": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng serve",
-    "build": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build",
+    "start": "node --max_old_space_size=12288 node_modules/@angular/cli/bin/ng serve",
+    "build": "node --max_old_space_size=12288 node_modules/@angular/cli/bin/ng build --prod --aot=true --buildOptimizer=true",
     "electron": "ng build && electron .",
     "test": "ng test",
     "lint ": "ng lint",
