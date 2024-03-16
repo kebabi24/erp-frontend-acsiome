@@ -18,10 +18,9 @@
             <div class="form-group col-4">
               <label class="form-group">Demande de chargement:</label>
               <div class="input-group input-group-sm">
-
                 <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest()" aria-describedby="basic-addon2" />
-              </div>  
               </div>
+            </div>
 
             <div class="form-group col-2">
               <label class="form-group">Imprimer:</label>
@@ -54,8 +53,8 @@
             <div class="form-group col-6">
               <label class="form-group">Palette:</label>
               <div class="input-group input-group-sm">
-                <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal()" aria-describedby="basic-addon2" />
-              </div>  
+                <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal(content1, content2)" aria-describedby="basic-addon2" />
+              </div>
             </div>
           </div>
         </form>
@@ -87,4 +86,38 @@
     </div>
     <!-- MODAL END -->
   </kt-portlet-body>
+  <div>
+    <ng-template #content2 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Scannez une demande de chargement et réessayez</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content1 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Cette palette a été déjà scannée</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
 </kt-portlet>

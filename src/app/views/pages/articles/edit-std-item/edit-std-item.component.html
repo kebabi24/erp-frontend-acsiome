@@ -21,7 +21,7 @@
                     <div class="form-group col-2">
                         <label class="form-group">Code Article:</label>
 
-                        <input type="text" [(ngModel)]="itemEdit.pt_part" formControlName="pt_part" (change)="onChangeCode()"
+                        <input type="text" [(ngModel)]="itemEdit.pt_part" formControlName="pt_part"
                             [className]="formX.controls['pt_part'].errors && (formX.controls['pt_part'].dirty || formX.controls['pt_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                         <div *ngIf="formX.controls['pt_part'].errors && (formX.controls['pt_part'].dirty || formX.controls['pt_part'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>

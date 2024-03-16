@@ -1050,6 +1050,12 @@ changeLoc() {
   );
 }
 
+onchangedesc() {
+  const controls = this.form4.controls
+  document.getElementById("pt_price").focus();
+
+}
+
 handleSelectedRowsChanged3(e, args) {
   const controls1 = this.form1.controls;
   const controls2 = this.form2.controls;

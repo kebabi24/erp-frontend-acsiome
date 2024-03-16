@@ -3,7 +3,7 @@ import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-b
 
 // Angular slickgrid
 import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, Validators, ControlContainer } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 // Layout
@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { InventoryManagementService, printInventory, InventoryTransactionService, ItemService, LoadRequestService,BarecodeinfosService } from "../../../../core/erp";
+import { InventoryManagementService, printInventory, InventoryTransactionService, ItemService, LoadRequestService, BarecodeinfosService } from "../../../../core/erp";
 import * as _ from "lodash";
 import jsPDF from "jspdf";
 import { toJSDate } from "@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar";
@@ -60,30 +60,26 @@ export class LoadingVansScanComponent implements OnInit {
   role_code: any = "";
   username: any = "";
 
-
-  code_start_pos : number
-  code_length : number
-  lot_start_pos : number
-  lot_length : number
-  serie_start_pos : number
-  serie_length : number
+  code_start_pos: number;
+  code_length: number;
+  lot_start_pos: number;
+  lot_length: number;
+  serie_start_pos: number;
+  serie_length: number;
   userPrinter: any;
-  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private  barecodeinfosService : BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
-  
-
+  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private barecodeinfosService: BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
     config.autoClose = true;
 
     this.barecodeinfosService.getAll().subscribe((response: any) => {
-     // console.log(response.data)
-      this.code_start_pos = Number(response.data[0].start ) - 1
-      this.code_length =    response.data[0].length
-      this.lot_start_pos = Number(response.data[1].start) - 1
-      this.lot_length = response.data[1].length
-      this.serie_start_pos = Number(response.data[2].start )- 1
-      this.serie_length = response.data[2].length
-    })
+      // console.log(response.data)
+      this.code_start_pos = Number(response.data[0].start) - 1;
+      this.code_length = response.data[0].length;
+      this.lot_start_pos = Number(response.data[1].start) - 1;
+      this.lot_length = response.data[1].length;
+      this.serie_start_pos = Number(response.data[2].start) - 1;
+      this.serie_length = response.data[2].length;
+    });
     this.prepareGrid();
-   
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
@@ -91,7 +87,6 @@ export class LoadingVansScanComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.userPrinter = this.user.usrd_dft_printer;
     this.createForm();
-   
   }
 
   //create form
@@ -352,20 +347,22 @@ export class LoadingVansScanComponent implements OnInit {
     });
   }
 
-  onScanPal() {
+  onScanPal(content1, content2) {
     const controls = this.chargeForm.controls;
     if (controls.load_request_code.value === "") {
-      alert("Scannez une demande de chargement et réessayez");
+      this.modalService.open(content2, { size: "lg" });
+      document.getElementById("pal").focus();
       return;
     }
-    
+
     let pal = controls.pal.value;
 
     // CHECK IF THE CODE WAS SCANNED BEFORE
     let index = this.scanned_codes.indexOf(pal);
     if (index != -1) {
-      alert("Cette palette a déjà été scannée");
+      this.modalService.open(content1, { size: "lg" });
       controls.pal.setValue("");
+      document.getElementById("pal").focus();
       return;
     }
 
@@ -402,6 +399,7 @@ export class LoadingVansScanComponent implements OnInit {
       });
     });
     controls.pal.setValue("");
+    document.getElementById("pal").focus();
   }
 
   printpdf() {
