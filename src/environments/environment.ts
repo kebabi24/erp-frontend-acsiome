@@ -8,7 +8,7 @@ export const environment = {
   authTokenKey: "authce9d77b308c149d5992a80073637e4d5",
   //apiUrl: "http://localhost:3236/api/v1",
   // apiUrl: "http://10.10.130.9:3001/api/v1",
-  apiUrl: "http://10.10.3.6:4341/api/v1",
+  apiUrl: "http://localhost:3001/api/v1",
   Instance: "Prod",
 };
 
