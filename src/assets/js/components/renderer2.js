@@ -17,8 +17,8 @@ var ElectronPrinter2 = (function () {
             let valueToAddToX = 5;
 
             var img = new Image();
-            img.src = "companylogo.png";
-            doc.addImage(img, "png", 150, 5, 50, 30);
+            // img.src = "companylogo.png";
+            // doc.addImage(img, "png", 150, 5, 50, 30);
             doc.setFontSize(9);
 
             // if (this.domain.dom_name != null) {
@@ -138,7 +138,7 @@ var ElectronPrinter2 = (function () {
                     doc.line(195, initialY + 25, 195, initialY + 30); // 90
                     var i = 95 + valueToAddToX;
                 }
-
+                console.log(printLines[j].product_name.length,printLines[j].product_name)
                 if (printLines[j].product_name.length > 35) {
                     doc.setFontSize(14);
 

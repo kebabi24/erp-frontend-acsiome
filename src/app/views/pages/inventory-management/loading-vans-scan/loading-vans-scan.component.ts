@@ -340,7 +340,8 @@ export class LoadingVansScanComponent implements OnInit {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
-      if (response.data.length > 0) {
+      console.log(response.data)
+      if (response.data.loadRequest != null) {
         //console.log(response);
         this.loadRequestInfo = response.data.loadRequest;
         this.userInfo = response.data.userMobile;
@@ -349,6 +350,7 @@ export class LoadingVansScanComponent implements OnInit {
         document.getElementById("pal").focus();
       } else {
         this.modalService.open(content3, { size: "lg" });
+        controls.load_request_code.setValue(null)
         document.getElementById("load_request_code").focus();
       }
     });
