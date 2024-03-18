@@ -7,7 +7,11 @@
     "ng": "ng",
     "start2": "electron .",
     "start": "node --max_old_space_size=12288 node_modules/@angular/cli/bin/ng serve",
+<<<<<<< HEAD
     "build": "node --max_old_space_size=12288 node_modules/@angular/cli/bin/ng build",
+=======
+    "build": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build",
+>>>>>>> 9b49bb8aba5dfe6f513ecd603978fa27bebc859a
     "electron": "ng build && electron .",
     "test": "ng test",
     "lint ": "ng lint",
