@@ -71,14 +71,14 @@ const myCustomCheckmarkFormatter: Formatter = (
     </div>
 	`;
 };
-
 @Component({
-  selector: 'kt-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  selector: 'kt-edit-std-item',
+  templateUrl: './edit-std-item.component.html',
+  styleUrls: ['./edit-std-item.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditStdItemComponent implements OnInit {
 
+  
   item: Item;
   hasFormErrors1 = false;
   hasFormErrors2 = false;
@@ -89,7 +89,7 @@ export class EditComponent implements OnInit {
   itemEdit: any
   
 
-
+  formX: FormGroup;
   form1: FormGroup;
   form2: FormGroup;
   form3: FormGroup;
@@ -420,18 +420,22 @@ export class EditComponent implements OnInit {
   }
     createForm() {
       this.loadingSubject.next(false)
-      
+      this.formX = this.formBuilder.group({
+        pt_part: [this.itemEdit.pt_part,Validators.required],
+        pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
+        pt_um: [this.itemEdit.pt_um,Validators.required],
+      })
       this.form1 = this.form1FB.group({
   
-        pt_part: [this.itemEdit.pt_part,Validators.required],
+       
         pt_upc: [this.itemEdit.pt_upc],
-        pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
+       
         pt_desc2: [this.itemEdit.pt_desc2],
-        pt_um: [this.itemEdit.pt_um,Validators.required],
-        pt_prod_line: [this.itemEdit.pt_prod_line,Validators.required],
-        pt_part_type: [this.itemEdit.pt_part_type,Validators.required],
-        pt_draw: [this.itemEdit.pt_draw,Validators.required],
-        pt_status: [this.itemEdit.pt_status,Validators.required],
+        
+        pt_prod_line: [this.itemEdit.pt_prod_line],
+        pt_part_type: [this.itemEdit.pt_part_type],
+        pt_draw: [this.itemEdit.pt_draw],
+        pt_status: [this.itemEdit.pt_status],
         // pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
         pt_group: [this.itemEdit.pt_group],
         pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
@@ -544,6 +548,7 @@ export class EditComponent implements OnInit {
         pt_taxc: [this.itemEdit.pt_taxc],
 
       })
+
       this.form6 = this.form6FB.group({
         pt_salable: [this.itemEdit.pt_salable],
         pt_inventoryable: [this.itemEdit.pt_inventoryable],
@@ -656,6 +661,7 @@ export class EditComponent implements OnInit {
 */
 
 prepareItem(): Item {
+  const controls  = this.formX.controls;
   const controls1 = this.form1.controls;
   const controls2 = this.form2.controls;
   const controls3 = this.form3.controls;
@@ -664,122 +670,112 @@ prepareItem(): Item {
   const controls6 = this.form6.controls;
 
   const _item = new Item();
-    _item.id = this.itemEdit.id;
-    _item.pt_part = controls1.pt_part.value;
-    _item.pt_upc = controls1.pt_upc.value;
-    _item.pt_desc1 = controls1.pt_desc1.value;
-    _item.pt_desc2 = controls1.pt_desc2.value;
-    _item.pt_um = controls1.pt_um.value;
-    _item.pt_prod_line = controls1.pt_prod_line.value;
-    _item.pt_part_type = controls1.pt_part_type.value;
-    _item.pt_draw = controls1.pt_draw.value;
-    _item.pt_status = controls1.pt_status.value;
-    // _item.pt_rev = controls1.pt_rev.value;
-    // _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
-    _item.pt_group = controls1.pt_group.value;
-    _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
-    // _item.pt_drwg_size = controls1.pt_drwg_size.value;
-    // _item.pt_promo = controls1.pt_promo.value;
-    // _item.pt_break_cat = controls1.pt_break_cat.value;
-    _item.pt_abc = controls1.pt_abc.value;
-    _item.pt_avg_int = controls1.pt_avg_int.value;
-    _item.pt_lot_ser = controls1.pt_lot_ser.value;
-    _item.pt_cyc_int = controls1.pt_cyc_int.value;
-    _item.pt_site = controls1.pt_site.value;
-    _item.pt_shelflife = controls1.pt_shelflife.value;
-    _item.pt_loc = controls1.pt_loc.value;
-    _item.pt_sngl_lot = controls1.pt_sngl_lot.value;
-    _item.pt_loc_type = controls1.pt_loc_type.value;
-    _item.pt_critical = controls1.pt_critical.value;
-    _item.pt_auto_lot = controls1.pt_auto_lot.value;
-    _item.pt_rctpo_status = controls1.pt_rctpo_status.value;
-    _item.pt_rctpo_active = controls1.pt_rctpo_active.value;
-    _item.pt_lot_grp = controls1.pt_lot_grp.value;
-    _item.pt_rctwo_status = controls1.pt_rctwo_status.value;
-    _item.pt_rctwo_active = controls1.pt_rctwo_active.value;
-    _item.pt_article = controls1.pt_article.value;
+  _item.pt_part = controls.pt_part.value;
+  _item.pt_desc1 = controls.pt_desc1.value;
+  _item.pt_desc2 = controls1.pt_desc2.value;
+  _item.pt_um = controls.pt_um.value;
+  _item.pt_prod_line = controls1.pt_prod_line.value;
+  _item.pt_part_type = controls1.pt_part_type.value;
+  _item.pt_draw = controls1.pt_draw.value;
+  _item.pt_status = controls1.pt_status.value;
+  _item.pt_rev = controls1.pt_rev.value;
+  _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
+  _item.pt_group = controls1.pt_group.value;
+  _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
+  _item.pt_drwg_size = controls1.pt_drwg_size.value;
+  _item.pt_promo = controls1.pt_promo.value;
+  _item.pt_break_cat = controls1.pt_break_cat.value;
+  _item.pt_abc = controls1.pt_abc.value;
+  _item.pt_avg_int = controls1.pt_avg_int.value;
+  _item.pt_lot_ser = controls1.pt_lot_ser.value;
+  _item.pt_cyc_int = controls1.pt_cyc_int.value;
+  _item.pt_site = controls1.pt_site.value;
+  _item.pt_shelflife = controls1.pt_shelflife.value;
+  _item.pt_loc = controls1.pt_loc.value;
+  _item.pt_sngl_lot = controls1.pt_sngl_lot.value;
+  _item.pt_loc_type = controls1.pt_loc_type.value;
+  _item.pt_critical = controls1.pt_critical.value;
+  _item.pt_auto_lot = controls1.pt_auto_lot.value;
+  _item.pt_rctpo_status = controls1.pt_rctpo_status.value;
+  _item.pt_rctpo_active = controls1.pt_rctpo_active.value;
+  _item.pt_lot_grp = controls1.pt_lot_grp.value;
+  _item.pt_rctwo_status = controls1.pt_rctwo_status.value;
+  _item.pt_rctwo_active = controls1.pt_rctwo_active.value;
+  _item.pt_article = controls1.pt_article.value;
 
-    _item.pt_ship_wt = controls2.pt_ship_wt.value;
-    _item.pt_ship_wt_um = controls2.pt_ship_wt_um.value;
-    // _item.pt_fr_class = controls2.pt_fr_class.value; removed from html
-    // _item.pt_net_wt = controls2.pt_net_wt.value;     to controls5
-    // _item.pt_net_wt_um = controls2.pt_net_wt_um.value;  //
-    // _item.pt_size = controls2.pt_size.value;         //
-    // _item.pt_size_um = controls2.pt_size_um.value;   //
-    // _item.pt_drwg_size = controls2.pt_drwg_size.value; not used any more , changed with int05
-    _item.int03=controls2.int03.value;
-    _item.int04=controls2.int04.value;
-    _item.int05=controls2.int05.value;
+  _item.pt_ship_wt = controls2.pt_ship_wt.value;
+  _item.pt_ship_wt_um = controls2.pt_ship_wt_um.value;
+  _item.pt_net_wt = controls2.pt_net_wt.value;
+  _item.pt_net_wt_um = controls2.pt_net_wt_um.value;
+  _item.pt_fr_class = controls2.pt_fr_class.value;
+  _item.pt_size = controls2.pt_size.value;
+  _item.pt_size_um = controls2.pt_size_um.value;
+
+  _item.pt_ms = controls3.pt_ms.value;
+  _item.pt_buyer = controls3.pt_buyer.value;
+  _item.pt_phantom = controls3.pt_phantom.value;
+  _item.pt_plan_ord = controls3.pt_plan_ord.value;
+  _item.pt_vend = controls3.pt_vend.value;
+
+  _item.pt_ord_min = controls3.pt_ord_min.value;
+  _item.pt_timefence = controls3.pt_timefence.value;
+  _item.pt_po_site = controls3.pt_po_site.value;
+  _item.pt_ord_max = controls3.pt_ord_max.value;
+  _item.pt_pm_code = controls3.pt_pm_code.value;
+  _item.pt_ord_mult = controls3.pt_ord_mult.value;
+  _item.pt_ord_pol = controls3.pt_ord_pol.value;
+  _item.pt_cfg_type = controls3.pt_cfg_type.value;
+  _item.pt_op_yield = controls3.pt_op_yield.value;
+  _item.pt_ord_qty = controls3.pt_ord_qty.value;
+  _item.pt_insp_rqd = controls3.pt_insp_rqd.value;
+  _item.pt_yield_pct = controls3.pt_yield_pct.value;
+  _item.pt_insp_lead = controls3.pt_insp_lead.value;
+  _item.pt_run = controls3.pt_run.value;
+  _item.pt_ord_per = controls3.pt_ord_per.value;
+  _item.pt_mfg_lead = controls3.pt_mfg_lead.value;
+  _item.pt_pur_lead = controls3.pt_pur_lead.value;
+  _item.pt_setup = controls3.pt_setup.value;
+  _item.pt_sfty_stk = controls3.pt_sfty_stk.value;
+  _item.pt_sfty_time = controls3.pt_sfty_time.value;
+  _item.pt_rop = controls3.pt_rop.value;
+  _item.pt_atp_family = controls3.pt_atp_family.value;
+  _item.pt_network = controls3.pt_network.value;
+  _item.pt_run_seq1 = controls3.pt_run_seq1.value;
+  _item.pt_routing = controls3.pt_routing.value;
+  // _item.pt_iss_pol = controls3.pt_iss_pol.value;
+  _item.pt_run_seq2 = controls3.pt_run_seq2.value;
+  _item.pt_bom_code = controls3.pt_bom_code.value;
+
+  _item.pt_pur_price = controls4.pt_pur_price.value;
+  _item.pt_price = controls4.pt_price.value;
+  _item.pt_taxable = controls4.pt_taxable.value;
+  _item.pt_taxc = controls4.pt_taxc.value;
 
 
-    _item.pt_ms = controls3.pt_ms.value;
-    _item.pt_buyer = controls3.pt_buyer.value;
-    _item.pt_phantom = controls3.pt_phantom.value;
-    _item.pt_plan_ord = controls3.pt_plan_ord.value;
-    _item.pt_vend = controls3.pt_vend.value;
+  _item.pt_iss_pol   = controls5.pt_iss_pol.value;
+  _item.pt_length    = controls5.pt_length.value;
+  _item.pt_height    = controls5.pt_height.value;
+  _item.pt_width     = controls5.pt_width.value;
+  _item.pt_origin    = controls5.pt_origin.value;
+  _item.pt_drwg_size = controls5.pt_drwg_size.value; 
+  _item.pt_model     = controls5.pt_model.value;
+  _item.pt_break_cat = controls5.pt_break_cat.value;
+  _item.int01        = controls5.int01.value;
+  _item.int02        = controls5.int02.value;
 
-    _item.pt_ord_min = controls3.pt_ord_min.value;
-    _item.pt_timefence = controls3.pt_timefence.value;
-    _item.pt_po_site = controls3.pt_po_site.value;
-    _item.pt_ord_max = controls3.pt_ord_max.value;
-    _item.pt_pm_code = controls3.pt_pm_code.value;
-    _item.pt_ord_mult = controls3.pt_ord_mult.value;
-    _item.pt_ord_pol = controls3.pt_ord_pol.value;
-    _item.pt_cfg_type = controls3.pt_cfg_type.value;
-    _item.pt_op_yield = controls3.pt_op_yield.value;
-    _item.pt_ord_qty = controls3.pt_ord_qty.value;
-    _item.pt_insp_rqd = controls3.pt_insp_rqd.value;
-    _item.pt_yield_pct = controls3.pt_yield_pct.value;
-    _item.pt_insp_lead = controls3.pt_insp_lead.value;
-    _item.pt_run = controls3.pt_run.value;
-    _item.pt_ord_per = controls3.pt_ord_per.value;
-    _item.pt_mfg_lead = controls3.pt_mfg_lead.value;
-    _item.pt_pur_lead = controls3.pt_pur_lead.value;
-    _item.pt_setup = controls3.pt_setup.value;
-    _item.pt_sfty_stk = controls3.pt_sfty_stk.value;
-    _item.pt_sfty_time = controls3.pt_sfty_time.value;
-    _item.pt_rop = controls3.pt_rop.value;
-    _item.pt_atp_family = controls3.pt_atp_family.value;
-    _item.pt_network = controls3.pt_network.value;
-    _item.pt_run_seq1 = controls3.pt_run_seq1.value;
-    _item.pt_routing = controls3.pt_routing.value;
-    _item.pt_iss_pol = controls3.pt_iss_pol.value;
-    _item.pt_run_seq2 = controls3.pt_run_seq2.value;
-    _item.pt_bom_code = controls3.pt_bom_code.value;
 
-    _item.pt_pur_price = controls4.pt_pur_price.value;
-    _item.pt_price = controls4.pt_price.value;
-    _item.pt_taxable = controls4.pt_taxable.value;
-    _item.pt_taxc = controls4.pt_taxc.value;
 
-    _item.pt_iss_pol   = controls5.pt_iss_pol.value;
-    _item.pt_length    = controls5.pt_length.value;
-    _item.pt_height    = controls5.pt_height.value;
-    _item.pt_width     = controls5.pt_width.value;
-    _item.pt_origin    = controls5.pt_origin.value;
-    _item.pt_drwg_loc  = controls5.pt_drwg_loc.value;
-    _item.pt_model     = controls5.pt_model.value;
-    _item.pt_break_cat = controls5.pt_break_cat.value;
-    _item.int01        = controls5.int01.value;
-    _item.int02        = controls5.int02.value;
-    _item.pt_promo     = controls5.pt_promo.value;
-    _item.pt_break_cat = controls5.pt_break_cat.value;
-    _item.pt_rev       = controls5.pt_rev.value;
-    _item.pt_dsgn_grp  = controls5.pt_dsgn_grp.value;
-    _item.pt_net_wt    = controls5.pt_net_wt.value;
-    _item.pt_net_wt_um = controls5.pt_net_wt_um.value;
-    _item.pt_size      = controls5.pt_size.value;
-    _item.pt_size_um   = controls5.pt_size_um.value;
+  _item.pt_salable = controls6.pt_salable.value;
+  _item.pt_inventoryable = controls6.pt_inventoryable.value;
+  _item.pt_consignable = controls6.pt_consignable.value;
+  _item.pt_returnable = controls6.pt_returnable.value;
+  _item.pt_orderable = controls6.pt_orderable.value;
+  _item.pt_loadable = controls6.pt_loadable.value;
+  _item.pt_promotion = controls6.pt_promotion.value;
 
-    _item.pt_salable = controls6.pt_salable.value;
-    _item.pt_inventoryable = controls6.pt_inventoryable.value;
-    _item.pt_consignable = controls6.pt_consignable.value;
-    _item.pt_returnable = controls6.pt_returnable.value;
-    _item.pt_orderable = controls6.pt_orderable.value;
-    _item.pt_loadable = controls6.pt_loadable.value;
-    _item.pt_promotion = controls6.pt_promotion.value;
-    return _item;
-  }
+
+  return _item;
+}
 
 
 
@@ -1052,6 +1048,12 @@ changeLoc() {
     },
     (error) => console.log(error)
   );
+}
+
+onchangedesc() {
+  const controls = this.form4.controls
+  document.getElementById("pt_price").focus();
+
 }
 
 handleSelectedRowsChanged3(e, args) {

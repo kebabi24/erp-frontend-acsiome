@@ -578,7 +578,11 @@ export class CreateStdItemComponent implements OnInit {
   }
 
 
-
+  onchangedesc() {
+    const controls = this.form4.controls
+    document.getElementById("pt_price").focus();
+  
+  }
 
   onChangeCode() {
     const controls = this.formX.controls

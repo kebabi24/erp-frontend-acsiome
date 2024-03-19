@@ -403,6 +403,27 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion Standard des Produits",
+          bullet: "dot",
+          icon: "flaticon2-box-1",
+          root: true,
+          submenu: [
+            {
+              title: "Liste des Produits",
+              page: "/articles/list",
+            },
+            {
+              title: "Modification des Produits",
+              page: "/articles/list-std-update",
+            },
+            {
+              title: "Ajouter un Produit",
+              page: "/articles/create-std-item",
+            },
+            
+          ]
+        },
+        {
           title: "Gestion des articles",
           bullet: "dot",
           icon: "flaticon2-box-1",
