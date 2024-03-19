@@ -35,6 +35,7 @@ export class CreateBobineWoComponent implements OnInit {
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
+
   dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
@@ -134,8 +135,8 @@ export class CreateBobineWoComponent implements OnInit {
   product_colors: any[] = [];
   product_types: any[] = [];
   product_qualitys: any[] = [];
-  product_Cyls: boolean = false;
-  cylicone: any;
+  product_Cyls: any[] = [];
+  
   shift: any;
   desc2: any;
   dataprinter: [];
@@ -191,9 +192,14 @@ export class CreateBobineWoComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
+          if (args.dataContext.tr_ref != null || args.dataContext.tr_ref != '' ){alert('vous ne pouvez pas supprimer cette ligne')}
+          else {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            const controls = this.woForm.controls;
+            let new_total = controls.total_bobine.value - args.dataContext.tr_qty_loc
+            controls.total_bobine.setValue(new_total)
             this.angularGrid.gridService.deleteItem(args.dataContext);
-          }
+          }}
         },
       },
 
@@ -215,18 +221,18 @@ export class CreateBobineWoComponent implements OnInit {
       // },
 
       {
-        id: "desc",
+        id: "tr_desc",
         name: "Description",
-        field: "desc",
+        field: "tr_desc",
         sortable: true,
         width: 180,
         filterable: false,
       },
 
       {
-        id: "break",
+        id: "tr__chr02",
         name: "Couleur",
-        field: "break",
+        field: "tr__chr02",
         sortable: true,
         width: 100,
         filterable: false,
@@ -260,9 +266,9 @@ export class CreateBobineWoComponent implements OnInit {
         type: FieldType.float,
       },
       {
-        id: "tr_um",
-        name: "UM",
-        field: "tr_um",
+        id: "tr_effdate",
+        name: "date",
+        field: "tr_effdate",
         sortable: true,
         width: 80,
         filterable: false,
@@ -391,7 +397,7 @@ export class CreateBobineWoComponent implements OnInit {
                 _tr.tr_qty_loc = args.dataContext.tr_qty_loc;
                 _tr.tr_serial = args.dataContext.tr_serial;
                 _tr.tr_program = args.dataContext.tr_program;
-                _tr.tr_addr = controls.emp_shift.value;
+                _tr.tr_user2 = controls.emp_shift.value;
                 this.trdataset = [];
             
                 if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
@@ -411,6 +417,7 @@ export class CreateBobineWoComponent implements OnInit {
                   tr_line: 1,
                   tr_part: controls.wo_part.value,
                   tr_qty_loc: args.dataContext.tr_qty_loc,
+                  tr_effdate:controls.wo_ord_date.value,
                   tr_um: this.um,
                   tr_um_conv: 1,
                   tr_price: 0,
@@ -489,18 +496,18 @@ export class CreateBobineWoComponent implements OnInit {
       // },
 
       {
-        id: "desc",
+        id: "tr_desc",
         name: "Description",
-        field: "desc",
+        field: "tr_desc",
         sortable: true,
         width: 180,
         filterable: false,
       },
 
       {
-        id: "break",
+        id: "tr__chr02",
         name: "Couleur",
-        field: "break",
+        field: "tr__chr02",
         sortable: true,
         width: 100,
         filterable: false,
@@ -534,9 +541,9 @@ export class CreateBobineWoComponent implements OnInit {
         type: FieldType.float,
       },
       {
-        id: "tr_um",
-        name: "UM",
-        field: "tr_um",
+        id: "tr_effdate",
+        name: "Date",
+        field: "tr_effdate",
         sortable: true,
         width: 80,
         filterable: false,
@@ -595,8 +602,8 @@ export class CreateBobineWoComponent implements OnInit {
         type: FieldType.string,
       },
       {
-        id: "id",
-        field: "id",
+        id: "sqid",
+        field: "sqid",
         excludeFromHeaderMenu: true,
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
@@ -647,7 +654,7 @@ export class CreateBobineWoComponent implements OnInit {
                 alert("Erreur Impression Etiquette");
               },
               () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
                 //console.log("id", args.dataContext.id)
                 //console.log("dataset",this.dataset[args.dataContext.id])
                 this.index = this.dataset.findIndex((el) => {
@@ -665,7 +672,7 @@ export class CreateBobineWoComponent implements OnInit {
                 _tr.tr_qty_loc = args.dataContext.tr_qty_loc;
                 _tr.tr_serial = args.dataContext.tr_serial;
                 _tr.tr_program = args.dataContext.tr_program;
-                _tr.tr_addr = controls.emp_shift.value;
+                _tr.tr_user2 = controls.emp_shift.value;
                 this.trdataset = [];
             
                 if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
@@ -683,8 +690,9 @@ export class CreateBobineWoComponent implements OnInit {
                 }
                 this.trdataset.push({
                   tr_line: 1,
-                  tr_part: controls.wo_part.value,
+                  tr_part: args.dataContext.tr_part,
                   tr_qty_loc: args.dataContext.tr_qty_loc,
+                  tr_effdate: controls.wo_ord_date.value,
                   tr_um: this.um,
                   tr_um_conv: 1,
                   tr_price: 0,
@@ -747,7 +755,7 @@ export class CreateBobineWoComponent implements OnInit {
     this.getProductColors();
     this.getProductTypes();
     this.getProductquality();
-    
+    this.getProductcyl()
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
 
@@ -792,7 +800,9 @@ export class CreateBobineWoComponent implements OnInit {
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
       ref: [{ value: null, disabled: true }],
-
+      wo_qty_ord: [{ value: 0 },this.workOrder.wo_qty_ord],
+      total_bobine:  [{disabled: true}],
+      total_squelette:  [{disabled: true}],
       wo_qty_comp: [{ value: 0 },this.workOrder.wo_qty_comp],
       wo_qty_rjct: [{ value: 0 },this.workOrder.wo_qty_rjct],
       emp_shift: [this.shift],
@@ -801,7 +811,7 @@ export class CreateBobineWoComponent implements OnInit {
       product_type: ["", Validators.required],
       product_color: ["", Validators.required],
       product_quality: ["", Validators.required],
-      product_Cyl: [false],
+      product_Cyl: ["", Validators.required],
     });
     const controls = this.woForm.controls;
     controls.wo_site.setValue(this.user.usrd_site);
@@ -816,6 +826,7 @@ export class CreateBobineWoComponent implements OnInit {
       (reponse: any) => {
         if (reponse.data != null) {
           controls.wo_routing.setValue(reponse.data.code_value), controls.wo_routing.disable();
+          this.gamme = reponse.data.code_value;
         }
       },
       (error) => {}
@@ -830,18 +841,20 @@ export class CreateBobineWoComponent implements OnInit {
     this.workOrderService.getByOne({ id }).subscribe((res: any) => {
       if (res.data.wo_status == "R" && res.data.wo_routing == controls.wo_routing.value) {
         this.woServer = res.data;
-
+        
         controls.wo_lot.setValue(this.woServer.id);
         controls.wo_nbr.setValue(this.woServer.wo_nbr);
         controls.wo_part.setValue(this.woServer.wo_part);
-        
+        controls.wo_qty_ord.setValue(this.woServer.wo_qty_ord);
+        controls.total_bobine.setValue(this.woServer.wo_qty_comp);
+        controls.total_squelette.setValue(this.woServer.wo_qty_rjct);
         controls.desc.setValue(this.woServer.item.pt_desc1);
         controls.product_type.setValue(this.woServer.item.pt_article);
         controls.product_color.setValue(this.woServer.item.pt_break_cat);
         controls.product_quality.setValue(this.woServer.item.pt_rev);
         
 
-        if(this.woServer.item.pt_group = "AVEC CYLICONE"){controls.product_Cyl.setValue(true)} else {controls.product_Cyl.setValue(false)}
+        controls.product_Cyl.setValue(this.woServer.item.pt_group)
         this.product = this.woServer.item;
         this.umd = this.woServer.item.pt_um;
         this.qtycart = this.woServer.item.int03 != null ? this.woServer.item.int03 : 0;
@@ -877,13 +890,76 @@ export class CreateBobineWoComponent implements OnInit {
             this.address = resaddr.data;
           });
         }
-        console.log(this.address);
-        console.log(this.site);
+        
         this.sctService.getByOne({ sct_site: this.site, sct_part: this.woServer.wo_part, sct_sim: "STD-CG" }).subscribe((resp: any) => {
           this.sct = resp.data;
           console.log(this.sct);
         }),
         this.globalState=true;
+
+        //remplir les grids
+        controls.wo_nbr.value
+        console.log('remplir grid' ,controls.wo_nbr.value)
+        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+          (res: any) => {        
+          this.dataset  = res.data;
+          for (let item of this.dataset){
+          this.gridService.addItem(
+            {
+              id: this.dataset.length + 1,
+              tr_line: this.dataset.length + 1,
+              tr_part: item.tr_part,
+              cmvid: "",
+              tr_desc: item.tr_desc,
+              tr__chr02:item.tr__chr02,
+              tr_qty_loc: item.tr_qty_loc,
+              tr_loc: item.tr_loc,
+              tr_effdate: item.tr_effdate,
+              tr_um:item.tr_um,
+              tr_um_conv: 1,
+              tr_price: item.tr_price,
+              cmvids: "",
+              tr_ref: item.tr_ref,
+              tr_serial: item.tr_serial,
+              tr_status: item.tr_status,
+              tr_expire: item.tr_expire,
+              tr_program: item.tr_program,
+            },
+            { position: "bottom" }
+            
+          )}},)
+          console.log('remplir grid' ,controls.wo_nbr.value)
+        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+          (res: any) => {        
+          this.sqdataset  = res.data;
+          for (let itemsq of this.sqdataset){
+          this.gridServicesq.addItem(
+            {
+              id: this.dataset.length + 1,
+              tr_line: this.dataset.length + 1,
+              tr_part: itemsq.tr_part,
+              cmvid: "",
+              tr_desc: itemsq.tr_desc,
+              tr__chr02:itemsq.tr__chr02,
+              tr_qty_loc: itemsq.tr_qty_loc,
+              tr_loc: itemsq.tr_loc,
+              tr_effdate: itemsq.tr_effdate,
+              tr_um:itemsq.tr_um,
+              tr_um_conv: 1,
+              tr_price: itemsq.tr_price,
+              cmvids: "",
+              tr_ref: itemsq.tr_ref,
+              tr_serial: itemsq.tr_serial,
+              tr_status: itemsq.tr_status,
+              tr_expire: itemsq.tr_expire,
+              tr_program: itemsq.tr_program,
+            },
+            { position: "bottom" }
+            
+          )}
+         
+      })
+     
       } else {
         alert("OF n'existe pas ou status <> 'R' ");
         controls.wo_lot.setValue(null);
@@ -961,6 +1037,20 @@ export class CreateBobineWoComponent implements OnInit {
         }
       });
   }
+  getProductcyl() {
+    this.codeService
+      .getBy({
+        code_fldname: "pt_group", code_desc: "cyl"
+      })
+      .subscribe((response: any) => {
+        const { data } = response;
+        this.product_Cyls = data;
+        if (!data) {
+          alert("Erreur bdd");
+          // controls.wo_site.setValue("");
+        }
+      });
+  }
 
   searchProduct() {
     this.globalState = false;
@@ -970,8 +1060,7 @@ export class CreateBobineWoComponent implements OnInit {
     controls.product_type.value;
     controls.product_color.value;
     controls.product_Cyl.value;
-    console.log(controls.product_Cyl.value)
-    if (controls.product_Cyl.value == true) this.cylicone = 'AVEC CYLICONE'; else this.cylicone = 'SANS CYLICONE'
+    
     
     this.itemsService
       .getBy({
@@ -979,15 +1068,16 @@ export class CreateBobineWoComponent implements OnInit {
         pt_break_cat: controls.product_color.value,
         pt_draw: "BOBINE",
         pt_rev: controls.product_quality.value,
-        pt_group:this.cylicone,
+        pt_group:controls.product_Cyl.value,
       })
       .subscribe((response: any) => {
-        const { data } = response.data;
-        if (data) {
+        const { data } = response;
+        console.log('recherche article',response);
+        if (data) { 
           if (data.length == 0) {
             alert("Aucun produit n'existe avec le type et la couleur sélectionnés");
           } else {
-            console.log(data);
+            
             controls.wo_part.setValue(data[0].pt_part);
             controls.desc.setValue(response.data[0].pt_desc1);
             this.desc2 = response.data[0].pt_desc2;
@@ -1103,7 +1193,7 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
-    _tr.tr_addr = controls.emp_shift.value;
+    _tr.tr_user2 = controls.emp_shift.value;
     // _tr.tr_so_job = controls.tr_so_job.value
 
     // _tr.tr_rmks = controls.tr_rmks.value
@@ -1121,7 +1211,7 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_rjct.value;
     _tr.tr_serial = controls.wo_serial.value;
-    _tr.tr_addr = controls.emp_shift.value;
+    _tr.tr_user2 = controls.emp_shift.value;
     // _tr.tr_so_job = controls.tr_so_job.value
 
     // _tr.tr_rmks = controls.tr_rmks.value
@@ -1364,7 +1454,8 @@ export class CreateBobineWoComponent implements OnInit {
 
       if (this.seq) {
         this.nof = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-
+        
+        
         this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
@@ -1384,6 +1475,7 @@ export class CreateBobineWoComponent implements OnInit {
           () => {
             this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 1000, false, false);
             controls.ref.enable();
+            controls.wo_nbr.setValue(this.nof),
             document.getElementById("ref").focus();
             this.loadingSubject.next(false);
 
@@ -1416,6 +1508,7 @@ export class CreateBobineWoComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls = this.woForm.controls;
     (this.part = null),
       this.gridService.addItem(
         {
@@ -1423,10 +1516,12 @@ export class CreateBobineWoComponent implements OnInit {
           tr_line: this.dataset.length + 1,
           tr_part: null,
           cmvid: "",
-          desc: null,
+          tr_desc: null,
+          tr__chr02: "",
           tr_qty_loc: null,
           tr_loc: null,
-          tr_um: null,
+          tr_effdate: controls.wo_ord_date.value,
+          tr_um:null,
           tr_um_conv: 1,
           tr_price: null,
           cmvids: "",
@@ -1582,7 +1677,7 @@ export class CreateBobineWoComponent implements OnInit {
         controls.desc.setValue(item.pt_desc1);
         this.desc2 = item.pt_desc2;
         controls.wo_serial.setValue(item.pt_part_type + item.pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
-
+        
         this.um = item.pt_um;
         this.loc = item.pt_loc;
         if (item.pt_rctwo_active) {
@@ -1598,8 +1693,8 @@ export class CreateBobineWoComponent implements OnInit {
             });
         }
       });
-    }
-  }
+    
+  }}
   angularGridReady4(angularGrid: AngularGridInstance) {
     this.angularGrid4 = angularGrid;
     this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
@@ -2030,6 +2125,8 @@ export class CreateBobineWoComponent implements OnInit {
     /*kamel palette*/
     const controls = this.woForm.controls;
     const qty= Number(controls.wo_qty_comp.value)
+    const TOTAL = Number(controls.total_bobine.value) + Number(controls.wo_qty_comp.value)
+    controls.total_bobine.setValue(TOTAL)
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
@@ -2048,14 +2145,15 @@ export class CreateBobineWoComponent implements OnInit {
         id: this.dataset.length + 1,
         tr_line: this.dataset.length + 1,
         tr_part: controls.wo_part.value,
-        break:respopart.data.pt_break_cat,
+        tr__chr02:respopart.data.pt_break_cat,
         cmvid: "",
-        desc: controls.desc.value,
+        tr_desc: controls.desc.value,
         // qty_oh: this.lddet.ld_qty_oh,
         tr_qty_loc: qty,
         tr_site: controls.wo_site.value,
         tr_loc: respopart.data.pt_loc,
-        tr_um: respopart.data.pt_um,
+        tr_effdate: controls.wo_ord_date.value,
+        tr_um:controls.wo_ord_date.value,
         tr_um_conv:1,
         tr_price: this.sct.sct_mtl_tl,
         cmvids: "",
@@ -2097,14 +2195,15 @@ export class CreateBobineWoComponent implements OnInit {
         id: this.sqdataset.length + 1,
         tr_line: this.sqdataset.length + 1,
         tr_part: respopart.data.pt_part,
-        break:respopart.data.pt_break_cat,
+        tr__chr02:respopart.data.pt_break_cat,
         cmvid: "",
-        desc: respopart.data.pt_desc1,
+        tr_desc: respopart.data.pt_desc1,
         // qty_oh: this.lddet.ld_qty_oh,
         tr_qty_loc: sqqty,
         tr_site: controls.wo_site.value,
         tr_loc: respopart.data.pt_loc,
-        tr_um: respopart.data.pt_um,
+        tr_effdate: controls.wo_ord_date.value,
+        tr_um:controls.wo_ord_date.value,
         tr_um_conv:1,
         tr_price: this.sct.sct_mtl_tl,
         cmvids: "",
@@ -2424,6 +2523,7 @@ export class CreateBobineWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
+    console.log(this.gamme)
     this.workOrderService.getBy({ wo_status: "R", wo_routing: this.gamme }).subscribe((response: any) => {
       // console.log(response.data)
       this.wos = response.data;
@@ -2446,7 +2546,72 @@ export class CreateBobineWoComponent implements OnInit {
         controls.product_type.setValue(item.item.pt_article);
         controls.product_color.setValue(item.item.pt_break_cat);
         controls.product_quality.setValue(item.item.pt_rev);
-        if(item.item.pt_group == "AVEC CYLICONE"){controls.product_Cyl.setValue(true)} else {controls.product_Cyl.setValue(false)}
+        controls.total_bobine.setValue(item.wo_qty_comp);
+        controls.wo_qty_ord.setValue(item.wo_qty_ord)
+        controls.product_Cyl.setValue(item.pt_group)
+        
+        //remplir les grids
+        controls.wo_nbr.value
+        console.log('remplir grid' ,controls.wo_nbr.value)
+        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+          (res: any) => {        
+          this.dataset  = res.data;
+          for (let item of this.dataset){
+          this.gridService.addItem(
+            {
+              id: this.dataset.length + 1,
+              tr_line: this.dataset.length + 1,
+              tr_part: item.tr_part,
+              cmvid: "",
+              tr_desc: item.tr_desc,
+              tr__chr02:item.tr__chr02,
+              tr_qty_loc: item.tr_qty_loc,
+              tr_loc: item.tr_loc,
+              tr_effdate: item.tr_effdate,
+              tr_um:item.tr_um,
+              tr_um_conv: 1,
+              tr_price: item.tr_price,
+              cmvids: "",
+              tr_ref: item.tr_ref,
+              tr_serial: item.tr_serial,
+              tr_status: item.tr_status,
+              tr_expire: item.tr_expire,
+              tr_program: item.tr_program,
+            },
+            { position: "bottom" }
+            
+          )}})
+          console.log('remplir grid' ,controls.wo_nbr.value)
+        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+          (res: any) => {        
+          this.sqdataset  = res.data;
+          for (let itemsq of this.sqdataset){
+          this.gridServicesq.addItem(
+            {
+              id: this.dataset.length + 1,
+              tr_line: this.dataset.length + 1,
+              tr_part: itemsq.tr_part,
+              cmvid: "",
+              tr_desc: itemsq.tr_desc,
+              tr__chr02:itemsq.tr__chr02,
+              tr_qty_loc: itemsq.tr_qty_loc,
+              tr_loc: itemsq.tr_loc,
+              tr_effdate: itemsq.tr_effdate,
+              tr_um:itemsq.tr_um,
+              tr_um_conv: 1,
+              tr_price: itemsq.tr_price,
+              cmvids: "",
+              tr_ref: itemsq.tr_ref,
+              tr_serial: itemsq.tr_serial,
+              tr_status: itemsq.tr_status,
+              tr_expire: itemsq.tr_expire,
+              tr_program: itemsq.tr_program,
+            },
+            { position: "bottom" }
+            
+          )}
+          })
+        
         this.product = item.item;
         this.umd = item.item.pt_um;
         this.qtycart = item.item.int03 != null ? item.item.int03 : 0;
@@ -2469,7 +2634,7 @@ export class CreateBobineWoComponent implements OnInit {
         }
 
         console.log(this.site);
-        this.sctService.getByOne({ sct_site: this.site, sct_part: controls.tr_part.value, sct_sim: "STD-CG" }).subscribe((resp: any) => {
+        this.sctService.getByOne({ sct_site: this.site, sct_part: item.wo_part, sct_sim: "STD-CG" }).subscribe((resp: any) => {
           this.sct = resp.data;
           console.log("sct", this.sct);
         });

@@ -127,6 +127,46 @@ export class ListWoComponent implements OnInit {
            
            
           },
+          {
+            id: "wo_ref",
+            name: "dimension",
+            field: "wo_ref",
+            sortable: true,
+            width: 50,
+            filterable: false,
+           
+           
+          },
+          {
+            id: "wo_batch",
+            name: "couleur",
+            field: "wo_batch",
+            sortable: true,
+            width: 50,
+            filterable: false,
+           
+           
+          },
+          {
+            id: "wo_rev",
+            name: "Qualité",
+            field: "wo_rev",
+            sortable: true,
+            width: 50,
+            filterable: false,
+           
+           
+          },
+          {
+            id: "wo_grade",
+            name: "cilicone",
+            field: "wo_grade",
+            sortable: true,
+            width: 50,
+            filterable: false,
+           
+           
+          },
           
           {
             id: "wo_qty_ord",
@@ -149,8 +189,26 @@ export class ListWoComponent implements OnInit {
           },
           {
             id: "wo_qty_rjct",
-            name: "Quantité Rejetée",
+            name: "Quantité Squelette",
             field: "wo_qty_rjct",
+            sortable: true,
+            width: 80,
+            filterable: false,
+           
+          },
+          {
+            id: "wo_qty_chg",
+            name: "diff",
+            field: "wo_qty_chg",
+            sortable: true,
+            width: 80,
+            filterable: false,
+           
+          },
+          {
+            id: "wo_yield_pct",
+            name: "Squelette/Total",
+            field: "wo_yield_pct",
             sortable: true,
             width: 80,
             filterable: false,
@@ -206,7 +264,7 @@ export class ListWoComponent implements OnInit {
           {
             id: "wo_routing",
             name: "Gamme",
-            field: "wo_roouting",
+            field: "wo_routing",
             sortable: true,
             width: 80,
             filterable: false,
@@ -215,18 +273,7 @@ export class ListWoComponent implements OnInit {
             
           },
           
-          {
-            id: "wo_site",
-            name: "Site",
-            field: "wo_site",
-            sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.string,
-          
-            
-          },
-          
+                  
           {
             id: "wo_lot_next",
             name: "Lot/Serie",

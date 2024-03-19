@@ -213,7 +213,7 @@ var ElectronPrinter2 = (function () {
 }(ElectronPrinter2 || {}))
 
 var Edelweiss = (function () {
-    console.log("herrereeeeeeeeee")
+    
     return {
         print3: function (lb, userPrinter) {
             const options = {
@@ -225,7 +225,7 @@ var Edelweiss = (function () {
             const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
             doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
             const time = new Date().toLocaleTimeString();
-
+            console.log('renderer.js')
             doc.text('FOURNISSEUR : ' + lb.lb_cust, 20, 18)
                 .font('Helvetica-Bold')
                 .fontSize(12)

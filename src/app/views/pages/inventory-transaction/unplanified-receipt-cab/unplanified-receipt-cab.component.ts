@@ -630,8 +630,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
+                console.log('lab',lab)
                 this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss.print3(lab, this.currentPrinter);
+                  console.log('print3',Edelweiss)
+                  Edelweiss.print3(lab,this.currentPrinter);
                 });
               },
               (error) => {
