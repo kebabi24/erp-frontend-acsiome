@@ -29,6 +29,11 @@ export class LoadRequestService {
     return this.http.get(`${API_URL_2}/getLoadRequestInfo/${load_request_code}`, { headers: httpHeaders });
   }
 
+  public getLoadRequestLineInfo(load_request_code: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL_2}/getLoadRequestLineInfo/${load_request_code}`, { headers: httpHeaders });
+  }
+
   // CREATE PRODUCT PAGE
   public createProductPage(productPage: any, productsCodes: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();

@@ -208,7 +208,22 @@ var ElectronPrinter2 = (function () {
             doc.setFontSize(14);
             doc.line(10, i - 5, 170, i - 5);
             doc.save(load_request_code + ".pdf")
-            print(load_request_code + ".pdf", options).then(console.log);
+            print(load_request_code + ".pdf", options)
+                .then((result) => {
+                    console.log(result); // Print the result if needed
+                    // Now that printing is done, delete the file
+                    const filePath = load_request_code + ".pdf";
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error(`Error deleting file: ${err}`);
+                            return;
+                        }
+                        console.log('File deleted successfully');
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error); // Handle any errors that occur during printing
+                });
 
         },
 
@@ -421,7 +436,22 @@ var ElectronPrinter3 = (function () {
             doc.setFontSize(14);
             doc.line(10, i - 5, 170, i - 5);
             doc.save(load_request_code + ".pdf")
-            print(load_request_code + ".pdf", options).then(console.log);
+            print(load_request_code + ".pdf", options)
+                .then((result) => {
+                    console.log(result); // Print the result if needed
+                    // Now that printing is done, delete the file
+                    const filePath = load_request_code + ".pdf";
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error(`Error deleting file: ${err}`);
+                            return;
+                        }
+                        console.log('File deleted successfully');
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error); // Handle any errors that occur during printing
+                });
 
         },
 

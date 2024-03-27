@@ -37,6 +37,7 @@ export class LoadingVansScanComponent implements OnInit {
   roles: any[] = [];
   loadRequests: any[] = [];
   loadRequestData: any[] = [];
+  loadRequestLineData: any[] = [];
   loadRequest: any;
   lots: any[] = [];
   selectedLotsIndexes: any[] = [];
@@ -175,7 +176,34 @@ export class LoadingVansScanComponent implements OnInit {
     );
   }
 
-  onSaveCharge() {
+  onSaveCharge(content4, content5, content6) {
+    const controls = this.chargeForm.controls;
+    console.log(controls.load_request_code.value);
+    if (controls.load_request_code.value === null) {
+      this.modalService.open(content4, { size: "lg" });
+      document.getElementById("load_request_code").focus();
+      return;
+    } else {
+      this.loadRequestService.getLoadRequestLineInfo(this.load_request_code).subscribe((response: any) => {
+        if (response.data.loadRequest.length > 0) {
+          console.log(response.data.loadRequest);
+          this.modalService.open(content5, { size: "lg" });
+          //console.log(response);
+          this.loadRequestLineData = response.data.loadRequest;
+          // this.confirmPrinting();
+          // this.userInfo = response.data.userMobile;
+          // this.role_code = response.data.loadRequest.role_code;
+          // this.username = response.data.userMobile.username;
+          // document.getElementById("pal").focus();
+        } else {
+          this.modalService.open(content6, { size: "lg" });
+          controls.load_request_code.setValue(null);
+          document.getElementById("load_request_code").focus();
+        }
+      });
+    }
+  }
+  confirmPrinting() {
     const details = [];
     const lines = [];
 
@@ -229,8 +257,9 @@ export class LoadingVansScanComponent implements OnInit {
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
       }
     );
-  }
 
+    this.modalService.dismissAll();
+  }
   goBack() {
     this.loadingSubject.next(false);
     const url = `/`;
@@ -621,27 +650,27 @@ export class LoadingVansScanComponent implements OnInit {
     // saveAs(blob, this.load_request_code + ".pdf");
   }
   printpdf2() {
-    let filteredData = [];
-    const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
-    for (const [key, value] of Object.entries(data)) {
-      filteredData.push({
-        prod: key,
-        occurences: value,
-      });
-    }
+    // let filteredData = [];
+    // const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
+    // for (const [key, value] of Object.entries(data)) {
+    //   filteredData.push({
+    //     prod: key,
+    //     occurences: value,
+    //   });
+    // }
     this.printLines = [];
     let k = 1;
-    filteredData.forEach((prod) => {
+    this.loadRequestLineData.forEach((prod) => {
       console.log(prod);
       this.printLines.push({
         line: k,
-        product_code: prod.prod,
-        product_name: prod.occurences[0].desc_prod,
-        pt_price: prod.occurences[0].price,
-        qt_request: prod.occurences.length,
-        lot: prod.occurences[0].lot,
-        qt_validated: prod.occurences.length,
-        qt_effected: prod.occurences.length,
+        product_code: prod.product_code,
+        product_name: prod.item.pt_desc1,
+        pt_price: prod.pt_price,
+        qt_request: prod.qt_request,
+        // lot: prod.occurences[0].lot,
+        qt_validated: prod.qt_validated,
+        qt_effected: prod.qt_effected,
       });
       k++;
     });
@@ -821,9 +850,9 @@ export class LoadingVansScanComponent implements OnInit {
     console.log(this.printLines, "Lines");
     this.printLines.map((item) => {
       this.total = Number(this.total) + Number(item.pt_price);
-      this.totalCartons = this.totalCartons + item.qt_request;
+      this.totalCartons = this.totalCartons + item.qt_effected;
     });
-    ElectronPrinter3.print3(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
+    ElectronPrinter3.print3(this.loadRequestLineData, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
 
     // saveAs(blob, this.load_request_code + ".pdf");
   }
