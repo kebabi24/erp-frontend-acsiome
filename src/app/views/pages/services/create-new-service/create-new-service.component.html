@@ -32,7 +32,7 @@
           >
         </div>
         <div class="col-2">
-          <a (click)="open2(content2)" class="btn btn-primary btn-sm font-weight-bolder">
+          <a (click)="open2(content2,content3)" class="btn btn-primary btn-sm font-weight-bolder">
             <span class="svg-icon svg-icon-md">
               <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Design/Flatten.svg-->
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -137,6 +137,7 @@
         <div class="modal-body">
           <kt-alert *ngIf="isNotSelected" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Veuillez tout d'abord selectionné un role pour lui affecter un service </kt-alert>
           <div class="example-preview2" *ngIf="isClose">
+
             <form class="form" [formGroup]="createServiceForm">
               <div class="form-group col-6">
                 <label class="form-group">Période service : </label>
@@ -147,6 +148,9 @@
                       <i class="flaticon-calendar-with-a-clock-time-tools"></i>
                     </button>
                   </div>
+                  <div *ngIf="createServiceForm.controls['service_creation_date'].errors && (createServiceForm.controls['service_creation_date'].dirty || createServiceForm.controls['service_creation_date'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+
                 </div>
               </div>
 
@@ -171,11 +175,11 @@
             </form>
           </div>
 
-          <kt-alert *ngIf="!isClose && !isNotSelected" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce service est déjà ouvert </kt-alert>
+          <kt-alert *ngIf="!isClose && !isNotSelected " type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce service est déjà ouvert </kt-alert>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-          <button type="button" class="btn btn-primary" (click)="c('Close click')" (click)="createService()">Créer un nouveau service</button>
+          <button type="button" class="btn btn-primary"  (click)="createService()">Créer un nouveau service</button>
         </div>
       </ng-template>
     </div>
@@ -192,7 +196,25 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-          <button type="button" class="btn btn-primary" (click)="closeService()">Ok</button>
+          <button type="button" class="btn btn-primary" (click)="closeServices()">Ok</button>
+        </div>
+      </ng-template>
+    </div>
+
+    <div>
+      <ng-template #content3 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Fermer un service</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <kt-alert type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Pas de Service Ouvert pour ce Role  </kt-alert>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
     </div>

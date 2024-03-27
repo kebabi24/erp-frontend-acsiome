@@ -69,9 +69,16 @@ export class CreateNewServiceComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
-  open2(content) {
-    this.modalService.open(content, { size: "lg" });
-  }
+  open2(content,content2) {
+    console.log(this.selectedRow)
+    if (this.selectedRow.etat_service != null)
+  { this.modalService.open(content, { size: "lg" }); }
+    else {
+      this.modalService.open(content2, { size: "lg" }); }
+    }
+  
+  
+  
   prepareGrid() {
     this.columnDefinitions = [
       {
@@ -183,7 +190,7 @@ export class CreateNewServiceComponent implements OnInit {
       enableRowSelection: true,
       enableCheckboxSelector: true,
       autoEdit: false,
-      autoHeight: true,
+      autoHeight: false,
       enableAutoResize: true,
       frozenColumn: 0,
       frozenBottom: true,
@@ -208,22 +215,22 @@ export class CreateNewServiceComponent implements OnInit {
     // fill the dataset with your data
     this.dataset = [];
     this.dataset = this.prepareDataset();
-    console.log(this.dataset);
+    // console.log(this.dataset);
   }
 
   prepareDataset() {
     this.mobileService.getAllService().subscribe(
       (response: any) => {
         this.data = response.data;
-        console.log(this.data);
+        // console.log(this.data);
         this.dataset = this.data.map((item) => {
           this.services.push(item);
-          console.log(item);
+          // console.log(item);
           const itineraries = item.role_itineraries;
           // console.log(itineraries);
           const tab = [];
           tab.push(itineraries);
-          console.log(tab)
+          // console.log(tab)
           const itn = itineraries.filter((item_itinerary) => item.service != null && item_itinerary.itinerary.itinerary_code === item.service.itinerary_code);
           // console.log(itn);
           // console.log(itineraries)
@@ -263,7 +270,7 @@ export class CreateNewServiceComponent implements OnInit {
             return node;
           }
         });
-        console.log(this.dataset);
+        // console.log(this.dataset);
       },
       (error) => {
         this.dataset = [];
@@ -307,7 +314,7 @@ export class CreateNewServiceComponent implements OnInit {
 
     // _service.service_code = controls.service_code.value;
     // _service.service_creation_date = controls.service_creation_date.value;
-    console.log(controls.service_creation_date.value.year);
+    // console.log(controls.service_creation_date.value.year);
     const year = controls.service_creation_date.value.year;
     const month = controls.service_creation_date.value.month;
     const day = controls.service_creation_date.value.day;
@@ -323,7 +330,7 @@ export class CreateNewServiceComponent implements OnInit {
   }
 
   addItinerary(_service: MobileService) {
-    console.log(_service);
+    // console.log(_service);
     this.loadingSubject.next(true);
     this.mobileService.addService(_service).subscribe(
       (reponse) => console.log("response", Response),
@@ -334,6 +341,7 @@ export class CreateNewServiceComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
+        this.dataset = this.prepareDataset();
         this.router.navigateByUrl("/services/create-new-service");
       }
     );
@@ -349,55 +357,107 @@ export class CreateNewServiceComponent implements OnInit {
     if (Array.isArray(args.rows) && this.grid) {
       args.rows.map((idx) => {
         const item = this.grid.getDataItem(idx);
-        console.log(item)
         // this.itinerary = this.services[idx].role_itineraries
         this.user_mobile_code = item.user_mobile_code
-console.log( item.role_site)
+        // console.log( item.role_site)
         this.site = item.role_site
         this.itinerary = [];
-        console.log(this.services[idx]);
+        // console.log(this.services[idx]);
         const newItem = [];
         newItem.push(this.services[idx].role_itineraries);
 
         newItem.map((item: any) => {
           item.map((element: any) => {
-          console.log(element)
+          // console.log(element)
           this.itinerary.push({ itinerary_code: element.itinerary.itinerary_code, itinerary_name: element.itinerary.itinerary_name });
           })
         });
-        console.log(this.itinerary);
+        // console.log(this.itinerary);
         this.selectedRow = item;
       });
     }
     if (this.selectedRow.etat_service === null) {
-      console.log("heree",this.selectedRow.etat_service)
       this.isNotSelected = false;
       this.createForm(this.selectedRow);
       // this.createService();
       
       this.isClose = true;
     } else {
-      this.closeService();
+      // this.closeService();
       this.isClose = false;
       this.isNotSelected = false;
     }
   }
-  closeService() {
-    console.log("close");
+  closeServices() {
+    this.hasFormErrors = false
+
+        
+    // let service = this.prepareService();
+    const service_code = this.selectedRow.code_service
+    this.mobileService.closeService({service_code}, service_code).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Fermeture avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+        this.dataset = this.prepareDataset();
+        this.router.navigateByUrl("/services/create-new-service");
+      }
+    );
+    this.modalService.dismissAll()
+  
   }
+    
+    
+  // closeSer(_service: any) {
+  //   console.log(_service);
+  //   this.loadingSubject.next(true);
+  //   this.mobileService.closeService(service_code: _service).subscribe(
+  //     (reponse) => console.log("response", Response),
+  //     (error) => {
+  //       this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+  //       this.loadingSubject.next(false);
+  //     },
+  //     () => {
+  //       this.layoutUtilsService.showActionNotification("Fermeture avec succès", MessageType.Create, 10000, true, true);
+  //       this.loadingSubject.next(false);
+  //       this.dataset = this.prepareDataset();
+  //       this.router.navigateByUrl("/services/create-new-service");
+  //     }
+  //   );
+  // }
+
   createService() {
+    this.hasFormErrors = false
+    const controls = this.createServiceForm.controls
+    /** check form */
+    if (this.createServiceForm.invalid) {
+        Object.keys(controls).forEach((controlName) =>
+            controls[controlName].markAsTouched()
+        )
+
+        this.hasFormErrors = true
+        return
+    }
+
     let service = this.prepareService();
     this.addItinerary(service);
+    this.modalService.dismissAll()
   }
-
+  onAlertClose($event) {
+    this.hasFormErrors = false
+  }
   createForm(row) {
     // console.log(row)
     this.loadingSubject.next(false);
     this.service = new MobileService();
     this.createServiceForm = this.serviceF.group({
       // service_code: [{value: row.service_code, disabled: true}],
-      service_creation_date: [{ value: this.service.service_creation_date }, Validators.required],
-      service_closing_date: [{ value: this.service.service_closing_date }, Validators.required],
+      service_creation_date: [ this.service.service_creation_date , Validators.required],
+      // service_closing_date: [{ value: this.service.service_closing_date }, Validators.required],
       role_code: [row.role_code, Validators.required],
       role_name: [row.role_name, Validators.required],
       itinerary_code: [row.itinerary_code, Validators.required],
@@ -419,7 +479,7 @@ console.log( item.role_site)
 
   updateItemMetadata(previousItemMetadata: any) {
     const newCssClass = "highlight-bg";
-    console.log(this.dataView);
+    // console.log(this.dataView);
     return (rowNumber: number) => {
       const item = this.dataView.getItem(rowNumber);
       let meta = {
