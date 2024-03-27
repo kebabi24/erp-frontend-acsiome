@@ -40,6 +40,8 @@ export class CreateNewServiceComponent implements OnInit {
   selectedRow: any;
   isNotSelected = true;
   isClose = false;
+  user_mobile_code: any
+  site: any
   constructor(
     config: NgbDropdownConfig,
     private serviceF: FormBuilder,
@@ -217,11 +219,12 @@ export class CreateNewServiceComponent implements OnInit {
         this.dataset = this.data.map((item) => {
           this.services.push(item);
           console.log(item);
-          const itineraries = item.role_itinerary;
+          const itineraries = item.role_itineraries;
           // console.log(itineraries);
           const tab = [];
           tab.push(itineraries);
-          const itn = tab.filter((item_itinerary) => item.service != null && item_itinerary.itinerary.itinerary_code === item.service.itinerary_code);
+          console.log(tab)
+          const itn = itineraries.filter((item_itinerary) => item.service != null && item_itinerary.itinerary.itinerary_code === item.service.itinerary_code);
           // console.log(itn);
           // console.log(itineraries)
           if (item.service == null) {
@@ -238,6 +241,7 @@ export class CreateNewServiceComponent implements OnInit {
               service_period_activate_date: null,
               itinerary_code: null,
               itinerary_name: null,
+              role_site: item.role_site
             };
             return node;
           } else {
@@ -246,14 +250,15 @@ export class CreateNewServiceComponent implements OnInit {
               role_code: item.role_code,
               role_name: item.role_name,
               user_mobile_code: item.user_mobile_code,
-              // username: item.userMobile.username,
-              // profile_code: item.userMobile.profileMobile.profile_code,
-              // profile_name: item.userMobile.profileMobile.profile_name,
+              username: item.userMobile.username,
+              profile_code: item.userMobile.profileMobile.profile_code,
+              profile_name: item.userMobile.profileMobile.profile_name,
               code_service: item.service.service_code,
               etat_service: "Oui",
               service_period_activate_date: item.service.service_period_activate_date,
               itinerary_code: item.service.itinerary_code,
               itinerary_name: itn[0].itinerary.itinerary_name,
+              role_site: item.role_site
             };
             return node;
           }
@@ -306,10 +311,13 @@ export class CreateNewServiceComponent implements OnInit {
     const year = controls.service_creation_date.value.year;
     const month = controls.service_creation_date.value.month;
     const day = controls.service_creation_date.value.day;
-    _service.service_creation_date = `${year}/${month}/${day}`;
+    _service.service_period_activate_date = `${year}/${month}/${day}`;
     //_service.service_closing_date = controls.service_closing_date.value
     _service.role_code = controls.role_code.value;
     _service.itinerary_code = controls.itinerary_code.value;
+    _service.user_mobile_code = this.user_mobile_code;
+    _service.service_site = this.site;
+    
     // _service.service_open = controls.service_open.value
     return _service;
   }
@@ -326,7 +334,7 @@ export class CreateNewServiceComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-        this.router.navigateByUrl("/service");
+        this.router.navigateByUrl("/services/create-new-service");
       }
     );
   }
@@ -341,23 +349,32 @@ export class CreateNewServiceComponent implements OnInit {
     if (Array.isArray(args.rows) && this.grid) {
       args.rows.map((idx) => {
         const item = this.grid.getDataItem(idx);
+        console.log(item)
         // this.itinerary = this.services[idx].role_itineraries
+        this.user_mobile_code = item.user_mobile_code
+console.log( item.role_site)
+        this.site = item.role_site
         this.itinerary = [];
         console.log(this.services[idx]);
         const newItem = [];
-        newItem.push(this.services[idx].role_itinerary);
+        newItem.push(this.services[idx].role_itineraries);
+
         newItem.map((item: any) => {
-          this.itinerary.push({ itinerary_code: item.itinerary.itinerary_code, itinerary_name: item.itinerary.itinerary_name });
+          item.map((element: any) => {
+          console.log(element)
+          this.itinerary.push({ itinerary_code: element.itinerary.itinerary_code, itinerary_name: element.itinerary.itinerary_name });
+          })
         });
         console.log(this.itinerary);
         this.selectedRow = item;
       });
     }
-
     if (this.selectedRow.etat_service === null) {
+      console.log("heree",this.selectedRow.etat_service)
+      this.isNotSelected = false;
       this.createForm(this.selectedRow);
       // this.createService();
-      this.isNotSelected = false;
+      
       this.isClose = true;
     } else {
       this.closeService();
