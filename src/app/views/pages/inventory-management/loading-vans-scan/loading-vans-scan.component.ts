@@ -162,7 +162,11 @@ export class LoadingVansScanComponent implements OnInit {
         this.printLines = [];
         this.username = "";
         // this.load_request_code = "";
+        this.scanned_codes = [];
+
         this.role_code = "";
+        this.total = 0;
+        this.totalCartons = 0;
       },
       (error) => {
         // this.loadRequestData = []
@@ -413,7 +417,7 @@ export class LoadingVansScanComponent implements OnInit {
 
     //console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
-      let desc = response.data.pt_desc1;
+      let desc = response.data.pt_desc2;
       let price = response.data.pt_price;
       this.gridService.addItem(
         {
@@ -665,7 +669,7 @@ export class LoadingVansScanComponent implements OnInit {
       this.printLines.push({
         line: k,
         product_code: prod.product_code,
-        product_name: prod.item.pt_desc1,
+        product_name: prod.item.pt_desc2,
         pt_price: prod.pt_price,
         qt_request: prod.qt_request,
         // lot: prod.occurences[0].lot,
