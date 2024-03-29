@@ -43,6 +43,8 @@ export class QuickUserPanelComponent implements OnInit {
     localStorage.removeItem('token')*/
     localStorage.removeItem('user')
     localStorage.removeItem('token')
+    localStorage.removeItem('domain')
+    // this.router.navigateByUrl(`/auth/login`)
     this.store.dispatch(new Logout());
     this.router.navigateByUrl(`/auth/login`)
 
