@@ -12,7 +12,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { InventoryManagementService, printInventory, InventoryTransactionService ,RoleService} from "../../../../core/erp";
+import { InventoryManagementService, printInventory, InventoryTransactionService, RoleService } from "../../../../core/erp";
 
 @Component({
   selector: "kt-loading-vans-v2",
@@ -57,7 +57,7 @@ export class LoadingVansV2Component implements OnInit {
 
   showSpinner: Boolean = false;
 
-  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private roleService: RoleService ,private modalService: NgbModal) {
+  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private roleService: RoleService, private modalService: NgbModal) {
     config.autoClose = true;
     this.prepareGrid();
   }
@@ -144,7 +144,7 @@ export class LoadingVansV2Component implements OnInit {
     this.inventoryManagementService.createLoadRequestDetails(details, lines).subscribe(
       (response: any) => {
         this.loadRequestData = [];
-        this.load_request_code = "";
+        // this.load_request_code = "";
         this.role_code = "";
         this.createForm();
       },

@@ -122,6 +122,7 @@ export class InventoryManagementService {
   }
   public createLoadRequestDetailsUpdateStatus(details: any, lines: any, load_request_code: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
+    console.log("load", load_request_code);
     return this.http.post(`${API_URL_2}/createLoadRequestDetailsStatus/`, { load_request_details: details, load_request_lines: lines, load_request_code: load_request_code }, { headers: httpHeaders });
   }
 }
