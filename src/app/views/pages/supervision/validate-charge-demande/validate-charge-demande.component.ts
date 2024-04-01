@@ -150,6 +150,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
     this.loadRequestService.getLoadRequestsLineWithCode({ role_code: this.role_code, load_request_code: load_request_data }).subscribe(
       (response: any) => {
         this.loadRequestData = response.loadRequestData;
+        console.log(this.loadRequestData);
         this.loadRequestData.forEach((page) => {
           for (const product of page.productPageDetails) {
             if (product.item.loadRequestLine == null) {
