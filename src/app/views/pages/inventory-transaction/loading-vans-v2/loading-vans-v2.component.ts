@@ -115,6 +115,7 @@ export class LoadingVansV2Component implements OnInit {
     const details = [];
     const lines = [];
 
+    console.log(this.loadRequestData)
     this.loadRequestData.forEach((loadRequest) => {
       let sum = 0;
       loadRequest.selectedProducts.forEach((product) => {
