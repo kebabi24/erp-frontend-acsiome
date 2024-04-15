@@ -119,6 +119,7 @@ export class LoadingVansV2Component implements OnInit {
     this.loadRequestData.forEach((loadRequest) => {
       let sum = 0;
       loadRequest.selectedProducts.forEach((product) => {
+        sum=0
         if (product.lots.length > 0) {
           product.lots.forEach((lot) => {
             sum += +lot.qt_effected;
@@ -169,7 +170,7 @@ export class LoadingVansV2Component implements OnInit {
               let i = 1;
               product.lots.forEach((lot) => {
                 sum += +lot.qt_effected;
-
+if(lot.qt_effected > 0) {
                 // CREATE DETAILS LINE
                 details.push({
                   product_code: product.product_code,
@@ -194,8 +195,9 @@ export class LoadingVansV2Component implements OnInit {
                 });
                 i++;
                 console.log("lol", detailss);
-              });
-
+              }
+            });
+            
               // CREATE LINE
               lines.push({
                 product_code: product.product_code,
@@ -216,14 +218,6 @@ export class LoadingVansV2Component implements OnInit {
           tr_effdate: new Date(),
           tr_nbr: nlot,
         };
-
-        this.inventoryManagementService.createLoadRequestDetailsUpdateStatus(details, lines, this.load_request_code).subscribe(
-          (response: any) => {
-            this.loadRequestData = [];
-            this.load_request_code = "";
-            this.role_code = "";
-
-            this.createForm();
             let detail = detailss;
 
             // isstr
@@ -240,17 +234,6 @@ export class LoadingVansV2Component implements OnInit {
               }
             );
           },
-          (error) => {
-            // this.loadRequestData = []
-            console.log(error);
-          },
-          () => {
-            this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
-            this.loadingSubject.next(false);
-            // this.router.navigateByUrl("/customers-mobile/cluster-create")
-          }
-        );
-      }
     );
   }
 

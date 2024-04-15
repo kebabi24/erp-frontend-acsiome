@@ -150,7 +150,7 @@ export class LoadingVansScanComponent implements OnInit {
       console.log("details", details);
     });
 
-    this.inventoryManagementService.createLoadRequestDetails(details, lines).subscribe(
+    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines).subscribe(
       (response: any) => {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
