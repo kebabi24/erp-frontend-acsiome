@@ -142,8 +142,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            /*ajouter ligne tr_hist de suppression*/
-            if (args.dataContext.tr_qty_loc > 0) {
+            if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
+              alert("Suppression interdite");
+              
+            }
+            else
+            {/*ajouter ligne tr_hist de suppression*/
+            if (args.dataContext.tr_qty_loc > 0 ) {
               this.index = this.dataset.findIndex((el) => {
                 return el.tr_line == args.dataContext.tr_line;
               });
@@ -155,6 +160,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             }
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
+        }
         },
       },
 
@@ -601,10 +607,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.printbuttonState = true;
+
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
             this.printbuttonState = true;
             const _lb = new Label();
@@ -625,7 +633,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
-            console.log(_lb);
+            // console.log(_lb);
             // console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
@@ -966,7 +974,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         // window.open(fileUrl)
       },
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur verifier les informations")
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

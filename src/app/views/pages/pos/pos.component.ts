@@ -1052,7 +1052,7 @@ export class PosComponent implements OnInit {
       this.posCategoryService.setLoyCart({ customer_number: this.loy_num, type: loy.pt_part_type }).subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -1401,7 +1401,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService.addOrder({ cart, modif: this.modif }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -1510,7 +1510,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService.checkInventory2({ detail: this.dataset }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -1545,7 +1545,7 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -1591,7 +1591,7 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -2085,7 +2085,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService.createRctPo({ detail: this.datasetRec, it: new Date() }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -2279,7 +2279,7 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -2302,7 +2302,7 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -2362,7 +2362,7 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -2382,7 +2382,7 @@ export class PosComponent implements OnInit {
       .subscribe(
         (reponse) => console.log("response", Response),
         (error) => {
-          this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+          alert("Erreur, vérifier les informations");
           this.loadingSubject.next(false);
         },
         () => {
@@ -2444,7 +2444,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService.createCustomer({ customer }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -2460,7 +2460,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService.createFRequest({ mv, type: "D", user_site: this.user.usrd_site }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -2584,7 +2584,7 @@ export class PosComponent implements OnInit {
     this.employeService.addTime({ empDetails: this.emps }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -2754,7 +2754,7 @@ export class PosComponent implements OnInit {
     this.posCategoryService.synchro().subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

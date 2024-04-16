@@ -1,6 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Sortie Composant OF" [class]="'card-head-lg'"
-        [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" title="Sortie Composant OF" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -11,7 +10,7 @@
     <kt-portlet-body>
         <div class="example-preview">
 
-            <form class="form row" [formGroup]="trForm">
+          <form class="form" [formGroup]="woForm">
                 <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
                     {{message}}
@@ -91,7 +90,7 @@
                       <label class="form-group">Qte Commandée:</label>
                       <div class="input-group input-group-sm">
         
-                          <input type="text" class="form-control form-control-solid"  formControlName="wo_ord_qty"
+                          <input type="number" class="form-control form-control-solid"  formControlName="wo_qty_ord"  step="0.5"
                               aria-describedby="basic-addon2" >
                           
                       </div>
@@ -101,7 +100,7 @@
                     <label class="form-group">Quantité Réalisée:</label>
                     <div class="input-group input-group-sm">
         
-                        <input type="text" class="form-control form-control-solid"  formControlName="total_bobine"
+                        <input type="number" class="form-control form-control-solid"  formControlName="total_bobine" 
                             aria-describedby="basic-addon2" >
                         
                     </div>
@@ -153,24 +152,24 @@
                       </select>
                     </div>
           
-                    <!-- <div class="form-group col-3">
+                    <div class="form-group col-3">
                       <label class="form-group">Rechercher</label>
                       <div class="input-group input-group-sm">
                         <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="searchProduct()" [disabled]="globalState">Rechercher</button>
                       </div>
                     </div>
         
-                    <div class="form-group col-3">
+                    <!-- <div class="form-group col-3">
                       <label class="form-group">Démarrer:</label>
                       <div class="input-group input-group-sm">
                         <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()" [disabled]="globalState">Créer OF</button>
                       </div>
-                    </div> -->
-                  </div>
+                    </div>-->
+                  </div> 
           
                   <!-- SEARCH PRODUCT END  -->
           
-                  <!-- <div class="row">
+                  <div class="row">
                     <div class="form-group col-2">
                       <label class="form-group">Produit:</label>
                       <div class="input-group input-group-sm">
@@ -204,7 +203,7 @@
                         <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()" [disabled]="globalState">Créer OF</button>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
                       <div class="row">
 
                         <div class="form-group col-3">
@@ -225,7 +224,7 @@
                         </div>    
                     
                 </div>
-                <div class="col-3">
+                <!-- <div class="col-3">
                     <div class="row">
 
                         <div class="form-group col-9">
@@ -237,7 +236,7 @@
                         
                             
                     </div>
-                </div> 
+                </div>  -->
                 <!--div class="row">
                    
                     <div class="form-group col-9">

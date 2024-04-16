@@ -477,7 +477,7 @@ export class SensibilisationComponent implements OnInit {
     this.projectService.addSensibilisationData({ data, mpd: this.checkedMpd }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

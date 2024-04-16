@@ -541,7 +541,7 @@ export class CreateDirectWoComponent implements OnInit {
       },
       () => {
         console.log("lab", lab);
-
+        const timedate = new Date().toLocaleTimeString();
         this.trdataset.push({
           tr_line: 1,
           tr_part: controls.wo_part.value,
@@ -556,6 +556,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_expire: null,
           tr_ref: lab.lb_ref,
           tr_user1: controls.wo_user1.value,
+          tr_program: timedate,
         });
         console.log(this.trdataset);
         this.addTR(this.trdataset, tr);
@@ -605,7 +606,7 @@ export class CreateDirectWoComponent implements OnInit {
     this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -767,7 +768,7 @@ export class CreateDirectWoComponent implements OnInit {
     this.inventoryTransactionService.addIssWo({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -812,7 +813,7 @@ export class CreateDirectWoComponent implements OnInit {
         this.workOrderService.addDirect({ it: wo, nof: this.nof }).subscribe(
           (reponse: any) => (this.wolot = reponse.data),
           (error) => {
-            this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+            alert("Erreur, vérifier les informations");
             this.loadingSubject.next(false);
           },
           () => {

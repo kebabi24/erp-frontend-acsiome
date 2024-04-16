@@ -172,7 +172,7 @@ export class ReviewCustomerReqComponent implements OnInit {
 
     this.projectService.sendDataToModelRevue({ pme: pme, dataset: this.dataset, dataset2: this.dataset2, dataset3: this.dataset3, dataset4: this.dataset4 }).subscribe(
       (reponse: any) => (error: any) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

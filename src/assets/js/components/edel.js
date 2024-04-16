@@ -88,7 +88,7 @@ const fs = require('fs');
 
 // }(Edelweiss || {}))
 var Edelweiss = (function () {
-    console.log("herrereeeeeeeeee")
+    console.log("EDELWEISS")
     return {
         print3: function (lb, userPrinter) {
             const options = {

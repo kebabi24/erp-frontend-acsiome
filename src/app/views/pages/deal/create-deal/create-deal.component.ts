@@ -194,7 +194,7 @@ export class CreateDealComponent implements OnInit {
     this.dealService.add(formData).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

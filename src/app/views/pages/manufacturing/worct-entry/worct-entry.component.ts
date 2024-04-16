@@ -823,7 +823,7 @@ export class WorctEntryComponent implements OnInit {
     this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

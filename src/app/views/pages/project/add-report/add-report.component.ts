@@ -296,7 +296,7 @@ export class AddReportComponent implements OnInit {
     this.addReportService.add({ addReport: _addReport, empDetail: detail, cnsDetail: cnsdetail, nbr }).subscribe(
       (reponse: any) => (emp = reponse.data),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

@@ -1165,7 +1165,7 @@ export class IssBobineWoComponent implements OnInit {
         console.log('recherche article',response);
         if (data) { 
           if (data.length == 0) {
-            alert("Aucun produit n'existe avec le type et la couleur sélectionnés");
+            alert("Aucun produit n'existe avec les caractéristiques sélectionnés");
           } else {
             
             controls.wo_part.setValue(data[0].pt_part);
@@ -1273,6 +1273,7 @@ export class IssBobineWoComponent implements OnInit {
     _wo.wo_user1 = this.user1;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
+    _wo.wo_qty_ord = controls.wo_qty_ord.value;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1332,7 +1333,7 @@ export class IssBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addIssWo({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -1374,11 +1375,11 @@ export class IssBobineWoComponent implements OnInit {
           }
         );
         console.log("yaw hna ", this.nof);
-        let wo = this.prepare();
+        let wo = this.preparewo();
         this.workOrderService.addDirect({ it: wo, nof: this.nof }).subscribe(
           (reponse: any) => (this.wolot = reponse.data),
           (error) => {
-            this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+            alert("Erreur création OF, vérifier les informations");
             this.loadingSubject.next(false);
           },
           () => {
@@ -2566,7 +2567,7 @@ var bol = false
 
 }
 else {
-  alert("Palette Nexiste pas")
+  alert("Palette N'existe pas")
 //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
   }
 

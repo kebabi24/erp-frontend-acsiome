@@ -209,7 +209,7 @@ export class CreateMessageComponent implements OnInit {
     this.messageService.add( { Msg:_message, Roles: _role }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

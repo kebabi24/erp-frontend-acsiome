@@ -192,7 +192,8 @@ export class CreateBobineWoComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          if (args.dataContext.tr_ref != null || args.dataContext.tr_ref != '' ){alert('vous ne pouvez pas supprimer cette ligne')}
+          console.log(args.dataContext.tr_ref)
+          if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != '' ){alert('vous ne pouvez pas supprimer cette ligne')}
           else {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             const controls = this.woForm.controls;
@@ -749,7 +750,7 @@ export class CreateBobineWoComponent implements OnInit {
     this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
       (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
-        alert("Erreur de récupération path");
+        alert("Erreur de récupération imprimante");
       }
     );
     this.getProductColors();
@@ -852,9 +853,9 @@ export class CreateBobineWoComponent implements OnInit {
         controls.product_type.setValue(this.woServer.item.pt_article);
         controls.product_color.setValue(this.woServer.item.pt_break_cat);
         controls.product_quality.setValue(this.woServer.item.pt_rev);
-        
+        controls.product_Cyl.setValue(this.woServer.item.pt_group);
 
-        controls.product_Cyl.setValue(this.woServer.item.pt_group)
+        
         this.product = this.woServer.item;
         this.umd = this.woServer.item.pt_um;
         this.qtycart = this.woServer.item.int03 != null ? this.woServer.item.int03 : 0;
@@ -961,7 +962,7 @@ export class CreateBobineWoComponent implements OnInit {
       })
      
       } else {
-        alert("OF n'existe pas ou status <> 'R' ");
+        alert("OF n'existe pas ou n'est pas lancé (statut <> 'R') ");
         controls.wo_lot.setValue(null);
         document.getElementById("id").focus();
       }
@@ -1003,7 +1004,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_colors = data;
         if (!data) {
-          alert("Erreur bdd");
+          alert("pas de couleur dans le paramétrage");
           // controls.wo_site.setValue("");
         }
       });
@@ -1018,7 +1019,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_types = data;
         if (!data) {
-          alert("Erreur bdd");
+          alert("pas de dimension dans le parametrage");
           // controls.wo_site.setValue("");
         }
       });
@@ -1032,7 +1033,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_qualitys = data;
         if (!data) {
-          alert("Erreur bdd");
+          alert("pas de qualité paramétrée");
           // controls.wo_site.setValue("");
         }
       });
@@ -1046,7 +1047,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_Cyls = data;
         if (!data) {
-          alert("Erreur bdd");
+          alert("pas de cilicone paramétré");
           // controls.wo_site.setValue("");
         }
       });
@@ -1075,7 +1076,7 @@ export class CreateBobineWoComponent implements OnInit {
         console.log('recherche article',response);
         if (data) { 
           if (data.length == 0) {
-            alert("Aucun produit n'existe avec le type et la couleur sélectionnés");
+            alert("Aucun produit n'existe avec les caracteristiques sélectionnés");
           } else {
             
             controls.wo_part.setValue(data[0].pt_part);
@@ -1238,7 +1239,7 @@ export class CreateBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations avec l'administrateur système");
         this.loadingSubject.next(false);
       },
       () => {
@@ -1260,7 +1261,7 @@ export class CreateBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addRJCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations avec l'administrateur système");
         this.loadingSubject.next(false);
       },
       () => {
@@ -1282,6 +1283,7 @@ export class CreateBobineWoComponent implements OnInit {
     _wo.wo_user1 = this.user1;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
+    _wo.wo_qty_ord = controls.wo_qty_ord.value;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1423,7 +1425,7 @@ export class CreateBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addIssWo({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {
@@ -1464,12 +1466,12 @@ export class CreateBobineWoComponent implements OnInit {
             return;
           }
         );
-        console.log("yaw hna ", this.nof);
+        
         let wo = this.prepare();
         this.workOrderService.addDirect({ it: wo, nof: this.nof }).subscribe(
           (reponse: any) => (this.wolot = reponse.data),
           (error) => {
-            this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+            alert("Erreur création OF, vérifier les informations");
             this.loadingSubject.next(false);
           },
           () => {
@@ -1520,7 +1522,7 @@ export class CreateBobineWoComponent implements OnInit {
           tr__chr02: "",
           tr_qty_loc: null,
           tr_loc: null,
-          tr_effdate: controls.wo_ord_date.value,
+          tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null,
           tr_um:null,
           tr_um_conv: 1,
           tr_price: null,
@@ -2125,12 +2127,13 @@ export class CreateBobineWoComponent implements OnInit {
     /*kamel palette*/
     const controls = this.woForm.controls;
     const qty= Number(controls.wo_qty_comp.value)
-    const TOTAL = Number(controls.total_bobine.value) + Number(controls.wo_qty_comp.value)
-    controls.total_bobine.setValue(TOTAL)
+    
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
-    this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
+    this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value }).subscribe((res: any) => {
+      if (res.data.wo_status == "C" ){alert('Quantité pour cet OF est superieure à la quantité prévue')}
+    else {this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)
   
@@ -2152,12 +2155,12 @@ export class CreateBobineWoComponent implements OnInit {
         tr_qty_loc: qty,
         tr_site: controls.wo_site.value,
         tr_loc: respopart.data.pt_loc,
-        tr_effdate: controls.wo_ord_date.value,
-        tr_um:controls.wo_ord_date.value,
+        tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}-${controls.wo_ord_date.value.month}-${controls.wo_ord_date.value.day}` : null,
+        tr_um:respopart.data.pt_um,
         tr_um_conv:1,
         tr_price: this.sct.sct_mtl_tl,
         cmvids: "",
-        tr_ref: "",
+        tr_ref: null,
         tr_serial: "",
         tr_program: timedate,
         // tr_status: this.stat,
@@ -2166,11 +2169,14 @@ export class CreateBobineWoComponent implements OnInit {
       { position: "bottom" },
       
     );
+    const TOTAL = Number(controls.total_bobine.value) + Number(controls.wo_qty_comp.value)
+    controls.total_bobine.setValue(TOTAL)
     controls.wo_qty_comp.setValue(0);
-  
+    
      });
     }); 
-  
+  }})
+    
  
   }
   onChangeSq() {
@@ -2202,12 +2208,12 @@ export class CreateBobineWoComponent implements OnInit {
         tr_qty_loc: sqqty,
         tr_site: controls.wo_site.value,
         tr_loc: respopart.data.pt_loc,
-        tr_effdate: controls.wo_ord_date.value,
-        tr_um:controls.wo_ord_date.value,
+        tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null,
+        tr_um:respopart.data.pt_um,
         tr_um_conv:1,
         tr_price: this.sct.sct_mtl_tl,
         cmvids: "",
-        tr_ref: "",
+        tr_ref: null,
         tr_serial: "",
         tr_program: timedate,
         // tr_status: this.stat,
@@ -2548,7 +2554,7 @@ export class CreateBobineWoComponent implements OnInit {
         controls.product_quality.setValue(item.item.pt_rev);
         controls.total_bobine.setValue(item.wo_qty_comp);
         controls.wo_qty_ord.setValue(item.wo_qty_ord)
-        controls.product_Cyl.setValue(item.pt_group)
+        controls.product_Cyl.setValue(item.item.pt_group)
         
         //remplir les grids
         controls.wo_nbr.value

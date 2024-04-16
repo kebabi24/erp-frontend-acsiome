@@ -218,7 +218,7 @@ prepareCode(): any {
     this.affectEmpService.add({ affectEmp: _affectEmp, empDetail: detail }).subscribe(
       (reponse: any) => (emp = reponse.data),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
       },
       () => {

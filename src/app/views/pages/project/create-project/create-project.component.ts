@@ -283,7 +283,7 @@ psdataset: any[];
     this.projectService.add({ Project: _project, ProjectDetails: details, docs_codes: l }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
-        this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+        alert("Erreur, vérifier les informations");
     //    this.loadingSubject.next(false);
       },
       () => {
@@ -349,7 +349,7 @@ psdataset: any[];
 //   this.saleOrderService.add({ saleOrder: so, saleOrderDetail: this.sodataset }).subscribe(
 //     (reponse: any) => (sop = reponse.data),
 //     (error) => {
-//       this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+//       alert("Erreur, vérifier les informations");
 //       this.loadingSubject.next(false);
 //     },
 //     () => {
@@ -464,7 +464,7 @@ psdataset: any[];
   //   this.saleOrderService.add({ /*saleOrder: _so, saleOrderDetail:*/ details }).subscribe(
   //     (reponse: any) => (so = reponse.data),
   //     (error) => {
-  //       this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+  //       alert("Erreur, vérifier les informations");
   //       this.loadingSubject.next(false);
   //     },
   //     () => {
@@ -500,7 +500,7 @@ psdataset: any[];
         this.requisitonService.add({ requisition: _req, requisitionDetail: this.reqdataset }).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
-            this.layoutUtilsService.showActionNotification("Erreur verifier les informations", MessageType.Create, 10000, true, true);
+            alert("Erreur, vérifier les informations");
             this.loadingSubject.next(false);
           },
           () => {
