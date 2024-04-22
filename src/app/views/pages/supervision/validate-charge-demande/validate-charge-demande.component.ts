@@ -76,8 +76,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
       //  }
       }
     });
-    console.log("this.printline",this.printLines);
-    console.log("this.loadreq",this.loadRequestData);
+    // console.log("this.printline",this.printLines);
+    // console.log("this.loadreq",this.loadRequestData);
     
     // this.printpdf();
     this.loadRequestService.updateLoadRequestStatus10(this.load_request_code, this.loadRequestData).subscribe(
@@ -153,11 +153,12 @@ export class ValidateChargeDemandeComponent implements OnInit {
       (response: any) => {
         this.loadRequestData = response.loadRequestData;
         console.log(this.loadRequestData);
+
         this.loadRequestData.forEach((page) => {
           for (const product of page.productPageDetails) {
-            console.log("product.item.loadRequestLines",product.item.loadRequestLines)
+         //   console.log("product.item.loadRequestLines",product.item.loadRequestLines)
             if (product.item.loadRequestLines.length == 0) {
-              console.log("hiiyiiiii",product.item.priceLists.length)
+           //   console.log("hiiyiiiii",product.item.priceLists.length)
               const price = (product.item.priceLists.length != 0) ? product.item.priceLists[0].salesprice : product.item.pt_price
 
               product.item.loadRequestLines.push({ qt_request: 0, pt_price: price ,qt_validated:0});
@@ -166,8 +167,16 @@ export class ValidateChargeDemandeComponent implements OnInit {
             }
           }
         });
-        console.log(this.loadRequestData);
-        this.load_request_header = response.data;
+       // console.log(this.loadRequestData);
+        // this.load_request_header = response.data;
+        // console.log("houhou",response.data)
+        this.loadRequestService.getLoadRequestInfo( load_request_data ).subscribe(
+          (respo: any) => {
+         console.log("houhou",respo.data)
+         this.load_request_header = respo.data.loadRequest.date_creation
+
+
+          })
       },
       (error) => {
         this.loadRequestData = [];
@@ -191,6 +200,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
   onSelectLoadRequest(load_request_code) {
     this.prepareLoadRequestData(load_request_code);
     this.load_request_code = load_request_code;
+    // console.log(this.load_request_header)
   }
 
   // onInputChanged(pageCode, prodCode, value) {
@@ -296,7 +306,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
     // fill the dataset with your data
   }
   openld(content, ld) {
-    console.log(ld);
+    //console.log(ld);
     this.ld = ld;
     this.prepareGridld();
     this.modalService.open(content, { size: "lg" });
@@ -363,6 +373,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
     var i = 95 + valueToAddToX;
     doc.setFontSize(10);
     for (let j = 0; j < this.printLines.length; j++) {
+      console.log(this.printLines[j].item.loadRequestLines[0].qt_request,this.printLines[j].item.loadRequestLines[0].qt_validated)
+     if(this.printLines[j].item.loadRequestLines[0].qt_request != 0 || this.printLines[j].item.loadRequestLines[0].qt_validated != 0) { 
       if (j % 30 == 0 && j != 0) {
         doc.addPage();
         img.src = "./assets/media/logos/companylogo.png";
@@ -377,7 +389,17 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
         doc.setFontSize(12);
-        doc.text(this.saved_data.load_request_code, 70, 40);
+        doc.barcode(this.load_request_code, {
+          fontSize: 70,
+          textColor: "#000000",
+          x: 100,
+          y: 60,
+          textOptions: { align: "center" }, // optional text options
+        });
+        doc.setFont("Times-Roman");
+        doc.setFontSize(12);
+            
+        doc.text(this.load_request_code, 70, 40);
         doc.setFontSize(8);
         doc.setFontSize(12);
         doc.text("Demande de chargement : " + this.load_request_code, 70, 60);
@@ -453,7 +475,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.line(120, i - 5, 120, i);
         doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
-        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 168, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text("", 193, i - 1, { align: "right" });
         doc.line(195, i - 5, 195, i);
@@ -461,6 +483,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
       }
       doc.line(10, i - 5, 195, i - 5);
     }
+    }/*for*/
     doc.line(10, i - 5, 195, i - 5);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));

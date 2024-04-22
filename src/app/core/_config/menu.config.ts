@@ -722,9 +722,19 @@ export class MenuConfig {
               page: "/sales/so-list",
             },
             {
+              title: "Commande Clients Céramic",
+              page: "/sales/create-ceram-so",
+            },
+            
+            {
               title: "Génération des BL",
               page: "/sales/create-psh",
             },
+            {
+              title: "Versement Client",
+              page: "/sales/create-payment-cust",
+            },
+            
             {
               title: "Paiement des BL",
               page: "/sales/payment-psh",
