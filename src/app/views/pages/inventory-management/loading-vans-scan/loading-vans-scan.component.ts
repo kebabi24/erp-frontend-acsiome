@@ -150,7 +150,7 @@ export class LoadingVansScanComponent implements OnInit {
       console.log("details", details);
     });
 
-    this.inventoryManagementService.createLoadRequestDetails(details, lines).subscribe(
+    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines).subscribe(
       (response: any) => {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
@@ -371,17 +371,24 @@ export class LoadingVansScanComponent implements OnInit {
     this.grid.render();
   }
 
-  onScanLoadRequest(content3) {
+  onScanLoadRequest(content3,content7) {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
-      if (response.data.loadRequest !== null) {
+      console.log(response.data.loadRequest)
+      if (response.data.loadRequest !== null ) {
+        if(response.data.loadRequest.status == 10) {
         //console.log(response);
-        this.loadRequestInfo = response.data.loadRequest;
-        this.userInfo = response.data.userMobile;
-        this.role_code = response.data.loadRequest.role_code;
-        this.username = response.data.userMobile.username;
-        document.getElementById("pal").focus();
+          this.loadRequestInfo = response.data.loadRequest;
+          this.userInfo = response.data.userMobile;
+          this.role_code = response.data.loadRequest.role_code;
+          this.username = response.data.userMobile.username;
+          document.getElementById("pal").focus();
+        } else {
+          this.modalService.open(content7, { size: "lg" });
+          controls.load_request_code.setValue(null);
+          document.getElementById("load_request_code").focus();  
+        }
       } else {
         this.modalService.open(content3, { size: "lg" });
         controls.load_request_code.setValue(null);
