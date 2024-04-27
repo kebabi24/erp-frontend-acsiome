@@ -15,14 +15,14 @@ var ElectronPrinter2 = (function () {
         scale: "fit",
         paperSize: "4x6",
       };
-      // Get the current directory of the script
-      const currentDirectory = __dirname;
-      console.log(currentDirectory);
-      // Define the file name
-      const newFileName = "file1.txt";
+      // // Get the current directory of the script
+      // const currentDirectory = __dirname;
+      // console.log(currentDirectory);
+      // // Define the file name
+      // const newFileName = "file1.txt";
 
-      // Combine the current directory with the new file name
-      const filePath = path.join(currentDirectory, newFileName);
+      // // Combine the current directory with the new file name
+      // const filePath = path.join(currentDirectory, newFileName);
 
       // Content to write in the new file
       // const fileContent = "This is the content of the new file.\n It's pretty neat.";
@@ -106,49 +106,11 @@ var ElectronPrinter2 = (function () {
       doc.setFontSize(22);
 
       for (let j = 0; j < printLines.length; j++) {
-        // if (j % 30 == 0 && j != 0) {
-        //     doc.addPage();
+        if (j % 30 == 0 && j != 0) {
+          doc.addPage();
 
-        //     doc.setFontSize(22);
-        // if (printLines[j].product_name.length > 35) {
-        //     doc.setFontSize(14);
-
-        //     let line = printLines[j];
-
-        //     let desc1 = line.product_name.substring(0, 34);
-        //     let ind = desc1.lastIndexOf(" ");
-        //     desc1 = line.product_name.substring(0, ind);
-        //     let desc2 = line.product_name.substring(ind + 1);
-
-        //     doc.line(10, i - 5, 10, i);
-        //     doc.text(String(line.line), 12.5, i - 1);
-        //     doc.line(20, i - 5, 20, i);
-        //     doc.text(line.product_code, 25, i - 1);
-        //     doc.line(45, i - 5, 45, i);
-        //     doc.text(desc1, 47, i - 1);
-        //     doc.line(100, i - 5, 100, i);
-        //     // doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
-        //     // doc.line(120, i - 5, 120, i);
-        //     doc.text(String(line.lot), 143, i - 1, { align: "right" });
-        //     doc.line(145, i - 5, 145, i);
-        //     doc.text(String(line.qt_request), 168, i - 1, { align: "right" });
-        //     doc.line(170, i - 5, 170, i);
-        //     // doc.text(String(line.qt_effected), 193, i - 1, { align: "right" });
-        //     // doc.line(195, i - 5, 195, i);
-
-        //     i = i + 5;
-
-        //     doc.text(desc2, 47, i - 1);
-
-        //     doc.line(10, i - 5, 10, i);
-        //     doc.line(20, i - 5, 20, i);
-        //     doc.line(45, i - 5, 45, i);
-        //     doc.line(100, i - 5, 100, i);
-        //     doc.line(120, i - 5, 120, i);
-        //     doc.line(145, i - 5, 145, i);
-
-        //     i = i + 5;
-        // } else {
+          doc.setFontSize(22);
+        }
         doc.setFontSize(22);
         let line = printLines[j];
         console.log(line);
@@ -166,7 +128,7 @@ var ElectronPrinter2 = (function () {
         doc.line(210, i - 14, 210, i);
 
         i = i + 14;
-        // }
+
         doc.line(2, i - 14, 210, i - 14);
       }
 
@@ -174,20 +136,20 @@ var ElectronPrinter2 = (function () {
       doc.line(2, i - 14, 210, i - 14);
       doc.save(load_request_code + ".pdf");
 
-      // Write content to the new file
-      let fileContent = "Demande de chargement : " + load_request_code + "\n" + "Role : " + role_code + "\n" + "Date : " + loadRequestInfo.date_creation + "\n" + "Vendeur : " + userInfo.user_mobile_code + "\n\n" + "--------------------------------------------------------------------" + "\n" + "|" + " Ligne " + "|" + " Code Prd " + "|" + "     Nom produit     " + "|" + "       Lot       " + "|" + "  Qté  " + "|" + "\n" + "--------------------------------------------------------------------" + "\n";
-      printLines.map((item) => {
-        let name = item.product_name.substring(0, 18);
-        fileContent = fileContent + "|" + "    " + item.line + "     " + "|" + "       " + item.product_code + "| " + name + "             | " + item.lot + " |    " + item.qt_request + "    |" + "\n" + "--------------------------------------------------------------------" + "\n";
-      });
-      fileContent = fileContent + "|                  Total cartons:" + "                    |                    |    " + totalCartons + "    |" + "\n" + "|                  Total:" + "                                |                 " + total + "    |" + "\n" + "--------------------------------------------------------------------";
-      fs.writeFile(filePath, fileContent, (err) => {
-        if (err) {
-          console.error("Error creating file:", err);
-        } else {
-          console.log("File created successfully:", filePath);
-        }
-      });
+      // // Write content to the new file
+      // let fileContent = "Demande de chargement : " + load_request_code + "\n" + "Role : " + role_code + "\n" + "Date : " + loadRequestInfo.date_creation + "\n" + "Vendeur : " + userInfo.user_mobile_code + "\n\n" + "--------------------------------------------------------------------" + "\n" + "|" + " Ligne " + "|" + " Code Prd " + "|" + "     Nom produit     " + "|" + "       Lot       " + "|" + "  Qté  " + "|" + "\n" + "--------------------------------------------------------------------" + "\n";
+      // printLines.map((item) => {
+      //   let name = item.product_name.substring(0, 18);
+      //   fileContent = fileContent + "|" + "    " + item.line + "     " + "|" + "       " + item.product_code + "| " + name + "             | " + item.lot + " |    " + item.qt_request + "    |" + "\n" + "--------------------------------------------------------------------" + "\n";
+      // });
+      // fileContent = fileContent + "|                  Total cartons:" + "                    |                    |    " + totalCartons + "    |" + "\n" + "|                  Total:" + "                                |                 " + total + "    |" + "\n" + "--------------------------------------------------------------------";
+      // fs.writeFile(filePath, fileContent, (err) => {
+      //   if (err) {
+      //     console.error("Error creating file:", err);
+      //   } else {
+      //     console.log("File created successfully:", filePath);
+      //   }
+      // });
 
       // const command = `print /d:"${userPrinter}" "${filePath}"`;
       // exec(command, (error, stdout, stderr) => {
@@ -197,23 +159,24 @@ var ElectronPrinter2 = (function () {
       //     }
       //     console.log('File printed successfully.');
       // });
-      // print(filePath, options)
-      //     .then((result) => {
-      //         console.log(result); // Print the result if needed
-      //         // Now that printing is done, delete the file
+      print(filePath, options)
+        .then((result) => {
+          console.log(result); // Print the result if needed
+          // Now that printing is done, delete the file
 
-      //         fs.unlink(filePath, (err) => {
-      //             if (err) {
-      //                 console.error(`Error deleting file: ${err}`);
-      //                 return;
-      //             }
-      //             console.log('File deleted successfully');
-      //         });
-      //     })
-      //     .catch((error) => {
-      //         console.error('Error:', error); // Handle any errors that occur during printing
-      //     });
-    },
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error(`Error deleting file: ${err}`);
+              return;
+            }
+            console.log('File deleted successfully');
+          });
+        })
+        .catch((error) => {
+          console.error('Error:', error); // Handle any errors that occur during printing
+        });
+    }
+
   };
 })(ElectronPrinter2 || {});
 
@@ -230,14 +193,14 @@ var ElectronPrinter3 = (function () {
       var doc = new jsPDF();
       let initialY = 65;
       let valueToAddToX = 5;
-      // Get the current directory of the script
-      const currentDirectory = __dirname;
-      console.log(currentDirectory);
-      // Define the file name
-      const newFileName = "file2.txt";
+      // // Get the current directory of the script
+      // const currentDirectory = __dirname;
+      // console.log(currentDirectory);
+      // // Define the file name
+      // const newFileName = "file2.txt";
 
-      // Combine the current directory with the new file name
-      const filePath = path.join(currentDirectory, newFileName);
+      // // Combine the current directory with the new file name
+      // const filePath = path.join(currentDirectory, newFileName);
       var img = new Image();
       // img.src = "companylogo.png";
       // doc.addImage(img, "png", 150, 5, 50, 30);
@@ -316,91 +279,53 @@ var ElectronPrinter3 = (function () {
       doc.setFontSize(22);
 
       for (let j = 0; j < printLines.length; j++) {
-        // if (j % 30 == 0 && j != 0) {
-        //     doc.addPage();
-        //     // img.src = "./assets/media/logos/companylogo.png";
-        //     // doc.addImage(img, "png", 150, 5, 50, 30);
-        //     doc.setFontSize(22);
-        //     //  if (this.domain.dom_name != null) {
-        //     //    doc.text(this.domain.dom_name, 10, 10);
-        //     //  }
-        //     //  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        //     //  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        //     //  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-        //     doc.setFontSize(22);
-        //     doc.line(10, 35, 200, 35);
+        if (j % 15 == 0 && j != 0) {
+          doc.addPage();
 
-        //     doc.setFontSize(22);
-        //     doc.text(load_request_code, 70, 40);
-        //     doc.setFontSize(22);
+          doc.setFontSize(22);
 
-        //     doc.setFontSize(22);
-        //     doc.text("Demande de chargement : " + load_request_code, 70, 60);
-        //     doc.setFontSize(22);
 
-        //     doc.setFontSize(22);
-        //     doc.text("Role    : " + role_code, 20, 70);
-        //     doc.text("Date    : " + loadRequestInfo.date_creation, 20, 75);
-        //     doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 20, 80);
-
-        //     doc.line(10, initialY + 25, 170, initialY + 25); // 85
-        //     doc.line(10, initialY + 30, 170, initialY + 30); // 90
-        //     doc.line(10, initialY + 25, 10, initialY + 30); // 90
-        //     doc.text("N", 12.5, initialY + 28.5); // 88.5
-        //     doc.line(20, initialY + 25, 20, initialY + 30); // 90
-        //     doc.text("Code Article", 25, initialY + 28.5); // 88.5
-        //     doc.line(45, initialY + 25, 45, initialY + 30); // 90
-        //     doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-        //     doc.line(100, initialY + 25, 100, initialY + 30); // 90
-        //     // doc.text("Prix", 107, initialY + 28.5); // 88.5
-        //     // doc.line(120, initialY + 25, 120, initialY + 30); // 90
-        //     doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
-        //     doc.line(145, initialY + 25, 145, initialY + 30); // 90
-        //     doc.text("QTE Chargée", 148, initialY + 28.5); // 88.5
-        //     doc.line(170, initialY + 25, 170, initialY + 30); // 90
-        //     // doc.text("QTE Chargée", 173, initialY + 28.5); // 88.5
-        //     // doc.line(195, initialY + 25, 195, initialY + 30); // 90
-        //     var i = 95 + valueToAddToX;
-        // }
+          var i = 95 + valueToAddToX;
+        }
 
         // if (printLines[j].product_name.length > 35) {
-        //     doc.setFontSize(22);
+        //   doc.setFontSize(22);
 
-        //     let line = printLines[j];
+        //   let line = printLines[j];
 
-        //     let desc1 = line.product_name.substring(0, 34);
-        //     let ind = desc1.lastIndexOf(" ");
-        //     desc1 = line.product_name.substring(0, ind);
-        //     let desc2 = line.product_name.substring(ind + 1);
+        //   let desc1 = line.product_name.substring(0, 34);
+        //   let ind = desc1.lastIndexOf(" ");
+        //   desc1 = line.product_name.substring(0, ind);
+        //   let desc2 = line.product_name.substring(ind + 1);
 
-        //     doc.line(10, i - 5, 10, i);
-        //     doc.text(String(line.line), 12.5, i - 1);
-        //     doc.line(20, i - 5, 20, i);
-        //     doc.text(line.product_code, 25, i - 1);
-        //     doc.line(45, i - 5, 45, i);
-        //     doc.text(desc1, 47, i - 1);
-        //     doc.line(100, i - 5, 100, i);
-        //     // doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
-        //     // doc.line(120, i - 5, 120, i);
-        //     doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
-        //     doc.line(145, i - 5, 145, i);
-        //     doc.text(String(line.qt_effected), 168, i - 1, { align: "right" });
-        //     doc.line(170, i - 5, 170, i);
-        //     // doc.text(String(line.qt_effected), 193, i - 1, { align: "right" });
-        //     // doc.line(195, i - 5, 195, i);
+        //   doc.line(10, i - 5, 10, i);
+        //   doc.text(String(line.line), 12.5, i - 1);
+        //   doc.line(20, i - 5, 20, i);
+        //   doc.text(line.product_code, 25, i - 1);
+        //   doc.line(45, i - 5, 45, i);
+        //   doc.text(desc1, 47, i - 1);
+        //   doc.line(100, i - 5, 100, i);
+        //   // doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
+        //   // doc.line(120, i - 5, 120, i);
+        //   doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
+        //   doc.line(145, i - 5, 145, i);
+        //   doc.text(String(line.qt_effected), 168, i - 1, { align: "right" });
+        //   doc.line(170, i - 5, 170, i);
+        //   // doc.text(String(line.qt_effected), 193, i - 1, { align: "right" });
+        //   // doc.line(195, i - 5, 195, i);
 
-        //     i = i + 5;
+        //   i = i + 5;
 
-        //     doc.text(desc2, 47, i - 1);
+        //   doc.text(desc2, 47, i - 1);
 
-        //     doc.line(10, i - 5, 10, i);
-        //     doc.line(20, i - 5, 20, i);
-        //     doc.line(45, i - 5, 45, i);
-        //     doc.line(100, i - 5, 100, i);
-        //     doc.line(120, i - 5, 120, i);
-        //     doc.line(145, i - 5, 145, i);
+        //   doc.line(10, i - 5, 10, i);
+        //   doc.line(20, i - 5, 20, i);
+        //   doc.line(45, i - 5, 45, i);
+        //   doc.line(100, i - 5, 100, i);
+        //   doc.line(120, i - 5, 120, i);
+        //   doc.line(145, i - 5, 145, i);
 
-        //     i = i + 5;
+        //   i = i + 5;
         // } else {
         doc.setFontSize(22);
         let line = printLines[j];
@@ -443,24 +368,24 @@ var ElectronPrinter3 = (function () {
           console.error("Error:", error); // Handle any errors that occur during printing
         });
 
-      // Write content to the new file
-      let fileContent = "Demande de chargement : " + load_request_code + "\n" + "Role : " + role_code + "\n" + "Date : " + loadRequestInfo.date_creation + "\n" + "Vendeur : " + userInfo.user_mobile_code + "\n\n" + "--------------------------------------------------------------------" + "\n" + "|" + " Ligne " + "|" + " Code Prd " + "|" + "     Nom produit     " + "|" + "       QtD       " + "|" + "  QtC  " + "|" + "\n" + "--------------------------------------------------------------------" + "\n";
-      printLines.map((item) => {
-        let name = item.product_name.substring(0, 5);
-        fileContent = fileContent + "|" + "    " + item.line + "     " + "|" + "       " + item.product_code + "| " + name + "              | " + "       " + item.qt_request + "       " + " |    " + item.qt_effected + "     |" + "\n" + "--------------------------------------------------------------------" + "\n";
-      });
-      fileContent = fileContent + "|                  Total cartons:" + "                    |                    |    " + totalCartons + "    |" + "\n" + "|                  Total:" + "                                |                 " + total + "    |" + "\n" + "--------------------------------------------------------------------";
-      fs.writeFile(filePath, fileContent, (err) => {
-        if (err) {
-          console.error("Error creating file:", err);
-        } else {
-          console.log("File created successfully:", filePath);
-        }
-      });
-      print({
-        destination: userPrinter,
-        file: filePath,
-      });
+      // // Write content to the new file
+      // let fileContent = "Demande de chargement : " + load_request_code + "\n" + "Role : " + role_code + "\n" + "Date : " + loadRequestInfo.date_creation + "\n" + "Vendeur : " + userInfo.user_mobile_code + "\n\n" + "--------------------------------------------------------------------" + "\n" + "|" + " Ligne " + "|" + " Code Prd " + "|" + "     Nom produit     " + "|" + "       QtD       " + "|" + "  QtC  " + "|" + "\n" + "--------------------------------------------------------------------" + "\n";
+      // printLines.map((item) => {
+      //   let name = item.product_name.substring(0, 5);
+      //   fileContent = fileContent + "|" + "    " + item.line + "     " + "|" + "       " + item.product_code + "| " + name + "              | " + "       " + item.qt_request + "       " + " |    " + item.qt_effected + "     |" + "\n" + "--------------------------------------------------------------------" + "\n";
+      // });
+      // fileContent = fileContent + "|                  Total cartons:" + "                    |                    |    " + totalCartons + "    |" + "\n" + "|                  Total:" + "                                |                 " + total + "    |" + "\n" + "--------------------------------------------------------------------";
+      // fs.writeFile(filePath, fileContent, (err) => {
+      //   if (err) {
+      //     console.error("Error creating file:", err);
+      //   } else {
+      //     console.log("File created successfully:", filePath);
+      //   }
+      // });
+      // print({
+      //   destination: userPrinter,
+      //   file: filePath,
+      // });
     },
   };
 })(ElectronPrinter3 || {});
