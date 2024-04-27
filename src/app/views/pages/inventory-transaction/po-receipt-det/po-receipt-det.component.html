@@ -128,7 +128,8 @@
             <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un Article</button>
           </div>
           <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitions"
+            [gridOptions]="gridOptions" [dataset]="dataset"  (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
           </div>
         </form>
       </div>
@@ -152,6 +153,8 @@
           </div>
         </ng-template>
         <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo modal</button>
+        
+        
       </div>
   
       <div>

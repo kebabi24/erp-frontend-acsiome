@@ -135,6 +135,7 @@ gridReady(angularGrid: AngularGridInstance) {
   this.dataView = angularGrid.dataView;
   this.grid = angularGrid.slickGrid;
   this.gridService = angularGrid.gridService;
+
 }
 
 initGrid() {

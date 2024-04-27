@@ -157,7 +157,8 @@ export class LoadingVansV2Component implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-        // this.router.navigateByUrl("/customers-mobile/cluster-create")
+        this.reset()
+         this.router.navigateByUrl("/inventory-transaction/loading-vans-v2")
         const details = [];
         const lines = [];
         const detailss = [];
