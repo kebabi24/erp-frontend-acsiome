@@ -97,7 +97,7 @@ export class LoadingVansScanComponent implements OnInit {
     this.loadingSubject.next(false);
 
     this.chargeForm = this.tagFB.group({
-      load_request_code: [this.load_request_code],
+      load_request_code: [null],
       pal: [],
       print: [true],
     });
@@ -175,6 +175,7 @@ export class LoadingVansScanComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
+        this.reset()
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
       }
     );
@@ -455,13 +456,17 @@ export class LoadingVansScanComponent implements OnInit {
 
   printpdf() {
     let filteredData = [];
-    const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
+    const data = _.mapValues(_.groupBy(this.printLines, ["code_prod"]));
+    console.log("data",data)
     for (const [key, value] of Object.entries(data)) {
+      console.log("key",key)
       filteredData.push({
         prod: key,
+      
         occurences: value,
       });
     }
+    console.log(filteredData)
     this.printLines = [];
     let k = 1;
     filteredData.forEach((prod) => {
