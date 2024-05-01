@@ -47,21 +47,28 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { ItineraryService, MobileServiceService, RoleService, UsersMobileService } from "../../../core/erp"
+import { ItineraryService, MobileServiceService, RoleService, SiteService, UsersMobileService } from "../../../core/erp"
 import { TreeModule } from "@circlon/angular-tree-component";
 import { CreateNewServiceComponent } from './create-new-service/create-new-service.component';
+import { ListServiceComponent } from './list-service/list-service.component';
 
 const routes: Routes = [
   {
       path: "create-new-service",
       component: CreateNewServiceComponent,
   },
+  {
+    path: "list-service",
+    component: ListServiceComponent,
+},
 ]
 
 @NgModule({
   declarations: [
 
-  CreateNewServiceComponent],
+  CreateNewServiceComponent,
+
+  ListServiceComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -99,6 +106,7 @@ const routes: Routes = [
       UsersMobileService,
       MobileServiceService,
       RoleService,
+      SiteService,
       ItineraryService,
       TypesUtilsService,
       LayoutUtilsService,

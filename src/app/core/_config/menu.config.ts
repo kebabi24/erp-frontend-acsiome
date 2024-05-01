@@ -400,6 +400,10 @@ export class MenuConfig {
               title: "Créer un nouveau service",
               page: "/services/create-new-service",
             },
+            {
+              title: "Consultation des Services",
+              page: "/services/list-service",
+            },
           ],
         },
         {
