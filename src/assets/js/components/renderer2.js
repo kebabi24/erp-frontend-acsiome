@@ -9,7 +9,7 @@ var ElectronPrinter2 = (function () {
   console.log("herrereeeeeeeeee");
   return {
     print2: function (dataset, load_request_code, role_code, loadRequestInfo, userInfo, username, printLines, userPrinter, total, totalCartons) {
-      console.log(userPrinter);
+     // console.log(userPrinter);
       const options = {
         printer: userPrinter,
         paperSize: "4x6",
@@ -65,7 +65,7 @@ var ElectronPrinter2 = (function () {
 
       doc.setFont("Times-Roman");
 
-      console.log("initialy",initialY)
+      //console.log("initialy",initialY)
       doc.setFontSize(14);
       doc.text("Demande de chargement : " + load_request_code, 13, initialY + 5);
 
@@ -99,10 +99,12 @@ var ElectronPrinter2 = (function () {
           doc.addPage();
 
           doc.setFontSize(8);
+          doc.line(2, 5, 98, 5); // 85
+          i = 10
         }
         doc.setFontSize(8);
         let line = printLines[j];
-        console.log("kamelkamel",line);
+       // console.log("kamelkamel",line);
         doc.line(2, i - 5, 2, i);
         doc.text(String(line.line), 4, i - 2 );
         doc.line(10, i - 5, 10, i);
@@ -154,13 +156,13 @@ var ElectronPrinter2 = (function () {
          console.log(result); // Print the result if needed
           // Now that printing is done, delete the file
 
-          // fs.unlink(load_request_code + ".pdf", (err) => {
-          //   if (err) {
-          //     console.error(`Error deleting file: ${err}`);
-          //     return;
-          //   }
-          //   console.log('File deleted successfully');
-          // });
+          fs.unlink(load_request_code + ".pdf", (err) => {
+            if (err) {
+              console.error(`Error deleting file: ${err}`);
+              return;
+            }
+            console.log('File deleted successfully');
+          });
        })
        .catch((error) => {
          console.error('Error:', error); // Handle any errors that occur during printing
@@ -177,12 +179,19 @@ var ElectronPrinter3 = (function () {
       console.log(userPrinter);
       const options = {
         printer: userPrinter,
-        scale: "fit",
         paperSize: "4x6",
+        scale:"fit",
       };
-      var doc = new jsPDF();
-      let initialY = 65;
-      let valueToAddToX = 5;
+     
+      var doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [100,150]
+        })
+        let initialY = 5;
+        let valueToAddToX = 5;
+        doc.setLineWidth(0.2);
+      
       // // Get the current directory of the script
       // const currentDirectory = __dirname;
       // console.log(currentDirectory);
@@ -194,7 +203,7 @@ var ElectronPrinter3 = (function () {
       var img = new Image();
       // img.src = "companylogo.png";
       // doc.addImage(img, "png", 150, 5, 50, 30);
-      doc.setFontSize(22);
+      doc.setFontSize(14);
 
       // if (this.domain.dom_name != null) {
       //   doc.text(this.domain.dom_name, 10, 10);
@@ -202,10 +211,9 @@ var ElectronPrinter3 = (function () {
       // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
       // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
       // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-      doc.setFontSize(22);
-
-      doc.line(10, 35, 200, 35);
-      doc.setFontSize(22);
+     
+      //doc.line(10, 35, 200, 35);
+      doc.setFontSize(14);
 
       // doc.barcode(load_request_code, {
       //     fontSize: 70,
@@ -215,67 +223,87 @@ var ElectronPrinter3 = (function () {
       //     textOptions: { align: "center" }, // optional text options
       // });
 
-      bwipjs.toBuffer(
-        {
-          bcid: "code128", // Barcode type (replace with the desired barcode format)
-          text: load_request_code, // Barcode data
-          scale: 3, // Scaling factor for the barcode image
-          includetext: true, // Include the barcode text
-          height: 10,
-          width: 60,
-        },
-        function (err, png) {
-          if (err) {
-            console.log(err);
-            return;
-          }
+      // bwipjs.toBuffer(
+      //   {
+      //     bcid: "code128", // Barcode type (replace with the desired barcode format)
+      //     text: load_request_code, // Barcode data
+      //     scale: 3, // Scaling factor for the barcode image
+      //     includetext: true, // Include the barcode text
+      //     height: 10,
+      //     width: 60,
+      //   },
+      //   function (err, png) {
+      //     if (err) {
+      //       console.log(err);
+      //       return;
+      //     }
 
-          doc.addImage(png, "PNG", 80, 45, 65, 20);
-          doc.save(load_request_code + ".pdf");
-        }
-      );
+      //     doc.addImage(png, "PNG", 80, 45, 65, 20);
+      //     doc.save(load_request_code + ".pdf");
+      //   }
+      // );
 
       doc.setFont("Times-Roman");
 
-      doc.setFontSize(22);
-      doc.text("Demande de chargement : " + load_request_code, 50, initialY + 5);
+      doc.text("Demande de chargement : " + load_request_code, 13, initialY + 5);
 
-      doc.setFontSize(22);
-      doc.text("Role    : " + role_code, 5, initialY + 20);
-      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 30);
-      doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 40);
-      doc.text("Total cartons    : " + totalCartons, 130, initialY + 30);
-      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 130, initialY + 40);
-      doc.setFontSize(22);
+      doc.setFontSize(9);
+      doc.text("Role    : " + role_code, 5, initialY + 10);
+      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
+      doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 20);
+      doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
+      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      doc.setFontSize(9);
 
-      doc.line(2, initialY + 55, 210, initialY + 55); // 85
-      doc.line(2, initialY + 70, 210, initialY + 70); // 90
-      doc.line(2, initialY + 55, 2, initialY + 70); // 90
-      doc.text("N", 11, initialY + 63); // 88.5
-      doc.line(20, initialY + 55, 20, initialY + 70); // 90
-      doc.text("Code Article", 25, initialY + 63); // 88.5
-      doc.line(70, initialY + 55, 70, initialY + 70); // 90
-      doc.text("Désignation", 75, initialY + 63); // 88.5
-      doc.line(140, initialY + 55, 140, initialY + 70); // 90
+//      doc.setFontSize(22);
 
-      doc.text("QTD", 145, initialY + 63); // 88.5
-      doc.line(192, initialY + 55, 192, initialY + 70); // 90
-      doc.text("QtC", 194, initialY + 63); // 88.5
-      doc.line(210, initialY + 55, 210, initialY + 70); // 90
+      doc.line(2, initialY + 25, 98, initialY + 25); // 85
+      doc.line(2, initialY + 35, 98, initialY + 35); // 90
+      doc.line(2, initialY + 25, 2, initialY + 35); // 90
+      doc.text("N°", 4, initialY + 30); // 88.5
+      doc.line(10, initialY + 25, 10, initialY + 35); // 90
+      doc.text("Code ", 13, initialY + 30); // 88.5
+      doc.line(30, initialY + 25, 30, initialY + 35); // 90
+      doc.text("Désignation", 35, initialY + 30); // 88.5
+      doc.line(70, initialY + 25, 70, initialY + 35); // 90
+      // doc.text("Lot", 65, initialY + 30); // 88.5
+      // doc.line(80, initialY + 25, 80, initialY + 35); // 90
+      doc.text("QTED", 75, initialY + 30); // 88.5
+      doc.line(84, initialY + 25, 84, initialY + 35); // 90
+      doc.text("QTEC", 88, initialY + 30); // 88.5
+      doc.line(98, initialY + 25, 98, initialY + 35); // 90
 
-      var i = 143 + valueToAddToX;
-      doc.setFontSize(22);
+      var i = 40 + valueToAddToX;
+      doc.setFontSize(8);
 
-      doc.setFontSize(22);
+      // doc.line(2, initialY + 55, 210, initialY + 55); // 85
+      // doc.line(2, initialY + 70, 210, initialY + 70); // 90
+      // doc.line(2, initialY + 55, 2, initialY + 70); // 90
+      // doc.text("N", 11, initialY + 63); // 88.5
+      // doc.line(20, initialY + 55, 20, initialY + 70); // 90
+      // doc.text("Code Article", 25, initialY + 63); // 88.5
+      // doc.line(70, initialY + 55, 70, initialY + 70); // 90
+      // doc.text("Désignation", 75, initialY + 63); // 88.5
+      // doc.line(140, initialY + 55, 140, initialY + 70); // 90
+
+      // doc.text("QTD", 145, initialY + 63); // 88.5
+      // doc.line(192, initialY + 55, 192, initialY + 70); // 90
+      // doc.text("QtC", 194, initialY + 63); // 88.5
+      // doc.line(210, initialY + 55, 210, initialY + 70); // 90
+
+      // var i = 143 + valueToAddToX;
+      // doc.setFontSize(22);
+
+      // doc.setFontSize(22);
 
       for (let j = 0; j < printLines.length; j++) {
-        if (j % 15 == 0 && j != 0) {
+        if (j % 21 == 0 && j != 0) {
           doc.addPage();
 
-          doc.setFontSize(22);
-
-
-          var i = 95 + valueToAddToX;
+          doc.setFontSize(8);
+          doc.line(2, 5, 98, 5); // 85
+          i = 10
+        
         }
 
         // if (printLines[j].product_name.length > 35) {
@@ -317,28 +345,28 @@ var ElectronPrinter3 = (function () {
 
         //   i = i + 5;
         // } else {
-        doc.setFontSize(22);
+      //  doc.setFontSize(22);
         let line = printLines[j];
-        doc.line(2, i - 14, 2, i);
-        doc.text(String(line.line), 12.5, i - 5);
-        doc.line(20, i - 14, 20, i);
-        doc.text(line.product_code, 25, i - 5);
-        doc.line(70, i - 14, 70, i);
-        doc.text(line.product_name, 75, i - 5);
-        doc.line(140, i - 14, 140, i);
+        doc.line(2, i - 5, 2, i);
+        doc.text(String(line.line), 4, i - 2);
+        doc.line(10, i - 5, 10, i);
+        doc.text(line.product_code, 13, i - 2);
+        doc.line(30, i - 5, 30, i);
+        doc.text(line.product_name, 33, i - 2);
+        doc.line(70, i - 5, 70, i);
 
-        doc.text(String(line.qt_request), 180, i - 5, { align: "right" });
-        doc.line(192, i - 14, 192, i);
-        doc.text(String(line.qt_effected), 200, i - 5, { align: "right" });
-        doc.line(210, i - 14, 210, i);
+        doc.text(String(line.qt_request), 82, i - 2, { align: "right" });
+        doc.line(84, i - 5, 84, i);
+        doc.text(String(line.qt_effected), 96, i - 2, { align: "right" });
+        doc.line(98, i - 5, 98, i);
 
-        i = i + 14;
-        // }
-        doc.line(2, i - 14, 210, i - 14);
+        doc.line(2, i  , 98, i  );
+        i = i + 5;
+
       }
 
-      doc.setFontSize(22);
-      doc.line(2, i - 14, 210, i - 14);
+     
+      //doc.line(2, i - 14, 210, i - 14);
       doc.save(load_request_code + ".pdf");
 
       print(load_request_code + ".pdf", options)

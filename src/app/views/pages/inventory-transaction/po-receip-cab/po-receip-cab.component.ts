@@ -1083,7 +1083,6 @@ export class PoReceipCabComponent implements OnInit {
         });
       });
     }
-    this.modalService.dismissAll()
   }
   angularGridReady4(angularGrid: AngularGridInstance) {
     this.angularGrid4 = angularGrid;

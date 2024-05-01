@@ -376,7 +376,7 @@ export class LoadingVansScanComponent implements OnInit {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
-      console.log(response.data.loadRequest)
+      //console.log(response.data.loadRequest)
       if (response.data.loadRequest !== null ) {
         if(response.data.loadRequest.status == 10) {
         //console.log(response);
@@ -444,6 +444,7 @@ export class LoadingVansScanComponent implements OnInit {
       this.printLines.push({
         id: this.dataset.length + 1,
         code_prod: prod,
+        prodlot:prod+lot,
         desc_prod: desc,
         lot: lot,
         price: price,
@@ -456,24 +457,38 @@ export class LoadingVansScanComponent implements OnInit {
 
   printpdf() {
     let filteredData = [];
-    const data = _.mapValues(_.groupBy(this.printLines, ["code_prod"]));
-    console.log("data",data)
+    const data = _.mapValues(_.groupBy(this.printLines, "prodlot"));
+    //console.log("data",data)
     for (const [key, value] of Object.entries(data)) {
-      console.log("key",key)
+  //    console.log("key",key)
       filteredData.push({
         prod: key,
-      
         occurences: value,
       });
     }
-    console.log(filteredData)
+//    console.log(filteredData)
+
+//    let  groups = ['code_prod', 'lot']
+//    let grouped = [];
+
+// this.printLines.forEach(function (a) {
+//     groups.reduce(function (o, g, i) {                            // take existing object,
+//         o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {}); // or generate new obj, or
+//         return o[a[g]];                                           // at last, then an array
+//     }, grouped).push(a);
+// });
+// for(let p of grouped) {
+// console.log(p)
+// }
+// console.log("grouped" , grouped)
+
     this.printLines = [];
     let k = 1;
     filteredData.forEach((prod) => {
-      console.log(prod);
+      //console.log(prod);
       this.printLines.push({
         line: k,
-        product_code: prod.prod,
+        product_code: prod.occurences[0].code_prod,
         product_name: prod.occurences[0].desc_prod,
         pt_price: prod.occurences[0].price,
         qt_request: prod.occurences.length,
@@ -655,8 +670,8 @@ export class LoadingVansScanComponent implements OnInit {
     // }
 
     // doc.line(10, i - 5, 195, i - 5);
-    console.log(this.dataset, "DATASET");
-    console.log(this.printLines, "Lines");
+    //console.log(this.dataset, "DATASET");
+    //console.log(this.printLines, "Lines");
     this.printLines.map((item) => {
       this.total = Number(this.total) + Number(item.pt_price);
       this.totalCartons = this.totalCartons + item.qt_request;
@@ -677,7 +692,7 @@ export class LoadingVansScanComponent implements OnInit {
     this.printLines = [];
     let k = 1;
     this.loadRequestLineData.forEach((prod) => {
-      console.log(prod);
+      //console.log(prod);
       this.printLines.push({
         line: k,
         product_code: prod.product_code,
@@ -862,8 +877,8 @@ export class LoadingVansScanComponent implements OnInit {
     // }
 
     // doc.line(10, i - 5, 195, i - 5);
-    console.log(this.dataset, "DATASET");
-    console.log(this.printLines, "Lines");
+    //console.log(this.dataset, "DATASET");
+    //console.log(this.printLines, "Lines");
     this.printLines.map((item) => {
       this.total = Number(this.total) + Number(item.pt_price);
       this.totalCartons = this.totalCartons + item.qt_effected;
