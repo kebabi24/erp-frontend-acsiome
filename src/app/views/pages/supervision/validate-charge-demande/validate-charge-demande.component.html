@@ -66,7 +66,7 @@
       <!--begin::Header-->
       <div class="col-12 card-header border-0 py-5 bg-success text-white">
         <h3 class="card-title align-items-start flex-column">
-          <span class="card-label font-weight-bolder text-dark">Page Produit : {{ items.product_page_code }} </span>
+          <span class="card-label font-weight-bolder text-dark">Page Produit : {{ items.productPageDetails[0].productPage.description }} </span>
         </h3>
       </div>
 
@@ -83,7 +83,7 @@
                     <th class="pr-0" style="width: 150px">Code produit</th>
                     <th class="pr-0" style="width: 350px">Designation</th>
                     <th style="min-width: 200px">QTE stockée</th>
-
+                    <th style="min-width: 150px">QTE Demandée</th>
                     <th style="min-width: 150px">QTE validée</th>
                     <th style="min-width: 150px">Prix</th>
                     <!-- <th class="pr-0 text-right" style="min-width: 150px">action</th> -->
@@ -112,9 +112,12 @@
                         <span class="input-group-text" style="width: 40px" (click)="openld(contentld, productPage.item.locationDetails)"> <i class="text-dark-50 flaticon-more"></i> </span>
                       </div>
                     </td>
-
                     <td>
-                      <input type="number" max="50" (change)="onInputChanged(items.product_page_code, productPage.item.pt_part, $event.target.value)" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg" value="{{ productPage.item.loadRequestLine.qt_request }}" />
+                      <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ productPage.item.loadRequestLines.length > 0 ? productPage.item.loadRequestLines[0].qt_request : 0 }}</span>
+                    </td>
+                   
+                    <td>
+                      <input type="number" max="50" (change)="onInputChanged(items.product_page_code, productPage.item.pt_part, $event.target.value)" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg" value="{{ productPage.item.loadRequestLines.length > 0 ? productPage.item.loadRequestLines[0].qt_validated : 0 }}" />
                     </td>
                     <td>
                       <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ productPage.item.priceLists.length > 0 ? productPage.item.priceLists["0"].salesprice + " DA" : productPage.item.pt_price + " DA" }}</span>

@@ -28,6 +28,10 @@ export class AccountShiperService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/P', data, { headers: httpHeaders })
     }
+    public addPCust(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/PCUST', data, { headers: httpHeaders })
+    }
     // READ
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

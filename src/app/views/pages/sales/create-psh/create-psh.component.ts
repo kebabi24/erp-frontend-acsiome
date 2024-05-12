@@ -168,6 +168,7 @@ export class CreatePshComponent implements OnInit {
   user;
   pshnbr: String;
   curr;
+  domain: any;
   constructor(
     config: NgbDropdownConfig,
     private prhFB: FormBuilder,
@@ -680,6 +681,7 @@ export class CreatePshComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain"));
     this.createForm();
     this.createtotForm();
   }
@@ -942,10 +944,11 @@ export class CreatePshComponent implements OnInit {
       .subscribe(
        (reponse: any) => {
         console.log(reponse)
-      	const arrayOctet = new Uint8Array(reponse.pdf.data)
-        const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-        const fileUrl = URL.createObjectURL(file);
-        window.open(fileUrl)},
+      	// const arrayOctet = new Uint8Array(reponse.pdf.data)
+        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        // const fileUrl = URL.createObjectURL(file);
+        // window.open(fileUrl)
+      },
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -967,7 +970,7 @@ export class CreatePshComponent implements OnInit {
           this.loadingSubject.next(false);
          console.log(this.customer, pshnbr, this.dataset);
          let cr_terms = controls.psh_cr_terms.value;
-          //if(controls.print.value == true)  this.printpdf(pshnbr) //printBL(this.customer, this.dataset, pshnbr, cr_terms);
+          if(controls.print.value == true)  this.printpdf(pshnbr) //printBL(this.customer, this.dataset, pshnbr, cr_terms);
           this.router.navigateByUrl("/");
         }
       );
@@ -2394,11 +2397,17 @@ printpdf(nbr) {
   const controlss = this.pshForm.controls 
   console.log("pdf")
   var doc = new jsPDF();
- console.log("customer", this.customer)
- // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-  var img = new Image()
-  img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  var img = new Image();
+  img.src = "./assets/media/logos/companylogo.png";
+    doc.addImage(img, "png", 170, 5, 30, 30);
+    doc.setFontSize(9);
+    if (this.domain.dom_name != null) {
+      doc.text(this.domain.dom_name, 10, 10);
+    }
+    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  
   doc.setFontSize(12);
   doc.text( 'Bon Livraison N° : ' + nbr  , 70, 40);
   doc.setFontSize(8);

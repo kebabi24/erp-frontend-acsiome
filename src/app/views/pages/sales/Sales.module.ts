@@ -77,6 +77,8 @@ import { ListInvoicesComponent } from './list-invoices/list-invoices.component';
 import { ListPaiementMobComponent } from './list-paiement-mob/list-paiement-mob.component';
 import { ListVisitMobComponent } from './list-visit-mob/list-visit-mob.component';
 import { ImputProjectInvoiceComponent } from './imput-project-invoice/imput-project-invoice.component';
+import { CreateCeramSoComponent } from './create-ceram-so/create-ceram-so.component';
+import { CreatePaymentCustComponent } from './create-payment-cust/create-payment-cust.component';
 
 
 const routes: Routes = [
@@ -185,7 +187,15 @@ const routes: Routes = [
           },
           {
             path: "imput-project-invoice",
-          component: ImputProjectInvoiceComponent,
+            component: ImputProjectInvoiceComponent,
+          },
+          {
+            path: "create-ceram-so",
+            component: CreateCeramSoComponent,
+          },
+          {
+            path: "create-payment-cust",
+            component: CreatePaymentCustComponent,
           },
           
         ],
@@ -193,7 +203,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent],
     imports: [
         CommonModule,
         HttpClientModule,

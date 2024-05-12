@@ -2,7 +2,7 @@
   <kt-portlet-header [sticky]="true" [title]="'Chargement Des Vans (Scan) '" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
       <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
-      <button type="button" (click)="onSaveCharge()" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button>
+      <button type="button" (click)="onSaveCharge(content4, content5, content6)" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -18,7 +18,7 @@
             <div class="form-group col-4">
               <label class="form-group">Demande de chargement:</label>
               <div class="input-group input-group-sm">
-                <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest(content3)" aria-describedby="basic-addon2" />
+                <input type="text" class="cab" id="load_request_code" formControlName="load_request_code" (change)="onScanLoadRequest(content3,content7)" aria-describedby="basic-addon2" />
               </div>
             </div>
 
@@ -137,4 +137,73 @@
       </div>
     </ng-template>
   </div>
+  <div>
+    <ng-template #content4 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Cette demande de chargement n'existe pas</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content5 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Voulez vous vraiment fermer cette demande</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Non</button>
+        <button type="button" class="btn btn-primary" (click)="confirmPrinting()">Oui</button>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content6 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Cette demande de chargement n'existe pas</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content7 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Demande déja Traitée ou bien n'est pas validée</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+  
 </kt-portlet>

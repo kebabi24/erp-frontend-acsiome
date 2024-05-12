@@ -37,6 +37,7 @@ export class LoadingVansScanComponent implements OnInit {
   roles: any[] = [];
   loadRequests: any[] = [];
   loadRequestData: any[] = [];
+  loadRequestLineData: any[] = [];
   loadRequest: any;
   lots: any[] = [];
   selectedLotsIndexes: any[] = [];
@@ -96,7 +97,7 @@ export class LoadingVansScanComponent implements OnInit {
     this.loadingSubject.next(false);
 
     this.chargeForm = this.tagFB.group({
-      load_request_code: [this.load_request_code],
+      load_request_code: [null],
       pal: [],
       print: [true],
     });
@@ -149,7 +150,7 @@ export class LoadingVansScanComponent implements OnInit {
       console.log("details", details);
     });
 
-    this.inventoryManagementService.createLoadRequestDetails(details, lines).subscribe(
+    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines).subscribe(
       (response: any) => {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
@@ -161,7 +162,11 @@ export class LoadingVansScanComponent implements OnInit {
         this.printLines = [];
         this.username = "";
         // this.load_request_code = "";
+        this.scanned_codes = [];
+
         this.role_code = "";
+        this.total = 0;
+        this.totalCartons = 0;
       },
       (error) => {
         // this.loadRequestData = []
@@ -170,12 +175,40 @@ export class LoadingVansScanComponent implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
+        this.reset()
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
       }
     );
   }
 
-  onSaveCharge() {
+  onSaveCharge(content4, content5, content6) {
+    const controls = this.chargeForm.controls;
+    console.log(controls.load_request_code.value);
+    if (controls.load_request_code.value === null) {
+      this.modalService.open(content4, { size: "lg" });
+      document.getElementById("load_request_code").focus();
+      return;
+    } else {
+      this.loadRequestService.getLoadRequestLineInfo(this.load_request_code).subscribe((response: any) => {
+        if (response.data.loadRequest.length > 0) {
+          console.log(response.data.loadRequest);
+          this.modalService.open(content5, { size: "lg" });
+          //console.log(response);
+          this.loadRequestLineData = response.data.loadRequest;
+          // this.confirmPrinting();
+          // this.userInfo = response.data.userMobile;
+          // this.role_code = response.data.loadRequest.role_code;
+          // this.username = response.data.userMobile.username;
+          // document.getElementById("pal").focus();
+        } else {
+          this.modalService.open(content6, { size: "lg" });
+          controls.load_request_code.setValue(null);
+          document.getElementById("load_request_code").focus();
+        }
+      });
+    }
+  }
+  confirmPrinting() {
     const details = [];
     const lines = [];
 
@@ -229,8 +262,9 @@ export class LoadingVansScanComponent implements OnInit {
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
       }
     );
-  }
 
+    this.modalService.dismissAll();
+  }
   goBack() {
     this.loadingSubject.next(false);
     const url = `/`;
@@ -338,17 +372,24 @@ export class LoadingVansScanComponent implements OnInit {
     this.grid.render();
   }
 
-  onScanLoadRequest(content3) {
+  onScanLoadRequest(content3,content7) {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
     this.loadRequestService.getLoadRequestInfo(this.load_request_code).subscribe((response: any) => {
-      if (response.data.loadRequest !== null) {
+      //console.log(response.data.loadRequest)
+      if (response.data.loadRequest !== null ) {
+        if(response.data.loadRequest.status == 10) {
         //console.log(response);
-        this.loadRequestInfo = response.data.loadRequest;
-        this.userInfo = response.data.userMobile;
-        this.role_code = response.data.loadRequest.role_code;
-        this.username = response.data.userMobile.username;
-        document.getElementById("pal").focus();
+          this.loadRequestInfo = response.data.loadRequest;
+          this.userInfo = response.data.userMobile;
+          this.role_code = response.data.loadRequest.role_code;
+          this.username = response.data.userMobile.username;
+          document.getElementById("pal").focus();
+        } else {
+          this.modalService.open(content7, { size: "lg" });
+          controls.load_request_code.setValue(null);
+          document.getElementById("load_request_code").focus();  
+        }
       } else {
         this.modalService.open(content3, { size: "lg" });
         controls.load_request_code.setValue(null);
@@ -384,7 +425,7 @@ export class LoadingVansScanComponent implements OnInit {
 
     //console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
-      let desc = response.data.pt_desc1;
+      let desc = response.data.pt_desc2;
       let price = response.data.pt_price;
       this.gridService.addItem(
         {
@@ -403,6 +444,7 @@ export class LoadingVansScanComponent implements OnInit {
       this.printLines.push({
         id: this.dataset.length + 1,
         code_prod: prod,
+        prodlot:prod+lot,
         desc_prod: desc,
         lot: lot,
         price: price,
@@ -415,20 +457,38 @@ export class LoadingVansScanComponent implements OnInit {
 
   printpdf() {
     let filteredData = [];
-    const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
+    const data = _.mapValues(_.groupBy(this.printLines, "prodlot"));
+    //console.log("data",data)
     for (const [key, value] of Object.entries(data)) {
+  //    console.log("key",key)
       filteredData.push({
         prod: key,
         occurences: value,
       });
     }
+//    console.log(filteredData)
+
+//    let  groups = ['code_prod', 'lot']
+//    let grouped = [];
+
+// this.printLines.forEach(function (a) {
+//     groups.reduce(function (o, g, i) {                            // take existing object,
+//         o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {}); // or generate new obj, or
+//         return o[a[g]];                                           // at last, then an array
+//     }, grouped).push(a);
+// });
+// for(let p of grouped) {
+// console.log(p)
+// }
+// console.log("grouped" , grouped)
+
     this.printLines = [];
     let k = 1;
     filteredData.forEach((prod) => {
-      console.log(prod);
+      //console.log(prod);
       this.printLines.push({
         line: k,
-        product_code: prod.prod,
+        product_code: prod.occurences[0].code_prod,
         product_name: prod.occurences[0].desc_prod,
         pt_price: prod.occurences[0].price,
         qt_request: prod.occurences.length,
@@ -610,8 +670,8 @@ export class LoadingVansScanComponent implements OnInit {
     // }
 
     // doc.line(10, i - 5, 195, i - 5);
-    console.log(this.dataset, "DATASET");
-    console.log(this.printLines, "Lines");
+    //console.log(this.dataset, "DATASET");
+    //console.log(this.printLines, "Lines");
     this.printLines.map((item) => {
       this.total = Number(this.total) + Number(item.pt_price);
       this.totalCartons = this.totalCartons + item.qt_request;
@@ -621,27 +681,27 @@ export class LoadingVansScanComponent implements OnInit {
     // saveAs(blob, this.load_request_code + ".pdf");
   }
   printpdf2() {
-    let filteredData = [];
-    const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
-    for (const [key, value] of Object.entries(data)) {
-      filteredData.push({
-        prod: key,
-        occurences: value,
-      });
-    }
+    // let filteredData = [];
+    // const data = _.mapValues(_.groupBy(this.printLines, "code_prod"));
+    // for (const [key, value] of Object.entries(data)) {
+    //   filteredData.push({
+    //     prod: key,
+    //     occurences: value,
+    //   });
+    // }
     this.printLines = [];
     let k = 1;
-    filteredData.forEach((prod) => {
-      console.log(prod);
+    this.loadRequestLineData.forEach((prod) => {
+      //console.log(prod);
       this.printLines.push({
         line: k,
-        product_code: prod.prod,
-        product_name: prod.occurences[0].desc_prod,
-        pt_price: prod.occurences[0].price,
-        qt_request: prod.occurences.length,
-        lot: prod.occurences[0].lot,
-        qt_validated: prod.occurences.length,
-        qt_effected: prod.occurences.length,
+        product_code: prod.product_code,
+        product_name: prod.item.pt_desc2,
+        pt_price: prod.pt_price,
+        qt_request: prod.qt_request,
+        // lot: prod.occurences[0].lot,
+        qt_validated: prod.qt_validated,
+        qt_effected: prod.qt_effected,
       });
       k++;
     });
@@ -817,13 +877,13 @@ export class LoadingVansScanComponent implements OnInit {
     // }
 
     // doc.line(10, i - 5, 195, i - 5);
-    console.log(this.dataset, "DATASET");
-    console.log(this.printLines, "Lines");
+    //console.log(this.dataset, "DATASET");
+    //console.log(this.printLines, "Lines");
     this.printLines.map((item) => {
       this.total = Number(this.total) + Number(item.pt_price);
-      this.totalCartons = this.totalCartons + item.qt_request;
+      this.totalCartons = this.totalCartons + item.qt_effected;
     });
-    ElectronPrinter3.print3(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
+    ElectronPrinter3.print3(this.loadRequestLineData, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
 
     // saveAs(blob, this.load_request_code + ".pdf");
   }

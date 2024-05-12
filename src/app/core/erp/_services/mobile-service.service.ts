@@ -40,4 +40,12 @@ export class MobileServiceService {
       headers: httpHeaders,
     });
   }
+  public closeService(data:any,service_code:any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.put(`${API_URL_SERVICE}/close/${service_code}`, data, { headers: httpHeaders })
+}
+public   getAllServicesBy(data:any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders()
+  return this.http.post(`${API_URL_SERVICE}/getAllService`, data,{ headers: httpHeaders })
+}   
 }

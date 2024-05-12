@@ -1,37 +1,34 @@
 // Angular
-import { Injectable } from "@angular/core"
-import { HttpClient } from "@angular/common/http"
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 // CRUD
-import { HttpUtilsService } from "../../_base/crud"
+import { HttpUtilsService } from "../../_base/crud";
 // ENV
-import { environment } from "../../../../environments/environment"
+import { environment } from "../../../../environments/environment";
 
 // model
 
-const API_URL = environment.apiUrl + "/inventory-transactions"
+const API_URL = environment.apiUrl + "/inventory-transactions";
 
 @Injectable()
 export class InventoryTransactionService {
-    httpOptions = this.httpUtils.getHTTPHeaders()
+  httpOptions = this.httpUtils.getHTTPHeaders();
 
-    constructor(
-        private http: HttpClient,
-        private httpUtils: HttpUtilsService
-    ) {}
+  constructor(private http: HttpClient, private httpUtils: HttpUtilsService) {}
 
-    // CREATE
-    public add(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, data, { headers: httpHeaders })
-    }
-    public addRCTUNP(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL+'/rct-unp', data, { headers: httpHeaders })
-    }
-    public addIssUnp(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL+'/iss-unp', data, { headers: httpHeaders })
-    }
+  // CREATE
+  public add(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL, data, { headers: httpHeaders });
+  }
+  public addRCTUNP(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL + "/rct-unp", data, { headers: httpHeaders });
+  }
+  public addIssUnp(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL + "/iss-unp", data, { headers: httpHeaders });
+  }
 
     public addRCTWO(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -163,4 +160,14 @@ export class InventoryTransactionService {
         return this.http.post(API_URL+'/rct-unpcab', data, { headers: httpHeaders })
     }
     
+ 
+  
+  
+  
+ 
+ 
+  
+  
+  
+  
 }

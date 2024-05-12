@@ -69,15 +69,17 @@ export class ValidateChargeDemandeComponent implements OnInit {
     // console.log(this.loadRequestData);
     this.loadRequestData.forEach((page) => {
       for (const product of page.productPageDetails) {
-        if (product.item.loadRequestLine.qt_request > 0) {
-          console.log(product.item.loadRequestLine.qt_request);
+    //    if (product.item.loadRequestLine.qt_request > 0) {
+          //console.log(product.item.loadRequestLine.qt_request);
           this.printLines.push({ ...product, line: i });
           i++;
-        }
+      //  }
       }
     });
-    console.log(this.printLines);
-    this.printpdf();
+    // console.log("this.printline",this.printLines);
+    // console.log("this.loadreq",this.loadRequestData);
+    
+    // this.printpdf();
     this.loadRequestService.updateLoadRequestStatus10(this.load_request_code, this.loadRequestData).subscribe(
       (response: any) => {
         const controls = this.validationForm.controls;
@@ -150,17 +152,31 @@ export class ValidateChargeDemandeComponent implements OnInit {
     this.loadRequestService.getLoadRequestsLineWithCode({ role_code: this.role_code, load_request_code: load_request_data }).subscribe(
       (response: any) => {
         this.loadRequestData = response.loadRequestData;
+        console.log(this.loadRequestData);
+
         this.loadRequestData.forEach((page) => {
           for (const product of page.productPageDetails) {
-            if (product.item.loadRequestLine == null) {
-              product.item.loadRequestLine = { qt_request: 0, pt_price: 0 };
+         //   console.log("product.item.loadRequestLines",product.item.loadRequestLines)
+            if (product.item.loadRequestLines.length == 0) {
+           //   console.log("hiiyiiiii",product.item.priceLists.length)
+              const price = (product.item.priceLists.length != 0) ? product.item.priceLists[0].salesprice : product.item.pt_price
+
+              product.item.loadRequestLines.push({ qt_request: 0, pt_price: price ,qt_validated:0});
               // this.printLines.push({ ...product, line: i });
               // i++;
             }
           }
         });
-        console.log(this.loadRequestData);
-        this.load_request_header = response.data;
+       // console.log(this.loadRequestData);
+        // this.load_request_header = response.data;
+        // console.log("houhou",response.data)
+        this.loadRequestService.getLoadRequestInfo( load_request_data ).subscribe(
+          (respo: any) => {
+         console.log("houhou",respo.data)
+         this.load_request_header = respo.data.loadRequest.date_creation
+
+
+          })
       },
       (error) => {
         this.loadRequestData = [];
@@ -184,6 +200,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
   onSelectLoadRequest(load_request_code) {
     this.prepareLoadRequestData(load_request_code);
     this.load_request_code = load_request_code;
+    // console.log(this.load_request_header)
   }
 
   // onInputChanged(pageCode, prodCode, value) {
@@ -208,8 +225,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
       return product.product_code === prodCode;
     });
 
-    this.loadRequestData[indexPage].productPageDetails[indexProduct].item.loadRequestLine.qt_request = +value;
-    this.loadRequestData[indexPage].productPageDetails[indexProduct].item.loadRequestLine.pt_price = this.loadRequestData[indexPage].productPageDetails[indexProduct].item.pt_price;
+    this.loadRequestData[indexPage].productPageDetails[indexProduct].item.loadRequestLines[0].qt_validated = +value;
+    // this.loadRequestData[indexPage].productPageDetails[indexProduct].item.loadRequestLines[0].pt_price = this.loadRequestData[indexPage].productPageDetails[indexProduct].item.pt_price;
     // this.loadRequestData[indexPage].products[indexProduct].qt_request = this.loadRequestData[indexPage].products[indexProduct].qt_validated;
   }
 
@@ -289,7 +306,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
     // fill the dataset with your data
   }
   openld(content, ld) {
-    console.log(ld);
+    //console.log(ld);
     this.ld = ld;
     this.prepareGridld();
     this.modalService.open(content, { size: "lg" });
@@ -356,6 +373,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
     var i = 95 + valueToAddToX;
     doc.setFontSize(10);
     for (let j = 0; j < this.printLines.length; j++) {
+      console.log(this.printLines[j].item.loadRequestLines[0].qt_request,this.printLines[j].item.loadRequestLines[0].qt_validated)
+     if(this.printLines[j].item.loadRequestLines[0].qt_request != 0 || this.printLines[j].item.loadRequestLines[0].qt_validated != 0) { 
       if (j % 30 == 0 && j != 0) {
         doc.addPage();
         img.src = "./assets/media/logos/companylogo.png";
@@ -370,7 +389,17 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
         doc.setFontSize(12);
-        doc.text(this.saved_data.load_request_code, 70, 40);
+        doc.barcode(this.load_request_code, {
+          fontSize: 70,
+          textColor: "#000000",
+          x: 100,
+          y: 60,
+          textOptions: { align: "center" }, // optional text options
+        });
+        doc.setFont("Times-Roman");
+        doc.setFontSize(12);
+            
+        doc.text(this.load_request_code, 70, 40);
         doc.setFontSize(8);
         doc.setFontSize(12);
         doc.text("Demande de chargement : " + this.load_request_code, 70, 60);
@@ -398,30 +427,31 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.line(195, initialY + 25, 195, initialY + 30); // 90
         var i = 95 + valueToAddToX;
       }
-      if (this.printLines[j].item.pt_desc1.length > 35) {
+      if (this.printLines[j].item.pt_desc1.length > 25) {
         doc.setFontSize(10);
         let line = this.printLines[j].item;
-        let desc1 = line.pt_desc1.substring(0, 34);
+        let desc1 = line.pt_desc1.substring(0, 20);
         let ind = desc1.lastIndexOf(" ");
         desc1 = line.pt_desc1.substring(0, ind);
         let desc2 = line.pt_desc1.substring(ind + 1);
+        console.log(desc1,desc2)
         doc.line(10, i - 5, 10, i);
         doc.text(String(this.printLines[j].line), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.printLines[j].item.pt_part, 25, i - 1);
+        doc.text(line.pt_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
-        doc.text(this.printLines[j].item.pt_desc1, 47, i - 1);
+        doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(this.printLines[j].item.loadRequestLine.pt_price), 118, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].pt_price), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
-        doc.text(String(this.printLines[j].item.loadRequestLine.qt_request), 143, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
-        doc.text(String(this.printLines[j].item.loadRequestLine.qt_request), 168, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text("", 193, i - 1, { align: "right" });
         doc.line(195, i - 5, 195, i);
         i = i + 5;
-        doc.text(this.printLines[j].item.pt_desc1, 47, i - 1);
+        doc.text(desc2, 47, i - 1);
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
         doc.line(45, i - 5, 45, i);
@@ -441,11 +471,11 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.line(45, i - 5, 45, i);
         doc.text(this.printLines[j].item.pt_desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(this.printLines[j].item.loadRequestLine.pt_price), 118, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].pt_price), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
-        doc.text(String(this.printLines[j].item.loadRequestLine.qt_request), 143, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
-        doc.text(String(this.printLines[j].item.loadRequestLine.qt_request), 168, i - 1, { align: "right" });
+        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text("", 193, i - 1, { align: "right" });
         doc.line(195, i - 5, 195, i);
@@ -453,6 +483,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
       }
       doc.line(10, i - 5, 195, i - 5);
     }
+    }/*for*/
     doc.line(10, i - 5, 195, i - 5);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));

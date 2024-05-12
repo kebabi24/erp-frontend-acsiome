@@ -1088,6 +1088,7 @@ prepareGridbill() {
     rowSelectionOptions: {
       // True (Single Selection), False (Multiple Selections)
       selectActiveRow: true,
+      
     },
     dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
       var val = undefined;
