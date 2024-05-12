@@ -301,7 +301,10 @@ export class RpBroyageComponent implements OnInit {
         // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
         thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
       },
-    
+      rowSelectionOptions: {
+         
+        selectActiveRow: false
+      },
       enableCellNavigation: true,
       asyncEditorLoading: false,
       editable: false,

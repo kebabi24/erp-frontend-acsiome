@@ -218,7 +218,7 @@ export class CreateItemModComponent implements OnInit {
   msg: String;
 
   isExist = false;
-
+  codedesc: any;
   sct1: CostSimulation;
   sct2: CostSimulation;
 
@@ -569,7 +569,7 @@ console.log(this.pt_break_cat)
 console.log(controls1.pt_break_cat.value)
     let index = this.pt_break_cat.findIndex(x => x.code_value == controls1.pt_break_cat.value); 
 console.log(index)
-    const codedesc = this.pt_break_cat[index].code_desc
+    this.codedesc = this.pt_break_cat[index].code_desc
     const codecmmt = this.pt_break_cat[index].code_cmmt
     this.itemService
         .getByOne({
@@ -583,7 +583,7 @@ console.log(index)
                 console.log(response.data)
             } else {
              
-              controls1.pt_part.setValue(controls1.pt_article.value + codedesc)
+              controls1.pt_part.setValue(controls1.pt_article.value + 'BR' + this.codedesc)
               controls1.pt_desc1.setValue(this.model.mod_desc + " " + codecmmt)
               controls1.pt_um.setValue(this.model.mod_um)
               controls1.pt_prod_line.setValue(this.model.mod_prod_line)
@@ -915,7 +915,7 @@ onAlertClose($event) {
     const controls6 = this.form6.controls;
 
     const _item = new Item();
-    _item.pt_part = controls1.pt_part.value;
+    _item.pt_part = controls1.pt_article.value + 'NB' + this.codedesc;
     _item.pt_desc1 = controls1.pt_desc1.value;
     _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls1.pt_um.value;

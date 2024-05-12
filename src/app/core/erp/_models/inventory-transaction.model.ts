@@ -123,5 +123,5 @@ export class InventoryTransaction extends BaseModel {
     tr_promise_date: Date
     tr_fldchg_cmtindx: number
     tr_domain: String
-        
+    created_ip_adr    
 }

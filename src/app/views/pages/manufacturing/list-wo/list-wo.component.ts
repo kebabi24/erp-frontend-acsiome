@@ -85,6 +85,7 @@ export class ListWoComponent implements OnInit {
               // use onCellClick OR grid.onClick.subscribe which you can see down below
               onCellClick: (e: Event, args: OnEventArgs) => {
                   const id = args.dataContext.id
+                  console.log(id)
                   this.router.navigateByUrl(`/manufacturing/edit-wo/${id}`)
               },
           },
@@ -102,7 +103,7 @@ export class ListWoComponent implements OnInit {
             name: "N°OF",
             field: "wo_nbr",
             sortable: true,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -113,7 +114,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_queue_eff",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -123,7 +124,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_part",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -133,7 +134,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_ref",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -143,7 +144,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_batch",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -153,7 +154,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_rev",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -163,7 +164,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_grade",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
            
            
           },
@@ -174,7 +175,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_qty_ord",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
            
           },
         
@@ -184,7 +185,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_qty_comp",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
            
           },
           {
@@ -193,7 +194,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_qty_rjct",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
            
           },
           {
@@ -202,7 +203,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_qty_chg",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
            
           },
           {
@@ -211,7 +212,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_yield_pct",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
            
           },
           {
@@ -220,7 +221,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_ord_date",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             formatter: Formatters.dateIso ,
             type: FieldType.dateIso,
            
@@ -233,7 +234,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_rel_date",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             formatter: Formatters.dateIso ,
             type: FieldType.dateIso,
            
@@ -244,7 +245,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_due_date",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             formatter: Formatters.dateIso ,
             type: FieldType.dateIso,
            
@@ -256,7 +257,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_bom_code",
             sortable: true,
            
-            filterable: false,
+            filterable: true,
             type: FieldType.string,
           
             
@@ -267,7 +268,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_routing",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.string,
           
             
@@ -280,7 +281,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_lot_next",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.string,
           
             
@@ -291,7 +292,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_status",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.string,
             
           },
@@ -302,7 +303,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_rmks",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.string,
           
           },
@@ -313,7 +314,7 @@ export class ListWoComponent implements OnInit {
             field: "wo_prod_pct",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.float,
             formatter: Formatters.percentComplete,
                      
@@ -325,7 +326,7 @@ export class ListWoComponent implements OnInit {
             field: "wo__dec01",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.float,
             formatter: Formatters.percentComplete,
                      
@@ -337,7 +338,7 @@ export class ListWoComponent implements OnInit {
             field: "wo__dec02",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.float,
             formatter: Formatters.percentComplete,
                      
@@ -349,7 +350,7 @@ export class ListWoComponent implements OnInit {
             field: "wo__dec03",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.float,
             formatter: Formatters.percentComplete,
                      

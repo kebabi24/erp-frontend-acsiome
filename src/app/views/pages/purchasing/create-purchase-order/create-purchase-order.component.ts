@@ -36,6 +36,7 @@ import {
     NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap"
 import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService } from "../../../../core/erp"
+import { Reason, ReasonService} from "../../../../core/erp"
 import { AlertComponent } from "../../../partials/content/crud"
 import { sequence } from "@angular/animations"
 
@@ -82,7 +83,13 @@ export class CreatePurchaseOrderComponent implements OnInit {
     gridOptions4: GridOption = {}
     gridObj4: any
     angularGrid4: AngularGridInstance
-
+    
+    causes: []
+    columnDefinitions6: Column[] = []
+    gridOptions6: GridOption = {}
+    gridObj6: any
+    angularGrid6: AngularGridInstance
+    
     row_number;
     user
     message=''
@@ -99,7 +106,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
         private providersService: ProviderService,
         private userService: UsersService,
         private sequencesService: SequenceService,
-        private itemsService: ItemService
+        private itemsService: ItemService,
+        private reasonService: ReasonService
     ) {
         config.autoClose = true
         this.initGrid()
@@ -812,6 +820,94 @@ export class CreatePurchaseOrderComponent implements OnInit {
     }
     open4(content) {
         this.prepareGrid4()
+        this.modalService.open(content, { size: "lg" })
+    }
+    handleSelectedRowsChanged6(e, args) {
+        const controls = this.reqForm.controls
+        if (Array.isArray(args.rows) && this.gridObj6) {
+            args.rows.map((idx) => {
+                const cause = this.gridObj6.getDataItem(idx)
+                console.log(cause)
+                controls.rqm_reason.setValue(cause.rsn_ref || "")
+
+            })
+        }
+    }
+    angularGridReady6(angularGrid: AngularGridInstance) {
+        this.angularGrid6 = angularGrid
+        this.gridObj6 = (angularGrid && angularGrid.slickGrid) || {}
+    }
+    prepareGrid6() {
+        const controls = this.reqForm.controls
+        this.columnDefinitions6 = [
+            {
+                id: "id",
+                name: "id",
+                field: "id",
+                sortable: true,
+                minWidth: 80,
+                maxWidth: 80,
+            },
+           
+           
+            {
+              id: "rsn_ref",
+              name: "Code",
+              field: "rsn_ref",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+          },
+          
+            {
+                id: "rsn_desc",
+                name: "Designation",
+                field: "rsn_desc",
+                sortable: true,
+                width: 200,
+                filterable: true,
+                type: FieldType.string,
+            },
+        ]
+
+        this.gridOptions6 = {
+            enableSorting: true,
+            enableCellNavigation: true,
+            enableExcelCopyBuffer: true,
+            enableFiltering: true,
+            autoEdit: false,
+            autoHeight: false,
+            frozenColumn: 0,
+            frozenBottom: true,
+            enableRowSelection: true,
+            enableCheckboxSelector: true,
+            checkboxSelector: {
+                // optionally change the column index position of the icon (defaults to 0)
+                // columnIndexPosition: 1,
+
+                // remove the unnecessary "Select All" checkbox in header when in single selection mode
+                hideSelectAllCheckbox: true,
+
+                // you can override the logic for showing (or not) the expand icon
+                // for example, display the expand icon only on every 2nd row
+                // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+            },
+            multiSelect: false,
+            rowSelectionOptions: {
+                // True (Single Selection), False (Multiple Selections)
+                selectActiveRow: true,
+            },
+        }
+
+        // fill the dataset with your data
+        
+        this.reasonService
+            .getBy ({rsn_type: 'requisition' })
+            .subscribe((response: any) => (this.causes = response.data))
+         
+    }
+    open6(content) {
+        this.prepareGrid6()
         this.modalService.open(content, { size: "lg" })
     }
     onAlertClose($event) {

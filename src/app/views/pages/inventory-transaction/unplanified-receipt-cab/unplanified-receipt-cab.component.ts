@@ -153,7 +153,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 return el.tr_line == args.dataContext.tr_line;
               });
               args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
-              this.onSubmit();
+              // this.onSubmit();
               // }
             } else {
               alert("ligne supprimée");
@@ -199,7 +199,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_ref);
+          
           if (args.dataContext.tr_ref != null) {
             alert("Modification interdite");
           } else {
@@ -508,9 +508,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         sortable: false,
 
         filterable: false,
-        editor: {
-          model: Editors.text,
-        },
+        // editor: {
+        //   model: Editors.text,
+        // },
       },
       // {
       //   id: "tr_status",
@@ -591,8 +591,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //   },
       // },
       {
-        id: "id",
-        field: "id",
+        id: "idprint",
+        field: "idprint",
         excludeFromHeaderMenu: true,
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
@@ -607,7 +607,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.printbuttonState = true;
-
+          let barcode = ''
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
@@ -633,34 +633,39 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
+            
             // console.log(_lb);
             // console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                console.log('lab',lab)
+                 barcode = lab.lb_ref;
+                  
                 this.labelService.addblob(_lb).subscribe((blob) => {
                   console.log('print3',Edelweiss)
                   Edelweiss.print3(lab,this.currentPrinter);
+                  
                 });
               },
               (error) => {
                 alert("Erreur Impression Etiquette");
               },
               () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                //console.log("id", args.dataContext.id)
-                //console.log("dataset",this.dataset[args.dataContext.id])
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });
+                
+                
                 this.index = this.dataset.findIndex((el) => {
                   return el.tr_line == args.dataContext.id;
                 });
                 console.log(this.index);
                 this.onSubmit();
+                
               }
             );
           } else {
             alert("Etiquette dèjà imprimée");
           }
+         
         },
       },
     ];
@@ -826,8 +831,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   // save data
   onSubmit() {
     this.hasFormErrors = false;
-    console.log("this.dataset", this.dataset);
-    console.log("this.index", this.index);
+    
     this.data = [];
     let obj = {
       tr_line: this.dataset[this.index].tr_line,
@@ -975,7 +979,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       },
       (error) => {
         alert("Erreur verifier les informations")
-        alert("Erreur, vérifier les informations");
+        
         this.loadingSubject.next(false);
       },
       () => {

@@ -290,6 +290,9 @@ export class IssBobineWoComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            let idpal;
+            this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
         },
@@ -932,6 +935,9 @@ export class IssBobineWoComponent implements OnInit {
       product_color: ["", Validators.required],
       product_quality: ["", Validators.required],
       product_Cyl: ["", Validators.required],
+      tr_so_job: [this.inventoryTransaction.tr_so_job],
+      tr_rmks: [this.inventoryTransaction.tr_rmks],
+      ref: [null],
     });
     const controls = this.woForm.controls;
     controls.wo_site.setValue(this.user.usrd_site);
@@ -1103,7 +1109,7 @@ export class IssBobineWoComponent implements OnInit {
   getProductTypes() {
     this.codeService
       .getBy({
-        code_fldname: "pt_article",
+        code_fldname: "pt_article", code_desc: 'DIMENSION'
       })
       .subscribe((response: any) => {
         const { data } = response;
@@ -1193,9 +1199,9 @@ export class IssBobineWoComponent implements OnInit {
   // save data
   onSubmit() {
     this.hasFormErrors = false;
-    const controls = this.trForm.controls;
+    const controls = this.woForm.controls;
     /** check form */
-    if (this.trForm.invalid) {
+    if (this.woForm.invalid) {
       Object.keys(controls).forEach((controlName) =>
         controls[controlName].markAsTouched()
       );
@@ -1295,7 +1301,7 @@ export class IssBobineWoComponent implements OnInit {
     return _tr;
   }
   prepare(){
-    const controls = this.trForm.controls;
+    // const controls = this.woForm.controls;
     const wocontrols = this.woForm.controls;
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = wocontrols.wo_nbr.value
@@ -1305,9 +1311,9 @@ export class IssBobineWoComponent implements OnInit {
     _tr.tr_effdate = wocontrols.wo_ord_date.value
     ? `${wocontrols.wo_ord_date.value.year}/${wocontrols.wo_ord_date.value.month}/${wocontrols.wo_ord_date.value.day}`
     : null
-    _tr.tr_so_job = controls.tr_so_job.value
+    _tr.tr_so_job = wocontrols.tr_so_job.value
     
-    _tr.tr_rmks = controls.tr_rmks.value
+    _tr.tr_rmks = wocontrols.tr_rmks.value
   
     return _tr
   }
@@ -1384,7 +1390,7 @@ export class IssBobineWoComponent implements OnInit {
           },
           () => {
             this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 1000, false, false);
-            controls.ref.enable();
+            // controls.ref.enable();
             controls.wo_nbr.setValue(this.nof),
             document.getElementById("ref").focus();
             this.loadingSubject.next(false);
@@ -1422,7 +1428,7 @@ export class IssBobineWoComponent implements OnInit {
      
     }
     this.loadingSubject.next(true);
-    const controls = this.trForm.controls;
+    const controls = this.woForm.controls;
 
     this.inventoryTransactionService
       .addIssWo({detail, it})
@@ -2337,7 +2343,7 @@ openstatus(content) {
 }
 
 handleSelectedRowsChanged2(e, args) {
-  const controls = this.trForm.controls;
+  const controls = this.woForm.controls;
   if (Array.isArray(args.rows) && this.gridObj2) {
     args.rows.map((idx) => {
       const item = this.gridObj2.getDataItem(idx);
@@ -2477,19 +2483,23 @@ addsameItem(i ) {
 
 onChangePal() {
   /*kamel palette*/
-  const controls = this.trForm.controls
+  const controls = this.woForm.controls
   const ref = controls.ref.value
 var bol = false
+let idpal;
+this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
+  
   for(let ob of this.dataset) {
 
     if(ob.tr_ref == ref) {
-      console.log("hnehnahna")
+      console.log(ob.tr_ref)
       bol = true
       break;
      
     }
   }
   if (!bol) {
+    console.log(ref)
   this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
     (response: any) => {
       this.lddet = response.data
@@ -2527,8 +2537,8 @@ var bol = false
     (respo: any) => {
       this.sct = respo.data
       console.log(this.sct)
-  
-
+      this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+      this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
    this.gridService.addItem(
     {
       id: this.dataset.length + 1,
@@ -2551,7 +2561,7 @@ var bol = false
     },
     { position: "bottom" }
   );
-
+  controls.ref.setValue(null)
    });
   }); 
 
@@ -2568,6 +2578,7 @@ var bol = false
 }
 else {
   alert("Palette N'existe pas")
+  controls.ref.setValue(null)
 //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
   }
 
@@ -2576,8 +2587,9 @@ else {
 }
 else {
   alert ("Palette déja scannée")
+  controls.ref.setValue(null)
 }
-controls.ref.setValue(null)
+
 document.getElementById("ref").focus();
 }
 

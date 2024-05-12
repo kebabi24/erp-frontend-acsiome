@@ -84,6 +84,10 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findtrdate', data, { headers: httpHeaders })
     }
+    public getByDateAddr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findtrdateaddr', data, { headers: httpHeaders })
+    }
     public getGrpType(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findtrtype', data, { headers: httpHeaders })
@@ -128,6 +132,10 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
+    public updatetr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/updateTr', data, { headers: httpHeaders })
+    }
     // DELETE
     
     public getByCost(data: any) {
@@ -154,4 +162,5 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/rct-unpcab', data, { headers: httpHeaders })
     }
+    
 }

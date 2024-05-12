@@ -391,20 +391,20 @@ export class CreateOrderComponent implements OnInit {
         },
       },
       
-      {
-        id: "wo_so_job",
-        name: "Liaison",
-        field: "wo_so_job",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-        editor: {
-          model: Editors.longText,
+      // {
+      //   id: "wo_so_job",
+      //   name: "Liaison",
+      //   field: "wo_so_job",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.string,
+      //   editor: {
+      //     model: Editors.longText,
         
-        },
+      //   },
       
-      },
+      // },
      
       {
         id: "wo_prod_pct",
@@ -476,8 +476,13 @@ export class CreateOrderComponent implements OnInit {
       wo_site: [this.workOrder.wo_site , Validators.required],
       wo_routing: [this.workOrder.wo_routing , Validators.required],
       wo_rmks: [this.workOrder.wo_rmks ],
+      wo_so_job: [this.workOrder.wo_so_job ],
+      wo_rev: [this.workOrder.wo_rev ],
+
       
     });
+    const controls = this.woForm.controls;
+    controls.wo_rev.setValue('01');
   }
   //reste form
   reset() {
@@ -616,6 +621,8 @@ export class CreateOrderComponent implements OnInit {
     _wo.wo_site = controls.wo_site.value
     _wo.wo_routing = controls.wo_routing.value
     _wo.wo_rmks = controls.wo_rmks.value
+    _wo.wo_so_job = controls.wo_so_job.value
+    _wo.wo_rev = controls.wo_rev.value
     _wo.wo_ord_date = controls.wo_ord_date.value
     ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
     : null
@@ -639,7 +646,7 @@ export class CreateOrderComponent implements OnInit {
     }
     this.loadingSubject.next(true);
     const controls = this.woForm.controls;
-
+    console.log(it.wo_part)
     this.workOrderService
       .add({detail, it,nof})
       .subscribe(
@@ -697,8 +704,7 @@ export class CreateOrderComponent implements OnInit {
         wo_status: "F",
         wo_bom_code: null,
         wo_vend: null,
-        wo_so_job: null,
-        wo_rmks: null,
+        
         wo_prod_pct: 0,
               },
       { position: "bottom" }

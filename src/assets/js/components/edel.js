@@ -166,7 +166,28 @@ var Edelweiss = (function () {
 
 
             print(filenamepdf, options).then(console.log);
-            console.log("all right")
+            console.log("all right EDEL")
+            setTimeout(() => {
+                fs.readFile(filenamepdf, (err, data) => {
+                  if (err) {
+                    console.error(err);
+                   
+                  }
+                  fs.unlink(filenamepdf,
+                    (err => {
+                        if (err) console.log(err);
+                        else {
+                            console.log("\nDeleted file:", filenamepdf);
+                 
+                            // Get the files in current directory
+                            // after deletion
+                            
+                        }
+                    }));
+                  
+                });
+              }, 2000);
+            
         },
 
     }

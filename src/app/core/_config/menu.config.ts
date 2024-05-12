@@ -562,6 +562,10 @@ export class MenuConfig {
               page: "/inventory-transaction/transaction-list",
             },
             {
+              title: "correction des Transactions ",
+              page: "/inventory-transaction/edit-transaction-list",
+            },
+            {
               title: "Consultation des Transactions Groupées ",
               page: "/inventory-transaction/trans-list-grp",
             },

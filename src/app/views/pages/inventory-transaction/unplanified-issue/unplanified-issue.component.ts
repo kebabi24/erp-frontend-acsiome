@@ -54,6 +54,7 @@ import {
   SequenceService,
   printBc,
   printISSUNP,
+  LabelService,
 } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
@@ -84,6 +85,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 
 export class UnplanifiedIssueComponent implements OnInit {
     inventoryTransaction: InventoryTransaction;
+    
     trForm: FormGroup;
     hasFormErrors = false;
     loadingSubject = new BehaviorSubject<boolean>(true);
@@ -174,7 +176,8 @@ export class UnplanifiedIssueComponent implements OnInit {
       private mesureService: MesureService,
       private addressService: AddressService,
       private sequenceService: SequenceService,
-      private locationDetailService: LocationDetailService
+      private locationDetailService: LocationDetailService,
+      private labelService: LabelService
     ) {
       config.autoClose = true;
       this.initGrid();
@@ -197,6 +200,9 @@ export class UnplanifiedIssueComponent implements OnInit {
           maxWidth: 30,
           onCellClick: (e: Event, args: OnEventArgs) => {
             if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+              let idpal;
+            this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
               this.angularGrid.gridService.deleteItem(args.dataContext);
             }
           },
@@ -2072,6 +2078,10 @@ console.log(updateItem.tr_part)
     const controls = this.trForm.controls
     const ref = controls.ref.value
   var bol = false
+  let idpal;
+this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
+  
+  
   if (controls.tr_addr.value == null){alert('veuillez remplir adresse')}
   else{
     for(let ob of this.dataset) {
@@ -2119,7 +2129,8 @@ console.log(updateItem.tr_part)
       (respo: any) => {
         this.sct = respo.data
         console.log(this.sct)
-    
+        this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+        this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
 
      this.gridService.addItem(
       {

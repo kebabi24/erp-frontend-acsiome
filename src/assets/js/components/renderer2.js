@@ -443,7 +443,7 @@ var Edelweiss = (function () {
             doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
             const time = new Date().toLocaleTimeString();
             console.log('renderer.js')
-            doc.text('FOURNISSEUR : ' + lb.lb_cust, 20, 18)
+            doc.text('FOURNISSEUR : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
                 .font('Helvetica-Bold')
                 .fontSize(12)
                 .text('DATE: ' + lb.lb_date, 20, 58);
@@ -453,7 +453,7 @@ var Edelweiss = (function () {
                 .text('PRODUIT :' + lb.lb_desc, 20, 78)
                 .font('Helvetica-Bold')
                 .fontSize(12)
-                .text('CODE :' + '', 20, 118)
+                .text('CODE :' + lb.lb_rmks, 20, 118)
                 .font('Helvetica-Bold')
                 .fontSize(12)
 
@@ -474,7 +474,7 @@ var Edelweiss = (function () {
 
                 .text('HEURE:' + time, 180, 58);
 
-            const filenamepdf = lb.lb_ref + '.pdf';
+            const filenamepdf = 'c://lb.lb_ref' + '.pdf';
 
             doc.pipe(fs.createWriteStream(filenamepdf));
 
@@ -506,9 +506,19 @@ var Edelweiss = (function () {
                 },
             );
 
-
-            print(filenamepdf, options).then(console.log);
+            setTimeout(() => {
+                fs.readFile(filenamepdf, (err, data) => {
+                  if (err) {
+                    console.error(err);
+                   
+                  }
+                  print(filenamepdf, options).then(console.log);
+                  
+                });
+              }, 5000);
+            
             console.log("all right")
+            
         },
 
     }

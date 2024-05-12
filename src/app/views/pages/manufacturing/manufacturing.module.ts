@@ -93,7 +93,7 @@ const routes: Routes = [
     component: ListWoComponent,
   },
   {
-    path: "edit-wo",
+    path: "edit-wo/:id",
     component: EditWoComponent,
   },
   {

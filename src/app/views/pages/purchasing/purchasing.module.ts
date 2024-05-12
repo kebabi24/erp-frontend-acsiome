@@ -67,6 +67,7 @@ import {
   PosCategoryService,
   InventoryTransactionService,
   AccountUnplanifedService,
+  ReasonService
 } from "../../../core/erp";
 import { CreatePurchaseOrderComponent } from "./create-purchase-order/create-purchase-order.component";
 import { PurchaseOrderApprovalComponent } from "./purchase-order-approval/purchase-order-approval.component";
@@ -278,6 +279,7 @@ const routes: Routes = [
     InventoryTransactionService,
     PosCategoryService,
     AccountUnplanifedService,
+    ReasonService
   ],
 
   entryComponents: [

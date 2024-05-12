@@ -2004,7 +2004,7 @@ export function printBc(provider, details, po,curr) {
     <section id="memo">
 
       <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
 
       <div class="company-info">
@@ -3245,7 +3245,7 @@ export function printTag(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -4435,7 +4435,7 @@ export function printReceive(provider, details, nbr,site) {
     <section id="memo">
 
     <div class="logo">
-    <img src="../../../../assets/media/Capt909090ure.PNG" />
+    <img src="../../../../assets/media/companylogo.PNG" />
     </div>
 
       <div class="company-info">
@@ -5646,7 +5646,7 @@ export function printReceiveUNP(provider, details, nlot) {
     <section id="memo">
 
     <div class="logo">
-    <img src="../../../../assets/media/Capt909090ure.PNG" />
+    <img src="../../../../assets/media/companylogo.PNG" />
     </div>
 
       <div class="company-info">
@@ -6854,7 +6854,7 @@ export function printTR(it, details, nlot) {
     <section id="memo">
 
     <div class="logo">
-    <img src="../../../../assets/media/Capt909090ure.PNG" />
+    <img src="../../../../assets/media/companylogo.PNG" />
     </div>
 
       <div class="company-info">
@@ -8057,7 +8057,7 @@ export function printISSUNP(provider, details, nlot) {
     <section id="memo">
 
     <div class="logo">
-    <img src="../../../../assets/media/Capt909090ure.PNG" />
+    <img src="../../../../assets/media/companylogo.PNG" />
     </div>
 
       <div class="company-info">
@@ -9267,7 +9267,7 @@ export function printSO(customer, details, so) {
     <section id="memo">
 
     <div class="logo">
-    <img src="../../../../assets/media/Capt909090ure.PNG" />
+    <img src="../../../../assets/media/companylogo.PNG" />
     </div>
 
       <div class="company-info">
@@ -10536,7 +10536,7 @@ export function printOc(customer, details, qo) {
     <section id="memo">
 
       <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
 
       <div class="company-info">
@@ -11804,7 +11804,7 @@ export function printBL(customer, details, pshnbr,cr_terms) {
     <section id="memo">
 
     <div class="logo">
-    <img src="../../../../assets/media/Capt909090ure.PNG" />
+    <img src="../../../../assets/media/companylogo.PNG" />
     </div>
 
       <div class="company-info">
@@ -13089,7 +13089,7 @@ export function printIH(customer, details, ih, curr) {
     <section id="memo">
 
       <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
 
       <div class="company-info">
@@ -14348,7 +14348,7 @@ export function printInventory(data,date) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -15499,7 +15499,7 @@ export function printInventoryOfSecurity(det) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -16661,7 +16661,7 @@ export function printInventoryActivity(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -17862,7 +17862,7 @@ export function printInventoryByStatus(data,date) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -19054,7 +19054,7 @@ export function printInventoryByLoc(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -20267,7 +20267,7 @@ export function printItemPurchaseByProvider(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -21425,7 +21425,7 @@ export function printCustomerActivity(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -22578,7 +22578,7 @@ export function printProviderActivity(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -23732,7 +23732,7 @@ export function printProviderCA(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -24886,7 +24886,7 @@ export function printProviderBalance(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -26080,7 +26080,7 @@ export function printItemSalesByCustomer(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -27238,7 +27238,7 @@ export function printCustomerSolde(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -28394,7 +28394,7 @@ export function printCustomerCAList(data) {
 <body >
   <div id="container">
   <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
     <div class="clearfix"></div>
 
@@ -29607,7 +29607,7 @@ export function printLp(details, lpnbr,wodnbr,wodlot,part,descr,routing,gamme,qt
     <section id="memo">
 
       <div class="logo">
-      <img src="../../../../assets/media/Capt909090ure.PNG" />
+      <img src="../../../../assets/media/companylogo.PNG" />
       </div>
 
       <div class="company-info">

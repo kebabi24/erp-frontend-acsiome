@@ -1,4 +1,6 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit } from '@angular/core';
+
+
 
 import {
   Formatter,
@@ -49,7 +51,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import {  InventoryTransactionService, CodeService} from "../../../../core/erp"
+import {  InventoryTransaction, InventoryTransactionService, CodeService} from "../../../../core/erp"
 import {
   NgbDropdownConfig,
   NgbTabChangeEvent,
@@ -60,6 +62,7 @@ import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
 import { findLastKey } from "lodash"
+import { PAUSE } from '@angular/cdk/keycodes';
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   const defaultPageSize = 100;
@@ -73,16 +76,19 @@ const mymonthFormatter: Formatter = (row: number, cell: number, valueMONTH: any,
 valueMONTH.substring(5,7)  ;
 
 
+
 @Component({
-  selector: 'kt-transaction-list',
-  templateUrl: './transaction-list.component.html',
-  styleUrls: ['./transaction-list.component.scss']
+  selector: 'kt-edit-transaction-list',
+  templateUrl: './edit-transaction-list.component.html',
+  styleUrls: ['./edit-transaction-list.component.scss']
 })
-export class TransactionListComponent implements OnInit {
+
+export class EditTransactionListComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true);
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
+  copydataset: any[] = []
   draggableGroupingPlugin: any;
   angularGrid: AngularGridInstance;
   metrics!: Metrics;
@@ -97,6 +103,11 @@ export class TransactionListComponent implements OnInit {
   elem: any[] = [];
   tab: any[] = [] ;
   datefilter: any;
+  index: any;
+  hasFormErrors = false;
+  data: any[];
+  message = "";
+  trlot: string;
   constructor(
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
@@ -175,95 +186,70 @@ export class TransactionListComponent implements OnInit {
             minWidth: 50,
             maxWidth: 50,
           },
-         
           {
-            id: "dec01",
-            name: "Année",
-            field: "dec01",
-            sortable: true,
-            filterable: true,
-                      
-            type: FieldType.float,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            id: "supp",
+            field: "supp",
+            excludeFromHeaderMenu: true,
+            formatter: Formatters.deleteIcon,
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+                
+                /*ajouter ligne tr_hist de suppression*/
+                
+                  this.index = this.dataset.findIndex((el) => {
+                    return el.tr_line == args.dataContext.tr_line;
+                  });
+                  args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+                  
+                  this.data = [];
+                  let obj = {
+                    tr_lot:args.dataContext.tr_lot,
+                    tr_nbr:args.dataContext.tr_nbr,
+                    tr_addr:args.dataContext.tr_addr,
+                    tr_rmks:'CORRECTION ADMINISTRATION',
+                    tr_gl_date: new Date(),
+                    tr_effdate: args.dataContext.tr_effdate,
+                    dec01:args.dataContext.dec01,
+                    dec02:args.dataContext.dec02,
+                    tr_line: args.dataContext.tr_line,
+                    tr_part: args.dataContext.tr_part,
+                    desc: args.dataContext.desc,
+                    tr_qty_loc: args.dataContext.tr_qty_chg * -1,
+                    tr_um: args.dataContext.tr_um,
+                    tr_um_conv: args.dataContext.tr_um_conv,
+                    tr_price: args.dataContext.tr_price,
+                    tr_site: args.dataContext.tr_site,
+                    tr_loc: args.dataContext.tr_loc,
+                    tr_serial: args.dataContext.tr_serial,
+                    tr_ref: args.dataContext.tr_ref,
+                    tr_status: args.dataContext.tr_status,
+                    tr_expire: args.dataContext.tr_expire,
+                  };
+                  
+                  this.data.push(obj);
+                  let tr = obj;
+                  this.trlot = args.dataContext.tr_lot;
+                  this.updatetrans(args.dataContext.id)
+                 if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
+                 else{
+                  if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
+                  else{
+                   if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                   else{
+                    if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                   }
+                  }
+                 }
+                  // }
+                
+                this.angularGrid.gridService.deleteItem(args.dataContext);
+              }
             
-            grouping: {
-              getter: 'dec01',
-              formatter: (g) => `Annee: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [new Aggregators.Sum('tr_qty_loc')],
-              aggregateCollapsed: true,
-              
-              collapsed:true
-            }
+            },
           },
-          {
-            id: "dec02",
-            name: "MOIS",
-            field: "dec02",
-            sortable: true,
-            filterable: true,
-            type: FieldType.float,
-            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
-            grouping: {
-              getter: 'dec02',
-              formatter: (g) => `Mois: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [new Aggregators.Sum('tr_qty_loc')],
-              aggregateCollapsed: true,
-             
-              collapsed:true
-            }
-          },
-          // {
-          //   id: "tr_site",
-          //   name: "Site",
-          //   field: "tr_site",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-            
-          //   filter: {
-  
-          //     model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
-              
-          //    },
-          //   grouping: {
-          //     getter: 'tr_site',
-          //     formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [
-          //       // (required), what aggregators (accumulator) to use and on which field to do so
-          //      // new Aggregators.Avg('tr_qty_loc'),
-          //       new Aggregators.Sum('tr_qty_loc')
-          //     ],
-              
-          //     aggregateCollapsed: true,
-            
-          //     collapsed:true
-          //   }
-          // }, 
-          // {
-          //   id: "tr_loc",
-          //   name: "Emplacement",
-          //   field: "tr_loc",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-          //   filter: {
-          //    model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
-              
-          //    },
-          //   grouping: {
-          //     getter: 'tr_loc',
-          //     formatter: (g) => `Emplacement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [
-          //       // (required), what aggregators (accumulator) to use and on which field to do so
-          //      // new Aggregators.Avg('tr_qty_loc'),
-          //       new Aggregators.Sum('tr_qty_loc')
-          //     ],
-              
-          //     aggregateCollapsed: true,
-             
-          //     collapsed:true
-          //   }
-          // },
+          
           {
             id: "tr_addr",
             name: "Adresse",
@@ -433,6 +419,14 @@ export class TransactionListComponent implements OnInit {
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
           }, 
           {
+            id: "tr_qty_chg",
+            name: "Quantité trans",
+            field: "tr_qty_chg",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+          }, 
+          {
             id: "tr_qty_loc",
             name: "Quantite",
             field: "tr_qty_loc",
@@ -440,7 +434,61 @@ export class TransactionListComponent implements OnInit {
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             type: FieldType.float,
+            editor: {
+              model: Editors.float,
+              params: { decimalPlaces: 2 },
+            },
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+            onCellChange: (e: Event, args: OnEventArgs) => {
+          
+            
+                
+                this.data = [];
+                let obj = {
+                  tr_lot:args.dataContext.tr_lot,
+                  tr_nbr:args.dataContext.tr_nbr,
+                  tr_addr:args.dataContext.tr_addr,
+                  tr_rmks:'CORRECTION ADMINISTRATION',
+                  tr_gl_date: new Date(),
+                  tr_effdate: args.dataContext.tr_effdate,
+                  dec01:args.dataContext.dec01,
+                  dec02:args.dataContext.dec02,
+                  tr_line: args.dataContext.tr_line,
+                  tr_part: args.dataContext.tr_part,
+                  desc: args.dataContext.desc,
+                  tr_qty_loc: args.dataContext.tr_qty_loc - args.dataContext.tr_qty_chg ,
+                  tr_um: args.dataContext.tr_um,
+                  tr_um_conv: args.dataContext.tr_um_conv,
+                  tr_price: args.dataContext.tr_price,
+                  tr_site: args.dataContext.tr_site,
+                  tr_loc: args.dataContext.tr_loc,
+                  tr_serial: args.dataContext.tr_serial,
+                  tr_ref: args.dataContext.tr_ref,
+                  tr_status: args.dataContext.tr_status,
+                  tr_expire: args.dataContext.tr_expire,
+                };
+                // this.data.push(this.dataset[this.index])
+                this.data.push(obj);
+                let tr = obj;
+                this.trlot = args.dataContext.tr_lot;
+                this.updatetrans(args.dataContext.id)
+                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
+                else{
+                 if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
+                 else{
+                  if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                  else{
+                   if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                  }
+                 }
+                }
+                
+              
+               
+                
+              
+              
+            },
           },
             {
             id: "tr_status",
@@ -532,32 +580,9 @@ export class TransactionListComponent implements OnInit {
             type: FieldType.string,
             filter: {model: Filters.compoundInput , operator: OperatorType.contains },
            
-//            filter: { model: Filters.dateRange },
-  //          type: FieldType.date,
-    //        filterable: true,
+
           },
           
-          // {
-          //   id: "tr_expire",
-          //   name: "Expire Le",
-          //   field: "tr_expire",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.dateTimeIso,
-          //   grouping: {
-          //     getter: 'tr_expire',
-          //     formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [
-          //       // (required), what aggregators (accumulator) to use and on which field to do so
-          //      // new Aggregators.Avg('tr_qty_loc'),
-          //       new Aggregators.Sum('tr_qty_loc')
-          //     ],
-              
-          //     aggregateCollapsed: true,
-              
-          //     collapsed:true
-          //   }
-          // }, 
           {
             id: "tr_type",
             name: "Type Transaction",
@@ -678,7 +703,7 @@ export class TransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
+          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
           
         },
        
@@ -716,13 +741,16 @@ export class TransactionListComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset = []
+    this.copydataset = []
     this.inventoryTransactionService.getAll().subscribe(
       
-        (response: any) => {this.dataset = response.data
+        (response: any) => {this.dataset = response.data,
+          this.copydataset = response.data,
           this.dataview.setItems(this.dataset)},
         
         (error) => {
             this.dataset = []
+            this.copydataset = []
         },
         () => {}
         
@@ -800,6 +828,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     const controls = this.trForm.controls
     
     this.dataset = []
+    this.copydataset = []
     const date = controls.date.value
     ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
     : null;
@@ -816,6 +845,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       console.log(res.data.tr_gl_date)
       
       this.dataset  = res.data;
+      this.copydataset  = res.data;
       this.dataview.setItems(this.dataset)
       
     //this.dataset = res.data
@@ -831,8 +861,226 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       const tr_line = this.gridService.getDataItemByRowIndex(index).tr_part
       this.trLines.push(tr_line)
     });
-    console.log(this.trLines)
+   
   }
-  
+  prepare() {
+    const controls = this.trForm.controls;
+    const _tr = new InventoryTransaction();
+    _tr.tr_lot = controls.tr_lot.value;
+    _tr.tr_nbr = controls.tr_nbr.value;
 
+    _tr.tr_effdate = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
+    _tr.tr_so_job = controls.tr_so_job.value;
+
+    _tr.tr_rmks = controls.tr_rmks.value;
+    _tr.tr_addr = controls.tr_addr.value;
+
+    return _tr;
+  }
+  /**
+   *
+   * Returns object for saving
+   */
+  /**
+   * Add po
+   *
+   * @param _it: it
+   */
+  onSubmit() {
+    this.hasFormErrors = false;
+    
+    this.data = [];
+    let obj = {
+      tr_lot:this.dataset[this.index].tr_lot,
+      tr_nbr:this.dataset[this.index].tr_nbr,
+      tr_addr:this.dataset[this.index].tr_addr,
+      tr_rmks:'CORRECTION ADMINISTRATION',
+      tr_gl_date: new Date(),
+      tr_effdate: this.dataset[this.index].tr_effdate,
+      dec01:this.dataset[this.index].dec01,
+      dec02:this.dataset[this.index].dec02,
+      tr_line: this.dataset[this.index].tr_line,
+      tr_part: this.dataset[this.index].tr_part,
+      desc: this.dataset[this.index].desc,
+      tr_qty_loc: this.dataset[this.index].tr_qty_loc,
+      tr_um: this.dataset[this.index].tr_um,
+      tr_um_conv: this.dataset[this.index].tr_um_conv,
+      tr_price: this.dataset[this.index].tr_price,
+      tr_site: this.dataset[this.index].tr_site,
+      tr_loc: this.dataset[this.index].tr_loc,
+      tr_serial: this.dataset[this.index].tr_serial,
+      tr_ref: this.dataset[this.index].tr_ref,
+      tr_status: this.dataset[this.index].tr_status,
+      tr_expire: this.dataset[this.index].tr_expire,
+    };
+    // this.data.push(this.dataset[this.index])
+    this.data.push(obj);
+
+    
+   
+    this.trlot = this.dataset[this.index].tr_lot;
+
+    let tr = obj;
+    this.addRCTUNP(this.data, tr, this.trlot);
+
+    
+  }
+  addRCTUNP(detail: any, it, nlot) {
+   
+    this.loadingSubject.next(true);
+    const controls = this.trForm.controls;
+  
+    this.inventoryTransactionService.addRCTUNPCab({ detail, it, nlot }).subscribe(
+      (reponse: any) => {
+        console.log(reponse);
+        // const arrayOctet = new Uint8Array(reponse.pdf.data)
+        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        // const fileUrl = URL.createObjectURL(file);
+        // window.open(fileUrl)
+      },
+      (error) => {
+        
+        alert("Erreur, vérifier les informations");
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+
+        //    console.log(this.provider, po, this.dataset);
+        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
+        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
+
+        // this.router.navigateByUrl("/");
+      }
+    );
+  }
+  addISSUNP( detail: any, it, nlot) {
+    
+    this.loadingSubject.next(true);
+    const controls = this.trForm.controls;
+
+    this.inventoryTransactionService
+      .addIssUnp({detail, it,nlot})
+      .subscribe(
+       (reponse: any) => {
+        console.log(reponse)
+      // this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
+        // const arrayOctet = new Uint8Array(reponse.pdf.data)
+        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        // const fileUrl = URL.createObjectURL(file);
+        // window.open(fileUrl)},
+       },
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+          
+          // this.goBack()
+      //    console.log(this.provider, po, this.dataset);
+      //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
+     
+
+        // this.router.navigateByUrl("/");
+        
+        }
+      );
+  }
+  addRCTWO(detail: any, it) {
+    
+    this.loadingSubject.next(true);
+
+    this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
+      (reponse: any) => console.log(reponse),
+      (error) => {
+        alert("Erreur, vérifier les informations avec l'administrateur système");
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+        //    console.log(this.provider, po, this.dataset);
+
+        // this.router.navigateByUrl("/");
+      }
+    );
+  }
+  addISSWO( detail: any, it) {
+    
+    this.loadingSubject.next(true);
+    const controls = this.trForm.controls;
+
+    this.inventoryTransactionService
+      .addIssWo({detail, it})
+      .subscribe(
+       (reponse: any) => console.log(reponse),
+        (error) => {
+          this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+        },
+        () => {
+          this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.loadingSubject.next(false);
+      //    console.log(this.provider, po, this.dataset);
+      //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
+     
+        // this.router.navigateByUrl("/");
+        }
+      );
+  }
+  updatetrans(details: any) {
+    this.loadingSubject.next(true)
+    this.inventoryTransactionService.updatetr({id:details}).subscribe(
+        (reponse) => console.log("response", Response),
+        (error) => {
+            this.layoutUtilsService.showActionNotification(
+                "Erreur verifier les informations",
+                MessageType.Create,
+                10000,
+                true,
+                true
+            )
+            this.loadingSubject.next(false)
+        },
+        () => {
+          
+            this.layoutUtilsService.showActionNotification(
+                "Modification avec succès",
+                MessageType.Create,
+                10000,
+                true,
+                true
+            )
+            this.loadingSubject.next(false)
+            // this.router.navigateByUrl("inventory-settings/list-status")
+        }
+    )
+  }
 }

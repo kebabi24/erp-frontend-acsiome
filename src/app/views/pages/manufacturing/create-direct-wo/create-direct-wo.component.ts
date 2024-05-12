@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
+import {HttpClient} from '@angular/common/http';
 // Angular slickgrid
 import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
@@ -14,6 +15,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, Label, EmployeService, PrintersService } from "../../../../core/erp";
 declare var Edelweiss: any;
+
 @Component({
   selector: "kt-create-direct-wo",
   templateUrl: "./create-direct-wo.component.html",
@@ -22,7 +24,7 @@ declare var Edelweiss: any;
 export class CreateDirectWoComponent implements OnInit {
   currentPrinter: string;
   PathPrinter: string;
-
+  ipAddress:any;
   workOrder: WorkOrder;
   woForm: FormGroup;
   hasFormErrors = false;
@@ -82,6 +84,7 @@ export class CreateDirectWoComponent implements OnInit {
 
   seq: any;
   nof: any;
+  nbpal: any;
   row_number;
   message = "";
 
@@ -122,8 +125,9 @@ export class CreateDirectWoComponent implements OnInit {
   domain: any;
   domconfig: any;
   user1: any;
-  constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService) {
+  constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService, private http: HttpClient) {
     config.autoClose = true;
+    
     this.workRoutingService.getBy({ ro_rollup: true }).subscribe((response: any) => {
       console.log(response.date);
       this.ro_rollup = response.data;
@@ -150,7 +154,11 @@ export class CreateDirectWoComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            let idpal;
+            this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+            this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
             this.angularGrid.gridService.deleteItem(args.dataContext);
+            
           }
         },
       },
@@ -493,24 +501,32 @@ export class CreateDirectWoComponent implements OnInit {
     let tr = this.prepareTr();
     this.trdataset = [];
 
-    if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value == 0) {
+    if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value <= 0) {
       this.hasFormErrors = true;
-      this.message = "Verifier la Quantité";
+      this.message = "la quantité ne peut pas être inferieure à 0";
       // alert("Saisir Qte")
-
+      this.globalState = false;
       return;
     }
     if (this.dataset.length == 0) {
       this.hasFormErrors = true;
       this.message = "Verifier la liste des consomation";
-
+      this.globalState = false;
       return;
     }
-
+    let date = new Date();
+    
+    let tr_addr = controls.wo_routing.value
+    let obj ={date,tr_addr}
+    this.inventoryTransactionService.getByDateAddr(obj).subscribe(
+      (res: any) => {
+        
+    console.log('nb pal', res.data.length + 1)
     const _lb = new Label();
+    _lb.lb__dec01 = res.data.length + 1
     _lb.lb_site = controls.wo_site.value;
     _lb.lb_loc = this.loc;
-    _lb.lb_part = controls.wo_part.value;
+    _lb.lb_part = controls.wo_part.value; 
     _lb.lb_nbr = this.nof;
     _lb.lb_lot = controls.wo_serial.value;
     _lb.lb_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -557,6 +573,7 @@ export class CreateDirectWoComponent implements OnInit {
           tr_ref: lab.lb_ref,
           tr_user1: controls.wo_user1.value,
           tr_program: timedate,
+          
         });
         console.log(this.trdataset);
         this.addTR(this.trdataset, tr);
@@ -567,6 +584,12 @@ export class CreateDirectWoComponent implements OnInit {
     let wod = this.prepareWOD();
     this.addWod(this.dataset, wod);
     this.reset();
+  })
+  
+      
+    
+   
+   
   }
 
   prepareTr() {
@@ -580,6 +603,7 @@ export class CreateDirectWoComponent implements OnInit {
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
     _tr.tr_addr = controls.emp_shift.value;
+    _tr.created_ip_adr = this.ipAddress;
     // _tr.tr_so_job = controls.tr_so_job.value
 
     // _tr.tr_rmks = controls.tr_rmks.value
@@ -1463,8 +1487,10 @@ export class CreateDirectWoComponent implements OnInit {
     const controls = this.woForm.controls;
     const ref = controls.ref.value;
     const timedate = new Date().toLocaleTimeString();
-    console.log(timedate);
     var bol = false;
+    
+    this.labelService.getBy({lb_cab: ref,lb_actif:false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
+    
     for (let ob of this.dataset) {
       if (ob.tr_ref == ref) {
         console.log("hnehnahna");
@@ -1473,77 +1499,82 @@ export class CreateDirectWoComponent implements OnInit {
       }
     }
     if (!bol) {
-      this.locationDetailService.getByOneRef({ ld_ref: ref }).subscribe((response: any) => {
-        this.lddet = response.data;
-        //console.log(this.lddet.ld_qty_oh)
-        if (this.lddet != null) {
-          if (this.lddet.ld_site != controls.wo_site.value) {
-            alert("Palette N'existe pas dans Ce Site");
-          } else {
-            this.inventoryStatusService.getAllDetails({ isd_status: this.lddet.ld_status, isd_tr_type: "ISS-WO" }).subscribe((resstat: any) => {
-              console.log(resstat);
-              const { data } = resstat;
+      this.workOrderService.getByOne({ wo_nbr: this.nof }).subscribe((res: any) => {
+        if (res.data.wo_status == "C" ){alert('Quantité pour cet OF est superieure à la quantité prévue')}
+        else {this.locationDetailService.getByOneRef({ ld_ref: ref }).subscribe((response: any) => {
+              this.lddet = response.data;
+              //console.log(this.lddet.ld_qty_oh)
+              if (this.lddet != null) {
+                if (this.lddet.ld_site != controls.wo_site.value) {
+                  alert("Palette N'existe pas dans Ce Site");
+                } else {
+                  this.inventoryStatusService.getAllDetails({ isd_status: this.lddet.ld_status, isd_tr_type: "ISS-WO" }).subscribe((resstat: any) => {
+                    console.log(resstat);
+                    const { data } = resstat;
 
-              if (data) {
-                this.stat = null;
-                alert("Status Interdit pour ce mouvement ");
-              } else {
-                this.stat = this.lddet.ld_status;
-
-                // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
-                //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
-
-                this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
-                  console.log(respopart);
-                  this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
-                    if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true) {
-                      alert("Type ne correspond pas au produit broyé");
+                    if (data) {
+                      this.stat = null;
+                      alert("Status Interdit pour ce mouvement ");
                     } else {
-                      this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
-                        this.sct = respo.data;
-                        console.log(this.sct);
+                      this.stat = this.lddet.ld_status;
 
-                        this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
-                          console.log(rescode);
-                          if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true) {
-                            this.gridService.addItem(
-                              {
-                                id: this.dataset.length + 1,
-                                tr_line: this.dataset.length + 1,
-                                tr_part: this.lddet.ld_part,
-                                break: respopart.data.pt_break_cat,
-                                cmvid: "",
-                                desc: respopart.data.pt_desc1,
-                                tr_qty_loc: this.lddet.ld_qty_oh,
-                                tr_loc: this.lddet.ld_loc,
-                                tr_um: respopart.data.pt_um,
-                                tr_um_conv: 1,
-                                tr_price: this.sct.sct_mtl_tl,
-                                cmvids: "",
-                                tr_ref: ref,
-                                tr_serial: this.lddet.ld_lot,
-                                tr_status: this.stat,
-                                tr_expire: this.lddet.ld_expire,
-                                tr_program: timedate,
-                              },
-                              { position: "bottom" }
-                            );
+                      // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+                      //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+
+                      this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
+                        console.log(respopart);
+                        this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
+                          if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true && respopart.data.pt_draw != 'PERTE' ) {
+                            alert("Type ne correspond pas au produit broyé");
                           } else {
-                            alert("Couleur ne correspond pas au produit ");
+                            this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
+                              this.sct = respo.data;
+                              console.log(this.sct);
+
+                              this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
+                                console.log(rescode);
+                                if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true || respopart.data.pt_draw == 'PERTE') {
+                                  this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{})
+                                  this.gridService.addItem(
+                                    {
+                                      id: this.dataset.length + 1,
+                                      tr_line: this.dataset.length + 1,
+                                      tr_part: this.lddet.ld_part,
+                                      break: respopart.data.pt_break_cat,
+                                      cmvid: "",
+                                      desc: respopart.data.pt_desc1,
+                                      tr_qty_loc: this.lddet.ld_qty_oh,
+                                      tr_loc: this.lddet.ld_loc,
+                                      tr_um: respopart.data.pt_um,
+                                      tr_um_conv: 1,
+                                      tr_price: this.sct.sct_mtl_tl,
+                                      cmvids: "",
+                                      tr_ref: ref,
+                                      tr_serial: this.lddet.ld_lot,
+                                      tr_status: this.stat,
+                                      tr_expire: this.lddet.ld_expire,
+                                      tr_program: timedate,
+                                    },
+                                    { position: "bottom" }
+                                  );
+                                } else {
+                                  alert("Couleur ne correspond pas au produit ");
+                                }
+                              });
+                            });
                           }
                         });
                       });
                     }
                   });
-                });
+                }
+              } else {
+                alert("Palette Nexiste pas");
+                //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
               }
             });
           }
-        } else {
-          alert("Palette Nexiste pas");
-          //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
-        }
-      });
+        })
     } else {
       alert("Palette déja scannée");
     }

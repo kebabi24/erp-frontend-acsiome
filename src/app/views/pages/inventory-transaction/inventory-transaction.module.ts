@@ -61,6 +61,7 @@ import { LoadingVansV2Component } from "./loading-vans-v2/loading-vans-v2.compon
 import { EditLdStatusComponent } from './edit-ld-status/edit-ld-status.component';
 import { UpdatePriceUnpComponent } from './update-price-unp/update-price-unp.component';
 import { BobineReceiptCabComponent } from './bobine-receipt-cab/bobine-receipt-cab.component';
+import { EditTransactionListComponent } from './edit-transaction-list/edit-transaction-list.component';
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -91,6 +92,10 @@ const routes: Routes = [
   {
     path: "transaction-list",
     component: TransactionListComponent,
+  },
+  {
+    path: "edit-transaction-list",
+    component: EditTransactionListComponent,
   },
   {
     path: "conso-report",
@@ -155,7 +160,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent],
   imports: [
     CommonModule,
     HttpClientModule,

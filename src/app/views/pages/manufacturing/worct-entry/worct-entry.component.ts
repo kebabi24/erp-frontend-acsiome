@@ -484,7 +484,7 @@ export class WorctEntryComponent implements OnInit {
             _lb.lb_desc = this.product.pt_desc2;
             _lb.lb_cust = this.address.ad_addr;
             _lb.lb_addr = this.address.ad_line1;
-            _lb.lb_rmks = controls.emp_shift.value;
+            _lb.lb_grp = controls.emp_shift.value;
             _lb.lb_tel = this.address.ad_phone;
             _lb.int01 = this.product.int01;
             _lb.int02 = this.product.int02;

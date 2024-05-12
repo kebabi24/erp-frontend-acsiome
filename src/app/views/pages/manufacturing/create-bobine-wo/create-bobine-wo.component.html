@@ -77,7 +77,7 @@
                 <label class="form-group">N° OF:</label>
                 <div class="input-group input-group-sm">
 
-                    <input type="text" class="form-control form-control-solid"  formControlName="wo_nbr"
+                    <input type="text" class="form-control form-control-solid"  formControlName="wo_nbr" disabled 
                         aria-describedby="basic-addon2" >
                     
                 </div>
@@ -87,7 +87,7 @@
               <label class="form-group">Qte Commandée:</label>
               <div class="input-group input-group-sm">
 
-                  <input type="text" class="form-control form-control-solid"  formControlName="wo_qty_ord"
+                  <input type="text" class="form-control form-control-solid"  formControlName="wo_qty_ord" disabled
                       aria-describedby="basic-addon2" >
                   
               </div>
@@ -97,7 +97,7 @@
             <label class="form-group">Quantité Réalisée:</label>
             <div class="input-group input-group-sm">
 
-                <input type="text" class="form-control form-control-solid"  formControlName="total_bobine"
+                <input type="text" class="form-control form-control-solid"  formControlName="total_bobine" disabled
                     aria-describedby="basic-addon2" >
                 
             </div>
@@ -111,7 +111,7 @@
           <div class="row">
             <div class="form-group col-2">
               <label class="form-group">Type de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_type" id="id_prod_type">
+              <select class="form-control form-control-sm form-control-solid" formControlName="product_type" id="id_prod_type" disabled>
                 <option value=""></option>
                 <option *ngFor="let elem of product_types" [value]="elem.code_value">
                   {{ elem.code_cmmt }}
@@ -121,7 +121,7 @@
   
             <div class="form-group col-2">
               <label class="form-group">Couleur de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_color" id="id_prod_color">
+              <select class="form-control form-control-sm form-control-solid" formControlName="product_color" id="id_prod_color" disabled>
                 <option value=""></option>
                 <option *ngFor="let elem of product_colors" [value]="elem.code_value">
                   {{ elem.code_cmmt }}
@@ -131,7 +131,7 @@
 
             <div class="form-group col-2">
               <label class="form-group">qualite de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_quality" id="id_prod_quality">
+              <select class="form-control form-control-sm form-control-solid" formControlName="product_quality" id="id_prod_quality" disabled>
                 <option value=""></option>
                 <option *ngFor="let elem of product_qualitys" [value]="elem.code_value">
                   {{ elem.code_value }}
@@ -141,7 +141,7 @@
 
             <div class="form-group col-2">
               <label class="form-group">silicone:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_Cyl" id="id_prod_Cyl">
+              <select class="form-control form-control-sm form-control-solid" formControlName="product_Cyl" id="id_prod_Cyl" disabled>
                 <option value=""></option>
                 <option *ngFor="let elem of product_Cyls" [value]="elem.code_value">
                   {{ elem.code_value }}
@@ -442,7 +442,7 @@
               <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
       </ng-template>
-      <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open5(content5)">Launch demo
+      <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
           modal</button>
 
       </div>

@@ -75,7 +75,9 @@ export class EditWoComponent implements OnInit {
 
   isExist = false
   bom: any;
-
+  woEdit: any;
+  title: String = 'Modifier OF - '
+  reldate: any
   constructor(
     config: NgbDropdownConfig,
     private woFB: FormBuilder,
@@ -94,25 +96,56 @@ export class EditWoComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
-    this.createForm();
+    // this.createForm();
+    this.activatedRoute.params.subscribe((params) => {
+      const id = params.id
+      this.workOrderService.getOne(id).subscribe((response: any)=>{
+        console.log(response.data)
+        this.woEdit = response.data
+        this.reldate = new Date(this.woEdit.wo_rel_date)
+          // this.date1 = new Date(this.codeEdit.date01) 
+          // this.date1.setDate(this.date1.getDate() )
+       
+        
+          // this.date2 = new Date(this.codeEdit.date02)
+          // this.date2.setDate(this.date2.getDate() )
+      
+         // console.log(this.codeEdit.date01, this.date2)
+       
+        this.initCode()
+        this.loadingSubject.next(false)
+        this.title = this.title + this.woEdit.id
+      })
+  })
     
   }
-
+  initCode() {
+    this.createForm()
+    this.loadingSubject.next(false)
+}
   //create form
   createForm() {
     this.loadingSubject.next(false);
     
     const date = new Date()
     this.woForm = this.woFB.group({
-      id: "",
-      wo_nbr: [{value:"", disabled: true}],
-      part: [{value:"", disabled: true}],
-      descr: [{value:"", disabled: true}],
-      wo_status: [{value:"",disabled: !this.isExist}],
-      routing: "",
-      site: [{value:"", disabled: true}],
-      bom: "",
-      qte: 0,
+      id: [this.woEdit.id],
+      wo_nbr: [this.woEdit.wo_nbr],
+      wo_rev:[this.woEdit.wo_rev],
+      wo_so_job:[this.woEdit.wo_so_job],
+      part: [this.woEdit.wo_part],
+      descr: [this.woEdit.item.pt_desc1],
+      wo_status: [this.woEdit.wo_status],
+      wo_routing: [this.woEdit.wo_routing],
+      site: [this.woEdit.wo_site],
+      wo_bom_code: [this.woEdit.wo_bom_code],
+      wo_qty_ord: [this.woEdit.wo_qty_ord],
+      wo_rel_date: [{
+        year: this.reldate.getFullYear(),
+        month: this.reldate.getMonth()+1,
+        day: this.reldate.getDate()
+      }],
+      wo_rmks:[this.woEdit.wo_rmks],
      
     });
   }
@@ -153,6 +186,11 @@ export class EditWoComponent implements OnInit {
     const controls = this.woForm.controls;
     const _wo = new WorkOrder();
     _wo.wo_status = controls.wo_status.value
+    _wo.wo_rel_date = controls.wo_rel_date.value
+    _wo.wo_routing = controls.wo_status.value
+    _wo.wo_bom_code = controls.wo_bom_code.value
+    _wo.wo_qty_ord = controls.wo_qty_ord.value
+    _wo.wo_rmks = controls.wo_rmks.value
    
     return _wo
   }
@@ -172,7 +210,7 @@ export class EditWoComponent implements OnInit {
     const controls = this.woForm.controls
    
 
-    
+    console.log(controls.id.value)
     this.workOrderService
     .update(controls.id.value, _wo, )
       .subscribe(
@@ -198,8 +236,8 @@ export class EditWoComponent implements OnInit {
           this.loadingSubject.next(false);
         // console.log(this.provider, poNbr, this.dataset);
          // if(controls.print.value == true) printReceive(this.provider, this.dataset, poNbr);
-       
-          this.router.navigateByUrl("/");
+       this.goBack()
+          // this.router.navigateByUrl("/");
         }
       );
   }
@@ -216,11 +254,14 @@ export class EditWoComponent implements OnInit {
         
         controls.id.setValue(this.woServer.id);
         controls.wo_nbr.setValue(this.woServer.wo_nbr);
+        controls.wo_so_job.setValue(this.woServer.wo_so_job);
+        controls.wo_rev.setValue(this.woServer.wo_rev);
+
         controls.part.setValue(this.woServer.wo_part);
         controls.descr.setValue(this.woServer.item.pt_desc1)
         controls.site.setValue(this.woServer.wo_site);
-        controls.routing.setValue(this.woServer.wo_routing);
-        controls.bom.setValue(this.woServer.wo_bom_code);
+        controls.wo_routing.setValue(this.woServer.wo_routing);
+        controls.wo_bom_code.setValue(this.woServer.wo_bom_code);
         controls.wo_status.setValue(this.woServer.wo_status)
         this.stat = this.woServer.wo_status
         controls.wo_status.enable()
@@ -232,16 +273,16 @@ export class EditWoComponent implements OnInit {
     const controls = this.woForm.controls;
     const stat = controls.wo_status.value;
    
-    if (this.stat != "R" && stat == "R") {
-      alert("Voue ne pouvez pas lancer cet OF ici")
-      console.log(this.stat)
-      controls.wo_status.setValue(this.stat)
-      document.getElementById("stat").focus();
+    // if (this.stat != "R" && stat == "R") {
+    //   alert("Voue ne pouvez pas lancer cet OF ici")
+    //   console.log(this.stat)
+    //   controls.wo_status.setValue(this.stat)
+    //   document.getElementById("stat").focus();
 
 
 
 
-    }
+    // }
    
   }
  

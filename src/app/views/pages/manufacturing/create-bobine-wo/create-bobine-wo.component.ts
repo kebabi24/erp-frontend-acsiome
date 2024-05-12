@@ -15,7 +15,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, SaleOrderService,Label, EmployeService, PrintersService } from "../../../../core/erp";
 import date from 'src/assets/plugins/formvalidation/src/js/validators/date';
-declare var Edelweiss: any;
+declare var Edelweiss2: any;
 @Component({
   selector: 'kt-create-bobine-wo',
   templateUrl: './create-bobine-wo.component.html',
@@ -131,7 +131,7 @@ export class CreateBobineWoComponent implements OnInit {
   rctwostat: any;
   ro_rollup: any[] = [];
   emp_shift: any[] = [];
-  globalState: boolean = false;
+  globalState: boolean = true;
   product_colors: any[] = [];
   product_types: any[] = [];
   product_qualitys: any[] = [];
@@ -212,14 +212,14 @@ export class CreateBobineWoComponent implements OnInit {
         maxWidth: 50,
         selectable: true,
       },
-      // {
-      //   id: "tr_part",
-      //   name: "Article",
-      //   field: "tr_part",
-      //   sortable: true,
-      //   width: 50,
-      //   filterable: false,
-      // },
+      {
+        id: "tr_part",
+        name: "Article",
+        field: "tr_part",
+        sortable: true,
+        width: 50,
+        filterable: false,
+      },
 
       {
         id: "tr_desc",
@@ -361,11 +361,12 @@ export class CreateBobineWoComponent implements OnInit {
             _lb.lb_qty = args.dataContext.tr_qty_loc;
             _lb.lb_um = args.dataContext.tr_um;
             _lb.lb_ld_status = args.dataContext.tr_status;
-            _lb.lb_desc = args.dataContext.desc;
+            _lb.lb_desc = args.dataContext.tr_desc;
             _lb.lb_printer = this.PathPrinter;
             _lb.lb_grp = controls.emp_shift.value;
             _lb.lb_cust = controls.wo_routing.value;
             _lb.lb_addr = controls.wo_user1.value;
+            _lb.lb_rmks = controls.product_Cyl.value;
             let lab = null;
             console.log(_lb);
             // console.log(10 * 100.02)
@@ -373,7 +374,7 @@ export class CreateBobineWoComponent implements OnInit {
               (reponse: any) => {
                 lab = reponse.data;
                 this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss.print3(lab);
+                  Edelweiss2.print3(lab);
                 });
               },
               (error) => {
@@ -487,15 +488,64 @@ export class CreateBobineWoComponent implements OnInit {
         maxWidth: 50,
         selectable: true,
       },
-      // {
-      //   id: "tr_part",
-      //   name: "Article",
-      //   field: "tr_part",
-      //   sortable: true,
-      //   width: 50,
-      //   filterable: false,
-      // },
+      {
+        id: "tr_part",
+        name: "Article",
+        field: "tr_part",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        editor: {
+          model: Editors.text,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            console.log(args.dataContext.tr_part);
+            this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
+              if (resp.data) {
+                this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
+                  this.location = response.data;
 
+                  this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+                    console.log(resstat);
+                    const { data } = resstat;
+
+                    if (data) {
+                      this.stat = null;
+                    } else {
+                      this.stat = this.location.loc_status;
+                    }
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
+                  });
+                });
+              } else {
+                alert("Article Nexiste pas");
+                this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
+              }
+            });
+          }
+        },
+      },
+      {
+        id: "mvid",
+        field: "cmvid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (args.dataContext.tr_ref != null) {
+            alert("Modification interdite");
+          } else {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
+            element.click();
+          }
+        },
+      },
       {
         id: "tr_desc",
         name: "Description",
@@ -636,11 +686,12 @@ export class CreateBobineWoComponent implements OnInit {
             _lb.lb_qty = args.dataContext.tr_qty_loc;
             _lb.lb_um = args.dataContext.tr_um;
             _lb.lb_ld_status = args.dataContext.tr_status;
-            _lb.lb_desc = args.dataContext.desc;
+            _lb.lb_desc = args.dataContext.tr_desc;
             _lb.lb_printer = this.PathPrinter;
             _lb.lb_grp = controls.emp_shift.value;
             _lb.lb_cust = controls.wo_routing.value;
             _lb.lb_addr = controls.wo_user1.value;
+            
             let lab = null;
             console.log(_lb);
             // console.log(10 * 100.02)
@@ -648,7 +699,7 @@ export class CreateBobineWoComponent implements OnInit {
               (reponse: any) => {
                 lab = reponse.data;
                 this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss.print3(lab);
+                  Edelweiss2.print3(lab);
                 });
               },
               (error) => {
