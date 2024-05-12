@@ -210,7 +210,12 @@
         </div>
         <div class="modal-body">
           <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions4" [dataset]="items"> </angular-slickgrid>
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" 
+            [columnDefinitions]="columnDefinitions4" 
+            (onAngularGridCreated)="angularGridReady4($event)"
+            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)" 
+            (sgonDblClick)="dbclick4($event)"
+            [gridOptions]="gridOptions4" [dataset]="items"> </angular-slickgrid>
           </div>
         </div>
         <div class="modal-footer">
