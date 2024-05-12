@@ -1345,6 +1345,12 @@ export class CreatesaleorderComponent implements OnInit {
       });
     }
   }
+  dbclick4(e) {
+     this.gridObj4.onDblClick.subscribe((e, args) => {
+     alert("On Click");
+      
+  })
+}
   angularGridReady4(angularGrid: AngularGridInstance) {
     this.angularGrid4 = angularGrid;
     this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
@@ -1405,6 +1411,7 @@ export class CreatesaleorderComponent implements OnInit {
       frozenBottom: true,
       enableRowSelection: true,
       enableCheckboxSelector: true,
+      editable: true,
       checkboxSelector: {
         // optionally change the column index position of the icon (defaults to 0)
         // columnIndexPosition: 1,

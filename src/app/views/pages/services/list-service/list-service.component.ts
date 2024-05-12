@@ -397,7 +397,7 @@ export class ListServiceComponent implements OnInit {
         width: 50,
         type: FieldType.float,
         formatter:Formatters.percentComplete ,
-     
+       
       },
     ];
 
