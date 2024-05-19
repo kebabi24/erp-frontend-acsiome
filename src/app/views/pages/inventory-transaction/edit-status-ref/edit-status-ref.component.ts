@@ -47,7 +47,7 @@ import {
   LocationDetailService,
   CostSimulationService
 } from "../../../../core/erp";
-
+import { Reason, ReasonService} from "../../../../core/erp"
 @Component({
   selector: 'kt-edit-status-ref',
   templateUrl: './edit-status-ref.component.html',
@@ -87,6 +87,12 @@ export class EditStatusRefComponent implements OnInit {
     angularGridlocdet: AngularGridInstance;
     selectedField = "";
     fieldcode = "";
+    
+    causes: []
+    columnDefinitions6: Column[] = []
+    gridOptions6: GridOption = {}
+    gridObj6: any
+    angularGrid6: AngularGridInstance
 
     datastatus: []
     columnDefinitionsstatus: Column[] = []
@@ -113,6 +119,7 @@ export class EditStatusRefComponent implements OnInit {
       private sctService: CostSimulationService,
       private modalService: NgbModal,
       private inventoryTransactionService: InventoryTransactionService,
+      private reasonService: ReasonService
   ) {
       config.autoClose = true
        }
@@ -135,7 +142,7 @@ export class EditStatusRefComponent implements OnInit {
           tr_serial: [this.inventoryTransaction.tr_serial], 
           tr_status: [this.inventoryTransaction.tr_status , Validators.required],
           tr_expire: [this.inventoryTransaction.tr_expire],
-          
+          tr_rmks : [this.inventoryTransaction.tr_rmks],
         })
   }
 
@@ -180,6 +187,7 @@ console.log( controls.tr_serial.value)
       _it.tr_serial = controls.tr_serial.value
       _it.tr_vend_lot = controls.tr_serial_prev.value
       _it.tr_expire = controls.tr_expire.value
+      _it.tr_rmks = controls.tr_rmks.value
       ? `${controls.tr_expire.value.year}/${controls.tr_expire.value.month}/${controls.tr_expire.value.day}`
       : null
       
@@ -728,7 +736,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         const item = this.gridObjlocdet.getDataItem(idx);
         controls.tr_status.enable()
         controls.tr_expire.enable()
-             
+        controls.tr_rmks.enable()     
         controls.tr_serial.setValue(item.ld_lot ); 
         controls.tr_status.setValue(item.ld_status ); 
         this.lddet = item
@@ -963,4 +971,92 @@ document.getElementById("ref").focus();
 }
 })
   }
+  handleSelectedRowsChanged6(e, args) {
+    const controls = this.statusForm.controls
+    if (Array.isArray(args.rows) && this.gridObj6) {
+        args.rows.map((idx) => {
+            const cause = this.gridObj6.getDataItem(idx)
+            console.log(cause)
+            controls.wo_rmks.setValue(cause.rsn_ref || "")
+
+        })
+    }
+} 
+angularGridReady6(angularGrid: AngularGridInstance) {
+    this.angularGrid6 = angularGrid
+    this.gridObj6 = (angularGrid && angularGrid.slickGrid) || {}
+}
+prepareGrid6() {
+    const controls = this.statusForm.controls
+    this.columnDefinitions6 = [
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+       
+       
+        {
+          id: "rsn_ref",
+          name: "Code",
+          field: "rsn_ref",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+        {
+            id: "rsn_desc",
+            name: "Designation",
+            field: "rsn_desc",
+            sortable: true,
+            width: 200,
+            filterable: true,
+            type: FieldType.string,
+        },
+    ]
+
+    this.gridOptions6 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+            // optionally change the column index position of the icon (defaults to 0)
+            // columnIndexPosition: 1,
+
+            // remove the unnecessary "Select All" checkbox in header when in single selection mode
+            hideSelectAllCheckbox: true,
+
+            // you can override the logic for showing (or not) the expand icon
+            // for example, display the expand icon only on every 2nd row
+            // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            // True (Single Selection), False (Multiple Selections)
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+    
+    this.reasonService
+        .getBy ({rsn_type: 'STATUSCHANGE' })
+        .subscribe((response: any) => (this.causes = response.data))
+     
+}
+open6(content) {
+    this.prepareGrid6()
+    this.modalService.open(content, { size: "lg" })
+}
 }

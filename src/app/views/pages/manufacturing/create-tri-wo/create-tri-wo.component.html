@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Déclaration Bobine/Squelette Extrusion" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" title="OF TRI" [class]="'card-head-lg'" [viewLoading$]="loading$">
       <ng-container ktPortletTools>
         <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
         <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -12,6 +12,7 @@
           <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="2000" (close)="onAlertClose($event)">
             {{ message }}
           </kt-alert>
+  
           <div class="row">
             <div class="form-group col-2">
               <label class="form-group">Date de creation:</label>
@@ -58,60 +59,13 @@
               </div>
             </div>   
           </div>
-          <div class="row">
-            <div class="form-group col-2">
-                <label class="form-group">ID OF:</label>
-                <div class="input-group input-group-sm">
-
-                    <input type="text" class="form-control form-control-solid"  formControlName="wo_lot" id="id"
-                        aria-describedby="basic-addon2" (change)="onChangeOA()">
-                    <div class="input-group-append">
-                        <span class="input-group-text" (click)="open5(content5)">
-                            <i class="text-dark-50 flaticon2-search"></i> </span>
-                    </div>
-                </div>
-
-            </div>
-            
-            <div class="form-group col-2">
-                <label class="form-group">N° OF:</label>
-                <div class="input-group input-group-sm">
-
-                    <input type="text" class="form-control form-control-solid"  formControlName="wo_nbr" disabled 
-                        aria-describedby="basic-addon2" >
-                    
-                </div>
-
-            </div>
-            <div class="form-group col-2">
-              <label class="form-group">Qte Commandée:</label>
-              <div class="input-group input-group-sm">
-
-                  <input type="text" class="form-control form-control-solid"  formControlName="wo_qty_ord" disabled
-                      aria-describedby="basic-addon2" >
-                  
-              </div>
-
-          </div>
-          <div class="form-group col-2">
-            <label class="form-group">Quantité Réalisée:</label>
-            <div class="input-group input-group-sm">
-
-                <input type="text" class="form-control form-control-solid"  formControlName="total_bobine" disabled
-                    aria-describedby="basic-addon2" >
-                
-            </div>
-
-        </div>
-        </div>
-        
           
           <!-- SEARCH PRODUCT START  -->
           
           <div class="row">
             <div class="form-group col-2">
               <label class="form-group">Type de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_type" id="id_prod_type" disabled>
+              <select class="form-control form-control-sm form-control-solid" formControlName="product_type" id="id_prod_type">
                 <option value=""></option>
                 <option *ngFor="let elem of product_types" [value]="elem.code_value">
                   {{ elem.code_cmmt }}
@@ -121,52 +75,25 @@
   
             <div class="form-group col-2">
               <label class="form-group">Couleur de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_color" id="id_prod_color" disabled>
+              <select class="form-control form-control-sm form-control-solid" formControlName="product_color" id="id_prod_color">
                 <option value=""></option>
                 <option *ngFor="let elem of product_colors" [value]="elem.code_value">
                   {{ elem.code_cmmt }}
                 </option>
               </select>
             </div>
-
-            <div class="form-group col-2">
-              <label class="form-group">qualite de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_quality" id="id_prod_quality" disabled>
-                <option value=""></option>
-                <option *ngFor="let elem of product_qualitys" [value]="elem.code_value">
-                  {{ elem.code_value }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group col-2">
-              <label class="form-group">silicone:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_Cyl" id="id_prod_Cyl" disabled>
-                <option value=""></option>
-                <option *ngFor="let elem of product_Cyls" [value]="elem.code_value">
-                  {{ elem.code_value }}
-                </option>
-              </select>
-            </div>
   
-            <!-- <div class="form-group col-3">
+            <div class="form-group col-3">
               <label class="form-group">Rechercher</label>
               <div class="input-group input-group-sm">
-                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="searchProduct()" [disabled]="globalState">Rechercher</button>
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="searchProduct()">Rechercher</button>
               </div>
             </div>
-
-            <div class="form-group col-3">
-              <label class="form-group">Démarrer:</label>
-              <div class="input-group input-group-sm">
-                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()" [disabled]="globalState">Créer OF</button>
-              </div>
-            </div> -->
           </div>
   
           <!-- SEARCH PRODUCT END  -->
   
-          <!-- <div class="row">
+          <div class="row">
             <div class="form-group col-2">
               <label class="form-group">Produit:</label>
               <div class="input-group input-group-sm">
@@ -197,33 +124,18 @@
             <div class="form-group col-3">
               <label class="form-group">Démarrer:</label>
               <div class="input-group input-group-sm">
-                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()" [disabled]="globalState">Créer OF</button>
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()">Créer OF</button>
               </div>
             </div>
-          </div> -->
+          </div>
+  
+  
+          
           <div class="row">
             <div class="form-group col-2">
-             <label class="form-group">Poids Bobine: </label>
-             <div class="input-group input-group-sm">
-              <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_comp" step="0.5" (change)="onChangePal()" aria-describedby="basic-addon2"/>
-             </div>
-            </div>
-            <div class="form-group col-2">
-              <label class="form-group">   </label>
+              <label class="form-group">N° Palette :</label>
               <div class="input-group input-group-sm">
-               
-              </div>
-             </div>
-             <div class="form-group col-2">
-              <label class="form-group">   </label>
-              <div class="input-group input-group-sm">
-               
-              </div>
-             </div>
-            <div class="form-group col-2">
-             <label class="form-group">Poids Squelette: </label>
-              <div class="input-group input-group-sm">
-               <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_rjct" step="0.5" (change)="onChangeSq()" aria-describedby="basic-addon2"/>
+                <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()" aria-describedby="basic-addon2" />
               </div>
             </div>
           </div>
@@ -242,21 +154,9 @@
                           <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter ID </button>
                       </div-->
           <div class="row">
-            <angular-slickgrid class="col-6" gridHeight="200" gridId="mGrid" 
-              [columnDefinitions]="columnDefinitions" 
-              [gridOptions]="gridOptions" 
-              [dataset]="dataset" 
-              (onAngularGridCreated)="gridReady($event)"> 
-            </angular-slickgrid>
-        
-            <angular-slickgrid class="col-6" gridHeight="200" gridId="sGrid" 
-              [columnDefinitions]="columnDefinitionssq" 
-              [gridOptions]="gridOptionssq" 
-              [dataset]="sqdataset" 
-              (onAngularGridCreated)="gridReadysq($event)"> 
-            </angular-slickgrid>
+            <angular-slickgrid class="col-12" gridHeight="200" gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
           </div>
-          <!-- <div class="row">
+          <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Quantite: </label>
               <div class="input-group input-group-sm">
@@ -275,14 +175,14 @@
                 <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2" [disabled]="globalState">Valider</button>
               </div>
             </div>
-          </div> --> 
+          </div>
         </form>
       </div>
   
       <div>
         <ng-template #content4 let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h4 class="modal-title">choisir l'article</h4>
+            <h4 class="modal-title">Choissir l'article</h4>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -302,7 +202,7 @@
       <div>
         <ng-template #contentvend let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h4 class="modal-title">choisir le Fournisseur</h4>
+            <h4 class="modal-title">Choissir le Fournisseur</h4>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -342,7 +242,7 @@
       <div>
         <ng-template #contentsite let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h4 class="modal-title">choisir Site</h4>
+            <h4 class="modal-title">Choissir Site</h4>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -361,7 +261,7 @@
       <div>
         <ng-template #contentgamme let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h4 class="modal-title">choisir Gamme</h4>
+            <h4 class="modal-title">Choissir Gamme</h4>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -380,7 +280,7 @@
       <div>
         <ng-template #contentprinter let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h4 class="modal-title">choisir imprimante</h4>
+            <h4 class="modal-title">Choissir imprimante</h4>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -399,7 +299,7 @@
       <div>
         <ng-template #contentemp let-c="close" let-d="dismiss">
             <div class="modal-header">
-                <h4 class="modal-title">choisir les Employés</h4>
+                <h4 class="modal-title">Choissir les Employés</h4>
                 <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -420,32 +320,6 @@
             </div>
         </ng-template>
     </div>
-    <div>
-      <ng-template #content5 let-c="close" let-d="dismiss">
-          <div class="modal-header">
-              <h4 class="modal-title">choisir ID</h4>
-              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpos"
-                      [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
-                      (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
-                      [gridOptions]="gridOptions5" [dataset]="wos">
-                  </angular-slickgrid>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-              <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-          </div>
-      </ng-template>
-      <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
-          modal</button>
-
-      </div>
     </kt-portlet-body>
-  </kt-portlet> 
+  </kt-portlet>
   

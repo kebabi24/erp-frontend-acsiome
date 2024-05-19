@@ -194,17 +194,17 @@ export class PoReceipCabComponent implements OnInit {
         maxWidth: 50,
         selectable: true,
       },
-      {
-        id: "prh_part",
-        name: "Article",
-        field: "prh_part",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-      },
+      // {
+      //   id: "prh_part",
+      //   name: "Article",
+      //   field: "prh_part",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      // },
       {
         id: "mvid",
         field: "cmvid",
@@ -235,15 +235,15 @@ export class PoReceipCabComponent implements OnInit {
         filterable: false,
         editor: { model: Editors.text },
       },
-      {
-        id: "qty_received",
-        name: "QTE OA Récept",
-        field: "qty_received",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.float,
-      },
+      // {
+      //   id: "qty_received",
+      //   name: "QTE OA Récept",
+      //   field: "qty_received",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.float,
+      // },
       {
         id: "prh_rcvd",
         name: "QTE A Récep",
@@ -257,76 +257,76 @@ export class PoReceipCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
       },
-      {
-        id: "prh_um",
-        name: "UM",
-        field: "prh_um",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.prh_um);
-          this.itemsService.getBy({ pt_part: args.dataContext.prh_part }).subscribe((resp: any) => {
-            if (args.dataContext.prh_um == resp.data.pt_um) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: 1 });
-            } else {
-              //console.log(resp.data.pt_um)
+      // {
+      //   id: "prh_um",
+      //   name: "UM",
+      //   field: "prh_um",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.prh_um);
+      //     this.itemsService.getBy({ pt_part: args.dataContext.prh_part }).subscribe((resp: any) => {
+      //       if (args.dataContext.prh_um == resp.data.pt_um) {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: 1 });
+      //       } else {
+      //         //console.log(resp.data.pt_um)
 
-              this.mesureService.getBy({ um_um: args.dataContext.prh_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.prh_part }).subscribe((res: any) => {
-                console.log(res);
-                const { data } = res;
+      //         this.mesureService.getBy({ um_um: args.dataContext.prh_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.prh_part }).subscribe((res: any) => {
+      //           console.log(res);
+      //           const { data } = res;
 
-                if (data) {
-                  //alert ("Mouvement Interdit Pour ce Status")
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: res.data.um_conv });
-                  this.angularGrid.gridService.highlightRow(1, 1500);
-                } else {
-                  this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.prh_um, um_part: args.dataContext.prh_part }).subscribe((res: any) => {
-                    console.log(res);
-                    const { data } = res;
-                    if (data) {
-                      //alert ("Mouvement Interdit Pour ce Status")
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: res.data.um_conv });
-                    } else {
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: "1", prh_um: null });
+      //           if (data) {
+      //             //alert ("Mouvement Interdit Pour ce Status")
+      //             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: res.data.um_conv });
+      //             this.angularGrid.gridService.highlightRow(1, 1500);
+      //           } else {
+      //             this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.prh_um, um_part: args.dataContext.prh_part }).subscribe((res: any) => {
+      //               console.log(res);
+      //               const { data } = res;
+      //               if (data) {
+      //                 //alert ("Mouvement Interdit Pour ce Status")
+      //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: res.data.um_conv });
+      //               } else {
+      //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: "1", prh_um: null });
 
-                      alert("UM conversion manquante");
-                    }
-                  });
-                }
-              });
-            }
-          });
-        },
-      },
+      //                 alert("UM conversion manquante");
+      //               }
+      //             });
+      //           }
+      //         });
+      //       }
+      //     });
+      //   },
+      // },
 
-      {
-        id: "mvidlot",
-        field: "cmvidlot",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "prh_um_conv",
-        name: "Conv UM",
-        field: "prh_um_conv",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        // editor: {
-        //     model: Editors.float,
-        //},
-      },
+      // {
+      //   id: "mvidlot",
+      //   field: "cmvidlot",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "prh_um_conv",
+      //   name: "Conv UM",
+      //   field: "prh_um_conv",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   // editor: {
+      //   //     model: Editors.float,
+      //   //},
+      // },
       {
         id: "prh_pur_cost",
         name: "Prix unitaire",
@@ -515,18 +515,18 @@ export class PoReceipCabComponent implements OnInit {
           model: Editors.text,
         },
       },
-      {
-        id: "tr_expire",
-        name: "Expire",
-        field: "tr_expire",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.dateIso,
-        editor: {
-          model: Editors.date,
-        },
-      },
+      // {
+      //   id: "tr_expire",
+      //   name: "Expire",
+      //   field: "tr_expire",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.dateIso,
+      //   editor: {
+      //     model: Editors.date,
+      //   },
+      // },
       {
         id: "tr_ref",
         name: "N° Palette",

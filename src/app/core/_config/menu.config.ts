@@ -947,6 +947,10 @@ export class MenuConfig {
               page: "/manufacturing/create-direct-wo",
             },
             {
+              title: "OF de Tri",
+              page: "/manufacturing/create-tri-wo",
+            },
+            {
               title: "Déclaration bobine",
               page: "/manufacturing/create-bobine-wo",
             },

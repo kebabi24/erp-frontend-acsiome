@@ -636,7 +636,28 @@ export class TransactionListComponent implements OnInit {
               collapsed:true
             }
           }, 
-          
+          {
+            id: "last_modified_by",
+            name: "Par",
+            field: "last_modified_by",
+            sortable: true,
+            filterable: true,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            type: FieldType.string,
+            grouping: {
+              getter: 'last_modified_by',
+              formatter: (g) => `Par: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc')
+              ],
+              
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
+          },    
 
       ]
 
@@ -678,7 +699,7 @@ export class TransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
+          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"last_modified_by",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:50},{columnId:"tr__chr01",width:50},{columnId:"tr__chr02",width:50},{columnId:"tr__chr03",width:50},{columnId:"tr_serial",width:50},{columnId:"tr_ref",width:50}, {columnId:"tr_qty_loc",width:50}, {columnId:"tr_status",width:50}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:50}, {columnId:"tr_nbr",width:50}]
           
         },
        

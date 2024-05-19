@@ -27,7 +27,7 @@ export class CreateBobineWoComponent implements OnInit {
   printbuttonState: boolean = false;
   workOrder: WorkOrder;
   woForm: FormGroup;
-  
+   
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -43,7 +43,7 @@ export class CreateBobineWoComponent implements OnInit {
   angularGridsq: AngularGridInstance;
   gridsq: any;
   gridServicesq: GridService;
-  dataViewsq: any;
+  dataViewsq: any; 
   columnDefinitionssq: Column[];
   gridOptionssq: GridOption;
   sqdataset: any[];
@@ -193,7 +193,9 @@ export class CreateBobineWoComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           console.log(args.dataContext.tr_ref)
-          if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != '' ){alert('vous ne pouvez pas supprimer cette ligne')}
+          if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != '' ){this.message = "vous ne pouvez pas supprimer cette ligne";
+          this.hasFormErrors = true;
+          return;}
           else {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             const controls = this.woForm.controls;
@@ -378,7 +380,9 @@ export class CreateBobineWoComponent implements OnInit {
                 });
               },
               (error) => {
-                alert("Erreur Impression Etiquette");
+                this.message = "veuillez verifier votre connexion";
+                  this.hasFormErrors = true;
+                  return;
               },
               () => {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
@@ -405,13 +409,20 @@ export class CreateBobineWoComponent implements OnInit {
                 if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
                   this.hasFormErrors = true;
                   this.message = "Verifier la Quantité";
-                  // alert("Saisir Qte")
+                  
             
                   return;
                 }
                 if (this.dataset.length == 0) {
                   this.hasFormErrors = true;
-                  this.message = "Verifier la liste des consomation";
+                  this.message = "Verifier la liste des bobines";
+            
+                  return;
+                }
+                if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+                  this.hasFormErrors = true;
+                  this.message = "veuillez remplir le N° de lot";
+                
             
                   return;
                 }
@@ -436,7 +447,9 @@ export class CreateBobineWoComponent implements OnInit {
               }
             );
           } else {
-            alert("Etiquette dèjà imprimée");
+            this.message = "etiquette déjà imprimée";
+                  this.hasFormErrors = true;
+                  return;
           }
         },
       },
@@ -475,7 +488,16 @@ export class CreateBobineWoComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            console.log(args.dataContext.tr_ref)
+          if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != '' ){this.message = "vous ne pouvez pas supprimer cette ligne";
+          this.hasFormErrors = true;
+          return;}
+          else {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            const controls = this.woForm.controls;
             this.angularGridsq.gridService.deleteItem(args.dataContext);
+          }}
+           
           }
         },
       },
@@ -501,7 +523,9 @@ export class CreateBobineWoComponent implements OnInit {
         onCellChange: (e: Event, args: OnEventArgs) => {
           
           if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
+            this.message = "modification interdite";
+                  this.hasFormErrors = true;
+                  return;
           } else {
             console.log(args.dataContext.tr_part);
             this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
@@ -518,11 +542,11 @@ export class CreateBobineWoComponent implements OnInit {
                     } else {
                       this.stat = this.location.loc_status;
                     }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
+                    this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
                   });
                 });
               } else {
-                alert("Article Nexiste pas");
+                
                 this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
               }
             });
@@ -538,7 +562,9 @@ export class CreateBobineWoComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
+            this.message = "modification interdite";
+                  this.hasFormErrors = true;
+                  return;
           } else {
             this.row_number = args.row;
             let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
@@ -703,7 +729,7 @@ export class CreateBobineWoComponent implements OnInit {
                 });
               },
               (error) => {
-                alert("Erreur Impression Etiquette");
+             
               },
               () => {
                 this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
@@ -730,13 +756,20 @@ export class CreateBobineWoComponent implements OnInit {
                 if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
                   this.hasFormErrors = true;
                   this.message = "Verifier la Quantité";
-                  // alert("Saisir Qte")
+                
+            
+                  return;
+                }
+                if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+                  this.hasFormErrors = true;
+                  this.message = "Veuillez remplir le N° de lot";
+                
             
                   return;
                 }
                 if (this.dataset.length == 0) {
                   this.hasFormErrors = true;
-                  this.message = "Verifier la liste des consomation";
+                  this.message = "Verifier la liste des bobines";
             
                   return;
                 }
@@ -762,7 +795,9 @@ export class CreateBobineWoComponent implements OnInit {
               }
             );
           } else {
-            alert("Etiquette dèjà imprimée");
+            this.message = "etiquette déjà imprimée";
+                  this.hasFormErrors = true;
+                  return;
           }
         },
       },
@@ -801,7 +836,9 @@ export class CreateBobineWoComponent implements OnInit {
     this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
       (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
-        alert("Erreur de récupération imprimante");
+        this.message = "veuillez verifier votre connexion";
+                  this.hasFormErrors = true;
+                  return;
       }
     );
     this.getProductColors();
@@ -1013,9 +1050,13 @@ export class CreateBobineWoComponent implements OnInit {
       })
      
       } else {
-        alert("OF n'existe pas ou n'est pas lancé (statut <> 'R') ");
         controls.wo_lot.setValue(null);
         document.getElementById("id").focus();
+        this.message = "OF n'existe pas ou n'est pas lancé";
+                  this.hasFormErrors = true;
+                  return;
+       
+        
       }
     });
   }
@@ -1039,7 +1080,7 @@ export class CreateBobineWoComponent implements OnInit {
       .subscribe((response: any) => {
         const { data } = response;
         if (!data) {
-          alert("Site n'existe pas");
+          
           controls.wo_site.setValue("");
           document.getElementById("site").focus();
         }
@@ -1055,7 +1096,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_colors = data;
         if (!data) {
-          alert("pas de couleur dans le paramétrage");
+         
           // controls.wo_site.setValue("");
         }
       });
@@ -1070,7 +1111,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_types = data;
         if (!data) {
-          alert("pas de dimension dans le parametrage");
+         
           // controls.wo_site.setValue("");
         }
       });
@@ -1084,7 +1125,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_qualitys = data;
         if (!data) {
-          alert("pas de qualité paramétrée");
+       
           // controls.wo_site.setValue("");
         }
       });
@@ -1098,7 +1139,7 @@ export class CreateBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_Cyls = data;
         if (!data) {
-          alert("pas de cilicone paramétré");
+    
           // controls.wo_site.setValue("");
         }
       });
@@ -1127,7 +1168,9 @@ export class CreateBobineWoComponent implements OnInit {
         console.log('recherche article',response);
         if (data) { 
           if (data.length == 0) {
-            alert("Aucun produit n'existe avec les caracteristiques sélectionnés");
+            this.message = "veuillez verifier votre configuration";
+                  this.hasFormErrors = true;
+                  return;
           } else {
             
             controls.wo_part.setValue(data[0].pt_part);
@@ -1154,7 +1197,7 @@ export class CreateBobineWoComponent implements OnInit {
   }
 
   // onSubmit() {
-  //   // alert("ok")
+  //  
   //   this.globalState = true;
   //   const controls = this.woForm.controls;
   //   let tr = this.prepareTr();
@@ -1163,7 +1206,7 @@ export class CreateBobineWoComponent implements OnInit {
   //   if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value == 0) {
   //     this.hasFormErrors = true;
   //     this.message = "Verifier la Quantité";
-  //     // alert("Saisir Qte")
+  //    
 
   //     return;
   //   }
@@ -1204,7 +1247,7 @@ export class CreateBobineWoComponent implements OnInit {
   //       });
   //     },
   //     (error) => {
-  //       alert("Erreur Impression Etiquette");
+  //      
   //     },
   //     () => {
   //       console.log("lab", lab);
@@ -1290,7 +1333,9 @@ export class CreateBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        alert("Erreur, vérifier les informations avec l'administrateur système");
+        this.message = "veuillez verifier votre connexion";
+        this.hasFormErrors = true;
+        return;
         this.loadingSubject.next(false);
       },
       () => {
@@ -1312,7 +1357,9 @@ export class CreateBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addRJCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        alert("Erreur, vérifier les informations avec l'administrateur système");
+        this.message = "veuillez verifier votre connexion";
+                  this.hasFormErrors = true;
+                  return;
         this.loadingSubject.next(false);
       },
       () => {
@@ -1476,7 +1523,9 @@ export class CreateBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addIssWo({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        alert("Erreur, vérifier les informations");
+        this.message = "veuillez verifier votre connexion";
+                  this.hasFormErrors = true;
+                  return;
         this.loadingSubject.next(false);
       },
       () => {
@@ -1522,7 +1571,9 @@ export class CreateBobineWoComponent implements OnInit {
         this.workOrderService.addDirect({ it: wo, nof: this.nof }).subscribe(
           (reponse: any) => (this.wolot = reponse.data),
           (error) => {
-            alert("Erreur création OF, vérifier les informations");
+            this.message = "veuillez verifier votre connexion";
+                  this.hasFormErrors = true;
+                  return;;
             this.loadingSubject.next(false);
           },
           () => {
@@ -1598,7 +1649,7 @@ export class CreateBobineWoComponent implements OnInit {
       .subscribe((response: any) => {
         console.log(response.data, response.data.length);
         if (response.data.length == 0) {
-          alert("Article n'existe pas");
+         
           controls.wo_part.setValue("");
           controls.desc.setValue("");
           document.getElementById("part").focus();
@@ -2167,7 +2218,7 @@ export class CreateBobineWoComponent implements OnInit {
       console.log(response.data);
       this.gamme = controls.wo_routing.value;
       if (response.data == null) {
-        alert("Gamme n'existe pas");
+        
         controls.wo_routing.setValue(null);
         document.getElementById("wo_routing").focus();
       }
@@ -2183,7 +2234,9 @@ export class CreateBobineWoComponent implements OnInit {
     console.log(timedate);
     var bol = false;
     this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value }).subscribe((res: any) => {
-      if (res.data.wo_status == "C" ){alert('Quantité pour cet OF est superieure à la quantité prévue')}
+      if (res.data.wo_status == "C" ){this.message = "vous avez atteint la quantité prevue";
+      this.hasFormErrors = true;
+      return;}
     else {this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)

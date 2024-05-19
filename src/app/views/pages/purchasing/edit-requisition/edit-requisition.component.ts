@@ -927,7 +927,7 @@ prepareGrid6() {
     // fill the dataset with your data
     
     this.reasonService
-        .getBy ({rsn_type: 'requisition' })
+        .getBy ({rsn_type: 'REQUISITION' })
         .subscribe((response: any) => (this.causes = response.data))
      
 }

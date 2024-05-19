@@ -735,85 +735,85 @@ export class TransferComponent implements OnInit {
             maxWidth: 50,
             selectable: true,
           },
-          {
-            id: "tr_part",
-            name: "Article",
-            field: "tr_part",
-            sortable: true,
-            minWidth: 80,
-            filterable: false,
-            editor: {
-              model: Editors.text,
-            },
+//           {
+//             id: "tr_part",
+//             name: "Article",
+//             field: "tr_part",
+//             sortable: true,
+//             minWidth: 80,
+//             filterable: false,
+//             editor: {
+//               model: Editors.text,
+//             },
 
-            onCellChange: (e: Event, args: OnEventArgs) => {
-              const controls = this.trForm.controls;
-              console.log(args.dataContext.tr_part)
-              this.itemsService.getByOne({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
+//             onCellChange: (e: Event, args: OnEventArgs) => {
+//               const controls = this.trForm.controls;
+//               console.log(args.dataContext.tr_part)
+//               this.itemsService.getByOne({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
   
-                console.log(resp.data)
-                if (resp.data) {
+//                 console.log(resp.data)
+//                 if (resp.data) {
   
-               // this.locationService.getByOne({ loc_loc: controls.tr_ref_loc.value, loc_site: controls.tr_ref_site.value }).subscribe(
-                  //(response: any) => {
-                    //this.location = response.data
+//                // this.locationService.getByOne({ loc_loc: controls.tr_ref_loc.value, loc_site: controls.tr_ref_site.value }).subscribe(
+//                   //(response: any) => {
+//                     //this.location = response.data
                 
-                    this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
-                      (response: any) => {
-                        this.sct = response.data
+//                     this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
+//                       (response: any) => {
+//                         this.sct = response.data
                
-                        this.locationDetailService.getByOne({ ld_site: controls.tr_site.value, ld_loc: controls.tr_loc.value, ld_part: args.dataContext.tr_part, ld_lot: null }).subscribe(
-                          (response: any) => {
-                            this.lddet = response.data
-                            //console.log(this.lddet.ld_qty_oh)
-      if (this.lddet != null)
-{                            this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-TR" }).subscribe((resstat:any)=>{
-                              console.log(resstat)
-                              const { data } = resstat;
+//                         this.locationDetailService.getByOne({ ld_site: controls.tr_site.value, ld_loc: controls.tr_loc.value, ld_part: args.dataContext.tr_part, ld_lot: null }).subscribe(
+//                           (response: any) => {
+//                             this.lddet = response.data
+//                             //console.log(this.lddet.ld_qty_oh)
+//       if (this.lddet != null)
+// {                            this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-TR" }).subscribe((resstat:any)=>{
+//                               console.log(resstat)
+//                               const { data } = resstat;
       
-                              if (data) {
-                                this.stat = null
-                              } else {
-                                this.stat = this.lddet.ld_status
-                              }
-                        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
-                          tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
-                            });     
-                          }
-                          else {
-                            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: 0,
-                              tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: null, tr_price: this.sct.sct_cst_tot, tr_expire: null})
+//                               if (data) {
+//                                 this.stat = null
+//                               } else {
+//                                 this.stat = this.lddet.ld_status
+//                               }
+//                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+//                           tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+//                             });     
+//                           }
+//                           else {
+//                             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: 0,
+//                               tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: null, tr_price: this.sct.sct_cst_tot, tr_expire: null})
 
 
-                          }
-                          });     
+//                           }
+//                           });     
          
                              
-                    });  
-               // });
-              }
+//                     });  
+//                // });
+//               }
   
   
   
         
   
   
-              else {
-                alert("Article Nexiste pas")
-                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
-              }
+//               else {
+//                 alert("Article Nexiste pas")
+//                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+//               }
               
-              });
+//               });
   
                
              
              
-            }
+//             }
 
 
 
 
-          },
+//           },
 
           {
             id: "mvid",
@@ -956,130 +956,130 @@ export class TransferComponent implements OnInit {
 
               
           },
-          {
-            id: "tr_um",
-            name: "UM",
-            field: "tr_um",
-            sortable: true,
-            width: 80,
-            filterable: false,
-            editor: {
-                model: Editors.text,
-                required: true,
-                validator: statusValidator,
+          // {
+          //   id: "tr_um",
+          //   name: "UM",
+          //   field: "tr_um",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: false,
+          //   editor: {
+          //       model: Editors.text,
+          //       required: true,
+          //       validator: statusValidator,
 
-            },
-            onCellChange: (e: Event, args: OnEventArgs) => {
-              console.log(args.dataContext.tr_um)
-              this.itemsService.getBy({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
+          //   },
+          //   onCellChange: (e: Event, args: OnEventArgs) => {
+          //     console.log(args.dataContext.tr_um)
+          //     this.itemsService.getBy({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
                 
-              if   (args.dataContext.tr_um == resp.data.pt_um )  {
+          //     if   (args.dataContext.tr_um == resp.data.pt_um )  {
                 
-                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: 1 })
-              } else { 
-                //console.log(resp.data.pt_um)
+          //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: 1 })
+          //     } else { 
+          //       //console.log(resp.data.pt_um)
 
 
 
-                  this.mesureService.getBy({um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
-                  console.log(res)
-                  const { data } = res;
+          //         this.mesureService.getBy({um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
+          //         console.log(res)
+          //         const { data } = res;
         
-                if (data) {
-                  //alert ("Mouvement Interdit Pour ce Status")
-                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: res.data.um_conv })
-                  this.angularGrid.gridService.highlightRow(1, 1500);
+          //       if (data) {
+          //         //alert ("Mouvement Interdit Pour ce Status")
+          //         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: res.data.um_conv })
+          //         this.angularGrid.gridService.highlightRow(1, 1500);
 
-                  if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
-                    console.log('here')
-                    alert ("Qte Manquante")
-                    this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
+          //         if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
+          //           console.log('here')
+          //           alert ("Qte Manquante")
+          //           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                    
                
-                  } else {
+          //         } else {
                 
-                    this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um: null })
+          //           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um: null })
   
-                  }
+          //         }
   
 
 
 
-                } else {
-                  this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
-                    console.log(res)
-                    const { data } = res;
-                    if (data) {
-                      if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
-                        console.log('here')
-                        alert ("Qte Manquante")
-                        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
+          //       } else {
+          //         this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part  }).subscribe((res:any)=>{
+          //           console.log(res)
+          //           const { data } = res;
+          //           if (data) {
+          //             if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
+          //               console.log('here')
+          //               alert ("Qte Manquante")
+          //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                        
                    
-                      } else {
+          //             } else {
                     
-                        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um: null })
+          //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um: null })
       
-                      }
+          //             }
            
-                    } else {
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
+          //           } else {
+          //             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                
-                      alert("UM conversion manquante")
+          //             alert("UM conversion manquante")
                       
-                    }  
-                  })
+          //           }  
+          //         })
 
-                }
-                  })
+          //       }
+          //         })
   
-                }
-                })
+          //       }
+          //       })
       
-              }
+          //     }
              
-          },
+          // },
         
        
-        {
-          id: "mvidlot",
-          field: "cmvidlot",
-          excludeFromHeaderMenu: true,
-          formatter: Formatters.infoIcon,
-          minWidth: 30,
-          maxWidth: 30,
-          onCellClick: (e: Event, args: OnEventArgs) => {
-              this.row_number = args.row;
-              let element: HTMLElement = document.getElementById(
-              "openUmsGrid"
-              ) as HTMLElement;
-              element.click();
-          },
-        },
-        {
-          id: "tr_um_conv",
-          name: "Conv UM",
-          field: "tr_um_conv",
-          sortable: true,
-          width: 80,
-          filterable: false,
-         // editor: {
-         //     model: Editors.float,
-          //},
+        // {
+        //   id: "mvidlot",
+        //   field: "cmvidlot",
+        //   excludeFromHeaderMenu: true,
+        //   formatter: Formatters.infoIcon,
+        //   minWidth: 30,
+        //   maxWidth: 30,
+        //   onCellClick: (e: Event, args: OnEventArgs) => {
+        //       this.row_number = args.row;
+        //       let element: HTMLElement = document.getElementById(
+        //       "openUmsGrid"
+        //       ) as HTMLElement;
+        //       element.click();
+        //   },
+        // },
+        // {
+        //   id: "tr_um_conv",
+        //   name: "Conv UM",
+        //   field: "tr_um_conv",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //  // editor: {
+        //  //     model: Editors.float,
+        //   //},
           
-        },
+        // },
         
-          {
-              id: "tr_price",
-              name: "Prix unitaire",
-              field: "tr_price",
-              sortable: true,
-              width: 80,
-              filterable: false,
-              //type: FieldType.float,
-              formatter: Formatters.decimal,
+          // {
+          //     id: "tr_price",
+          //     name: "Prix unitaire",
+          //     field: "tr_price",
+          //     sortable: true,
+          //     width: 80,
+          //     filterable: false,
+          //     //type: FieldType.float,
+          //     formatter: Formatters.decimal,
               
-          },
+          // },
                   
           {
             id: "tr_ref",
@@ -1098,79 +1098,79 @@ export class TransferComponent implements OnInit {
             
         },
              
-          {
-            id: "tr_status",
-            name: "Status",
-            field: "tr_status",
-            sortable: true,
-            width: 80,
-            filterable: false,
-        //     editor: {
-        //       model: Editors.text,
-        //     },
-        //     onCellChange: (e: Event, args: OnEventArgs) => {
-        //       const controls = this.trForm.controls;
-        //       console.log(args.dataContext.tr_status)
+        //   {
+        //     id: "tr_status",
+        //     name: "Status",
+        //     field: "tr_status",
+        //     sortable: true,
+        //     width: 80,
+        //     filterable: false,
+        // //     editor: {
+        // //       model: Editors.text,
+        // //     },
+        // //     onCellChange: (e: Event, args: OnEventArgs) => {
+        // //       const controls = this.trForm.controls;
+        // //       console.log(args.dataContext.tr_status)
              
-        //       this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
-        //         console.log(ress.data.inventoryStatus) 
-        // if (ress.data.inventoryStatus) {
+        // //       this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
+        // //         console.log(ress.data.inventoryStatus) 
+        // // if (ress.data.inventoryStatus) {
   
   
-        //       this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-TR" }).subscribe((res:any)=>{
-        //       console.log(res)
-        //       const { data } = res;
+        // //       this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-TR" }).subscribe((res:any)=>{
+        // //       console.log(res)
+        // //       const { data } = res;
     
-        //     if (data) {
-        //       alert ("Mouvement Interdit Pour ce Status")
-        //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        // //     if (data) {
+        // //       alert ("Mouvement Interdit Pour ce Status")
+        // //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
               
-        //      } else {
+        // //      } else {
   
-        //  console.log(args.dataContext.tr_part)
-        //       let obj = {}
-        //       obj = {
-        //          ld_site: controls.tr_ref_site.value, 
-        //          ld_loc: controls.tr_ref_loc.value, 
-        //          ld_part: args.dataContext.tr_part, 
-        //          ld_lot: args.dataContext.tr_serial
-        //         }
-        //         console.log(obj)
-        //         status = args.dataContext.tr_status
-        //       console.log(args.dataContext.tr_part) 
-        //       console.log(status)
-        //       this.locationDetailService.getByStatus({obj, status} ).subscribe(
-        //         (response: any) => {
-        //          console.log(response.data.length != 0   )
-        //           if (response.data.length != 0) {
-        //             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
-        //               alert("lot existe avec un autre status")
+        // //  console.log(args.dataContext.tr_part)
+        // //       let obj = {}
+        // //       obj = {
+        // //          ld_site: controls.tr_ref_site.value, 
+        // //          ld_loc: controls.tr_ref_loc.value, 
+        // //          ld_part: args.dataContext.tr_part, 
+        // //          ld_lot: args.dataContext.tr_serial
+        // //         }
+        // //         console.log(obj)
+        // //         status = args.dataContext.tr_status
+        // //       console.log(args.dataContext.tr_part) 
+        // //       console.log(status)
+        // //       this.locationDetailService.getByStatus({obj, status} ).subscribe(
+        // //         (response: any) => {
+        // //          console.log(response.data.length != 0   )
+        // //           if (response.data.length != 0) {
+        // //             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        // //               alert("lot existe avec un autre status")
    
-        //           }  
+        // //           }  
   
   
   
             
-        //   })
-        //     }
+        // //   })
+        // //     }
           
-        //       })
-        //     } else {
+        // //       })
+        // //     } else {
       
-        //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
-        //       alert("Status N' existe pas")
+        // //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        // //       alert("Status N' existe pas")
       
       
-        //     }
-        //   })
-        //   }
+        // //     }
+        // //   })
+        // //   }
   
 
 
 
 
 
-          },
+        //   },
           // {
           //   id: "mvidlot",
           //   field: "cmvidlot",
@@ -1186,17 +1186,17 @@ export class TransferComponent implements OnInit {
           //       element.click();
           //   },
           // },
-          {
-            id: "tr_expire",
-            name: "Expire",
-            field: "tr_expire",
-            sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.dateIso,
+          // {
+          //   id: "tr_expire",
+          //   name: "Expire",
+          //   field: "tr_expire",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: false,
+          //   type: FieldType.dateIso,
            
             
-          },
+          // },
         ];
     
         this.gridOptions = {

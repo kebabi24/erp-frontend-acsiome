@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
 import {HttpClient} from '@angular/common/http';
@@ -15,13 +15,12 @@ import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, Label, EmployeService, PrintersService } from "../../../../core/erp";
 declare var Edelweiss: any;
-
 @Component({
-  selector: "kt-create-direct-wo",
-  templateUrl: "./create-direct-wo.component.html",
-  styleUrls: ["./create-direct-wo.component.scss"],
+  selector: 'kt-create-tri-wo',
+  templateUrl: './create-tri-wo.component.html',
+  styleUrls: ['./create-tri-wo.component.scss']
 })
-export class CreateDirectWoComponent implements OnInit {
+export class CreateTriWoComponent implements OnInit {
   currentPrinter: string;
   PathPrinter: string;
   ipAddress:any;
@@ -310,6 +309,9 @@ export class CreateDirectWoComponent implements OnInit {
 
     this.dataset = [];
   }
+  
+
+ 
 
   //ISS-UNP qrt * -1 w ttna7a men ld_det
   ngOnInit(): void {
@@ -368,7 +370,7 @@ export class CreateDirectWoComponent implements OnInit {
       wo_part: [{ value: this.workOrder.wo_part, disabled: true }, Validators.required],
       desc: [{ value: null, disabled: true }],
 
-      wo_routing: [this.workOrder.wo_routing, Validators.required],
+      wo_routing: ['MAN'],
       ref: [{ value: null, disabled: true }],
 
       wo_qty_comp: [this.workOrder.wo_qty_comp],
@@ -387,15 +389,9 @@ export class CreateDirectWoComponent implements OnInit {
       controls.emp_shift.setValue(this.shift);
       console.log("shift", this.shift);
     });
-    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
-      (reponse: any) => {
-        if (reponse.data != null) {
-          controls.wo_routing.setValue(reponse.data.code_value), controls.wo_routing.disable();
-        }
-      },
-      (error) => {}
-    );
-  }
+    
+          controls.wo_routing.setValue('MAN'), controls.wo_routing.disable();
+  }   
   //reste form
   reset() {
     this.workOrder = new WorkOrder();
@@ -829,13 +825,28 @@ export class CreateDirectWoComponent implements OnInit {
     const controls = this.woForm.controls;
     this.hasFormErrors = false;
     /** check form */
-    if (this.woForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
-      this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+    // if (this.woForm.invalid) {
+      // Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
+      if (controls.wo_user1.value == null || controls.wo_user1.value == '') {this.message = "veuillez remplir la liste des employés";
       this.hasFormErrors = true;
 
       return;
-    }
+      }
+      else {if (controls.product_color.value == null || controls.product_color.value == '') {this.message = "veuillez choisir la couleur souhaité";
+      this.hasFormErrors = true;
+
+      return;
+      }
+            else {if (controls.product_type.value == null || controls.product_type.value == '') {this.message = "veuillez choisir le type de produit souhaité";
+            this.hasFormErrors = true;
+
+            return;
+            }
+                 }
+           } 
+    
+     
+    // }
     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
       this.seq = response.data;
 
@@ -855,7 +866,7 @@ export class CreateDirectWoComponent implements OnInit {
         this.workOrderService.addDirect({ it: wo, nof: this.nof }).subscribe(
           (reponse: any) => (this.wolot = reponse.data),
           (error) => {
-            this.message = "la création de l'OF n'a pas ete enregistrée, veuillez verifier votre connexion";
+            this.message = "la création de l'OF n'a pas ete enregistrée, veuillez faire la recherche du produit";
             this.hasFormErrors = true;
             return;
             
@@ -1842,4 +1853,11 @@ export class CreateDirectWoComponent implements OnInit {
     controls.wo_user1.setValue(l);
     this.user1 = l;
   }
+
+ 
 }
+
+
+
+
+

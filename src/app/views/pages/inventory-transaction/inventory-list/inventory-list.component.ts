@@ -173,15 +173,15 @@ export class InventoryListComponent implements OnInit {
               lazyTotalsCalculation:true,
             }
           }, 
-          {
-            id: "item.pt_desc1",
-            name: "Description",
-            field: "item.pt_desc1",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "item.pt_desc1",
+          //   name: "Description",
+          //   field: "item.pt_desc1",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
             
-          }, 
+          // }, 
           {
             id: "item.pt_draw",
             name: "FAMILLE",
@@ -326,56 +326,56 @@ export class InventoryListComponent implements OnInit {
           //     collapsed: true,
           //   }
           // }, 
-          // {
-          //   id: "chr01",
-          //   name: "Couleur",
-          //   field: "chr01",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-          //   grouping: {
-          //     getter: 'chr01',
-          //     formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregateCollapsed: true,
-          //     collapsed: true,
-          //   }
-          // }, 
-          // {
-          //   id: "ld_date",
-          //   name: "Date",
-          //   field: "ld_date",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.date,
-          //   formatter: Formatters.dateIso ,
-          //   filter: { model: Filters.compoundDate },
-          //   grouping: {
-          //     getter: 'ld_date',
-          //     formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregateCollapsed: false,
-          //     collapsed: false,
-          //   }
-          // },
-          
           {
-            id: "ld_expire",
-            name: "Expire Le",
-            field: "ld_expire",
+            id: "last_modified_by",
+            name: "Par",
+            field: "last_modified_by",
             sortable: true,
             filterable: true,
-            type: FieldType.dateTimeIso,
+            type: FieldType.string,
             grouping: {
-              getter: 'ld_expire',
-              formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
-              ],
+              getter: 'last_modified_by',
+              formatter: (g) => `Users: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
+          {
+            id: "ld_date",
+            name: "Date Entrée",
+            field: "ld_date",
+            sortable: true,
+            filterable: true,
+            type: FieldType.date,
+            formatter: Formatters.dateIso ,
+            filter: { model: Filters.compoundDate },
+            grouping: {
+              getter: 'ld_date',
+              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: false,
+              collapsed: false,
+            }
+          },
+          
+          // {
+          //   id: "ld_expire",
+          //   name: "Expire Le",
+          //   field: "ld_expire",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.dateTimeIso,
+          //   grouping: {
+          //     getter: 'ld_expire',
+          //     formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('ld_qty_oh'),
+          //       new Aggregators.Sum('ld_qty_oh')
+          //     ],
+          //     aggregateCollapsed: true,
+          //     collapsed: true,
+          //   }
+          // }, 
           // {
           //   id: "ld_qty_frz",
           //   name: "Qte Friz",

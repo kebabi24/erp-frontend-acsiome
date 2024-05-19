@@ -45,7 +45,7 @@ import {
   BomService,
   
 } from "../../../../core/erp";
-
+import { Reason, ReasonService} from "../../../../core/erp"
 @Component({
   selector: 'kt-edit-wo',
   templateUrl: './edit-wo.component.html',
@@ -66,13 +66,19 @@ export class EditWoComponent implements OnInit {
   gridObj5: any;
   angularGrid5: AngularGridInstance;
 
+  causes: []
+  columnDefinitions6: Column[] = []
+  gridOptions6: GridOption = {}
+  gridObj6: any
+  angularGrid6: AngularGridInstance
+
   row_number;
   message = "";
   woServer;
   user;
   lpnbr: String;
   stat: String;
-
+ 
   isExist = false
   bom: any;
   woEdit: any;
@@ -89,6 +95,7 @@ export class EditWoComponent implements OnInit {
     private workOrderService: WorkOrderService,
     private psService: PsService,
     private bomService: BomService,
+    private reasonService: ReasonService
   ) {
     config.autoClose = true;
   }
@@ -186,10 +193,12 @@ export class EditWoComponent implements OnInit {
     const controls = this.woForm.controls;
     const _wo = new WorkOrder();
     _wo.wo_status = controls.wo_status.value
-    _wo.wo_rel_date = controls.wo_rel_date.value
-    _wo.wo_routing = controls.wo_status.value
+    _wo.wo_routing = controls.wo_routing.value
     _wo.wo_bom_code = controls.wo_bom_code.value
     _wo.wo_qty_ord = controls.wo_qty_ord.value
+    _wo.wo_rel_date = controls.wo_rel_date.value
+      ? `${controls.wo_rel_date.value.year}/${controls.wo_rel_date.value.month}/${controls.wo_rel_date.value.day}`
+      : null
     _wo.wo_rmks = controls.wo_rmks.value
    
     return _wo
@@ -230,7 +239,7 @@ export class EditWoComponent implements OnInit {
             "Ajout avec succès",
             MessageType.Create,
             10000,
-            true,
+            true, 
             true
           );
           this.loadingSubject.next(false);
@@ -274,7 +283,7 @@ export class EditWoComponent implements OnInit {
     const stat = controls.wo_status.value;
    
     // if (this.stat != "R" && stat == "R") {
-    //   alert("Voue ne pouvez pas lancer cet OF ici")
+    
     //   console.log(this.stat)
     //   controls.wo_status.setValue(this.stat)
     //   document.getElementById("stat").focus();
@@ -435,4 +444,92 @@ export class EditWoComponent implements OnInit {
     this.prepareGrid5();
     this.modalService.open(content, { size: "lg" });
   }
+  handleSelectedRowsChanged6(e, args) {
+    const controls = this.woForm.controls
+    if (Array.isArray(args.rows) && this.gridObj6) {
+        args.rows.map((idx) => {
+            const cause = this.gridObj6.getDataItem(idx)
+            console.log(cause)
+            controls.wo_rmks.setValue(cause.rsn_ref || "")
+
+        })
+    }
+}
+angularGridReady6(angularGrid: AngularGridInstance) {
+    this.angularGrid6 = angularGrid
+    this.gridObj6 = (angularGrid && angularGrid.slickGrid) || {}
+}
+prepareGrid6() {
+    const controls = this.woForm.controls
+    this.columnDefinitions6 = [
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+       
+       
+        {
+          id: "rsn_ref",
+          name: "Code",
+          field: "rsn_ref",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+        {
+            id: "rsn_desc",
+            name: "Designation",
+            field: "rsn_desc",
+            sortable: true,
+            width: 200,
+            filterable: true,
+            type: FieldType.string,
+        },
+    ]
+
+    this.gridOptions6 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+            // optionally change the column index position of the icon (defaults to 0)
+            // columnIndexPosition: 1,
+
+            // remove the unnecessary "Select All" checkbox in header when in single selection mode
+            hideSelectAllCheckbox: true,
+
+            // you can override the logic for showing (or not) the expand icon
+            // for example, display the expand icon only on every 2nd row
+            // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            // True (Single Selection), False (Multiple Selections)
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+    
+    this.reasonService
+        .getBy ({rsn_type: 'WORKORDERCHANGE' })
+        .subscribe((response: any) => (this.causes = response.data))
+     
+}
+open6(content) {
+    this.prepareGrid6()
+    this.modalService.open(content, { size: "lg" })
+}
 }

@@ -277,7 +277,9 @@ export class UnplanifiedIssueComponent implements OnInit {
 
 
             else {
-              alert("Article Nexiste pas")
+              this.message = "article n'existe pas";
+              this.hasFormErrors = true;
+              return;
               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
             }
             
@@ -340,7 +342,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         //                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , tr_site: null});
       
         //                // this.gridService.onItemUpdated;
-        //                 alert("Site N'existe pas")
+        //              
         //           }
         //     });     
         // }
@@ -409,7 +411,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         //                 });     
         //               }
         //               else {
-        //                 alert("Emplacement Nexiste pas")
+        //                 
         //                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_loc: null, qty_oh: 0, tr_status: null })
         //               }
                        
@@ -459,7 +461,9 @@ export class UnplanifiedIssueComponent implements OnInit {
                     else {
                           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , tr_serial: null, qty_0h: 0, tr_expire: null});
         
-                          alert("Lot N' existe pas")
+                          this.message = "lot n'existe pas";
+                          this.hasFormErrors = true;
+                          return;
                     }
               });     
           }
@@ -512,9 +516,11 @@ export class UnplanifiedIssueComponent implements OnInit {
                 
                 if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                     console.log('here')
-                 alert ("Qte Manquante")
+                    this.message = "Quantité manquante";
+                    this.hasFormErrors = true;
+                    return;
                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
-              //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
+              
              
                
             }
@@ -554,13 +560,14 @@ export class UnplanifiedIssueComponent implements OnInit {
                   const { data } = res;
         
                 if (data) {
-                  //alert ("Mouvement Interdit Pour ce Status")
+                  
                   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: res.data.um_conv })
                   this.angularGrid.gridService.highlightRow(1, 1500);
 
                   if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
-                    console.log('here')
-                    alert ("Qte Manquante")
+                    this.message = "Quantité manquante";
+                    this.hasFormErrors = true;
+                    return;
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                     
                 
@@ -580,7 +587,9 @@ export class UnplanifiedIssueComponent implements OnInit {
                     if (data) {
                       if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                         console.log('here')
-                        alert ("Qte Manquante")
+                        this.message = "Quantité manquante";
+                        this.hasFormErrors = true;
+                        return;
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                         
                     
@@ -593,7 +602,7 @@ export class UnplanifiedIssueComponent implements OnInit {
                     } else {
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                 
-                      alert("UM conversion manquante")
+                      
                       
                     }  
                   })
@@ -687,7 +696,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         //     const { data } = res;
   
         //   if (data) {
-        //     alert ("Mouvement Interdit Pour ce Status")
+        //     
         //     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
             
         //   }
@@ -695,10 +704,9 @@ export class UnplanifiedIssueComponent implements OnInit {
 
     
         //     //if (args.dataContext.tr_qty_loc > args.dataContext.qty_oh) {
-        //     //    console.log('here')
-        //     // alert ("Qte Manquante")
+        //    
         //     // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
-        //   //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
+        //   
          
            
         // },
@@ -1045,7 +1053,9 @@ export class UnplanifiedIssueComponent implements OnInit {
     // add new Item to Datatable
     addNewItem() {
       const controls = this.trForm.controls;
-      if(controls.tr_addr.value == null){alert('veuillez remplir addresse')}
+      if(controls.tr_addr.value == null){  this.message = "veuillez remplir l'adresse";
+      this.hasFormErrors = true;
+      return;}
       else{
       this.gridService.addItem(
         {
@@ -1367,7 +1377,7 @@ export class UnplanifiedIssueComponent implements OnInit {
             })
                     }
                     else {
-                      alert("Emplacement Nexiste pas")
+                    
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_loc: null, tr_status: null })
                     }
                      
@@ -1498,7 +1508,9 @@ export class UnplanifiedIssueComponent implements OnInit {
               const { data } = res;
     
             if (data) {
-              alert ("Mouvement Interdit Pour ce Status")
+              this.message = "mouvement interdit dans cet emplacement";
+              this.hasFormErrors = true;
+              return;
               updateItem.tr_serial = null;
               updateItem.tr_expire = null;
               updateItem.qty_oh = 0;
@@ -1686,7 +1698,7 @@ console.log(updateItem.tr_part)
                 const { data } = res;
 
               if (data) {
-                //alert ("Mouvement Interdit Pour ce Status")
+                
                 updateItem.tr_um_conv = res.data.um_conv 
                 this.angularGrid.gridService.highlightRow(1, 1500);
               } else {
@@ -1694,14 +1706,14 @@ console.log(updateItem.tr_part)
                   console.log(res)
                   const { data } = res;
                   if (data) {
-                    //alert ("Mouvement Interdit Pour ce Status")
+                    
                     updateItem.tr_um_conv = res.data.um_conv
                     
                   } else {
                     updateItem.tr_um_conv = 1
                     updateItem.tr_um = null
             
-                    alert("UM conversion manquante")
+                 
                     
                   }  
                 })
@@ -1818,7 +1830,9 @@ console.log(updateItem.tr_part)
             const { data } = res;
   
           if (data) {
-            alert ("Mouvement Interdit Pour ce Status")
+            this.message = "mouvement interdit dans cet emplacement";
+            this.hasFormErrors = true;
+            return;
           }else {
             updateItem.tr_status = item.is_status;
        
@@ -2082,7 +2096,9 @@ console.log(updateItem.tr_part)
 this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
   
   
-  if (controls.tr_addr.value == null){alert('veuillez remplir adresse')}
+  if (controls.tr_addr.value == null){  this.message = "veuillez saisir l'adresse";
+  this.hasFormErrors = true;
+  return;}
   else{
     for(let ob of this.dataset) {
 
@@ -2110,7 +2126,9 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
 
           if (data) {
             this.stat = null
-            alert("Status Interdit pour ce mouvement ")
+            this.message = "mouvement interdit dans cet emplacement";
+            this.hasFormErrors = true;
+            return;
 
 
           } else {
@@ -2133,7 +2151,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
         this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
 
      this.gridService.addItem(
-      {
+      { 
         id: this.dataset.length + 1,
         tr_line: this.dataset.length + 1,
         tr_part: this.lddet.ld_part,
@@ -2172,7 +2190,9 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
 
 
     else {
-    alert("Palette Nexiste pas")
+      this.message = "veuillez verifier le bigbag";
+            this.hasFormErrors = true;
+            return;
   //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
     }
 
@@ -2180,7 +2200,9 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
 
   }
   else {
-    alert ("Palette déja scannée")
+    this.message = "bigbag déjà scanné";
+    this.hasFormErrors = true;
+    return;
   }
 }
   controls.ref.setValue(null)

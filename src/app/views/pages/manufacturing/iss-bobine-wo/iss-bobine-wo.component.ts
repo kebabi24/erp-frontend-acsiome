@@ -49,7 +49,7 @@ import {
   CostSimulationService,
   LocationDetailService,
   CodeService,
-  InventoryStatusService,
+  InventoryStatusService, 
   MesureService,
   SequenceService,
   WorkOrderService,
@@ -392,7 +392,8 @@ export class IssBobineWoComponent implements OnInit {
 
 
           else {
-            alert("Article Nexiste pas")
+
+        
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
           }
           
@@ -454,8 +455,7 @@ export class IssBobineWoComponent implements OnInit {
                 else {
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , tr_site: null});
     
-                     // this.gridService.onItemUpdated;
-                      alert("Site N'existe pas")
+                 
                 }
           });     
       }
@@ -524,7 +524,7 @@ export class IssBobineWoComponent implements OnInit {
                       });     
                     }
                     else {
-                      alert("Emplacement Nexiste pas")
+                   
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_loc: null, qty_oh: 0, tr_status: null })
                     }
                      
@@ -574,7 +574,9 @@ export class IssBobineWoComponent implements OnInit {
                   else {
                         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , tr_serial: null, qty_0h: 0, tr_expire: null});
       
-                        alert("Lot N' existe pas")
+                        this.message = "le N° de lot que vous avez saisi n'existe pas";
+                        this.hasFormErrors = true;
+                        return;
                   }
             });     
         }
@@ -639,7 +641,7 @@ export class IssBobineWoComponent implements OnInit {
               
               if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                   console.log('here')
-               alert ("Qte Manquante")
+               
                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
             //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
            
@@ -681,13 +683,13 @@ export class IssBobineWoComponent implements OnInit {
                 const { data } = res;
       
               if (data) {
-                //alert ("Mouvement Interdit Pour ce Status")
+                
                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: res.data.um_conv })
                 this.angularGrid.gridService.highlightRow(1, 1500);
 
                 if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                   console.log('here')
-                  alert ("Qte Manquante")
+                  
                   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                   
               
@@ -707,7 +709,7 @@ export class IssBobineWoComponent implements OnInit {
                   if (data) {
                     if (args.dataContext.tr_qty_loc * Number(res.data.um_conv) >  args.dataContext.qty_oh) {
                       console.log('here')
-                      alert ("Qte Manquante")
+                 
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
                       
                   
@@ -720,7 +722,6 @@ export class IssBobineWoComponent implements OnInit {
                   } else {
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_um_conv: "1" , tr_um: null});
               
-                    alert("UM conversion manquante")
                     
                   }  
                 })
@@ -786,7 +787,7 @@ export class IssBobineWoComponent implements OnInit {
           const { data } = res;
 
         if (data) {
-          alert ("Mouvement Interdit Pour ce Status")
+        
           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
           
         }
@@ -795,7 +796,7 @@ export class IssBobineWoComponent implements OnInit {
   
           //if (args.dataContext.tr_qty_loc > args.dataContext.qty_oh) {
           //    console.log('here')
-          // alert ("Qte Manquante")
+    
           // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
         //  this.alertWarning = `Updated Title: ${args.dataView.tr_qty_loc}`;
        
@@ -870,7 +871,9 @@ export class IssBobineWoComponent implements OnInit {
     this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
       (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
-        alert("Erreur de récupération path");
+        this.message = "veuillez verifier votre connexion";
+        this.hasFormErrors = true;
+        return;
       }
     );
     this.getProductColors();
@@ -1061,9 +1064,12 @@ export class IssBobineWoComponent implements OnInit {
           )}},)
        
       } else {
-        alert("OF n'existe pas ou status <> 'R' ");
+       
         controls.wo_lot.setValue(null);
         document.getElementById("id").focus();
+        this.message = "l'OF n'existe pas ou n'est pas lancé";
+  this.hasFormErrors = true;
+  return;
       }
     });
   }
@@ -1085,7 +1091,7 @@ export class IssBobineWoComponent implements OnInit {
       .subscribe((response: any) => {
         const { data } = response;
         if (!data) {
-          alert("Site n'existe pas");
+          
           controls.wo_site.setValue("");
           document.getElementById("site").focus();
         }
@@ -1100,7 +1106,7 @@ export class IssBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_colors = data;
         if (!data) {
-          alert("Erreur bdd");
+         
           // controls.wo_site.setValue("");
         }
       });
@@ -1115,7 +1121,7 @@ export class IssBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_types = data;
         if (!data) {
-          alert("Erreur bdd");
+     
           // controls.wo_site.setValue("");
         }
       });
@@ -1129,7 +1135,7 @@ export class IssBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_qualitys = data;
         if (!data) {
-          alert("Erreur bdd");
+    
           // controls.wo_site.setValue("");
         }
       });
@@ -1143,7 +1149,7 @@ export class IssBobineWoComponent implements OnInit {
         const { data } = response;
         this.product_Cyls = data;
         if (!data) {
-          alert("Erreur bdd");
+     
           // controls.wo_site.setValue("");
         }
       });
@@ -1171,7 +1177,9 @@ export class IssBobineWoComponent implements OnInit {
         console.log('recherche article',response);
         if (data) { 
           if (data.length == 0) {
-            alert("Aucun produit n'existe avec les caractéristiques sélectionnés");
+            this.message = "aucune bobine avec cette configuration,veuillez verifier votre configuration";
+  this.hasFormErrors = true;
+  return;
           } else {
             
             controls.wo_part.setValue(data[0].pt_part);
@@ -1339,7 +1347,9 @@ export class IssBobineWoComponent implements OnInit {
     this.inventoryTransactionService.addIssWo({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
-        alert("Erreur, vérifier les informations");
+        this.message = "veuillez verifier votre connexion";
+  this.hasFormErrors = true;
+  return;
         this.loadingSubject.next(false);
       },
       () => {
@@ -1385,7 +1395,10 @@ export class IssBobineWoComponent implements OnInit {
         this.workOrderService.addDirect({ it: wo, nof: this.nof }).subscribe(
           (reponse: any) => (this.wolot = reponse.data),
           (error) => {
-            alert("Erreur création OF, vérifier les informations");
+            this.message = "Erreur création OF, verifier votre connexion";
+            this.hasFormErrors = true;
+            return;
+           
             this.loadingSubject.next(false);
           },
           () => {
@@ -1507,7 +1520,7 @@ export class IssBobineWoComponent implements OnInit {
       .subscribe((response: any) => {
         console.log(response.data, response.data.length);
         if (response.data.length == 0) {
-          alert("Article n'existe pas");
+          
           controls.wo_part.setValue("");
           controls.desc.setValue("");
           document.getElementById("part").focus();
@@ -1788,7 +1801,7 @@ export class IssBobineWoComponent implements OnInit {
           })
                   }
                   else {
-                    alert("Emplacement Nexiste pas")
+                    
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_loc: null, tr_status: null })
                   }
                    
@@ -1919,7 +1932,7 @@ export class IssBobineWoComponent implements OnInit {
             const { data } = res;
   
           if (data) {
-            alert ("Mouvement Interdit Pour ce Status")
+            
             updateItem.tr_serial = null;
             updateItem.tr_expire = null;
             updateItem.qty_oh = 0;
@@ -2097,7 +2110,7 @@ console.log(updateItem.tr_part)
               const { data } = res;
 
             if (data) {
-              //alert ("Mouvement Interdit Pour ce Status")
+              
               updateItem.tr_um_conv = res.data.um_conv 
               this.angularGrid.gridService.highlightRow(1, 1500);
             } else {
@@ -2105,14 +2118,14 @@ console.log(updateItem.tr_part)
                 console.log(res)
                 const { data } = res;
                 if (data) {
-                  //alert ("Mouvement Interdit Pour ce Status")
+                  
                   updateItem.tr_um_conv = res.data.um_conv
                   
                 } else {
                   updateItem.tr_um_conv = 1
                   updateItem.tr_um = null
           
-                  alert("UM conversion manquante")
+             
                   
                 }  
               })
@@ -2229,7 +2242,7 @@ console.log(updateItem.tr_part)
           const { data } = res;
 
         if (data) {
-          alert ("Mouvement Interdit Pour ce Status")
+      
         }else {
           updateItem.tr_status = item.is_status;
      
@@ -2514,7 +2527,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
 
         if (data) {
           this.stat = null
-          alert("Status Interdit pour ce mouvement ")
+          
 
 
         } else {
@@ -2577,8 +2590,11 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
 
 }
 else {
-  alert("Palette N'existe pas")
   controls.ref.setValue(null)
+  this.message = "le bigbag n'existe pas ou quantité egale à 0";
+  this.hasFormErrors = true;
+  return;
+  
 //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
   }
 
@@ -2586,8 +2602,11 @@ else {
 
 }
 else {
-  alert ("Palette déja scannée")
+  
   controls.ref.setValue(null)
+  this.message = "le bigbag a déjà été scané";
+  this.hasFormErrors = true;
+  return;
 }
 
 document.getElementById("ref").focus();
@@ -2933,7 +2952,7 @@ onChangeGamme() {
     console.log(response.data);
     this.gamme = controls.wo_routing.value;
     if (response.data == null) {
-      alert("Gamme n'existe pas");
+  
       controls.wo_routing.setValue(null);
       document.getElementById("wo_routing").focus();
     }

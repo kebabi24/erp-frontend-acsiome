@@ -8,6 +8,7 @@ import {
     Editor,
     Editors,
     FieldType,
+    Filters,
     OnEventArgs,
 } from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -27,6 +28,22 @@ import {
 import { MatDialog } from "@angular/material/dialog"
 
 import {  WorkOrderService } from "../../../../core/erp"
+
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+if (value=="C"){
+  return `<div class="text"  aria-hidden="C">Cloturé</div>`
+}
+if (value=="R"){
+  return `<div class="text"  aria-hidden="R">Lancé</div>`
+}
+if (value=="F"){
+  return `<div class="text"  aria-hidden="F">Valide</div>`
+}
+if (value=="D"){
+  return `<div class="text"  aria-hidden="D">Reporté</div>`
+}
+}
+  // return  value  ? `<div class="text"  aria-hidden="C">Clos</div>` : '<div class="text"  aria-hidden="R">Lancé</div>';}
 @Component({
   selector: 'kt-list-wo',
   templateUrl: './list-wo.component.html',
@@ -293,8 +310,12 @@ export class ListWoComponent implements OnInit {
             sortable: true,
             width: 80,
             filterable: true,
-            type: FieldType.string,
-            
+            type: FieldType.text,
+             formatter: myCustomCheckboxFormatter,
+            filter:{
+              collection:[{value:"C",label:"Cloturé"},{value:"R",label:"Lancé"},{value:"F",label:"Valide"}, {value:"D",label:"Reporté"}],
+              model: Filters.multipleSelect,
+            }
           },
           
           {

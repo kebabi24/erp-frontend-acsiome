@@ -51,7 +51,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import {  InventoryTransaction, InventoryTransactionService, CodeService} from "../../../../core/erp"
+import {  InventoryTransaction, InventoryTransactionService, CodeService, LabelService, Label} from "../../../../core/erp"
 import {
   NgbDropdownConfig,
   NgbTabChangeEvent,
@@ -76,7 +76,7 @@ const mymonthFormatter: Formatter = (row: number, cell: number, valueMONTH: any,
 valueMONTH.substring(5,7)  ;
 
 
-
+declare var Edelweiss: any;
 @Component({
   selector: 'kt-edit-transaction-list',
   templateUrl: './edit-transaction-list.component.html',
@@ -119,6 +119,7 @@ export class EditTransactionListComponent implements OnInit {
       private layoutUtilsService: LayoutUtilsService,
       private codeService: CodeService,
       private inventoryTransactionService: InventoryTransactionService,
+      private labelService: LabelService,
   ) {
    
     
@@ -239,7 +240,11 @@ export class EditTransactionListComponent implements OnInit {
                    if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
                    else{
                     if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
-                   }
+                    else{
+                      if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
+                     }
+                  }
+                   
                   }
                  }
                   // }
@@ -441,8 +446,6 @@ export class EditTransactionListComponent implements OnInit {
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
             onCellChange: (e: Event, args: OnEventArgs) => {
           
-            
-                
                 this.data = [];
                 let obj = {
                   tr_lot:args.dataContext.tr_lot,
@@ -1006,6 +1009,25 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     this.loadingSubject.next(true);
 
     this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
+      (reponse: any) => console.log(reponse),
+      (error) => {
+        alert("Erreur, vérifier les informations avec l'administrateur système");
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+        //    console.log(this.provider, po, this.dataset);
+
+        // this.router.navigateByUrl("/");
+      }
+    );
+  }
+  addRJCTWO(detail: any, it) {
+    
+    this.loadingSubject.next(true);
+
+    this.inventoryTransactionService.addRJCTWO({ detail, it }).subscribe(
       (reponse: any) => console.log(reponse),
       (error) => {
         alert("Erreur, vérifier les informations avec l'administrateur système");

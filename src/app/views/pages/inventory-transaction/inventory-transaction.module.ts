@@ -40,7 +40,7 @@ import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 import { UnplanifiedReceptComponent } from "./unplanified-recept/unplanified-recept.component";
 import { InventoryListComponent } from "./inventory-list/inventory-list.component";
-import { DomainService, LocationDetailService, SequenceService, InventoryManagementService, UnloadRequestService, LoadRequestService, RoleService } from "../../../core/erp";
+import { DomainService, LocationDetailService, SequenceService, InventoryManagementService, UnloadRequestService, LoadRequestService, RoleService, ReasonService } from "../../../core/erp";
 import { PoReceipComponent } from "./po-receip/po-receip.component";
 
 import { TransactionListComponent } from "./transaction-list/transaction-list.component";
@@ -227,6 +227,7 @@ const routes: Routes = [
     UnloadRequestService,
     LoadRequestService,
     RoleService,
+    ReasonService,
   ],
 })
 export class InventoryTransactionModule {}

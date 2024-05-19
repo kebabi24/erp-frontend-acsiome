@@ -143,7 +143,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
-              alert("Suppression interdite");
+              this.message = "vous ne pouvez pas supprimer cette ligne";
+              this.hasFormErrors = true;
+              return;
               
             }
             else
@@ -156,7 +158,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               // this.onSubmit();
               // }
             } else {
-              alert("ligne supprimée");
+              
             }
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
@@ -201,7 +203,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         onCellChange: (e: Event, args: OnEventArgs) => {
           
           if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
           } else {
             console.log(args.dataContext.tr_part);
             this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
@@ -222,7 +226,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                   });
                 });
               } else {
-                alert("Article Nexiste pas");
+                this.message = "article n'existe pas";
+                this.hasFormErrors = true;
+                return;
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
               }
             });
@@ -238,7 +244,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
           } else {
             this.row_number = args.row;
             let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
@@ -280,63 +288,65 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
-            alert("Modification interdite");
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
           } else {
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
           }
         },
       },
-      {
-        id: "tr_um",
-        name: "UM",
-        field: "tr_um",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-          required: true,
-          validator: statusValidator,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
-          } else {
-            this.itemsService.getBy({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
-              if (args.dataContext.tr_um == resp.data.pt_um) {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: 1 });
-              } else {
-                //console.log(resp.data.pt_um)
+      // {
+      //   id: "tr_um",
+      //   name: "UM",
+      //   field: "tr_um",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //     required: true,
+      //     validator: statusValidator,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     if (args.dataContext.tr_ref != null) {
+      //       
+      //     } else {
+      //       this.itemsService.getBy({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
+      //         if (args.dataContext.tr_um == resp.data.pt_um) {
+      //           this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: 1 });
+      //         } else {
+      //           //console.log(resp.data.pt_um)
 
-                this.mesureService.getBy({ um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
-                  console.log(res);
-                  const { data } = res;
+      //           this.mesureService.getBy({ um_um: args.dataContext.tr_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
+      //             console.log(res);
+      //             const { data } = res;
 
-                  if (data) {
-                    //alert ("Mouvement Interdit Pour ce Status")
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
-                    this.angularGrid.gridService.highlightRow(1, 1500);
-                  } else {
-                    this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
-                      console.log(res);
-                      const { data } = res;
-                      if (data) {
-                        //alert ("Mouvement Interdit Pour ce Status")
-                        this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
-                      } else {
-                        this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: "1", tr_um: null });
+      //             if (data) {
+      //               
+      //               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
+      //               this.angularGrid.gridService.highlightRow(1, 1500);
+      //             } else {
+      //               this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.tr_um, um_part: args.dataContext.tr_part }).subscribe((res: any) => {
+      //                 console.log(res);
+      //                 const { data } = res;
+      //                 if (data) {
+      //                  
+      //                   this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: res.data.um_conv });
+      //                 } else {
+      //                   this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_um_conv: "1", tr_um: null });
 
-                        alert("UM conversion manquante");
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          }
-        },
-      },
+      //                
+      //                 }
+      //               });
+      //             }
+      //           });
+      //         }
+      //       });
+      //     }
+      //   },
+      // },
 
       {
         id: "mvidlot",
@@ -347,7 +357,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
           } else {
             this.row_number = args.row;
             let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
@@ -401,7 +413,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
 
       //         // this.gridService.onItemUpdated;
-      //         alert("Site N'existe pas");
+      //        
       //       }
       //     });
       //   },
@@ -447,7 +459,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //           this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
       //         });
       //       } else {
-      //         alert("Emplacement Nexiste pas");
+      //         
       //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
       //       }
       //     });
@@ -479,7 +491,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           if (args.dataContext.tr_ref != null) {
-            alert("Modification interdite");
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
           } else {
             this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
               console.log(response.data);
@@ -535,7 +549,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //           const { data } = res;
 
       //           if (data) {
-      //             alert("Mouvement Interdit Pour ce Status");
+      //          
       //             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
       //           } else {
       //             let obj = {};
@@ -551,7 +565,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //               console.log(response.data.length != 0);
       //               if (response.data.length != 0) {
       //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-      //                 alert("lot existe avec un autre status");
+      //                 
       //               } else {
       //                 console.log("here");
       //               }
@@ -560,7 +574,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //         });
       //       } else {
       //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: null });
-      //         alert("Status N' existe pas");
+      //        
       //       }
       //     });
       //   },
@@ -611,10 +625,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
+          if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+            this.hasFormErrors = true;
+            this.message = "veuillez remplir le N° de lot";
+          
+      
+            return;
+          }
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
-            this.printbuttonState = true;
+            this.printbuttonState = true; 
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             _lb.lb_rmks = controls.tr_rmks.value;
@@ -648,7 +669,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 });
               },
               (error) => {
-                alert("Erreur Impression Etiquette");
+                this.message = "l'impression n'a pas été enregistrée";
+                this.hasFormErrors = true;
+                return;
               },
               () => {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });
@@ -658,17 +681,20 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                   return el.tr_line == args.dataContext.id;
                 });
                 console.log(this.index);
+                
                 this.onSubmit();
                 
               }
             );
           } else {
-            alert("Etiquette dèjà imprimée");
+            this.message = "Etiquette déjà imprimée ";
+            this.hasFormErrors = true;
+            return;
           }
          
         },
       },
-    ];
+    ]; 
 
     this.gridOptions = {
       asyncEditorLoading: false,
@@ -703,13 +729,17 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
       (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
-        alert("Erreur de récupération path");
+        this.message = "veuillez verifier l'imprimante";
+        this.hasFormErrors = true;
+        return;
       }
     );
     this.employeService.getByOne({ emp_userid: this.user.usrd_code }).subscribe(
       (reponse: any) => ((this.employeGrp = reponse.data.emp_shift), console.log(this.employeGrp)),
       (error) => {
-        alert("Erreur Employe Shift");
+        this.message = "veuillez verifier la connexion";
+        this.hasFormErrors = true;
+        return;
       }
     );
     this.domain = JSON.parse(localStorage.getItem("domain"));
@@ -978,7 +1008,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         // window.open(fileUrl)
       },
       (error) => {
-        alert("Erreur verifier les informations")
+        this.message = "La transaction n'a pas été enregistrée ";
+        this.hasFormErrors = true;
+        return;
         
         this.loadingSubject.next(false);
       },
@@ -1014,7 +1046,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   addNewItem() {
     const controls = this.trForm.controls;
     if (controls.tr_addr.value == null) {
-      alert("veuillez remplir addresse");
+      this.message = "veuillez remplir l'adresse";
+      this.hasFormErrors = true;
+      return;
     } else {
       var maxObj = null;
       var iddd = 0;
@@ -1355,7 +1389,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               this.gridService.updateItem(updateItem);
             });
           } else {
-            alert("Emplacement Nexiste pas");
+            
             updateItem.tr_loc = null;
             updateItem.tr_status = null;
             this.gridService.updateItem(updateItem);
@@ -1493,7 +1527,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               const { data } = res;
 
               if (data) {
-                //alert ("Mouvement Interdit Pour ce Status")
+               
                 updateItem.tr_um_conv = res.data.um_conv;
                 this.angularGrid.gridService.highlightRow(1, 1500);
               } else {
@@ -1501,13 +1535,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                   console.log(res);
                   const { data } = res;
                   if (data) {
-                    //alert ("Mouvement Interdit Pour ce Status")
+                   
                     updateItem.tr_um_conv = res.data.um_conv;
                   } else {
                     updateItem.tr_um_conv = 1;
                     updateItem.tr_um = null;
 
-                    alert("UM conversion manquante");
+                    
                   }
                 });
               }
@@ -1608,7 +1642,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           const { data } = res;
 
           if (data) {
-            alert("Mouvement Interdit Pour ce Status");
+            this.message = "mouvement interdit pour ce statut";
+            this.hasFormErrors = true;
+            return;
           } else {
             updateItem.tr_status = item.is_status;
 

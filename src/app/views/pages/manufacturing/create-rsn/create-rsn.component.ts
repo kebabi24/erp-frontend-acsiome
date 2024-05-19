@@ -78,6 +78,7 @@ export class CreateRsnComponent implements OnInit {
       this.reason = new Reason()
       this.reasonForm = this.reasonFB.group({
         rsn_type: [this.reason.rsn_type, Validators.required],
+        chr01:[this.reason.chr01],
           rsn_ref: [this.reason.rsn_ref, Validators.required],
           rsn_desc: [{ value: this.reason.rsn_desc, disabled: !this.isExist },  Validators.required ],
          
@@ -143,6 +144,7 @@ export class CreateRsnComponent implements OnInit {
       _reason.rsn_type = controls.rsn_type.value
       _reason.rsn_ref = controls.rsn_ref.value
       _reason.rsn_desc= controls.rsn_desc.value
+      _reason.chr01 = controls.chr01.value
       return _reason
   }
   /**

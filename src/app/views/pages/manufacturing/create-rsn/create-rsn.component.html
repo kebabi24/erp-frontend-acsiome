@@ -26,12 +26,33 @@
                             <option value=""></option>
                             <option value="Reject">Reject</option>
                             <option value="Down">Down</option>
+                            <option value="REQUISITION">Demande</option>
+                            <option value="WORKORDERCHANGE">Changement OF</option>
+                            <option value="STATUSCHANGE">Changement Statut</option>
                             
 
 
                         </select>
                         <div *ngIf="reasonForm.controls['rsn_type'].errors && (reasonForm.controls['rsn_type'].dirty || reasonForm.controls['rsn_type'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Panne/réglage:</label>
+
+                        <select
+                            [className]="reasonForm.controls['chr01'].errors && (reasonForm.controls['chr01'].dirty || reasonForm.controls['chr01'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="chr01"  id="exampleSelects7">
+                            <option value=""></option>
+                            <option value="REGLAGE">Réglage</option>
+                            <option value="PANNE">Panne</option>
+                            
+                            
+
+
+                        </select>
+                        <!-- <div *ngIf="reasonForm.controls['rsn_type'].errors && (reasonForm.controls['rsn_type'].dirty || reasonForm.controls['rsn_type'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div> -->
 
                     </div>
                 </div> 
