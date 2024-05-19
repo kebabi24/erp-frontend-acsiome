@@ -222,7 +222,7 @@ export class CreateNewServiceComponent implements OnInit {
     this.mobileService.getAllService().subscribe(
       (response: any) => {
         this.data = response.data;
-        // console.log(this.data);
+         //console.log(this.data);
         this.dataset = this.data.map((item) => {
           this.services.push(item);
           // console.log(item);
@@ -318,6 +318,7 @@ export class CreateNewServiceComponent implements OnInit {
     const year = controls.service_creation_date.value.year;
     const month = controls.service_creation_date.value.month;
     const day = controls.service_creation_date.value.day;
+  
     _service.service_period_activate_date = `${year}/${month}/${day}`;
     //_service.service_closing_date = controls.service_closing_date.value
     _service.role_code = controls.role_code.value;
@@ -454,9 +455,19 @@ export class CreateNewServiceComponent implements OnInit {
     // console.log(row)
     this.loadingSubject.next(false);
     this.service = new MobileService();
+    const date = new Date();
+     console.log("Date",date);
+     console.log("heure",date.getHours());
     this.createServiceForm = this.serviceF.group({
       // service_code: [{value: row.service_code, disabled: true}],
-      service_creation_date: [ this.service.service_creation_date , Validators.required],
+    //  service_creation_date: [ this.service.service_creation_date , Validators.required],
+      service_creation_date: [
+        {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: (date.getHours() > 13) ? date.getDate() + 1: date.getDate(),
+        },
+      ],
       // service_closing_date: [{ value: this.service.service_closing_date }, Validators.required],
       role_code: [row.role_code, Validators.required],
       role_name: [row.role_name, Validators.required],

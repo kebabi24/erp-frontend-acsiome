@@ -147,6 +147,11 @@ export class ProfilesListComponent implements OnInit {
           autoHeight: false,
           frozenColumn: 0,
           frozenBottom: true,
+          presets: {
+            sorters: [
+              { columnId: 'id', direction: 'ASC' }
+            ],
+          },
       }
 
       // fill the dataset with your data

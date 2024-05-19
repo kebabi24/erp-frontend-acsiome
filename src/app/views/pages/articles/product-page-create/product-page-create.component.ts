@@ -187,8 +187,9 @@ export class ProductPageCreateComponent implements OnInit {
     }
 
     getItems(){
-      this.itemService.getAll().subscribe(
+      this.itemService.getBy({pt_salable:true}).subscribe(
         (response: any) => {
+          console.log(response.data)
           this.dataset = response.data
           this.dataView.setItems(this.dataset)
         },
@@ -325,6 +326,7 @@ export class ProductPageCreateComponent implements OnInit {
             frozenBottom: true,
             enableRowSelection: true,
             enableCheckboxSelector: true,
+            enableAutoResize:true,
             // multiSelect: false,
             rowSelectionOptions: {
               selectActiveRow: false
