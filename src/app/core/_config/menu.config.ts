@@ -324,6 +324,10 @@ export class MenuConfig {
               page: "/supervision/validate-charge-demande",
             },
             {
+              title: "Validation des demandes de chargement Sup",
+              page: "/supervision/validate-lr-sup",
+            },
+            {
               title: "Validation des demandes de dechargement",
               page: "/supervision/validate-decharge-demande",
             },

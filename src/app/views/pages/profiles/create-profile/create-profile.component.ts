@@ -215,9 +215,27 @@ export class CreateProfileComponent implements OnInit {
       const {node:{data:name}} = event
       const index = this.selectedMenus.indexOf(name.name)
       this.selectedMenus.splice(index,1)
-      const indexs = this.selectedMenus.indexOf(event.node.parent.data.name)
-      
-      if(this.selectedMenus.includes(event.node.parent.data.name)) this.selectedMenus.splice(indexs,1)
+     // const indexs = this.selectedMenus.indexOf(event.node.parent.data.name)
+
+      //const ind = this.selectedMenus.
+    //   console.log(event.node.parent.data)
+    //   console.log(event.node.parent.data.children)
+      let bool = false
+      for (let child of event.node.parent.data.children ) {
+        // console.log(child.name)
+        const ind = this.selectedMenus.indexOf(child.name)
+        // console.log(ind)
+        if (ind >= 0) {
+            bool = true;
+            break;
+        }
+      }
+    //   console.log(bool)
+    //   this.selectedMenus.splice(index,1)
+     const indexs = this.selectedMenus.indexOf(event.node.parent.data.name)
+    if(bool == false) {this.selectedMenus.splice(indexs,1)}
+   // if(this.selectedMenus.includes(event.node.parent.data.name)) this.selectedMenus.splice(indexs,1)
+    // console.log("this.selectedMenus", this.selectedMenus)
     }
     
 }

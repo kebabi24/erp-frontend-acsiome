@@ -211,7 +211,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -240,7 +240,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -264,7 +264,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Role: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -288,7 +288,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Itineraire: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -312,7 +312,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -336,7 +336,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -403,7 +403,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Clos: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -436,7 +436,7 @@ export class ListInvoiceMobComponent implements OnInit {
           formatter: (g) => `Annulée: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
           new Aggregators.Sum('horstax_amount'),  
-          new Aggregators.Sum('tax_amount'),
+          new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
           new Aggregators.Sum('due_amount')
@@ -460,9 +460,9 @@ export class ListInvoiceMobComponent implements OnInit {
 
       },
       {
-        id: "tax_amount",
+        id: "taxe_amount",
         name: "TVA",
-        field: "tax_amount",
+        field: "taxe_amount",
         sortable: true,
         width: 50,
         filterable: true,

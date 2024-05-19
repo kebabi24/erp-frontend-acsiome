@@ -194,4 +194,6 @@ export class Item extends BaseModel{
     pt_orderable    : Boolean
     pt_loadable     : Boolean
     pt_promotion    : Boolean
+    pt_loadpacking: Number
+    pt_salepacking: Number
 }

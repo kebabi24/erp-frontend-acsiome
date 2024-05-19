@@ -136,12 +136,13 @@
         </div>
         <div class="modal-body">
           <kt-alert *ngIf="isNotSelected" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Veuillez tout d'abord selectionné un role pour lui affecter un service </kt-alert>
+          <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="3000" (close)="onAlertClose($event)">Modifiez quelques éléments et réessayez de soumettre.</kt-alert>
           <div class="example-preview2" *ngIf="isClose">
 
             <form class="form" [formGroup]="createServiceForm">
               <div class="form-group col-6">
                 <label class="form-group">Période service : </label>
-                <div class="input-group input-group-sm">
+                <!--div class="input-group input-group-sm">
                   <input class="form-control form-control-solid" placeholder="jj-mm-aaaa" name="service_creation_date" formControlName="service_creation_date" ngbDatepicker #service_creation_date="ngbDatepicker" />
                   <div class="input-group-append">
                     <button class="btn btn-primary" (click)="service_creation_date.toggle()" type="button">
@@ -151,6 +152,16 @@
                   <div *ngIf="createServiceForm.controls['service_creation_date'].errors && (createServiceForm.controls['service_creation_date'].dirty || createServiceForm.controls['service_creation_date'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
 
+                </div-->
+                <div class="input-group input-group-sm">
+                  <input class="form-control form-control-sm form-control-solid" formControlName="service_creation_date"  placeholder="jj-mm-aaaa" name="service_creation_date" ngbDatepicker f #service_creation_date="ngbDatepicker"  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" (click)="service_creation_date.toggle()" type="button">
+                      <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="createServiceForm.controls['service_creation_date'].errors && (createServiceForm.controls['service_creation_date'].dirty || createServiceForm.controls['service_creation_date'].touched) "
+                  class="invalid-feedback">Ce Champs est obligatoire</div>
                 </div>
               </div>
 
@@ -171,6 +182,8 @@
                   <option value=""></option>
                   <option *ngFor="let elem of itinerary" [value]="elem.itinerary_code">{{ elem.itinerary_code }} {{ elem.itinerary_name }}</option>
                 </select>
+                <div *ngIf="createServiceForm.controls['itinerary_code'].errors && (createServiceForm.controls['itinerary_code'].dirty || createServiceForm.controls['itinerary_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+          
               </div>
             </form>
           </div>

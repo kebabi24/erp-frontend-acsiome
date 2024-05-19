@@ -501,6 +501,8 @@ export class CreateComponent implements OnInit {
       int02: [{ value: this.item.int02, disabled: !this.isExist }],
     });
     this.form6 = this.formBuilder.group({
+      pt_loadpacking: [1],
+      pt_salepacking: [1],
       pt_salable: [{ value: this.item.pt_salable, disabled: !this.isExist }],
       pt_inventoryable: [{ value: this.item.pt_inventoryable, disabled: !this.isExist }],
       pt_consignable: [{ value: this.item.pt_consignable, disabled: !this.isExist }],
@@ -857,6 +859,9 @@ export class CreateComponent implements OnInit {
     _item.pt_orderable = controls6.pt_orderable.value;
     _item.pt_loadable = controls6.pt_loadable.value;
     _item.pt_promotion = controls6.pt_promotion.value;
+
+    _item.pt_loadpacking = controls6.pt_loadpacking.value;
+    _item.pt_salepacking = controls6.pt_salepacking.value;
 
 
     return _item;

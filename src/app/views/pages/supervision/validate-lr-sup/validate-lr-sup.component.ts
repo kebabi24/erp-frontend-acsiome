@@ -12,13 +12,13 @@ import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
 import { MobileServiceService, MobileService, RoleService, ItineraryService, LoadRequestService, UsersMobileService } from "../../../../core/erp";
 import { MobileSettingsService } from "../../../../core/erp";
 import jsPDF from "jspdf";
+
 @Component({
-  selector: "kt-validate-charge-demande",
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: "./validate-charge-demande.component.html",
-  styleUrls: ["./validate-charge-demande.component.scss"],
+  selector: 'kt-validate-lr-sup',
+  templateUrl: './validate-lr-sup.component.html',
+  styleUrls: ['./validate-lr-sup.component.scss']
 })
-export class ValidateChargeDemandeComponent implements OnInit {
+export class ValidateLrSupComponent implements OnInit {
   service: MobileService;
   validationForm: FormGroup;
   hasFormErrors = false;
@@ -43,7 +43,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
   user;
   domain;
   angularGridld: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService,private roleService:  RoleService) {
+  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService) {
     config.autoClose = true;
   }
 
@@ -112,7 +112,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
 
   // GET ROLES OF THE SUPERVISOR
   prepareRoles() {
-    this.roleService.getAllRoles().subscribe(
+    this.loadRequestService.getRoles(this.user.usrd_code).subscribe(
       (response: any) => {
         this.roles = response.data;
       },

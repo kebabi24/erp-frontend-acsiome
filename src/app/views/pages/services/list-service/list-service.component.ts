@@ -200,7 +200,7 @@ export class ListServiceComponent implements OnInit {
         name: "Site",
         field: "service_site",
         sortable: true,
-        width: 50,
+       // width: 50,
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
@@ -222,7 +222,7 @@ export class ListServiceComponent implements OnInit {
         name: "Service",
         field: "service_code",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.string,
         filterable: true,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
@@ -244,7 +244,7 @@ export class ListServiceComponent implements OnInit {
         name: "Date Effet",
         field: "service_period_activate_date",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.date,
         filterable: true,
         filter: {
@@ -270,7 +270,7 @@ export class ListServiceComponent implements OnInit {
         name: "Role",
         field: "role_code",
         sortable: true,
-        width: 50,
+       // width: 50,
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
@@ -292,7 +292,7 @@ export class ListServiceComponent implements OnInit {
         name: "Itineraire",
         field: "itinerary_code",
         sortable: true,
-        width: 50,
+       // width: 50,
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
@@ -314,7 +314,7 @@ export class ListServiceComponent implements OnInit {
         name: "KM Debut",
         field: "service_kmdep",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.text,
         
       },
@@ -323,7 +323,7 @@ export class ListServiceComponent implements OnInit {
         name: "KM Arret",
         field: "service_kmarr",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.text,
         
       },
@@ -332,7 +332,7 @@ export class ListServiceComponent implements OnInit {
         name: "Nbre Visite",
         field: "nb_visits",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.integer,
       },
 
@@ -341,7 +341,7 @@ export class ListServiceComponent implements OnInit {
         name: "Nbre Client Tournée",
         field: "nb_clients_itin",
         sortable: true,
-        width: 50,
+      //  width: 50,
         type: FieldType.integer,
       },
       {
@@ -349,7 +349,7 @@ export class ListServiceComponent implements OnInit {
         name: "Nbre De Facture",
         field: "nb_invoice",
         sortable: true,
-        width: 50,
+      //  width: 50,
         type: FieldType.integer,
       },
       {
@@ -357,7 +357,7 @@ export class ListServiceComponent implements OnInit {
         name: "Nbre Nouveau Client",
         field: "nb_clients_created",
         sortable: true,
-        width: 50,
+     //   width: 50,
         type: FieldType.integer,
       },
       {
@@ -365,7 +365,7 @@ export class ListServiceComponent implements OnInit {
         name: "CA Réalisé",
         field: "sum_invoice",
         sortable: true,
-        width: 50,
+      //  width: 50,
         type: FieldType.float,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
      
@@ -375,7 +375,7 @@ export class ListServiceComponent implements OnInit {
         name: "Recette",
         field: "sum_paiement",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.float,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
      
@@ -385,7 +385,7 @@ export class ListServiceComponent implements OnInit {
         name: "Taux Visite",
         field: "visitrate",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.float,
         formatter:Formatters.percentComplete,
       },
@@ -394,7 +394,7 @@ export class ListServiceComponent implements OnInit {
         name: "Taux Reussite",
         field: "successrate",
         sortable: true,
-        width: 50,
+       // width: 50,
         type: FieldType.float,
         formatter:Formatters.percentComplete ,
        
@@ -408,6 +408,7 @@ export class ListServiceComponent implements OnInit {
         preHeaderPanelHeight: 40,
         enableFiltering: true,
         enableAutoResize: true,
+        
         enableSorting: true,
         autoHeight:false,
         exportOptions: {

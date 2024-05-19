@@ -545,6 +545,8 @@ export class EditComponent implements OnInit {
 
       })
       this.form6 = this.form6FB.group({
+        pt_loadpacking: [this.itemEdit.pt_loadpacking],
+        pt_salepacking: [this.itemEdit.pt_salepacking],
         pt_salable: [this.itemEdit.pt_salable],
         pt_inventoryable: [this.itemEdit.pt_inventoryable],
         pt_consignable: [this.itemEdit.pt_consignable],
@@ -778,6 +780,8 @@ prepareItem(): Item {
     _item.pt_orderable = controls6.pt_orderable.value;
     _item.pt_loadable = controls6.pt_loadable.value;
     _item.pt_promotion = controls6.pt_promotion.value;
+    _item.pt_loadpacking = controls6.pt_loadpacking.value;
+    _item.pt_salepacking = controls6.pt_salepacking.value;
     return _item;
   }
 
