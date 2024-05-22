@@ -67,7 +67,7 @@
                         </div>    
                     </div> 
                 <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plagemvGrid"  gridHeight="450"
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid"  
                           [columnDefinitions]="mvcolumnDefinitions"
                           (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
                           [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
@@ -75,13 +75,7 @@
                     </angular-slickgrid>
                 </div>
                
-                <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plageGrid"  
-                          [columnDefinitions]="columnDefinitions"
-                          [gridOptions]="gridOptions" [dataset]="dataset" 
-                          (onAngularGridCreated)="GridReady($event)">
-                    </angular-slickgrid>
-                </div>
+               
             </form>
            
         </div>
@@ -115,6 +109,31 @@
                 modal</button>
         </div>
         
+        <div>
+            <ng-template #contentdet let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Détail Facture </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12"  gridId="plageGrid"  
+                              [columnDefinitions]="columnDefinitions"
+                              [gridOptions]="gridOptions" [dataset]="dataset" 
+                              (onAngularGridCreated)="GridReady($event)">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openInvsGrid" class="btn btn-primary" (click)="openInv(contentdet)">Launch demo
+                modal</button>
+        </div>
         
     </kt-portlet-body>
 </kt-portlet>

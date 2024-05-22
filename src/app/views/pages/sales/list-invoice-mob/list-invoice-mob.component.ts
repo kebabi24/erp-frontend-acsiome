@@ -126,7 +126,7 @@ export class ListInvoiceMobComponent implements OnInit {
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
-  
+  invid : any;
 
   constructor(
     config: NgbDropdownConfig,
@@ -165,7 +165,7 @@ export class ListInvoiceMobComponent implements OnInit {
     console.log(this.user)
     this.createForm();
     this.initmvGrid();
-    this.initGrid();
+    //this.initGrid();
     this.solist();
    
   }
@@ -214,7 +214,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
           ],
             aggregateCollapsed: false,
             collapsed: false,
@@ -243,7 +244,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -267,7 +269,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -291,7 +294,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -315,7 +319,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -339,7 +344,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -406,7 +412,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -439,7 +446,8 @@ export class ListInvoiceMobComponent implements OnInit {
           new Aggregators.Sum('taxe_amount'),
           new Aggregators.Sum('stamp_amount'),
           new Aggregators.Sum('amount'),
-          new Aggregators.Sum('due_amount')
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -503,7 +511,55 @@ export class ListInvoiceMobComponent implements OnInit {
         type: FieldType.float,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
-      
+
+      {
+        id: "Credit",
+        name: "Crédit",
+        field: "Credit",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        formatter:Formatters.decimal,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
+      {
+        id: "id",
+        name: "Détail",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+       // formatter: Formatters.editIcon,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Voir Détail Facture">
+               <i class="flaticon2-list"></i>
+           </a>
+           `;
+        },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+           this.invid = args.dataContext.invoice_code
+           
+          // if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
+          // this.router.navigateByUrl(`/purchasing/edit-po/${id}`)
+          let element: HTMLElement = document.getElementById(
+            "openInvsGrid"
+          ) as HTMLElement;
+          element.click();
+          // }
+          // else {
+          //   alert("Modification Impossible pour ce Status")
+          // }
+           
+        },
+      },
+
     ];
 
     this.mvgridOptions = {
@@ -538,7 +594,17 @@ export class ListInvoiceMobComponent implements OnInit {
           selectActiveRow: true,
         },
        
-     
+        formatterOptions: {
+        
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+        },
         gridMenu: {
           onCommand: (e, args) => {
             if (args.command === 'toggle-preheader') {
@@ -878,7 +944,7 @@ this.dataset= []
       {
         id: "description",
         name: "Designation",
-        field: "description",
+        field: "designation",
         sortable: true,
         width: 50,
         filterable: true,
@@ -1027,4 +1093,31 @@ this.dataset= []
     }
     this.grid.invalidate(); // invalidate all rows and re-render
   }
+  openInv(contentdet) {
+    // this.prepareGridvend();
+    const invoicecode = this.invid 
+       
+    let obj= {invoicecode}
+this.dataset= []
+       
+       this.mobileSettingsService.getAllInvoicesLine(obj).subscribe(
+        (respo: any) => {   
+          this.dataset = respo.data
+         console.log(this.dataset)
+         this.dataView.setItems(this.dataset);
+          
+           },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+    
+        )
+     
+ 
+
+   this.initGrid()
+     this.modalService.open(contentdet, { size: "lg" });
+   }
+ 
 }

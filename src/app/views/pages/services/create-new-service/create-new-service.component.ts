@@ -210,6 +210,11 @@ export class CreateNewServiceComponent implements OnInit {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: true,
       },
+      presets: {
+        sorters: [
+          { columnId: 'role_code', direction: 'ASC' }
+        ],
+      }
     };
 
     // fill the dataset with your data
