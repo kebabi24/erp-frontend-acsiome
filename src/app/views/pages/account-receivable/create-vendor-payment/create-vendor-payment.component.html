@@ -19,7 +19,8 @@
             [duration]="300" (close)="onAlertClose($event)">
             Modifiez quelques éléments et réessayez de soumettre.
         </kt-alert>
-          <div class="row" style="display: flex; justify-content: center">
+          <!--div class="row" style="display: flex; justify-content: center"-->
+          <div class="row">
             <div class="form-group col-1">
                 <label class="form-group">Banque:</label>
                 <div class="input-group input-group-sm">
@@ -58,7 +59,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-group col-1">
+            <div class="form-group col-2">
                 <label class="form-group">Role Code:</label>
                 <select 
                 (change)="onSelectRole($event.target.value)"
@@ -68,26 +69,37 @@
                 class="form-control form-control-sm form-control-solid">
                 <option value=""></option>
                 <option *ngFor="let elem of roles" [value]="elem.role_code">
-                    {{elem.role_code}} </option>
+                    {{elem.role_code}} {{elem.role_name}} </option>
                 
                 </select> 
             </div>  
             <div class="form-group col-2">
-                <label class="form-group">Service Code:</label>
-                <select 
-                (change)="onSelectService()"
-                name="service_code"
-                id="service_code"
-                formControlName="service_code"
-                class="form-control form-control-sm form-control-solid">
-                <option value=""></option>
-                <option *ngFor="let elem of services" [value]="elem.service_code">
-                    {{elem.service_code}} </option>
-                
-                </select> 
+              <label class="form-group">Service Code:</label>
+              <select 
+              (change)="onSelectService()"
+              name="service_code"
+              id="service_code"
+              formControlName="service_code"
+              class="form-control form-control-sm form-control-solid">
+              <option value=""></option>
+              <option *ngFor="let elem of services" [value]="elem.service_code">
+                  {{elem.service_code}} </option>
+              
+              </select> 
             </div>  
 
             <div class="form-group col-2">
+              <label class="form-group">Vendeur:</label>
+              <div class="input-group input-group-sm">
+
+                  <input type="text" class="form-control form-control-solid"  formControlName="user_mobile_code" 
+                      aria-describedby="basic-addon2">
+              </div>
+
+          </div>
+          </div>
+          <div class="row">          
+            <div class="form-group col-3">
               <label class="form-group">Montant système:</label>
   
               <div class="input-group input-group-sm">
@@ -145,11 +157,12 @@
                 </div>
               </div>
             </div>
-            <div class="form-group col-2">
+            <div class="form-group col-6">
+            
               <button
                 type="button"
                 (click)="onSubmit()"
-                class="btn btn-success btn-sm mr-2 mt-9"
+                class="btn btn-success btn-sm col-lg-4 mr-4 mt-9 "
               >
                 Valider
               </button>
