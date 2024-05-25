@@ -55,7 +55,7 @@ export class CreateUserMobileComponent implements OnInit {
     this.userForm = this.userFB.group({
       user_mobile_code: [this.userMobile.user_mobile_code, Validators.required],
       username: [this.userMobile.username, Validators.required],
-      //fullname: [{value: this.userMobile.fullname, disabled: !this.isExist}, Validators.required],
+      user_phone: [{value: this.userMobile.user_phone, disabled: !this.isExist}, Validators.required],
       password: [{ value: this.userMobile.password, disabled: true }, Validators.required],
       new_password: [{ value: "", disabled: true }],
       // email: [{value: this.userMobile.email, disabled: !this.isExist}],
@@ -75,7 +75,7 @@ export class CreateUserMobileComponent implements OnInit {
         this.isExist = true;
         document.getElementById("user").focus();
         controls.username.disable();
-        //controls.fullname.disable()
+        controls.user_phone.disable()
         // controls.email.disable()
         controls.password.disable();
         controls.new_password.disable();
@@ -195,7 +195,7 @@ export class CreateUserMobileComponent implements OnInit {
     const _user = new UserMobile();
     _user.user_mobile_code = controls.user_mobile_code.value;
     _user.username = controls.username.value;
-    //_user.fullname = controls.fullname.value
+    _user.user_phone = controls.user_phone.value
     _user.password = controls.password.value;
     // _user.email = controls.email.value
     console.log(this.profile_code);

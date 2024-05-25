@@ -788,6 +788,10 @@ export class MenuConfig {
               page: "/sales/list-invoice-mob",
             },
             {
+              title: "Liste des Ventes DD",
+              page: "/sales/list-sales-dd",
+            },
+            {
               title: "Liste des Paiement DD",
               page: "/sales/list-paiement-mob",
             },

@@ -55,7 +55,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import {
   SiteService,
-  MobileServiceService,
+  MobileSettingsService,
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -64,14 +64,17 @@ import thId from "src/assets/plugins/formvalidation/src/js/validators/id/thId";
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
+const API_URL = environment.apiUrl + "/users-mobile"
+
 
 @Component({
-  selector: 'kt-list-service',
-  templateUrl: './list-service.component.html',
-  styleUrls: ['./list-service.component.scss']
+  selector: 'kt-list-sales-dd',
+  templateUrl: './list-sales-dd.component.html',
+  styleUrls: ['./list-sales-dd.component.scss']
 })
-export class ListServiceComponent implements OnInit {
+export class ListSalesDdComponent implements OnInit {
 
+ 
   soForm: FormGroup;
   totForm: FormGroup;
   hasFormErrors = false;
@@ -125,7 +128,7 @@ export class ListServiceComponent implements OnInit {
   datasetPrint = [];
   date: String;
   po_cr_terms: any[] = [];
-  
+  invid : any;
 
   constructor(
     config: NgbDropdownConfig,
@@ -138,7 +141,7 @@ export class ListServiceComponent implements OnInit {
     private modalService: NgbModal,
     private layoutUtilsService: LayoutUtilsService,
     private siteService: SiteService,
-    private mobileService: MobileServiceService,
+    private mobileSettingsService: MobileSettingsService,
   ) {
     config.autoClose = true;
     
@@ -164,6 +167,7 @@ export class ListServiceComponent implements OnInit {
     console.log(this.user)
     this.createForm();
     this.initmvGrid();
+    //this.initGrid();
     this.solist();
    
   }
@@ -196,11 +200,11 @@ export class ListServiceComponent implements OnInit {
         
       },
       {
-        id: "service_site",
+        id: "site",
         name: "Site",
-        field: "service_site",
+        field: "site",
         sortable: true,
-       // width: 50,
+        width: 50,
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
@@ -208,43 +212,20 @@ export class ListServiceComponent implements OnInit {
           getter: 'site',
           formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('sum_invoice'),
-            new Aggregators.Sum('sum_paiement')
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
           ],
             aggregateCollapsed: false,
             collapsed: false,
           }
 
       }, 
-     
       {
-        id: "service_code",
-        name: "Service",
-        field: "service_code",
+        id: "period_active_date",
+        name: "Date",
+        field: "period_active_date",
         sortable: true,
-       // width: 50,
-        type: FieldType.string,
-        filterable: true,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
-        grouping: {
-          getter: 'service_code',
-          formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-            new Aggregators.Sum('sum_invoice'),
-            new Aggregators.Sum('sum_paiement')
-          ],
-            aggregateCollapsed: false,
-            collapsed: false,
-          }
-
-       
-      },
-      {
-        id: "service_period_activate_date",
-        name: "Date Effet",
-        field: "service_period_activate_date",
-        sortable: true,
-       // width: 50,
+        width: 50,
         type: FieldType.date,
         filterable: true,
         filter: {
@@ -254,11 +235,11 @@ export class ListServiceComponent implements OnInit {
           //editorOptions: { minDate: 'today' } as FlatpickrOption
         },
         grouping: {
-          getter: 'periode_active_date',
+          getter: 'period_active_date',
           formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('sum_invoice'),
-            new Aggregators.Sum('sum_paiement')
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
         ],
           aggregateCollapsed: false,
           collapsed: false,
@@ -270,20 +251,40 @@ export class ListServiceComponent implements OnInit {
         name: "Role",
         field: "role_code",
         sortable: true,
-       // width: 50,
+        width: 50,
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
         grouping: {
           getter: 'role_code',
           formatter: (g) => `Role: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          
-            aggregators: [
-              new Aggregators.Sum('sum_invoice'),
-              new Aggregators.Sum('sum_paiement') 
-          ],
-            aggregateCollapsed: false,
-            collapsed: false,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      }, 
+      {
+        id: "user_code",
+        name: "vendeur",
+        field: "user_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'user_code',
+          formatter: (g) => `Vendeur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
         }
        
       }, 
@@ -292,7 +293,7 @@ export class ListServiceComponent implements OnInit {
         name: "Itineraire",
         field: "itinerary_code",
         sortable: true,
-       // width: 50,
+        width: 50,
         filterable: true,
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
@@ -300,105 +301,127 @@ export class ListServiceComponent implements OnInit {
           getter: 'itinerary_code',
           formatter: (g) => `Itineraire: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
-            new Aggregators.Sum('sum_invoice'),
-            new Aggregators.Sum('sum_paiement') 
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
         ],
           aggregateCollapsed: false,
           collapsed: false,
         }
        
       },
-      
       {
-        id: "service_kmdep",
-        name: "KM Debut",
-        field: "service_kmdep",
+        id: "customer_code",
+        name: "Code Client",
+        field: "customer_code",
         sortable: true,
-       // width: 50,
+        width: 50,
+        filterable: true,
         type: FieldType.text,
-        
-      },
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'customer_code',
+          formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      }, 
       {
-        id: "service_kmarr",
-        name: "KM Arret",
-        field: "service_kmarr",
+        id: "product_code",
+        name: "Code Produit",
+        field: "product_code",
         sortable: true,
-       // width: 50,
+        width: 50,
+        filterable: true,
         type: FieldType.text,
-        
-      },
-      {
-        id: "nb_visits",
-        name: "Nbre Visite",
-        field: "nb_visits",
-        sortable: true,
-       // width: 50,
-        type: FieldType.integer,
-      },
-
-      {
-        id: "nb_clients_itin",
-        name: "Nbre Client Tournée",
-        field: "nb_clients_itin",
-        sortable: true,
-      //  width: 50,
-        type: FieldType.integer,
-      },
-      {
-        id: "nb_invoice",
-        name: "Nbre De Facture",
-        field: "nb_invoice",
-        sortable: true,
-      //  width: 50,
-        type: FieldType.integer,
-      },
-      {
-        id: "nb_clients_created",
-        name: "Nbre Nouveau Client",
-        field: "nb_clients_created",
-        sortable: true,
-     //   width: 50,
-        type: FieldType.integer,
-      },
-      {
-        id: "sum_invoice",
-        name: "CA Réalisé",
-        field: "sum_invoice",
-        sortable: true,
-      //  width: 50,
-        type: FieldType.float,
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-     
-      },
-      {
-        id: "sum_paiement",
-        name: "Recette",
-        field: "sum_paiement",
-        sortable: true,
-       // width: 50,
-        type: FieldType.float,
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-     
-      },
-      {
-        id: "visitrate",
-        name: "Taux Visite",
-        field: "visitrate",
-        sortable: true,
-       // width: 50,
-        type: FieldType.float,
-        formatter:Formatters.percentComplete,
-      },
-      {
-        id: "successrate",
-        name: "Taux Reussite",
-        field: "successrate",
-        sortable: true,
-       // width: 50,
-        type: FieldType.float,
-        formatter:Formatters.percentComplete ,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'Code produit',
+          formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
        
       },
+      {
+        id: "designation",
+        name: "Designation",
+        field: "designation",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'designation',
+          formatter: (g) => `Designation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('quantity'),  
+          new Aggregators.Sum('amount'),
+          
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
+        id: "invoice_code",
+        name: "Facture",
+        field: "invoice_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'invoice_code',
+          formatter: (g) => `Facture: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+      },
+      
+     
+     
+      {
+        id: "quantity",
+        name: "QTE",
+        field: "quantity",
+        sortable: true,
+        width: 50,
+        filterable: true,
+       
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+
+      },
+      {
+        id: "amount",
+        name: "Montant",
+        field: "amount",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+        type: FieldType.float,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
+      
+
     ];
 
     this.mvgridOptions = {
@@ -408,24 +431,42 @@ export class ListServiceComponent implements OnInit {
         preHeaderPanelHeight: 40,
         enableFiltering: true,
         enableAutoResize: true,
-        
         enableSorting: true,
-        autoHeight:false,
         exportOptions: {
           sanitizeDataExport: true
         },
        
-        presets: {
-       
-          sorters: [
-          
-            { columnId: 'service_code', direction: 'ASC' }
-          ],
-        },
         //enableRowSelection: true,
-        //enableCellNavigation: true,
+        enableCellNavigation: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+       // multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
+       
+        formatterOptions: {
         
-     
+          // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+          displayNegativeNumberWithParentheses: true,
+    
+          // Defaults to undefined, minimum number of decimals
+          minDecimal: 2,
+    
+          // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+          thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+        },
         gridMenu: {
           onCommand: (e, args) => {
             if (args.command === 'toggle-preheader') {
@@ -458,7 +499,7 @@ export class ListServiceComponent implements OnInit {
     console.log(date,controls.calc_date.value,date1)
     const site = controls.site.value
     let obj= {date,date1,site}
-    this.mobileService.getAllServicesBy(obj).subscribe(
+    this.mobileSettingsService.getAllInvoicesDet(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -484,7 +525,7 @@ export class ListServiceComponent implements OnInit {
     : null;
     const site = controls.site.value
     let obj= {date,date1,site}
-    this.mobileService.getAllServicesBy(obj).subscribe(
+    this.mobileSettingsService.getAllInvoicesDet(obj).subscribe(
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
@@ -589,7 +630,35 @@ export class ListServiceComponent implements OnInit {
     }
     this.mvgrid.invalidate(); // invalidate all rows and re-render
   }
+  handleSelectedRowsChanged(e, args) {
+    const controls = this.soForm.controls;
+      if (Array.isArray(args.rows) && this.mvgrid) {
+      args.rows.map((idx) => {
+        const item = this.mvgrid.getDataItem(idx);
+        console.log(item);
+        
+       const invoicecode = item.invoice_code 
+       
+    let obj= {invoicecode}
+this.dataset= []
+       
+       this.mobileSettingsService.getAllInvoicesDet(obj).subscribe(
+        (respo: any) => {   
+          this.dataset = respo.data
+         console.log(this.dataset)
+         this.dataView.setItems(this.dataset);
+          
+           },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+    )
+     
+  });
 
+    }
+  }
    
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.soForm.controls;
@@ -687,5 +756,7 @@ export class ListServiceComponent implements OnInit {
   }
 
 
-}
 
+  
+ 
+}

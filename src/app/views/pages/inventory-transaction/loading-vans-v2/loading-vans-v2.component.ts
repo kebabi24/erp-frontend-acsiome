@@ -108,6 +108,8 @@ export class LoadingVansV2Component implements OnInit {
   //reste form
   reset() {
     this.createForm();
+    this.createForm2();
+    this.prepareRoles();
     this.hasFormErrors = false;
   }
   // save data
@@ -222,7 +224,7 @@ if(lot.qt_effected > 0) {
             let detail = detailss;
 
             // isstr
-            this.inventoryTransactionService.addTr({ nlot, it, detail }).subscribe(
+            this.inventoryTransactionService.addTrV({ nlot, it, detail }).subscribe(
               (response: any) => {},
               (error) => {
                 // this.loadRequestData = []
@@ -231,7 +233,8 @@ if(lot.qt_effected > 0) {
               () => {
                 this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
                 this.loadingSubject.next(false);
-                // this.router.navigateByUrl("/customers-mobile/cluster-create")
+                this.reset()
+                 this.router.navigateByUrl("/inventory-transaction/loading-vans-v2")
               }
             );
           },

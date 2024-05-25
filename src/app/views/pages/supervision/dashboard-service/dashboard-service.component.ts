@@ -111,7 +111,7 @@ export class DashboardServiceComponent implements OnInit {
   change() {
     const controls = this.itineraryForm.controls;
     // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
-    const date = controls.calc_date.value ? `${controls.calc_date.value.year}/${controls.calc_date.value.day}/${controls.calc_date.value.month}` : null;
+    const date = controls.calc_date.value ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}` : null;
     console.log(date);
     this.itineraryService.getAllServices({ date: date }).subscribe((response: any) => ((this.services = response.data), console.log(this.services)));
   }
