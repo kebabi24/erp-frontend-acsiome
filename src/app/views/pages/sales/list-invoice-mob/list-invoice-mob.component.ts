@@ -278,6 +278,31 @@ export class ListInvoiceMobComponent implements OnInit {
        
       }, 
       {
+        id: "user_code",
+        name: "vendeur",
+        field: "user_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'user_code',
+          formatter: (g) => `Vendeur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('horstax_amount'),  
+          new Aggregators.Sum('taxe_amount'),
+          new Aggregators.Sum('stamp_amount'),
+          new Aggregators.Sum('amount'),
+          new Aggregators.Sum('due_amount'),
+          new Aggregators.Sum('Credit')
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      }, 
+      {
         id: "itinerary_code",
         name: "Itineraire",
         field: "itinerary_code",
@@ -930,8 +955,8 @@ this.dataset= []
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
         grouping: {
-          getter: 'site',
-          formatter: (g) => `Site: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          getter: 'product_code',
+          formatter: (g) => `Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('quantity'),
             new Aggregators.Sum('Montant')

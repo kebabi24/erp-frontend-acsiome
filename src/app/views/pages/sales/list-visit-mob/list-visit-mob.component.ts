@@ -65,7 +65,23 @@ import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
 const API_URL = environment.apiUrl + "/users-mobile"
-
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value=="0.0"){
+    return `<div class="text"  aria-hidden="0.0">Succes</div>`
+  }
+  else {
+    return `<div class="text"  aria-hidden="${value}">${value}</div>`
+  }
+  // if (value=="R"){
+  //   return `<div class="text"  aria-hidden="R">Lancé</div>`
+  // }
+  // if (value=="F"){
+  //   return `<div class="text"  aria-hidden="F">Valide</div>`
+  // }
+  // if (value=="D"){
+  //   return `<div class="text"  aria-hidden="D">Reporté</div>`
+  // }
+  }
 @Component({
   selector: 'kt-list-visit-mob',
   templateUrl: './list-visit-mob.component.html',
@@ -217,6 +233,27 @@ export class ListVisitMobComponent implements OnInit {
 
       }, 
      
+      {
+        id: "visitresult_code",
+        name: "Status",
+        field: "visitresult_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        formatter: myCustomCheckboxFormatter,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'visitresult_code',
+          formatter: (g) => `Status: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('amount'),
+          ],
+            aggregateCollapsed: false,
+            collapsed: false,
+          }
+
+      }, 
       {
         id: "start_time",
         name: "Date Début",

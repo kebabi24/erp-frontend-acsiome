@@ -352,26 +352,26 @@ gridReady(angularGrid: AngularGridInstance) {
 
 prepareGrid2() {
   this.columnDefinitions2 = [
-            {
-                id: "date_creation",
-                name: "Date creation",
-                field: "date_creation",
-                sortable: true,
-                minWidth: 100,
-                maxWidth: 300,
-                filterable: true,
-                type: FieldType.date,
-            },
-            {
-              id: "date_charge",
-              name: "Date charge",
-              field: "date_charge",
-              sortable: true,
-              minWidth: 100,
-              maxWidth: 300,
-              filterable: true,
-              type: FieldType.date, 
-            },
+            // {
+            //     id: "date_creation",
+            //     name: "Date creation",
+            //     field: "date_creation",
+            //     sortable: true,
+            //     minWidth: 100,
+            //     maxWidth: 300,
+            //     filterable: true,
+            //     type: FieldType.date,
+            // },
+            // {
+            //   id: "date_charge",
+            //   name: "Date charge",
+            //   field: "date_charge",
+            //   sortable: true,
+            //   minWidth: 100,
+            //   maxWidth: 300,
+            //   filterable: true,
+            //   type: FieldType.date, 
+            // },
 
             
             {
@@ -379,18 +379,18 @@ prepareGrid2() {
                 name: "Ligne",
                 field: "line",
                 sortable: true,
-                minWidth: 100,
-                maxWidth: 300,
+                minWidth: 30,
+                maxWidth: 30,
                 filterable: true,
                 type: FieldType.string, 
             },
             {
               id: "product_code",
-              name: "Code produit",
+              name: "Code Produit",
               field: "product_code",
               sortable: true,
-              minWidth: 100,
-              maxWidth: 300,
+              minWidth: 50,
+              maxWidth: 120,
               filterable: true,
               type: FieldType.string, 
             },
@@ -398,11 +398,11 @@ prepareGrid2() {
 
             // 
             {
-                id: "product_desc",
-                name: "Desc produit",
-                field: "product_desc",
+                id: "item.pt_desc1",
+                name: "Designation",
+                field: "item.pt_desc1",
                 sortable: true,
-                minWidth: 100,
+                minWidth: 150,
                 maxWidth: 300,
                 filterable: true,
                 type: FieldType.string, 
@@ -411,40 +411,40 @@ prepareGrid2() {
 
             {
               id: "qt_request",
-              name: "Qnt demandee",
+              name: "QTE Demandée",
               field: "qt_request",
               sortable: true,
-              minWidth: 100,
-              maxWidth: 300,
+              minWidth: 50,
+              maxWidth: 80,
               filterable: true,
               type: FieldType.integer, 
             },
 
             {
               id: "qt_validated",
-              name: "Qnt valide",
+              name: "QTE validée",
               field: "qt_validated",
               sortable: true,
-              minWidth: 100,
-              maxWidth: 300,
+              minWidth: 50,
+              maxWidth: 80,
               filterable: true,
               type: FieldType.integer, 
             },
 
             {
               id: "qt_effected",
-              name: "Qnt effectue",
+              name: "QTE chargée",
               field: "qt_effected",
               sortable: true,
-              minWidth: 100,
-              maxWidth: 300,
+              minWidth: 50,
+              maxWidth: 80,
               filterable: true,
               type: FieldType.integer, 
             },
 
             {
               id: "pt_price",
-              name: "Price",
+              name: "Prix",
               field: "pt_price",
               sortable: true,
               minWidth: 100,
@@ -459,6 +459,18 @@ prepareGrid2() {
         enableAutoResize:true,
         enableColumnPicker: true,
         enableCellNavigation: true,
+        enableAutoResizeColumnsByCellContent:true,
+        enableAutoSizeColumns:true,
+        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+          var val = undefined;
+          try {
+            val = eval("item." + column.field);
+          } catch (e) {
+            // ignore
+          }
+          return val;
+        },
+  
       };
 
 
@@ -476,16 +488,16 @@ angularGridReady2(angularGrid: AngularGridInstance) {
 prepareGrid3() {
   this.columnDefinitions3 = [
          
-            {
-                id: "line",
-                name: "Ligne",
-                field: "line",
-                sortable: true,
-                minWidth: 100,
-                maxWidth: 300,
-                filterable: true,
-                type: FieldType.string, 
-            },
+            // {
+            //     id: "line",
+            //     name: "Ligne",
+            //     field: "line",
+            //     sortable: true,
+            //     minWidth: 100,
+            //     maxWidth: 300,
+            //     filterable: true,
+            //     type: FieldType.string, 
+            // },
             {
               id: "product_code",
               name: "Code produit",
@@ -500,20 +512,20 @@ prepareGrid3() {
 
             // 
             {
-                id: "product_desc",
-                name: "Desc produit",
-                field: "product_desc",
-                sortable: true,
-                minWidth: 100,
-                maxWidth: 300,
-                filterable: true,
-                type: FieldType.string, 
-            },
+              id: "item.pt_desc1",
+              name: "Designation",
+              field: "item.pt_desc1",
+              sortable: true,
+              minWidth: 150,
+              maxWidth: 300,
+              filterable: true,
+              type: FieldType.string, 
+          },
 
 
             {
               id: "qt_effected",
-              name: "Qnt effectue",
+              name: "Qnt Chargée",
               field: "qt_effected",
               sortable: true,
               minWidth: 100,
@@ -524,7 +536,7 @@ prepareGrid3() {
 
             {
               id: "pt_price",
-              name: "Price",
+              name: "Prix",
               field: "pt_price",
               sortable: true,
               minWidth: 100,
@@ -551,6 +563,16 @@ prepareGrid3() {
         // autoHeight:true,
         enableColumnPicker: true,
         enableCellNavigation: true,
+        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+          var val = undefined;
+          try {
+            val = eval("item." + column.field);
+          } catch (e) {
+            // ignore
+          }
+          return val;
+        },
+  
       };
 
   

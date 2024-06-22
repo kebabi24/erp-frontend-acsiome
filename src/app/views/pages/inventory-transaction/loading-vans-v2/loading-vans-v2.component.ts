@@ -110,6 +110,8 @@ export class LoadingVansV2Component implements OnInit {
     this.createForm();
     this.createForm2();
     this.prepareRoles();
+    this.dataset = [];
+    this.loadRequestData = [];
     this.hasFormErrors = false;
   }
   // save data
@@ -159,8 +161,8 @@ export class LoadingVansV2Component implements OnInit {
       () => {
         this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-        this.reset()
-         this.router.navigateByUrl("/inventory-transaction/loading-vans-v2")
+        // this.reset()
+        //  this.router.navigateByUrl("/inventory-transaction/loading-vans-v2")
         const details = [];
         const lines = [];
         const detailss = [];
@@ -234,6 +236,7 @@ if(lot.qt_effected > 0) {
                 this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
                 this.loadingSubject.next(false);
                 this.reset()
+                this.load_request_code
                  this.router.navigateByUrl("/inventory-transaction/loading-vans-v2")
               }
             );

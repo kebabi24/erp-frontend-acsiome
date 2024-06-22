@@ -95,6 +95,7 @@ export { Audiometry } from "./_models/audiometry.model";
 export { ItemModel } from "./_models/item-model.model";
 export { Message } from "./_models/message.model";
 export { Barecodeinfos } from "./_models/barecodeinfos.model";
+export { Invoice } from "./_models/invoice.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";

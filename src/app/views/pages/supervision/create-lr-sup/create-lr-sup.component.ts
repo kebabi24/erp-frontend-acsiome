@@ -16,13 +16,11 @@ import { NumberToLetters } from "src/app/core/erp/helpers/numberToString";
 
 import "jspdf-barcode";
 @Component({
-  selector: "kt-create-load-request",
-  encapsulation: ViewEncapsulation.None,
-
-  templateUrl: "./create-load-request.component.html",
-  styleUrls: ["./create-load-request.component.scss"],
+  selector: 'kt-create-lr-sup',
+  templateUrl: './create-lr-sup.component.html',
+  styleUrls: ['./create-lr-sup.component.scss']
 })
-export class CreateLoadRequestComponent implements OnInit {
+export class CreateLrSupComponent implements OnInit {
   service: MobileService;
   validationForm: FormGroup;
   hasFormErrors = false;
@@ -46,7 +44,7 @@ export class CreateLoadRequestComponent implements OnInit {
   gridOptionsld: GridOption = {};
   gridObjld: any;
   angularGridld: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer,private roleService: RoleService) {
+  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer) {
     config.autoClose = true;
   }
 
@@ -226,7 +224,7 @@ export class CreateLoadRequestComponent implements OnInit {
 
   // GET ROLES OF THE SUPERVISOR
   prepareRoles() {
-    this.roleService.getAllRoles().subscribe(
+    this.loadRequestService.getRoles(this.user.usrd_code).subscribe(
       (response: any) => {
         this.roles = response.data;
         console.log(this.roles);

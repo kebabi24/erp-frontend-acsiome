@@ -445,8 +445,9 @@ export class ListPaiementMobComponent implements OnInit {
         preHeaderPanelHeight: 40,
         enableFiltering: true,
         enableAutoResize: true,
+        
         enableSorting: true,
-        autoHeight:true,
+        autoHeight:false,
         exportOptions: {
           sanitizeDataExport: true
         },

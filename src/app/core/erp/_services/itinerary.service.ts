@@ -50,6 +50,10 @@ export class ItineraryService {
     return this.http.post(`${API_ITINERARY_ROLE}/find`, data, { headers: httpHeaders });
   }
 
+  public getItinerarydetByRole(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_ITINERARY_ROLE}/finddet`, data, { headers: httpHeaders });
+  }
   public updated(id: Number, data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.put(`${API_ITINERARY}/up${id}`, data, { headers: httpHeaders });

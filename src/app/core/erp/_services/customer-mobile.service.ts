@@ -38,7 +38,15 @@ export class CustomerMobileService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_CUSTOMER}/getCustomersOfItinerary`, data, { headers: httpHeaders });
   }
+  public getByCustomerByitin(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_CUSTOMER}/getCustomersByItinerary`, data, { headers: httpHeaders });
+  }
 
+  public getCustomerByitin(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_CUSTOMER}/getOneCustomersByItinerary`, data, { headers: httpHeaders });
+  }
   public getOne(customer_code: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL_CUSTOMER}/${customer_code}`, { headers: httpHeaders });

@@ -784,6 +784,11 @@ export class MenuConfig {
               page: "/sales/list-invoices",
             },
             {
+              title: "Ajouter Facture DD",
+              page: "/sales/create-inv-mob",
+            },
+            
+            {
               title: "Liste des Factures DD",
               page: "/sales/list-invoice-mob",
             },

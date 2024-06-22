@@ -123,7 +123,7 @@ export class CreateNewRolesComponent implements OnInit {
       user_mobile_code: [{ value: this.role.user_mobile_code, disabled: !this.isExist }, Validators.required],
       device_id: [this.role.device_id, Validators.required],
 
-      controller_role: [this.role.controller_role, Validators.required],
+      controller_role: [this.role.controller_role],
       upper_role_code: [this.role.upper_role_code, Validators.required],
 
       token_serie_code: [this.role.token_serie_code, Validators.required],
