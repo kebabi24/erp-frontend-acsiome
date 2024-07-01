@@ -14,7 +14,7 @@
     "e2e": "ng e2e",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json",
     "rtl": "webpack",
-    "pack": "electron-packager . EDELWEISS --platform=win32 --arch=ia32"
+    "pack": "electron-packager . PrimaGlaces --platform=win32 --arch=ia32"
   },
   "private": true,
   "dependencies": {

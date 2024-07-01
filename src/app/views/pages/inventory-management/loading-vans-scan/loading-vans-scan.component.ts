@@ -51,11 +51,20 @@ export class LoadingVansScanComponent implements OnInit {
   // GRID
   angularGrid: AngularGridInstance;
   grid: any;
+
   gridService: GridService;
   dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+  
+  angularGriddif: AngularGridInstance;
+  griddif: any;
+  gridServicedif: GridService;
+  dataViewdif: any;
+  columnDefinitionsdif: Column[];
+  gridOptionsdif: GridOption;
+  datasetdif: any[];
 
   showSpinner: Boolean = false;
   loadRequestInfo: any;
@@ -154,7 +163,7 @@ export class LoadingVansScanComponent implements OnInit {
       (response: any) => {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
-          this.printpdf();
+           this.printpdf();
         }
 
         this.loadRequestData = [];
@@ -192,6 +201,8 @@ export class LoadingVansScanComponent implements OnInit {
       this.loadRequestService.getLoadRequestLineInfo(this.load_request_code).subscribe((response: any) => {
         if (response.data.loadRequest.length > 0) {
           console.log(response.data.loadRequest);
+          this.datasetdif = response.data.loadRequest
+          this.prepareGriddif(this.load_request_code);
           this.modalService.open(content5, { size: "lg" });
           //console.log(response);
           this.loadRequestLineData = response.data.loadRequest;
@@ -454,6 +465,133 @@ export class LoadingVansScanComponent implements OnInit {
     controls.pal.setValue("");
     document.getElementById("pal").focus();
   }
+
+  handleSelectedRowsChangeddif(e, args) {
+      if (Array.isArray(args.rows) && this.griddif) {
+      args.rows.map((idx) => {
+        const item = this.griddif.getDataItem(idx);
+        console.log(item);
+        
+  });
+
+    }
+  }
+  angularGridReadydif(angularGrid: AngularGridInstance) {
+    this.angularGriddif = angularGrid;
+    this.dataViewdif = angularGrid.dataView;
+    this.griddif = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGriddif(nbr) {
+    this.columnDefinitionsdif = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+
+        minWidth: 50,
+        maxWidth: 50,
+      },
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "product_code",
+        name: "Code Produit",
+        field: "product_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "item.pt_desc2",
+        name: "Designation",
+        field: "item.pt_desc2",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "qt_validated",
+        name: "QTE Demandée ",
+        field: "qt_validated",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "qt_effected",
+        name: "QTE Chargée",
+        field: "qt_effected",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsdif = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
+        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+          var val = undefined;
+          try {
+            val = eval("item." + column.field);
+          } catch (e) {
+            // ignore
+          }
+          return val;
+        },
+  
+      };
+    // fill the dataset with your data
+    this.loadRequestService.getLoadRequestLineInfoDif(nbr).subscribe((response: any) => {
+      console.log("hehhre",response.data)
+      this.datasetdif = response.data.loadRequest
+      console.log("hehhre",this.datasetdif)
+      this.dataViewdif.setItems(this.datasetdif)
+    })
+  
+    
+  }
+  // opendif(contentsite) {
+  //   this.prepareGriddif();
+  //   this.modalService.open(contentsite, { size: "lg" });
+  // }
+ 
+
+
+
 
   printpdf() {
     let filteredData = [];
