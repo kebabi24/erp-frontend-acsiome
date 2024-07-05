@@ -1073,6 +1073,26 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion Des Formations",
+          bullet: "dot",
+          icon: "flaticon-event-calendar-symbol",
+          root: true,
+          submenu: [
+            {
+              title: "Création Formation",
+              page: "/training/create-training",
+            },
+            {
+              title: "Modification Des Formation",
+              page: "/training/update-training",
+            },
+            {
+              title: "Liste Des Formations",
+              page: "/training/list-training",
+            },
+          ],
+        },
+        {
           title: "Gestion des Patients",
           root: true,
           bullet: "dot",
@@ -1790,7 +1810,30 @@ export class MenuConfig {
                 },
               ],
             },
-
+            {
+              title: "Parametrage des Formation",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Domaine de Formation",
+                  page: "/training/create-training-domain",
+                },
+                {
+                  title: "Liste des Domaines de Formation",
+                  page: "/training/list-domain",
+                },
+                {
+                  title: "Rubrique de Formation",
+                  page: "/training/create-training-section",
+                },
+                {
+                  title: "Liste des Domaines de Formation",
+                  page: "/training/list-section",
+                },
+              ],
+            },
             {
               title: "Configuration Module",
               page: "/config/maint-config",

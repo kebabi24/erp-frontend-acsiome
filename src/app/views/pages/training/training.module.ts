@@ -66,8 +66,12 @@ import {CodeService,
          CostSimulationService, 
          InventoryStatusService,
          TaxeService,
+         JobService,
          CustomerMobileService
         } from '../../../core/erp';
+import { UpdateTrainingComponent } from './update-training/update-training.component';
+import { ListSectionComponent } from './list-section/list-section.component';
+import { ListDomainComponent } from './list-domain/list-domain.component';
 
     const routes: Routes = [
      
@@ -82,7 +86,7 @@ import {CodeService,
               },
               
               {
-                  path: "edit/:id",
+                  path: "edit-training/:id",
                   component: EditTrainingComponent,
               },
               {
@@ -93,14 +97,25 @@ import {CodeService,
                 path: "create-training-section",
                 component: CreateTrainingSectionComponent,
               },
-              
+              {
+                path: "list-domain",
+                component: ListDomainComponent,
+              },
+              {
+                path: "list-section",
+                component: ListSectionComponent,
+              },
+              {
+                path: "update-training",
+                component: UpdateTrainingComponent,
+            },
          
   ]
   
 
 
 @NgModule({
-  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent],
+  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent],
   
   imports: [
     CommonModule,
@@ -150,6 +165,7 @@ providers: [
     CostSimulationService,
     CustomerMobileService,
     ItemModelService,
+    JobService,
 ],
 
 entryComponents: [

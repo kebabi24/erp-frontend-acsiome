@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Domaine Rubrique'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'Rubrique Formation'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
 
@@ -24,21 +24,22 @@
         </div>
 
         <br/>
-        <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter Domaine</button>
+        <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter Rubrique</button>
             <br><br><br>
-            <span>Liste des Domaines de Formation</span>
+            <span>Liste des Rubriques de Formation</span>
             <br><br>
         <div class="row">
-            <angular-slickgrid class="col-12" 
-               
-                gridId="gridS" 
-                [columnDefinitions]="columnDefinitions"
-                (onAngularGridCreated)="angularGridReady($event)"
-                
-                (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
-                [gridOptions]="gridOptions" 
-                [dataset]="dataset">
-            </angular-slickgrid>
+          <angular-slickgrid class="col-6"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+          (onAngularGridCreated)="angularGridReady($event)"
+              [gridOptions]="gridOptions" [dataset]="dataset"
+              (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData,$event.detail.args)"
+              >
+          </angular-slickgrid>
+          <angular-slickgrid class="col-6 "  gridId="gridLines" [columnDefinitions]="columnDefinitionstr"
+          (onAngularGridCreated)="angularGridReadytr($event)"
+          [gridOptions]="gridOptionstr" [dataset]="datasettr"
+              >
+          </angular-slickgrid>
         </div>
         <!--(sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"-->
         </div>

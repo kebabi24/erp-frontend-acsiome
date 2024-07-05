@@ -5,15 +5,20 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
-import { AngularGridInstance, Column, FieldType, GridOption, OnEventArgs, GridService, Editors, thousandSeparatorFormatted, Formatters } from 'angular-slickgrid';
+import { AngularGridInstance, Column, FieldType, GridOption, OnEventArgs, GridService, Editors,Formatter, thousandSeparatorFormatted, Formatters } from 'angular-slickgrid';
 
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
-import {   CodeService} from "../../../../core/erp"
+import {   CodeService,ItemService} from "../../../../core/erp"
 
-
+const myCustomStringFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value!= null){
+    return `<div class="text"  aria-hidden="${value}" style="font-size:14px; font-weight: bold;" >${value}</div>`
+  }
+}
 @Component({
   selector: 'kt-create-training-section',
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './create-training-section.component.html',
   styleUrls: ['./create-training-section.component.scss']
 })
@@ -27,16 +32,27 @@ export class CreateTrainingSectionComponent implements OnInit {
   services: []
   roles : string[] = []
   itinerary: string[] = []
-  dataset: any[] = []
+  angularGrid: AngularGridInstance;
+  grid: any;
+  gridService: GridService;
+  dataView: any;
+  gridObj: any;
+  dataviewObj: any;
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
-  gridObj: any
-  angularGrid: AngularGridInstance
-  gridService: GridService
+  dataset: any = []; // dataset
+
+  datasettr: any = []
+  columnDefinitionstr: Column[] = []
+  gridOptionstr: GridOption = {}
+  gridObjtr: any
+  angularGridtr: AngularGridInstance
+  gridServicetr: GridService
+  gridtr: any
+  dataViewtr: any
   message: any
   column : Column
-  grid: any
-  dataView: any
+  
   selectedRow: any
   isSelected = false
   // selectedIndex :any 
@@ -48,13 +64,13 @@ export class CreateTrainingSectionComponent implements OnInit {
   confirmDelete: boolean;
   alertWarning: string;
   row_number;
-indexd:any
+  indexd:any
   codes: [];
   columnDefinitions1: Column[] = [];
   gridOptions1: GridOption = {};
   gridObj1: any;
   angularGrid1: AngularGridInstance;
-
+  group : any
   constructor(
     config: NgbDropdownConfig,
         private serviceF : FormBuilder,
@@ -63,13 +79,13 @@ indexd:any
         public dialog: MatDialog,
         private modalService: NgbModal,
         private codeService : CodeService,
+        private itemService : ItemService,
         private layoutUtilsService: LayoutUtilsService,
   ) { 
         config.autoClose = true
         // this.prepareVisitResult()
         // this.fillDataset()
-        this.prepareGrid()
-        
+      
         // this.gridService.highlightRow("")
   }
 
@@ -79,7 +95,9 @@ indexd:any
   ngOnInit(): void {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
-        // this.createForm()
+        this.initData()
+        this.prepareGrid()
+        this.prepareGridtr()
         
   }
 
@@ -165,16 +183,18 @@ indexd:any
               // },
               {
                   id: "code_value",
-                  name: "Code Domaine",
+                  name: "Code Rubrique",
                   field: "code_value",
                   sortable: true,
                   editor: {
                     model: Editors.text,
                   },
                   minWidth: 70,
-                  maxWidth: 100,
+                  maxWidth: 150,
+                  resizeExtraWidthPadding: 20,
                   filterable: true,
                   type: FieldType.string,
+                  formatter:myCustomStringFormatter,
                   onCellChange: (e: Event, args: OnEventArgs) => {
                     
                     if(args.dataContext.etat_service != true){
@@ -192,6 +212,7 @@ indexd:any
                   editor: {
                     model: Editors.text,
                   },
+                  formatter:myCustomStringFormatter,
                   minWidth: 100,
                   maxWidth: 300,
                   filterable: true,
@@ -209,6 +230,7 @@ indexd:any
                 name: "Domaine",
                 field: "chr01",
                 sortable: true,
+               
                 editor: {
                   model: Editors.text,
                 },
@@ -216,6 +238,8 @@ indexd:any
                 maxWidth: 300,
                 filterable: true,
                 type: FieldType.string,
+                formatter:myCustomStringFormatter,
+                
                 onCellChange: (e: Event, args: OnEventArgs) => {
                   this.codeService.getByOne({code_fldname:"pt_draw", code_value: args.dataContext.chr01 }).subscribe((response: any) => {
                     if (!response.data) {
@@ -247,28 +271,30 @@ indexd:any
 
     this.gridOptions = {
       editable:true,
-      enableSorting: true,
+      rowHeight: 40,
+      enableAutoResize:true,
+      autoFitColumnsOnFirstLoad: false,
+    enableAutoSizeColumns: false,
+    
+
+    // then enable resize by content with these 2 flags
+    autosizeColumnsByCellContentOnFirstLoad: true,
+    enableAutoResizeColumnsByCellContent: true,
+      autoHeight:false,
       enableCellNavigation: true,
-      enableExcelCopyBuffer: true,
-      enableFiltering: true,
       enableRowSelection: true,
-      // enableCheckboxSelector: true,
-      autoEdit: false,
-      autoHeight: false,
-      enableAutoResize: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          hideSelectAllCheckbox: true,
+        },
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+      enableFiltering:true,
       
-        // enableExcelCopyBuffer: true,
-        //   enableRowSelection: true,
-        // // enableCheckboxSelector: true,
-        // //  frozenColumn: 0,
-        // // frozenBottom: true,
-        // checkboxSelector: {
-        //   hideSelectAllCheckbox: true,
-        // },
-        // multiSelect: false,
-        // rowSelectionOptions: {
-        //     selectActiveRow: true,
-        // },
+    
+    
+
         presets: {
           sorters: [{ columnId: "id", direction: "ASC" }],
         } 
@@ -295,7 +321,28 @@ indexd:any
 
   }
 
+  initData(){
+  
+    
+    this.codeService.getBy({code_fldname:"pt_group"}).subscribe(
+      (response: any) => {
+        this.dataset = response.data
+          console.log(this.dataset)
+       // this.dataset.push();
+        // this.grid.invalidate();
+        // this.grid.render();
+        // this.dataView.refresh()
+        //this.dataView.setItems(this.dataset)
+      },
+      (error) => {
+        this.dataset = []
+    
+      },
+      () => {}
+      )
+    
 
+   }
   onSubmit() {
     // GET THE IDS TO BE ADDED 
     this.addToCreateIds()
@@ -346,20 +393,79 @@ indexd:any
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
 }
 
-handleSelectedRowsChanged(e, args) {
-  if (Array.isArray(args.rows) && this.grid) {
-      args.rows.map((idx) => {
-          const item = this.grid.getDataItem(idx)
-          item.etat_service = false
-          this.selectedRow = item
-          console.log(item)
+// handleSelectedRowsChanged(e, args) {
+//   let updateItem = this.angularGrid.gridService.getDataItemByRowIndex(this.row_number);
+//   if (Array.isArray(args.rows) && this.gridObjtr) {
+//     args.rows.map((idx) => {
+      
+//           const item = this.grid.getDataItem(idx)
+//           console.log(item);
+//           item.etat_service = false
+//           this.selectedRow = item
+//           console.log("here",item)
+//           this.itemService.getByOne(
+//             {pt_group: item.code_value},
+//             ).subscribe(
+//             (response: any) => {
+//               console.log(response.data)
+//               this.datasettr = response.data
+//               this.dataViewtr.setItems(this.datasettr)
+              
+              
+//             },
+//             (error) => {
+//                 console.log(error)
+//             },
+//           )
          
-      })
-  }
-  this.isSelected = true
-  // this.createForm(this.selectedRow)
+//       })
+//   }
+//   this.isSelected = true
+//   // this.createForm(this.selectedRow)
+// }
+onSelectedRowsChanged(e,args) {
+  // console.log('indexs', args.rows);
+  const index = args.rows;
+  
+  this.group = this.gridService.getDataItemByRowIndex(index).code_value
+  console.log("this.group", this.group)
+  // this.itemService.getByOne(
+  //   {pt_group: this.group},
+  //   ).subscribe(
+  //   (response: any) => {
+  //     console.log(response.data)
+  //     this.datasettr = response.data
+  //     this.dataViewtr.setItems(this.datasettr)
+      
+      
+  //   },
+  //   (error) => {
+  //       console.log(error)
+  //   },
+  // )
+ 
+this.updateData()
 }
+updateData(){
+console.log("hereeeeeeeeeeeeeeeeee")
+  this.itemService.getBy(
+    {pt_group: this.group},
+    ).subscribe(
+    (response: any) => {
+      console.log(response.data)
+      this.datasettr = response.data
+      console.log(this.datasettr)
+      
+    
+      this.dataViewtr.setItems(this.datasettr)
+       
+    },
+    (error) => {
+        console.log(error)
+    },
+  )
 
+}
 // createForm(row) {
 //   console.log(row)
 //   this.loadingSubject.next(false)
@@ -377,37 +483,41 @@ handleSelectedRowsChanged(e, args) {
 
 angularGridReady(angularGrid: AngularGridInstance) {
   this.angularGrid = angularGrid;
+  this.grid = angularGrid.slickGrid; // grid object
   this.dataView = angularGrid.dataView;
-  this.grid = angularGrid.slickGrid;
+  this.gridService = angularGrid.gridService;
+ // this.dataView.getItemMetadata = this.updateItemMetadata();
+  // this.dataView.getItemMetadata = function(idx) {
+  //   return {cssClasses: ".slick-cell"}
+  // };
+  // this.grid.invalidate();
+  // this.grid.render();
 
-  // if you want to change background color of Duration over 50 right after page load,
-  // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
-  // this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
-  this.grid.invalidate();
-  this.grid.render();
 }
-
-updateItemMetadata(previousItemMetadata: any) {
-  const newCssClass = "highlight-bg";
+updateItemMetadata() {
+  const newCssClass = "slick-cell";
   // console.log(this.dataView);
-  return (rowNumber: number) => {
-    const item = this.dataView.getItem(rowNumber);
+  
+    //const item = this.dataView.getItem(rowNumber);
     let meta = {
       cssClasses: "",
     };
-    if (typeof previousItemMetadata === "object") {
-      meta = previousItemMetadata(rowNumber);
-    }
-      
-    if (meta && item && item.bool05) {
-      const state = item.bool05;
-      if (state === true) {
-        meta.cssClasses = (meta.cssClasses || "") + " " + newCssClass;
-      }
-    }
+    
 
+   
+      
+        meta.cssClasses = (meta.cssClasses || "") + " " + newCssClass;
+      
+   
     return meta;
-  };
+  }
+angularGridReadytr(angularGrid: AngularGridInstance) {
+  this.angularGridtr = angularGrid;
+  this.dataViewtr = angularGrid.dataView;
+  this.gridtr = angularGrid.slickGrid;
+  this.gridServicetr = angularGrid.gridService;
+  
+ 
 }
 
 addNewItem() {
@@ -556,5 +666,72 @@ prepareGrid1() {
 openCode(content) {
   this.prepareGrid1();
   this.modalService.open(content, { size: "lg" });
+}
+
+
+
+
+
+prepareGridtr() {
+  this.columnDefinitionstr = [
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            excludeFromHeaderMenu: true,
+            minWidth: 40,
+            maxWidth: 60,
+            sortable:true,
+        },
+        {
+            id: "pt_part",
+            name: "Code Formation",
+            field: "pt_part",
+            sortable: true,
+            minWidth: 70,
+            maxWidth: 120,          
+            type: FieldType.string,
+        },
+        {
+            id: "pt_desc1",
+            name: "Désignation",
+            field: "pt_desc1",
+            sortable: true,
+            minWidth: 100,
+            maxWidth: 350,
+            type: FieldType.string,
+        },      
+        {
+          id: "pt_draw",
+          name: "Domaine",
+          field: "pt_draw",
+          type: FieldType.string,
+          sortable: true,
+         
+        },    
+          
+        {
+          id: "pt_formula",
+          name: "Int / Ext",
+          field: "pt_formula",
+          type: FieldType.boolean,
+          formatter: Formatters.checkmark,
+          sortable: true,
+         
+        },      
+      ]
+
+  this.gridOptionstr = {
+   
+    rowHeight: 40,
+    enableAutoResize:true,
+    autoHeight:false,
+    enableCellNavigation: true,
+    
+    
+  
+  }
+
+ 
 }
 }

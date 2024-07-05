@@ -10,6 +10,7 @@ export const environment = {
   apiUrl: "http://localhost:3001/api/v1",
   //apiUrl: "http://10.10.3.6:4341/api/v1",
   Instance: "Prod",
+  App: "RH", // RH or ERP
 };
 
 /*

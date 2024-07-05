@@ -29,15 +29,20 @@
             <span>Liste des Domaines de Formation</span>
             <br><br>
         <div class="row">
-            <angular-slickgrid class="col-12" 
+            <angular-slickgrid class="col-6" 
                
                 gridId="gridS" 
                 [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
                 
-                (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData,$event.detail.args)"
                 [gridOptions]="gridOptions" 
                 [dataset]="dataset">
+            </angular-slickgrid>
+            <angular-slickgrid class="col-6 "  gridId="gridLines" [columnDefinitions]="columnDefinitionstr"
+            (onAngularGridCreated)="angularGridReadytr($event)"
+            [gridOptions]="gridOptionstr" [dataset]="datasettr"
+                >
             </angular-slickgrid>
         </div>
         <!--(sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"-->

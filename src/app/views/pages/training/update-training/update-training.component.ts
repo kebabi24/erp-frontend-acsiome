@@ -17,12 +17,13 @@ const myCustomStringFormatter: Formatter = (row: number, cell: number, value: an
 }
 
 @Component({
-  selector: 'kt-list-training',
-  templateUrl: './list-training.component.html',
-  styleUrls: ['./list-training.component.scss']
+  selector: 'kt-update-training',
+  templateUrl: './update-training.component.html',
+  styleUrls: ['./update-training.component.scss']
 })
-export class ListTrainingComponent implements OnInit {
+export class UpdateTrainingComponent implements OnInit {
 
+ 
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
@@ -50,6 +51,39 @@ export class ListTrainingComponent implements OnInit {
 
   prepareGrid() {
     this.columnDefinitions = [
+      {
+        id: "mod",
+        name: "Edit",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+       // formatter: Formatters.editIcon,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Formation">
+               <i class="flaticon2-pen"></i>
+           </a>
+           `;
+        },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id
+                // if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
+          // this.router.navigateByUrl(`/purchasing/edit-po/${id}`)
+          this.router.navigateByUrl(`/training/edit-training/${id}`)
+          // }
+          // else {
+          //   alert("Modification Impossible pour ce Status")
+          // }
+            
+        // })
+        },
+      },
+
           {
               id: "id",
               name: "id",
@@ -156,10 +190,10 @@ export class ListTrainingComponent implements OnInit {
       frozenColumn: 0,
       frozenBottom: true,
       enableFilterTrimWhiteSpace:true,
-      
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
       } 
+    
     }
   
     this.itemService.getBy(
@@ -238,7 +272,9 @@ export class ListTrainingComponent implements OnInit {
       // enableAutoSizeColumns:true,
     
      //enableAutoResizeColumnsByCellContent:true,
-      
+     presets: {
+      sorters: [{ columnId: "id", direction: "ASC" }],
+    } 
     };
     this.itemService.getByDetTr({ptd_part:this.item}).subscribe(
       (respo: any) => {this.datadet = respo.data

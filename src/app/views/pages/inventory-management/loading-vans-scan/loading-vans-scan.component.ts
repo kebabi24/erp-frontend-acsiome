@@ -26,6 +26,7 @@ declare var ElectronPrinter3: any;
 })
 export class LoadingVansScanComponent implements OnInit {
   chargeForm: FormGroup;
+  unloadForm: FormGroup;
   productLotForm: FormGroup;
   hasFormErrors = false;
   isExist = false;
@@ -58,6 +59,18 @@ export class LoadingVansScanComponent implements OnInit {
   gridOptions: GridOption;
   dataset: any[];
   
+
+  angularGridun: AngularGridInstance;
+  gridun: any;
+
+  gridServiceun: GridService;
+  dataViewun: any;
+  columnDefinitionsun: Column[];
+  gridOptionsun: GridOption;
+  datasetun: any[];
+
+
+
   angularGriddif: AngularGridInstance;
   griddif: any;
   gridServicedif: GridService;
@@ -79,7 +92,7 @@ export class LoadingVansScanComponent implements OnInit {
   serie_start_pos: number;
   serie_length: number;
   userPrinter: any;
-  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private barecodeinfosService: BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
+  constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private unloadFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private barecodeinfosService: BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
     config.autoClose = true;
 
     this.barecodeinfosService.getAll().subscribe((response: any) => {
@@ -111,6 +124,16 @@ export class LoadingVansScanComponent implements OnInit {
       print: [true],
     });
     document.getElementById("load_request_code").focus();
+  }
+
+  createUnloadForm() {
+    this.loadingSubject.next(false);
+
+    this.unloadForm = this.unloadFB.group({
+      palu: [],
+  
+    });
+    document.getElementById("palu").focus();
   }
 
   time = new Observable<string>((observer: Observer<string>) => {
@@ -276,6 +299,83 @@ export class LoadingVansScanComponent implements OnInit {
 
     this.modalService.dismissAll();
   }
+
+
+
+  onUnload() {
+    const details = [];
+    const lines = [];
+    this.filteredData = [];
+    const data = _.mapValues(_.groupBy(this.datasetun, "code_prod"));
+
+    for (const [key, value] of Object.entries(data)) {
+      this.filteredData.push({
+        prod: key,
+        rows: value,
+      });
+    }
+    this.filteredData.forEach((element) => {
+      lines.push({
+        product_code: element.prod,
+        load_request_code: this.load_request_code,
+        qt_effected: - element.rows.length,
+      });
+    });
+    console.log("liinee", lines);
+    this.filteredData.forEach((product) => {
+      const filteredByLot = _.mapValues(_.groupBy(product.rows, "lot"));
+      for (const [key, value] of Object.entries(filteredByLot)) {
+        details.push({
+          product_code: value[0].code_prod,
+          load_request_code: this.load_request_code,
+          lot: key,
+          qt_effected:  - value.length,
+          pt_price: value[0].price,
+        });
+      }
+      console.log("details", details);
+    });
+
+    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines).subscribe(
+      (response: any) => {
+        const controls = this.chargeForm.controls;
+        if (controls.print.value == true) {
+           this.printpdf();
+        }
+
+        this.loadRequestData = [];
+        this.datasetun = [];
+        this.printLines = [];
+        this.username = "";
+        // this.load_request_code = "";
+        this.scanned_codes = [];
+
+        this.role_code = "";
+        this.total = 0;
+        this.totalCartons = 0;
+      },
+      (error) => {
+        // this.loadRequestData = []
+        console.log(error);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+        this.reset()
+        // this.router.navigateByUrl("/customers-mobile/cluster-create")
+      }
+    );
+    this.modalService.dismissAll()
+  }
+
+  
+
+  openUnload(content) {
+   
+    this.prepareGridun()
+    this.modalService.open(content, { size: "lg" });
+    this.createUnloadForm()
+  }
   goBack() {
     this.loadingSubject.next(false);
     const url = `/`;
@@ -383,6 +483,104 @@ export class LoadingVansScanComponent implements OnInit {
     this.grid.render();
   }
 
+
+
+
+
+  
+  prepareGridun() {
+    this.columnDefinitionsun = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.angularGrid.gridService.deleteItem(args.dataContext);
+          }
+        },
+      },
+      {
+        id: "line",
+        name: "Ligne",
+        field: "line",
+        minWidth: 80,
+        maxWidth: 80,
+        type: FieldType.number,
+      },
+
+      {
+        id: "code_prod",
+        name: "Code produit",
+        field: "code_prod",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.text,
+      },
+
+      {
+        id: "desc_prod",
+        name: "Description",
+        field: "desc_prod",
+        minWidth: 200,
+        maxWidth: 200,
+        type: FieldType.text,
+      },
+      {
+        id: "lot",
+        name: "N° Lot",
+        field: "lot",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.text,
+      },
+      {
+        id: "quantity",
+        name: "Quantité",
+        field: "quantity",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.text,
+      },
+      {
+        id: "serie",
+        name: "N° série",
+        field: "serie",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.text,
+      },
+    ];
+
+    this.gridOptionsun = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableAutoResize: true,
+      // enableRowSelection: true,
+      enableCheckboxSelector: true,
+    };
+
+    this.datasetun = [];
+  }
+
+  angularGridReadyun(angularGrid: AngularGridInstance) {
+    this.angularGridun = angularGrid;
+    this.dataViewun = angularGrid.dataView;
+    this.gridun = angularGrid.slickGrid;
+    this.gridServiceun = angularGrid.gridService;
+    this.gridun.invalidate();
+    this.gridun.render();
+  }
+
   onScanLoadRequest(content3,content7) {
     const controls = this.chargeForm.controls;
     this.load_request_code = controls.load_request_code.value;
@@ -466,6 +664,67 @@ export class LoadingVansScanComponent implements OnInit {
     document.getElementById("pal").focus();
   }
 
+
+
+
+
+  onScanPalU(content1, content2) {
+    const controls = this.unloadForm.controls;
+    const controls1 = this.chargeForm.controls;
+    if (controls1.load_request_code.value === "") {
+      this.modalService.open(content2, { size: "lg" });
+      document.getElementById("palu").focus();
+      return;
+    }
+
+    let palu = controls.palu.value;
+
+    // CHECK IF THE CODE WAS SCANNED BEFORE
+    let index = this.scanned_codes.indexOf(palu);
+    if (index != -1) {
+      this.modalService.open(content1, { size: "lg" });
+      controls.palu.setValue("");
+      document.getElementById("palu").focus();
+      return;
+    }
+
+    this.scanned_codes.push(palu);
+    let prod = palu.substring(this.code_start_pos, this.code_start_pos + this.code_length);
+    //console.log(this.code_start_pos , this.code_length)
+    let lot = palu.substring(this.lot_start_pos, this.lot_start_pos + this.lot_length); // stop at 8
+    let serie = palu.substring(this.serie_start_pos, this.serie_start_pos + this.serie_length);
+
+    //console.log(prod, lot, serie);
+    this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
+      let desc = response.data.pt_desc2;
+      let price = response.data.pt_price;
+      this.gridServiceun.addItem(
+        {
+          id: this.datasetun.length + 1,
+          line: this.datasetun.length + 1,
+          code_prod: prod,
+          desc_prod: desc,
+          lot: lot,
+          quantity: 1,
+          serie: serie,
+          price: price,
+        },
+        { position: "bottom" }
+      );
+
+      this.printLines.push({
+        id: this.datasetun.length + 1,
+        code_prod: prod,
+        prodlot:prod+lot,
+        desc_prod: desc,
+        lot: lot,
+        price: price,
+        quantity: 1,
+      });
+    });
+    controls.palu.setValue("");
+    document.getElementById("palu").focus();
+  }
   handleSelectedRowsChangeddif(e, args) {
       if (Array.isArray(args.rows) && this.griddif) {
       args.rows.map((idx) => {

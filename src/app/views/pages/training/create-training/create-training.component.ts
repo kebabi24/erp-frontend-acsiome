@@ -64,6 +64,7 @@ import {
   CodeService,
   Item,
   ItemService,
+  JobService
   
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
@@ -147,7 +148,11 @@ export class CreateTrainingComponent implements OnInit {
 
   isExist = false;
 
-
+  jobs: [];
+  columnDefinitions1: Column[] = [];
+  gridOptions1: GridOption = {};
+  gridObj1: any;
+  angularGrid1: AngularGridInstance;
 
 
   constructor(
@@ -160,6 +165,7 @@ export class CreateTrainingComponent implements OnInit {
     private layoutUtilsService: LayoutUtilsService,
     private codeService: CodeService,
     private itemService: ItemService,
+    private jobService:JobService
   ) {
     config.autoClose = true;
     // this.prepareGrid();
@@ -265,6 +271,7 @@ export class CreateTrainingComponent implements OnInit {
     _item.pt_draw = controls.pt_draw.value;
     _item.pt_group = controls.pt_group.value;
     _item.pt_formula = controls.pt_formula.value;
+    _item.pt_part_type = "FORMATION"
     
 
     return _item;
@@ -340,7 +347,7 @@ export class CreateTrainingComponent implements OnInit {
     this.codeService
       .getBy({ code_fldname: "pt_group",chr01:controls.pt_draw.value })
       .subscribe((response: any) => (this.pt_group = response.data));
-    document.getElementById("pt_group").focus();
+   // document.getElementById("pt_group").focus();
   
   }
 
@@ -382,14 +389,39 @@ export class CreateTrainingComponent implements OnInit {
         editor: {
           model: Editors.text,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          this.jobService.getBy({jb_code: args.dataContext.ptd_gol }).subscribe((response: any) => {
+            console.log(response.data.job)
+            if (!response.data.job) {
+              alert("Métier N'existe pas");
+              this.mvgridService.updateItemById(args.dataContext.id, { ...args.dataContext, ptd_gol: null });
+            }
+          });
+         
+          // this.dataView.getItemById(args.dataContext.id).meta
+          // console.log(Object.keys(this.dataView))
+        },
       },
+      {
+        id: "mvid",
+        field: "cmvid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          let element: HTMLElement = document.getElementById("openJobsGrid") as HTMLElement;
+          element.click();
+        },
+      }, 
     ];
 
     this.mvgridOptions = {
       asyncEditorLoading: false,
       editable: true,
       autoCommitEdit:true,
-      enableColumnPicker: true,
+     // enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
     };
@@ -407,4 +439,96 @@ export class CreateTrainingComponent implements OnInit {
     this.mvgridService.addItem(newItem, { position: "bottom" });
   }
 
+
+  handleSelectedRowsChanged1(e, args) {
+    let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObj1) {
+      args.rows.map((idx) => {
+        const item = this.gridObj1.getDataItem(idx);
+        console.log(item);
+        
+       
+        updateItem.ptd_gol = item.jb_code;
+  
+       this.mvgridService.updateItem(updateItem);
+       
+      });
+    }
+  
+  
+  
+  }
+  
+  angularGridReady1(angularGrid: AngularGridInstance) {
+    this.angularGrid1 = angularGrid;
+    this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+  
+  prepareGrid1() {
+    this.columnDefinitions1 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "jb_code",
+        name: "code Métier",
+        field: "jb_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "jb_desc",
+        name: "Désignation",
+        field: "jb_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      
+    ];
+  
+    this.gridOptions1 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+  
+    // fill the dataset with your data
+  
+    this.jobService.getAll().subscribe((response: any) => (this.jobs = response.data));
+  }
+  openJob(content) {
+    this.prepareGrid1();
+    this.modalService.open(content, { size: "lg" });
+  }
+  
 }

@@ -383,7 +383,7 @@
                 
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group">DATE Fin :</label>
+                                        <label class="form-group">Date Fin :</label>
                                         <div class="input-group input-group-sm">
                                             <input
                                                 [className]="empForm.controls['emp_last_date'].errors && (empForm.controls['emp_last_date'].dirty || empForm.controls['emp_last_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
@@ -400,6 +400,88 @@
                 
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Confirmation :</label>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                [className]="empForm.controls['emp_conf_date'].errors && (empForm.controls['emp_conf_date'].dirty || empForm.controls['emp_conf_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_conf_date" ngbDatepicker formControlName="emp_conf_date"
+                                                #emp_conf_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_conf_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_conf_date'].errors && (empForm.controls['emp_conf_date'].dirty || empForm.controls['emp_conf_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Démission :</label>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                [className]="empForm.controls['emp_dism_date'].errors && (empForm.controls['emp_dism_date'].dirty || empForm.controls['emp_dism_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_dism_date" ngbDatepicker formControlName="emp_dism_date"
+                                                #emp_dism_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_dism_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_dism_date'].errors && (empForm.controls['emp_dism_date'].dirty || empForm.controls['emp_dism_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group"> Contrat Fidélité: </label>
+                                        <span class="switch switch-icon ">
+                                            <label>
+                                                <input type="checkbox" formControlName="emp_loyalty"
+                                                    class="form-control form-control-sm form-control-solid">
+                                                    <span></span>    
+                                                
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Fin Fidélitée :</label>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                [className]="empForm.controls['emp_loyal_date'].errors && (empForm.controls['emp_loyal_date'].dirty || empForm.controls['emp_loyal_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_loyal_date" ngbDatepicker formControlName="emp_loyal_date"
+                                                #emp_loyal_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_loyal_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_loyal_date'].errors && (empForm.controls['emp_loyal_date'].dirty || empForm.controls['emp_loyal_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Responsable : *</label>
+                                        <div class="input-group input-group-sm">
+    
+                                            <input type="text" class="form-control form-control-solid" 
+                                                aria-describedby="basic-addon2" formControlName="emp_upper" (change)="onChangeUpper()" id="emp_upper">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="openupper(contentupper)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        
+                                        </div>
+                
+                                        
+                                    </div>    
+
+                                </div>
+
+                                  
                                 <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group ">Taux:</label>
@@ -644,6 +726,29 @@
                             [columnDefinitions]="columnDefinitionsuserid" (onAngularGridCreated)="angularGridReadyuserid($event)"
                             (sgOnSelectedRowsChanged)="handleSelectedRowsChangeduserid($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptionsuserid" [dataset]="datauserid">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentupper let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Responsable </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionsupper" (onAngularGridCreated)="angularGridReadyupper($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedupper($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsupper" [dataset]="dataupper">
                         </angular-slickgrid>
                     </div>
                 </div>

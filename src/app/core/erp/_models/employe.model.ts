@@ -45,5 +45,10 @@ emp_contact_adress: String
 emp_contact_tel: String
 emp_parent_liaison: String
 emp_userid : String
+emp_conf_date: String
+emp_dism_date: String
+emp_loyalty: Boolean
+emp_loyal_date: String
+emp_upper : String
 
 }

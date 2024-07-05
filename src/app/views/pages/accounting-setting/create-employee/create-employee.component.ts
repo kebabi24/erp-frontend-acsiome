@@ -116,6 +116,14 @@ export class CreateEmployeeComponent implements OnInit {
     httpOptions = this.httpUtils.getHTTPHeaders()
     leveljbd = [];
   leveljob = []
+
+
+  dataupper: []
+    columnDefinitionsupper: Column[] = []
+    gridOptionsupper: GridOption = {}
+    gridObjupper: any
+    angularGridupper: AngularGridInstance
+
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -434,7 +442,11 @@ createForm() {
       emp_contact_tel: [{ value: this.employe.emp_contact_tel, disabled: !this.isExist }],
       emp_parent_liaison: [{ value: this.employe.emp_parent_liaison, disabled: !this.isExist }],
       emp_userid: [{ value: this.employe.emp_userid, disabled: !this.isExist }],
-
+      emp_conf_date: [{value: this.employe.emp_conf_date, disabled: !this.isExist }],
+      emp_dism_date: [{value: this.employe.emp_dism_date, disabled: !this.isExist }],
+      emp_loyalty: [{value: this.employe.emp_loyalty, disabled: !this.isExist }],
+      emp_loyal_date: [{value: this.employe.emp_loyal_date, disabled: !this.isExist }],
+      emp_upper : [{value: this.employe.emp_upper, disabled: !this.isExist }],
   })
 }
 
@@ -484,6 +496,12 @@ onChangeCode() {
               controls.emp_contact_tel.enable()
               controls.emp_parent_liaison.enable()
               controls.emp_userid.enable()
+
+              controls.emp_conf_date.enable()
+              controls.emp_dism_date.enable()
+              controls.emp_loyalty.enable()
+              controls.emp_loyal_date.enable()
+              controls.emp_upper.enable()
         
               
 
@@ -647,6 +665,18 @@ onSubmit() {
       _employe.emp_userid = controls.emp_userid.value
       
 
+      _employe.emp_conf_date =  controls.emp_conf_date.value
+      ? `${controls.emp_conf_date.value.year}/${controls.emp_conf_date.value.month}/${controls.emp_conf_date.value.day}`
+      : null
+      _employe.emp_dism_date = controls.emp_dism_date.value
+      ? `${controls.emp_dism_date.value.year}/${controls.emp_dism_date.value.month}/${controls.emp_dism_date.value.day}`
+      : null
+      _employe.emp_loyalty = controls.emp_loyalty.value
+      _employe.emp_loyal_date = controls.emp_loyal_date.value
+      ? `${controls.emp_emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
+      : null
+      _employe.emp_upper =  controls.emp_upper.value
+      
       return _employe
   }
   onChangeState() {
@@ -1263,4 +1293,189 @@ onChangeUserid() {
     (error) => console.log(error)
   );
 }
+
+
+
+
+handleSelectedRowsChangedupper(e, args) {
+  
+  const controls = this.empForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjupper) {
+      args.rows.map((idx) => {
+          const item = this.gridObjupper.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+                  controls.emp_upper.setValue(item.emp_addr || "")
+      })
+  }
+}
+angularGridReadyupper(angularGrid: AngularGridInstance) {
+  this.angularGridupper = angularGrid
+  this.gridObjupper = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridupper() {
+  this.columnDefinitionsupper = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+        id: "emp_addr",
+        name: "Code Employe",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+    },
+    {
+      id: "emp_fname",
+      name: "Nom",
+      field: "emp_fname",
+      sortable: true,
+      filterable: true,
+      width: 50,
+      type: FieldType.string,
+  },
+  {
+      id: "emp_lname",
+      name: "Prénom",
+      field: "emp_lname",
+      sortable: true,
+      filterable: true,
+      width: 50,
+      type: FieldType.string,
+  },
+  {
+    id: "emp_line1",
+    name: "Adresse",
+    field: "emp_line1",
+    sortable: true,
+    width: 120,
+    filterable: true,
+    type: FieldType.string,
+  },
+  {
+    id: "emp_birth_date",
+    name: "Date Naissance",
+    field: "emp_birth_date",
+    sortable: true,
+    filterable: true,
+    width: 50,
+    type: FieldType.dateIso,
+  },
+  
+  {
+    id: "emp_job",
+    name: "Métier",
+    field: "emp_job",
+    sortable: true,
+    filterable: true,
+    width: 50,
+    type: FieldType.string,
+  },
+  
+  {
+    id: "emp_level",
+    name: "Niveau",
+    field: "emp_level",
+    sortable: true,
+    filterable: true,
+    width: 50,
+    type: FieldType.string,
+  },
+  {
+    id: "emp_site",
+    name: "Site",
+    field: "emp_site",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  },
+  
+  {
+    id: "emp_shift",
+    name: "Equipe",
+    field: "emp_shift",
+    sortable: true,
+    filterable: true,
+    type: FieldType.string,
+  },
+
+  {
+    id: "emp_rate",
+    name: "Taux",
+    field: "emp_rate",
+    sortable: true,
+    filterable: true,
+    type: FieldType.float,
+  },
+  {
+    id: "emp_mrate",
+    name: "Taux Multiple",
+    field: "emp_mrate",
+    sortable: true,
+    filterable: true,
+    type: FieldType.float,
+  },
+  {
+    id: "emp_arate",
+    name: "Taux",
+    field: "emp_arate",
+    sortable: true,
+    filterable: true,
+    type: FieldType.float,
+  },
+      
+  ]
+
+  this.gridOptionsupper = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  this.employeService
+      .getAll()
+      .subscribe((response: any) => (this.dataupper = response.data))
+}
+openupper(content) {
+ 
+  this.prepareGridupper()
+  this.modalService.open(content, { size: "lg" })
+}
+onChangeUpper() {
+  const controls = this.empForm.controls;
+  const emp_addr = controls.emp_upper.value;
+  
+  this.employeService.getByOne({ emp_addr }).subscribe(
+    (res: any) => {
+console.log(res.data)
+      if (!res.data) {
+
+          alert("Employe n'existe pas  ")
+          controls.emp_upper.setValue(null);
+          document.getElementById("emp_upper").focus();
+        }
+    
+    });
+}
+
 }

@@ -1,1 +1,131 @@
-<p>edit-training works!</p>
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div>
+            
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce Code existe deja
+                </kt-alert>
+                <form [formGroup]="formX" class="form">   
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Formation:</label>
+
+                        <input type="text" formControlName="pt_part" [(ngModel)]="itemEdit.pt_part"
+                            [className]="formX.controls['pt_part'].errors && (formX.controls['pt_part'].dirty || formX.controls['pt_part'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                        <div *ngIf="formX.controls['pt_part'].errors && (formX.controls['pt_part'].dirty || formX.controls['pt_part'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-6">
+                        <label class="form-group">Description:</label>
+                        <input type="text" id="pt_desc1" (change)="onchangedesc()"
+                            [className]="formX.controls['pt_desc1'].errors && (formX.controls['pt_desc1'].dirty || formX.controls['pt_desc1'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                            formControlName="pt_desc1">
+                        <div *ngIf="formX.controls['pt_desc1'].errors && (formX.controls['pt_desc1'].dirty || formX.controls['pt_desc1'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                   
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group ">Domaine</label>
+
+                        <select
+                        class="form-control form-control-lg"
+                        formControlName="pt_draw" id="pt_draw" (change)="onchangedomain()">
+                            <option value=""></option>
+                            <option *ngFor="let elem of pt_draw" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                        </select>
+                       
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Rubrique</label>
+
+                        <select
+                        class="form-control form-control-lg"
+                        formControlName="pt_group" id="pt_group" >
+                            <option value=""></option>
+                            <option *ngFor="let elem of pt_group" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                        </select>
+                       
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Interne/ Externe:</label>
+                        <div class="col-6">
+                            <span class="switch switch-lg switch-icon">
+                                <label>
+                                    <input type="checkbox"
+                                       
+                                        formControlName="pt_formula" id="pt_formula" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                   
+                </div>
+                <br> <br>
+                <div class="form-group col-12 row">
+                    <label class="col-2 col-form-label text-right"> Détail Formation: </label>
+                </div>
+
+
+                <div class="row col-lg-12">
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter Une Ligne</button>
+                </div>
+                <br>
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                    [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                </angular-slickgrid>
+                </div>
+                </form>
+            </div>
+        </div>
+
+    </kt-portlet-body>
+    
+
+    <div>
+        <ng-template #content1 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Métier</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" 
+              [columnDefinitions]="columnDefinitions1" 
+              (onAngularGridCreated)="angularGridReady1($event)"
+              (sgOnSelectedRowsChanged)="handleSelectedRowsChanged1($event.detail.eventData, $event.detail.args)" 
+              [gridOptions]="gridOptions1" [dataset]="jobs"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openJobsGrid" class="btn btn-primary" (click)="openJob(content1)">Launch demo modal</button>
+      </div>
+
+
+</kt-portlet>
+

@@ -13,7 +13,8 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
 import { MenuConfig } from '../../../../core/_config/menu.config'
-
+import { MenuTrConfig } from '../../../../core/_config/menuTr.config'
+import { MenuMobileConfig } from '../../../../core/_config/menuMobile.config'
 // Layout
 import {
     SubheaderService,
@@ -30,7 +31,7 @@ import { IActionMapping, ITreeOptions, TREE_ACTIONS } from '@circlon/angular-tre
 
 
 import { Profile, UsersService } from "../../../../core/erp"
-
+import { environment } from "../../../../../environments/environment";
 const actionMapping: IActionMapping = {
     mouse: {
       click: (tree, node, $event) => {
@@ -74,7 +75,11 @@ export class CreateProfileComponent implements OnInit {
         private profileService: UsersService
     ) {
         config.autoClose = true
-        const menus = new MenuConfig().defaults
+        
+        var app = environment.App
+       
+        const menus = (app=="RH") ? new MenuTrConfig().defaults : (app=="ERP") ? new MenuConfig().defaults : new MenuMobileConfig().defaults
+
         menus.aside.items.map(obj=>{
             if(obj.title){
                 const node : any = {}
