@@ -8,5 +8,5 @@ export const environment = {
   //apiUrl: "http://10.10.3.6:4341/api/v1",
  
   Instance: "Prod",
-  App: "RH",
+  App: "ERP",
 };
