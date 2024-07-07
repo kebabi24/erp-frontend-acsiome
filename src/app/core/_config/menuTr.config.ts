@@ -98,7 +98,7 @@ export class MenuTrConfig {
               },
               {
                 title: "Répertoire Fournisseurs",
-                page: "/providers/create-rep",
+                page: "/providers/create-rep-job",
               },
               {
                 title: "Liste Répertoire Fournisseurs",

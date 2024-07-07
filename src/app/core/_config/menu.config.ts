@@ -228,6 +228,10 @@ export class MenuConfig {
               page: "/providers/create-rep",
             },
             {
+              title: "Répertoire Fournisseurs Métier",
+              page: "/providers/create-rep-job",
+            },
+            {
               title: "Liste Répertoire Fournisseurs",
               page: "/providers/list-rep",
             },

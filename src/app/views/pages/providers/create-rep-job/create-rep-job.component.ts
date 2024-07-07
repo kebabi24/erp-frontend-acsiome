@@ -26,7 +26,7 @@ import {
 } from "angular-slickgrid";
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
-import { RepertoryService, ProviderService} from "../../../../core/erp";
+import { RepertoryService, ProviderService,JobService} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -36,29 +36,17 @@ import {
 } from "../../../../core/_base/crud";
 
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY } from "@angular/cdk/overlay/overlay-directives";
-const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
-  // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
-  const grid = args && args.grid;
-  const gridOptions = (grid && grid.getOptions) ? grid.getOptions() : {};
-  const translate = gridOptions.i18n;
-
-  // to get the editor object, you'll need to use "internalColumnEditor"
-  // don't use "editor" property since that one is what SlickGrid uses internally by it's editor factory
-  const columnEditor = args && args.column && args.column.internalColumnEditor;
-
-  if (value == null || value == undefined || !value.length) {
-    return { valid: false, msg: 'This is a required field' };
-  } 
-  return { valid: true, msg: '' };
-};
-
-
+const myCustomStringFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value!= null){
+    return `<div class="text"  aria-hidden="${value}" style="font-size:14px;" >${value}</div>`
+  }
+}
 @Component({
-  selector: 'kt-create-rep',
-  templateUrl: './create-rep.component.html',
-  styleUrls: ['./create-rep.component.scss']
+  selector: 'kt-create-rep-job',
+  templateUrl: './create-rep-job.component.html',
+  styleUrls: ['./create-rep-job.component.scss']
 })
-export class CreateRepComponent implements OnInit {
+export class CreateRepJobComponent implements OnInit {
 
 
   
@@ -90,8 +78,24 @@ export class CreateRepComponent implements OnInit {
   gridService: GridService;
   angularGrid: AngularGridInstance;
  
+  columnDefinitionsJob: Column[];
+  gridOptionsJob: GridOption;
+  gridObjJob: any;
+  dataViewJob: any;
+  gridJob: any;
+  gridServiceJob: GridService;
+  angularGridJob: AngularGridInstance;
+
+  datajob: [];
+  columnDefinitionsj: Column[] = [];
+  gridOptionsj: GridOption = {};
+  gridObjj: any;
+  angularGridj: AngularGridInstance;
+
   reps: any[] = [];
+  jobs: any[] = [];
   httpOptions = this.httpUtils.getHTTPHeaders();
+  contact:any;
   constructor(
     
     config: NgbDropdownConfig,
@@ -104,6 +108,7 @@ export class CreateRepComponent implements OnInit {
     private layoutUtilsService: LayoutUtilsService,
     private modalService: NgbModal,
     private providerService: ProviderService,
+    private jobService: JobService,
     private repertoryService: RepertoryService,
    
   ) {
@@ -121,7 +126,7 @@ export class CreateRepComponent implements OnInit {
     
     this.createForm();
     this.initGrid();
-   
+   this.initGridJob();
   }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -134,15 +139,42 @@ export class CreateRepComponent implements OnInit {
     this.reps = [];
     this.columnDefinitions = [
       {
-        id: "id",
-        name: "id",
-        field: "id",
-        sortable: true,
-        minWidth: 50,
-        maxWidth: 50,
-        filterable: true,
+        id: 'delete',
+        field: 'id',
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+           let ids=[]
+           for(let da of this.jobs) {
+            if (da.repd_contact == args.dataContext.rep_contact){
+              console.log("da.id",da.id)
+              ids.push(da.id)
+            
+            }
+           }
+           this.playAudio();
+           this.gridServiceJob.deleteItemByIds(ids)
+           this.gridService.deleteItem(args.dataContext);
+          }
+        
+        }
         
       },
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 50,
+      //   maxWidth: 50,
+      //   filterable: true,
+        
+      // },
       {
         id: "rep_contact",
         name: "Contact",
@@ -150,6 +182,7 @@ export class CreateRepComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: true,
+        formatter:myCustomStringFormatter,
         type: FieldType.string,
         editor: {
           model: Editors.text,
@@ -162,6 +195,7 @@ export class CreateRepComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: true,
+        formatter:myCustomStringFormatter,
         type: FieldType.string,
         editor: {
           model: Editors.text,
@@ -176,6 +210,7 @@ export class CreateRepComponent implements OnInit {
         sortable: true,
         width: 80,
         type: FieldType.string,
+        formatter:myCustomStringFormatter,
         editor: {
           model: Editors.text,
         }
@@ -188,6 +223,7 @@ export class CreateRepComponent implements OnInit {
         sortable: true,
         width: 80,
         type: FieldType.string,
+        formatter:myCustomStringFormatter,
         editor: {
           model: Editors.text,
         }
@@ -200,10 +236,44 @@ export class CreateRepComponent implements OnInit {
         sortable: true,
         width: 80,
         type: FieldType.string,
+        formatter:myCustomStringFormatter,
         editor: {
           model: Editors.text,
         }
 
+      },
+      {
+        id: "mod",
+        name: "Edit",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+       // formatter: Formatters.editIcon,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Formation">
+               <i class="flaticon2-plus"></i>
+           </a>
+           `;
+        },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id
+          this.contact = args.dataContext.rep_contact
+                // if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
+          // this.router.navigateByUrl(`/purchasing/edit-po/${id}`)
+     
+          // }
+          // else {
+          //   alert("Modification Impossible pour ce Status")
+          // }
+          this.addNewJob(this.contact)
+        // })
+        },
       },
     ];
 
@@ -215,6 +285,7 @@ export class CreateRepComponent implements OnInit {
       editable: true,
       autoHeight: false,
       autoCommitEdit:true,
+      rowHeight:40,
       
     };
 
@@ -222,11 +293,127 @@ export class CreateRepComponent implements OnInit {
    
   }
 
+  angularGridReadyJob(angularGrid: AngularGridInstance) {
+    this.angularGridJob = angularGrid;
+    this.gridObjJob = (angularGrid && angularGrid.slickGrid) || {};
+    this.dataViewJob = angularGrid.dataView;
+    this.gridServiceJob = angularGrid.gridService;
+  }
+
+  initGridJob() {
+    this.jobs = [];
+    this.columnDefinitionsJob = [
+      {
+        id: 'delete',
+        field: 'id',
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.gridServiceJob.deleteItem(args.dataContext);
+          }
+        
+        }
+        
+      },
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 50,
+      //   maxWidth: 50,
+      //   filterable: true,
+        
+      // },
+      {
+        id: "repd_contact",
+        name: "Code Contact",
+        field: "repd_contact",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        formatter:myCustomStringFormatter,
+    },
+    {
+      id: "repd_job",
+      name: "Code Métier",
+      field: "repd_job",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      formatter:myCustomStringFormatter,
+      editor: {
+        model: Editors.text,
+      }
+    },
+    {
+      id: "mvid",
+      field: "cmvid",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.infoIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+        this.row_number = args.row;
+        let element: HTMLElement = document.getElementById("openJobsGrid") as HTMLElement;
+        element.click();
+      },
+    }, 
+    {
+      id: "desc",
+      name: "Designation Job",
+      field: "desc",
+      sortable: true,
+      width: 200,
+      filterable: true,
+      type: FieldType.string,
+      formatter:myCustomStringFormatter,
+  },
+    
+   
+     
+    ];
+
+    this.gridOptionsJob = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      editable: true,
+      autoHeight: false,
+      autoCommitEdit:true,
+      rowHeight:40,
+    
+      
+    };
+
+    // this.jobService.getAllwithDetail().subscribe(
+        
+    //   (response: any) => {
+    //   //  console.log(response.data),
+    //     this.jobs = response.data,
+    //     this.dataViewJob.setItems(this.jobs)
+    //   },
+    //   (error) => {
+    //       this.jobs = []
+    //   },
+    //   () => {}
+    //   )
+   
+  }
   getRep() {
     this.reps = []
    
     const controls = this.repForm.controls
-    
+    this.providerService.getBy({vd_addr:controls.four.value}).subscribe((respo: any)=>{
+      if(respo.data != null) {
+        controls.name.setValue(respo.data.address.ad_name)
+      }
   
    
     this.repertoryService.getBy({ rep_type: "Provider",rep_code : controls.four.value}).subscribe(
@@ -241,6 +428,19 @@ export class CreateRepComponent implements OnInit {
       },
       () => {}
   )
+  this.repertoryService.getByJob({ repd_code : controls.four.value}).subscribe(
+    (respo: any) => {   
+      this.jobs = respo.data
+     console.log(this.jobs)
+     this.dataViewJob.setItems(this.jobs);
+      
+       },
+    (error) => {
+        this.jobs = []
+    },
+    () => {}
+)
+    })
   }
   onSubmit() {
     const controls = this.repForm.controls
@@ -249,7 +449,11 @@ export class CreateRepComponent implements OnInit {
       delete data.id;
     
     }
-    this.repertoryService.add({addr: controls.four.value,repDetails: this.reps }).subscribe(
+    for (let data of this.jobs) {
+      delete data.id;
+    
+    }
+    this.repertoryService.addJob({addr: controls.four.value,repDetails: this.reps,jobDetails: this.jobs }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         this.layoutUtilsService.showActionNotification(
@@ -280,7 +484,8 @@ export class CreateRepComponent implements OnInit {
   //create form
   
   this.repForm = this.repFB.group({
-      four: [ ""]
+      four: [null],
+      name: [null]
   
   })
 }
@@ -306,6 +511,7 @@ export class CreateRepComponent implements OnInit {
     this.createForm();
     this.hasFormErrors = false;
     this.reps = []; 
+    this.jobs = []; 
   }
   // save data
 //   onSubmit() {
@@ -378,6 +584,7 @@ export class CreateRepComponent implements OnInit {
             // TODO : HERE itterate on selected field and change the value of the selected field
             
                     controls.four.setValue(item.vd_addr || "")
+                    controls.name.setValue(item.address.ad_name || "")
                     this.getRep()
             
         })
@@ -495,4 +702,116 @@ addNewItem() {
   };
   this.gridService.addItem(newItem, { position: "bottom" });
 }
+addNewJob(contact) {
+  const newId = this.jobs.length+1;
+
+  const newItem = {
+    id: newId,
+    repd_contact:contact,
+    repd_job: null,
+    desc: null,
+   
+  };
+  this.gridServiceJob.addItem(newItem, { position: "bottom" });
+}
+
+handleSelectedRowsChangedj(e, args) {
+  let updateItem = this.gridServiceJob.getDataItemByRowIndex(this.row_number);
+  if (Array.isArray(args.rows) && this.gridObjj) {
+    args.rows.map((idx) => {
+      const item = this.gridObjj.getDataItem(idx);
+    console.log(item)
+          updateItem.repd_job = item.jb_code;
+          updateItem.desc= item.jb_desc;
+          
+          this.gridServiceJob.updateItem(updateItem);
+         
+    
+});
+
+  }
+}
+angularGridReadyj(angularGrid: AngularGridInstance) {
+  this.angularGridj = angularGrid;
+  this.gridObjj = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridj() {
+  this.columnDefinitionsj = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromColumnPicker: true,
+      excludeFromGridMenu: true,
+      excludeFromHeaderMenu: true,
+
+      minWidth: 50,
+      maxWidth: 50,
+    },
+    
+    {
+      id: "jb_code",
+      name: "Code",
+      field: "jb_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "jb_desc",
+      name: "Designation",
+      field: "jb_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    
+  ];
+
+  this.gridOptionsj = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+    // let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+  
+  // fill the dataset with your data
+  this.jobService
+    .getAll()
+    .subscribe((response: any) => (this.datajob = response.data));
+}
+openjob(contenttask) {
+  this.prepareGridj();
+  this.modalService.open(contenttask, { size: "lg" });
+}
+playAudio(){
+  let audio = new Audio();
+  audio.src = "../../../assets/media/error/error.mp3";
+  audio.load();
+  audio.play();
+}
+
 }

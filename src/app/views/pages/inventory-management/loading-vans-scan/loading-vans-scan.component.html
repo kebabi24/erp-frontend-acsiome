@@ -53,7 +53,7 @@
             <div class="form-group col-6">
               <label class="form-group">Palette:</label>
               <div class="input-group input-group-sm">
-                <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal(content1, content2)" aria-describedby="basic-addon2" />
+                <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal(content1, content2,content8)" aria-describedby="basic-addon2" />
               </div>
             </div>
             <div class="col-2">
@@ -243,7 +243,7 @@
               <div class="form-group col-6">
                 <label class="form-group">Palette:</label>
                 <div class="input-group input-group-sm">
-                  <input type="text" class="cab" id="palu" formControlName="palu" (change)="onScanPalU(content1, content2)" aria-describedby="basic-addon2" />
+                  <input type="text" class="cab" id="palu" formControlName="palu" (change)="onScanPalU(content1, content2,content8)" aria-describedby="basic-addon2" />
                 </div>
               </div>
             </div>
@@ -258,6 +258,23 @@
         </div>
       <div class="modal-footer">
          <button type="button" class="btn btn-primary"  (click)="onUnload()">Sauvgarder</button>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content8 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Code a Bare Erroné réessayez</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+        <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
       </div>
     </ng-template>
   </div>

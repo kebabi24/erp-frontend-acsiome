@@ -53,7 +53,7 @@ import { NgxPermissionsModule } from "ngx-permissions"
 
 //Service 
 
-import {PurchaseOrderService, AddressService, CodeService, ProviderService, AccountService, TaxeService, DeviseService, SequenceService, RepertoryService} from '../../../core/erp';
+import {PurchaseOrderService, AddressService, CodeService, ProviderService, AccountService, TaxeService, DeviseService, SequenceService, RepertoryService, JobService} from '../../../core/erp';
 import { ItempurchasebyproviderListComponent } from './itempurchasebyprovider-list/itempurchasebyprovider-list.component';
 import { ProviderActivitylistComponent } from './provider-activitylist/provider-activitylist.component';
 import { ProviderCAlistComponent } from './provider-calist/provider-calist.component'
@@ -62,7 +62,8 @@ import {BankService} from '../../../core/erp';
 import { BalanceGeneraleComponent } from './balance-generale/balance-generale.component';
 import { CreateRepComponent } from './create-rep/create-rep.component';
 import { ListRepComponent } from './list-rep/list-rep.component';
-import { CreateStdProviderComponent } from './create-std-provider/create-std-provider.component'
+import { CreateStdProviderComponent } from './create-std-provider/create-std-provider.component';
+import { CreateRepJobComponent } from './create-rep-job/create-rep-job.component'
 
 
 const routes: Routes = [
@@ -112,6 +113,10 @@ const routes: Routes = [
 	            path: "create-std-provider",
 	            component: CreateStdProviderComponent,
             },
+            {
+	            path: "create-rep-job",
+	            component: CreateRepJobComponent,
+            },
  
         ],
     },
@@ -130,6 +135,7 @@ const routes: Routes = [
         CreateRepComponent,
         ListRepComponent,
         CreateStdProviderComponent,
+        CreateRepJobComponent,
     ],
     imports: [
         CommonModule,
@@ -176,6 +182,7 @@ const routes: Routes = [
         DeviseService,
         SequenceService,
         RepertoryService,
+        JobService,
     ],
     entryComponents: [
         ActionNotificationComponent,

@@ -607,11 +607,12 @@ export class LoadingVansScanComponent implements OnInit {
     });
   }
 
-  onScanPal(content1, content2) {
+  onScanPal(content1, content2,content8) {
     const controls = this.chargeForm.controls;
     if (controls.load_request_code.value === "") {
       this.modalService.open(content2, { size: "lg" });
       document.getElementById("pal").focus();
+      this.playAudio()
       return;
     }
 
@@ -623,6 +624,7 @@ export class LoadingVansScanComponent implements OnInit {
       this.modalService.open(content1, { size: "lg" });
       controls.pal.setValue("");
       document.getElementById("pal").focus();
+      this.playAudio()
       return;
     }
 
@@ -634,6 +636,7 @@ export class LoadingVansScanComponent implements OnInit {
 
     //console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
+      if(response.data != null) {
       let desc = response.data.pt_desc2;
       let price = response.data.pt_price;
       this.gridService.addItem(
@@ -659,6 +662,10 @@ export class LoadingVansScanComponent implements OnInit {
         price: price,
         quantity: 1,
       });
+    } else {
+      this.playAudio()
+      this.modalService.open(content8, { size: "lg" });
+    }
     });
     controls.pal.setValue("");
     document.getElementById("pal").focus();
@@ -668,7 +675,7 @@ export class LoadingVansScanComponent implements OnInit {
 
 
 
-  onScanPalU(content1, content2) {
+  onScanPalU(content1, content2,content8) {
     const controls = this.unloadForm.controls;
     const controls1 = this.chargeForm.controls;
     if (controls1.load_request_code.value === "") {
@@ -696,6 +703,7 @@ export class LoadingVansScanComponent implements OnInit {
 
     //console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
+      if(response.data !=null) {
       let desc = response.data.pt_desc2;
       let price = response.data.pt_price;
       this.gridServiceun.addItem(
@@ -721,6 +729,11 @@ export class LoadingVansScanComponent implements OnInit {
         price: price,
         quantity: 1,
       });
+    }
+    else {
+      this.playAudio()
+      this.modalService.open(content8, { size: "lg" });
+    }
     });
     controls.palu.setValue("");
     document.getElementById("palu").focus();
@@ -1283,5 +1296,11 @@ export class LoadingVansScanComponent implements OnInit {
     ElectronPrinter3.print3(this.loadRequestLineData, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
 
     // saveAs(blob, this.load_request_code + ".pdf");
+  }
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../../../assets/media/error/error.mp3";
+    audio.load();
+    audio.play();
   }
 }
