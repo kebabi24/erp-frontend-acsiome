@@ -101,6 +101,10 @@ export class MenuTrConfig {
                 page: "/providers/create-rep-job",
               },
               {
+                title: "Répertoire Fournisseurs Métier",
+                page: "/providers/create-rep-job",
+              },
+              {
                 title: "Liste Répertoire Fournisseurs",
                 page: "/providers/list-rep",
               },
@@ -397,6 +401,10 @@ export class MenuTrConfig {
                   {
                     title: "Liste des Domaines de Formation",
                     page: "/training/list-section",
+                  },
+                  {
+                    title: "Demande de Formation",
+                    page: "/training/create-training-request",
                   },
                 ],
               },

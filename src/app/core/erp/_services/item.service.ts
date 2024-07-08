@@ -138,4 +138,11 @@ export class ItemService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/updated/${id}`, data, { headers: httpHeaders })
     }
+    public getByJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findjob`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
 }

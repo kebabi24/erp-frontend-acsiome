@@ -67,11 +67,17 @@ import {CodeService,
          InventoryStatusService,
          TaxeService,
          JobService,
-         CustomerMobileService
+         CustomerMobileService,
+         UsersService,
+         EmployeService,
+         RequisitionService,
+         ReasonService
         } from '../../../core/erp';
 import { UpdateTrainingComponent } from './update-training/update-training.component';
 import { ListSectionComponent } from './list-section/list-section.component';
 import { ListDomainComponent } from './list-domain/list-domain.component';
+import { CreateTrainingRequestComponent } from './create-training-request/create-training-request.component';
+import { CreateRequestGroupComponent } from './create-request-group/create-request-group.component';
 
     const routes: Routes = [
      
@@ -108,14 +114,21 @@ import { ListDomainComponent } from './list-domain/list-domain.component';
               {
                 path: "update-training",
                 component: UpdateTrainingComponent,
-            },
-         
+              },
+              {
+                path: "create-training-request",
+                component: CreateTrainingRequestComponent,
+              },     
+              {
+                path: "create-request-group",
+                component: CreateRequestGroupComponent,
+              }, 
   ]
   
 
 
 @NgModule({
-  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent],
+  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent],
   
   imports: [
     CommonModule,
@@ -166,6 +179,12 @@ providers: [
     CustomerMobileService,
     ItemModelService,
     JobService,
+    UsersService,
+    EmployeService,
+    RequisitionService,
+    ProviderService,
+    ReasonService,
+
 ],
 
 entryComponents: [

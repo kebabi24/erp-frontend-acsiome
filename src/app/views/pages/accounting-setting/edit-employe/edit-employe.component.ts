@@ -118,6 +118,12 @@ export class EditEmployeComponent implements OnInit {
   leveljbd = [];
   leveljob = []
 
+  domains: [];
+  columnDefinitionsdomain: Column[] = [];
+  gridOptionsdomain: GridOption = {};
+  gridObjdomain: any;
+  angularGriddomain: AngularGridInstance;
+  
   dataupper: []
     columnDefinitionsupper: Column[] = []
     gridOptionsupper: GridOption = {}
@@ -1429,6 +1435,108 @@ console.log(res.data)
         }
     
     });
+}
+changeDomain(){
+  const controls = this.empForm.controls // chof le champs hada wesh men form rah
+  const code_value  = controls.emp_job.value
+  this.codeService.getBy({code_fldname:"pt_draw",code_value:code_value}).subscribe((res:any)=>{
+      const {data} = res
+      console.log(res)
+      if (!data){ this.layoutUtilsService.showActionNotification(
+          "ce Service n'existe pas!",
+          MessageType.Create,
+          10000,
+          true,
+          true
+      )
+  this.error = true}
+      else {
+          this.error = false
+      }
+
+
+  },error=>console.log(error))
+}
+
+handleSelectedRowsChangeddomain(e, args) {
+  const controls = this.empForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjdomain) {
+    args.rows.map((idx) => {
+      const item = this.gridObjdomain.getDataItem(idx);
+      controls.emp_job.setValue(item.code_value || "");
+    });
+  }
+}
+
+angularGridReadydomain(angularGrid: AngularGridInstance) {
+  this.angularGriddomain = angularGrid;
+  this.gridObjdomain = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGriddomain() {
+  this.columnDefinitionsdomain = [
+   
+    {
+      id: "code_value",
+      name: "Code Domaine",
+      field: "code_value",
+      sortable: true,
+      minWidth: 70,
+      maxWidth: 100,
+      filterable: true,
+      type: FieldType.string,
+    
+  },
+  {
+      id: "code_cmmt",
+      name: "Désignation",
+      field: "code_cmmt",
+      sortable: true,
+      minWidth: 100,
+      maxWidth: 300,
+      filterable: true,
+      type: FieldType.string,
+      
+  },   
+  ];
+
+  this.gridOptionsdomain = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.codeService
+    .getBy({code_fldname:"pt_draw"})
+    .subscribe((response: any) => (this.domains = response.data));
+}
+opendom(content) {
+  this.prepareGriddomain();
+  this.modalService.open(content, { size: "lg" });
 }
 
 }

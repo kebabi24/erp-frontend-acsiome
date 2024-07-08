@@ -215,7 +215,8 @@ indexd:any
                     // this.dataView.getItemById(args.dataContext.id).meta
                     // console.log(Object.keys(this.dataView))
                   },
-              },        ]
+              },   
+       ]
 
     this.gridOptions = {
       editable:true,

@@ -1836,6 +1836,10 @@ export class MenuConfig {
                   title: "Liste des Domaines de Formation",
                   page: "/training/list-section",
                 },
+                {
+                  title: "Demande de Formation",
+                  page: "/training/create-training-request",
+                },
               ],
             },
             {

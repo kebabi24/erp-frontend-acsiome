@@ -524,16 +524,16 @@
                                      [gridOptions]="jbgridOptions" [dataset]="jbdataset" (onAngularGridCreated)="jbGridReady($event)">
                                     </angular-slickgrid>
                                 </div>
-                                <!--div class="row"> 
+                                <div class="row"> 
                                     <div class="form-group col-2">
                                         <label class="form-group">Métier : *</label>
                                         <div class="input-group input-group-sm">
                 
-                                            <input type="text" formControlName="emp_job" (change)="onChangeJob()" id="job"
+                                            <input type="text" formControlName="emp_job" (change)="changeDomain()" id="job"
                                                 [className]="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 aria-describedby="basic-addon2">
                                             <div class="input-group-append">
-                                                <span class="input-group-text" (click)="open2(content)">
+                                                <span class="input-group-text" (click)="opendom(contentdom)">
                                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                                             </div>
                                             <div *ngIf="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched)"
@@ -559,7 +559,7 @@
                 
                                         
                                     </div>    
-                                </div-->
+                                </div>
                                 <div class="form-group col-12 row">
                                     <label class="col-2 col-form-label text-right"> Detail Salaire: </label>
                                 </div>
@@ -739,6 +739,29 @@
                             [columnDefinitions]="columnDefinitionsupper" (onAngularGridCreated)="angularGridReadyupper($event)"
                             (sgOnSelectedRowsChanged)="handleSelectedRowsChangedupper($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptionsupper" [dataset]="dataupper">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentdom let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Service</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitionsdomain" (onAngularGridCreated)="angularGridReadydomain($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangeddomain($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsdomain" [dataset]="domains">
                         </angular-slickgrid>
                     </div>
                 </div>

@@ -157,7 +157,7 @@ export class CreateRepJobComponent implements OnInit {
             
             }
            }
-           this.playAudio();
+          //  this.playAudio();
            this.gridServiceJob.deleteItemByIds(ids)
            this.gridService.deleteItem(args.dataContext);
           }

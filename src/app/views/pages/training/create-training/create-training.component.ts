@@ -271,7 +271,8 @@ export class CreateTrainingComponent implements OnInit {
     _item.pt_draw = controls.pt_draw.value;
     _item.pt_group = controls.pt_group.value;
     _item.pt_formula = controls.pt_formula.value;
-    _item.pt_part_type = "FORMATION"
+    _item.pt_part_type = "FORMATION";
+    _item.pt_um= "UN"
     
 
     return _item;
