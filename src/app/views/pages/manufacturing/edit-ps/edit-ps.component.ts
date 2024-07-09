@@ -27,6 +27,7 @@ import {
   Formatter,
   Editor,
   Editors,
+  Filters,
   AngularGridInstance,
   GridService,
   Formatters,
@@ -66,6 +67,14 @@ export class EditPsComponent implements OnInit {
   angularGrid4: AngularGridInstance;
   desc: any;
   row_number
+  comp:any;
+message :any;
+  quantitytypesList = [
+    { value: 0, label: 'UM' },
+    { value: 1, label: '%' },
+  
+  ];
+  percent= 0;
   
     constructor(
       config: NgbDropdownConfig,
@@ -137,8 +146,17 @@ onSubmit() {
       Object.keys(controls).forEach((controlName) =>
           controls[controlName].markAsTouched()
       )
+      this.message = "veuillez choisir le code formule";
+      this.hasFormErrors = true;
 
-      this.hasFormErrors = true
+      return;
+    }
+    if (this.percent < 100) {
+      
+      this.message = "la somme des quantités saisies n'atteint pas 100%";
+      this.hasFormErrors = true;
+
+     
       return
   }
 
@@ -230,6 +248,8 @@ addPs(_ps: Ps, details: any) {
       maxWidth: 30,
       onCellClick: (e: Event, args: OnEventArgs) => {
         if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+          if(args.dataContext.ps_qty_type == 1){this.percent = Number(this.percent) - args.dataContext.ps_qty_per}
+            
           this.angularGrid.gridService.deleteItem(args.dataContext);
         }
       },
@@ -263,7 +283,7 @@ addPs(_ps: Ps, details: any) {
           if (resp.data) {
             console.log(resp.data)
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , })
-     
+            this.comp = args.dataContext.ps_comp
           }else {
 
             alert("Article Nexiste pas")
@@ -299,21 +319,21 @@ addPs(_ps: Ps, details: any) {
       filterable: false,
     },
     
-    {
-      id: "ps_item_no",
-      name: "Revision",
-      field: "ps_item_no",
-      sortable: true,
-      width: 80,
-      filterable: false,
-      editor: {
-        model: Editors.integer,
-        required: true,
+    // {
+    //   id: "ps_item_no",
+    //   name: "Revision",
+    //   field: "ps_item_no",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //   editor: {
+    //     model: Editors.integer,
+    //     required: true,
         
 
-      },
+    //   },
      
-    },
+    // },
     {
       id: "ps_ref",
       name: "Ref",
@@ -321,44 +341,73 @@ addPs(_ps: Ps, details: any) {
       sortable: true,
       width: 80,
       filterable: false,
-      editor: {
-        model: Editors.text,
-        required: true,
+      // editor: {
+      //   model: Editors.text,
+      //   required: true,
         
 
-      },
+      // },
      
     },
 
 
+    // {
+    //   id: "ps_start",
+    //   name: "Date Début",
+    //   field: "ps_start",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //   formatter: Formatters.dateIso ,
+    //   type: FieldType.dateIso,
+    //   editor: {
+    //     model: Editors.date,
+    //   },
+     
+    // },
+    // {
+    //   id: "ps_end",
+    //   name: "Date Fin",
+    //   field: "ps_end",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //   formatter: Formatters.dateIso ,
+    //   type: FieldType.dateIso,
+    //   editor: {
+    //     model: Editors.date,
+    //   },
+     
+    // },
     {
-      id: "ps_start",
-      name: "Date Début",
-      field: "ps_start",
+      id: "ps_qty_type",
+      name: "Type Qté",
+      field: "ps_qty_type",
       sortable: true,
       width: 80,
       filterable: false,
-      formatter: Formatters.dateIso ,
-      type: FieldType.dateIso,
-      editor: {
-        model: Editors.date,
+      type: FieldType.number,
+      formatter: (_row, _cell, value) => this.quantitytypesList[value]?.label,
+      exportCustomFormatter: (_row, _cell, value) => this.quantitytypesList[value]?.label,
+      filter: {
+        model: Filters.multipleSelect,
+        collection: this.quantitytypesList,
       },
-     
-    },
-    {
-      id: "ps_end",
-      name: "Date Fin",
-      field: "ps_end",
-      sortable: true,
-      width: 80,
-      filterable: false,
-      formatter: Formatters.dateIso ,
-      type: FieldType.dateIso,
       editor: {
-        model: Editors.date,
+        model: Editors.singleSelect,
+        collection: this.quantitytypesList,
+        
       },
+      onCellChange: (e: Event, args: OnEventArgs) => {var bol = false
+        
+      }
+
+
+
      
+
     },
+    
 
     {
       id: "ps_qty_per",
@@ -375,7 +424,20 @@ addPs(_ps: Ps, details: any) {
           
           
       },
-  
+      onCellChange: (e: Event, args: OnEventArgs) => {
+        console.log(args.dataContext.ps_qty_type)
+        if(args.dataContext.ps_qty_type == 1 ){console.log(this.percent)
+              if ((Number(this.percent) + args.dataContext.ps_qty_per ) > 100)
+                 {this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , ps_qty_per: 0}) 
+                  this.message = "la quantité saisie dépasse les 100%";
+                   this.hasFormErrors = true;
+                   return;
+                   
+                } 
+              else {this.percent = Number(this.percent) + args.dataContext.ps_qty_per}     
+        }
+        else{console.log('0',this.percent)}
+      }  
       
     },
    
@@ -399,54 +461,37 @@ addPs(_ps: Ps, details: any) {
     },
     
 
-    {
-      id: "ps_qty_type",
-      name: "Type Qté",
-      field: "ps_qty_type",
-      sortable: true,
-      width: 80,
-      filterable: false,
-      editor: {
-        model: Editors.text,
+   
+    // {
+    //   id: "ps_lt_off",
+    //   name: "Décalage",
+    //   field: "ps_lt_off",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //   editor: {
+    //     model: Editors.integer
         
 
-      },
+    //   },
 
-
-     
-
-    },
-    
-    {
-      id: "ps_lt_off",
-      name: "Décalage",
-      field: "ps_lt_off",
-      sortable: true,
-      width: 80,
-      filterable: false,
-      editor: {
-        model: Editors.integer
-        
-
-      },
-
-    },
+    // },
     
         
-    {
-      id: "ps_cst_pct",
-      name: "Pourcentage lot",
-      field: "ps_cst_pct",
-      sortable: true,
-      width: 80,
-      filterable: false,
-      formatter: Formatters.percentComplete,
-      editor: {
-        model: Editors.text,
+    // {
+    //   id: "ps_cst_pct",
+    //   name: "Pourcentage lot",
+    //   field: "ps_cst_pct",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //   formatter: Formatters.percentComplete,
+    //   editor: {
+    //     model: Editors.text,
         
-      },
+    //   },
      
-    },
+    // },
     {
       id: "ps_op",
       name: "Opération",
@@ -465,22 +510,22 @@ addPs(_ps: Ps, details: any) {
 
     },
             
-    {
-      id: "ps_group",
-      name: "Groupe Option",
-      field: "ps_group",
-      sortable: true,
-      width: 80,
-      filterable: false,
-      editor: {
-        model: Editors.text,
+    // {
+    //   id: "ps_group",
+    //   name: "Groupe Option",
+    //   field: "ps_group",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
+    //   editor: {
+    //     model: Editors.text,
       
-      },
+    //   },
 
 
      
 
-    },
+    // },
   ];
 
   this.gridOptions = {
@@ -541,16 +586,36 @@ handleSelectedRowsChanged4(e, args) {
   const controls = this.psForm.controls;
   
   if (Array.isArray(args.rows) && this.gridObj4) {
-    args.rows.map((idx) => {
-
-      
+    args.rows.map((idx) => { var bol;
       const item = this.gridObj4.getDataItem(idx);
+      console.log(this.dataset)
+      if (this.dataset.length > 1)
+        {for(let ob of this.dataset) {
+          if(ob.ps_comp == item.pt_part) {
+            console.log(item.pt_part)
+            bol = true
+            break;
+           
+          }
+        }}
+        if (bol){
+          // this.angularGrid.gridService.deleteItem(args.dataContext);
+          this.message = "ce produit existe déjà dans la formule";
+                   this.hasFormErrors = true;
+                   return;
+
+        }
+      
       console.log(item);
       updateItem.ps_comp = item.pt_part;
-      updateItem.chr01 = item.pt_desc1;
-      this.gridService.updateItem(updateItem);
+      updateItem.desc = item.pt_desc1;
+      updateItem.ps_ref = item.pt_draw;
+     
+      
+         
+        this.gridService.updateItem(updateItem);
     }) 
-    
+   
   }
 }
 angularGridReady4(angularGrid: AngularGridInstance) {

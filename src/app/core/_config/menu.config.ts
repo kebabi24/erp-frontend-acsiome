@@ -1197,11 +1197,15 @@ export class MenuConfig {
               icon: "flaticon2-tools-and-utensils",
               submenu: [
                 {
-                  title: "Maint Code Nomenclature",
+                  title: "ajouter Code Formules",
                   page: "/manufacturing/create-nomenclature",
                 },
                 {
-                  title: "Maint des Nomenclatures",
+                  title: "Liste des codes formules",
+                  page: "/manufacturing/list-bom",
+                },
+                {
+                  title: "ajouter des composants Nomenclatures",
                   page: "/manufacturing/create-ps",
                 },
                 {
@@ -1453,23 +1457,27 @@ export class MenuConfig {
               icon: "flaticon2-settings",
               submenu: [
                 {
-                  title: "Maint Code Nomenclature",
+                  title: "ajouter Code formule",
                   page: "/manufacturing/create-nomenclature",
                 },
                 {
-                  title: "Maint des Nomenclature",
+                  title: "Liste des codes formules",
+                  page: "/manufacturing/list-bom",
+                },
+                {
+                  title: "ajouter des composants formules",
                   page: "/manufacturing/create-ps",
                 },
                 {
-                  title: "Liste des Nomenclature",
+                  title: "Liste des Composants formules",
                   page: "/manufacturing/list-ps",
                 },
                 {
-                  title: "Affectation Nomenclature",
+                  title: "Affectation Formules",
                   page: "/manufacturing/affect-bom",
                 },
                 {
-                  title: "Calcul coût des Nomenclatures",
+                  title: "Calcul coût des formules",
                   page: "/manufacturing/bom-cost",
                 },
                 {

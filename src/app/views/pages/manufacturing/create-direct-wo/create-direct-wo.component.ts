@@ -112,7 +112,8 @@ export class CreateDirectWoComponent implements OnInit {
   globalState: boolean = false;
   product_colors: any[] = [];
   product_types: any[] = [];
-
+  color:any;
+  type:any;
   shift: any;
   desc2: any;
   dataprinter: [];
@@ -425,7 +426,8 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   getProductColors() {
-    this.codeService
+    
+      this.codeService
       .getBy({
         code_fldname: "pt_break_cat",
       })
@@ -464,7 +466,8 @@ export class CreateDirectWoComponent implements OnInit {
     const date = new Date();
     controls.product_type.value;
     controls.product_color.value;
-
+    this.color = controls.product_color.value;
+    this.type = controls.product_type.value;
     this.itemsService
       .getBy({
         pt_draw: controls.product_type.value,
@@ -511,7 +514,7 @@ export class CreateDirectWoComponent implements OnInit {
     const controls = this.woForm.controls;
     let tr = this.prepareTr();
     this.trdataset = [];
-
+    
     if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value <= 0) {
       this.hasFormErrors = true;
       this.message = "la quantité ne peut pas être inferieure à 0";
@@ -829,13 +832,31 @@ export class CreateDirectWoComponent implements OnInit {
     const controls = this.woForm.controls;
     this.hasFormErrors = false;
     /** check form */
-    if (this.woForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
-      this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+    
+    if (controls.wo_user1.value == null || controls.wo_user1.value == '') {this.message = "veuillez remplir la liste des employés";
       this.hasFormErrors = true;
 
       return;
-    }
+      }
+      else {if (controls.product_color.value == null || controls.product_color.value == '') {this.message = "veuillez choisir la couleur souhaité";
+      this.hasFormErrors = true;
+
+      return;
+      }
+            else {if (controls.product_type.value == null || controls.product_type.value == '') {this.message = "veuillez choisir le type de produit souhaité";
+            this.hasFormErrors = true;
+
+            return;
+            }
+            else {if (this.color != controls.product_color.value || this.type != controls.product_type.value){
+              this.hasFormErrors = true;
+              this.message = "veuillez relancer la recherche du produit";
+           
+              this.globalState = false;
+              return;
+            }}
+                 }
+           } 
     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
       this.seq = response.data;
 
@@ -1831,9 +1852,9 @@ export class CreateDirectWoComponent implements OnInit {
     console.log(l.length);
     this.selectedIndexes.forEach((index) => {
       if (index == 0) {
-        l = this.emps[index]["emp_addr"];
+        l = this.emps[index]["emp_fname"];
       } else {
-        l = l + "," + this.emps[index]["emp_addr"];
+        l = l + "," + this.emps[index]["emp_fname"];
       }
       //id: index,
     });

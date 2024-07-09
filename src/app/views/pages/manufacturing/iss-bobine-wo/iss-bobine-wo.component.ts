@@ -57,6 +57,11 @@ import {
   BomService, BomPartService, WorkOrder, ProviderService, WorkRoutingService, RequisitionService, printBc, LabelService, SaleOrderService,Label, EmployeService, PrintersService
  
 } from "../../../../core/erp";
+import {
+   Ps, PsService,
+
+} from "../../../../core/erp";
+import { Console } from 'console';
 declare var Edelweiss: any;
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
@@ -195,7 +200,10 @@ export class IssBobineWoComponent implements OnInit {
   product_types: any[] = [];
   product_qualitys: any[] = [];
   product_Cyls: any[] = [];
-  
+  color:any;
+  type:any;
+  quality:any;
+  cyl:any;
   shift: any;
   desc2: any;
   dataprinter: [];
@@ -261,7 +269,8 @@ export class IssBobineWoComponent implements OnInit {
     private workOrderService: WorkOrderService,
     private workOrderDetailService: WorkOrderDetailService,
     private providersService: ProviderService,
-    private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private saleOrderService: SaleOrderService,private employeService: EmployeService, private addressService: AddressService,private printerService: PrintersService,
+    private workRoutingService: WorkRoutingService,  private bomPartService: BomPartService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private saleOrderService: SaleOrderService,private employeService: EmployeService, private addressService: AddressService,private printerService: PrintersService, private bomService: BomService,  
+    private psService: PsService, 
     
   ) {
     config.autoClose = true;
@@ -290,9 +299,26 @@ export class IssBobineWoComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            const controls = this.woForm.controls
+            const paiqty = controls.PAI_ISS.value
+            const prfqty = controls.PRF_ISS.value
+            const sqlqty = controls.SQL_ISS.value
+            const orgqty = controls.ORG_ISS.value
             let idpal;
+            let total = 0
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
             this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
+            this.itemsService.getByOne({pt_part: args.dataContext.tr_part  }).subscribe(
+              (respopart: any) => {
+                console.log(respopart.data)
+                         total = total -  Number(this.lddet.ld_qty_oh)              
+                if(respopart.data.pt_draw == 'ORIGINAL'){let Orgqty = Number(Number(orgqty) - Number(this.lddet.ld_qty_oh));controls.ORG_ISS.setValue(Number(Orgqty))}
+                else{if(respopart.data.pt_draw == 'SQUELETTE'){let Sqlqty = Number(Number(sqlqty) - Number(this.lddet.ld_qty_oh));controls.SQL_ISS.setValue(Number(Sqlqty))}
+                else{if(respopart.data.pt_draw == 'PREFORME'){let Prfqty = Number(Number(prfqty) - Number(this.lddet.ld_qty_oh));controls.PRF_ISS.setValue(Number(Prfqty))}
+                else{if(respopart.data.pt_draw == 'PAYETTE'){let Paiqty = Number(Number(paiqty) - Number(this.lddet.ld_qty_oh));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
+              controls.total_iss.setValue(total)
+             
+            }); 
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }
         },
@@ -925,10 +951,20 @@ export class IssBobineWoComponent implements OnInit {
       desc: [{ value: null, disabled: true }],
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
-      
+      wo_bom_code: [this.workOrder.wo_bom_code, Validators.required],
       wo_qty_ord: [{ value: 0 },this.workOrder.wo_qty_ord],
       total_bobine:  [{disabled: true}],
       total_squelette:  [{disabled: true}],
+      ORG_PREV:  [0,{disabled: true}],
+      SQL_PREV:  [0,{disabled: true}],
+      PRF_PREV:  [0,{disabled: true}],
+      PAI_PREV:  [0,{disabled: true}],
+      ORG_ISS:  [0,{disabled: true}],
+      SQL_ISS:  [0,{disabled: true}],
+      PRF_ISS:  [0,{ value: 0 },{disabled: true}],
+      PAI_ISS:  [0,{disabled: true}],
+      total_prev:  [0,{disabled: true}],
+      total_iss:  [0,{disabled: true}],
       wo_qty_comp: [{ value: 0 },this.workOrder.wo_qty_comp],
       wo_qty_rjct: [{ value: 0 },this.workOrder.wo_qty_rjct],
       emp_shift: [this.shift],
@@ -966,12 +1002,56 @@ export class IssBobineWoComponent implements OnInit {
       ref: [null],
       });
   }
+  onChangeBomCode() {
+    const controls = this.woForm.controls
+    console.log(controls.wo_bom_code.value,)
+    this.bomService
+        .getBy({
+              bom_parent: controls.wo_bom_code.value,
+        })
+        .subscribe((response: any) => {
+            console.log(response.data)
+            if (!response.data) {
+              alert("Code n'existe pas")
+              controls.ps_parent.setValue("")
+              document.getElementById("code").focus();
+            } else {
+              // controls.desc.setValue(response.data.bom_desc);
+            let formule:any;
+            this.psService.getBy({ps_parent:controls.wo_bom_code.value}).subscribe((ps: any) => {
+              console.log(response.data.bom_batch)
+              formule = ps.data
+              console.log(formule)
+              let total = 0
+              for (var object = 0; object < formule.length; object++) {
+                let calc = 0
+                
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) / Number(response.data.bom_batch)
+                if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'PAILETTE'){ controls.PAI_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'ORIGINAL'){ controls.ORG_PREV.setValue(calc )}
+              }
+              total = Number(controls.SQL_PREV.value) + Number(controls.PRF_PREV.value) + Number(controls.PAI_PREV.value) + Number(controls.ORG_PREV.value)
+                
+              controls.total_prev.setValue(total)
+              })
+              
+              
+              
+            }
+     })
+  }
   onChangeOA() {
     this.dataset = [];
   
     const controls = this.woForm.controls;
     const id = controls.wo_lot.value;
-
+    const paiqty = controls.PAI_ISS.value
+    const prfqty = controls.PRF_ISS.value
+    const sqlqty = controls.SQL_ISS.value
+    const orgqty = controls.ORG_ISS.value
+    let total = 0
     this.workOrderService.getByOne({ id }).subscribe((res: any) => {
       if (res.data.wo_status == "R" && res.data.wo_routing == controls.wo_routing.value) {
         this.woServer = res.data;
@@ -986,7 +1066,46 @@ export class IssBobineWoComponent implements OnInit {
         controls.product_type.setValue(this.woServer.item.pt_article);
         controls.product_color.setValue(this.woServer.item.pt_break_cat);
         controls.product_quality.setValue(this.woServer.item.pt_rev);
+        controls.wo_bom_code.setValue(this.woServer.wo_bom_code);
         
+
+        this.bomService
+        .getBy({
+              bom_parent: controls.wo_bom_code.value,
+        })
+        .subscribe((response: any) => {
+            console.log(response.data)
+            if (!response.data) {
+              alert("Code n'existe pas")
+              controls.ps_parent.setValue("")
+              document.getElementById("code").focus();
+            } else {
+              // controls.desc.setValue(response.data.bom_desc);
+            let formule:any;
+            this.psService.getBy({ps_parent:controls.wo_bom_code.value}).subscribe((ps: any) => {
+              console.log(response.data.bom_batch)
+              formule = ps.data
+              console.log(formule)
+              let total = 0
+              for (var object = 0; object < formule.length; object++) {
+                let calc = 0
+                console.log(total)
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) / Number(response.data.bom_batch)
+                if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'PAILETTE'){ controls.PAI_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'ORIGINAL'){ controls.ORG_PREV.setValue(calc )}
+              }
+              total = Number(controls.SQL_PREV.value) + Number(controls.PRF_PREV.value) + Number(controls.PAI_PREV.value) + Number(controls.ORG_PREV.value)
+             
+              controls.total_prev.setValue(total)
+              })
+              
+              
+              
+            }
+     })
+
 
         controls.product_Cyl.setValue(this.woServer.item.pt_group)
         this.product = this.woServer.item;
@@ -1007,7 +1126,7 @@ export class IssBobineWoComponent implements OnInit {
               this.rctwostat = resp.data.loc_status;
             });
         }
-
+       
         if (this.woServer.wo_so_job != null && this.woServer.wo_so_job != "") {
           this.saleOrderService.getBy({ so_nbr: this.woServer.wo_so_job }).subscribe((res: any) => {
             console.log(res.data);
@@ -1038,6 +1157,14 @@ export class IssBobineWoComponent implements OnInit {
           (res: any) => {        
           this.dataset  = res.data;
           for (let item of this.dataset){
+            this.itemsService.getByOne({pt_part: item.tr_part  }).subscribe(
+              (respopart: any) => {
+                total = total + Number(item.tr_qty_loc)
+            if(respopart.data.pt_draw == 'ORIGINAL'){let Orgqty = Number(Number(orgqty) + Number(item.tr_qty_loc));controls.ORG_ISS.setValue(Number(Orgqty))}
+            else{if(respopart.data.pt_draw == 'SQUELETTE'){let Sqlqty = Number(Number(sqlqty) + Number(item.tr_qty_loc));controls.SQL_ISS.setValue(Number(Sqlqty))}
+                 else{if(respopart.data.pt_draw == 'PREFORME'){let Prfqty = Number(Number(prfqty) + Number(item.tr_qty_loc));controls.PRF_ISS.setValue(Number(Prfqty))}
+                      else{if(respopart.data.pt_draw == 'PAYETTE'){let Paiqty = Number(Number(paiqty) + Number(item.tr_qty_loc));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
+              })
           this.gridService.addItem(
             {
               id: this.dataset.length + 1,
@@ -1162,8 +1289,10 @@ export class IssBobineWoComponent implements OnInit {
     controls.product_type.value;
     controls.product_color.value;
     controls.product_Cyl.value;
-    
-    
+    this.color = controls.product_color.value;
+    this.type = controls.product_type.value;
+    this.quality = controls.product_quality.value;
+    this.cyl = controls.product_Cyl.value;
     this.itemsService
       .getBy({
         pt_article: controls.product_type.value,
@@ -1287,6 +1416,7 @@ export class IssBobineWoComponent implements OnInit {
     _wo.wo_user1 = this.user1;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
+    _wo.wo_bom_code = controls.wo_bom_code.value;
     _wo.wo_qty_ord = controls.wo_qty_ord.value;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1368,13 +1498,30 @@ export class IssBobineWoComponent implements OnInit {
     const controls = this.woForm.controls;
     this.hasFormErrors = false;
     /** check form */
-    if (this.woForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
-      this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+    if (controls.wo_user1.value == null || controls.wo_user1.value == '') {this.message = "veuillez remplir la liste des employés";
       this.hasFormErrors = true;
 
       return;
-    }
+      }
+      else {if (controls.product_color.value == null || controls.product_color.value == '') {this.message = "veuillez choisir la couleur souhaité";
+      this.hasFormErrors = true;
+
+      return;
+      }
+            else {if (controls.product_type.value == null || controls.product_type.value == '') {this.message = "veuillez choisir le type de produit souhaité";
+            this.hasFormErrors = true;
+
+            return;
+            }
+            else {if (this.color != controls.product_color.value || this.type != controls.product_type.value || this.cyl != controls.product_Cyl.value || this.quality != controls.product_quality.value){
+              this.hasFormErrors = true;
+              this.message = "veuillez relancer la recherche du produit";
+           
+              this.globalState = false;
+              return;
+            }}
+                 }
+           } 
     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
       this.seq = response.data;
 
@@ -2498,8 +2645,14 @@ onChangePal() {
   /*kamel palette*/
   const controls = this.woForm.controls
   const ref = controls.ref.value
+  const paiqty = controls.PAI_ISS.value
+  const prfqty = controls.PRF_ISS.value
+  const sqlqty = controls.SQL_ISS.value
+  const orgqty = controls.ORG_ISS.value
+  let total =0
 var bol = false
 let idpal;
+// this.workOrderService.getBy({wo_nbr: controls.wo_nbr.value,wo_status:'R'}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
 this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
   
   for(let ob of this.dataset) {
@@ -2513,81 +2666,111 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
   }
   if (!bol) {
     console.log(ref)
+    
   this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
     (response: any) => {
       this.lddet = response.data
       //console.log(this.lddet.ld_qty_oh)
-  if (this.lddet != null) {
-   
-  
      
+  if (this.lddet != null) {
+   console.log(this.lddet.ld_qty_oh)
+    
+   this.labelService.getBy({lb_cab: ref,lb__log01: false}).subscribe((res:any) =>{if (res.data != null) {controls.ref.setValue(null)
+    this.message = "vous ne pouvez pas consommer ce BigBag pour cette production";
+    this.hasFormErrors = true;
+    return;}
+    else {
     this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-WO" }).subscribe((resstat:any)=>{
-        console.log(resstat)
-        const { data } = resstat;
+      console.log(resstat)
+      const { data } = resstat;
 
-        if (data) {
-          this.stat = null
-          
-
-
-        } else {
-          this.stat = this.lddet.ld_status
+      if (data) {
+        this.stat = null
         
-         
-    // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
-    //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
-        
-  
-    
-    
-           
-   
-   this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
-    (respopart: any) => {
-      console.log(respopart)
-
-   this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
-    (respo: any) => {
-      this.sct = respo.data
-      console.log(this.sct)
-      this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
-      this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
-   this.gridService.addItem(
-    {
-      id: this.dataset.length + 1,
-      tr_line: this.dataset.length + 1,
-      tr_part: this.lddet.ld_part,
-      cmvid: "",
-      desc: respopart.data.pt_desc1,
-      qty_oh: this.lddet.ld_qty_oh,
-      tr_qty_loc: this.lddet.ld_qty_oh,
-      tr_site: this.lddet.ld_site,
-      tr_loc: this.lddet.ld_loc,
-      tr_um: respopart.data.pt_um,
-      tr_um_conv:1,
-      tr_price: this.sct.sct_mtl_tl,
-      cmvids: "",
-      tr_ref: ref,
-      tr_serial: this.lddet.ld_lot,
-      tr_status: this.stat,
-      tr_expire: this.lddet.ld_expire,
-    },
-    { position: "bottom" }
-  );
-  controls.ref.setValue(null)
-   });
-  }); 
 
 
-
-  
-}
-}); 
+      } else {
+        this.stat = this.lddet.ld_status
       
+       
+  // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+  //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+      
+
   
+  
+         
+ 
+ this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+  (respopart: any) => {
+    console.log(respopart.data)
+    
+    if(respopart.data.pt_draw == 'ORIGINAL'){if(controls.ORG_ISS.value > controls.ORG_PREV.value) {controls.ref.setValue(null)
+      this.message = "la quantité d'ORIGINAL consommé est dèjà atteinte";
+      this.hasFormErrors = true;
+      return;}}
+      if(respopart.data.pt_draw == 'SQUELETTE'){if(controls.SQL_ISS.value > controls.SQL_PREV.value) {controls.ref.setValue(null)
+        this.message = "la quantité de squelette consommé est dèjà atteinte";
+        this.hasFormErrors = true;
+        return;}}
+        if(respopart.data.pt_draw == 'PREFORME'){if(controls.PRF_ISS.value > controls.PRF_PREV.value) {controls.ref.setValue(null)
+          this.message = "la quantité de preforme consommé est dèjà atteinte";
+          this.hasFormErrors = true;
+          return;}}
+          if(respopart.data.pt_draw == 'PAYETTE'){if(controls.PAI_ISS.value > controls.PAI_PREV.value) {controls.ref.setValue(null)
+            this.message = "la quantité de pailette consommé est dèjà atteinte";
+            this.hasFormErrors = true;
+            return;}}
+            total = total + Number(this.lddet.ld_qty_oh)  
+            controls.total_iss.setValue(total)     
+    if(respopart.data.pt_draw == 'ORIGINAL'){let Orgqty = Number(Number(orgqty) + Number(this.lddet.ld_qty_oh));controls.ORG_ISS.setValue(Number(Orgqty))}
+    else{if(respopart.data.pt_draw == 'SQUELETTE'){let Sqlqty = Number(Number(sqlqty) + Number(this.lddet.ld_qty_oh));controls.SQL_ISS.setValue(Number(Sqlqty))}
+    else{if(respopart.data.pt_draw == 'PREFORME'){let Prfqty = Number(Number(prfqty) + Number(this.lddet.ld_qty_oh));controls.PRF_ISS.setValue(Number(Prfqty))}
+    else{if(respopart.data.pt_draw == 'PAYETTE'){let Paiqty = Number(Number(paiqty) + Number(this.lddet.ld_qty_oh));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
+
+ this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
+  (respo: any) => {
+    this.sct = respo.data
+    console.log(this.sct)
+    this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id
+      console.log(idpal)
+      this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
+    }})
+      
+    
+     this.gridService.addItem(
+  {
+    id: this.dataset.length + 1,
+    tr_line: this.dataset.length + 1,
+    tr_part: this.lddet.ld_part,
+    cmvid: "",
+    desc: respopart.data.pt_desc1,
+    qty_oh: this.lddet.ld_qty_oh,
+    tr_qty_loc: this.lddet.ld_qty_oh,
+    tr_site: this.lddet.ld_site,
+    tr_loc: this.lddet.ld_loc,
+    tr_um: respopart.data.pt_um,
+    tr_um_conv:1,
+    tr_price: this.sct.sct_mtl_tl,
+    cmvids: "",
+    tr_ref: ref,
+    tr_serial: this.lddet.ld_lot,
+    tr_status: this.stat,
+    tr_expire: this.lddet.ld_expire,
+  },
+  { position: "bottom" }
+);
+controls.ref.setValue(null)
+ });
+}); 
 
 
 
+
+}
+    }); }
+  })
+ 
 }
 else {
   controls.ref.setValue(null)
@@ -2833,14 +3016,33 @@ opengamme(content) {
 }
 
 handleSelectedRowsChangedbom(e, args) {
-  let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  const controls = this.woForm.controls;
   if (Array.isArray(args.rows) && this.gridObjbom) {
     args.rows.map((idx) => {
       const item = this.gridObjbom.getDataItem(idx);
-
-      updateItem.wo_bom_code = item.bom_parent;
-
-      this.gridService.updateItem(updateItem);
+      controls.wo_bom_code.setValue(item.bom_parent || "");
+      this.bomService
+        .getBy({
+              bom_parent: controls.wo_bom_code.value,
+        })
+        .subscribe((response: any) => {
+            console.log(response.data)
+            
+      let formule:any;
+      this.psService.getBy({ps_parent:controls.wo_bom_code.value}).subscribe((ps: any) => {
+       
+        formule = ps.data
+        console.log(formule)
+        for (var object = 0; object < formule.length; object++) {
+          let calc = 0
+          calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) / Number(response.data.bom_batch)
+          if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
+          if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
+          if (formule[object].ps_ref == 'PAILETTE'){ controls.PAI_PREV.setValue(calc )}
+          if (formule[object].ps_ref == 'ORIGINAL'){ controls.ORG_PREV.setValue(calc )}
+        }
+        })
+      })
     });
   }
 }
@@ -2861,25 +3063,25 @@ prepareGridbom() {
       maxWidth: 80,
     },
     {
-      id: "ptb_bom",
-      name: "code Nomen",
-      field: "ptb_bom",
+      id: "bom_parent",
+      name: "code",
+      field: "bom_parent",
       sortable: true,
       filterable: true,
       type: FieldType.string,
     },
     {
       id: "bom_desc",
-      name: "Désignation",
-      field: "Bom.bom_desc",
+      name: "Designation",
+      field: "bom_desc",
       sortable: true,
       filterable: true,
       type: FieldType.string,
     },
     {
       id: "bom_batch",
-      name: "Batch",
-      field: "Bom.bom_batch",
+      name: "Taille du Lot",
+      field: "bom_batcg",
       sortable: true,
       filterable: true,
       type: FieldType.string,
@@ -2887,7 +3089,15 @@ prepareGridbom() {
     {
       id: "bom_batch_um",
       name: "UM",
-      field: "Bom.bom_batch_um",
+      field: "bom_batch_um",
+      sortable: true,
+      filterable: true,
+      type: FieldType.boolean,
+    },
+    {
+      id: "bom_formula",
+      name: "Formule",
+      field: "bom_formula",
       sortable: true,
       filterable: true,
       type: FieldType.string,
@@ -2921,24 +3131,12 @@ prepareGridbom() {
       // True (Single Selection), False (Multiple Selections)
       selectActiveRow: true,
     },
-
-    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
-      var val = undefined;
-      try {
-        val = eval("item." + column.field);
-      } catch (e) {
-        // ignore
-      }
-      return val;
-    },
   };
 
   // fill the dataset with your data
-
-  this.bomPartService.getBy({ ptb_part: this.part }).subscribe((response: any) => {
-    console.log(response.data);
-    this.boms = response.data;
-  });
+  this.bomService
+    .getAll()
+    .subscribe((response: any) => (this.boms = response.data));
 }
 openbom(content) {
   this.prepareGridbom();
@@ -3284,9 +3482,72 @@ handleSelectedRowsChanged5(e, args) {
       controls.total_bobine.setValue(item.wo_qty_comp);
       controls.wo_qty_ord.setValue(item.wo_qty_ord)
       controls.product_Cyl.setValue(item.pt_group)
-      
+      controls.wo_bom_code.setValue(item.wo_bom_code);
+
+      const paiqty = controls.PAI_ISS.value
+      const prfqty = controls.PRF_ISS.value
+      const sqlqty = controls.SQL_ISS.value
+      const orgqty = controls.ORG_ISS.value
+      let total = 0
+      this.bomService
+        .getBy({
+              bom_parent: controls.wo_bom_code.value,
+        })
+        .subscribe((response: any) => {
+            console.log(response.data)
+            if (!response.data) {
+              alert("Code n'existe pas")
+              controls.ps_parent.setValue("")
+              document.getElementById("code").focus();
+            } else {
+              // controls.desc.setValue(response.data.bom_desc);
+            let formule:any;
+          
+            this.psService.getBy({ps_parent:controls.wo_bom_code.value}).subscribe((ps: any) => {
+              console.log(response.data.bom_batch)
+              formule = ps.data
+              
+              let calc_prev = 0
+              for (var object = 0; object < formule.length; object++) {
+                let calc = 0
+                
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) / Number(response.data.bom_batch)
+                
+                if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'PAILETTE'){ controls.PAI_PREV.setValue(calc )}
+                if (formule[object].ps_ref == 'ORIGINAL'){ controls.ORG_PREV.setValue(calc )}
+                
+              }
+              calc_prev = Number(controls.SQL_PREV.value) + Number(controls.PRF_PREV.value) + Number(controls.PAI_PREV.value) + Number(controls.ORG_PREV.value)
+              
+              
+              })
+             
+            
+            
+              
+              
+            }
+     })
+     this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+      (res: any) => {        
+      this.dataset  = res.data;
+      for (let item of this.dataset){
+        this.itemsService.getByOne({pt_part: item.tr_part  }).subscribe(
+          (respopart: any) => {
+            let calc_iss = 0   
+        if(respopart.data.pt_draw == 'ORIGINAL'){let Orgqty = Number(Number(orgqty) + Number(item.tr_qty_loc));controls.ORG_ISS.setValue(Number(Orgqty))}
+        else{if(respopart.data.pt_draw == 'SQUELETTE'){let Sqlqty = Number(Number(sqlqty) + Number(item.tr_qty_loc));controls.SQL_ISS.setValue(Number(Sqlqty))}
+             else{if(respopart.data.pt_draw == 'PREFORME'){let Prfqty = Number(Number(prfqty) + Number(item.tr_qty_loc));controls.PRF_ISS.setValue(Number(Prfqty))}
+                  else{if(respopart.data.pt_draw == 'PAYETTE'){let Paiqty = Number(Number(paiqty) + Number(item.tr_qty_loc));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
+         
+          calc_iss = Number(controls.SQL_ISS.value) + Number(controls.PRF_ISS.value) + Number(controls.PAI_ISS.value) + Number(controls.ORG_ISS.value)   
+        controls.total_iss.setValue(calc_iss)  })
+      }},)
       //remplir les grids
       controls.wo_nbr.value
+      
       console.log('remplir grid' ,controls.wo_nbr.value)
       this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
         (res: any) => {        
@@ -3376,9 +3637,9 @@ addit() {
   console.log(l.length);
   this.selectedIndexes.forEach((index) => {
     if (index == 0) {
-      l = this.emps[index]["emp_addr"];
+      l = this.emps[index]["emp_fname"];
     } else {
-      l = l + "," + this.emps[index]["emp_addr"];
+      l = l + "," + this.emps[index]["emp_fname"];
     }
     //id: index,
   });

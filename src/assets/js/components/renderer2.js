@@ -454,7 +454,7 @@ var Edelweiss = (function () {
 
               .text('HEURE:' + time, 180, 58);
 
-          const filenamepdf = 'c://lb.lb_ref' + '.pdf';
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
 
           doc.pipe(fs.createWriteStream(filenamepdf));
 
@@ -495,7 +495,7 @@ var Edelweiss = (function () {
                 print(filenamepdf, options).then(console.log);
                 
               });
-            }, 5000);
+            }, 2000);
           
           console.log("all right")
           
@@ -518,15 +518,21 @@ var Edelweiss2 = (function () {
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
           const time = new Date().toLocaleTimeString();
-          console.log('renderer.js')
+          
           doc.text('MACHINE : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('DATE: ' + lb.lb_date, 20, 58);
+              .text('DATE: ' + lb.lb_date, 20, 38);
 
           doc
 
-              .text('PRODUIT :' + lb.lb_desc, 20, 78)
+              .text('PRODUIT :' + lb.lb_desc, 20, 58)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('MIC/LAI :' + lb.lb_type, 20, 78)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('COULEUR :' + lb.lb_ray, 20, 98)
               .font('Helvetica-Bold')
               .fontSize(12)
               .text('SILICONE :' + lb.lb_rmks, 20, 118)
@@ -550,7 +556,7 @@ var Edelweiss2 = (function () {
 
               .text('HEURE:' + time, 180, 58);
 
-          const filenamepdf = 'c://lb.lb_ref' + '.pdf';
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
 
           doc.pipe(fs.createWriteStream(filenamepdf));
 
@@ -591,7 +597,7 @@ var Edelweiss2 = (function () {
                 print(filenamepdf, options).then(console.log);
                 
               });
-            }, 5000);
+            }, 2000);
           
           console.log("all right")
           

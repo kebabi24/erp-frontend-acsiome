@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Création Nomenclature" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Composition formule" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -19,7 +19,7 @@
                     
                     <div class="row">
                         <div class="form-group col-2">
-                            <label class="form-group">Code Nomenclature:</label>
+                            <label class="form-group">Code Formule:</label>
                             <div class="input-group input-group-sm">
     
                                 <input type="text"   id="code"
@@ -97,7 +97,7 @@
         <div>
             <ng-template #contentbom let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choisir Nomenclature </h4>
+                    <h4 class="modal-title">Choisir Formule </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>

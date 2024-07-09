@@ -406,7 +406,7 @@ export class RpBroyageComponent implements OnInit {
       (response: any) => {   
        // this.sos = response.data.soss
         this.dataset = response.data
-      // console.log(this.mvdataset)
+       console.log('RAPPORT',this.dataset)
        this.dataView.setItems(this.dataset);
         
          },

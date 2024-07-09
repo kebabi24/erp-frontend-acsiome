@@ -137,6 +137,9 @@ export class CreateBobineWoComponent implements OnInit {
   product_qualitys: any[] = [];
   product_Cyls: any[] = [];
   
+  produit:any;
+  color:any;
+  miclaise:any;
   shift: any;
   desc2: any;
   dataprinter: [];
@@ -349,6 +352,16 @@ export class CreateBobineWoComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
+          this.itemsService.getByOne({pt_part:args.dataContext.tr_part }).subscribe( 
+            (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type
+                              this.miclaise = reponse.data.pt_article
+                              this.color = reponse.data.pt_break_cat
+                              
+            }
+            
+          )
+
+
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.woForm.controls;
             this.printbuttonState = true;
@@ -363,7 +376,9 @@ export class CreateBobineWoComponent implements OnInit {
             _lb.lb_qty = args.dataContext.tr_qty_loc;
             _lb.lb_um = args.dataContext.tr_um;
             _lb.lb_ld_status = args.dataContext.tr_status;
-            _lb.lb_desc = args.dataContext.tr_desc;
+            _lb.lb_desc = this.produit;
+            _lb.lb_type = this.miclaise;
+            _lb.lb_ray = this.color;
             _lb.lb_printer = this.PathPrinter;
             _lb.lb_grp = controls.emp_shift.value;
             _lb.lb_cust = controls.wo_routing.value;
@@ -2237,7 +2252,12 @@ export class CreateBobineWoComponent implements OnInit {
       if (res.data.wo_status == "C" ){this.message = "vous avez atteint la quantité prevue";
       this.hasFormErrors = true;
       return;}
-    else {this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
+    else {
+      if (controls.total_bobine.value > controls.wo_qty_ord.value ){this.message = "vous avez atteint la quantité prevue";
+      this.hasFormErrors = true;
+      return;}
+      else{
+      this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)
   
@@ -2278,7 +2298,7 @@ export class CreateBobineWoComponent implements OnInit {
     controls.wo_qty_comp.setValue(0);
     
      });
-    }); 
+    }); }
   }})
     
  
@@ -2781,9 +2801,9 @@ export class CreateBobineWoComponent implements OnInit {
     console.log(l.length);
     this.selectedIndexes.forEach((index) => {
       if (index == 0) {
-        l = this.emps[index]["emp_addr"];
+        l = this.emps[index]["emp_fname"];
       } else {
-        l = l + "," + this.emps[index]["emp_addr"];
+        l = l + "," + this.emps[index]["emp_fname"];
       }
       //id: index,
     });

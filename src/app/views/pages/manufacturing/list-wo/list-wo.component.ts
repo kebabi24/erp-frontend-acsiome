@@ -124,6 +124,26 @@ export class ListWoComponent implements OnInit {
            
            
           },
+          {
+            id: "wo_so_job",
+            name: "Programme N°",
+            field: "wo_so_job",
+            sortable: true,
+            width: 50,
+            filterable: true,
+           
+           
+          },
+          {
+            id: "wo_rev",
+            name: "Version N°",
+            field: "wo_rev",
+            sortable: true,
+            width: 50,
+            filterable: true,
+           
+           
+          },
         
           {
             id: "wo_queue_eff",
@@ -165,16 +185,7 @@ export class ListWoComponent implements OnInit {
            
            
           },
-          {
-            id: "wo_rev",
-            name: "Qualité",
-            field: "wo_rev",
-            sortable: true,
-            width: 50,
-            filterable: true,
-           
-           
-          },
+         
           {
             id: "wo_grade",
             name: "cilicone",
@@ -232,17 +243,17 @@ export class ListWoComponent implements OnInit {
             filterable: true,
            
           },
-          {
-            id: "wo_ord_date",
-            name: "Date Création",
-            field: "wo_ord_date",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            formatter: Formatters.dateIso ,
-            type: FieldType.dateIso,
+          // {
+          //   id: "wo_ord_date",
+          //   name: "Date Création",
+          //   field: "wo_ord_date",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   formatter: Formatters.dateIso ,
+          //   type: FieldType.dateIso,
            
-          },
+          // },
          
     
           {
@@ -268,17 +279,17 @@ export class ListWoComponent implements OnInit {
            
           },
     
-          {
-            id: "wo_bom_code",
-            name: "Code Nomenc",
-            field: "wo_bom_code",
-            sortable: true,
+          // {
+          //   id: "wo_bom_code",
+          //   name: "Code Nomenc",
+          //   field: "wo_bom_code",
+          //   sortable: true,
            
-            filterable: true,
-            type: FieldType.string,
+          //   filterable: true,
+          //   type: FieldType.string,
           
             
-          },
+          // },
           {
             id: "wo_routing",
             name: "Gamme",
@@ -292,17 +303,17 @@ export class ListWoComponent implements OnInit {
           },
           
                   
-          {
-            id: "wo_lot_next",
-            name: "Lot/Serie",
-            field: "wo_lot_next",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "wo_lot_next",
+          //   name: "Lot/Serie",
+          //   field: "wo_lot_next",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.string,
           
             
-          },
+          // },
           {
             id: "wo_status",
             name: "Status",
@@ -318,16 +329,16 @@ export class ListWoComponent implements OnInit {
             }
           },
           
-          {
-            id: "wo_rmks",
-            name: "Remarque",
-            field: "wo_rmks",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "wo_rmks",
+          //   name: "Remarque",
+          //   field: "wo_rmks",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.string,
           
-          },
+          // },
          
           {
             id: "wo_prod_pct",
@@ -341,41 +352,41 @@ export class ListWoComponent implements OnInit {
                      
           },
           
-          {
-            id: "wo__dec01",
-            name: "Coût Matiére",
-            field: "wo__dec01",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo__dec01",
+          //   name: "Coût Matiére",
+          //   field: "wo__dec01",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
-          {
-            id: "wo__dec02",
-            name: "Coût Main d'Oeuvre",
-            field: "wo__dec02",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo__dec02",
+          //   name: "Coût Main d'Oeuvre",
+          //   field: "wo__dec02",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
-          {
-            id: "wo__dec03",
-            name: "Coût FG Variable",
-            field: "wo__dec03",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo__dec03",
+          //   name: "Coût FG Variable",
+          //   field: "wo__dec03",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
           
           

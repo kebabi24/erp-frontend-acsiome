@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core"
-import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
+import { NgbDropdownConfig, NgbTabsetConfig, NgbModal, } from "@ng-bootstrap/ng-bootstrap"
 
 // Angular slickgrid
 import {
@@ -8,6 +8,8 @@ import {
     Formatter,
     Editor,
     Editors,
+    AngularGridInstance,
+    FieldType,
 } from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
@@ -25,7 +27,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { Bom, BomService } from "../../../../core/erp"
+import {CodeService, Bom, BomService, MesureService, } from "../../../../core/erp"
 
 @Component({
   selector: 'kt-create-nomenclature',
@@ -33,14 +35,21 @@ import { Bom, BomService } from "../../../../core/erp"
   styleUrls: ['./create-nomenclature.component.scss']
 })
 export class CreateNomenclatureComponent implements OnInit {
-
+    
   bom: Bom
   bomForm: FormGroup
   hasFormErrors = false
   isExist = false
   loadingSubject = new BehaviorSubject<boolean>(true)
   loading$: Observable<boolean>
-
+  data: [];
+  columnDefinitions3: Column[] = [];
+  gridOptions3: GridOption = {};
+  gridObj3: any;
+  angularGrid3: AngularGridInstance;
+  selectedField = "";
+  fieldcode = "";
+error = false;
   constructor(
       config: NgbDropdownConfig,
       private bomFB: FormBuilder,
@@ -48,7 +57,10 @@ export class CreateNomenclatureComponent implements OnInit {
       private router: Router,
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
-      private bomService: BomService
+      private bomService: BomService,
+      private codeService: CodeService,
+      private modalService: NgbModal,
+      private mesureService: MesureService,
   ) {
       config.autoClose = true
   }
@@ -72,6 +84,7 @@ createForm() {
       bom_batch_um: [{ value: this.bom.bom_batch_um, disabled: !this.isExist }],
       bom_formula: [{ value: this.bom.bom_formula, disabled: !this.isExist }],
       bom_rmks: [{ value: this.bom.bom_rmks, disabled: !this.isExist }],
+      bom__chr01: [{ value: this.bom.bom__chr01, disabled: !this.isExist }],
   })
 }
 
@@ -140,6 +153,7 @@ onSubmit() {
      * @param _bom: DeviseModel
      */
     addCode(_bom: Bom) {
+        const controls = this.bomForm.controls;
       this.loadingSubject.next(true)
       this.bomService.add(_bom).subscribe(
           (reponse) => console.log("response", Response),
@@ -162,7 +176,9 @@ onSubmit() {
                   true
               )
               this.loadingSubject.next(false)
-              this.router.navigateByUrl("/manufacturing/codes-list")
+              const bom_parent = controls.bom_parent.value
+              
+              this.router.navigateByUrl(`/manufacturing/edit-ps/${bom_parent}`)
           }
       )
   }
@@ -178,6 +194,118 @@ onSubmit() {
       this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
   }
 
+  angularGridReady3(angularGrid: AngularGridInstance) {
+    this.angularGrid3 = angularGrid;
+    this.gridObj3 = (angularGrid && angularGrid.slickGrid) || {};
+  }
 
+  prepareGrid3() {
+    this.columnDefinitions3 = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
 
+        minWidth: 50,
+        maxWidth: 50,
+      },
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "code_fldname",
+        name: "Champs",
+        field: "code_fldname",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "code_value",
+        name: "Code",
+        field: "code_value",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "code_cmmt",
+        name: "Description",
+        field: "code_cmmt",
+        sortable: true,
+        width: 200,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions3 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.codeService
+      .getBy({ code_fldname: 'pt_um' })
+      .subscribe((response: any) => (this.data = response.data));
+  }
+  open3(content, field) {
+    this.selectedField = field;
+    this.prepareGrid3();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChanged3(e, args) {
+    const controls = this.bomForm.controls;
+   
+
+    if (Array.isArray(args.rows) && this.gridObj3) {
+      args.rows.map((idx) => {
+        const item = this.gridObj3.getDataItem(idx);
+        // TODO : HERE itterate on selected field and change the value of the selected field
+        controls.bom_batch_um.setValue(item.code_value)
+      });
+    }
+  }
+  changeUm() {
+    const controls = this.bomForm.controls; // chof le champs hada wesh men form rah
+    const um_um = controls.bom_batch_um.value;
+    this.mesureService.getBy({ um_um }).subscribe(
+      (res: any) => {
+        const { data } = res;
+        if (!data) {
+          this.layoutUtilsService.showActionNotification(
+            "cette unite de mesure n'existe pas!",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.error = true;
+        } else {
+          this.error = false;
+        }
+      },
+      (error) => console.log(error)
+    );
+  }
 }

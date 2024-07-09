@@ -187,7 +187,7 @@
                         <input type="text" class="form-control form-control-sm form-control-solid" formControlName="desc" />
                       </div>
                     </div>
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                       <label class="form-group">choix de l'imprimante</label>
                       <div class="input-group input-group-sm">
                         <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
@@ -195,7 +195,25 @@
                           <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
                         </div>
                       </div>
+                    </div> -->
+                    <div class="form-group col-2">
+                      <label class="form-group">Code Nomenclature:</label>
+                      <div class="input-group input-group-sm">
+
+                          <input type="text"   id="wo_bom_code"
+                              [className]="woForm.controls['wo_bom_code'].errors && (woForm.controls['wo_bom_code'].dirty || woForm.controls['wo_bom_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                              formControlName="wo_bom_code" (change)="onChangeBomCode()" aria-describedby="basic-addon2">
+                          <div class="input-group-append">
+                              <span class="input-group-text" (click)=openbom(contentbom)>
+                                  <i class="text-dark-50 flaticon2-search"></i> </span>
+                          </div>
+
+                          <div *ngIf="woForm.controls['wo_bom_code'].errors && (woForm.controls['wo_bom_code'].dirty || woForm.controls['wo_bom_code'].touched)"
+                              class="invalid-feedback">Ce Champs est obligatoire</div>
+                      </div>
                     </div>
+
+                
           
                     <div class="form-group col-3">
                       <label class="form-group">Démarrer:</label>
@@ -204,6 +222,111 @@
                       </div>
                     </div>
                   </div>
+<div class="row">
+  <div class="form-group col-1">
+    <label class="form-group">Original prévu:</label>
+    <div class="input-group input-group-sm">
+
+        <input type="number" class="form-control form-control-solid"  formControlName="ORG_PREV" 
+            aria-describedby="basic-addon2" >
+        
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Consommé:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="ORG_ISS" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Squelette prévu:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="SQL_PREV" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Consommé:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="SQL_ISS" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group"> Preforme prévu:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="PRF_PREV" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Consommé:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="PRF_ISS" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Paillette prévu:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="PAI_PREV" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Consommé:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="PAI_ISS" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Total prévu:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="total_prev" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+  <div class="form-group col-1">
+    <label class="form-group">Total Consommé:</label>
+    <div class="input-group input-group-sm">
+
+      <input type="number" class="form-control form-control-solid"  formControlName="total_iss" 
+          aria-describedby="basic-addon2" >
+      
+    </div>
+
+  </div>
+
+</div>
+
+
                       <div class="row">
 
                         <div class="form-group col-3">
@@ -425,6 +548,32 @@
               modal</button>
     
           </div>
+          <div>
+            <ng-template #contentbom let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Nomenclature </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridbom"
+                            [columnDefinitions]="columnDefinitionsbom"
+                            (onAngularGridCreated)="angularGridReadybom($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedbom($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsbom" [dataset]="boms">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openBomsGrid" class="btn btn-primary" (click)="openbom(contentbom)">Launch demo
+                modal</button>
+        </div>
         </kt-portlet-body>
       </kt-portlet>
       

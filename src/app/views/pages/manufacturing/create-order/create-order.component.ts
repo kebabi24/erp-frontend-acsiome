@@ -1156,7 +1156,7 @@ export class CreateOrderComponent implements OnInit {
         const item = this.gridObjbom.getDataItem(idx);
         
      
-        updateItem.wo_bom_code = item.bom_parent;
+        updateItem.wo_bom_code = item.ptb_bom;
       
         this.gridService.updateItem(updateItem);
      
