@@ -228,6 +228,10 @@ export class MenuConfig {
               page: "/providers/create-rep",
             },
             {
+              title: "Répertoire Fournisseurs Métier",
+              page: "/providers/create-rep-job",
+            },
+            {
               title: "Liste Répertoire Fournisseurs",
               page: "/providers/list-rep",
             },
@@ -784,8 +788,17 @@ export class MenuConfig {
               page: "/sales/list-invoices",
             },
             {
+              title: "Ajouter Facture DD",
+              page: "/sales/create-inv-mob",
+            },
+            
+            {
               title: "Liste des Factures DD",
               page: "/sales/list-invoice-mob",
+            },
+            {
+              title: "Liste des Ventes DD",
+              page: "/sales/list-sales-dd",
             },
             {
               title: "Liste des Paiement DD",
@@ -1060,6 +1073,26 @@ export class MenuConfig {
             {
               title: "Calcule paie",
               page: "/accounting-setting/employe-salary",
+            },
+          ],
+        },
+        {
+          title: "Gestion Des Formations",
+          bullet: "dot",
+          icon: "flaticon-event-calendar-symbol",
+          root: true,
+          submenu: [
+            {
+              title: "Création Formation",
+              page: "/training/create-training",
+            },
+            {
+              title: "Modification Des Formation",
+              page: "/training/update-training",
+            },
+            {
+              title: "Liste Des Formations",
+              page: "/training/list-training",
             },
           ],
         },
@@ -1793,7 +1826,34 @@ export class MenuConfig {
                 },
               ],
             },
-
+            {
+              title: "Parametrage des Formation",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Domaine de Formation",
+                  page: "/training/create-training-domain",
+                },
+                {
+                  title: "Liste des Domaines de Formation",
+                  page: "/training/list-domain",
+                },
+                {
+                  title: "Rubrique de Formation",
+                  page: "/training/create-training-section",
+                },
+                {
+                  title: "Liste des Domaines de Formation",
+                  page: "/training/list-section",
+                },
+                {
+                  title: "Demande de Formation",
+                  page: "/training/create-training-request",
+                },
+              ],
+            },
             {
               title: "Configuration Module",
               page: "/config/maint-config",

@@ -12,8 +12,9 @@ import {
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MenuConfig } from "../../../../core/_config/menu.config";
-
+import { MenuConfig } from '../../../../core/_config/menu.config'
+import { MenuTrConfig } from '../../../../core/_config/menuTr.config'
+import { MenuMobileConfig } from '../../../../core/_config/menuMobile.config'
 // Layout
 import {
   SubheaderService,
@@ -33,7 +34,7 @@ import {
 } from "@circlon/angular-tree-component";
 
 import { Profile, UsersService } from "../../../../core/erp";
-
+import { environment } from "../../../../../environments/environment";
 const actionMapping: IActionMapping = {
   mouse: {
     click: (tree, node, $event) => {
@@ -81,7 +82,10 @@ export class EditProfileComponent implements OnInit {
       this.id = params.id;
       if (this.id) {
         const controls = this.profileForm.controls;
-        const menus = new MenuConfig().defaults;
+        var app = environment.App
+       
+        const menus = (app=="RH") ? new MenuTrConfig().defaults : (app=="ERP") ? new MenuConfig().defaults : new MenuMobileConfig().defaults
+console.log("menu", menus)
         menus.aside.items.map(obj=>{
           if(obj.title){
               const node : any = {}
@@ -105,10 +109,11 @@ export class EditProfileComponent implements OnInit {
               
               this.nodes.push(node)
           }
+         // console.log("node",this.nodes)
       })
         this.profileService.getProfile(this.id).subscribe(
           (res: any) => {
-            console.log("aa", res.data);
+           // console.log("aa", res.data);
             this.prf = res.data
             controls.usrg_code.setValue(this.prf.usrg_code)
             controls.usrg_description.setValue(this.prf.usrg_description)
@@ -131,7 +136,8 @@ export class EditProfileComponent implements OnInit {
                  
           })
             this.roles = JSON.parse(res.data.usrg_menus)
-            const menus = new MenuConfig().defaults;
+           //console.log(JSON.parse(res.data.usrg_menus))
+            //const menus = new MenuConfig().defaults;
            this.selectedMenus = this.roles
             
             // controls.usrd_code.setValue(this.users.usrd_code);
@@ -161,7 +167,7 @@ export class EditProfileComponent implements OnInit {
     event.treeModel.nodes.map(node=>{
       if(this.roles.filter(elem=>elem==node.name)[0]){
         const node_ = event.treeModel.getNodeById(node.id)
-        node_.setIsSelected(true)
+        // node_.setIsSelected(true)
       }
       node.children.map(node=>{
         if(this.roles.filter(elem=>elem==node.name)[0]){
@@ -195,7 +201,7 @@ export class EditProfileComponent implements OnInit {
   }
   // save data
   onSubmit() {
-    console.log('aaa')
+  //  console.log('aaa')
 
     this.hasFormErrors = false;
     const controls = this.profileForm.controls;
@@ -210,7 +216,7 @@ export class EditProfileComponent implements OnInit {
    * Returns object for saving
    */
   prepareProfile(): Profile {
-    console.log('aaa')
+    //console.log('aaa')
 
     const controls = this.profileForm.controls;
     const _profile = new Profile();
@@ -222,7 +228,7 @@ export class EditProfileComponent implements OnInit {
     _profile.usrg_val_en_date = controls.usrg_val_en_date.value
       ? `${controls.usrg_val_en_date.value.year}/${controls.usrg_val_en_date.value.month}/${controls.usrg_val_en_date.value.day}`
       : null;
-    console.log(this.selectedMenus)
+   // console.log(this.selectedMenus)
     _profile.usrg_menus = JSON.stringify(this.selectedMenus);
 
     return _profile;

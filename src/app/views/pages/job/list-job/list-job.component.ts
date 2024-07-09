@@ -117,15 +117,7 @@ export class ListJobComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
         },
-          {
-              id: "jbd_desc",
-              name: "Designation",
-              field: "jbd_desc",
-              sortable: true,
-              width: 200,
-              filterable: true,
-              type: FieldType.string,
-          },
+          
           {
             id: "jbd_level",
             name: "Niveau",

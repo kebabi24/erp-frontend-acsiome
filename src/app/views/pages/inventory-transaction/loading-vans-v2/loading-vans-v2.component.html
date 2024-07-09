@@ -19,9 +19,7 @@
               <label class="form-group">Rôle:</label>
               <select (change)="onSelectRole($event.target.value)" name="role_code" id="role_code" formControlName="role_code" class="form-control form-control-sm form-control-solid">
                 <option value=""></option>
-                <option *ngFor="let elem of roles" [value]="elem.role_code">
-                  {{ elem.role_code }}
-                </option>
+                <option *ngFor="let elem of roles" [value]="elem.role_code">{{ elem.role_code }} {{ elem.role_name }}</option>
               </select>
             </div>
             <div class="col-3">

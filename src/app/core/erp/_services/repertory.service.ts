@@ -24,6 +24,10 @@ export class RepertoryService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
+    public addJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/Job`, data, { headers: httpHeaders })
+    }
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -36,6 +40,10 @@ export class RepertoryService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })   
+    }
+    public getByJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findJob`,data, { headers: httpHeaders })   
     }
     public getByAddress(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

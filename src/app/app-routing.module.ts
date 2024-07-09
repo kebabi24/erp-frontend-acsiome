@@ -188,6 +188,10 @@ const routes: Routes = [
         path: "revenue-transfer",
         loadChildren: () => import("./views/pages/revenue-transfer/revenue-transfer.module").then((m) => m.RevenueTransferModule),
       },
+      {
+        path: "training",
+        loadChildren: () => import("./views/pages/training/training.module").then((m) => m.TrainingModule),
+      },
 
       // {
       //   path: 'config',

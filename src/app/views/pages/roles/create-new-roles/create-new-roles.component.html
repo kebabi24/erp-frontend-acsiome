@@ -86,18 +86,16 @@
                     <div class="row">
 
                         <div class="form-group col-3">
-                            <label class="form-group">Role controleur: *</label>
+                            <label class="form-group">Role controleur: </label>
                             <div class="input-group input-group-sm">
 
                                 <input type="text" formControlName="controller_role" 
-                                    [className]="roleForm.controls['controller_role'].errors && (roleForm.controls['controller_role'].dirty || roleForm.controls['controller_role'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    aria-describedby="basic-addon2">
+                                class="form-control form-control-sm form-control-solid"  aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" (click)="open3(content3)">
                                         <i class="text-dark-50 flaticon2-search"></i> </span>
                                 </div>
-                                <div *ngIf="roleForm.controls['controller_role'].errors && (roleForm.controls['controller_role'].dirty || roleForm.controls['controller_role'].touched)"
-                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                               
                             </div>   
                         </div>
 

@@ -415,6 +415,13 @@ export class ListServiceComponent implements OnInit {
           sanitizeDataExport: true
         },
        
+        presets: {
+       
+          sorters: [
+          
+            { columnId: 'service_code', direction: 'ASC' }
+          ],
+        },
         //enableRowSelection: true,
         //enableCellNavigation: true,
         

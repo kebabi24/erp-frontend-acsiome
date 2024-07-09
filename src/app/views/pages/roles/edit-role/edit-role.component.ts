@@ -194,7 +194,7 @@ export class EditRoleComponent implements OnInit {
       user_mobile_code: [this.roleEdit.user_mobile_code, Validators.required],
       device_id: [this.roleEdit.device_id, Validators.required],
 
-      controller_role: [this.roleEdit.controller_role, Validators.required],
+      controller_role: [this.roleEdit.controller_role],
       upper_role_code: [this.roleEdit.upper_role_code, Validators.required],
 
       token_serie_code: [this.roleEdit.token_serie_code, Validators.required],

@@ -33,7 +33,7 @@
                     Code service : {{ service.item.service_code }} {{ service.item.role_code }} <br />
                     <div *ngIf="service.clients[0].customer_display">
                       <div *ngFor="let customer of mockCustomers">
-                        <span>{{ customer.customer_name }}</span>
+                        <span>{{ customer.customer_code }} {{ customer.customer_name }}</span>
                       </div>
                     </div>
                   </mat-radio-button>

@@ -108,12 +108,16 @@ export class TransferChargeDemandeToDeliveryComponent implements OnInit {
             true
         )
         this.loadingSubject.next(false)
+        this.reset()
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
     }
     )
 
   }
-
+reset(){
+  this.loadRequests=[]
+  this.dataView.setItems(this.loadRequests)
+}
   goBack() {
     this.loadingSubject.next(false)
     const url = `/service`
@@ -225,26 +229,7 @@ updateItemMetadata(previousItemMetadata: any) {
 
 prepareGrid() {
   this.columnDefinitions = [
-            {
-              id: 'delete',
-              field: 'id',
-              excludeFromColumnPicker: true,
-              excludeFromGridMenu: true,
-              excludeFromHeaderMenu: true,
-              formatter: Formatters.infoIcon,
-              minWidth: 30,
-              maxWidth: 30,
-              onCellClick: (e: Event, args: OnEventArgs) => {
-                const loadRequestCode = this.gridService.getDataItemByRowIndex(args.row).load_request_code
-                this.selectedLoadRequest= loadRequestCode
-                let element: HTMLElement = document.getElementById(
-                  "detailsGrid"
-                  ) as HTMLElement;
-                  element.click();
             
-              }
-              
-            },
             {
                 id: "load_request_code",
                 name: "N° BC ",
@@ -305,6 +290,26 @@ prepareGrid() {
               maxWidth: 100,
               filterable: true,  
               type: FieldType.string, 
+            },
+            {
+              id: 'delete',
+              field: 'id',
+              excludeFromColumnPicker: true,
+              excludeFromGridMenu: true,
+              excludeFromHeaderMenu: true,
+              formatter: Formatters.infoIcon,
+              minWidth: 30,
+              maxWidth: 30,
+              onCellClick: (e: Event, args: OnEventArgs) => {
+                const loadRequestCode = this.gridService.getDataItemByRowIndex(args.row).load_request_code
+                this.selectedLoadRequest= loadRequestCode
+                let element: HTMLElement = document.getElementById(
+                  "detailsGrid"
+                  ) as HTMLElement;
+                  element.click();
+            
+              }
+              
             },
       ]
 

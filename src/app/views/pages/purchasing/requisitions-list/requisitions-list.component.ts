@@ -241,6 +241,7 @@ draggableGroupingPlugin: any;
     this.dataset = [];
     this.requisitionService.getAll().subscribe(
       (response: any) => {this.dataset = response.data
+        console.log(this.dataset)
       this.dataView.setItems(this.dataset)},
       (error) => {
         this.dataset = [];

@@ -56,6 +56,7 @@ import { CreateMessageComponent } from "./create-message/create-message.componen
 import { DashboardServiceComponent } from "./dashboard-service/dashboard-service.component";
 import { MatRadioModule } from "@angular/material/radio";
 import { ValidateLrSupComponent } from './validate-lr-sup/validate-lr-sup.component';
+import { CreateLrSupComponent } from './create-lr-sup/create-lr-sup.component';
 
 const routes: Routes = [
   {
@@ -76,6 +77,10 @@ const routes: Routes = [
     component: CreateLoadRequestComponent,
   },
   {
+    path: "create-lr-sup",
+    component: CreateLrSupComponent,
+  },
+  {
     path: "list-diff-loadrequest",
     component: ListDiffLoadrequestComponent,
   },
@@ -93,7 +98,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent],
+  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent],
   imports: [
     CommonModule,
     HttpClientModule,

@@ -201,7 +201,7 @@ export class ProductPageCreateComponent implements OnInit {
     }
 
     prepareGrid() {
-      this.itemService.getAll().subscribe(
+      this.itemService.getBy({pt_salable:true}).subscribe(
         (response: any) => {
           this.dataset = response.data
           this.dataView.setItems(this.dataset)
@@ -469,7 +469,9 @@ export class ProductPageCreateComponent implements OnInit {
           reponse['products_codes'].forEach(prod => {
             const index = this.getIndexOfProduct(prod.product_code)
             this.selectedProductsIndexes.push(index)
+          
           });
+          console.log("this.selectedProductsIndexes",this.selectedProductsIndexes)
           this.grid.setSelectedRows(this.selectedProductsIndexes);
           controls.description.setValue(page.description)
           this.pageIsEdited = true

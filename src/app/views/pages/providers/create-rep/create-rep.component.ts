@@ -456,6 +456,18 @@ prepareGridcust() {
         rowSelectionOptions: {
             selectActiveRow: true,
         },
+        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+          var val = undefined;
+          try {
+            val = eval("item." + column.field);
+          } catch (e) {
+            // ignore
+          }
+          return val;
+        },
+
+
+
     }
 
     // fill the dataset with your data

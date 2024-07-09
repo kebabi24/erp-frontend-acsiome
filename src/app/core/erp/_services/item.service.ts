@@ -26,6 +26,10 @@ export class ItemService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, item, { headers: httpHeaders })
     }
+    public adddetail(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/detail', data, { headers: httpHeaders })
+    }
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -34,6 +38,10 @@ export class ItemService {
     public getOne(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
+    public getOneDet(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/det/${id}`, { headers: httpHeaders })
     }
     public getStk(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -115,6 +123,24 @@ export class ItemService {
     public CalcCmp(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/calccmp`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
+    public getByDetTr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/finddettr`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
+    public updateDet(data: any, id:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/updated/${id}`, data, { headers: httpHeaders })
+    }
+    public getByJob(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findjob`,data, { headers: httpHeaders })
 
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         

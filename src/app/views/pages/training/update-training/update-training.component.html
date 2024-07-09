@@ -1,0 +1,42 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Modification des Fromations'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridtr" [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+    <div>
+        <ng-template #content4 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Détail</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="350" gridId="griditem" 
+              [columnDefinitions]="columnDefinitions1" 
+              (onAngularGridCreated)="angularGridReady1($event)"
+               [gridOptions]="gridOptions1" [dataset]="datadet"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openDetsGrid" class="btn btn-primary" (click)="openDet(content4)">Launch demo modal</button>
+      </div>
+</kt-portlet>

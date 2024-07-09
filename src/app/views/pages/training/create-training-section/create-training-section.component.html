@@ -1,0 +1,95 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Rubrique Formation'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+
+
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">Sauvgarder et quitter</button>
+
+                </div>
+            </div>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        <div class="example-preview">
+        <div class="row">
+            
+        </div>
+
+        <br/>
+        <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter Rubrique</button>
+            <br><br><br>
+            <span>Liste des Rubriques de Formation</span>
+            <br><br>
+        <div class="row">
+          <angular-slickgrid class="col-6"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+          (onAngularGridCreated)="angularGridReady($event)"
+              [gridOptions]="gridOptions" [dataset]="dataset"
+              (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData,$event.detail.args)"
+              >
+          </angular-slickgrid>
+          <angular-slickgrid class="col-6 "  gridId="gridLines" [columnDefinitions]="columnDefinitionstr"
+          (onAngularGridCreated)="angularGridReadytr($event)"
+          [gridOptions]="gridOptionstr" [dataset]="datasettr"
+              >
+          </angular-slickgrid>
+        </div>
+        <!--(sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"-->
+        </div>
+        
+        
+    
+            
+
+    </kt-portlet-body>
+    <div>
+        <ng-template #content5 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Une erreur s'est produite</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <span>Voulez vous vraiment Supprimer ce Domaine</span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Non</button>
+            <button type="button" class="btn btn-primary" (click)="confirmDeleting()">Oui</button>
+          </div>
+        </ng-template>
+        <button hidden id="openDeletesGrid" class="btn btn-primary" (click)="openDelete(content5)">Launch demo modal</button>
+      </div>
+      <div>
+        <ng-template #content4 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Domaine</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" 
+              [columnDefinitions]="columnDefinitions1" 
+              (onAngularGridCreated)="angularGridReady1($event)"
+              (sgOnSelectedRowsChanged)="handleSelectedRowsChanged1($event.detail.eventData, $event.detail.args)" 
+              [gridOptions]="gridOptions1" [dataset]="codes"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openCodesGrid" class="btn btn-primary" (click)="openCode(content4)">Launch demo modal</button>
+      </div>
+  
+</kt-portlet>

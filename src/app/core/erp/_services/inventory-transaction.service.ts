@@ -50,6 +50,12 @@ export class InventoryTransactionService {
     
         
     }
+    public addTrV(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/iss-trv', data, { headers: httpHeaders })
+    
+        
+    }
     public addIssChl(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/iss-chl', data, { headers: httpHeaders })

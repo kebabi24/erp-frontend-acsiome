@@ -93,7 +93,7 @@ export class EditUserMobileComponent implements OnInit {
         this.userForm = this.userFB.group({
             user_mobile_code: [{value: this.userMobileEdit.user_mobile_code, disabled : false}, Validators.required],
             username: [{value: this.userMobileEdit.username, disabled : false}, Validators.required],
-            //fullname: [{value: this.userMobileEdit.fullname, disabled : true}],
+            user_phone: [{value: this.userMobileEdit.user_phone, disabled : true}],
             //email: [{value: this.userMobileEdit.email, disabled : false}],
             password: [{value: this.userMobileEdit.password}, Validators.required],
             new_password: [{value: ""}],
@@ -143,7 +143,7 @@ export class EditUserMobileComponent implements OnInit {
         const _userMobile = new UserMobile()
         _userMobile.user_mobile_code =   controls.user_mobile_code.value
         _userMobile.username =   controls.username.value
-        //_userMobile.fullname = controls.fullname.value
+        _userMobile.user_phone = controls.user_phone.value
         _userMobile.profile_code =   this.profile_code
         // _userMobile.email =   controls.email.value 
         _userMobile.hold =   controls.hold.value

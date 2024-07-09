@@ -148,7 +148,7 @@ export class CreateVendorPaymentComponent implements OnInit {
     ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
     : null;
     const role_code = controls.role_code.value
-    this.mobileServiceService.getBy({role_code,service_period_activate_date,service_open: false}).subscribe(
+    this.mobileServiceService.getBy({role_code,service_period_activate_date,service_open: false,service_versement_open:true}).subscribe(
         
         (response: any) => {
           console.log("ser",response.data)
@@ -165,6 +165,7 @@ export class CreateVendorPaymentComponent implements OnInit {
   onSelectRole(role_code){
     this.prepareService()
     this.role_code = role_code
+  
     // let index = this.roles.findIndex((role)=>{return role.role_code === role_code})
     
     // this.mobileServiceService.getByOne({user_mobile_code :this.roles[index].user_mobile_code }).subscribe(
@@ -177,23 +178,24 @@ export class CreateVendorPaymentComponent implements OnInit {
 
     const controls = this.rvForm.controls
 
-    let index = this.services.findIndex((service)=>{return service.role_code === controls.role_code.value})
+    let index = this.services.findIndex((service)=>{return service.service_code === controls.service_code.value})
     console.log(this.services[index])
-
-    this.mobileSettingsService.getAllPaymentService({service_code: controls.service_code.value}).subscribe(
-      (response: any) => {   
+    controls.montant_rl.setValue(this.services[index].sum_paiement) 
+    controls.user_mobile_code.setValue(this.services[index].user_mobile_code) 
+  //   this.mobileSettingsService.getAllPaymentService({service_code: controls.service_code.value}).subscribe(
+  //     (response: any) => {   
        
-       console.log(response.data)
-       controls.montant_rl.setValue(response.data[0].amt)
+  //      console.log(response.data)
+  //      controls.montant_rl.setValue(response.data[0].amt) sum_paiement
       
      
         
-         },
-      (error) => {
-        controls.montant_tr.setValue(0)
-      },
-      () => {}
-  )
+  //        },
+  //     (error) => {
+  //       controls.montant_tr.setValue(0)
+  //     },
+  //     () => {}
+  // )
   }
   
 
@@ -214,6 +216,7 @@ export class CreateVendorPaymentComponent implements OnInit {
       ],
       
       role_code : ["", Validators.required],
+      user_mobile_code : [{value:"",disabled:true}],
       service_code : ["", Validators.required],
 
       montant_rl: [
@@ -223,7 +226,12 @@ export class CreateVendorPaymentComponent implements OnInit {
       montant_tr: ["", Validators.required],
       
     });
-
+    const controls = this.rvForm.controls
+    this.bankService
+    .getBy({bk_user1:this.user.usrd_code})
+    .subscribe((response: any) => {
+      console.log(response.data.bank)
+  controls.bank_code.setValue(response.data.bank.bk_code)});
    
   }
 

@@ -46,7 +46,7 @@ export class CreateLoadRequestComponent implements OnInit {
   gridOptionsld: GridOption = {};
   gridObjld: any;
   angularGridld: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer) {
+  constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer,private roleService: RoleService) {
     config.autoClose = true;
   }
 
@@ -226,7 +226,7 @@ export class CreateLoadRequestComponent implements OnInit {
 
   // GET ROLES OF THE SUPERVISOR
   prepareRoles() {
-    this.loadRequestService.getRoles(this.user.usrd_code).subscribe(
+    this.roleService.getAllRoles().subscribe(
       (response: any) => {
         this.roles = response.data;
         console.log(this.roles);

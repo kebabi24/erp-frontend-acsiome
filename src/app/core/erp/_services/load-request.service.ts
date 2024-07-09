@@ -33,6 +33,10 @@ export class LoadRequestService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL_2}/getLoadRequestLineInfo/${load_request_code}`, { headers: httpHeaders });
   }
+  public getLoadRequestLineInfoDif(load_request_code: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL_2}/getLoadRequestLineInfodif/${load_request_code}`, { headers: httpHeaders });
+  }
 
   // CREATE PRODUCT PAGE
   public createProductPage(productPage: any, productsCodes: any) {
