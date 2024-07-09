@@ -15,7 +15,7 @@
 
                 <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
-                    Ce Lot nexiste pas
+                    {{ message }}
                 </kt-alert>
 
                 <div class="row">
@@ -166,6 +166,15 @@
 
 
                     </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Décision:</label>
+                        <select class="form-control form-control-sm form-control-solid" formControlName="tr_user1" id="id_act" >
+                          <option value=""></option>
+                          <option *ngFor="let elem of acts" [value]="elem.code_value">
+                            {{ elem.code_cmmt }}
+                          </option>
+                        </select>
+                      </div>
                 </div>
 
             </form>

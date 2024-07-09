@@ -50,7 +50,9 @@ import { HttpUtilsService } from "../../../../core/_base/crud"
 import { HttpClient } from "@angular/common/http"
 import { environment } from "../../../../../environments/environment"
 const API_URL = environment.apiUrl + "/inventory-status"
-
+const API_URL_codes = environment.apiUrl + "/codes"
+const API_URL_RSN = environment.apiUrl + "/reasons"
+ 
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
 
@@ -264,7 +266,36 @@ export class EditLdStatusComponent implements OnInit {
              
             },
           }, 
-
+          {
+            id: "ld_user2",
+            name: "Raison",
+            field: "ld_user2",
+           
+            type: FieldType.string,
+            editor: {
+              model: Editors.singleSelect,
+    
+              enableRenderHtml: true,
+              collectionAsync:  this.http.get(`${API_URL_RSN}/rsn`) /*'api/data/pre-requisites')*/ ,
+          
+             
+            },
+          }, 
+          {
+            id: "ld_user1",
+            name: "Décision",
+            field: "ld_user1",
+           
+            type: FieldType.string,
+            editor: {
+              model: Editors.singleSelect,
+    
+              enableRenderHtml: true,
+              collectionAsync:  this.http.get(`${API_URL_codes}/act`) /*'api/data/pre-requisites')*/ ,
+          
+             
+            },
+          }, 
       ]
 
       this.gridOptions = {

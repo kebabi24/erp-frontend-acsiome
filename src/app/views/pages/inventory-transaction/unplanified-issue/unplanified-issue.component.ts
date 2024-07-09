@@ -136,7 +136,7 @@ export class UnplanifiedIssueComponent implements OnInit {
     gridOptionsum: GridOption = {};
     gridObjum: any;
     angularGridum: AngularGridInstance;
-  
+    globalState: boolean = false;
     statuss: [];
     columnDefinitionsstatus: Column[] = [];
     gridOptionsstatus: GridOption = {};
@@ -854,6 +854,7 @@ export class UnplanifiedIssueComponent implements OnInit {
     }
     // save data
     onSubmit() {
+      this.globalState = true;
       this.hasFormErrors = false;
       const controls = this.trForm.controls;
       
@@ -1231,6 +1232,7 @@ export class UnplanifiedIssueComponent implements OnInit {
     }
     onAlertClose($event) {
       this.hasFormErrors = false;
+      this.globalState=false
     }
     handleSelectedRowsChangedsite(e, args) {
         let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
@@ -1508,12 +1510,13 @@ export class UnplanifiedIssueComponent implements OnInit {
               const { data } = res;
     
             if (data) {
-              this.message = "mouvement interdit dans cet emplacement";
-              this.hasFormErrors = true;
-              return;
               updateItem.tr_serial = null;
               updateItem.tr_expire = null;
               updateItem.qty_oh = 0;
+              this.message = "mouvement interdit dans cet emplacement";
+              this.hasFormErrors = true;
+              return;
+              
 
             }else {
               updateItem.tr_serial = item.ld_lot;

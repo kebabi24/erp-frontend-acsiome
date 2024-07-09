@@ -1209,12 +1209,16 @@ export class MenuConfig {
                   page: "/manufacturing/create-ps",
                 },
                 {
-                  title: "Liste des Nomenclatures",
+                  title: "Liste des Formules",
                   page: "/manufacturing/list-ps",
                 },
                 {
-                  title: "Affectation Nomenclature",
+                  title: "Affectation Formules",
                   page: "/manufacturing/affect-bom",
+                },
+                {
+                  title: "Liste des affectations Formules",
+                  page: "/manufacturing/list-ptb", 
                 },
                 {
                   title: "Calcul coût des Nomenclatures",

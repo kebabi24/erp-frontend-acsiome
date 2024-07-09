@@ -134,6 +134,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
   //    so__chr01: [this.saleOrder.so__chr01],
       tagnbr:  [""],   
       new: [false],
+      ref:[""],   
     });
 
     
@@ -168,7 +169,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
         console.log(resp.data)
             if (resp.data) {
      
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , description: resp.data.pt_desc1  })
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , description: resp.data.pt_desc1, tag_site: resp.data.pt_site, tag_loc:resp.data.pt_loc  })
 
       
       
@@ -201,9 +202,31 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
         },
       },
       {
+        id: "description",
+        name: "Description",
+        field: "description",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        // editor: {
+        //   model: Editors.text,
+        // },
+      },
+      {
         id: "tag_serial",
         name: "Lot",
         field: "tag_serial",
+        minWidth: 100,
+        maxWidth: 100,
+        selectable: true,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "tag_ref",
+        name: "BIG BAG",
+        field: "tag_ref",
         minWidth: 100,
         maxWidth: 100,
         selectable: true,
@@ -233,17 +256,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
           model: Editors.text,
         },
       },
-      {
-        id: "description",
-        name: "Description",
-        field: "item.pt_desc1",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-      },
+      
       {
         id: "tag_cnt_qty",
         name: "Qte Comptee",
@@ -284,7 +297,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
 
     this.gridOptions = {
       asyncEditorLoading: false,
-      
+      enableFiltering:true,
       editable: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
@@ -445,7 +458,9 @@ console.log(this.bool)
     
         
         updateItem.tag_part = item.pt_part;
-        updateItem.desc = item.pt_desc1;
+        updateItem.description = item.pt_desc1;
+        updateItem.tag_loc = item.pt_loc;
+        updateItem.tag_site = item.pt_site;
         this.gridService.updateItem(updateItem);
       });
     }

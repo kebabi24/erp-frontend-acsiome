@@ -49,6 +49,10 @@ export class CreateNomenclatureComponent implements OnInit {
   angularGrid3: AngularGridInstance;
   selectedField = "";
   fieldcode = "";
+  product_colors: any[] = [];
+  product_types: any[] = [];
+  
+  message:any;
 error = false;
   constructor(
       config: NgbDropdownConfig,
@@ -68,6 +72,8 @@ error = false;
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
     this.createForm()
+    this.getProductColors();
+    this.getProductTypes();
 }
 //create form
 createForm() {
@@ -84,8 +90,10 @@ createForm() {
       bom_batch_um: [{ value: this.bom.bom_batch_um, disabled: !this.isExist }],
       bom_formula: [{ value: this.bom.bom_formula, disabled: !this.isExist }],
       bom_rmks: [{ value: this.bom.bom_rmks, disabled: !this.isExist }],
-      bom__chr01: [{ value: this.bom.bom__chr01, disabled: !this.isExist }],
+      product_type: ["", Validators.required],
+      product_color: ["", Validators.required],
   })
+  
 }
 
 onChangeCode() {
@@ -145,6 +153,8 @@ onSubmit() {
       _bom.bom_batch_um = controls.bom_batch_um.value
       _bom.bom_formula = controls.bom_formula.value
       _bom.bom_rmks = controls.bom_rmks.value
+      _bom.bom__chr01 = controls.product_type.value
+      _bom.bom__chr02 = controls.product_color.value
       return _bom
   }
 /**
@@ -286,6 +296,40 @@ onSubmit() {
       });
     }
   }
+  getProductColors() {
+    
+    this.codeService
+    .getBy({
+      code_fldname: "pt_break_cat",
+    })
+    .subscribe((response: any) => {
+      const { data } = response;
+      this.product_colors = data;
+      if (!data) {
+        this.message = "veuillez verifier la connexion";
+        this.hasFormErrors = true;
+        return;
+        // controls.wo_site.setValue("");
+      }
+    });
+}
+
+getProductTypes() {
+  this.codeService
+    .getBy({
+      code_fldname: "pt_draw",
+    })
+    .subscribe((response: any) => {
+      const { data } = response;
+      this.product_types = data;
+      if (!data) {
+        this.message = "veuillez verifier votre connexion";
+        this.hasFormErrors = true;
+        return;
+        // controls.wo_site.setValue("");
+      }
+    });
+}
   changeUm() {
     const controls = this.bomForm.controls; // chof le champs hada wesh men form rah
     const um_um = controls.bom_batch_um.value;

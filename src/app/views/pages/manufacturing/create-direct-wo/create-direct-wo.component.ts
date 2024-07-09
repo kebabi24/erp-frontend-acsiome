@@ -1518,7 +1518,7 @@ export class CreateDirectWoComponent implements OnInit {
       //   const { data } = response;
       console.log(response.data);
       if (response.data == null) {
-        
+         
         controls.wo_routing.setValue(null);
         document.getElementById("wo_routing").focus();
       }

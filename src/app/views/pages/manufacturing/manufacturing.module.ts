@@ -96,6 +96,10 @@ const routes: Routes = [
     component: ListWoComponent,
   },
   {
+    path: "list-ptb",
+    component: ListPtbComponent,
+  },
+  {
     path: "edit-wo/:id",
     component: EditWoComponent,
   },

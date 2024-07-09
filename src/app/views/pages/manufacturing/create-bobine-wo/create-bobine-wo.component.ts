@@ -131,7 +131,7 @@ export class CreateBobineWoComponent implements OnInit {
   rctwostat: any;
   ro_rollup: any[] = [];
   emp_shift: any[] = [];
-  globalState: boolean = true;
+  globalState: boolean = true; 
   product_colors: any[] = [];
   product_types: any[] = [];
   product_qualitys: any[] = [];
@@ -2811,5 +2811,9 @@ export class CreateBobineWoComponent implements OnInit {
     console.log(l);
     controls.wo_user1.setValue(l);
     this.user1 = l;
+  }
+  onAlertClose($event) {
+    this.hasFormErrors = false;
+    // this.globalState=false
   }
 }

@@ -152,8 +152,9 @@ export class CreatePsComponent implements OnInit {
 
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          const controls = this.psForm.controls
           console.log(args.dataContext.ps_comp)
-          this.itemsService.getByOne({pt_part: args.dataContext.ps_comp }).subscribe((resp:any)=>{
+          this.itemsService.getByOne({pt_part: args.dataContext.ps_comp,pt_bom_code:controls.type.value,pt_break_cat:controls.color.value }).subscribe((resp:any)=>{
 
             if (resp.data) {
               console.log(resp.data)
@@ -161,9 +162,11 @@ export class CreatePsComponent implements OnInit {
               this.comp = args.dataContext.ps_comp
             }else {
 
-              alert("Article Nexiste pas")
+              
               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , ps_comp: null })
-
+              this.message = "le code article n'existe pas ou n'est pas prévu pour ce type formule";
+                     this.hasFormErrors = true;
+                     return;
 
             } 
           })
@@ -456,6 +459,10 @@ export class CreatePsComponent implements OnInit {
       ps_parent: [this.ps.ps_parent , Validators.required],
       desc: [
         { value: "", disabled: true }],
+      type: [
+        { value: "", disabled: true }],
+      color:[
+        { value: "", disabled: true }], 
       
     });
   }
@@ -476,11 +483,16 @@ export class CreatePsComponent implements OnInit {
         .subscribe((response: any) => {
             console.log(response.data)
             if (!response.data) {
-              alert("Code n'existe pas")
+             
               controls.ps_parent.setValue("")
               document.getElementById("code").focus();
+              this.message = "le code formule saisie n'existe pas";
+                     this.hasFormErrors = true;
+                     return;
             } else {
               controls.desc.setValue(response.data.bom_desc);
+              controls.type.setValue(response.data.bom__chr01);
+              controls.color.setValue(response.data.bom__chr02)
             
             }
      })
@@ -622,6 +634,8 @@ export class CreatePsComponent implements OnInit {
         const item = this.gridObjbom.getDataItem(idx);
         controls.ps_parent.setValue(item.bom_parent || "");
         controls.desc.setValue(item.bom_desc)
+        controls.type.setValue(item.bom__chr01)
+        controls.color.setValue(item.bom__chr02)
         
 
       });
@@ -660,6 +674,22 @@ export class CreatePsComponent implements OnInit {
         type: FieldType.string,
       },
       {
+        id: "bom__chr01",
+        name: "Type",
+        field: "bom__chr01",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "bom__chr02",
+        name: "Couleur",
+        field: "bom__chr02",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
         id: "bom_batch",
         name: "Taille du Lot",
         field: "bom_batcg",
@@ -673,7 +703,7 @@ export class CreatePsComponent implements OnInit {
         field: "bom_batch_um",
         sortable: true,
         filterable: true,
-        type: FieldType.boolean,
+        type: FieldType.string,
       },
       {
         id: "bom_formula",
@@ -681,7 +711,7 @@ export class CreatePsComponent implements OnInit {
         field: "bom_formula",
         sortable: true,
         filterable: true,
-        type: FieldType.string,
+        type: FieldType.boolean,
       },
     ];
 
@@ -751,8 +781,9 @@ export class CreatePsComponent implements OnInit {
                      return;
 
           }
+         
         
-        console.log(item);
+        
         updateItem.ps_comp = item.pt_part;
         updateItem.desc = item.pt_desc1;
         updateItem.ps_ref = item.pt_draw;
@@ -786,6 +817,7 @@ export class CreatePsComponent implements OnInit {
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        
       },
       {
         id: "pt_desc1",
@@ -835,8 +867,9 @@ export class CreatePsComponent implements OnInit {
     };
 
     // fill the dataset with your data
+    const controls = this.psForm.controls
     this.itemsService
-      .getAll()
+      .getBy({pt_bom_code:controls.type.value,pt_break_cat:controls.color.value})
       .subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {

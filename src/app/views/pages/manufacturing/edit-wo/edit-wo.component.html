@@ -5,7 +5,7 @@
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
 
-        </ng-container> 
+        </ng-container>  
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview">
@@ -43,7 +43,7 @@
                     <div class="form-group col-2">
                         <label class="form-group">Date de Lancement:</label>
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-sm form-control-solid"  formControlName="wo_rel_date" 
+                            <input class="form-control form-control-sm form-control-solid"  formControlName="wo_rel_date" (change)="onChangereldate()"
                                  placeholder="jj-mm-aaaa" name="wo_rel_date" ngbDatepicker f
                                 #wo_rel_date="ngbDatepicker"  >
                             <div class="input-group-append">
@@ -101,6 +101,17 @@
 
                     
                     </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Ordre de passage:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_queue_eff" (change)="onChangeorder()"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    
+                    </div>
                 </div>
                 <div class="row">   
                     
@@ -108,7 +119,7 @@
                         <label class="form-group">Gamme:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="wo_routing" 
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_routing" (change)="onChangerouting()"
                                 aria-describedby="basic-addon2" >
                             
                         </div>
@@ -118,7 +129,7 @@
                         <label class="form-group">Nomenclature:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="wo_bom_code" 
+                            <input type="text" class="form-control form-control-solid"  formControlName="wo_bom_code" (change)="onChangebom()"
                                 aria-describedby="basic-addon2" >
                            
                         </div>
@@ -138,7 +149,7 @@
                         <label class="form-group">Quantité Commandée:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="number" class="form-control form-control-solid"  formControlName="wo_qty_ord"
+                            <input type="number" class="form-control form-control-solid"  formControlName="wo_qty_ord" (change)="onChangeqty()"
                                 aria-describedby="basic-addon2">
                         </div>
 

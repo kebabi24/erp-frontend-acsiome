@@ -41,7 +41,23 @@ import {
   ItemService, SiteService, BomService,BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService,
 
 } from "../../../../core/erp";
+import { addDays } from "@fullcalendar/angular";
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value=="C"){
+    return `<div class="text"  aria-hidden="C">Cloturé</div>`
+  }
+  if (value=="R"){
+    return `<div class="text"  aria-hidden="R">Lancé</div>`
+  }
+  if (value=="F"){
+    return `<div class="text"  aria-hidden="F">Valide</div>`
+  }
+  if (value=="D"){
+    return `<div class="text"  aria-hidden="D">Reporté</div>`
+  }
 
+
+  }
 @Component({
   selector: 'kt-create-order',
   templateUrl: './create-order.component.html',
@@ -73,6 +89,8 @@ export class CreateOrderComponent implements OnInit {
   angularGridsite: AngularGridInstance;
 
   part: any;
+  color:any;
+  micronage:any;
   gammes: [];
   rowkctr:any;
   columnDefinitionsgamme: Column[] = [];
@@ -97,7 +115,11 @@ export class CreateOrderComponent implements OnInit {
   gridOptionsvend: GridOption = {};
   gridObjvend: any;
   angularGridvend: AngularGridInstance;
-
+  gamme: any;
+  echeance: any;
+  lancement:any;
+  op:any;
+  jours:any;
   seq : any;
   nof : any;  
   row_number;
@@ -129,7 +151,7 @@ export class CreateOrderComponent implements OnInit {
     this.gridService = angularGrid.gridService;
   }
 
-  initGrid() {
+  initGrid() { 
     this.columnDefinitions = [
       {
         id: "id",
@@ -173,7 +195,8 @@ export class CreateOrderComponent implements OnInit {
             if (resp.data) {
              this.part = resp.data.pt_part
               if (resp.data.pt_pm_code == "M") {
-               
+                 this.color = resp.data.pt_break_cat
+                 this.micronage = resp.data.int01
                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , um: resp.data.pt_um,wo_status : "F", wo_bom_code: resp.data.pt_bom_code })
               } else {
                 alert("Article N' est pas Production")
@@ -234,6 +257,51 @@ export class CreateOrderComponent implements OnInit {
           
 
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+         
+          
+          this.workRoutingService.getByOne({ro_routing: this.gamme, ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+            
+            if (resp.data) {console.log(resp.data.ro_run)
+              this.op = resp.data.ro_op
+              this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(resp.data.ro_run) * 24))
+              console.log(this.jours)
+                   
+                if(this.lancement == null)  {this.lancement = new Date()}
+              
+             
+               console.log(this.lancement)
+                this.echeance = addDays(this.lancement,this.jours)
+                console.log(this.echeance)
+                this.lancement = args.dataContext.wo_rel_date
+                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_rel_date:this.lancement, wo_due_date: this.echeance })
+               
+            } 
+            else {
+              this.workRoutingService.getByOne({ro_routing: this.gamme,ro_op: 0} ).subscribe((resp:any)=>{
+
+            
+                if (resp.data) {console.log(resp.data.ro_run)
+                  this.op = 0
+                  this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(resp.data.ro_run) * 24))
+                  console.log(this.jours)
+                       
+                    if(this.lancement == null)  {this.lancement = new Date()}
+                  
+                 
+                   console.log(this.lancement)
+                    this.echeance = addDays(this.lancement,this.jours)
+                    console.log(this.echeance)
+                    this.lancement = args.dataContext.wo_rel_date
+                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_rel_date:this.lancement, wo_due_date: this.echeance })
+                   
+                } 
+              })
+
+            }
+          })
+        } 
        
       },
     
@@ -251,6 +319,56 @@ export class CreateOrderComponent implements OnInit {
         editor: {
           model: Editors.date,
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+         
+          
+          this.workRoutingService.getByOne({ro_routing: this.gamme,ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+            
+            if (resp.data) {console.log(resp.data.ro_run)
+              this.op= resp.data.ro_op
+              this.jours = Number(Number(args.dataContext.wo_qty_ord) / Number(resp.data.ro_run))
+              console.log(this.jours)
+                   
+                  this.lancement = new Date(args.dataContext.wo_rel_date)
+              
+             
+               console.log(this.lancement)
+                this.echeance = addDays(this.lancement,this.jours)
+                console.log(this.echeance)
+                this.lancement = this.echeance
+                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,  wo_due_date: this.echeance })
+               
+            } else {
+
+              this.workRoutingService.getByOne({ro_routing: this.gamme,ro_op:0} ).subscribe((resp:any)=>{
+
+            
+                if (resp.data) {console.log(resp.data.ro_run)
+                  this.op= resp.data.ro_op
+                  this.jours = Number(Number(args.dataContext.wo_qty_ord) / Number(resp.data.ro_run))
+                  console.log(this.jours)
+                       
+                      this.lancement = new Date(args.dataContext.wo_rel_date)
+                  
+                 
+                   console.log(this.lancement)
+                    this.echeance = addDays(this.lancement,this.jours)
+                    console.log(this.echeance)
+                    this.lancement = this.echeance
+                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,  wo_due_date: this.echeance })
+                   
+                } else {
+    
+                          
+                          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_bom_code: null })
+                  
+                } 
+              })
+              
+            } 
+          })
+        } 
        
       },
       {
@@ -293,7 +411,7 @@ export class CreateOrderComponent implements OnInit {
                
             } else {
 
-                      alert("Code Nomenclature N' existe pas")
+                      alert("Code Formule N' existe pas")
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_bom_code: null })
               
             } 
@@ -339,7 +457,7 @@ export class CreateOrderComponent implements OnInit {
         width: 80,
         filterable: false,
         type: FieldType.string,
-        
+        formatter: myCustomCheckboxFormatter,
       },
       
       {
@@ -623,6 +741,7 @@ export class CreateOrderComponent implements OnInit {
     _wo.wo_rmks = controls.wo_rmks.value
     _wo.wo_so_job = controls.wo_so_job.value
     _wo.wo_rev = controls.wo_rev.value
+    _wo.wo_line = this.op
     _wo.wo_ord_date = controls.wo_ord_date.value
     ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}`
     : null
@@ -700,7 +819,7 @@ export class CreateOrderComponent implements OnInit {
         cmvid: "",
         desc: "",
         wo_qty_ord: 0,
-        
+        wo_rel_date: this.lancement,
         wo_status: "F",
         wo_bom_code: null,
         wo_vend: null,
@@ -831,7 +950,8 @@ export class CreateOrderComponent implements OnInit {
         updateItem.wo_status = "F";
         updateItem.wo_bom_code = item.pt_bom_code;
         this.part = item.pt_part
-        
+        this.color = item.pt_break_cat
+        this.micronage = item.int01
         this.gridService.updateItem(updateItem);
       }) 
       
@@ -912,7 +1032,9 @@ export class CreateOrderComponent implements OnInit {
     this.itemsService
 
       .getProd({pt_origin:this.rowkctr})
-      .subscribe((response: any) => (this.items = response.data));
+      .subscribe((response: any) => (this.items = response.data
+        
+      ));
   }
   open4(content) {
     this.prepareGrid4();
@@ -1051,6 +1173,8 @@ export class CreateOrderComponent implements OnInit {
         const item = this.gridObjgamme.getDataItem(idx);
     console.log(item)
         controls.wo_routing.setValue(item.ro_routing || "");
+        this.gamme = item.ro_routing;
+        
         this.rowkctr=item.ro_wkctr;
       });
     }
@@ -1266,6 +1390,8 @@ export class CreateOrderComponent implements OnInit {
     this.prepareGridbom();
     this.modalService.open(content, { size: "lg" });
   }
+ 
+
   }
 
 
