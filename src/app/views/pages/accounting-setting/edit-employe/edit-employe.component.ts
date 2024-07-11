@@ -271,6 +271,9 @@ emp_blood: [this.employeEdit.emp_blood , Validators.required],
       emp_loyalty: [this.employeEdit.emp_loyalty],
       emp_loyal_date: [this.employeEdit.emp_loyal_date],
       emp_upper : [this.employeEdit.emp_upper],
+      emp_job: [this.employeEdit.emp_job, ],
+
+      emp_level: [this.employeEdit.emp_level],
   })
 }
 
@@ -651,7 +654,8 @@ onSubmit() {
       ? `${controls.emp_emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
       : null
       _employe.emp_upper =  controls.emp_upper.value
-      
+      _employe.emp_job   = controls.emp_job.value
+      _employe.emp_level = controls.emp_level.value
 
       return _employe
   }

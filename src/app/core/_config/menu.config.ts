@@ -1094,6 +1094,14 @@ export class MenuConfig {
               title: "Liste Des Formations",
               page: "/training/list-training",
             },
+            {
+              title: "Demande de Formation",
+              page: "/training/create-training-request",
+            },
+            {
+              title: "Demande de Formation Par Service",
+              page: "/training/create-request-group",
+            },
           ],
         },
         {
@@ -1836,10 +1844,7 @@ export class MenuConfig {
                   title: "Liste des Domaines de Formation",
                   page: "/training/list-section",
                 },
-                {
-                  title: "Demande de Formation",
-                  page: "/training/create-training-request",
-                },
+               
               ],
             },
             {

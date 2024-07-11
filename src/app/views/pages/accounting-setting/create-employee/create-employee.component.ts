@@ -227,6 +227,7 @@ initmvGrid() {
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
+    rowHeight:40,
   };
   this.codeService.getBy({ code_fldname: "emp_type" })
   .subscribe((response: any) => (this.mvdataset = response.data));
@@ -344,6 +345,7 @@ initjbGrid() {
     enableColumnPicker: true,
     enableCellNavigation: true,
     enableRowSelection: true,
+    rowHeight:40,
   };
   // this.codeService.getBy({ code_fldname: "emp_type" })
   // .subscribe((response: any) => (this.mvdataset = response.data));

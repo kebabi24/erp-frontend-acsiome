@@ -161,10 +161,40 @@ export class CreateTrainingSectionComponent implements OnInit {
                   // this.dataView.setItems(this.dataset)
                   console.log(args.dataContext.id)
                  
-                  this.indexd = args.dataContext.id
-                  console.log(this.dataView.getIdxById(args.dataContext.id))
-                  let element: HTMLElement = document.getElementById("openDeletesGrid") as HTMLElement;
-                  element.click();
+                
+
+                  console.log(args.dataContext.id)
+                  this.itemService.getByOne(
+                    {pt_group: args.dataContext.code_value},
+                    ).subscribe(
+                    (response: any) => {
+                      console.log(response.data)
+                     if(response.data != null) {
+                      alert("Formations existent pour ce code")
+                     }
+                      else {
+
+                        this.indexd = args.dataContext.id
+                        console.log(this.dataView.getIdxById(args.dataContext.id))
+                        let element: HTMLElement = document.getElementById("openDeletesGrid") as HTMLElement;
+                        element.click();
+      
+                      }
+                    
+                      //this.dataViewtr.setItems(this.datasettr)
+                       
+                    },
+                    (error) => {
+                        console.log(error)
+                    },
+                  )
+                
+                
+                //   this.angularGrid.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, bool05:true });
+                //   this.addToDeletedIds(args.dataContext.id)
+                //  console.log(args.dataContext.bool05)
+                //  this.dataView.setItems(this.dataset)
+               
                 //   this.angularGrid.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, bool05:true });
                 //   this.addToDeletedIds(args.dataContext.id)
                 //  console.log(args.dataContext.bool05)
