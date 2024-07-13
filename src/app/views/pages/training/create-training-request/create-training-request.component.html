@@ -2,9 +2,9 @@
     <kt-portlet-header [sticky]="true" title="Ajouter Une Demande De Formation " [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
-            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-lg mr-2">Sauvgarder </button>
 
         </ng-container>
     </kt-portlet-header>
@@ -22,9 +22,9 @@
                  
                     <div class="form-group col-2">
                         <label class="form-group">DEMANDE LE:</label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group input-group-lg">
                             <input
-                                [className]="reqForm.controls['rqm_req_date'].errors && (reqForm.controls['rqm_req_date'].dirty || reqForm.controls['rqm_req_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                [className]="reqForm.controls['rqm_req_date'].errors && (reqForm.controls['rqm_req_date'].dirty || reqForm.controls['rqm_req_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
                                 formControlName="rqm_req_date" placeholder="jj-mm-aaaa" name="dd" ngbDatepicker f
                                 #dd="ngbDatepicker">
                             <div class="input-group-append">

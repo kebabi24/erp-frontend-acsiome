@@ -35,7 +35,7 @@ import {
     ModalDismissReasons,
     NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap"
-import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService,EmployeService,JobService } from "../../../../core/erp"
+import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService,EmployeService,JobService, CodeService } from "../../../../core/erp"
 import { Reason, ReasonService} from "../../../../core/erp"
 import { AlertComponent } from "../../../partials/content/crud"
 import { sequence } from "@angular/animations"
@@ -45,7 +45,7 @@ import { sequence } from "@angular/animations"
   styleUrls: ['./create-request-group.component.scss']
 })
 export class CreateRequestGroupComponent implements OnInit {
-
+    error = false
   requisition: Requisition
     reqForm: FormGroup
     hasFormErrors = false
@@ -101,6 +101,11 @@ export class CreateRequestGroupComponent implements OnInit {
     message=''
     selectedJob: number[] = [];
     seq: any;
+    domains: [];
+    columnDefinitionsdomain: Column[] = [];
+    gridOptionsdomain: GridOption = {};
+    gridObjdomain: any;
+    angularGriddomain: AngularGridInstance;
     constructor(
         config: NgbDropdownConfig,
         private reqFB: FormBuilder,
@@ -117,6 +122,7 @@ export class CreateRequestGroupComponent implements OnInit {
         private reasonService: ReasonService,
         private employeService: EmployeService,
         private jobService: JobService,
+        private codeService: CodeService,
     ) {
         config.autoClose = true
         this.initGrid()
@@ -307,14 +313,18 @@ export class CreateRequestGroupComponent implements OnInit {
         const controls = this.reqForm.controls
         this.user =  JSON.parse(localStorage.getItem('user'))
         console.log(this.user)
-        controls.rqm_rqby_userid.setValue(this.user.usrd_code)
+        
         this.employeService
         .getByOne({emp_userid: this.user.usrd_code})
         .subscribe((response: any) => {
             console.log(response)
             if (response.data != null) {
-              controls.code.setValue(response.data.emp_addr)
-              controls.name.setValue(response.data.emp_fname + " " + response.data.emp_lname)
+              controls.code.setValue(response.data.emp_job)
+              controls.rqm_rqby_userid.setValue(response.data.emp_job)
+              this.codeService.getByOne({code_fldname:"pt_draw",code_value:response.data.emp_job}).subscribe((res:any)=>{
+              //  const {data} = res
+                controls.name.setValue(res.data.code_cmmt)
+              })
             } else {
               alert("Vous n'etes pas affecter à un employé")
             }
@@ -1076,4 +1086,110 @@ export class CreateRequestGroupComponent implements OnInit {
       });
       this.modalService.dismissAll()
     }
+
+    changeDomain(){
+        const controls = this.reqForm.controls // chof le champs hada wesh men form rah
+        const code_value  = controls.rqm_rqby_userid.value
+        this.codeService.getByOne({code_fldname:"pt_draw",code_value:code_value}).subscribe((res:any)=>{
+            const {data} = res
+            console.log(res)
+            if (!data){ this.layoutUtilsService.showActionNotification(
+                "ce Service n'existe pas!",
+                MessageType.Create,
+                10000,
+                true,
+                true
+            )
+            document.getElementById("rqm_rqby_userid").focus();
+            this.error = true}
+            else {
+                this.error = false
+                controls.name.setValue(res.data.code_cmmt)
+            }
+    
+    
+        },error=>console.log(error))
+    }
+    
+      handleSelectedRowsChangeddomain(e, args) {
+        const controls = this.reqForm.controls;
+        if (Array.isArray(args.rows) && this.gridObjdomain) {
+          args.rows.map((idx) => {
+            const item = this.gridObjdomain.getDataItem(idx);
+            controls.rqm_rqby_userid.setValue(item.code_value || "");
+            controls.name.setValue(item.code_cmmt || "");
+          });
+        }
+      }
+    
+      angularGridReadydomain(angularGrid: AngularGridInstance) {
+        this.angularGriddomain = angularGrid;
+        this.gridObjdomain = (angularGrid && angularGrid.slickGrid) || {};
+      }
+    
+      prepareGriddomain() {
+        this.columnDefinitionsdomain = [
+         
+          {
+            id: "code_value",
+            name: "Code Domaine",
+            field: "code_value",
+            sortable: true,
+            minWidth: 70,
+            maxWidth: 100,
+            filterable: true,
+            type: FieldType.string,
+          
+        },
+        {
+            id: "code_cmmt",
+            name: "Désignation",
+            field: "code_cmmt",
+            sortable: true,
+            minWidth: 100,
+            maxWidth: 300,
+            filterable: true,
+            type: FieldType.string,
+            
+        },   
+        ];
+    
+        this.gridOptionsdomain = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          enableFiltering: true,
+          autoEdit: false,
+          autoHeight: false,
+          frozenColumn: 0,
+          frozenBottom: true,
+          enableRowSelection: true,
+          enableCheckboxSelector: true,
+          checkboxSelector: {
+            // optionally change the column index position of the icon (defaults to 0)
+            // columnIndexPosition: 1,
+    
+            // remove the unnecessary "Select All" checkbox in header when in single selection mode
+            hideSelectAllCheckbox: true,
+    
+            // you can override the logic for showing (or not) the expand icon
+            // for example, display the expand icon only on every 2nd row
+            // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+          },
+          multiSelect: false,
+          rowSelectionOptions: {
+            // True (Single Selection), False (Multiple Selections)
+            selectActiveRow: true,
+          },
+        };
+    
+        // fill the dataset with your data
+        this.codeService
+          .getBy({code_fldname:"pt_draw"})
+          .subscribe((response: any) => (this.domains = response.data));
+      }
+      opendom(content) {
+        this.prepareGriddomain();
+        this.modalService.open(content, { size: "lg" });
+      }
 }

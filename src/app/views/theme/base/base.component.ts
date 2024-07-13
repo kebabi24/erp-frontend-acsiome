@@ -9,13 +9,16 @@ import { LayoutConfigService, MenuConfigService, PageConfigService } from '../..
 import { HtmlClassService } from '../html-class.service';
 import { LayoutConfig } from '../../../core/_config/layout.config';
 import { MenuConfig } from '../../../core/_config/menu.config';
+import { MenuTrConfig } from '../../../core/_config/menuTr.config';
 import { PageConfig } from '../../../core/_config/page.config';
 // User permissions
 import { NgxPermissionsService } from 'ngx-permissions';
 import { currentUserPermissions, Permission } from '../../../core/auth';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../../core/reducers';
-
+import { environment } from "../../../../environments/environment";
+var app = environment.App;
+  
 @Component({
   selector: 'kt-base',
   templateUrl: './base.component.html',
@@ -30,7 +33,6 @@ export class BaseComponent implements OnInit, OnDestroy {
   contentContainerClasses = '';
   subheaderDisplay = true;
   contentExtended: false;
-
   // Private properties
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private currentUserPermissions$: Observable<Permission[]>;
@@ -57,7 +59,11 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     // register configs by demos
     this.layoutConfigService.loadConfigs(new LayoutConfig().configs);
-    this.menuConfigService.loadConfigs(new MenuConfig().configs);
+   // this.menuConfigService.loadConfigs(new MenuConfig().configs);
+  
+       
+    (app=="RH") ? this.menuConfigService.loadConfigs(new MenuTrConfig().configs):  this.menuConfigService.loadConfigs(new MenuConfig().configs)
+
     this.pageConfigService.loadConfigs(new PageConfig().configs);
 
     // setup element classes
