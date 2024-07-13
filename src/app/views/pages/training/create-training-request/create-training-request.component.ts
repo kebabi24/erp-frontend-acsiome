@@ -319,12 +319,14 @@ export class CreateTrainingRequestComponent implements OnInit {
               alert("Vous n'etes pas affecter à un employé")
             }
         })
+        
         this.sequencesService
         .getByOne({ seq_type: 'RQ', seq_profile: this.user.usrd_profile})
         .subscribe((response: any) => {
             console.log(response)
             if (response.data == null) {
                 alert("Sequence nexiste pas")
+                console.log(this.user.usrd_profile)
                 
             } else {
               this.seq = response.data.seq_seq
