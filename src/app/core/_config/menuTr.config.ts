@@ -65,14 +65,7 @@ export class MenuTrConfig {
                 title: "Liste Des Formations",
                 page: "/training/list-training",
               },
-              {
-                title: "Demande de Formation",
-                page: "/training/create-training-request",
-              },
-              {
-                title: "Demande de Formation Par Service",
-                page: "/training/create-request-group",
-              },
+              
             ],
           },
   
@@ -120,7 +113,7 @@ export class MenuTrConfig {
           },
          
           {
-            title: "Gestion des achats",
+            title: "Gestion des demandes de formations",
             root: true,
             bullet: "dot",
             icon: "flaticon2-shopping-cart",
@@ -130,7 +123,15 @@ export class MenuTrConfig {
                 page: "/purchasing/create-req",
               },
               {
-                title: "Liste des Demande d'achats",
+                title: "Demande de Formation",
+                page: "/training/create-training-request",
+              },
+              {
+                title: "Demande de Formation Par Service",
+                page: "/training/create-request-group",
+              },
+              {
+                title: "Liste des Demandes ",
                 page: "/purchasing/req-list",
               },
               {
@@ -138,7 +139,7 @@ export class MenuTrConfig {
                 page: "/purchasing/purchase-order-approval",
               },
               {
-                title: "Approbation des Demandes d'achats",
+                title: "Approbation des Demandes globales",
                 page: "/purchasing/list-approval",
               },
               {
