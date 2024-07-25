@@ -234,10 +234,36 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                    <button type="button" class="btn btn-primary" (click)="getTraining()">Ok</button>
+                    <button type="button" class="btn btn-primary" (click)="getTrainingDet()">Ok</button>
                 </div>
             </ng-template>
             <button hidden id="openJobsGrid" class="btn btn-primary" (click)="openjob(contentjob)">Launch demo
+                modal</button>
+        </div>
+        <div>
+            <ng-template #contenttr let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Formation </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridtr"
+                            [columnDefinitions]="columnDefinitionstr"
+                            (onAngularGridCreated)="angularGridReadytr($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtr($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionstr" [dataset]="datatr">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="getTraining()">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openTrsGrid" class="btn btn-primary" (click)="opentr(contenttr)">Launch demo
                 modal</button>
         </div>
     </kt-portlet-body>

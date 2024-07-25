@@ -1,0 +1,86 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une Charge'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="fcFORM">
+
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="500"
+                                    (close)="onAlertClose($event)">
+                                    Ce Code existe deja
+                </kt-alert>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Charge: *</label>
+                        <input type="text" formControlName="fc_code"  (change)="onChangeCode()"
+                            [className]="fcFORM.controls['fc_code'].errors && (fcFORM.controls['fc_code'].dirty || fcFORM.controls['fc_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="fcFORM.controls['fc_code'].errors && (fcFORM.controls['fc_code'].dirty || fcFORM.controls['fc_code'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="form-group">Description: *</label>
+                        <input type="text" formControlName="fc_desc"  id="fc_desc"
+                            [className]="fcFORM.controls['fc_desc'].errors && (fcFORM.controls['fc_desc'].dirty || fcFORM.controls['fc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="fcFORM.controls['fc_desc'].errors && (fcFORM.controls['fc_desc'].dirty || fcFORM.controls['fc_desc'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+               
+              
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Type: *</label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="fc_type" id="fc_type" (change)="onChangeType()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open(content)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </form>
+        </div>
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Type</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions" [dataset]="data">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

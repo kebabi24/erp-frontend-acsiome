@@ -75,6 +75,8 @@ import {
     BankService, AccountPayableService,
     DaybookService,
     LocationDeclaredService,
+    FinancialchargeService,
+    AccountUnplanifedService
 } from "../../../core/erp";
 
 import { CreatePaymentComponent } from './create-payment/create-payment.component';
@@ -83,6 +85,7 @@ import { EditPaymentComponent } from './edit-payment/edit-payment.component';
 import { ListPaymentComponent } from './list-payment/list-payment.component';
 import { CreateNoteComponent } from './create-note/create-note.component';
 import { ListVhComponent } from './list-vh/list-vh.component';
+import { CreateChargePaymentComponent } from './create-charge-payment/create-charge-payment.component';
 
 const routes: Routes = [
   {
@@ -120,6 +123,10 @@ const routes: Routes = [
             path: "create-note",
             component: CreateNoteComponent,
           },
+          {
+            path: "create-charge-payment",
+            component: CreateChargePaymentComponent,
+          },
           
         
       ],
@@ -127,7 +134,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [AccountPayableComponent, CreateVhComponent, CreatePaymentComponent, ListPaymentRapComponent, EditPaymentComponent, ListPaymentComponent, CreateNoteComponent, ListVhComponent],
+  declarations: [AccountPayableComponent, CreateVhComponent, CreatePaymentComponent, ListPaymentRapComponent, EditPaymentComponent, ListPaymentComponent, CreateNoteComponent, ListVhComponent, CreateChargePaymentComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -186,6 +193,8 @@ providers: [
     ConfigService,
     UsersService,
     LocationDeclaredService,
+    FinancialchargeService,
+    AccountUnplanifedService,
 
 
 ],

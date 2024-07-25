@@ -230,7 +230,7 @@ export class AsideLeftComponent implements OnInit, AfterViewInit {
 
   checkPermission(title) {
     title = '"' + title + '"'
-    console.log("titleeeeeeeeeeeeeeee", title)
+   // console.log("titleeeeeeeeeeeeeeee", title)
     const {
       profile: { usrg_menus },
     } = JSON.parse(localStorage.getItem("user"));

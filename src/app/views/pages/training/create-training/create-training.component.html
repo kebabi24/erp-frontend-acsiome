@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter Formation'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">Annuller</button>
-            <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button (click)="goBack()" type="button" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+            <button (click)="reset()" type="button" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-lg mr-2">Sauvgarder </button>
 
 
         </ng-container>
@@ -90,7 +90,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
                     [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
                 </angular-slickgrid>
                 </div>

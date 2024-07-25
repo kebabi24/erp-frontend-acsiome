@@ -25,6 +25,10 @@ export class AccountPayableService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+`/P`, data, { headers: httpHeaders })
     }
+    public addFC(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+`/FC`, data, { headers: httpHeaders })
+    }
     public addNote(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+`/note`, data, { headers: httpHeaders })

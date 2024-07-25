@@ -433,6 +433,8 @@ export class EditTrainingComponent implements OnInit {
       asyncEditorLoading: false,
       editable: true,
       autoCommitEdit:true,
+      enableAutoResize:true,
+      rowHeight:40,
       // enableColumnPicker: true,
       enableCellNavigation: true,
      // enableRowSelection: true,

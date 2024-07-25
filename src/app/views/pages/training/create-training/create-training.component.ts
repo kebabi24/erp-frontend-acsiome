@@ -319,7 +319,7 @@ export class CreateTrainingComponent implements OnInit {
             console.log(this.dataset);
           
             this.reset();
-            this.loadingSubject.next(true);
+           // this.loadingSubject.next(true);
             this.router.navigateByUrl("/training/create-training");
             
      //       this.dataset = [];
@@ -422,6 +422,9 @@ export class CreateTrainingComponent implements OnInit {
       asyncEditorLoading: false,
       editable: true,
       autoCommitEdit:true,
+      enableAutoResize:true,
+      autoHeight: false,
+      rowHeight:40,
      // enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
