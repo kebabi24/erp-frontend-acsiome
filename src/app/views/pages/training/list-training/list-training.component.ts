@@ -106,6 +106,42 @@ export class ListTrainingComponent implements OnInit {
            
           },      
           {
+            id: "pt_ms",
+            name: "Certification",
+            field: "pt_ms",
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark,
+            filterable:true,
+            sortable: true,
+           
+          },      
+          {
+            id: "pt_rollup",
+            name: "Fidélité",
+            field: "pt_rollup",
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark,
+            filterable:true,
+            sortable: true,
+           
+          },    
+          {
+            id: "pt_origin",
+            field: "pt_origin",
+            type: FieldType.string,
+            filterable:true,
+            sortable: true,
+           
+          },      
+          {
+            id: "pt_meter_um",
+            field: "pt_meter_um",
+            type: FieldType.string,
+            filterable:true,
+            sortable: true,
+           
+          },      
+          {
             id: "det",
             name: "Détail",
             field: "id",

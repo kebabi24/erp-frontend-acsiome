@@ -157,7 +157,8 @@ export class EditTrainingComponent implements OnInit {
 
   title: String = 'Modifier Formation - '
   itemEdit: any
-
+  ad_country: any[] = []
+  pt_meter_um: any[] = []
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -196,9 +197,16 @@ export class EditTrainingComponent implements OnInit {
         this.mvdataset = response.data.itemDetails
        
          console.log(this.itemEdit)
+         
          this.codeService
-         .getBy({ code_fldname: "pt_group",chr01:this.itemEdit.pt_draw })
-         .subscribe((response: any) => (this.pt_group = response.data));
+         .getBy({ code_fldname: "ad_country" })
+         .subscribe((response: any) => (this.ad_country = response.data))
+       this.codeService
+         .getBy({ code_fldname: "pt_draw" })
+         .subscribe((response: any) => (this.pt_draw = response.data));
+       this.codeService
+         .getBy({ code_fldname: "pt_meter_um" })
+         .subscribe((response: any) => (this.pt_meter_um = response.data));  
       
         this.initCode()
         this.loadingSubject.next(false)
@@ -222,6 +230,10 @@ export class EditTrainingComponent implements OnInit {
       pt_draw: [this.itemEdit.pt_draw, Validators.required],
       pt_group: [this.itemEdit.pt_group,Validators.required],
       pt_formula: [this.itemEdit.pt_formula],
+      pt_ms: [this.itemEdit.pt_ms],
+      pt_rollup: [this.itemEdit.pt_rollup],
+      pt_origin: [this.itemEdit.pt_origin],
+      pt_meter_um: [this.itemEdit.pt_meter_um],
     })
   
   }
@@ -274,6 +286,10 @@ export class EditTrainingComponent implements OnInit {
     _item.pt_draw = controls.pt_draw.value;
     _item.pt_group = controls.pt_group.value;
     _item.pt_formula = controls.pt_formula.value;
+    _item.pt_ms = controls.pt_ms.value;
+    _item.pt_rollup = controls.pt_rollup.value;
+    _item.pt_origin = controls.pt_origin.value;
+    _item.pt_meter_um = controls.pt_meter_um.value;
     _item.pt_part_type = "FORMATION"
     
 
@@ -427,6 +443,19 @@ export class EditTrainingComponent implements OnInit {
           element.click();
         },
       }, 
+      {
+        id: "ptd_level",
+        name: "Niveau Maitrise",
+        field: "ptd_level",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+       
+      },
     ];
 
     this.mvgridOptions = {

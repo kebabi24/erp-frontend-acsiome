@@ -78,6 +78,8 @@ import { ListSectionComponent } from './list-section/list-section.component';
 import { ListDomainComponent } from './list-domain/list-domain.component';
 import { CreateTrainingRequestComponent } from './create-training-request/create-training-request.component';
 import { CreateRequestGroupComponent } from './create-request-group/create-request-group.component';
+import { CreateReqTrainingComponent } from './create-req-training/create-req-training.component';
+import { ApprovalReqComponent } from './approval-req/approval-req.component';
 
     const routes: Routes = [
      
@@ -123,12 +125,20 @@ import { CreateRequestGroupComponent } from './create-request-group/create-reque
                 path: "create-request-group",
                 component: CreateRequestGroupComponent,
               }, 
+              {
+                path: "create-req-training",
+                component: CreateReqTrainingComponent,
+              },     
+              {
+                path: "approval-req",
+                component: ApprovalReqComponent,
+              },     
   ]
   
 
 
 @NgModule({
-  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent],
+  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent],
   
   imports: [
     CommonModule,
@@ -182,8 +192,8 @@ providers: [
     UsersService,
     EmployeService,
     RequisitionService,
-    ProviderService,
     ReasonService,
+   
 
 ],
 

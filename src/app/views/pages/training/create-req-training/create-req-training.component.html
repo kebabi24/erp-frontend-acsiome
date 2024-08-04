@@ -1,0 +1,258 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Ajouter une demande de Formation" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-lg mr-2">Sauvgarder </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="reqForm">
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    {{message}}
+                </kt-alert>
+                <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">DEMANDE LE:</label>
+                        <div class="input-group input-group-lg">
+                            <input
+                                [className]="reqForm.controls['rqm_req_date'].errors && (reqForm.controls['rqm_req_date'].dirty || reqForm.controls['rqm_req_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                formControlName="rqm_req_date" placeholder="jj-mm-aaaa" name="dp" ngbDatepicker f
+                                #dd="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="dd.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="reqForm.controls['rqm_req_date'].errors && (reqForm.controls['rqm_req_date'].dirty || reqForm.controls['rqm_req_date'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">DATE BESOIN:</label>
+                        <div class="input-group input-group-lg">
+                            <input
+                                [className]="reqForm.controls['rqm_need_date'].errors && (reqForm.controls['rqm_need_date'].dirty || reqForm.controls['rqm_need_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                formControlName="rqm_need_date" placeholder="jj-mm-aaaa" name="dp1" ngbDatepicker
+                                #d1="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="d1.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="reqForm.controls['rqm_need_date'].errors && (reqForm.controls['rqm_need_date'].dirty || reqForm.controls['rqm_need_date'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">DATE Fin:</label>
+                        <div class="input-group input-group-lg">
+                            <input
+                                [className]="reqForm.controls['rqm_due_date'].errors && (reqForm.controls['rqm_due_date'].dirty || reqForm.controls['rqm_due_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                formControlName="rqm_due_date" placeholder="jj-mm-aaaa" name="dp1" ngbDatepicker
+                                #d1="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="d1.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="reqForm.controls['rqm_due_date'].errors && (reqForm.controls['rqm_due_date'].dirty || reqForm.controls['rqm_due_date'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Formation:</label>
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control form-control-solid" formControlName="part" id ="part"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openpart(contentpart)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">Designation:</label>
+                        <input type="text" class="form-control form-control-lg form-control-solid" formControlName="desc" disabled>
+                    </div>
+                   
+                </div>
+               
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Demandeur:</label>
+                        <div class="input-group input-group-lg">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="rqm_rqby_userid" disabled
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Demandeur:</label>
+                        <div class="input-group input-group-lg">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="rqm_end_userid"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content3)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-8">
+                        <label class="form-group">Remarque:</label>
+                        <textarea class="form-control form-control-lg form-control-solid" formControlName="rqm_rmks"
+                            rows="2"></textarea>
+                    </div>
+
+                </div>
+
+               
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
+                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedS($event.detail.eventData, $event.detail.args)"
+                        (onAngularGridCreated)="gridReady($event)">
+                    </angular-slickgrid>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la SEQUENCE</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridSeq"
+                            [columnDefinitions]="columnDefinitions1" (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions1" [dataset]="sequences">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le FOURNISSEUR</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="providers">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Demandeur</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="users">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="getTraining()">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+       
+        <div>
+            <ng-template #content6 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la cause</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridcause"
+                            [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged6($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions6" [dataset]="causes">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentpart let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir l'article</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="items">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
+    
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

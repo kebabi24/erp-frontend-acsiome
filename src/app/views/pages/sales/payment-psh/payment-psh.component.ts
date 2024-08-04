@@ -91,6 +91,12 @@ export class PaymentPshComponent implements OnInit {
   pshnbr: String;
   check;
   nbr;
+  banks: [];
+  columnDefinitionsbank: Column[] = [];
+  gridOptionsbank: GridOption = {};
+  gridObjbank: any;
+  angularGridbank: AngularGridInstance;
+
   constructor(
     config: NgbDropdownConfig,
     private asFB: FormBuilder,
@@ -103,6 +109,7 @@ export class PaymentPshComponent implements OnInit {
     private bankService: BankService,
     private accountShiperService: AccountShiperService,
     private codeService: CodeService,
+    private deviseService:  DeviseService,
     
 
   ) {
@@ -148,7 +155,7 @@ export class PaymentPshComponent implements OnInit {
        
         as_pay_method: [this.accountShiper.as_pay_method, Validators.required],
         
-        as_check: [this.accountShiper.as_check , Validators.required],
+        as_check: [this.accountShiper.as_check ],
 
         as_amt: [this.accountShiper.as_amt],
        
@@ -163,6 +170,21 @@ export class PaymentPshComponent implements OnInit {
   
     }
 
+    OnchangeCurr(){
+      const controls = this.asForm.controls
+      
+            this.deviseService
+            .getBy({ cu_curr: controls.as_curr.value })
+            .subscribe((response: any) => {
+
+              if (response.data == null){ 
+                alert("Devise n'existe pas")
+                controls.au_curr.setValue(null)
+                document.getElementById("as_curr").focus();
+              }
+          })
+           
+    }
 
 
     OnchangeBank (){
@@ -185,12 +207,7 @@ export class PaymentPshComponent implements OnInit {
         else {
             this.error = false
     
-            this.bankService
-          .getAllDetails({ bkd_bank: bk_code, bkd_module: "AR" })
-          .subscribe((response: any) => {(this.as_pay_method = response.data)
-          console.log("hhhhhhhhhhhhhhh",this.as_pay_method)
-        })    
-            
+         
         }
   
   
@@ -333,7 +350,7 @@ export class PaymentPshComponent implements OnInit {
           controls.amt.setValue(data.as_amt || "");
           controls.rest.setValue(Number(data.as_amt) - Number(data.as_applied) || "");
         
-      controls.as_pay_method.setValue(data.as_pay_method || "");
+      // controls.as_pay_method.setValue(data.as_pay_method || "");
      
       this.customerService.getBy({cm_addr: data.as_cust}).subscribe((response: any)=>{
                     
@@ -341,15 +358,8 @@ export class PaymentPshComponent implements OnInit {
       
         controls.name.setValue(response.data.address.ad_name || "");
         controls.as_bank.setValue(response.data.cm_bank || "");
-        controls.as_pay_method.setValue(response.data.cm_pay_method|| "");
-      
-        
-        this.bankService
-        .getAllDetails({ bkd_bank: response.data.cm_bank, bkd_module: "AR" })
-        .subscribe((response: any) => {(this.as_pay_method = response.data)
-     
-        })
-       
+        // controls.as_pay_method.setValue(response.data.cm_pay_method|| "");
+         
        
      
 
@@ -451,20 +461,17 @@ handleSelectedRowsChangedbl(e, args) {
       controls.as_cust.setValue(item.as_cust || "");
       controls.as_curr.setValue(item.as_curr || "");
       controls.amt.setValue(item.as_amt || "");
-       controls.rest.setValue(Number(item.as_amt) - Number(item.as_applied) || "");
-      controls.as_pay_method.setValue(item.cm_cr_terms || "");
+      controls.rest.setValue(Number(item.as_amt) - Number(item.as_applied) || "");
+      // controls.as_pay_method.setValue(item.cm_cr_terms || "");
      
       this.customerService.getBy({cm_addr: item.as_cust}).subscribe((response: any)=>{
                     
                     
       
         controls.name.setValue(response.data.address.ad_name || "");
-        controls.as_bank.setValue(response.data.cm_bank || "");
-        controls.as_pay_method.setValue(response.data.cm_pay_method|| "");
-        this.bankService
-        .getAllDetails({ bkd_bank: response.data.cm_bank, bkd_module: "AR" })
-        .subscribe((response: any) => {(this.as_pay_method = response.data)
-      })
+        // controls.as_bank.setValue(response.data.cm_bank || "");
+        // controls.as_pay_method.setValue(response.data.cm_pay_method|| "");
+      
       })
       
      
@@ -562,6 +569,114 @@ openbl(content) {
   this.modalService.open(content, { size: "lg" });
 }
 
+handleSelectedRowsChangedbank(e, args) {
+  const controls = this.asForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjbank) {
+    args.rows.map((idx) => {
+      const item = this.gridObjbank.getDataItem(idx);
+      controls.as_bank.setValue(item.bk_code || "");
+      
 
+    
+    });
+  }
+}
+
+angularGridReadybank(angularGrid: AngularGridInstance) {
+  this.angularGridbank = angularGrid;
+  this.gridObjbank = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridbank() {
+  this.columnDefinitionsbank = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "bk_code",
+      name: "code",
+      field: "bk_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "address.ad_name",
+      name: "Designation",
+      field: "address.ad_name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "bk_curr",
+      name: "Devise",
+      field: "bk_curr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "bk_entity",
+      name: "Entité",
+      field: "bk_entity",
+      sortable: true,
+      filterable: true,
+      type: FieldType.boolean,
+    },
+  ];
+
+  this.gridOptionsbank = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+      var val = undefined;
+      try {
+        val = eval("item." + column.field);
+      } catch (e) {
+        // ignore
+      }
+      return val;
+    },
+  };
+  // fill the dataset with your data
+  this.bankService
+    .getByAll({bk_userid: this.user.usrd_code})
+    .subscribe((response: any) => {this.banks = response.data
+    console.log(this.banks)});
+}
+openbank(content) {
+  this.prepareGridbank();
+  this.modalService.open(content, { size: "lg" });
+}
 
 }

@@ -107,7 +107,8 @@ export class CreateTrainingComponent implements OnInit {
 
   formX: FormGroup;
   
-
+  ad_country: any[] = []
+  pt_meter_um: any[] = []
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
   // slick grid
@@ -169,10 +170,16 @@ export class CreateTrainingComponent implements OnInit {
   ) {
     config.autoClose = true;
     // this.prepareGrid();
-   
+     
+    this.codeService
+      .getBy({ code_fldname: "ad_country" })
+      .subscribe((response: any) => (this.ad_country = response.data))
     this.codeService
       .getBy({ code_fldname: "pt_draw" })
       .subscribe((response: any) => (this.pt_draw = response.data));
+    this.codeService
+      .getBy({ code_fldname: "pt_meter_um" })
+      .subscribe((response: any) => (this.pt_meter_um = response.data));  
     
    
   }
@@ -198,6 +205,10 @@ export class CreateTrainingComponent implements OnInit {
       pt_draw: [{ value: this.item.pt_draw, disabled: !this.isExist },Validators.required],
       pt_group: [{ value: this.item.pt_group, disabled: !this.isExist },Validators.required],
       pt_formula: [{ value: false, disabled: !this.isExist }],
+      pt_ms: [{ value: false, disabled: !this.isExist }],
+      pt_rollup: [{ value: false, disabled: !this.isExist }],
+      pt_origin: [{ value: false, disabled: !this.isExist }],
+      pt_meter_um: [{ value: false, disabled: !this.isExist }],
     })
   
   }
@@ -223,6 +234,10 @@ export class CreateTrainingComponent implements OnInit {
               controls.pt_draw.enable()
               controls.pt_group.enable()
               controls.pt_formula.enable()
+              controls.pt_ms.enable()
+              controls.pt_rollup.enable()
+              controls.pt_origin.enable()  
+              controls.pt_meter_um.enable()  
               document.getElementById("pt_desc1").focus();
 
             }
@@ -271,6 +286,10 @@ export class CreateTrainingComponent implements OnInit {
     _item.pt_draw = controls.pt_draw.value;
     _item.pt_group = controls.pt_group.value;
     _item.pt_formula = controls.pt_formula.value;
+    _item.pt_ms = controls.pt_ms.value;
+    _item.pt_rollup = controls.pt_rollup.value;
+    _item.pt_origin = controls.pt_origin.value;
+    _item.pt_meter_um = controls.pt_meter_um.value;
     _item.pt_part_type = "FORMATION";
     _item.pt_um= "UN"
     
@@ -416,6 +435,19 @@ export class CreateTrainingComponent implements OnInit {
           element.click();
         },
       }, 
+      {
+        id: "ptd_level",
+        name: "Niveau Maitrise",
+        field: "ptd_level",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+       
+      },
     ];
 
     this.mvgridOptions = {

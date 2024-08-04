@@ -61,7 +61,7 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import {AccountService, SubaccountService, CostcenterService, BankService, ProductLineService,DaybookService, EmployeService, JobService,
-        SiteService,AffectEmpService, ProviderService,ProjectService,TaskService, PayMethService, UsersService} from '../../../core/erp';
+        SiteService,AffectEmpService, ProviderService,ProjectService,TaskService, PayMethService, UsersService, ItemService} from '../../../core/erp';
 import {TaxeService} from '../../../core/erp';
 import {CodeService} from '../../../core/erp';
 import { EditAccountComponent } from './edit-account/edit-account.component';
@@ -89,6 +89,7 @@ import { EditSubaccountComponent } from './edit-subaccount/edit-subaccount.compo
 import { ListCcComponent } from './list-cc/list-cc.component';
 import { EditCcComponent } from './edit-cc/edit-cc.component';
 import { EmployeSalaryComponent } from './employe-salary/employe-salary.component';
+import { CreateStdBankComponent } from './create-std-bank/create-std-bank.component';
 const routes: Routes = [
     {
         path: "create-account",
@@ -257,6 +258,7 @@ const routes: Routes = [
         ListCcComponent,
         EditCcComponent,
         EmployeSalaryComponent,
+        CreateStdBankComponent,
        
     ],
     imports: [
@@ -314,6 +316,7 @@ const routes: Routes = [
         TypesUtilsService,
         ProductLineService,
         LayoutUtilsService,
+        ItemService,
     ],
     entryComponents: [
         ActionNotificationComponent,

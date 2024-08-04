@@ -66,12 +66,20 @@ export class MenuTrConfig {
                 page: "/training/list-training",
               },
               {
-                title: "Demande de Formation",
+                title: "Demande de Formation Maitier",
                 page: "/training/create-training-request",
               },
               {
                 title: "Demande de Formation Par Service",
                 page: "/training/create-request-group",
+              },
+              {
+                title: "Demande de Formation",
+                page: "/training/create-req-training",
+              },
+              {
+                title: "Approuver Demande de Formation",
+                page: "/training/approval-req",
               },
             ],
           },

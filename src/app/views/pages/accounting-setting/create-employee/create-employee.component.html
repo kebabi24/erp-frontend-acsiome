@@ -584,7 +584,33 @@
                         </ng-template>
                     </ngb-tab>
 
-                    
+                    <ngb-tab>
+                        <ng-template ngbTabTitle>
+                        
+                           Historique de Formation
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasEmployeFormErrors"
+                                class="btn btn-lg btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <div class="form-group col-12 row">
+                                <label class="col-2 col-form-label text-right"> Detail Formation: </label>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewtrItem()">Ajouter Formation </button>
+                            </div>
+                            
+                            <div class="row">
+                                <angular-slickgrid class="col-12"  gridId="plagetrGrid" [columnDefinitions]="trcolumnDefinitions"
+                                [gridOptions]="trgridOptions" [dataset]="trdataset" (onAngularGridCreated)="trGridReady($event)">
+                            </angular-slickgrid>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+
                 </ngb-tabset>
 
 
@@ -758,6 +784,32 @@
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
+        </div>
+        <div>
+            <ng-template #content4 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Formation</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditems"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="items">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemspGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
+
         </div>
     </kt-portlet-body>
 </kt-portlet>
