@@ -35,7 +35,7 @@ export class CreateBobineWoComponent implements OnInit {
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
-
+  printable:boolean;
   dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
@@ -352,6 +352,7 @@ export class CreateBobineWoComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
+          if(this.printable == true){
           this.itemsService.getByOne({pt_part:args.dataContext.tr_part }).subscribe( 
             (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type
                               this.miclaise = reponse.data.pt_article
@@ -360,11 +361,10 @@ export class CreateBobineWoComponent implements OnInit {
             }
             
           )
-
-
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.woForm.controls;
             this.printbuttonState = true;
+            this.printable = false;
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             // _lb.lb_rmks = controls.tr_rmks.value;
@@ -390,19 +390,8 @@ export class CreateBobineWoComponent implements OnInit {
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss2.print3(lab);
-                });
-              },
-              (error) => {
-                this.message = "veuillez verifier votre connexion";
-                  this.hasFormErrors = true;
-                  return;
-              },
-              () => {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                //console.log("id", args.dataContext.id)
-                //console.log("dataset",this.dataset[args.dataContext.id])
+                
                 this.index = this.dataset.findIndex((el) => {
                   return el.tr_line == args.dataContext.id;
                 });
@@ -422,6 +411,8 @@ export class CreateBobineWoComponent implements OnInit {
                 this.trdataset = [];
             
                 if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
+                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                
                   this.hasFormErrors = true;
                   this.message = "Verifier la Quantité";
                   
@@ -434,13 +425,13 @@ export class CreateBobineWoComponent implements OnInit {
             
                   return;
                 }
-                if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-                  this.hasFormErrors = true;
-                  this.message = "veuillez remplir le N° de lot";
+                // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+                //   this.hasFormErrors = true;
+                //   this.message = "veuillez remplir le N° de lot";
                 
             
-                  return;
-                }
+                //   return;
+                // }
                 this.trdataset.push({
                   tr_line: 1,
                   tr_part: controls.wo_part.value,
@@ -459,14 +450,27 @@ export class CreateBobineWoComponent implements OnInit {
                 });
                 console.log(this.trdataset);
                 this.addTR(this.trdataset, _tr);
-              }
+                this.labelService.addblob(_lb).subscribe((blob) => {
+                  Edelweiss2.print3(lab);
+                });
+              },
+              (error) => {
+                this.message = "veuillez verifier votre connexion";
+                  this.hasFormErrors = true;
+                  return;
+              },
+             
             );
           } else {
             this.message = "etiquette déjà imprimée";
                   this.hasFormErrors = true;
                   return;
           }
-        },
+        }
+        else { this.message = "etiquette déjà imprimée";
+          this.hasFormErrors = true;
+          return;}
+      }
       },
     ];
 
@@ -713,9 +717,11 @@ export class CreateBobineWoComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
+          if(this.printable == true){
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.woForm.controls;
             this.printbuttonState = true;
+            this.printable=false;
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             // _lb.lb_rmks = controls.tr_rmks.value;
@@ -739,17 +745,8 @@ export class CreateBobineWoComponent implements OnInit {
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss2.print3(lab);
-                });
-              },
-              (error) => {
-             
-              },
-              () => {
                 this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                //console.log("id", args.dataContext.id)
-                //console.log("dataset",this.dataset[args.dataContext.id])
+                
                 this.index = this.dataset.findIndex((el) => {
                   return el.tr_line == args.dataContext.id;
                 });
@@ -769,19 +766,21 @@ export class CreateBobineWoComponent implements OnInit {
                 this.trdataset = [];
             
                 if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
+                  this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: null, qty: args.dataContext.tr_qty_loc });
+                
                   this.hasFormErrors = true;
                   this.message = "Verifier la Quantité";
                 
             
                   return;
                 }
-                if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-                  this.hasFormErrors = true;
-                  this.message = "Veuillez remplir le N° de lot";
+                // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+                //   this.hasFormErrors = true;
+                //   this.message = "Veuillez remplir le N° de lot";
                 
             
-                  return;
-                }
+                //   return;
+                // }
                 if (this.dataset.length == 0) {
                   this.hasFormErrors = true;
                   this.message = "Verifier la liste des bobines";
@@ -807,6 +806,15 @@ export class CreateBobineWoComponent implements OnInit {
                 console.log(this.trdataset);
                 this.addSQ(this.trdataset, _tr);
 
+                this.labelService.addblob(_lb).subscribe((blob) => {
+                  Edelweiss2.print3(lab);
+                });
+              },
+              (error) => {
+             
+              },
+              () => {
+                
               }
             );
           } else {
@@ -814,7 +822,13 @@ export class CreateBobineWoComponent implements OnInit {
                   this.hasFormErrors = true;
                   return;
           }
-        },
+        }
+        else {
+          this.message = "etiquette déjà imprimée";
+                  this.hasFormErrors = true;
+                  return;
+        }
+      }
       },
     ];
 
@@ -2248,11 +2262,17 @@ export class CreateBobineWoComponent implements OnInit {
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
+    this.printable = true;
+    if(controls.wo_qty_comp.value > 2000 || controls.wo_qty_comp.value < 0){
+      this.message = "la quantité que vous avez saisi est erroné";
+    this.hasFormErrors = true;
+    return;}
     this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value }).subscribe((res: any) => {
       if (res.data.wo_status == "C" ){this.message = "vous avez atteint la quantité prevue";
       this.hasFormErrors = true;
       return;}
     else {
+      
       if (controls.total_bobine.value > controls.wo_qty_ord.value ){this.message = "vous avez atteint la quantité prevue";
       this.hasFormErrors = true;
       return;}
@@ -2310,6 +2330,11 @@ export class CreateBobineWoComponent implements OnInit {
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
+    this.printable=true;
+    if(controls.wo_qty_rjct.value > 2000 || controls.wo_qty_rjct.value < 0){
+      this.message = "la quantité que vous avez saisi est erroné";
+    this.hasFormErrors = true;
+    return;}
     this.itemsService.getByOne({pt_draw:'SQUELETTE', pt_dsgn_grp:'N/BROY',pt_break_cat: controls.product_color.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)

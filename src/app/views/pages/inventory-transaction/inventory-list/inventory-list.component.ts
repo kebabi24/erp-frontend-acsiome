@@ -183,15 +183,15 @@ export class InventoryListComponent implements OnInit {
             
           // }, 
           {
-            id: "item.pt_draw",
+            id: "chr01",
             name: "FAMILLE",
-            field: "item.pt_draw",
+            field: "chr01",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
             grouping: {
-              getter: 'item.pt_draw',
+              getter: 'chr01',
               formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
@@ -205,15 +205,15 @@ export class InventoryListComponent implements OnInit {
             
           }, 
           {
-            id: "item.pt_break_cat",
+            id: "chr02",
             name: "COULEUR",
-            field: "item.pt_break_cat",
+            field: "chr02",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             filter: {collectionAsync:  this.http.get(`${API_URL_codes}/colors`),model: Filters.multipleSelect , operator: OperatorType.inContains },
             grouping: {
-              getter: 'item.pt_break_cat',
+              getter: 'chr02',
               formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
@@ -227,15 +227,15 @@ export class InventoryListComponent implements OnInit {
             
           }, 
           {
-            id: "item.pt_group",
+            id: "chr03",
             name: "Etat",
-            field: "item.pt_group",
+            field: "chr03",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
             grouping: {
-              getter: 'item.pt_group',
+              getter: 'chr03',
               formatter: (g) => `Etat: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so

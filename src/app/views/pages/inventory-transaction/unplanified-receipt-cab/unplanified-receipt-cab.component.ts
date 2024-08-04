@@ -107,6 +107,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   stat: String;
   domain: any;
   seq: any;
+  printable:boolean;
   dataprinter: [];
   domconfig: any;
   prodligne: any;
@@ -222,14 +223,15 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                     } else {
                       this.stat = this.location.loc_status;
                     }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: resp.data.pt_price });
                   });
                 });
               } else {
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null })
                 this.message = "article n'existe pas";
                 this.hasFormErrors = true;
                 return;
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
+                ;
               }
             });
           }
@@ -288,12 +290,22 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
             this.message = "vous ne pouvez pas modifier cette ligne";
             this.hasFormErrors = true;
             return;
-            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+            
           } else {
+            if(args.dataContext.tr_qty_loc < 2000 && args.dataContext.tr_qty_loc > 0){
+            this.printable = true
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
+            }  
+            else {
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+            this.message = "la quantité ne doit pas dépasser 2000";
+            this.hasFormErrors = true;
+            return;
+            }      
           }
         },
       },
@@ -632,10 +644,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       
             return;
           }
+          if (this.printable == true){
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
-            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
+            // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
             this.printbuttonState = true; 
+            this.printable = false
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             _lb.lb_rmks = controls.tr_rmks.value;
@@ -655,44 +669,42 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
             
-            // console.log(_lb);
-            // console.log(10 * 100.02)
+           
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                 barcode = lab.lb_ref;
-                  
-                this.labelService.addblob(_lb).subscribe((blob) => {
-                  console.log('print3',Edelweiss)
+                barcode = lab.lb_ref;
+                 this.index = this.dataset.findIndex((el) => {
+                  return el.tr_line == args.dataContext.id;
+                });
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });              
+                this.onSubmit();
+                this.labelService.addblob(_lb).subscribe((blob) => {                 
                   Edelweiss.print3(lab,this.currentPrinter);
                   
                 });
+                
               },
               (error) => {
                 this.message = "l'impression n'a pas été enregistrée";
                 this.hasFormErrors = true;
                 return;
               },
-              () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });
-                
-                
-                this.index = this.dataset.findIndex((el) => {
-                  return el.tr_line == args.dataContext.id;
-                });
-                console.log(this.index);
-                
-                this.onSubmit();
-                
-              }
+              
             );
           } else {
-            this.message = "Etiquette déjà imprimée ";
+            this.message = "veuillez choisir article et remplir le poids ";
             this.hasFormErrors = true;
             return;
           }
          
-        },
+        }
+        else {
+          this.message = "Etiquette déjà imprimée ";
+          this.hasFormErrors = true;
+          return;
+        }
+      }
       },
     ]; 
 

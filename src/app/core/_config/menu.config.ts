@@ -564,6 +564,18 @@ export class MenuConfig {
               title: "Controle Palette ",
               page: "/inventory-transaction/edit-status-ref",
             },
+            {
+              title: "Modification Palette ",
+              page: "/inventory-transaction/remodify-cab",
+            },
+            {
+              title: "Réimprimer Palette ",
+              page: "/inventory-transaction/reprint-cab",
+            },
+            {
+              title: "Retour Palette ",
+              page: "/inventory-transaction/return-cab",
+            },
 
             {
               title: "Consultation Stocks ",

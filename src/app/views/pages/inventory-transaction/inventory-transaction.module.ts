@@ -63,6 +63,9 @@ import { UpdatePriceUnpComponent } from './update-price-unp/update-price-unp.com
 import { BobineReceiptCabComponent } from './bobine-receipt-cab/bobine-receipt-cab.component';
 import { EditTransactionListComponent } from './edit-transaction-list/edit-transaction-list.component';
 import { ActivityListComponent } from './activity-list/activity-list.component';
+import { ReprintCabComponent } from './reprint-cab/reprint-cab.component';
+import { ReturnCabComponent } from './return-cab/return-cab.component';
+import { RemodifyCabComponent } from './remodify-cab/remodify-cab.component';
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -115,6 +118,18 @@ const routes: Routes = [
     component: EditStatusComponent,
   },
   {
+    path: "reprint-cab",
+    component: ReprintCabComponent,
+  },
+  {
+    path: "remodify-cab",
+    component: RemodifyCabComponent,
+  },
+  {
+    path: "return-cab",
+    component: ReturnCabComponent,
+  },
+  {
     path: "edit-status-ref",
     component: EditStatusRefComponent,
   },
@@ -161,7 +176,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent],
   imports: [
     CommonModule,
     HttpClientModule,

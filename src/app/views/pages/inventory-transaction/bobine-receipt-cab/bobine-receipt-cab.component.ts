@@ -67,7 +67,7 @@ export class BobineReceiptCabComponent implements OnInit {
   gridOptions4: GridOption = {};
   gridObj4: any;
   angularGrid4: AngularGridInstance;
-
+  printable:boolean;
   datasite: [];
   columnDefinitionssite: Column[] = [];
   gridOptionssite: GridOption = {};
@@ -276,10 +276,12 @@ export class BobineReceiptCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          
           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
             alert("Modification interdite");
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
           } else {
+            this.printable = true;
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
           }
         },
@@ -604,12 +606,23 @@ export class BobineReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.printbuttonState = true;
+          let barcode = ''
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
+          if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+            this.hasFormErrors = true;
+            this.message = "veuillez remplir le N° de lot";
+          
+      
+            return;
+          }
+          if (this.printable == true){
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+            // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
-            this.printbuttonState = true;
+            this.printbuttonState = true; 
+            this.printable = false
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             _lb.lb_rmks = controls.tr_rmks.value;
@@ -628,33 +641,43 @@ export class BobineReceiptCabComponent implements OnInit {
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
-            console.log(_lb);
-            // console.log(10 * 100.02)
+            
+           
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss.print3(lab);
-                });
-              },
-              (error) => {
-                alert("Erreur Impression Etiquette");
-              },
-              () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                //console.log("id", args.dataContext.id)
-                //console.log("dataset",this.dataset[args.dataContext.id])
-                this.index = this.dataset.findIndex((el) => {
+                barcode = lab.lb_ref;
+                 this.index = this.dataset.findIndex((el) => {
                   return el.tr_line == args.dataContext.id;
                 });
-                console.log(this.index);
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });              
                 this.onSubmit();
-              }
+                this.labelService.addblob(_lb).subscribe((blob) => {                 
+                  Edelweiss.print3(lab,this.currentPrinter);
+                  
+                });
+                
+              },
+              (error) => {
+                this.message = "l'impression n'a pas été enregistrée";
+                this.hasFormErrors = true;
+                return;
+              },
+              
             );
           } else {
-            alert("Etiquette dèjà imprimée");
+            this.message = "veuillez choisir article et remplir le poids ";
+            this.hasFormErrors = true;
+            return;
           }
-        },
+         
+        }
+        else {
+          this.message = "Etiquette déjà imprimée ";
+          this.hasFormErrors = true;
+          return;
+        }
+      }
       },
     ];
 
