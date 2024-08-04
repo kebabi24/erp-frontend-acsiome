@@ -844,6 +844,10 @@ export class MenuConfig {
               title: "Liste des Transferts Recettes ",
               page: "/account-receivable/list-transfert-payment",
             },
+            {
+              title: "Paiement Dépense",
+              page: "/account-payable/create-charge-payment",
+            },
           ],
         },
         {

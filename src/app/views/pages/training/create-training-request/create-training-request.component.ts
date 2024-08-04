@@ -96,6 +96,13 @@ export class CreateTrainingRequestComponent implements OnInit {
     gridObjj: any;
     angularGridj: AngularGridInstance;
 
+    datatr: any [];
+    columnDefinitionstr: Column[] = [];
+    gridOptionstr: GridOption = {};
+    gridObjtr: any;
+    angularGridtr: AngularGridInstance;
+    gridServicetr: GridService
+    dataViewtr: any
     row_number;
     user
     message=''
@@ -1049,33 +1056,194 @@ export class CreateTrainingRequestComponent implements OnInit {
       this.modalService.open(contenttask, { size: "xl" });
     }
 
-    getTraining(){
+    getTrainingDet(){
       this.dataset=[]
       // for(let job of this.selectedJob) {
 
       //   console.log(job)
       // }
+      this.datatr = [];
       this.itemsService
       .getByJob({detail:this.selectedJob})
       .subscribe((response: any) => {this.datasetitem = response.data
-      
-       let  id = 0
+        
+       let idd = 0
         for (let data of this.datasetitem){
-          this.gridService.addItem(
-            {
-              id: id + 1,
-              rqd_line: id + 1,
+
+         // this.gridServicetr.addItem(
+          let obj =  {
+              id: idd + 1,
+              rqd_line: idd + 1,
               rqd_part: data.pt_part,
               rqd_desc : data.pt_desc1,
               rqd_req_qty : 1,
               rqd_um: data.pt_um,
-            },
-            { position: "bottom" }
-          );
-            id++
+            };
+              this.datatr.push(obj)
+            idd++;
         }
-      
+
+      console.log(this.datatr)
+      this.dataViewtr.setItems(this.datatr)
       });
-      this.modalService.dismissAll()
+      //this.modalService.dismissAll()
+      let element: HTMLElement = document.getElementById('openTrsGrid') as HTMLElement;
+      element.click();
     }
+
+    handleSelectedRowsChangedtr(e, args) {
+        if (Array.isArray(args.rows) && this.gridObjtr) {
+          this.selectedJob = args.rows.map((idx: number) => {
+            const item = this.gridObjtr.getDataItem(idx);
+            return item.jb_code;
+          });
+        }
+       
+      }
+      angularGridReadytr(angularGrid: AngularGridInstance) {
+       
+        this.gridObjtr = (angularGrid && angularGrid.slickGrid) || {};
+        this.angularGridtr = angularGrid
+        this.dataViewtr = angularGrid.dataView
+        this.gridObjtr = angularGrid.slickGrid
+        this.gridServicetr = angularGrid.gridService
+      }
+      
+      prepareGridtr() {
+        this.columnDefinitionstr = [
+            {
+                id: "id",
+                field: "id",
+                excludeFromHeaderMenu: true,
+                formatter: Formatters.deleteIcon,
+                minWidth: 30,
+                maxWidth: 30,
+                onCellClick: (e: Event, args: OnEventArgs) => {
+                    if (confirm('Êtes-vous sûr de supprimer cette ligne?')) {
+                        this.angularGrid.gridService.deleteItem(args.dataContext);
+                      }
+                  }
+            },
+            
+            {
+                id: "rqd_line",
+                name: "Ligne",
+                field: "rqd_line",
+                minWidth: 50,
+                maxWidth: 50,
+                selectable: true,
+            },
+            {
+                id: "rqd_part",
+                name: "Article",
+                field: "rqd_part",
+                sortable: true,
+                filterable: false,
+               
+            },
+            
+            {
+                id: "rqd_desc",
+                name: "Description",
+                field: "rqd_desc",
+                sortable: true,
+                filterable: false,
+                
+            },
+            {
+                id: "rqd_req_qty",
+                name: "QTE",
+                field: "rqd_req_qty",
+                sortable: true,
+                filterable: false,
+                type: FieldType.float,
+               
+            },
+            {
+                id: "rqd_um",
+                name: "UM",
+                field: "rqd_um",
+                sortable: true,
+               
+                filterable: false,
+                type: FieldType.float,
+               
+            },
+            
+        ];
+      
+        this.gridOptionstr = {
+            enableSorting: true,
+            enableCellNavigation: true,
+            enableExcelCopyBuffer: true,
+            enableFiltering: true,
+            enableAutoResize:true,
+            enableAutoSizeColumns:true,
+            autoFitColumnsOnFirstLoad: true,
+            autoEdit: false,
+            rowHeight:40,
+            autoHeight: false,
+            frozenColumn: 0,
+            frozenBottom: true,
+            enableRowSelection: true,
+            enableCheckboxSelector: true,
+            checkboxSelector: {
+              // optionally change the column index position of the icon (defaults to 0)
+              // columnIndexPosition: 1,
+      
+              // remove the unnecessary "Select All" checkbox in header when in single selection mode
+              hideSelectAllCheckbox: false,
+      
+              // you can override the logic for showing (or not) the expand icon
+              // for example, display the expand icon only on every 2nd row
+              // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+            },
+            multiSelect: true,
+            rowSelectionOptions: {
+              // True (Single Selection), False (Multiple Selections)
+              selectActiveRow: false,
+            },
+          };
+          // let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+        
+        // fill the dataset with your data
+        //this.datatr= []
+        
+      }
+      opentr(contenttask) {
+        this.prepareGridtr();
+        this.modalService.open(contenttask, { size: "xl" });
+      }
+      getTraining(){
+        this.dataset=[]
+        // for(let job of this.selectedJob) {
+  
+        //   console.log(job)
+        // }
+        
+       
+         let idd = 0
+          for (let data of this.datatr){
+  
+           // this.gridServicetr.addItem(
+            let obj =  {
+                id: idd + 1,
+                rqd_line: idd + 1,
+                rqd_part: data.rqd_part,
+                rqd_desc : data.rqd_desc,
+                rqd_req_qty : 1,
+                rqd_um: data.rqd_um
+              };
+                this.dataset.push(obj)
+              idd++;
+          }
+  
+        console.log(this.dataset)
+        this.dataView.setItems(this.dataset)
+       
+        this.modalService.dismissAll()
+        // let element: HTMLElement = document.getElementById('openTrsGrid') as HTMLElement;
+        // element.click();
+      }
+  
 }

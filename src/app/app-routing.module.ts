@@ -381,6 +381,10 @@ const routes: Routes = [
         path: "quality-assurance",
         loadChildren: () => import("./views/pages/quality-assurance/quality-assurance.module").then((m) => m.QualityAssuranceModule),
       },
+      {
+        path: "financialcharge",
+        loadChildren: () => import("./views/pages/financialcharge/financialcharge.module").then((m) => m.FinancialchargeModule),
+      },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "**", redirectTo: "dashboard", pathMatch: "full" },
     ],
