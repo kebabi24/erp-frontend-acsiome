@@ -458,8 +458,12 @@ export class MenuConfig {
               page: "/articles/add",
             },
             {
-              title: "Ajouter Article via Modèle",
+              title: "Génerer Article via Modèle",
               page: "/articles/create-item-mod",
+            },
+            {
+              title: "Génerer Bobine par Modèle",
+              page: "/articles/create-bobine-mod",
             },
             {
               title: "MAINT Cout Article",
@@ -477,6 +481,10 @@ export class MenuConfig {
                 {
                   title: "Ajouter Un Modèle",
                   page: "/articles/create-mod",
+                },
+                {
+                  title: "Ajouter Un Modèle bobine",
+                  page: "/articles/create-mod-bobine",
                 },
                 {
                   title: "Liste des Modèles",
@@ -581,6 +589,11 @@ export class MenuConfig {
               title: "Consultation Stocks ",
               page: "/inventory-transaction/inventory-list",
             },
+            {
+              title: "Consultation Stocks Bobine ",
+              page: "/inventory-transaction/list-inv-bobine",
+            },
+
             {
               title: "Consultation des Transactions ",
               page: "/inventory-transaction/transaction-list",
@@ -990,6 +1003,10 @@ export class MenuConfig {
             {
               title: "Consommation extrusion",
               page: "/manufacturing/iss-bobine-wo",
+            },
+            {
+              title: "Consommation bobine",
+              page: "/manufacturing/bobine-issue",
             },
             {
               title: "Déclaration Production",

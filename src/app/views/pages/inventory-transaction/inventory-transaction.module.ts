@@ -66,6 +66,7 @@ import { ActivityListComponent } from './activity-list/activity-list.component';
 import { ReprintCabComponent } from './reprint-cab/reprint-cab.component';
 import { ReturnCabComponent } from './return-cab/return-cab.component';
 import { RemodifyCabComponent } from './remodify-cab/remodify-cab.component';
+import { ListInvBobineComponent } from './list-inv-bobine/list-inv-bobine.component';
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -138,6 +139,10 @@ const routes: Routes = [
     component: ListInvComponent,
   },
   {
+    path: "list-inv-bobine",
+    component: ListInvBobineComponent,
+  },
+  {
     path: "list-rct",
     component: ListRctComponent,
   },
@@ -176,7 +181,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent],
   imports: [
     CommonModule,
     HttpClientModule,

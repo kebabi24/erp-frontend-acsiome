@@ -53,6 +53,7 @@ export class BobineReceiptCabComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
   error = false;
+  nom:any;
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
@@ -480,6 +481,7 @@ export class BobineReceiptCabComponent implements OnInit {
           if (args.dataContext.tr_ref != null) {
             alert("Modification interdite");
           } else {
+            this.printable = true
             this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
               console.log(response.data);
               if (response.data.length != 0) {
@@ -636,7 +638,7 @@ export class BobineReceiptCabComponent implements OnInit {
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
             _lb.lb_printer = this.PathPrinter;
-            _lb.lb_cust = this.provider.ad_name;
+            _lb.lb_cust = controls.tr_addr.value;
             _lb.lb_grp = this.employeGrp;
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
@@ -781,6 +783,7 @@ export class BobineReceiptCabComponent implements OnInit {
             console.log("aaaaaaaaaaa", response.data);
             if (response.data != null) {
               this.provider = response.data;
+              this.nom = this.provider.ad_name
             }
           });
           console.log("hehehehehehehehehehe");
@@ -830,6 +833,7 @@ export class BobineReceiptCabComponent implements OnInit {
         this.error = true;
       } else {
         this.provider = response.data;
+        this.nom = this.provider.ad_name
       }
     });
   }
@@ -1246,7 +1250,7 @@ export class BobineReceiptCabComponent implements OnInit {
       if (this.pdl == null) {
         //this.prodligne = ["SQUELETTE", "BOBINE"]
         console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp);
-        this.itemsService.getBy({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getbywithperte({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       } else {
         this.itemsService.getByOp({ pt_break_cat: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       }
@@ -1732,6 +1736,7 @@ export class BobineReceiptCabComponent implements OnInit {
 
         this.provider = item;
         controls.tr_addr.setValue(item.ad_addr || "");
+        this.nom = item.ad_name
       });
     }
   }

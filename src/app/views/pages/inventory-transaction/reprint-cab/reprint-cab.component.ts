@@ -122,8 +122,10 @@ export class ReprintCabComponent implements OnInit {
     dateexpire: String;
     sct;
     lddet: any
-    
+    lbdet: any
     acts: any[] = [];
+    data: [];
+    trlot:any;
   constructor(
       config: NgbDropdownConfig,
       private statusFB: FormBuilder,
@@ -195,17 +197,22 @@ export class ReprintCabComponent implements OnInit {
       this.isExist = false
       const controls = this.statusForm.controls
       /** check form */
-      if (this.statusForm.invalid) {
-        console.log("here")
-          Object.keys(controls).forEach((controlName) =>
-              controls[controlName].markAsTouched()
-          )
-          this.message = "vous ne pouvez pas supprimer cette ligne";
-          this.isExist = true
-          return
-      }
+      // if (this.statusForm.invalid) {
+      //   console.log("here")
+      //     Object.keys(controls).forEach((controlName) =>
+      //         controls[controlName].markAsTouched()
+      //     )
+      //     this.message = "ce champs ne peut pas etre vide";
+      //     this.isExist = true
+      //     return
+      // }
 
-     
+     if (controls.tr_rmks.value == null || controls.tr_rmks.value == null){
+      this.message = "veuillez choisir la cause de la réimpression";
+           this.isExist = true
+           return
+
+     }
       //CONTROLE CHOIX DECISION
 
       // tslint:disable-next-line:prefer-const
@@ -214,7 +221,7 @@ export class ReprintCabComponent implements OnInit {
       let cabs : any;
       const _lb = new Label();
       this.labelService.getBy({ lb_ref: controls.ref.value }).subscribe(
-        (reponse: any) => (cabs = reponse.data.label, console.log(controls.ref.value,cabs.lb__dec01),
+        (reponse: any) => (cabs = reponse.data.label, 
         _lb.lb__dec01 = cabs.lb__dec01,
         
         _lb.lb_site = cabs.lb_site,
@@ -234,6 +241,7 @@ export class ReprintCabComponent implements OnInit {
         _lb.lb_addr = cabs.lb_addr,
         _lb.lb_tel = cabs.lb_tel,
         _lb.lb_ref = cabs.lb_ref
+        
       ),
         (error) => {
           this.message = "veuillez verifier le code barre";
@@ -257,6 +265,11 @@ export class ReprintCabComponent implements OnInit {
           });
           this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
           this.loadingSubject.next(false);
+
+          
+          let tr = this.prepareIt();
+          this.addIt(tr);
+
         },
         (error) => {
           this.message = "l'impression n'a pas été enregistrée";
@@ -269,18 +282,19 @@ export class ReprintCabComponent implements OnInit {
    */
   prepareIt(): InventoryTransaction {
       const controls = this.statusForm.controls
-console.log( controls.tr_serial.value)
+
       const _it = new InventoryTransaction()
-      _it.tr_site = controls.tr_site.value
-      _it.tr_loc = controls.tr_loc.value
+      _it.tr_site = '1000'
+      _it.tr_loc = 'EMPL PLAST2'
       _it.tr_status = controls.tr_status.value
       _it.tr_part = controls.tr_part.value
-      _it.tr_type = "ISS-CHL"
+      _it.tr_type = "REPRINT"
       _it.tr_ref  = controls.ref.value
       _it.tr_serial = controls.tr_serial.value
       _it.tr_vend_lot = controls.tr_serial_prev.value
       _it.tr_rmks = controls.tr_rmks.value
       _it.tr_user1 = controls.tr_user1.value
+      _it.tr_addr = controls.tr_site.value
       _it.tr_expire = controls.tr_expire.value
       ? `${controls.tr_expire.value.year}/${controls.tr_expire.value.month}/${controls.tr_expire.value.day}`
       : null
@@ -293,9 +307,10 @@ console.log( controls.tr_serial.value)
    * @param _it: InventoryTransactionModel
    */
   addIt(_it: InventoryTransaction) {
+    const controls = this.statusForm.controls
       this.loadingSubject.next(true)
-      this.inventoryTransactionService.addIssChlRef(_it).subscribe(
-          (reponse) => console.log("response", Response),
+      this.inventoryTransactionService.reprint(_it).subscribe(
+          (reponse) => console.log("response", reponse),
           (error) => {
               this.layoutUtilsService.showActionNotification(
                   "Erreur verifier les informations",
@@ -308,14 +323,15 @@ console.log( controls.tr_serial.value)
           },
           () => {
               this.layoutUtilsService.showActionNotification(
-                  "Ajout avec succès",
+                  "imprimé avec succès",
                   MessageType.Create,
                   10000,
                   true,
                   true
               )
               this.loadingSubject.next(false)
-              this.router.navigateByUrl("/")
+              controls.ref.setValue(null)
+              // this.router.navigateByUrl("/")
           }
       )
   }
@@ -1033,56 +1049,80 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
     const controls = this.statusForm.controls
     const ref = controls.ref.value
     let description : any
-    this.labelService.getBy({ lb_ref: ref  }).subscribe(
-      (response: any) => {
-        this.lddet = response.data
-        //console.log(this.lddet.ld_qty_oh)
-    if (this.lddet != null ) {
+    console.log(ref,'ref')
+    this.locationDetailService.getBy({ld_ref:ref}).subscribe(
+      (ldresp: any) => {if(ldresp != null){
+        if (ldresp.data.ld_qty_oh == 0){
+            this.message = "cette réference a été consommée";
+            this.isExist = true
+            return
+        }
+        this.labelService.getBy({ lb_ref: ref  }).subscribe(
+          (response: any) => {
+            this.lbdet = response.data.label
+            if (this.lbdet != null ) {
+    
+                    this.itemService.getByOne({pt_part: this.lbdet.lb_part  }).subscribe(
+                    (respopart: any) => {
+                           description = respopart.data.pt_desc1
+                           this.sctService.getByOne({ sct_site: respopart.data.pt_site, sct_part: this.lbdet.lb_part, sct_sim: 'STD-CG' }).subscribe(
+                                          (respo: any) => {
+                                                this.sct = respo.data
+                        
+        controls.tr_site.setValue(this.lbdet.lb_cust)
+        controls.tr_loc.setValue(this.lbdet.lb_date)
+        controls.tr_part.setValue(this.lbdet.lb_part)
+        controls.tr_qty_loc.setValue(this.lbdet.lb_qty)
+        controls.tr_desc.setValue(description)
+        controls.tr_serial_prev.setValue(this.lbdet.lb_lot)
+        controls.tr_serial.setValue(this.lbdet.ld_lot)
+        // controls.tr_status.setValue(this.lddet.ld_status)
+        controls.tr_expire.setValue(this.lbdet.lb__dec01)
+        if(description == null){  controls.ref.setValue(null)
+          controls.tr_site.setValue(null)
+        controls.tr_loc.setValue(null)
+        controls.tr_part.setValue(null)
+        controls.tr_qty_loc.setValue(null)
+        controls.tr_desc.setValue(null)
+        controls.tr_serial_prev.setValue(null)
+        controls.tr_serial.setValue(null)
+        controls.tr_status.setValue(null)
+        controls.tr_expire.setValue(null)
+        // document.getElementById("ref").focus();
+          this.message = "cette réference n'existe pas";
+          this.isExist = true
+          return
+        //  this.gridService.updateItemById(cabs.id,{...cabs , tr_part: null })
+        }
+         
+    })
       
-     this.itemService.getByOne({pt_part: this.lddet.lb_part  }).subscribe(
-      (respopart: any) => {
-        console.log(respopart)
-        description = respopart.data.pt_desc1
-     this.sctService.getByOne({ sct_site: controls.pt_site.value, sct_part: this.lddet.lb_part, sct_sim: 'STD-CG' }).subscribe(
-      (respo: any) => {
-        this.sct = respo.data
-        console.log(this.sct)
-       
-    controls.tr_site.setValue(this.lddet.lb_cust)
-    controls.tr_loc.setValue(this.lddet.lb_date)
-    controls.tr_part.setValue(this.lddet.lb_part)
-    controls.tr_qty_loc.setValue(this.lddet.lb_qty)
-    controls.tr_desc.setValue(description)
-    controls.tr_serial_prev.setValue(this.lddet.lb_lot)
-    controls.tr_serial.setValue(this.lddet.ld_lot)
-    // controls.tr_status.setValue(this.lddet.ld_status)
-    controls.tr_expire.setValue(this.lddet.lb__dec01)
-   
+    })     
+            }
+      else { 
+          controls.ref.setValue(null)
+          controls.tr_site.setValue(null)
+        controls.tr_loc.setValue(null)
+        controls.tr_part.setValue(null)
+        controls.tr_qty_loc.setValue(null)
+        controls.tr_desc.setValue(null)
+        controls.tr_serial_prev.setValue(null)
+        controls.tr_serial.setValue(null)
+        controls.tr_status.setValue(null)
+        controls.tr_expire.setValue(null)
+        // document.getElementById("ref").focus();
+          this.message = "cette réference n'existe pas";
+          this.isExist = true
+          return
+      //  this.gridService.updateItemById(cabs.id,{...cabs , tr_part: null })
      
-})
-  
-})     
-  }
-  else { 
-      controls.ref.setValue(null)
-      controls.tr_site.setValue(null)
-    controls.tr_loc.setValue(null)
-    controls.tr_part.setValue(null)
-    controls.tr_qty_loc.setValue(null)
-    controls.tr_desc.setValue(null)
-    controls.tr_serial_prev.setValue(null)
-    controls.tr_serial.setValue(null)
-    controls.tr_status.setValue(null)
-    controls.tr_expire.setValue(null)
-    // document.getElementById("ref").focus();
-      this.message = "cette réference n'existe pas";
-      this.isExist = true
-      return
-  //  this.gridService.updateItemById(cabs.id,{...cabs , tr_part: null })
- 
+    
+    }
+    })
+    
+      }})
+    
 
-}
-})
   }
   handleSelectedRowsChanged6(e, args) {
     const controls = this.statusForm.controls
@@ -1090,7 +1130,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         args.rows.map((idx) => {
             const cause = this.gridObj6.getDataItem(idx)
             console.log(cause)
-            controls.tr_rmks.setValue(cause.rsn_ref || "")
+            controls.tr_rmks.setValue(cause.rsn_desc || "")
 
         })
     }
@@ -1164,7 +1204,7 @@ prepareGrid6() {
     // fill the dataset with your data
     
     this.reasonService
-        .getBy ({rsn_type: 'STATUSCHANGE' })
+        .getBy ({rsn_type: 'REPRINT' })
         .subscribe((response: any) => (this.causes = response.data))
      
 }
@@ -1268,5 +1308,9 @@ getacts() {
         // controls.wo_site.setValue("");
       }
     });
+}
+onAlertClose($event) {
+  this.hasFormErrors = false;
+ 
 }
 }

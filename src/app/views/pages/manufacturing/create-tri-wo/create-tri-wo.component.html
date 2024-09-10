@@ -5,7 +5,7 @@
         <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
         <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button-->
       </ng-container>
-    </kt-portlet-header>
+    </kt-portlet-header> 
     <kt-portlet-body>
       <div class="example-preview">
         <form class="form" [formGroup]="woForm">
@@ -57,7 +57,29 @@
   
                 <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
               </div>
-            </div>   
+            </div> 
+            <div class="form-group col-2">
+              <label class="form-group">Remplacer:</label>
+              <div class="input-group input-group-sm">
+                <span class="switch switch-icon">
+                  <label>
+                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="adduser2" (change)="onChangeuser()" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <label class="form-group">Remplacement:</label>
+              <div class="input-group input-group-sm">
+                <input type="text" id="emp2" [className]="woForm.controls['wo_user2'].errors && (woForm.controls['wo_user2'].dirty || woForm.controls['wo_user2'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_user2" aria-describedby="basic-addon2" disabled  />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="openemp2(contentemp2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                </div>
+  
+                <!-- <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div> -->
+              </div>
+            </div>  
           </div>
           
           <!-- SEARCH PRODUCT START  -->
@@ -320,6 +342,30 @@
             </div>
         </ng-template>
     </div>
+    <div>
+      <ng-template #contentemp2 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">choisir les Employés</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridemp2"
+                      [columnDefinitions]="columnDefinitionsemp2" (onAngularGridCreated)="angularGridReadyemp2($event)"
+                      (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp2($event.detail.eventData, $event.detail.args)"
+                     
+                      [gridOptions]="gridOptionsemp2" [dataset]="emps2">
+                  </angular-slickgrid>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+              <button type="button" class="btn btn-primary" (click)="addit2()" (click)="c('Close click')">Ok</button>
+          </div>
+      </ng-template>
+  </div>
     </kt-portlet-body>
   </kt-portlet>
   

@@ -77,7 +77,9 @@ import { UpdateModComponent } from './update-mod/update-mod.component';
 import { CreateItemModComponent } from './create-item-mod/create-item-mod.component';
 import { CreateStdItemComponent } from './create-std-item/create-std-item.component';
 import { ListStdUpdateComponent } from './list-std-update/list-std-update.component';
-import { EditStdItemComponent } from './edit-std-item/edit-std-item.component'
+import { EditStdItemComponent } from './edit-std-item/edit-std-item.component';
+import { CreateModBobineComponent } from './create-mod-bobine/create-mod-bobine.component';
+import { CreateBobineModComponent } from './create-bobine-mod/create-bobine-mod.component'
 
 
 const routes: Routes = [
@@ -124,6 +126,10 @@ const routes: Routes = [
                 component: CreateModComponent,
             },
             {
+                path: "create-mod-bobine",
+                component: CreateModBobineComponent,
+            },
+            {
                 path: "list-mod",
                 component: ListModComponent,
             },
@@ -138,6 +144,10 @@ const routes: Routes = [
             {
                 path: "create-item-mod",
                 component: CreateItemModComponent,
+            },
+            {
+                path: "create-bobine-mod",
+                component: CreateBobineModComponent,
             },
             {
                 path: "edit-std-item/:id",
@@ -171,6 +181,8 @@ const routes: Routes = [
         CreateStdItemComponent,
         ListStdUpdateComponent,
         EditStdItemComponent,
+        CreateModBobineComponent,
+        CreateBobineModComponent,
     ],
     imports: [
         CommonModule,

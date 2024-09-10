@@ -589,7 +589,7 @@ export class CreatePsComponent implements OnInit {
           this.loadingSubject.next(false);
       //    console.log(this.provider, po, this.dataset);
       //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl(`/manufacturing/list-ps`);
         }
       );
   }
@@ -869,7 +869,7 @@ export class CreatePsComponent implements OnInit {
     // fill the dataset with your data
     const controls = this.psForm.controls
     this.itemsService
-      .getBy({pt_bom_code:controls.type.value,pt_break_cat:controls.color.value})
+      .getBy({pt_bom_code:controls.type.value})
       .subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {

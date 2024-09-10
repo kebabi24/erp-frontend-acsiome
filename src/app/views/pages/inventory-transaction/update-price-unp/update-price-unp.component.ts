@@ -350,7 +350,7 @@ this.addIt(this.dataset)
                   controls.tr_loc.setValue(resp.data[0].tr_loc || "");
                   controls.tr_rmks.setValue(resp.data[0].tr_rmks || "");
                   controls.tr_addr.setValue(resp.data[0].tr_addr || "");
-                  this.addressService.getBy({ad_addr: resp.data[0].tr_addr}).subscribe((response: any)=>{
+                  this.addressService.getBy({ad_name: resp.data[0].tr_addr}).subscribe((response: any)=>{
                 
                 
                     this.provider = response.data
@@ -638,7 +638,7 @@ printpdf(nbr) {
   doc.text("Site Source : " + controlss.tr_site.value, 20, 60);
   doc.text("Magasin     : " + controlss.tr_loc.value, 100, 60);
   doc.text("Fournisseur : " + controlss.tr_addr.value, 20, 65);
-  doc.text( controlss.name.value, 50, 65);
+  // doc.text( controlss.name.value, 50, 65);
  
 
   doc.line(10, 85, 205, 85);
@@ -685,7 +685,7 @@ doc.addPage();
       doc.text("Site Source : " + controlss.tr_site.value, 20, 60);
       doc.text("Magasin     : " + controlss.tr_loc.value, 100, 60);
       doc.text("Fournisseur : " + controlss.tr_addr.value, 20, 65);
-      doc.text( controlss.name.value, 50, 65);
+      // doc.text( controlss.name.value, 50, 65);
 
       doc.line(10, 85, 205, 85);
       doc.line(10, 90, 205, 90);

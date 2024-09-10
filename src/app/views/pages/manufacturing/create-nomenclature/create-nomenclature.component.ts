@@ -91,7 +91,7 @@ createForm() {
       bom_formula: [{ value: this.bom.bom_formula, disabled: !this.isExist }],
       bom_rmks: [{ value: this.bom.bom_rmks, disabled: !this.isExist }],
       product_type: ["", Validators.required],
-      product_color: ["", Validators.required],
+      // product_color: ["", Validators.required],
   })
   
 }
@@ -154,7 +154,7 @@ onSubmit() {
       _bom.bom_formula = controls.bom_formula.value
       _bom.bom_rmks = controls.bom_rmks.value
       _bom.bom__chr01 = controls.product_type.value
-      _bom.bom__chr02 = controls.product_color.value
+      // _bom.bom__chr02 = controls.product_color.value
       return _bom
   }
 /**
@@ -188,7 +188,7 @@ onSubmit() {
               this.loadingSubject.next(false)
               const bom_parent = controls.bom_parent.value
               
-              this.router.navigateByUrl(`/manufacturing/edit-ps/${bom_parent}`)
+              this.router.navigateByUrl(`/manufacturing/list-bom`)
           }
       )
   }

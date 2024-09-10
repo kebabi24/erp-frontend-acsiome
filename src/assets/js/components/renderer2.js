@@ -421,7 +421,7 @@ var Edelweiss = (function () {
           const pageHeight = 284; // Height of the page in points
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-          const time = new Date().toLocaleTimeString();
+          const time = new Date(lb.createdAt).toLocaleTimeString();
           console.log('renderer.js')
           doc.text('FOURNISSEUR : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
@@ -517,7 +517,7 @@ var Edelweiss2 = (function () {
           const pageHeight = 284; // Height of the page in points
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-          const time = new Date().toLocaleTimeString();
+          const time = new Date(lb.createdAt).toLocaleTimeString();
           
           doc.text('MACHINE : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
@@ -554,7 +554,7 @@ var Edelweiss2 = (function () {
               .font('Helvetica-Bold')
               .fontSize(12)
 
-              .text('HEURE:' + time, 180, 58);
+              .text('HEURE:' + time, 180, 38);
 
           const filenamepdf = 'lb.lb_ref' + '.pdf';
 

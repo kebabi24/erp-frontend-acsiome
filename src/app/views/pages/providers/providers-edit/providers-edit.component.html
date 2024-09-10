@@ -31,7 +31,7 @@
 
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Fournisseur:</label>
+                                        <label class="form-group ">Code Fournisseur:</label>
                                         <input type="text" [(ngModel)]="providerEdit.vd_addr" 
                                             [className]="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="ad_addr">
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group ">Nom:</label>
+                                        <label class="form-group ">Nom fournisseur:</label>
                                             <input type="text"
                                                 [className]="addressForm.controls['ad_name'].errors && (addressForm.controls['ad_name'].dirty || addressForm.controls['ad_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 formControlName="ad_name">

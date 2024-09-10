@@ -40,6 +40,8 @@ declare var Edelweiss: any;
   styleUrls: ["./unplanified-receipt-cab.component.scss"],
 })
 export class UnplanifiedReceiptCabComponent implements OnInit {
+  seuil : any;
+  nom:any;
   currentPrinter: string;
   PathPrinter: string;
   employeGrp: string;
@@ -65,12 +67,33 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   gridOptions4: GridOption = {};
   gridObj4: any;
   angularGrid4: AngularGridInstance;
-
+  user1: any;
   datasite: [];
   columnDefinitionssite: Column[] = [];
   gridOptionssite: GridOption = {};
   gridObjsite: any;
   angularGridsite: AngularGridInstance;
+
+  emps: [];
+  columnDefinitionsemp: Column[] = [];
+  gridOptionsemp: GridOption = {};
+  gridObjemp: any;
+  angularGridemp: AngularGridInstance;
+  dataViewemp: any;
+  gridServiceemp: GridService;
+  emps2: [];
+  columnDefinitionsemp2: Column[] = [];
+  gridOptionsemp2: GridOption = {};
+  gridObjemp2: any;
+  angularGridemp2: AngularGridInstance;
+  dataViewemp2: any;
+  gridServiceemp2: GridService;
+  selectedIndexes: any[];
+  selectedIndexes2: any[];
+  index: any;
+  
+  user2: any;
+  adduser: boolean = true;
 
   dataloc: [];
   columnDefinitionsloc: Column[] = [];
@@ -94,6 +117,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   gridOptions2: GridOption = {};
   gridObj2: any;
   angularGrid2: AngularGridInstance;
+
+  
 
   user: any;
   trlot: string;
@@ -120,7 +145,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   angularGridprinter: AngularGridInstance;
   nligne: any;
   pdl: any;
-  index: any;
+  
   constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
@@ -226,6 +251,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: resp.data.pt_price });
                   });
                 });
+                this.codeService.getByOne({code_fldname:'LIMIT',code_value:resp.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
               } else {
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null })
                 this.message = "article n'existe pas";
@@ -289,20 +315,21 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          
           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
             this.message = "vous ne pouvez pas modifier cette ligne";
             this.hasFormErrors = true;
             return;
             
-          } else {
-            if(args.dataContext.tr_qty_loc < 2000 && args.dataContext.tr_qty_loc > 0){
+          } else {console.log(this.seuil)
+            if(args.dataContext.tr_qty_loc < this.seuil && args.dataContext.tr_qty_loc > 0){
             this.printable = true
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
             }  
             else {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
-            this.message = "la quantité ne doit pas dépasser 2000";
+            this.message = "la quantité dépasse la limite";
             this.hasFormErrors = true;
             return;
             }      
@@ -405,31 +432,31 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         // },
         formatter: Formatters.decimal,
       },
-      // {
-      //   id: "tr_site",
-      //   name: "Site",
-      //   field: "tr_site",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //   editor: {
-      //     model: Editors.text,
-      //   },
-      //   onCellChange: (e: Event, args: OnEventArgs) => {
-      //     this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
-      //       console.log(response.data);
+      {
+        id: "tr_site",
+        name: "Site",
+        field: "tr_site",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        // editor: {
+        //   model: Editors.text,
+        // },
+        // onCellChange: (e: Event, args: OnEventArgs) => {
+        //   this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
+        //     console.log(response.data);
 
-      //       if (response.data) {
-      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
-      //       } else {
-      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
+        //     if (response.data) {
+        //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
+        //     } else {
+        //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
 
-      //         // this.gridService.onItemUpdated;
-      //        
-      //       }
-      //     });
-      //   },
-      // },
+        //       // this.gridService.onItemUpdated;
+             
+        //     }
+        //   });
+        // },
+      },
       // {
       //   id: "mvids",
       //   field: "cmvids",
@@ -443,40 +470,40 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //     element.click();
       //   },
       // },
-      // {
-      //   id: "tr_loc",
-      //   name: "Emplacement",
-      //   field: "tr_loc",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //   editor: {
-      //     model: Editors.text,
-      //   },
-      //   onCellChange: (e: Event, args: OnEventArgs) => {
-      //     console.log(args.dataContext.tr_loc);
+      {
+        id: "tr_loc",
+        name: "Emplacement",
+        field: "tr_loc",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        // editor: {
+        //   model: Editors.text,
+        // },
+        // onCellChange: (e: Event, args: OnEventArgs) => {
+        //   console.log(args.dataContext.tr_loc);
 
-      //     this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
-      //       this.location = response.data;
-      //       if (response.data) {
-      //         this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-      //           console.log(resstat);
-      //           const { data } = resstat;
+        //   this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
+        //     this.location = response.data;
+        //     if (response.data) {
+        //       this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+        //         console.log(resstat);
+        //         const { data } = resstat;
 
-      //           if (data) {
-      //             this.stat = null;
-      //           } else {
-      //             this.stat = this.location.loc_status;
-      //           }
-      //           this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
-      //         });
-      //       } else {
-      //         
-      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
-      //       }
-      //     });
-      //   },
-      // },
+        //         if (data) {
+        //           this.stat = null;
+        //         } else {
+        //           this.stat = this.location.loc_status;
+        //         }
+        //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
+        //       });
+        //     } else {
+              
+        //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
+        //     }
+        //   });
+        // },
+      },
       // {
       //   id: "mvidl",
       //   field: "cmvidl",
@@ -507,6 +534,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             this.hasFormErrors = true;
             return;
           } else {
+            this.printable = true
             this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
               console.log(response.data);
               if (response.data.length != 0) {
@@ -645,7 +673,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             return;
           }
           if (this.printable == true){
-          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != 0 && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
             this.printbuttonState = true; 
@@ -659,7 +687,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             _lb.lb_lot = args.dataContext.tr_serial;
             _lb.lb_date = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
             _lb.lb_qty = args.dataContext.tr_qty_loc;
-            _lb.lb_um = args.dataContext.tr_um;
+            _lb.lb_um = args.dataContext.tr_um; 
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
             _lb.lb_printer = this.PathPrinter;
@@ -678,11 +706,9 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                   return el.tr_line == args.dataContext.id;
                 });
                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });              
+                
                 this.onSubmit();
-                this.labelService.addblob(_lb).subscribe((blob) => {                 
-                  Edelweiss.print3(lab,this.currentPrinter);
-                  
-                });
+                              
                 
               },
               (error) => {
@@ -690,6 +716,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                 this.hasFormErrors = true;
                 return;
               },
+              () => {this.labelService.addblob(_lb).subscribe((blob) => {                 
+                Edelweiss.print3(lab,this.currentPrinter);
+                
+              });
+}
               
             );
           } else {
@@ -773,8 +804,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.domconfig = false;
       }
     );
+    this.seuil = 1200;
     this.createForm();
     console.log(this.PathPrinter);
+    
   }
 
   //create form
@@ -796,8 +829,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       tr_addr: [this.inventoryTransaction.tr_addr],
+      tr_user1: [this.inventoryTransaction.tr_user1],
+      tr_user2: [this.inventoryTransaction.tr_user2],
       printer: [this.user.usrd_dft_printer],
       print: [true],
+      adduser2:[false],
     });
     const controls = this.trForm.controls;
     console.log(this.domconfig);
@@ -806,12 +842,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       (reponse: any) => {
         if (reponse.data != null) {
           controls.tr_addr.setValue(reponse.data.code_value), controls.tr_addr.disable();
-
+          
           this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
             //   const { data } = response;
             console.log("aaaaaaaaaaa", response.data);
             if (response.data != null) {
               this.provider = response.data;
+              this.nom = this.provider.ad_name;
             }
           });
           console.log("hehehehehehehehehehe");
@@ -861,6 +898,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.error = true;
       } else {
         this.provider = response.data;
+        this.nom = this.provider.ad_name;
       }
     });
   }
@@ -990,6 +1028,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
     _tr.tr_rmks = controls.tr_rmks.value;
     _tr.tr_addr = controls.tr_addr.value;
+    _tr.tr_user1 = controls.tr_user1.value;
+    _tr.tr_user2 = controls.tr_user2.value;
 
     return _tr;
   }
@@ -1020,6 +1060,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         // window.open(fileUrl)
       },
       (error) => {
+        console.log(this.trlot)
         this.message = "La transaction n'a pas été enregistrée ";
         this.hasFormErrors = true;
         return;
@@ -1057,6 +1098,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   // add new Item to Datatable
   addNewItem() {
     const controls = this.trForm.controls;
+    if (controls.tr_user1.value == null) {
+      this.message = "veuillez selectionner les employés";
+      this.hasFormErrors = true;
+      return;}
+    else{  
     if (controls.tr_addr.value == null) {
       this.message = "veuillez remplir l'adresse";
       this.hasFormErrors = true;
@@ -1094,6 +1140,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         { position: "bottom" }
       );
     }
+  }
   }
 
   addsameItem() {
@@ -1166,7 +1213,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     if (Array.isArray(args.rows) && this.gridObj4) {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
-        console.log(item);
+        console.log(item.pt_site, item.pt_loc);
 
         this.locationService.getByOne({ loc_loc: item.pt_loc, loc_site: item.pt_site }).subscribe((response: any) => {
           this.location = response.data;
@@ -1200,6 +1247,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           });
           //});
         });
+        console.log(item.pt_part_type), this.codeService.getByOne({code_fldname:'LIMIT',code_value:item.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
       });
     }
   }
@@ -1236,8 +1284,24 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       },
       {
         id: "pt_um",
-        name: "desc",
+        name: "UM",
         field: "pt_um",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "pt_site",
+        name: "Site",
+        field: "pt_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "pt_loc",
+        name: "Emplacement",
+        field: "pt_loc",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1281,11 +1345,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       if (this.pdl == null) {
         //this.prodligne = ["SQUELETTE", "BOBINE"]
         console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp);
-        this.itemsService.getBy({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getbywithperte({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       } else {
-        this.itemsService.getBy({ pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getbywithperte({ pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       }
-    }
+    } 
   }
   open4(content) {
     this.prepareGrid4();
@@ -1769,6 +1833,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
         this.provider = item;
         controls.tr_addr.setValue(item.ad_addr || "");
+        this.nom = item.ad_name;
       });
     }
   }
@@ -2199,5 +2264,326 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   opennbrligne(content) {
     this.createnbrForm();
     this.modalService.open(content, { size: "lg" });
+  }
+ 
+
+  // GRID IN
+ 
+
+  
+  addemp() {
+    // this.itinerary.push({})
+    const controls = this.trForm.controls;
+    var l: String;
+    l = "";
+    console.log(l.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l = this.emps[index]["emp_fname"];
+      } else {
+        l = l + "," + this.emps[index]["emp_fname"];
+      }
+      //id: index,
+    });
+
+    console.log(l);
+    controls.tr_user1.setValue(l);
+    this.user1 = l;
+  }
+  addit() {
+    // this.itinerary.push({})
+    const controls = this.trForm.controls;
+    var l: String;
+    l = "";
+    console.log(l.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l = this.emps[index]["emp_fname"];
+      } else {
+        l = l + "," + this.emps[index]["emp_fname"];
+      }
+      //id: index,
+    });
+  
+    console.log(l);
+    controls.tr_user1.setValue(l);
+    this.user1 = l;
+  }
+  
+  angularGridReadyemp(angularGrid: AngularGridInstance) {
+    this.angularGridemp = angularGrid;
+    this.gridObjemp = (angularGrid && angularGrid.slickGrid) || {};
+  
+    this.gridServiceemp = angularGrid.gridService;
+    this.dataViewemp = angularGrid.dataView;
+  }
+  // GRID IN
+  prepareGridemp() {
+    this.columnDefinitionsemp = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsemp = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+  
+    // fill the dataset with your data
+    const controls = this.trForm.controls;
+    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));}
+    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data))}
+          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR'}).subscribe((response: any) => (this.emps = response.data))}
+               else{this.employeService.getBy({emp_job:'MAG'}).subscribe((response: any) => (this.emps = response.data));}}
+  }}
+  
+  handleSelectedRowsChangedemp(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+  openemp(content) {
+    this.prepareGridemp();
+    this.modalService.open(content, { size: "lg" });
+  }
+  angularGridReadyemp2(angularGrid: AngularGridInstance) {
+    this.angularGridemp2 = angularGrid;
+    this.gridObjemp2 = (angularGrid && angularGrid.slickGrid) || {};
+  
+    this.gridServiceemp2 = angularGrid.gridService;
+    this.dataViewemp2 = angularGrid.dataView;
+  }
+  
+  // GRID IN
+  prepareGridemp2() {
+    this.columnDefinitionsemp2 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsemp2 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+  
+    // fill the dataset with your data
+    
+    if (this.adduser == false){this.employeService.getBy({}).subscribe((response: any) => (this.emps2 = response.data));}
+    else{this.employeService.getBy({emp_job:'NONE'}).subscribe((response: any) => (this.emps2 = response.data));}
+  }
+  
+  handleSelectedRowsChangedemp2(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+  openemp2(content) {
+    this.prepareGridemp2();
+    this.modalService.open(content, { size: "lg" });
+  }
+  addit2() {
+    // this.itinerary.push({})
+    const controls = this.trForm.controls;
+    var l2: String;
+    l2 = "";
+    console.log(l2.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l2 = this.emps2[index]["emp_fname"];
+      } else {
+        l2 = l2 + "," + this.emps2[index]["emp_fname"];
+      }
+      //id: index,
+    });
+  
+    console.log(l2);
+    controls.tr_user2.setValue(l2);
+    this.user2 = l2;
+  }
+  onChangeuser() {
+    const controls = this.trForm.controls;
+    
+    if(controls.adduser2.value == true){this.adduser = false}
+    else {this.adduser = true,controls.tr_user2.setValue(null); this.emps2=[]}
   }
 }

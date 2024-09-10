@@ -43,6 +43,10 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/iss-wo', data, { headers: httpHeaders })
     }
+    public addRetIssWo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/retiss-wo', data, { headers: httpHeaders })
+    }
 
     public addTr(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -64,6 +68,14 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/iss-chlref', data, { headers: httpHeaders })
     }
+    public reprint(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/Reprint', data, { headers: httpHeaders })
+    }
+    public ORDWO(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/OrdWo', data, { headers: httpHeaders })
+    }
     // READ
     public findBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -81,6 +93,11 @@ export class InventoryTransactionService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+ 
+    }
+    public getByIss(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findiss`,data, { headers: httpHeaders })
  
     }
     public getByDate(data: any) {

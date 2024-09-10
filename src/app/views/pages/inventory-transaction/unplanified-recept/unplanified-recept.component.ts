@@ -1179,9 +1179,9 @@ export class UnplanifiedReceptComponent implements OnInit {
       if(this.pdl == null) {
       //this.prodligne = ["SQUELETTE", "BOBINE"] 
       console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp)
-      this.itemsService.getBy({pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+      this.itemsService.getbywithperte({pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
       } else {
-        this.itemsService.getBy({pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getbywithperte({pt_draw: this.pdl, pt_dsgn_grp: this.dsgn_grp}).subscribe((response: any) => (this.items = response.data));
 
       }
     }

@@ -551,6 +551,7 @@ console.log(this.bool)
     const ref = controls.ref.value
   var bol = false
   let idpal;
+  console.log(ref)
 this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
   
   

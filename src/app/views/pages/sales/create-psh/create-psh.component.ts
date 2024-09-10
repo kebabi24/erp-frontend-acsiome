@@ -59,6 +59,8 @@ import {
   CodeService,
   AccountShiperService,
   printBL,
+  LabelService,
+  Label
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
 import { jsPDF } from "jspdf";
@@ -193,6 +195,7 @@ export class CreatePshComponent implements OnInit {
     private mesureService: MesureService,
     private locationService: LocationService,
     private locationDetailService: LocationDetailService,
+    private labelService: LabelService,
   ) {
     config.autoClose = true;
     this.initGrid();
@@ -2027,7 +2030,7 @@ export class CreatePshComponent implements OnInit {
         updateItem.psh_um = item.code_value;
      
         this.gridService.updateItem(updateItem);
-
+ 
 /*********/
 console.log(updateItem.psh_part)
 
@@ -2611,5 +2614,122 @@ doc.addPage();
     window.open(URL.createObjectURL(blob));
 
   }
+  onChangePal() {
+    
+    /*kamel palette*/
+    const controls = this.pshForm.controls
+    const ref = controls.ref.value
+  var bol = false
+  let idpal;
+this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
+  
+  
+  if (controls.psh_cust.value == null){  this.message = "veuillez saisir l'adresse";
+  this.hasFormErrors = true;
+  return;}
+  else{
+     
+    for(let ob of this.dataset) {
 
+      if(ob.tr_ref == ref) {
+        console.log("hnehnahna")
+        bol = true
+        break;
+       
+      }
+    }
+    if (!bol) {
+    this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
+      (response: any) => {
+        this.lddet = response.data
+        //console.log(this.lddet.ld_qty_oh)
+    if (this.lddet != null) {
+     
+      
+      
+     
+     
+      this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-UNP" }).subscribe((resstat:any)=>{
+          console.log(resstat)
+          const { data } = resstat;
+
+          if (data) {
+            this.stat = null
+            this.message = "mouvement interdit dans cet emplacement";
+            this.hasFormErrors = true;
+            return;
+
+
+          } else {
+            this.stat = this.lddet.ld_status
+          
+ 
+     
+     this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+      (respopart: any) => {
+        console.log(respopart)
+        this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+          this.gridService.addItem(
+            {
+              id: this.dataset.length + 1,
+              psh_line: this.dataset.length + 1,
+              psh_part: respopart.data.pt_part,
+              cmvid: "",
+              desc: respopart.data.pt_desc1,
+              psh_qty_toship: 0,
+              psh_qty_ship: this.lddet.ld_qty_oh, //detail.sod_qty_ord - detail.sod_qty_ship,
+              psh_um: this.lddet.ld_um,
+              psh_um_conv: 1,
+              psh_type: '',
+              psh_price: 0,
+              psh_disc_pct: 0,
+              psh_so_taxable: true,
+              psh_tax_code: '',
+              psh_taxc: '19A',
+              psh_site: this.lddet.ld_site,
+              psh_loc: this.lddet.ld_loc,
+              psh_serial: this.lddet.ld_lot,
+              qty_oh: this.lddet.ld_qty_oh,
+              psh_status: this.lddet.ld_status,
+              psh_expire: this.lddet.ld_expire,
+            },
+            { position: "bottom" }
+          );
+ 
+     
+  
+})
+  
+     
+  }
+  }); 
+        
+    
+ 
+
+
+  }
+
+
+
+    else {
+      this.message = "veuillez verifier le bigbag";
+            this.hasFormErrors = true;
+            return;
+  //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+    }
+
+    });
+
+  }
+  else {
+    this.message = "bigbag déjà scanné";
+    this.hasFormErrors = true;
+    return;
+  }
+}
+  controls.ref.setValue(null)
+  document.getElementById("ref").focus();
+  
+}
 }

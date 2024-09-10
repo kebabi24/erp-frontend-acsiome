@@ -30,8 +30,10 @@
                             <div class="form-group col-2">
                                 <label class="form-group">Code: *</label>
                                 
-                                <input type="text" formControlName="emp_addr"  [(ngModel)]="employeEdit.emp_addr"
-                                class="form-control form-control-lg form-control-solid">
+                                <input type="text" formControlName="emp_addr"  [(ngModel)]="empEdit.emp_addr"
+                                [className]="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                                <div *ngIf="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
                                 
                             </div>
                         </div>

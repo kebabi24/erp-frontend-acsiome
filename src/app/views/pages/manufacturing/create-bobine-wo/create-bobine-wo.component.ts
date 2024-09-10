@@ -22,6 +22,7 @@ declare var Edelweiss2: any;
   styleUrls: ['./create-bobine-wo.component.scss']
 })
 export class CreateBobineWoComponent implements OnInit {
+  seuil : any;
   currentPrinter: string;
   PathPrinter: string;
   printbuttonState: boolean = false;
@@ -95,8 +96,21 @@ export class CreateBobineWoComponent implements OnInit {
   angularGridemp: AngularGridInstance;
   dataViewemp: any;
   gridServiceemp: GridService;
+
+  emps2: [];
+  columnDefinitionsemp2: Column[] = [];
+  gridOptionsemp2: GridOption = {};
+  gridObjemp2: any;
+  angularGridemp2: AngularGridInstance;
+  dataViewemp2: any;
+  gridServiceemp2: GridService;
+  
   selectedIndexes: any[];
   selectedIndexes2: any[];
+
+
+
+
   index: any;
   woServer;
   umd;
@@ -152,7 +166,8 @@ export class CreateBobineWoComponent implements OnInit {
   domain: any;
   domconfig: any;
   user1: any;
- 
+  user2: any;
+  adduser: boolean = true;
 
  
 
@@ -357,117 +372,119 @@ export class CreateBobineWoComponent implements OnInit {
             (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type
                               this.miclaise = reponse.data.pt_article
                               this.color = reponse.data.pt_break_cat
+                              if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+                                const controls = this.woForm.controls;
+                                this.printbuttonState = true;
+                                this.printable = false;
+                                const _lb = new Label();
+                                (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
+                                // _lb.lb_rmks = controls.tr_rmks.value;
+                                _lb.lb_loc = args.dataContext.tr_loc;
+                                _lb.lb_part = args.dataContext.tr_part;
+                                _lb.lb_nbr = args.dataContext.tr_so_job; //this.trnbr
+                                _lb.lb_lot = args.dataContext.tr_serial;
+                                _lb.lb_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
+                                _lb.lb_qty = args.dataContext.tr_qty_loc;
+                                _lb.lb_um = args.dataContext.tr_um;
+                                _lb.lb_ld_status = args.dataContext.tr_status;
+                                _lb.lb_desc = this.produit;
+                                _lb.lb_type = this.miclaise;
+                                _lb.lb_ray = this.color;
+                                _lb.lb_rmks = controls.product_Cyl.value;
+                                _lb.lb_printer = this.PathPrinter;
+                                _lb.lb_grp = controls.emp_shift.value;
+                                _lb.lb_cust = controls.wo_routing.value;
+                                _lb.lb_addr = controls.wo_user1.value;
+                                
+                                let lab = null;
+                                console.log(_lb);
+                                // console.log(10 * 100.02)
+                                this.labelService.add(_lb).subscribe(
+                                  (reponse: any) => {
+                                    lab = reponse.data;
+                                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                                    
+                                    this.index = this.dataset.findIndex((el) => {
+                                      return el.tr_line == args.dataContext.id;
+                                    });
+                                    console.log(this.index);
+                                    this.globalState = true;
+                                    const controls = this.woForm.controls;
+                                    const _tr = new InventoryTransaction();
+                                    _tr.tr_nbr = controls.wo_nbr.value;
+                                    _tr.tr_lot = controls.wo_lot.value;
+                                    _tr.tr_part = args.dataContext.tr_part;
+                                
+                                    _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
+                                    _tr.tr_qty_loc = args.dataContext.tr_qty_loc;
+                                    _tr.tr_serial = args.dataContext.tr_serial;
+                                    _tr.tr_program = args.dataContext.tr_program;
+                                    _tr.tr_user2 = controls.emp_shift.value;
+                                    this.trdataset = [];
+                                
+                                    if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
+                                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                                    
+                                      this.hasFormErrors = true;
+                                      this.message = "Verifier la Quantité";
+                                      
+                                
+                                      return;
+                                    }
+                                    if (this.dataset.length == 0) {
+                                      this.hasFormErrors = true;
+                                      this.message = "Verifier la liste des bobines";
+                                
+                                      return;
+                                    }
+                                    // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+                                    //   this.hasFormErrors = true;
+                                    //   this.message = "veuillez remplir le N° de lot";
+                                    
+                                
+                                    //   return;
+                                    // }
+                                    this.trdataset.push({
+                                      tr_line: 1,
+                                      tr_part: controls.wo_part.value,
+                                      tr_qty_loc: args.dataContext.tr_qty_loc,
+                                      tr_effdate:controls.wo_ord_date.value,
+                                      tr_um: this.um,
+                                      tr_um_conv: 1,
+                                      tr_price: 0,
+                                      tr_site: controls.wo_site.value,
+                                      tr_loc: this.loc,
+                                      tr_serial: args.dataContext.tr_serial,
+                                      tr_status: this.rctwostat,
+                                      tr_expire: null,
+                                      tr_ref: lab.lb_ref,
+                                      tr_user1: controls.wo_user1.value,
+                                    });
+                                    console.log(this.trdataset);
+                                    this.addTR(this.trdataset, _tr);
+                                    this.labelService.addblob(_lb).subscribe((blob) => {
+                                      Edelweiss2.print3(lab);
+                                    });
+                                  },
+                                  (error) => {
+                                    this.message = "veuillez verifier votre connexion";
+                                      this.hasFormErrors = true;
+                                      return;
+                                  },
+                                 
+                                );
+                              } else {
+                                this.message = "etiquette déjà imprimée";
+                                      this.hasFormErrors = true;
+                                      return;
+                              }
                               
             }
             
           )
-          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
-            const controls = this.woForm.controls;
-            this.printbuttonState = true;
-            this.printable = false;
-            const _lb = new Label();
-            (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
-            // _lb.lb_rmks = controls.tr_rmks.value;
-            _lb.lb_loc = args.dataContext.tr_loc;
-            _lb.lb_part = args.dataContext.tr_part;
-            _lb.lb_nbr = args.dataContext.tr_so_job; //this.trnbr
-            _lb.lb_lot = args.dataContext.tr_serial;
-            _lb.lb_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
-            _lb.lb_qty = args.dataContext.tr_qty_loc;
-            _lb.lb_um = args.dataContext.tr_um;
-            _lb.lb_ld_status = args.dataContext.tr_status;
-            _lb.lb_desc = this.produit;
-            _lb.lb_type = this.miclaise;
-            _lb.lb_ray = this.color;
-            _lb.lb_printer = this.PathPrinter;
-            _lb.lb_grp = controls.emp_shift.value;
-            _lb.lb_cust = controls.wo_routing.value;
-            _lb.lb_addr = controls.wo_user1.value;
-            _lb.lb_rmks = controls.product_Cyl.value;
-            let lab = null;
-            console.log(_lb);
-            // console.log(10 * 100.02)
-            this.labelService.add(_lb).subscribe(
-              (reponse: any) => {
-                lab = reponse.data;
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                
-                this.index = this.dataset.findIndex((el) => {
-                  return el.tr_line == args.dataContext.id;
-                });
-                console.log(this.index);
-                this.globalState = true;
-                const controls = this.woForm.controls;
-                const _tr = new InventoryTransaction();
-                _tr.tr_nbr = controls.wo_nbr.value;
-                _tr.tr_lot = controls.wo_lot.value;
-                _tr.tr_part = args.dataContext.tr_part;
-            
-                _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
-                _tr.tr_qty_loc = args.dataContext.tr_qty_loc;
-                _tr.tr_serial = args.dataContext.tr_serial;
-                _tr.tr_program = args.dataContext.tr_program;
-                _tr.tr_user2 = controls.emp_shift.value;
-                this.trdataset = [];
-            
-                if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                
-                  this.hasFormErrors = true;
-                  this.message = "Verifier la Quantité";
-                  
-            
-                  return;
-                }
-                if (this.dataset.length == 0) {
-                  this.hasFormErrors = true;
-                  this.message = "Verifier la liste des bobines";
-            
-                  return;
-                }
-                // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-                //   this.hasFormErrors = true;
-                //   this.message = "veuillez remplir le N° de lot";
-                
-            
-                //   return;
-                // }
-                this.trdataset.push({
-                  tr_line: 1,
-                  tr_part: controls.wo_part.value,
-                  tr_qty_loc: args.dataContext.tr_qty_loc,
-                  tr_effdate:controls.wo_ord_date.value,
-                  tr_um: this.um,
-                  tr_um_conv: 1,
-                  tr_price: 0,
-                  tr_site: controls.wo_site.value,
-                  tr_loc: this.loc,
-                  tr_serial: args.dataContext.tr_serial,
-                  tr_status: this.rctwostat,
-                  tr_expire: null,
-                  tr_ref: lab.lb_ref,
-                  tr_user1: controls.wo_user1.value,
-                });
-                console.log(this.trdataset);
-                this.addTR(this.trdataset, _tr);
-                this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss2.print3(lab);
-                });
-              },
-              (error) => {
-                this.message = "veuillez verifier votre connexion";
-                  this.hasFormErrors = true;
-                  return;
-              },
-             
-            );
-          } else {
-            this.message = "etiquette déjà imprimée";
-                  this.hasFormErrors = true;
-                  return;
-          }
+          
         }
-        else { this.message = "etiquette déjà imprimée";
+        else { this.message = "etiquette déjà imprimée"; 
           this.hasFormErrors = true;
           return;}
       }
@@ -564,6 +581,7 @@ export class CreateBobineWoComponent implements OnInit {
                     this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
                   });
                 });
+                this.codeService.getBy({code_fldname:'LIMIT',code_value:resp.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
               } else {
                 
                 this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
@@ -891,7 +909,7 @@ export class CreateBobineWoComponent implements OnInit {
         this.domconfig = false;
       }
     );
-
+    this.seuil = 1200;
     this.createForm();
   }
 
@@ -911,6 +929,8 @@ export class CreateBobineWoComponent implements OnInit {
       ],
       wo_site: [this.workOrder.wo_site, Validators.required],
       wo_user1: [this.workOrder.wo_user1, Validators.required],
+      wo_user2: [this.workOrder.wo_user2],
+      adduser2:[false],
       wo_lot:[this.workOrder.wo_lot,],
       wo_nbr:[this.workOrder.wo_nbr,],
       wo_part: [{ value: this.workOrder.wo_part, disabled: true }, Validators.required],
@@ -1201,7 +1221,7 @@ export class CreateBobineWoComponent implements OnInit {
                   this.hasFormErrors = true;
                   return;
           } else {
-            
+            this.codeService.getBy({code_fldname:'LIMIT',code_value:data[0].pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
             controls.wo_part.setValue(data[0].pt_part);
             controls.desc.setValue(response.data[0].pt_desc1);
             this.desc2 = response.data[0].pt_desc2;
@@ -1317,7 +1337,8 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
-    _tr.tr_user2 = controls.emp_shift.value;
+    _tr.tr_user1 = this.user1;
+    _tr.tr_user2 = this.user2;
     // _tr.tr_so_job = controls.tr_so_job.value
 
     // _tr.tr_rmks = controls.tr_rmks.value
@@ -1335,7 +1356,8 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_rjct.value;
     _tr.tr_serial = controls.wo_serial.value;
-    _tr.tr_user2 = controls.emp_shift.value;
+    _tr.tr_user1 = this.user1;
+    _tr.tr_user2 = this.user2;
     // _tr.tr_so_job = controls.tr_so_job.value
 
     // _tr.tr_rmks = controls.tr_rmks.value
@@ -1408,6 +1430,7 @@ export class CreateBobineWoComponent implements OnInit {
 
     _wo.wo_site = controls.wo_site.value;
     _wo.wo_user1 = this.user1;
+    _wo.wo_user2 = this.user2;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
     _wo.wo_qty_ord = controls.wo_qty_ord.value;
@@ -1521,7 +1544,8 @@ export class CreateBobineWoComponent implements OnInit {
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = this.nof;
     _tr.tr_lot = this.wolot;
-
+    _tr.tr_user1 = this.user1;
+    _tr.tr_user2 = this.user2;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     //_tr.tr_site = controls.wo_site.value
     // _tr.tr_so_job = controls.tr_so_job.value
@@ -1683,6 +1707,7 @@ export class CreateBobineWoComponent implements OnInit {
           controls.desc.setValue("");
           document.getElementById("part").focus();
         } else {
+          this.codeService.getBy({code_fldname:'LIMIT',code_value:response.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
           controls.desc.setValue(response.data[0].pt_desc1);
           this.desc2 = response.data[0].pt_desc2;
           controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
@@ -1810,7 +1835,7 @@ export class CreateBobineWoComponent implements OnInit {
         controls.desc.setValue(item.pt_desc1);
         this.desc2 = item.pt_desc2;
         controls.wo_serial.setValue(item.pt_part_type + item.pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
-        
+        this.codeService.getBy({code_fldname:'LIMIT',code_value:item.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
         this.um = item.pt_um;
         this.loc = item.pt_loc;
         if (item.pt_rctwo_active) {
@@ -2263,17 +2288,26 @@ export class CreateBobineWoComponent implements OnInit {
     console.log(timedate);
     var bol = false;
     this.printable = true;
-    if(controls.wo_qty_comp.value > 2000 || controls.wo_qty_comp.value < 0){
+    if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
+      this.message = "veuillez sélectionner les employés";
+    this.hasFormErrors = true;
+    return;}
+    if(controls.wo_qty_comp.value > this.seuil || controls.wo_qty_comp.value < 0){
       this.message = "la quantité que vous avez saisi est erroné";
     this.hasFormErrors = true;
     return;}
-    this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value }).subscribe((res: any) => {
-      if (res.data.wo_status == "C" ){this.message = "vous avez atteint la quantité prevue";
+    this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value,id:controls.wo_lot.value }).subscribe((res: any) => {
+      if (res.data.wo_status == "C" ){
+        console.log(res.data.wo_status)
+        this.message = "vous avez atteint la quantité prevue";
       this.hasFormErrors = true;
       return;}
     else {
       
-      if (controls.total_bobine.value > controls.wo_qty_ord.value ){this.message = "vous avez atteint la quantité prevue";
+      if (Number(controls.total_bobine.value) > Number(controls.wo_qty_ord.value) )
+      {
+        console.log(controls.total_bobine.value , '>', controls.wo_qty_ord.value)
+        this.message = "vous avez atteint la quantité prevue";
       this.hasFormErrors = true;
       return;}
       else{
@@ -2331,20 +2365,24 @@ export class CreateBobineWoComponent implements OnInit {
     console.log(timedate);
     var bol = false;
     this.printable=true;
-    if(controls.wo_qty_rjct.value > 2000 || controls.wo_qty_rjct.value < 0){
-      this.message = "la quantité que vous avez saisi est erroné";
+    if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
+      this.message = "veuillez sélectionner les employés";
     this.hasFormErrors = true;
     return;}
     this.itemsService.getByOne({pt_draw:'SQUELETTE', pt_dsgn_grp:'N/BROY',pt_break_cat: controls.product_color.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)
+        this.codeService.getBy({code_fldname:'LIMIT',code_value:respopart.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
   
      this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: respopart.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
       (respo: any) => {
         this.sct = respo.data
         console.log(this.sct)
     
-  
+        if(controls.wo_qty_rjct.value > this.seuil || controls.wo_qty_rjct.value < 0){
+          this.message = "la quantité que vous avez saisi est erroné";
+        this.hasFormErrors = true;
+        return;} 
      this.gridServicesq.addItem(
       {
         id: this.sqdataset.length + 1,
@@ -2570,7 +2608,7 @@ export class CreateBobineWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService.getAll().subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));
   }
 
   handleSelectedRowsChangedemp(e, args) {
@@ -2840,5 +2878,155 @@ export class CreateBobineWoComponent implements OnInit {
   onAlertClose($event) {
     this.hasFormErrors = false;
     // this.globalState=false
+  }
+  angularGridReadyemp2(angularGrid: AngularGridInstance) {
+    this.angularGridemp2 = angularGrid;
+    this.gridObjemp2 = (angularGrid && angularGrid.slickGrid) || {};
+  
+    this.gridServiceemp2 = angularGrid.gridService;
+    this.dataViewemp2 = angularGrid.dataView;
+  }
+  
+  // GRID IN
+  prepareGridemp2() {
+    this.columnDefinitionsemp2 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsemp2 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+  
+    // fill the dataset with your data
+    
+    if (this.adduser == false){this.employeService.getBy({}).subscribe((response: any) => (this.emps2 = response.data));}
+    else{this.employeService.getBy({emp_job:'NONE'}).subscribe((response: any) => (this.emps2 = response.data));}
+  }
+  
+  handleSelectedRowsChangedemp2(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+  openemp2(content) {
+    this.prepareGridemp2();
+    this.modalService.open(content, { size: "lg" });
+  }
+  addit2() {
+    // this.itinerary.push({})
+    const controls = this.woForm.controls;
+    var l2: String;
+    l2 = "";
+    console.log(l2.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l2 = this.emps2[index]["emp_fname"];
+      } else {
+        l2 = l2 + "," + this.emps2[index]["emp_fname"];
+      }
+      //id: index,
+    });
+  
+    console.log(l2);
+    controls.wo_user2.setValue(l2);
+    this.user2 = l2;
+  }
+  onChangeuser() {
+    const controls = this.woForm.controls;
+    
+    if(controls.adduser2.value == true){this.adduser = false}
+    else {this.adduser = true,controls.wo_user2.setValue(null); this.emps2=[]}
   }
 }

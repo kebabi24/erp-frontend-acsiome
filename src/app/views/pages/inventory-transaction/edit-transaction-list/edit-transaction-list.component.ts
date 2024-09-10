@@ -94,7 +94,7 @@ export class EditTransactionListComponent implements OnInit {
   currentPrinter: string;
   PathPrinter: string;
   datasetPrint = [];
-
+ nom :any;
   dataprinter: [];
   columnDefinitionsprinter: Column[] = [];
   gridOptionsprinter: GridOption = {};
@@ -253,9 +253,11 @@ export class EditTransactionListComponent implements OnInit {
                   this.index = this.dataset.findIndex((el) => {
                     return el.tr_line == args.dataContext.tr_line;
                   });
-                  args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+                  // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
                   
                   this.data = [];
+                  
+                  
                   let obj = {
                     tr_lot:args.dataContext.tr_lot,
                     tr_nbr:args.dataContext.tr_nbr,
@@ -268,7 +270,7 @@ export class EditTransactionListComponent implements OnInit {
                     tr_line: args.dataContext.tr_line,
                     tr_part: args.dataContext.tr_part,
                     desc: args.dataContext.desc,
-                    tr_qty_loc: args.dataContext.tr_qty_chg * -1,
+                    tr_qty_loc: args.dataContext.tr_qty_loc * - 1,
                     tr_um: args.dataContext.tr_um,
                     tr_um_conv: args.dataContext.tr_um_conv,
                     tr_price: args.dataContext.tr_price,
@@ -283,7 +285,7 @@ export class EditTransactionListComponent implements OnInit {
                   this.data.push(obj);
                   let tr = obj;
                   this.trlot = args.dataContext.tr_lot;
-                  this.updatetrans(args.dataContext.id)
+                  // this.updatetrans(args.dataContext.id)
                   if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
                   else{
                    if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
@@ -617,6 +619,16 @@ export class EditTransactionListComponent implements OnInit {
             },
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
             onCellChange: (e: Event, args: OnEventArgs) => {
+              this.codeService.getByOne({code_fldname:'LIMIT',code_value:args.dataContext.tr__chr01}).subscribe((coderesp:any)=>{
+                if(coderesp.data != null)
+                {if(args.dataContext.tr_qty_loc > Number(coderesp.data.code_cmmt) || args.dataContext.tr_qty_loc < 0){
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.tr_qty_chg })
+                this.message = "quantité ne peut pas dépasser limite";
+                this.hasFormErrors = true;
+                return;
+              }}
+            })
+ 
           
                 
                 
@@ -814,13 +826,14 @@ export class EditTransactionListComponent implements OnInit {
             minWidth: 30,
             maxWidth: 30,
             onCellClick: (e: Event, args: OnEventArgs) => {
-
-            if(args.dataContext.tr_part!=args.dataContext.tr_oldpart || args.dataContext.tr_addr!=args.dataContext.tr_oldaddr || args.dataContext.tr_serial!=args.dataContext.tr_oldserial)   /*ajouter ligne tr_hist de suppression*/
+              
+            if(args.dataContext.tr_part!=args.dataContext.tr_oldpart || args.dataContext.tr_addr!=args.dataContext.tr_oldaddr || args.dataContext.tr_serial!=args.dataContext.tr_oldserial || args.dataContext.tr_qty_loc!= args.dataContext.tr_qty_chg)   /*ajouter ligne tr_hist de suppression*/
               { console.log('changement', args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,args.dataContext.tr_oldserial) 
+                
                this.index = this.dataset.findIndex((el) => {
                 return el.tr_line == args.dataContext.tr_line;
               });
-              args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+              // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
               
               this.oldata = [];
               let oldobj = {
@@ -845,13 +858,15 @@ export class EditTransactionListComponent implements OnInit {
                 tr_ref: args.dataContext.tr_ref,
                 tr_status: args.dataContext.tr_status,
                 tr_expire: args.dataContext.tr_expire,
+                tr_rev:'CHANGED',
               };
-              
+              // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+              args.dataContext.tr_qty_chg = 0;
               this.oldata.push(oldobj);
               let oldtr = oldobj;
               this.trlot = args.dataContext.tr_lot;
               // this.updatetrans(args.dataContext.id)
-              console.log(this.oldata)
+              console.log(args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,'old')
               if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.oldata, oldtr, this.trlot)}
               else{
                if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.oldata, oldtr, this.trlot)}
@@ -865,8 +880,8 @@ export class EditTransactionListComponent implements OnInit {
                 }
                }
               }
-              args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
-              args.dataContext.tr_qty_chg = 0;
+                    
+              
             }
               
               this.data = [];
@@ -882,7 +897,9 @@ export class EditTransactionListComponent implements OnInit {
                   tr_line: args.dataContext.tr_line,
                   tr_part: args.dataContext.tr_part,
                   desc: args.dataContext.desc,
-                  tr_qty_loc: args.dataContext.tr_qty_loc - args.dataContext.tr_qty_chg ,
+                  tr_loc_begin: args.dataContext.tr_qty_chg,
+                  tr_qty_loc: args.dataContext.tr_qty_loc  ,
+                  tr_gl_amt: (args.dataContext.tr_qty_loc ) * args.dataContext.tr_price * args.dataContext.tr_um_conv,
                   tr_um: args.dataContext.tr_um,
                   tr_um_conv: args.dataContext.tr_um_conv,
                   tr_price: args.dataContext.tr_price,
@@ -897,15 +914,7 @@ export class EditTransactionListComponent implements OnInit {
                 this.data.push(obj);
                 let tr = obj;
                 this.trlot = args.dataContext.tr_lot;
-                this.updatetrans(args.dataContext.id)
-                this.labelService.update({lb_part:args.dataContext.tr_part,lb_cust:'',lb_lot:args.dataContext.tr_serial,lb_qty:args.dataContext.tr_qty_loc},{ lb_ref: args.dataContext.tr_ref }).subscribe(
-                  (reponse: any) => (console.log(reponse.data)                ),
-                  (error) => {
-                    this.message = "veuillez verifier le code barre";
-                    this.isExist = true;
-                    return;
-                  }
-                )
+                
                 if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
                 else{
                  if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
@@ -921,25 +930,26 @@ export class EditTransactionListComponent implements OnInit {
                 }
      const controls = this.trForm.controls;
                                
-                let cabs : any;
+      let cabs : any;
       const _lb = new Label();
       this.labelService.getBy({ lb_ref: args.dataContext.tr_ref }).subscribe(
-        (reponse: any) => (cabs = reponse.data.label, console.log(args.dataContext.tr_ref,cabs.lb__dec01),
+        (reponse: any) => (cabs = reponse.data.label, console.log(args.dataContext.tr_ref,cabs),
+        
         _lb.lb__dec01 = cabs.lb__dec01,
         
         _lb.lb_site = cabs.lb_site,
         _lb.lb_rmks = cabs.lb_rmks,
         _lb.lb_loc = cabs.lb_loc,
-        _lb.lb_part = cabs.lb_part,
+        _lb.lb_part = args.dataContext.tr_part,
         _lb.lb_nbr = cabs.lb_nbr, //this.trnbr
-        _lb.lb_lot = cabs.lb_lot,
+        _lb.lb_lot = args.dataContext.tr_serial,
         _lb.lb_date = cabs.lb_date, 
         _lb.lb_qty = cabs.lb_qty,
         _lb.lb_um = cabs.lb_um,
         _lb.lb_ld_status = cabs.lb_ld_status,
-        _lb.lb_desc = cabs.lb_desc,
+        _lb.lb_desc = args.dataContext.desc,
         _lb.lb_printer = this.PathPrinter,
-        _lb.lb_cust = cabs.lb_cust,
+        _lb.lb_cust = args.dataContext.tr_addr,
         _lb.lb_grp = cabs.lb_Grp,
         _lb.lb_addr = cabs.lb_addr,
         _lb.lb_tel = cabs.lb_tel,
@@ -1016,7 +1026,7 @@ export class EditTransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_addr",width:50},{columnId:"tr_oldaddr",width:50},{columnId:"advid",width:20},{columnId:"tr_oldpart",width:50},{columnId:"mvid",width:20},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_oldserial",width:50},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20},{columnId:"idprint",width:20}]
+          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_addr",width:50},{columnId:"advid",width:20},{columnId:"mvid",width:20},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20},{columnId:"idprint",width:20}]
           
         },
        
@@ -1166,7 +1176,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       (res: any) => {
     
       //(response: any) => (this.dataset = response.data),
-      console.log(res.data.tr_effdate)
+      console.log(res.data)
       
       this.dataset  = res.data;
       this.copydataset  = res.data;
@@ -1263,8 +1273,9 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
         // window.open(fileUrl)
       },
       (error) => {
-        
-        alert("Erreur, vérifier les informations");
+        this.message = "RCT-UNP";
+        this.isExist = true
+        return
         this.loadingSubject.next(false);
       },
       () => {
@@ -1297,7 +1308,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
        },
         (error) => {
           this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
+            "Erreur iss-unp",
             MessageType.Create,
             10000,
             true,
@@ -1374,7 +1385,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
        (reponse: any) => console.log(reponse),
         (error) => {
           this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
+            "Erreur iss-wo",
             MessageType.Create,
             10000,
             true,
@@ -1705,8 +1716,8 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
   }
   updatetrans(details: any) {
     this.loadingSubject.next(true)
-    this.inventoryTransactionService.updatetr({id:details}).subscribe(
-        (reponse) => console.log("response", Response),
+    this.inventoryTransactionService.updatetr(details).subscribe(
+        (reponse) => console.log("response", reponse),
         (error) => {
             this.layoutUtilsService.showActionNotification(
                 "Erreur verifier les informations",

@@ -966,6 +966,7 @@ export class CreateComponent implements OnInit {
       obj = {
         code_value,
         code_fldname: field,
+        code_desc: this.pt_part_type,
       };
     }
 

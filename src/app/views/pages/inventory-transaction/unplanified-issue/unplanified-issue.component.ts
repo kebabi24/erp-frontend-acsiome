@@ -55,6 +55,7 @@ import {
   printBc,
   printISSUNP,
   LabelService,
+  EmployeService,
 } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
@@ -87,6 +88,7 @@ export class UnplanifiedIssueComponent implements OnInit {
     inventoryTransaction: InventoryTransaction;
     
     trForm: FormGroup;
+    nom: any;
     hasFormErrors = false;
     loadingSubject = new BehaviorSubject<boolean>(true);
     loading$: Observable<boolean>;
@@ -108,6 +110,26 @@ export class UnplanifiedIssueComponent implements OnInit {
     gridObj2: any;
     angularGrid2: AngularGridInstance;
 
+    emps: [];
+  columnDefinitionsemp: Column[] = [];
+  gridOptionsemp: GridOption = {};
+  gridObjemp: any;
+  angularGridemp: AngularGridInstance;
+  dataViewemp: any;
+  gridServiceemp: GridService;
+  emps2: [];
+  columnDefinitionsemp2: Column[] = [];
+  gridOptionsemp2: GridOption = {};
+  gridObjemp2: any;
+  angularGridemp2: AngularGridInstance;
+  dataViewemp2: any;
+  gridServiceemp2: GridService;
+  selectedIndexes: any[];
+  selectedIndexes2: any[];
+  index: any;
+  user1: any;
+  user2: any;
+  adduser: boolean = true;
     items: [];
     columnDefinitions4: Column[] = [];
     gridOptions4: GridOption = {};
@@ -177,7 +199,8 @@ export class UnplanifiedIssueComponent implements OnInit {
       private addressService: AddressService,
       private sequenceService: SequenceService,
       private locationDetailService: LocationDetailService,
-      private labelService: LabelService
+      private labelService: LabelService,
+      private employeService: EmployeService
     ) {
       config.autoClose = true;
       this.initGrid();
@@ -815,7 +838,9 @@ export class UnplanifiedIssueComponent implements OnInit {
         tr_addr: [this.inventoryTransaction.tr_addr],
         print:[false],
         ref: [null],
-     
+        tr_user1: [this.inventoryTransaction.tr_user1],
+        tr_user2: [this.inventoryTransaction.tr_user2, ],
+        adduser2:[false]
       });
       const controls = this.trForm.controls;
       console.log(this.domconfig)
@@ -825,12 +850,13 @@ export class UnplanifiedIssueComponent implements OnInit {
             if(reponse.data != null) {
             controls.tr_addr.setValue(reponse.data.code_value),
             controls.tr_addr.disable() 
-  
+            
             this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
               //   const { data } = response;
                  console.log("aaaaaaaaaaa",response.data);
                  if (response.data != null) {
                    this.provider = response.data;
+                   this.nom = this.provider.ad_name
                  }
                });
             console.log("hehehehehehehehehehe")
@@ -979,6 +1005,8 @@ export class UnplanifiedIssueComponent implements OnInit {
       
       _tr.tr_rmks = controls.tr_rmks.value
       _tr.tr_addr = controls.tr_addr.value
+      _tr.tr_user1 = controls.tr_user1.value;
+      _tr.tr_user2 = controls.tr_user2.value;
       return _tr
     }
     /**
@@ -1956,7 +1984,7 @@ console.log(updateItem.tr_part)
        
         this.provider = item
         controls.tr_addr.setValue(item.ad_addr || "");
-       
+       this.nom =item.ad_name
 
 
       });
@@ -2085,11 +2113,12 @@ console.log(updateItem.tr_part)
         this.error = true;
       } else {
         this.provider = response.data;
+        this.nom = this.provider.ad_name
       }
     });
   }
  
-  onChangePal() {
+  onChangePal() { 
     
     /*kamel palette*/
     const controls = this.trForm.controls
@@ -2352,7 +2381,7 @@ doc.addPage();
       doc.line(45, i - 5, 45, i);
       doc.text(desc1, 47, i - 1);
       doc.line(100, i - 5, 100, i);
-      doc.text(String(Number(this.dataset[j].tr_qty_loc.toFixed(2))), 118, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_qty_loc).toFixed(2)), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
       doc.text(this.dataset[j].tr_um, 123, i - 1);
       doc.line(130, i - 5, 130, i);
@@ -2362,7 +2391,7 @@ doc.addPage();
       doc.line(170, i - 5, 170, i);
       doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String(Number((Number(this.dataset[j].tr_price) * Number((this.dataset[j].tr_qty_loc).toFixed(2))))), 203, i - 1, { align: "right" });
+      doc.text(String(Number((Number(this.dataset[j].tr_price) * Number((this.dataset[j].tr_qty_loc))))), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       // doc.line(10, i, 200, i );
 
@@ -2450,7 +2479,303 @@ doc.addPage();
   var blob = doc.output("blob");
   window.open(URL.createObjectURL(blob));
 }
+addemp() {
+  // this.itinerary.push({})
+  const controls = this.trForm.controls;
+  var l: String;
+  l = "";
+  console.log(l.length);
+  this.selectedIndexes.forEach((index) => {
+    if (index == 0) {
+      l = this.emps[index]["emp_fname"];
+    } else {
+      l = l + "," + this.emps[index]["emp_fname"];
+    }
+    //id: index,
+  });
 
+  console.log(l);
+  controls.tr_user1.setValue(l);
+  this.user1 = l;
+}
+
+angularGridReadyemp(angularGrid: AngularGridInstance) {
+  this.angularGridemp = angularGrid;
+  this.gridObjemp = (angularGrid && angularGrid.slickGrid) || {};
+
+  this.gridServiceemp = angularGrid.gridService;
+  this.dataViewemp = angularGrid.dataView;
+}
+// GRID IN
+prepareGridemp() {
+  this.columnDefinitionsemp = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "emp_addr",
+      name: "Code Employé",
+      field: "emp_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_fname",
+      name: "Nom",
+      field: "emp_fname",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_lname",
+      name: "Prénom",
+      field: "emp_lname",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_line1",
+      name: "Adresse",
+      field: "emp_line1",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_job",
+      name: "Métier",
+      field: "emp_job",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_level",
+      name: "Niveau",
+      field: "emp_level",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionsemp = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    // frozenColumn: 0,
+    // frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: true,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: false,
+    },
+    presets: {
+      sorters: [{ columnId: "id", direction: "ASC" }],
+      rowSelection: {
+        // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+        gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+        //dataContextIds
+      },
+    },
+  };
+
+  // fill the dataset with your data
+  const controls = this.trForm.controls;
+    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));}
+    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data))}
+          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR'}).subscribe((response: any) => (this.emps = response.data))}
+               else{this.employeService.getBy({emp_job:'MAG'}).subscribe((response: any) => (this.emps = response.data));}}
+  }
+}
+
+handleSelectedRowsChangedemp(e, args) {
+  this.selectedIndexes = [];
+  this.selectedIndexes = args.rows;
+}
+openemp(content) {
+  this.prepareGridemp();
+  this.modalService.open(content, { size: "lg" });
+}
+angularGridReadyemp2(angularGrid: AngularGridInstance) {
+  this.angularGridemp2 = angularGrid;
+  this.gridObjemp2 = (angularGrid && angularGrid.slickGrid) || {};
+
+  this.gridServiceemp2 = angularGrid.gridService;
+  this.dataViewemp2 = angularGrid.dataView;
+}
+
+// GRID IN
+prepareGridemp2() {
+  this.columnDefinitionsemp2 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "emp_addr",
+      name: "Code Employé",
+      field: "emp_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_fname",
+      name: "Nom",
+      field: "emp_fname",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_lname",
+      name: "Prénom",
+      field: "emp_lname",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_line1",
+      name: "Adresse",
+      field: "emp_line1",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_job",
+      name: "Métier",
+      field: "emp_job",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "emp_level",
+      name: "Niveau",
+      field: "emp_level",
+      sortable: true,
+      width: 80,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionsemp2 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    // frozenColumn: 0,
+    // frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: true,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: false,
+    },
+    presets: {
+      sorters: [{ columnId: "id", direction: "ASC" }],
+      rowSelection: {
+        // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+        gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+        //dataContextIds
+      },
+    },
+  };
+
+  // fill the dataset with your data
+  
+  if (this.adduser == false){this.employeService.getBy({}).subscribe((response: any) => (this.emps2 = response.data));}
+  else{this.employeService.getBy({emp_job:'NONE'}).subscribe((response: any) => (this.emps2 = response.data));}
+}
+
+handleSelectedRowsChangedemp2(e, args) {
+  this.selectedIndexes = [];
+  this.selectedIndexes = args.rows;
+}
+openemp2(content) {
+  this.prepareGridemp2();
+  this.modalService.open(content, { size: "lg" });
+}
+addit2() {
+  // this.itinerary.push({})
+  const controls = this.trForm.controls;
+  var l2: String;
+  l2 = "";
+  console.log(l2.length);
+  this.selectedIndexes.forEach((index) => {
+    if (index == 0) {
+      l2 = this.emps2[index]["emp_fname"];
+    } else {
+      l2 = l2 + "," + this.emps2[index]["emp_fname"];
+    }
+    //id: index,
+  });
+
+  console.log(l2);
+  controls.tr_user2.setValue(l2);
+  this.user2 = l2;
+}
+onChangeuser() {
+  const controls = this.trForm.controls;
+  
+  if(controls.adduser2.value == true){this.adduser = false}
+  else {this.adduser = true,controls.tr_user2.setValue(null); this.emps2=[]}
+}
 }
   
 

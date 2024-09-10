@@ -78,6 +78,17 @@ export class CreateTriWoComponent implements OnInit {
   angularGridemp: AngularGridInstance;
   dataViewemp: any;
   gridServiceemp: GridService;
+
+  emps2: [];
+  columnDefinitionsemp2: Column[] = [];
+  gridOptionsemp2: GridOption = {};
+  gridObjemp2: any;
+  angularGridemp2: AngularGridInstance;
+  dataViewemp2: any;
+  gridServiceemp2: GridService;
+  user2: any;
+  adduser: boolean = true;
+
   selectedIndexes: any[];
   selectedIndexes2: any[];
 
@@ -367,6 +378,8 @@ export class CreateTriWoComponent implements OnInit {
       ],
       wo_site: [this.workOrder.wo_site, Validators.required],
       wo_user1: [this.workOrder.wo_user1, Validators.required],
+      wo_user2: [this.workOrder.wo_user2],
+      adduser2:[false],
       wo_part: [{ value: this.workOrder.wo_part, disabled: true }, Validators.required],
       desc: [{ value: null, disabled: true }],
 
@@ -460,7 +473,10 @@ export class CreateTriWoComponent implements OnInit {
     const date = new Date();
     controls.product_type.value;
     controls.product_color.value;
-
+    if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
+      this.message = "veuillez sélectionner les employés";
+    this.hasFormErrors = true;
+    return;}
     this.itemsService
       .getBy({
         pt_draw: controls.product_type.value,
@@ -582,6 +598,7 @@ export class CreateTriWoComponent implements OnInit {
           tr_expire: null,
           tr_ref: lab.lb_ref,
           tr_user1: controls.wo_user1.value,
+          tr_user2: controls.wo_user2.value,
           tr_program: timedate,
           
         });
@@ -608,7 +625,8 @@ export class CreateTriWoComponent implements OnInit {
     _tr.tr_nbr = this.nof;
     _tr.tr_lot = this.wolot;
     _tr.tr_part = controls.wo_part.value;
-
+    _tr.tr_user1 = this.user1;
+    _tr.tr_user2 = this.user2;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
@@ -661,6 +679,7 @@ export class CreateTriWoComponent implements OnInit {
     const _wo = new WorkOrder();
     _wo.wo_site = controls.wo_site.value;
     _wo.wo_user1 = this.user1;
+    _wo.wo_user2 = this.user2;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1853,7 +1872,156 @@ export class CreateTriWoComponent implements OnInit {
     controls.wo_user1.setValue(l);
     this.user1 = l;
   }
-
+  angularGridReadyemp2(angularGrid: AngularGridInstance) {
+    this.angularGridemp2 = angularGrid;
+    this.gridObjemp2 = (angularGrid && angularGrid.slickGrid) || {};
+  
+    this.gridServiceemp2 = angularGrid.gridService;
+    this.dataViewemp2 = angularGrid.dataView;
+  }
+  
+  // GRID IN
+  prepareGridemp2() {
+    this.columnDefinitionsemp2 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsemp2 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+  
+    // fill the dataset with your data
+    
+    if (this.adduser == false){this.employeService.getBy({}).subscribe((response: any) => (this.emps2 = response.data));}
+    else{this.employeService.getBy({emp_job:'NONE'}).subscribe((response: any) => (this.emps2 = response.data));}
+  }
+  
+  handleSelectedRowsChangedemp2(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+  openemp2(content) {
+    this.prepareGridemp2();
+    this.modalService.open(content, { size: "lg" });
+  }
+  addit2() {
+    // this.itinerary.push({})
+    const controls = this.woForm.controls;
+    var l2: String;
+    l2 = "";
+    console.log(l2.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l2 = this.emps2[index]["emp_fname"];
+      } else {
+        l2 = l2 + "," + this.emps2[index]["emp_fname"];
+      }
+      //id: index,
+    });
+  
+    console.log(l2);
+    controls.wo_user2.setValue(l2);
+    this.user2 = l2;
+  }
+  onChangeuser() {
+    const controls = this.woForm.controls;
+    
+    if(controls.adduser2.value == true){this.adduser = false}
+    else {this.adduser = true,controls.wo_user2.setValue(null); this.emps2=[]}
+  }
  
 }
 

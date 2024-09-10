@@ -173,15 +173,52 @@ export class InventoryListComponent implements OnInit {
               lazyTotalsCalculation:true,
             }
           }, 
-          // {
-          //   id: "item.pt_desc1",
-          //   name: "Description",
-          //   field: "item.pt_desc1",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
+          {
+            id: "chr05",
+            name: "Categorie",
+            field: "chr05",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+            grouping: {
+              getter: 'chr05',
+              formatter: (g) => `Categorie: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
             
-          // }, 
+          }, 
+          {
+            id: "ld__chr02",
+            name: "Type",
+            field: "ld__chr02",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+            grouping: {
+              getter: 'ld__chr02',
+              formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          }, 
+            
+           
           {
             id: "chr01",
             name: "FAMILLE",
@@ -311,24 +348,38 @@ export class InventoryListComponent implements OnInit {
               aggregateCollapsed: true,
               collapsed: true,
             }
+          },
+          {
+            id: "chr04",
+            name: "Origine",
+            field: "chr04",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'chr04',
+              formatter: (g) => `Reference: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
           }, 
-          // {
-          //   id: "ld_grade",
-          //   name: "Taille",
-          //   field: "ld_grade",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-          //   grouping: {
-          //     getter: 'ld_grade',
-          //     formatter: (g) => `Taille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregateCollapsed: true,
-          //     collapsed: true,
-          //   }
-          // }, 
+          {
+            id: "created_by",
+            name: "Saisie par",
+            field: "created_by",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'created_by',
+              formatter: (g) => `Users: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
+          }, 
           {
             id: "last_modified_by",
-            name: "Par",
+            name: "Modifié par",
             field: "last_modified_by",
             sortable: true,
             filterable: true,
@@ -357,49 +408,7 @@ export class InventoryListComponent implements OnInit {
             }
           },
           
-          // {
-          //   id: "ld_expire",
-          //   name: "Expire Le",
-          //   field: "ld_expire",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.dateTimeIso,
-          //   grouping: {
-          //     getter: 'ld_expire',
-          //     formatter: (g) => `Expire Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [
-          //       // (required), what aggregators (accumulator) to use and on which field to do so
-          //      // new Aggregators.Avg('ld_qty_oh'),
-          //       new Aggregators.Sum('ld_qty_oh')
-          //     ],
-          //     aggregateCollapsed: true,
-          //     collapsed: true,
-          //   }
-          // }, 
-          // {
-          //   id: "ld_qty_frz",
-          //   name: "Qte Friz",
-          //   field: "ld_qty_frz",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-            
-          // },
           
-          // {
-          //   id: "ld_date_frz",
-          //   name: "Date Friz",
-          //   field: "ld_date_frz",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.date,
-          //   grouping: {
-          //     getter: 'ld_date_frz',
-          //     formatter: (g) => `Date Friz: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregateCollapsed: false,
-          //     collapsed: false,
-          //   }
-          // },
           
 
       ]

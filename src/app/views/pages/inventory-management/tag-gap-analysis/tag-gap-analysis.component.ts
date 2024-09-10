@@ -86,6 +86,14 @@ export class TagGapAnalysisComponent implements OnInit {
         selectable: true,
       },
       {
+        id: "tag_ref",
+        name: "N° pal",
+        field: "tag_ref",
+        minWidth: 100,
+        maxWidth: 100,
+        selectable: true,
+      },
+      {
         id: "tag_site",
         name: "Site",
         field: "tag_site",

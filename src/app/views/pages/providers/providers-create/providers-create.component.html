@@ -34,7 +34,7 @@
 
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Fournisseur:</label>
+                                        <label class="form-group ">Code Fournisseur:</label>
                                         <input type="text" (change)="onChangeCode()"
                                             [className]="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="ad_addr">
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group ">Nom:</label>
+                                        <label class="form-group ">Raison sociale:</label>
                                             <input type="text"
                                                 [className]="addressForm.controls['ad_name'].errors && (addressForm.controls['ad_name'].dirty || addressForm.controls['ad_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                                 formControlName="ad_name">
@@ -115,7 +115,7 @@
                                             </select>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Post:</label>
+                                        <label class="form-group ">Code Postale:</label>
                                         
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_zip">
@@ -143,7 +143,7 @@
                                         
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Pst:</label>
+                                        <label class="form-group ">Poste:</label>
                                     
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_ext">
@@ -172,7 +172,7 @@
                                         
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Pst:</label>
+                                        <label class="form-group ">Poste:</label>
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_ext2">
                                     </div>
@@ -330,7 +330,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Mode exp:</label>
+                                        <label class="form-group ">Mode expedition:</label>
                                         
                                             <select class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_shipvia" id="exampleSelects5">
@@ -356,7 +356,7 @@
                                 </div>
                                 <div class="row">    
                                     <div class="form-group col-2">
-                                        <label class="form-group "> Check Form:</label>
+                                        <label class="form-group "> méthode paiement:</label>
                                         
                                             <div class="input-group input-group-sm">
 
@@ -637,7 +637,7 @@
                                     </div>
                                     
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Numero dibiteur:</label>
+                                        <label class="form-group ">Numero débiteur:</label>
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_debtor">
                                     </div>

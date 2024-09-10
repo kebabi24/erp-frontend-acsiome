@@ -101,8 +101,8 @@
                     
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-sm form-control-solid" formControlName="tr_expire" disabled
-                                placeholder="jj-mm-aaaa" name="tr_expire" ngbDatepicker f
-                                #tr_expire="ngbDatepicker">
+                                placeholder="" name="tr_expire" aria-describedby="basic-addon2">
+                                
                             
                             
                         </div>
@@ -113,7 +113,8 @@
                         <label class="form-group">Cause:</label>
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control form-control-solid" formControlName="tr_rmks"
-                                aria-describedby="basic-addon2">
+                            
+                                aria-describedby="basic-addon2" disabled>
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open6(content6)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
