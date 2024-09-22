@@ -1048,7 +1048,18 @@ export class MenuConfig {
               title: "Maint Congés des Employés",
               page: "/accounting-setting/create-emp-avail",
             },
-
+            {
+              title: "Ajout Population Employés",
+              page: "/training/create-population",
+            },
+            {
+              title: "Liste des Population",
+              page: "/training/list-population",
+            },
+            {
+              title: "Modification des Population",
+              page: "/training/update-population",
+            },
             {
               title: "Gestion des Métier",
               root: true,
@@ -1113,6 +1124,14 @@ export class MenuConfig {
             {
               title: "Approuver Demande de Formation",
               page: "/training/approval-req",
+            },
+            {
+              title: "Demande de Formation Par Employée",
+              page: "/training/create-request-group",
+            },
+            {
+              title: "Création Calendrier de Formation",
+              page: "/training/create-training-calander",
             },
           ],
         },

@@ -71,7 +71,9 @@ import {CodeService,
          UsersService,
          EmployeService,
          RequisitionService,
-         ReasonService
+         ReasonService,
+         PopulationemployeService,
+         TrainingcalenderService,
         } from '../../../core/erp';
 import { UpdateTrainingComponent } from './update-training/update-training.component';
 import { ListSectionComponent } from './list-section/list-section.component';
@@ -80,6 +82,11 @@ import { CreateTrainingRequestComponent } from './create-training-request/create
 import { CreateRequestGroupComponent } from './create-request-group/create-request-group.component';
 import { CreateReqTrainingComponent } from './create-req-training/create-req-training.component';
 import { ApprovalReqComponent } from './approval-req/approval-req.component';
+import { CreateTrainingCalanderComponent } from './create-training-calander/create-training-calander.component';
+import { CreatePopulationComponent } from './create-population/create-population.component';
+import { EditPopulationComponent } from './edit-population/edit-population.component';
+import { UpdatePopulationComponent } from './update-population/update-population.component';
+import { ListPopulationComponent } from './list-population/list-population.component';
 
     const routes: Routes = [
      
@@ -132,13 +139,33 @@ import { ApprovalReqComponent } from './approval-req/approval-req.component';
               {
                 path: "approval-req",
                 component: ApprovalReqComponent,
-              },     
+              },    
+              {
+                path: "list-population",
+                component: ListPopulationComponent,
+              },
+              {
+                path: "create-population",
+                component: CreatePopulationComponent,
+              },
+              {
+                path: "edit-population/:id",
+                component: EditPopulationComponent,
+              },
+              {
+                path: "update-population",
+                component: UpdatePopulationComponent,
+              }, 
+              {
+                path: "create-training-calander",
+                component: CreateTrainingCalanderComponent,
+            },
   ]
   
 
 
 @NgModule({
-  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent],
+  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent, CreateTrainingCalanderComponent, CreatePopulationComponent, EditPopulationComponent, UpdatePopulationComponent, ListPopulationComponent],
   
   imports: [
     CommonModule,
@@ -193,6 +220,8 @@ providers: [
     EmployeService,
     RequisitionService,
     ReasonService,
+    PopulationemployeService,
+    TrainingcalenderService,
    
 
 ],

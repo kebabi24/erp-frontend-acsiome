@@ -97,6 +97,9 @@ export { Message } from "./_models/message.model";
 export { Barecodeinfos } from "./_models/barecodeinfos.model";
 export { Invoice } from "./_models/invoice.model";
 export { Financialcharge } from "./_models/financialcharge.model";
+export { Populationemploye } from "./_models/populationemploye.model";
+export { Trainingcalender } from "./_models/trainingcalender.model";
+
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -200,4 +203,6 @@ export { ItemModelService } from "./_services/item-model.service";
 export { MessageService } from "./_services/message.service";
 export { BarecodeinfosService } from "./_services/barecodeinfos.service";
 export { FinancialchargeService } from "./_services/financialcharge.service";
+export { PopulationemployeService } from "./_services/populationemploye.service";
+export { TrainingcalenderService } from "./_services/trainingcalender.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

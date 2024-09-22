@@ -127,6 +127,7 @@ export class ListTrainingComponent implements OnInit {
           },    
           {
             id: "pt_origin",
+            name: "Pays",
             field: "pt_origin",
             type: FieldType.string,
             filterable:true,
@@ -135,6 +136,7 @@ export class ListTrainingComponent implements OnInit {
           },      
           {
             id: "pt_meter_um",
+            name: "Mesure d'accompagnement",
             field: "pt_meter_um",
             type: FieldType.string,
             filterable:true,
