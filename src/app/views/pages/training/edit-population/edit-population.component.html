@@ -1,0 +1,83 @@
+
+<kt-portlet class="main-container">
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter une population'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" >
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+            <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-lg mr-2">Ajouter une catégorie</button> -->
+            <button type="button" (click)="onSubmit()" class="btn btn-lg mr-2 btn-success">Sauvgarder</button>
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body class="main-container">
+        <div class="example-preview">
+            <div>
+                <div>
+                    {{ time | async }}
+                </div>
+
+                <form [formGroup]="populationForm" class="form">
+
+                    <!-- <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce code customer existe deja - Si vous voulez le mettre à jour<button type="warn" class="btn">Cliquez ici</button>
+                    </kt-alert>   (change)="onChangeCode()" -->
+                    
+                    <div class="row">
+                      <!-- CODE POPULATION -->
+                      <div class="form-group col-2">
+                        <!-- <span >Code paramètre:</span> -->
+                            <label class="form-group " id="pop_code" >Code population:</label>
+                            <input type="text" [(ngModel)]="popEdit.pop_code"
+                            class="form-control form-control-lg form-control-solid"
+                            formControlName="pop_code"
+                           disabled
+                            >
+                            
+                            <div *ngIf="populationForm.controls['pop_code'].errors && (populationForm.controls['pop_code'].dirty || populationForm.controls['pop_code'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                      </div>
+                      <!-- CODE POPULATION END  -->
+
+                        <div class=" form-group col-6">
+                            <label class="form-group " id="pop_desc" >Déscription:</label>
+                            
+
+                            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="pop_desc"
+                           >
+                            
+                           
+
+                      </div>
+
+                       
+                    </div>
+                </form> 
+                
+                <!-- DETAILS TITLE  -->
+                <div class="row mt-7 mb-7">
+                    <h4>Liste de clients</h4>
+                </div>
+                <!-- DETAILS TITLE END -->
+
+                
+
+                <!-- GRID -->
+                <div class="row"> 
+                        <angular-slickgrid class="col-12" 
+                            gridId="grid" 
+                            [columnDefinitions]="columnDefinitions"
+                            (onAngularGridCreated)="angularGridReady($event)"
+                            (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions" 
+                            [dataset]="employes"
+                            >
+                        </angular-slickgrid>
+                </div>
+                <!-- GRID END -->
+            
+               
+            </div>
+        </div>
+
+    </kt-portlet-body>
+ 

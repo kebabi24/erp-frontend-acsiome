@@ -48,4 +48,9 @@ public   getAllServicesBy(data:any) {
   const httpHeaders = this.httpUtils.getHTTPHeaders()
   return this.http.post(`${API_URL_SERVICE}/getAllService`, data,{ headers: httpHeaders })
 }   
+public   getItinirary(data:any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders()
+  return this.http.post(`${API_URL_SERVICE}/getItinirary`, data,{ headers: httpHeaders })
+}  
+
 }

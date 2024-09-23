@@ -36,7 +36,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { Employe, EmployeService, JobService , CodeService, SiteService,UsersService} from "../../../../core/erp"
+import { Employe, EmployeService, JobService , CodeService, SiteService,UsersService, ItemService} from "../../../../core/erp"
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
@@ -129,6 +129,20 @@ export class CreateEmployeeComponent implements OnInit {
     gridObjupper: any
     angularGridupper: AngularGridInstance
 
+    trangularGrid: AngularGridInstance;
+    trgrid: any;
+    trgridService: GridService;
+    trdataView: any;
+    trcolumnDefinitions: Column[];
+    trgridOptions: GridOption;
+    trdataset: any[];
+
+    items: [];
+    columnDefinitions4: Column[] = [];
+    gridOptions4: GridOption = {};
+    gridObj4: any;
+    angularGrid4: AngularGridInstance;
+
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -144,6 +158,7 @@ export class CreateEmployeeComponent implements OnInit {
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
       private userService: UsersService,
+      private itemsService: ItemService,
     
       
   ) {
@@ -168,6 +183,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.createForm()
     this.initmvGrid();
     this.initjbGrid()
+    this.inittrGrid()
 }
 initmvGrid() {
   this.mvcolumnDefinitions = [
@@ -353,6 +369,97 @@ initjbGrid() {
 
 }
 
+inittrGrid() {
+  this.trcolumnDefinitions = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.deleteIcon,
+      minWidth: 30,
+      maxWidth: 30,
+    
+    },
+    {
+      id: "empf_part",
+      name: "Code Formation",
+      field: "empf_part",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
+    },
+    {
+      id: "mvid",
+      field: "cmvid",
+      excludeFromHeaderMenu: true,
+      formatter: Formatters.infoIcon,
+      minWidth: 30,
+      maxWidth: 30,
+      onCellClick: (e: Event, args: OnEventArgs) => {
+      
+       
+        this.row_number = args.row
+        let element: HTMLElement = document.getElementById(
+            "openItemspGrid"
+        ) as HTMLElement
+        element.click()
+        }  
+      
+    },
+    {
+      id: "desc",
+      name: "Designation",
+      field: "desc",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.string,
+    
+    },
+    {
+      id: "empf_beging_date",
+      name: "Date Debut",
+      field: "empf_beging_date",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.dateIso,
+      editor: {
+        model: Editors.date,
+      },
+    },
+    
+    {
+      id: "empf_end_date",
+      name: "Date Fin",
+      field: "empf_end_date",
+      sortable: true,
+      width: 50,
+      filterable: false,
+      type: FieldType.dateIso,
+      editor: {
+        model: Editors.date,
+      },
+    },
+  ];
+
+  this.trgridOptions = {
+    asyncEditorLoading: false,
+    editable: true,
+    enableAutoResize:true,
+    autoHeight:false,
+    enableColumnPicker: true,
+    enableCellNavigation: true,
+    enableRowSelection: true,
+    rowHeight:40,
+  };
+  this.trdataset=[]
+
+}
 addNewItem() {
   this.jbgridService.addItem(
     {
@@ -364,7 +471,18 @@ addNewItem() {
     { position: "bottom" }
   );
 }
-
+addNewtrItem() {
+  this.trgridService.addItem(
+    {
+      id: this.trdataset.length + 1,
+     
+      empf_part: null,
+      empf_beging_date: null,
+      empf_end_date: null
+    },
+    { position: "bottom" }
+  );
+}
 jbGridReady(angularGrid: AngularGridInstance) {
   this.jbangularGrid = angularGrid;
   this.jbdataView = angularGrid.dataView;
@@ -376,6 +494,12 @@ mvGridReady(angularGrid: AngularGridInstance) {
   this.mvdataView = angularGrid.dataView;
   this.mvgrid = angularGrid.slickGrid;
   this.mvgridService = angularGrid.gridService;
+}
+trGridReady(angularGrid: AngularGridInstance) {
+  this.trangularGrid = angularGrid;
+  this.trdataView = angularGrid.dataView;
+  this.trgrid = angularGrid.slickGrid;
+  this.trgridService = angularGrid.gridService;
 }
 //create form
 createForm() {
@@ -626,7 +750,12 @@ onSubmit() {
   }
   console.log(this.mvdataset)
   
-  this.addEmploye(employe,this.mvdataset,this.jbdataset)
+  for (let data of this.trdataset) {
+    delete data.id;
+    delete data.cmvid;
+    delete data.desc;
+  }
+  this.addEmploye(employe,this.mvdataset,this.jbdataset,this.trdataset)
   
 }
 /**
@@ -720,10 +849,10 @@ onSubmit() {
      *
      * @param _employe: EmployeModel
      */
-    addEmploye(_employe: Employe, details: any, jbdetails:any) {
+    addEmploye(_employe: Employe, details: any, jbdetails:any,trdetails:any) {
       const controls = this.empForm.controls
       this.loadingSubject.next(true)
-      this.employeService.add({ Employe: _employe, employeScoreDetail: details, employeJobDetail: jbdetails }).subscribe(
+      this.employeService.add({ Employe: _employe, employeScoreDetail: details, employeJobDetail: jbdetails,employeTrDetail: trdetails }).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
               this.layoutUtilsService.showActionNotification(
@@ -1575,6 +1704,96 @@ console.log(res.data)
         }
     
     });
+}
+
+handleSelectedRowsChanged4(e, args) {
+  let updateItem = this.trgridService.getDataItemByRowIndex(this.row_number);
+  if (Array.isArray(args.rows) && this.gridObj4) {
+    args.rows.map((idx) => {
+      const item = this.gridObj4.getDataItem(idx);
+            updateItem.empf_part = item.pt_part;
+            updateItem.desc = item.pt_desc1;
+            
+            this.trgridService.updateItem(updateItem);
+    });
+  }
+}
+angularGridReady4(angularGrid: AngularGridInstance) {
+  this.angularGrid4 = angularGrid;
+  this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGrid4() {
+  this.columnDefinitions4 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "pt_part",
+      name: "code ",
+      field: "pt_part",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "pt_desc1",
+      name: "desc",
+      field: "pt_desc1",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "pt_um",
+      name: "desc",
+      field: "pt_um",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptions4 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.itemsService.getBy({pt_part_type : "FORMATION"}).subscribe((response: any) => (this.items = response.data));
+}
+open4(content) {
+  this.prepareGrid4();
+  this.modalService.open(content, { size: "lg" });
 }
 
 }

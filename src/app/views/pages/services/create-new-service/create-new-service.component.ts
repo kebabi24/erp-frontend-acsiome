@@ -42,6 +42,7 @@ export class CreateNewServiceComponent implements OnInit {
   isClose = false;
   user_mobile_code: any
   site: any
+  role: any
   constructor(
     config: NgbDropdownConfig,
     private serviceF: FormBuilder,
@@ -66,6 +67,7 @@ export class CreateNewServiceComponent implements OnInit {
   }
 
   open(content) {
+    this.prepareItinirary(this.role)
     this.modalService.open(content, { size: "lg" });
   }
 
@@ -223,6 +225,15 @@ export class CreateNewServiceComponent implements OnInit {
     // console.log(this.dataset);
   }
 
+  prepareItinirary(role) {
+    this.mobileService.getItinirary({role_code: role}).subscribe(
+      (response: any) => {
+        
+
+this.itinerary = response.data
+console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
+      })
+    }
   prepareDataset() {
     this.mobileService.getAllService().subscribe(
       (response: any) => {
@@ -367,17 +378,18 @@ export class CreateNewServiceComponent implements OnInit {
         this.user_mobile_code = item.user_mobile_code
         // console.log( item.role_site)
         this.site = item.role_site
-        this.itinerary = [];
+        this.role= item.role_code
+        // this.itinerary = [];
         // console.log(this.services[idx]);
         const newItem = [];
         newItem.push(this.services[idx].role_itineraries);
 
-        newItem.map((item: any) => {
-          item.map((element: any) => {
-          // console.log(element)
-          this.itinerary.push({ itinerary_code: element.itinerary.itinerary_code, itinerary_name: element.itinerary.itinerary_name });
-          })
-        });
+        // newItem.map((item: any) => {
+        //   item.map((element: any) => {
+        //   // console.log(element)
+        //   this.itinerary.push({ itinerary_code: element.itinerary.itinerary_code, itinerary_name: element.itinerary.itinerary_name });
+        //   })
+        // });
         // console.log(this.itinerary);
         this.selectedRow = item;
       });

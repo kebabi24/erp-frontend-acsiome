@@ -53,6 +53,10 @@ export class RequisitionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/findapp`, { headers: httpHeaders })
     }
+    public getAllAppDet() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findappdet`, { headers: httpHeaders })
+    }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -61,6 +65,15 @@ export class RequisitionService {
     public updatedet(data: any, ids:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(API_URL +`/${ids}`, data, { headers: httpHeaders }) 
+    }
+    public updaterqd(data: any, id:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/RQD/${id}`, data, { headers: httpHeaders })
+    }
+    // READ
+    public findByDet(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/finddet', data, { headers: httpHeaders })
     }
     // DELETE
 }
