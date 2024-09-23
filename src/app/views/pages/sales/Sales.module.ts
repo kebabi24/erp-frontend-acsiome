@@ -48,7 +48,7 @@ import {
 
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { QuoteService, UsersService, ItemService, CodeService, TaxeService, SaleOrderService, ProductLineService,
+import { LabelService,QuoteService, UsersService, ItemService, CodeService, TaxeService, SaleOrderService, ProductLineService,
          SaleShiperService,CustomerService,SequenceService, SiteService,LocationService, MesureService,
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
@@ -244,6 +244,7 @@ const routes: Routes = [
             useClass: InterceptService,
             multi: true,
         },
+        LabelService,
         UsersService,
         TypesUtilsService,
         LayoutUtilsService,

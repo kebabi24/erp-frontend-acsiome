@@ -180,7 +180,7 @@ export class CreateModBobineComponent implements OnInit {
       .getBy({ code_fldname: "pt_prod_line" })
       .subscribe((response: any) => (this.mod_prod_line = response.data));
     this.codeService
-      .getBy({ code_fldname: "pt_part_type" })
+      .getBy({ code_fldname: "pt_part_type",code_desc:'BOBINE' })
       .subscribe((response: any) => (this.mod_part_type = response.data));
     this.codeService
       .getBy({ code_fldname: "pt_draw" })
@@ -222,51 +222,101 @@ export class CreateModBobineComponent implements OnInit {
     this.itemModel = new ItemModel();
     this.code = new Code();
     this.form1 = this.formBuilder.group({
-      mod_code: [this.itemModel.mod_code ,Validators.required],
-      mod_desc: [{value :this.itemModel.mod_desc,disabled: !this.isExist }, ],
-      mod_um: [{value :this.itemModel.mod_um,disabled: !this.isExist }, Validators.required],
-      
       mod_prod_line: [{value :'SF',disabled: true }, ],
-      mod_part_type: [{value :this.itemModel.mod_part_type,disabled: !this.isExist }, Validators.required ],
+      mod_part_type: [{value :this.itemModel.mod_part_type }, Validators.required ],
       // mod_group: [{value :this.itemModel.mod_group,disabled: !this.isExist }, Validators.required],
-      int01: [{value :this.itemModel.int01,disabled: !this.isExist },Validators.required],
-      int02: [{value :this.itemModel.int02,disabled: !this.isExist },Validators.required],
+      int01: [{value :this.itemModel.int01},Validators.required],
+      int02: [{value :this.itemModel.int02},Validators.required],
+      mod_code: [{value :this.itemModel.mod_code,disabled: !this.isExist }],
+      mod_desc: [{value :this.itemModel.mod_desc,disabled: !this.isExist }, ],
+      mod_um: [{value :this.itemModel.mod_um,disabled: !this.isExist },],
+      
+      
       
       
     });
   }
-  onChangeCode() {
+  // onChangeCode() {
+  
+  //   const controls = this.form1.controls
+    
+  //   this.itemModelService
+  //       .getByOne({
+  //             mod_code:  controls.mod_code.value
+  //       })
+  //       .subscribe((response: any) => {
+  //        console.log(response.data)
+  //         if (response.data) {
+  //           if()
+  //           controls.mod_desc.setValue(response.data.mod_desc)
+  //           controls.mod_um.setValue(response.data.mod_um)
+  //           controls.mod_part_type.setValue(response.data.mod_part_type)
+  //           // controls.mod_group.setValue(response.data.mod_group)
+  //           controls.int01.setValue(response.data.int01)
+  //           controls.int02.setValue(response.data.int02)
+  //           controls.mod_desc.enable()
+  //           controls.mod_um.enable()
+  //           controls.mod_part_type.enable()
+  //           // controls.mod_group.enable()
+  //           controls.int01.enable()
+  //           controls.int02.enable()
+            
+  //         } else {
+
+  //             controls.mod_desc.enable()
+  //             controls.mod_um.enable()
+  //             controls.mod_part_type.enable()
+  //             // controls.mod_group.enable()
+  //             controls.int01.enable()
+  //             controls.int02.enable()
+  //         }
+      
+  //    })
+  // }
+  onChangemic() {
   
     const controls = this.form1.controls
-    console.log(controls.mod_code.value)
+    console.log(controls.int01.value)
+    if(controls.int01.value < 110 || controls.int01.value > 1050 )
+    {
+      controls.int01.setValue(0)
+      this.message = 'la valeur Micronage est hors limite'
+      this.hasFormErrors1 = true
+      return
+    }
+  }
+  onChangelai() {
+  
+    
+    const controls = this.form1.controls
+    console.log(controls.int02.value)
+    if(controls.int02.value < 300 || controls.int02.value > 1100 )
+    {
+      controls.int02.setValue(0)
+      this.message = 'la valeur laise est hors limite'
+      this.hasFormErrors1 = true
+      return
+    }
     this.itemModelService
         .getByOne({
-              mod_code:  controls.mod_code.value
+              int01:  controls.int01.value,
+              int02: controls.int02.value,
+              mod_part_type : controls.mod_part_type.value
         })
         .subscribe((response: any) => {
          console.log(response.data)
-          if (response.data) {
-            controls.mod_desc.setValue(response.data.mod_desc)
-            controls.mod_um.setValue(response.data.mod_um)
-            controls.mod_part_type.setValue(response.data.mod_part_type)
-            // controls.mod_group.setValue(response.data.mod_group)
-            controls.int01.setValue(response.data.int01)
-            controls.int02.setValue(response.data.int02)
-            controls.mod_desc.enable()
-            controls.mod_um.enable()
-            controls.mod_part_type.enable()
-            // controls.mod_group.enable()
-            controls.int01.enable()
-            controls.int02.enable()
+          if (response.data != null) {
+            controls.int02.setValue(0)
+            this.message = 'un modèle existe pour cette configuration'
+            this.hasFormErrors1 = true
+            return
             
           } else {
-
-              controls.mod_desc.enable()
-              controls.mod_um.enable()
-              controls.mod_part_type.enable()
-              // controls.mod_group.enable()
-              controls.int01.enable()
-              controls.int02.enable()
+              controls.mod_code.setValue(controls.mod_part_type.value + '-' + controls.int01.value + '/' + controls.int02.value )
+              controls.mod_desc.setValue('BOBINE ' + controls.mod_part_type.value + ' ' + controls.int01.value + '/' + controls.int02.value)
+              controls.mod_um.setValue('KG')
+              
+             
           }
       
      })

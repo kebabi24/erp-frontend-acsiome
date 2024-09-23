@@ -58,6 +58,7 @@ import {
   LabelService,
   PrintersService, EmployeService
 } from "../../../../core/erp";
+import { Reason, ReasonService} from "../../../../core/erp"
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
@@ -145,6 +146,13 @@ export class ReturnCabComponent implements OnInit {
   gridOptionslocdet: GridOption = {};
   gridObjlocdet: any;
   angularGridlocdet: AngularGridInstance;
+
+  causes: []
+  columnDefinitions6: Column[] = []
+  gridOptions6: GridOption = {}
+  gridObj6: any
+  angularGrid6: AngularGridInstance
+
   ums: [];
   columnDefinitionsum: Column[] = [];
   gridOptionsum: GridOption = {};
@@ -194,7 +202,8 @@ export class ReturnCabComponent implements OnInit {
     private locationDetailService: LocationDetailService,
     private labelService: LabelService,
     private printerService: PrintersService,
-    private employeService: EmployeService
+    private employeService: EmployeService,
+    private reasonService: ReasonService,
   ) {
     config.autoClose = true;
     this.initGrid();
@@ -538,19 +547,30 @@ export class ReturnCabComponent implements OnInit {
           },
       
         onCellChange: (e: Event, args: OnEventArgs) => {
-             
+          const controls = this.trForm.controls;
+          if (controls.tr_rmks.value == null){
+            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: args.dataContext.qty_oh })
+        
+            this.message = "veuillez choisir la cause";
+              this.hasFormErrors = true;
+              return;
+          }
               if (args.dataContext.tr_qty_loc <0){
+                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: args.dataContext.qty_oh })
+            
                 this.message = "Quantité n peut pas être négative";
                   this.hasFormErrors = true;
                   return;
               }
               if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
                   console.log('here')
+                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: args.dataContext.qty_oh })
+            
                   this.message = "Quantité manquante";
                   this.hasFormErrors = true;
+                  
                   return;
-               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
-            
+               
            
              
           }
@@ -790,22 +810,19 @@ export class ReturnCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-         
+          const controls = this.trForm.controls;
+           
           let barcode = ''
-          // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          //   this.angularGrid.gridService.deleteItem(args.dataContext);
-          // }
-          // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-          //   this.hasFormErrors = true;
-          //   this.message = "veuillez remplir le N° de lot";
-          
-      
-          //   return;
-          // }
+          if (controls.tr_rmks.value == null){
+           // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: args.dataContext.qty_oh })
+        
+            this.message = "veuillez choisir la cause";
+              this.hasFormErrors = true;
+              return;
+          }
           if (this.printable == true){
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null ) {
             // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
-            const controls = this.trForm.controls;
              
             this.printable = false
             const _lb = new Label();
@@ -841,6 +858,7 @@ export class ReturnCabComponent implements OnInit {
                   Edelweiss.print3(lab,this.currentPrinter);
                   
                 });
+                
                 
               },
               (error) => {
@@ -965,13 +983,13 @@ export class ReturnCabComponent implements OnInit {
           controls.tr_addr.setValue(reponse.data.code_value),
           controls.tr_addr.disable() 
 
-          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
-            //   const { data } = response;
+          // this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+          //   //   const { data } = response;
                
-               if (response.data != null) {
-                 this.provider = response.data;
-               }
-             });
+          //      if (response.data != null) {
+          //        this.provider = response.data;
+          //      }
+          //    });
           
           }
         },
@@ -1008,7 +1026,7 @@ export class ReturnCabComponent implements OnInit {
   reset() {
     this.inventoryTransaction = new InventoryTransaction();
     this.createForm();
-    
+    this.dataset=[];
     this.hasFormErrors = false;
   }
   // save data
@@ -1020,7 +1038,7 @@ export class ReturnCabComponent implements OnInit {
     let obj:any;
     if (this.trtype =='ISS-WO'){obj = {
       tr_lot:this.trlot,
-      tr_so_job: ref,
+      tr_so_job: controls.tr_ref.value,
       tr_line: this.dataset[this.index].tr_line,
       tr_part: this.dataset[this.index].tr_part,
       desc: this.dataset[this.index].desc,
@@ -1037,7 +1055,7 @@ export class ReturnCabComponent implements OnInit {
     };}
     else{obj = {
       tr_lot:this.trlot,
-      tr_so_job: ref,
+      tr_so_job: controls.tr_ref.value,
       tr_line: this.dataset[this.index].tr_line,
       tr_part: this.dataset[this.index].tr_part,
       desc: this.dataset[this.index].desc,
@@ -1055,7 +1073,7 @@ export class ReturnCabComponent implements OnInit {
     // this.data.push(this.dataset[this.index])
     this.data.push(obj);
 
-    controls.tr_ref.setValue(null)
+     
     
     /** check form */
 
@@ -1070,7 +1088,7 @@ export class ReturnCabComponent implements OnInit {
         let tr = this.prepare();
     this.addIt(this.data, tr, this.trlot);
 
-    
+    controls.tr_ref.setValue(null)
     // tslint:disable-next-line:prefer-const
   }
 
@@ -1081,7 +1099,7 @@ export class ReturnCabComponent implements OnInit {
     _tr.tr_nbr = controls.tr_nbr.value;
     _tr.tr_lot = this.trlot
     _tr.tr_effdate = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
-    _tr.tr_so_job = ref;
+    _tr.tr_so_job = controls.tr_ref.value;
 
     _tr.tr_rmks = controls.tr_rmks.value;
     _tr.tr_addr = controls.tr_addr.value;
@@ -2220,28 +2238,34 @@ this.trtype = null;
 // this.labelService.getBy({lb_cab: controls.tr_ref.value,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
 
   this.inventoryTransactionService.getBy({tr_so_job:ref}).subscribe((trres:any) =>{
-    if (trres.data != null) {
+    if (trres.data.length != 0) {
     bol = true
+    this.dataset =[]
+    console.log(trres.data)
+    // this.createForm();
+    this.message = "le bigbaga a dèjà été retourné";
+    this.hasFormErrors = true;
+    return;
   }
 })
     
   if (!bol) {
-    this.inventoryTransactionService.getByIss({ tr_ref: ref  }).subscribe(
+    this.inventoryTransactionService.getByIss({ tr_ref: ref,tr_so_job:null  }).subscribe(
       (trresponse: any) => {
-        if (trresponse.data != null)
+        if (trresponse.data.length != 0)
         {this.lddet = trresponse.data[0]
-        console.log(this.lddet.tr_lot)
+        console.log(this.lddet)
         this.trlot=this.lddet.tr_lot
         this.trtype=this.lddet.tr_type
         if (this.lddet != null ) 
         {
-            this.addressService.getBy({ ad_addr: this.lddet.tr_addr }).subscribe((adresponse: any) => {
-            //   const { data } = response;
-               console.log("aaaaaaaaaaa",adresponse.data);
-               if (adresponse.data != null) {
-                 this.provider = adresponse.data;
-               }
-             });
+            // this.addressService.getBy({ ad_addr: this.lddet.tr_addr }).subscribe((adresponse: any) => {
+            // //   const { data } = response;
+            //    console.log("aaaaaaaaaaa",adresponse.data);
+            //    if (adresponse.data != null) {
+            //      this.provider = adresponse.data;
+            //    }
+            //  });
      
              this.inventoryStatusService.getAllDetails({isd_status: this.lddet.tr_status, isd_tr_type: this.lddet.tr_type }).subscribe((resstat:any)=>{
           
@@ -2304,16 +2328,21 @@ this.trtype = null;
               //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
         }
       }
+      else {
+        this.message = "ce bigbaga n'est pas consommé";
+    this.hasFormErrors = true;
+    return;
+      }
     });
   }
   else {
-    this.message = "bigbag déjà scanné";
+    this.message = "bigbag déjà retourné";
     this.hasFormErrors = true;
     return;
   }
 
   
-console.log(ref, bol)
+
 
 
 // controls.tr_ref.setValue(null)
@@ -2555,6 +2584,7 @@ if (mt.length > 95) {
 }
 // window.open(doc.output('bloburl'), '_blank');
 //window.open(doc.output('blobUrl'));  // will open a new tab
+doc.save('RETOUR-' + nbr + '.pdf')
 var blob = doc.output("blob");
 window.open(URL.createObjectURL(blob));
 }
@@ -2787,6 +2817,95 @@ addISSWO( detail: any, it) {
       }
     );
 }
+handleSelectedRowsChanged6(e, args) {
+  const controls = this.trForm.controls
+  if (Array.isArray(args.rows) && this.gridObj6) {
+      args.rows.map((idx) => {
+          const cause = this.gridObj6.getDataItem(idx)
+          console.log(cause)
+          controls.tr_rmks.setValue(cause.rsn_ref || "")
+
+      })
+  }
+}
+angularGridReady6(angularGrid: AngularGridInstance) {
+  this.angularGrid6 = angularGrid
+  this.gridObj6 = (angularGrid && angularGrid.slickGrid) || {}
+}
+prepareGrid6() {
+  const controls = this.trForm.controls
+  this.columnDefinitions6 = [
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+     
+     
+      {
+        id: "rsn_ref",
+        name: "Code",
+        field: "rsn_ref",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+    },
+    
+      {
+          id: "rsn_desc",
+          name: "Designation",
+          field: "rsn_desc",
+          sortable: true,
+          width: 200,
+          filterable: true,
+          type: FieldType.string,
+      },
+  ]
+
+  this.gridOptions6 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  
+  this.reasonService
+      .getBy ({rsn_type: 'RETURN' })
+      .subscribe((response: any) => (this.causes = response.data))
+   
+}
+open6(content) {
+  this.prepareGrid6()
+  this.modalService.open(content, { size: "lg" })
+}
+
 }
   
 

@@ -463,7 +463,7 @@ export class CreatePsComponent implements OnInit {
         { value: "", disabled: true }],
       color:[
         { value: "", disabled: true }], 
-      
+        ps_scrp_pct: [this.ps.ps_scrp_pct],
     });
   }
   //reste form
@@ -606,6 +606,7 @@ export class CreatePsComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls=this.psForm.controls
     this.gridService.addItem(
       {
         id: this.dataset.length + 1,
@@ -614,7 +615,7 @@ export class CreatePsComponent implements OnInit {
         cmvid: "",
         desc: "",
         ps_qty_req: 0,
-        
+        ps_scrp_pct:controls.ps_scrp_pct.value
       },
       { position: "bottom" }
     );

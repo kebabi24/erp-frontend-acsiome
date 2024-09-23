@@ -72,10 +72,7 @@ export class InventoryTransactionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/Reprint', data, { headers: httpHeaders })
     }
-    public ORDWO(data: any) {
-        const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL+'/OrdWo', data, { headers: httpHeaders })
-    }
+    
     // READ
     public findBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

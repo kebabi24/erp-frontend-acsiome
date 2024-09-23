@@ -378,7 +378,7 @@ export class CreateBobineModComponent implements OnInit {
       pt_um: [{ value: this.item.pt_um, disabled: !this.isExist },Validators.required],
 
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
-      pt_price: [{ value: this.item.pt_price, disabled: !this.isExist }],
+      pt_price: [{ value: this.item.pt_price }],
       
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
@@ -508,9 +508,9 @@ onChangesilicone() {
         pt_rev:controls1.pt_rev.value,
         pt_group:controls1.pt_group.value
       })
-      .subscribe((response: any) => {
-      console.log(response.data)
-          if (response.data != null) {
+      .subscribe((itemresponse: any) => {
+      console.log(itemresponse.data)
+          if (itemresponse.data != null) {
               this.isExist = true
               console.log('article existe')
               controls1.pt_group.setValue(null)
@@ -522,28 +522,40 @@ onChangesilicone() {
         .getByOne({
               mod_code:  controls1.pt_article.value
         })
-        .subscribe((response: any) => {
-         console.log(response.data)
-          if (response.data) {
-            console.log(response.data.mod_part_type)
-            controls1.pt_um.setValue(response.data.mod_um)
-            controls1.pt_prod_line.setValue(response.data.mod_prod_line)
-            controls1.pt_part_type.setValue(response.data.mod_part_type)
+        .subscribe((modeleresponse: any) => {
+         console.log(modeleresponse.data)
+          if (modeleresponse.data) {
+            console.log(modeleresponse.data.mod_part_type)
+            let code_couleur:any;
+            let code_silicone:any;
+            let vitesse:any;
+            this.codeService.getBy({ code_fldname: 'pt_break_cat',code_value: controls1.pt_break_cat.value }).subscribe((coderesponse: any) => 
+              { code_couleur = coderesponse.data[0].code_desc, vitesse=Number(coderesponse.data[0].dec01)
+                this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls1.pt_group.value }).subscribe((coderesponse: any) => {code_silicone = coderesponse.data[0].chr01
+                  console.log(code_couleur, code_silicone)
+            controls1.pt_um.setValue(modeleresponse.data.mod_um)
+            controls1.pt_prod_line.setValue(modeleresponse.data.mod_prod_line)
+            controls1.pt_part_type.setValue(modeleresponse.data.mod_part_type)
             controls1.pt_price.setValue(0)
             controls1.pt_draw.setValue('BOBINE')
             controls1.pt_origin.setValue('EXTRUSION')
             controls1.pt_bom_code.setValue('F' + controls1.pt_rev.value)
-            controls1.pt_dsgn_grp.setValue(response.data.mod_dsgn_grp)
+            controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
             controls1.pt_status.setValue('SF-ACTIF')
-            controls1.int01.setValue(response.data.int01)
-            controls1.int02.setValue(response.data.int02)
-            controls1.int03.setValue(530)
-            controls1.pt_part.setValue('BOB-' + controls1.pt_article.value + 'Q' + controls1.pt_rev.value + controls1.pt_break_cat.value + controls1.pt_group.value)
+            controls1.int01.setValue(modeleresponse.data.int01)
+            controls1.int02.setValue(modeleresponse.data.int02)
+            if(Number(modeleresponse.data.int01) == 110 || Number(modeleresponse.data.int01) == 152){vitesse = 380}
+            controls1.int03.setValue(vitesse)
+            controls1.pt_part.setValue('BOB-' + controls1.pt_article.value + 'Q' + controls1.pt_rev.value + code_couleur + code_silicone)
             controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_article.value + " QUALITE " + controls1.pt_rev.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
-            controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_article.value + " QUALITE " + controls1.pt_rev.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
+            controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_article.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
             controls1.pt_part.enable()
             controls1.pt_desc1.enable()
             controls1.pt_desc2.enable()
+                });
+              });
+            
+  
           } else {
 
             console.log ('code modele existe pas')
@@ -873,7 +885,28 @@ onAlertClose($event) {
           this.error = false;
           this.model = data
           console.log(this.model,'model')
+          controls.pt_break_cat.setValue(null)
           controls.pt_break_cat.enable()
+          controls.pt_rev.disable()
+          controls.pt_group.disable()
+            controls.pt_um.setValue(null)
+            controls.pt_prod_line.setValue(null)
+            controls.pt_part_type.setValue(null)
+            controls.pt_price.setValue(0)
+            controls.pt_draw.setValue('BOBINE')
+            controls.pt_origin.setValue('EXTRUSION')
+            controls.pt_bom_code.setValue(null)
+            controls.pt_dsgn_grp.setValue(null)
+            controls.pt_status.setValue('SF-ACTIF')
+            controls.int01.setValue(null)
+            controls.int02.setValue(null)
+           controls.int03.setValue(0)
+            controls.pt_part.setValue(null)
+            controls.pt_desc1.setValue(null)
+            controls.pt_desc2.setValue(null)
+            controls.pt_part.disable()
+            controls.pt_desc1.disable()
+            controls.pt_desc2.disable()
         }
       },
       (error) => console.log(error)
@@ -1526,7 +1559,29 @@ handleSelectedRowsChangedmod(e, args) {
       controls1.pt_article.setValue(item.mod_code || "");
       this.model = item
       console.log(controls1.pt_article.value)
-      controls1.pt_break_cat.enable()
+      
+      controls1.pt_break_cat.setValue(null)
+          controls1.pt_break_cat.enable()
+          controls1.pt_rev.disable()
+          controls1.pt_group.disable()
+            controls1.pt_um.setValue(null)
+            controls1.pt_prod_line.setValue(null)
+            controls1.pt_part_type.setValue(null)
+            controls1.pt_price.setValue(0)
+            controls1.pt_draw.setValue('BOBINE')
+            controls1.pt_origin.setValue('EXTRUSION')
+            controls1.pt_bom_code.setValue(null)
+            controls1.pt_dsgn_grp.setValue(null)
+            controls1.pt_status.setValue('SF-ACTIF')
+            controls1.int01.setValue(null)
+            controls1.int02.setValue(null)
+           controls1.int03.setValue(0)
+            controls1.pt_part.setValue(null)
+            controls1.pt_desc1.setValue(null)
+            controls1.pt_desc2.setValue(null)
+            controls1.pt_part.disable()
+            controls1.pt_desc1.disable()
+            controls1.pt_desc2.disable()
     });
   }
 }
@@ -1722,7 +1777,7 @@ prepareGridmod() {
 
   // fill the dataset with your data
   this.itemModelService
-      .getAll()
+      .getBy({mod_draw:'BOBINE'})
       .subscribe((response: any) => (this.datamod = response.data))
 }
 openmod(content) {

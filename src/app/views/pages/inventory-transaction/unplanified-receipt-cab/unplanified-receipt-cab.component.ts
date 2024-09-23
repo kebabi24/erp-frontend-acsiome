@@ -2177,6 +2177,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     }
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('RU-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }
@@ -2422,10 +2423,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   
     // fill the dataset with your data
     const controls = this.trForm.controls;
-    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));}
-    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data))}
-          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR'}).subscribe((response: any) => (this.emps = response.data))}
-               else{this.employeService.getBy({emp_job:'MAG'}).subscribe((response: any) => (this.emps = response.data));}}
+    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}
+    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
+          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
+               else{this.employeService.getBy({emp_job:'MAG',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}}
   }}
   
   handleSelectedRowsChangedemp(e, args) {

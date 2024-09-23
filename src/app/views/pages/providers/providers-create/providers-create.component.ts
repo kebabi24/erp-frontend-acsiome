@@ -217,9 +217,7 @@ export class ProvidersCreateComponent implements OnInit {
         this.codeService
             .getBy({ code_fldname: "ad_tax_zone" })
             .subscribe((response: any) => (this.ad_tax_zone = response.data))
-        this.codeService
-            .getBy({ code_fldname: "ad_tax_zone" })
-            .subscribe((response: any) => (this.ad_tax_zone = response.data))
+        
         this.codeService
             .getBy({ code_fldname: "ad_tax_usage" })
             .subscribe((response: any) => (this.ad_tax_usage = response.data))        

@@ -185,6 +185,7 @@ export class EditEmployeComponent implements OnInit {
       this.initmvGrid()
       this.initjbGrid()
       this.loadingSubject.next(false)
+      
       })
     })
 }
@@ -195,14 +196,15 @@ createForm() {
   
   this.empForm = this.empFB.group({
       emp_addr: [{value: this.employeEdit.emp_addr, disabled:true}],
+      emp_fname: [{value:this.employeEdit.emp_fname},
+        Validators.required
+        
+    ],
       emp_lname: [
           this.employeEdit.emp_lname ,
           Validators.required,
       ],
-      emp_fname: [
-        this.employeEdit.emp_fname ,
-        Validators.required,
-    ],
+      
       
     emp_sex: [
       this.employeEdit.emp_sex ,
@@ -241,7 +243,7 @@ emp_hab_date: [{
 
 
       
-emp_blood: [this.employeEdit.emp_blood , Validators.required],
+    emp_blood: [this.employeEdit.emp_blood , Validators.required],
       emp_line1:  [this.employeEdit.emp_line1, Validators.required,],
       emp_ss_id:  [this.employeEdit.emp_ss_id , Validators.required,],
       emp_country: [this.employeEdit.emp_country ],

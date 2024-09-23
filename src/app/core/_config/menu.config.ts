@@ -458,8 +458,8 @@ export class MenuConfig {
               page: "/articles/add",
             },
             {
-              title: "Génerer Article via Modèle",
-              page: "/articles/create-item-mod",
+              title: "Génerer Matiere via Modèle",
+              page: "/articles/create-mp-mod",
             },
             {
               title: "Génerer Bobine par Modèle",
@@ -479,8 +479,8 @@ export class MenuConfig {
               icon: "flaticon2-delivery-package",
               submenu: [
                 {
-                  title: "Ajouter Un Modèle",
-                  page: "/articles/create-mod",
+                  title: "Ajouter Un Modèle mp",
+                  page: "/articles/create-mod-mp",
                 },
                 {
                   title: "Ajouter Un Modèle bobine",
@@ -985,8 +985,12 @@ export class MenuConfig {
             },
 
             {
-              title: "Déclaration Operation",
+              title: "Déclaration des Arrêts",
               page: "/manufacturing/create-op",
+            },
+            {
+              title: "Liste des Arrêts",
+              page: "/manufacturing/list-op",
             },
             {
               title: "Broyage",
@@ -1032,6 +1036,10 @@ export class MenuConfig {
             {
               title: "List Prix de Revient OF",
               page: "/manufacturing/costprice-list",
+            },
+            {
+              title: "Suivi Alimentation Extrusion ",
+              page: "/manufacturing/suivi-alimentation-extrusion",
             },
             {
               title: "Etat des Broyages ",

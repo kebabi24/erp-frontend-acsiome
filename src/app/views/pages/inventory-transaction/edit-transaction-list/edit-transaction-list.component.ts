@@ -827,162 +827,145 @@ export class EditTransactionListComponent implements OnInit {
             maxWidth: 30,
             onCellClick: (e: Event, args: OnEventArgs) => {
               
-            if(args.dataContext.tr_part!=args.dataContext.tr_oldpart || args.dataContext.tr_addr!=args.dataContext.tr_oldaddr || args.dataContext.tr_serial!=args.dataContext.tr_oldserial || args.dataContext.tr_qty_loc!= args.dataContext.tr_qty_chg)   /*ajouter ligne tr_hist de suppression*/
-              { console.log('changement', args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,args.dataContext.tr_oldserial) 
+              if(args.dataContext.tr_part!=args.dataContext.tr_oldpart || args.dataContext.tr_addr!=args.dataContext.tr_oldaddr || args.dataContext.tr_serial!=args.dataContext.tr_oldserial || args.dataContext.tr_qty_loc!= args.dataContext.tr_qty_chg)   /*ajouter ligne tr_hist de suppression*/
+                { console.log('changement', args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,args.dataContext.tr_oldserial) 
+                  
+                this.index = this.dataset.findIndex((el) => {
+                  return el.tr_line == args.dataContext.tr_line;
+                });
+                // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
                 
-               this.index = this.dataset.findIndex((el) => {
-                return el.tr_line == args.dataContext.tr_line;
-              });
-              // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
-              
-              this.oldata = [];
-              let oldobj = {
-                tr_lot:args.dataContext.tr_lot,
-                tr_nbr:args.dataContext.tr_nbr,
-                tr_addr:args.dataContext.tr_oldaddr,
-                tr_rmks:'CORRECTION ADMINISTRATION',
-                tr_gl_date: new Date(),
-                tr_effdate: args.dataContext.tr_effdate,
-                dec01:args.dataContext.dec01,
-                dec02:args.dataContext.dec02,
-                tr_line: args.dataContext.tr_line,
-                tr_part: args.dataContext.tr_oldpart,
-                desc: args.dataContext.desc,
-                tr_qty_loc: args.dataContext.tr_qty_chg * -1,
-                tr_um: args.dataContext.tr_um,
-                tr_um_conv: args.dataContext.tr_um_conv,
-                tr_price: args.dataContext.tr_price,
-                tr_site: args.dataContext.tr_site,
-                tr_loc: args.dataContext.tr_loc,
-                tr_serial: args.dataContext.tr_oldserial,
-                tr_ref: args.dataContext.tr_ref,
-                tr_status: args.dataContext.tr_status,
-                tr_expire: args.dataContext.tr_expire,
-                tr_rev:'CHANGED',
-              };
-              // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
-              args.dataContext.tr_qty_chg = 0;
-              this.oldata.push(oldobj);
-              let oldtr = oldobj;
-              this.trlot = args.dataContext.tr_lot;
-              // this.updatetrans(args.dataContext.id)
-              console.log(args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,'old')
-              if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.oldata, oldtr, this.trlot)}
-              else{
-               if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.oldata, oldtr, this.trlot)}
-               else{
-                if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.oldata, oldtr)}
-                else{
-                 if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.oldata,oldtr)}
-                 else{ 
-                  if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.oldata,oldtr)}
-                 }
-                }
-               }
-              }
-                    
-              
-            }
-              
-              this.data = [];
-                let obj = {
+                this.oldata = [];
+                let oldobj = {
                   tr_lot:args.dataContext.tr_lot,
                   tr_nbr:args.dataContext.tr_nbr,
-                  tr_addr:args.dataContext.tr_addr,
+                  tr_addr:args.dataContext.tr_oldaddr,
                   tr_rmks:'CORRECTION ADMINISTRATION',
                   tr_gl_date: new Date(),
                   tr_effdate: args.dataContext.tr_effdate,
                   dec01:args.dataContext.dec01,
                   dec02:args.dataContext.dec02,
                   tr_line: args.dataContext.tr_line,
-                  tr_part: args.dataContext.tr_part,
+                  tr_part: args.dataContext.tr_oldpart,
                   desc: args.dataContext.desc,
-                  tr_loc_begin: args.dataContext.tr_qty_chg,
-                  tr_qty_loc: args.dataContext.tr_qty_loc  ,
-                  tr_gl_amt: (args.dataContext.tr_qty_loc ) * args.dataContext.tr_price * args.dataContext.tr_um_conv,
+                  tr_qty_loc: args.dataContext.tr_qty_chg * -1,
                   tr_um: args.dataContext.tr_um,
                   tr_um_conv: args.dataContext.tr_um_conv,
                   tr_price: args.dataContext.tr_price,
                   tr_site: args.dataContext.tr_site,
                   tr_loc: args.dataContext.tr_loc,
-                  tr_serial: args.dataContext.tr_serial,
+                  tr_serial: args.dataContext.tr_oldserial,
                   tr_ref: args.dataContext.tr_ref,
                   tr_status: args.dataContext.tr_status,
                   tr_expire: args.dataContext.tr_expire,
+                  tr_rev:'CHANGED',
                 };
-                // this.data.push(this.dataset[this.index])
-                this.data.push(obj);
-                let tr = obj;
+                // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+                args.dataContext.tr_qty_chg = 0;
+                this.oldata.push(oldobj);
+                let oldtr = oldobj;
                 this.trlot = args.dataContext.tr_lot;
-                
-                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
+                // this.updatetrans(args.dataContext.id)
+                console.log(args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,'old')
+                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.oldata, oldtr, this.trlot)}
                 else{
-                 if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
-                 else{
-                  if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.oldata, oldtr, this.trlot)}
+                else{
+                  if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.oldata, oldtr)}
                   else{
-                   if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
-                   else{ 
-                    if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
-                   }
+                  if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.oldata,oldtr)}
+                  else{ 
+                    if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.oldata,oldtr)}
                   }
-                 }
+                  }
                 }
-     const controls = this.trForm.controls;
-                               
-      let cabs : any;
-      const _lb = new Label();
-      this.labelService.getBy({ lb_ref: args.dataContext.tr_ref }).subscribe(
-        (reponse: any) => (cabs = reponse.data.label, console.log(args.dataContext.tr_ref,cabs),
-        
-        _lb.lb__dec01 = cabs.lb__dec01,
-        
-        _lb.lb_site = cabs.lb_site,
-        _lb.lb_rmks = cabs.lb_rmks,
-        _lb.lb_loc = cabs.lb_loc,
-        _lb.lb_part = args.dataContext.tr_part,
-        _lb.lb_nbr = cabs.lb_nbr, //this.trnbr
-        _lb.lb_lot = args.dataContext.tr_serial,
-        _lb.lb_date = cabs.lb_date, 
-        _lb.lb_qty = cabs.lb_qty,
-        _lb.lb_um = cabs.lb_um,
-        _lb.lb_ld_status = cabs.lb_ld_status,
-        _lb.lb_desc = args.dataContext.desc,
-        _lb.lb_printer = this.PathPrinter,
-        _lb.lb_cust = args.dataContext.tr_addr,
-        _lb.lb_grp = cabs.lb_Grp,
-        _lb.lb_addr = cabs.lb_addr,
-        _lb.lb_tel = cabs.lb_tel,
-        _lb.lb_ref = cabs.lb_ref
-      ),
-        (error) => {
-          this.message = "veuillez verifier le code barre";
-          this.isExist = true;
-          return;
-        }
-      )
-       let lab: any;     
-       this.labelService.getBy({lb_ref:args.dataContext.tr_ref}).subscribe(
-        (reponse: any) => {
-          lab = reponse.data.label;
-          
-          this.labelService.addblob(_lb).subscribe((blob) => {                 
-            Edelweiss.print3(lab,this.currentPrinter);
-            
-          });
-          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
-          this.loadingSubject.next(false);
-        },
-        (error) => {
-          this.message = "l'impression n'a pas été enregistrée";
-          this.hasFormErrors = true;
-          return;
-        },)
-       
-             
-            
-          
-          }
+                }
+                      
+                
+              }
+              this.data = [];
+              let obj = {
+                    tr_lot:args.dataContext.tr_lot,
+                    tr_nbr:args.dataContext.tr_nbr,
+                    tr_addr:args.dataContext.tr_addr,
+                    tr_rmks:'CORRECTION ADMINISTRATION',
+                    tr_gl_date: new Date(),
+                    tr_effdate: args.dataContext.tr_effdate,
+                    dec01:args.dataContext.dec01,
+                    dec02:args.dataContext.dec02,
+                    tr_line: args.dataContext.tr_line,
+                    tr_part: args.dataContext.tr_part,
+                    desc: args.dataContext.desc,
+                    tr_loc_begin: args.dataContext.tr_qty_chg,
+                    tr_qty_loc: args.dataContext.tr_qty_loc  ,
+                    tr_gl_amt: (args.dataContext.tr_qty_loc ) * args.dataContext.tr_price * args.dataContext.tr_um_conv,
+                    tr_um: args.dataContext.tr_um,
+                    tr_um_conv: args.dataContext.tr_um_conv,
+                    tr_price: args.dataContext.tr_price,
+                    tr_site: args.dataContext.tr_site,
+                    tr_loc: args.dataContext.tr_loc,
+                    tr_serial: args.dataContext.tr_serial,
+                    tr_ref: args.dataContext.tr_ref,
+                    tr_status: args.dataContext.tr_status,
+                    tr_expire: args.dataContext.tr_expire,
+              };
+              // this.data.push(this.dataset[this.index])
+              this.data.push(obj);
+              let tr = obj;
+              this.trlot = args.dataContext.tr_lot;
+                  
+              if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
+              else{
+                  if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
+                  else{
+                    if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                    else{
+                    if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                    else{ 
+                      if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
+                    }
+                    }
+                  }
+              }
+              const controls = this.trForm.controls;
+              let cabs : any;
+              const _lb = new Label();
+              this.labelService.getBy({ lb_ref: args.dataContext.tr_ref }).subscribe(
+                (reponse: any) => (
+                  cabs = reponse.data.label, console.log(args.dataContext.tr_ref,cabs),
+                
+                _lb.lb__dec01 = cabs.lb__dec01,
+                
+                _lb.lb_site = cabs.lb_site,
+                _lb.lb_rmks = cabs.lb_rmks,
+                _lb.lb_loc = cabs.lb_loc,
+                _lb.lb_part = args.dataContext.tr_part,
+                _lb.lb_nbr = cabs.lb_nbr, //this.trnbr
+                _lb.lb_lot = args.dataContext.tr_serial,
+                _lb.lb_date = cabs.lb_date, 
+                _lb.lb_qty = cabs.lb_qty,
+                _lb.lb_um = cabs.lb_um,
+                _lb.lb_ld_status = cabs.lb_ld_status,
+                _lb.lb_desc = args.dataContext.desc,
+                _lb.lb_printer = this.PathPrinter,
+                _lb.lb_cust = args.dataContext.tr_addr,
+                _lb.lb_grp = cabs.lb_Grp,
+                _lb.lb_addr = cabs.lb_addr,
+                _lb.lb_tel = cabs.lb_tel,
+                _lb.lb_ref = cabs.lb_ref,
+
+                this.labelService.addblob(_lb).subscribe((blob) => {                 
+                  Edelweiss.print3(_lb,this.currentPrinter);
+                })
+                
+              ),
+                (error) => {
+                  this.message = "veuillez verifier le code barre";
+                  this.isExist = true;
+                  return;
+                }
+              )
+            }
           },
           
 

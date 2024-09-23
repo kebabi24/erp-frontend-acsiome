@@ -2193,6 +2193,7 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
  
        // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('RC-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
 

@@ -239,7 +239,7 @@ const routes: Routes = [
     RequisitionService,
     UsersService,
     LabelService,
-    DomainService,
+    DomainService, 
     PrintersService,
     EmployeService,
     ProductLineService,

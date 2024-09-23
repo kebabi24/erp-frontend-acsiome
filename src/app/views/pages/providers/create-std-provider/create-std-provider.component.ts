@@ -215,9 +215,7 @@ constructor(
     this.codeService
         .getBy({ code_fldname: "vd_lang" })
         .subscribe((response: any) => (this.vd_lang = response.data))
-    this.codeService
-        .getBy({ code_fldname: "ad_tax_zone" })
-        .subscribe((response: any) => (this.ad_tax_zone = response.data))
+    
     this.codeService
         .getBy({ code_fldname: "ad_tax_zone" })
         .subscribe((response: any) => (this.ad_tax_zone = response.data))

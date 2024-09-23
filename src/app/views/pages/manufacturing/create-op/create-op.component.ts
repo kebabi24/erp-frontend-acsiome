@@ -59,6 +59,7 @@ import {
  
 } from "../../../../core/erp";
 import { any } from "@amcharts/amcharts4/.internal/core/utils/Array";
+import { format } from "path";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -518,9 +519,9 @@ export class CreateOpComponent implements OnInit {
         },
       },
       {
-        id: "id",
-        name: "id",
-        field: "id",
+        id: "line",
+        name: "ligne",
+        field: "line",
         sortable: true,
         minWidth: 50,
         maxWidth: 50,
@@ -585,14 +586,18 @@ export class CreateOpComponent implements OnInit {
 
        
       let time = args.dataContext.debut_cause
-   
-      if (time.substring(0,2) > 24) {
-        alert("Heure ne doit pas depassé 24")
+      
+      if (Number(time.substring(0,2)) > 24) {
         this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , debut_cause: "HH:MM" })
+        this.message = "Heure ne doit pas depassé 24"
+        this.hasFormErrors = true;
+        return
       }
-      if (time.substring(3,5) > 59) {
-        alert("Minute ne doit pas depassé 59")
+      if (Number(time.substring(3,5)) > 59) {
         this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , debut_cause: "HH:MM" })
+        this.message = "Minutes ne doit pas depassé 59"
+        this.hasFormErrors = true;
+        return
       }
     }
    
@@ -906,7 +911,7 @@ export class CreateOpComponent implements OnInit {
       op_mch   : [this.operationHistory.op_mch],
       op_dept  : [{value: this.operationHistory.op_dept, disabled:true}],
       op_shift : [this.operationHistory.op_shift],
-      op_emp   : [this.operationHistory.op_emp],
+      // op_emp   : [this.operationHistory.op_emp],
       
       
         
@@ -1037,7 +1042,7 @@ export class CreateOpComponent implements OnInit {
     _op.op_mch   = controls.op_mch.value
     _op.op_dept  = controls.op_dept.value
     _op.op_shift = controls.op_shift.value
-    _op.op_emp   = controls.op_emp.value
+    // _op.op_emp   = controls.op_emp.value
         
     
     
@@ -1103,7 +1108,7 @@ export class CreateOpComponent implements OnInit {
       //    console.log(this.provider, po, this.dataset);
       //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
      
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl("/manufacturing/list-op");
         }
       );
   }
@@ -1593,10 +1598,10 @@ export class CreateOpComponent implements OnInit {
               controls.op_shift.setValue(item.code_value || "");
               break;
             }
-            case "op_emp": {
-              controls.op_emp.setValue(item.code_value || "");
-              break;
-            }
+            // case "op_emp": {
+            //   controls.op_emp.setValue(item.code_value || "");
+            //   break;
+            // }
             default:
               break;
           }
@@ -1629,14 +1634,14 @@ export class CreateOpComponent implements OnInit {
           minWidth: 80,
           maxWidth: 80,
         },
-        {
-          id: "code_fldname",
-          name: "Champs",
-          field: "code_fldname",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-        },
+        // {
+        //   id: "code_fldname",
+        //   name: "Champs",
+        //   field: "code_fldname",
+        //   sortable: true,
+        //   filterable: true,
+        //   type: FieldType.string,
+        // },
         {
           id: "code_value",
           name: "Code",
@@ -1678,7 +1683,11 @@ export class CreateOpComponent implements OnInit {
         this.fldname = "wc_dept"
       }
       else {
-        this.fldname = this.selectedField
+        if (this.selectedField == "op_shift") {
+
+          this.fldname = "emp_shift"
+        }
+        else{this.fldname = this.selectedField}
       }
     
       // fill the dataset with your data
@@ -1712,14 +1721,14 @@ export class CreateOpComponent implements OnInit {
           code_fldname: "op_shift",
         };
       }
-      if (field == "op_emp") {
-        this.msg = " Employé ";
-        const code_value = controls.op_emp.value;
-        obj = {
-          code_value,
-          code_fldname: "op_emp",
-        };
-      }
+      // if (field == "op_emp") {
+      //   this.msg = " Employé ";
+      //   const code_value = controls.op_emp.value;
+      //   obj = {
+      //     code_value,
+      //     code_fldname: "op_emp",
+      //   };
+      // }
       this.codeService.getBy(obj).subscribe(
         (res: any) => {
           const { data } = res;
@@ -1751,6 +1760,7 @@ export class CreateOpComponent implements OnInit {
                 
             controls.op_wkctr.setValue(item.wc_wkctr || "")
             controls.op_dept.setValue(item.wc_dept || "")
+            controls.op_mch.setValue(item.wc_mch || "")
             
       });
    
@@ -1863,7 +1873,7 @@ export class CreateOpComponent implements OnInit {
               const item = this.gridObjmch.getDataItem(idx);
                   
               controls.op_mch.setValue(item.wc_mch || "")
-              
+              controls.op_wkctr.setValue(item.wc_wkctr || "")
               
         });
      

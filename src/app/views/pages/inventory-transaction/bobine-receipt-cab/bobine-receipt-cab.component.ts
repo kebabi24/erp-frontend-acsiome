@@ -1012,7 +1012,7 @@ export class BobineReceiptCabComponent implements OnInit {
   onPrint() {
     const controls = this.trForm.controls;
 
-    if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
+    if (controls.print.value == true) {this.printpdf(this.trlot)}; //printBc(this.provider, this.dataset, po, this.curr);
     this.goBack();
   }
   /**
@@ -2080,6 +2080,7 @@ export class BobineReceiptCabComponent implements OnInit {
     }
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('BRB-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }

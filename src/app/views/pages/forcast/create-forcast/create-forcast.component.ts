@@ -99,7 +99,7 @@ export class CreateForcastComponent implements OnInit {
   ) {
       config.autoClose = true,
       this.codeService
-      .getBy({ code_fldname: "frc_type" })
+      .getBy({ code_fldname: "fc_type" })
       .subscribe((response: any) => (this.frc_type = response.data));
       this.codeService
       .getBy({ code_fldname: "pt_part_type" })

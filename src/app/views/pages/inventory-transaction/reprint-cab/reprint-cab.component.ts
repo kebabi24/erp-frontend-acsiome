@@ -240,7 +240,12 @@ export class ReprintCabComponent implements OnInit {
         _lb.lb_grp = cabs.lb_Grp,
         _lb.lb_addr = cabs.lb_addr,
         _lb.lb_tel = cabs.lb_tel,
-        _lb.lb_ref = cabs.lb_ref
+        _lb.lb_ref = cabs.lb_ref,
+        this.labelService.addblob(_lb).subscribe((blob) => {                 
+          Edelweiss.print3(_lb,this.currentPrinter);
+          let tr = this.prepareIt();
+          this.addIt(tr);
+        })
         
       ),
         (error) => {
@@ -249,34 +254,7 @@ export class ReprintCabComponent implements OnInit {
           return;
         }
       )
-      
-      
-      let lab = null;
-      
-     
-      this.labelService.getBy({lb_ref:controls.ref.value}).subscribe(
-        (reponse: any) => {
-          lab = reponse.data.label;
-          
-          console.log(_lb.lb_ref)
-          this.labelService.addblob(_lb).subscribe((blob) => {                 
-            Edelweiss.print3(lab,this.currentPrinter);
-            
-          });
-          this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
-          this.loadingSubject.next(false);
-
-          
-          let tr = this.prepareIt();
-          this.addIt(tr);
-
-        },
-        (error) => {
-          this.message = "l'impression n'a pas été enregistrée";
-          this.hasFormErrors = true;
-          return;
-        },)
-      }
+    }
   /**
    * Returns object for saving
    */

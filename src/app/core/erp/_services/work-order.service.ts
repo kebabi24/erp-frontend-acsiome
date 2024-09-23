@@ -92,6 +92,10 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findbrrep`,data, { headers: httpHeaders })   
     }
+    public getExRep(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findexrep`,data, { headers: httpHeaders })   
+    }
     public getBrRecap(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findbrrecap`,data, { headers: httpHeaders })   

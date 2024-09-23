@@ -1,17 +1,33 @@
 import { Component, OnInit } from "@angular/core";
 // Angular slickgrid
 import {
-  Column,
-  GridOption,
-  AngularGridInstance,
-  GridService,
   Formatter,
-  Formatters,
   Editor,
   Editors,
-  FieldType,
   OnEventArgs,
-} from "angular-slickgrid";
+  AngularGridInstance,
+  Aggregators,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  GridOption,
+  Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+  GridService,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+} from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -44,6 +60,10 @@ export class ListModComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+  draggableGroupingPlugin: any;
+  selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  gridObj: any;
+  dataviewObj: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,6 +130,12 @@ export class ListModComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'mod_prod_line',
+          formatter: (g) => `famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
       {
         id: "mod_part_type",
@@ -119,6 +145,12 @@ export class ListModComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'mod_part_type',
+          formatter: (g) => `type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
       {
         id: "mod_draw",
@@ -128,6 +160,12 @@ export class ListModComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'mod_draw',
+          formatter: (g) => `Categorie: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
 
       {
@@ -138,6 +176,12 @@ export class ListModComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'mod_group',
+          formatter: (g) => `groupe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
       
       {
@@ -148,6 +192,12 @@ export class ListModComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 80,
+        grouping: {
+          getter: 'mod_dsgn_grp',
+          formatter: (g) => `forme: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
       {
         id: "mod_origin",
@@ -157,18 +207,14 @@ export class ListModComponent implements OnInit {
         filterable: true,
         // type: FieldType.text,
         minWidth: 80,
+        grouping: {
+          getter: 'mod_origin',
+          formatter: (g) => `origine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
-      
-           {
-        id: "mod_drwg_loc",
-        name: "Source",
-        field: "mod_drwg_loc",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-      },
-
+     
       {
         id: "mod_status",
         name: "Statut",
@@ -177,63 +223,96 @@ export class ListModComponent implements OnInit {
         filterable: true,
         // type: FieldType.text,
         minWidth: 80,
+        grouping: {
+          getter: 'mod_status',
+          formatter: (g) => `statut: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
+      
+      
       {
-        id: "mod_abc",
-        name: "Classe ABC",
-        field: "mod_abc",
+        id: "created_by",
+        name: "par",
+        field: "created_by",
         sortable: true,
         filterable: true,
         type: FieldType.string,
         minWidth: 80,
-      },
-     
-      {
-        id: "mod_site",
-        name: "Site",
-        field: "mod_site",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-        minWidth: 80,
-      },
-      {
-        id: "mod_loc",
-        name: "Emplacement",
-        field: "mod_loc",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-        minWidth: 80,
+        grouping: {
+          getter: 'created_by',
+          formatter: (g) => `crée par: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
       
       {
-        id: "mod_iss_pol",
-        name: "Scan",
-        field: "mod_iss_pol",
+        id: "createdAt",
+        name: "Crée le",
+        field: "createdAt",
         sortable: true,
         filterable: true,
-        type: FieldType.boolean,
-        formatter: Formatters.checkmark,
+        
         minWidth: 80,
+        grouping: {
+          getter: 'createdAt',
+          formatter: (g) => `crée le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
 
     ];
 
     this.gridOptions = {
-      enableSorting: true,
-      enableCellNavigation: false,
-      enableExcelCopyBuffer: true,
-      enableFiltering: true,
-      autoEdit: false,
-      enableAutoResize: true,
-      autoHeight:false,
+      enableDraggableGrouping: true,
+          createPreHeaderPanel: true,
+          showPreHeaderPanel: true,
+          preHeaderPanelHeight: 40,
+          enableFiltering: true,
+          enableSorting: true,
+          enableAutoResize: true,
+          exportOptions: {
+            sanitizeDataExport: true
+          },
+          gridMenu: {
+            onCommand: (e, args) => {
+              if (args.command === 'toggle-preheader') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.clearGrouping();
+              }
+            },
+          },
+          draggableGrouping: {
+            dropPlaceHolderText: 'Drop a column header here to group by the column',
+            // groupIconCssClass: 'fa fa-outdent',
+            deleteIconCssClass: 'fa fa-times',
+            onGroupChanged: (e, args) => this.onGroupChanged(args),
+            onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+        
+        },
 
+    
+          dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+            var val = undefined;
+            try {
+              val = eval("item." + column.field);
+            } catch (e) {
+              // ignore
+            }
+            return val;
+          },
+
+      
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      autoEdit: false,
       autoFitColumnsOnFirstLoad: true,
       // autosizeColumnsByCellContentOnFirstLoad: true,
       enableAutoSizeColumns: true,
       syncColumnCellResize: true,
-
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
       },
@@ -253,4 +332,34 @@ export class ListModComponent implements OnInit {
       () => {}
     );
   }
+  onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
+    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+    const caller = change && change.caller || [];
+    const groups = change && change.groupColumns || [];
+
+    if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+      // update all Group By select dropdown
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+    } else if (groups.length === 0 && caller === 'remove-group') {
+      this.clearGroupingSelects();
+    }
+  }
+  clearGroupingSelects() {
+    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+  }
+  
+  collapseAllGroups() {
+    this.dataviewObj.collapseAllGroups();
+  }
+
+  expandAllGroups() {
+    this.dataviewObj.expandAllGroups();
+  }
+  clearGrouping() {
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.draggableGroupingPlugin.clearDroppedGroups();
+    }
+    this.gridObj.invalidate(); // invalidate all rows and re-render
+  }
+
 }

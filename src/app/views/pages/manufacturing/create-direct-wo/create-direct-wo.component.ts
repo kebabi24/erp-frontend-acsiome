@@ -715,6 +715,7 @@ export class CreateDirectWoComponent implements OnInit {
     _wo.wo_user2 = this.user2;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
+    _wo.wo_qty_ord = controls.wo_qty_comp.value;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1782,7 +1783,7 @@ export class CreateDirectWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getBy({emp_job:'BR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));
   }
 
   handleSelectedRowsChangedemp(e, args) {
@@ -2021,7 +2022,7 @@ export class CreateDirectWoComponent implements OnInit {
   
    
     doc.setFontSize(8);
- 
+    doc.save('EB-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }

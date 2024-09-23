@@ -1,17 +1,34 @@
 import { Component, OnInit } from "@angular/core";
 // Angular slickgrid
 import {
-  Column,
-  GridOption,
-  AngularGridInstance,
-  GridService,
   Formatter,
-  Formatters,
   Editor,
   Editors,
-  FieldType,
   OnEventArgs,
-} from "angular-slickgrid";
+  AngularGridInstance,
+  Aggregators,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  GridOption,
+  Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+  GridService,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+} from "angular-slickgrid"
+
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -43,6 +60,10 @@ export class ListComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+  draggableGroupingPlugin: any;
+  selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  gridObj: any;
+  dataviewObj: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -118,15 +139,27 @@ export class ListComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'pt_prod_line',
+          formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
       },
       {
         id: "pt_part_type",
-        name: "Type Client",
+        name: "Type",
         field: "pt_part_type",
         sortable: true,
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'pt_part_type',
+          formatter: (g) => `type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
       },
       {
         id: "pt_draw",
@@ -136,6 +169,12 @@ export class ListComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'pt_draw',
+          formatter: (g) => `Sous famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
       },
 
       {
@@ -146,70 +185,107 @@ export class ListComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
         minWidth: 100,
+        grouping: {
+          getter: 'pt_group',
+          formatter: (g) => `groupe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
       },
       {
-        id: "pt_promo",
-        name: "Logo",
-        field: "pt_promo",
+        id: "pt_origin",
+        name: "Origin",
+        field: "pt_origin",
         sortable: true,
         filterable: true,
-        type: FieldType.string,
-        minWidth: 100,
-      },
-      {
-        id: "pt_dsgn_grp",
-        name: "Forme Géometrique",
-        field: "pt_dsgn_grp",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
+        // type: FieldType.text,
         minWidth: 80,
+        grouping: {
+          getter: 'pt_origin',
+          formatter: (g) => `Origine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
       },
       {
-        id: "pt_site",
-        name: "Site",
-        field: "pt_site",
+        id: "pt_break_cat",
+        name: "Couleur",
+        field: "pt_break_cat",
         sortable: true,
         filterable: true,
-        type: FieldType.string,
         minWidth: 80,
+        grouping: {
+          getter: 'pt_break_cat',
+          formatter: (g) => `Couelur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+        // type: FieldType.text,
+        // resizeAlwaysRecalculateWidth:true
       },
-      {
-        id: "pt_loc",
-        name: "Emplacement",
-        field: "pt_loc",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-        minWidth: 80,
-      },
-      {
-        id: "pt_insp_lead",
-        name: "Delai Achat",
-        field: "pt_insp_lead",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
-      {
-        id: "pt_pur_lead",
-        name: "Delai Production",
-        field: "pt_pur_lead",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
-      {
-        id: "pt_sfty_stk",
-        name: "Stock Securite",
-        field: "pt_sfty_stk",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
+      // {
+      //   id: "pt_promo",
+      //   name: "Logo",
+      //   field: "pt_promo",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   minWidth: 100,
+      // },
+      // {
+      //   id: "pt_dsgn_grp",
+      //   name: "Forme Géometrique",
+      //   field: "pt_dsgn_grp",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_site",
+      //   name: "Site",
+      //   field: "pt_site",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_loc",
+      //   name: "Emplacement",
+      //   field: "pt_loc",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_insp_lead",
+      //   name: "Delai Achat",
+      //   field: "pt_insp_lead",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_pur_lead",
+      //   name: "Delai Production",
+      //   field: "pt_pur_lead",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_sfty_stk",
+      //   name: "Stock Securite",
+      //   field: "pt_sfty_stk",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
       // {
       //   id: "pt_rop",
       //   name: "Stock Securite",
@@ -219,61 +295,53 @@ export class ListComponent implements OnInit {
       //   type: FieldType.number,
       //   minWidth: 150,
       // },
-      {
-        id: "pt_iss_pol",
-        name: "Scan",
-        field: "pt_iss_pol",
-        sortable: true,
-        filterable: true,
-        type: FieldType.boolean,
-        minWidth: 80,
-      },
-      {
-        id: "pt_length",
-        name: "Longuer",
-        field: "pt_length",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
-      {
-        id: "pt_height",
-        name: "Hauteur",
-        field: "pt_height",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
-      {
-        id: "pt_width",
-        name: "Largeur",
-        field: "pt_width",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
+      // {
+      //   id: "pt_iss_pol",
+      //   name: "Scan",
+      //   field: "pt_iss_pol",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.boolean,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_length",
+      //   name: "Longuer",
+      //   field: "pt_length",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_height",
+      //   name: "Hauteur",
+      //   field: "pt_height",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_width",
+      //   name: "Largeur",
+      //   field: "pt_width",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
 
-      {
-        id: "pt_origin",
-        name: "Origin",
-        field: "pt_origin",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-      },
-      {
-        id: "pt_drwg_loc",
-        name: "Source",
-        field: "pt_drwg_loc",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-      },
+      
+      // {
+      //   id: "pt_drwg_loc",
+      //   name: "Source",
+      //   field: "pt_drwg_loc",
+      //   sortable: true,
+      //   filterable: true,
+      //   // type: FieldType.text,
+      //   minWidth: 80,
+      // },
       {
         id: "pt_status",
         name: "Statut",
@@ -283,56 +351,47 @@ export class ListComponent implements OnInit {
         // type: FieldType.text,
         minWidth: 80,
       },
-      {
-        id: "pt_plan_ord",
-        name: "Demande Obligatoire",
-        field: "pt_plan_ord",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-      },
-      {
-        id: "pt_drwg_size",
-        name: "Unité/Sachet",
-        field: "pt_drwg_size",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
-      {
-        id: "pt_net_wt",
-        name: "Poids Net",
-        field: "pt_net_wt",
-        sortable: true,
-        filterable: true,
-        type: FieldType.number,
-        minWidth: 80,
-      },
-      {
-        id: "pt_model",
-        name: "Format",
-        field: "pt_model",
-        sortable: true,
-        filterable: true,
-        // type: FieldType.text,
-        minWidth: 80,
-      },
+      // {
+      //   id: "pt_plan_ord",
+      //   name: "Demande Obligatoire",
+      //   field: "pt_plan_ord",
+      //   sortable: true,
+      //   filterable: true,
+      //   // type: FieldType.text,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_drwg_size",
+      //   name: "Unité/Sachet",
+      //   field: "pt_drwg_size",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_net_wt",
+      //   name: "Poids Net",
+      //   field: "pt_net_wt",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.number,
+      //   minWidth: 80,
+      // },
+      // {
+      //   id: "pt_model",
+      //   name: "Format",
+      //   field: "pt_model",
+      //   sortable: true,
+      //   filterable: true,
+      //   // type: FieldType.text,
+      //   minWidth: 80,
+      // },
 
-      {
-        id: "pt_break_cat",
-        name: "Couleur",
-        field: "pt_break_cat",
-        sortable: true,
-        filterable: true,
-        minWidth: 80,
-        // type: FieldType.text,
-        // resizeAlwaysRecalculateWidth:true
-      },
+     
       {
         id: "int01",
-        name: "Laize",
+        name: "Micronage",
         field: "int01",
         sortable: true,
         filterable: true,
@@ -341,28 +400,102 @@ export class ListComponent implements OnInit {
       },
       {
         id: "int02",
-        name: "Micronage",
+        name: "Laise",
         field: "int02",
         sortable: true,
         filterable: true,
         type: FieldType.number,
         minWidth: 80,
       },
+      {
+        id: "int03",
+        name: "Vitesse",
+        field: "int03",
+        sortable: true,
+        filterable: true,
+        type: FieldType.number,
+        minWidth: 80,
+      },
+      {
+        id: "created_by",
+        name: "Utilisateur",
+        field: "created_by",
+        sortable: true,
+        filterable: true,
+        type: FieldType.number,
+        minWidth: 80,
+        grouping: {
+          getter: 'created_by',
+          formatter: (g) => `utilisateur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+      },
+      {
+        id: "createdAt",
+        name: "crée le",
+        field: "createdAt",
+        sortable: true,
+        filterable: true,
+        type: FieldType.number,
+        minWidth: 80,
+        grouping: {
+          getter: 'createdAt',
+          formatter: (g) => `crée le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+      },
+
     ];
 
     this.gridOptions = {
-      enableSorting: true,
+      enableDraggableGrouping: true,
+          createPreHeaderPanel: true,
+          showPreHeaderPanel: true,
+          preHeaderPanelHeight: 40,
+          enableFiltering: true,
+          enableSorting: true,
+          enableAutoResize: true,
+          exportOptions: {
+            sanitizeDataExport: true
+          },
+          gridMenu: {
+            onCommand: (e, args) => {
+              if (args.command === 'toggle-preheader') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.clearGrouping();
+              }
+            },
+          },
+          draggableGrouping: {
+            dropPlaceHolderText: 'Drop a column header here to group by the column',
+            // groupIconCssClass: 'fa fa-outdent',
+            deleteIconCssClass: 'fa fa-times',
+            onGroupChanged: (e, args) => this.onGroupChanged(args),
+            onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+        
+        },
+
+    
+          dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+            var val = undefined;
+            try {
+              val = eval("item." + column.field);
+            } catch (e) {
+              // ignore
+            }
+            return val;
+          },
+
+      
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
-      enableFiltering: true,
       autoEdit: false,
-      enableAutoResize: true,
-
       autoFitColumnsOnFirstLoad: true,
       // autosizeColumnsByCellContentOnFirstLoad: true,
       enableAutoSizeColumns: true,
       syncColumnCellResize: true,
-
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
       },
@@ -382,4 +515,34 @@ export class ListComponent implements OnInit {
       () => {}
     );
   }
+  onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
+    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+    const caller = change && change.caller || [];
+    const groups = change && change.groupColumns || [];
+
+    if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+      // update all Group By select dropdown
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+    } else if (groups.length === 0 && caller === 'remove-group') {
+      this.clearGroupingSelects();
+    }
+  }
+  clearGroupingSelects() {
+    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+  }
+  
+  collapseAllGroups() {
+    this.dataviewObj.collapseAllGroups();
+  }
+
+  expandAllGroups() {
+    this.dataviewObj.expandAllGroups();
+  }
+  clearGrouping() {
+    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+      this.draggableGroupingPlugin.clearDroppedGroups();
+    }
+    this.gridObj.invalidate(); // invalidate all rows and re-render
+  }
+
 }

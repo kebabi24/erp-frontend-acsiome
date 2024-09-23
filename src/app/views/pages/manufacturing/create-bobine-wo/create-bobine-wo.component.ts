@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
+import { jsPDF } from "jspdf";
 // Angular slickgrid
 import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
@@ -10,12 +11,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 // Layout
 import { SubheaderService, LayoutConfigService } from "../../../../core/_base/layout";
 // CRUD
-import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
+import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud"; 
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, SaleOrderService,Label, EmployeService, PrintersService } from "../../../../core/erp";
 import date from 'src/assets/plugins/formvalidation/src/js/validators/date';
 declare var Edelweiss2: any;
+declare var Edelweiss: any;
 @Component({
   selector: 'kt-create-bobine-wo',
   templateUrl: './create-bobine-wo.component.html',
@@ -635,16 +637,8 @@ export class CreateBobineWoComponent implements OnInit {
         filterable: false,
       },
 
-      // {
-      //     id: "tr_loc",
-      //     name: "Empl",
-      //     field: "tr_loc",
-      //     sortable: true,
-      //     width: 80,
-      //     filterable: false,
-      //     type: FieldType.string,
-
-      // },
+      
+      
       {
         id: "tr_qty_loc",
         name: "QTE",
@@ -663,31 +657,6 @@ export class CreateBobineWoComponent implements OnInit {
         filterable: false,
       },
 
-      // {
-      //   id: "tr_um_conv",
-      //   name: "Conv UM",
-      //   field: "tr_um_conv",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //  // editor: {
-      //  //     model: Editors.float,
-      //   //},
-
-      // },
-
-      // {
-      //     id: "tr_price",
-      //     name: "Prix unitaire",
-      //     field: "tr_price",
-      //     sortable: true,
-      //     width: 80,
-      //     filterable: false,
-      //     //type: FieldType.float,
-      //     formatter: Formatters.decimal,
-
-      // },
-
       {
         id: "tr_ref",
         name: "BIG BAG",
@@ -698,14 +667,7 @@ export class CreateBobineWoComponent implements OnInit {
         //type: FieldType.float,
       },
 
-      // {
-      //   id: "tr_status",
-      //   name: "Status",
-      //   field: "tr_status",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      // },
+      
       {
         id: "tr_program",
         name: "Heure",
@@ -825,7 +787,7 @@ export class CreateBobineWoComponent implements OnInit {
                 this.addSQ(this.trdataset, _tr);
 
                 this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss2.print3(lab);
+                  Edelweiss.print3(lab);
                 });
               },
               (error) => {
@@ -1438,6 +1400,7 @@ export class CreateBobineWoComponent implements OnInit {
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo__chr01 = controls.emp_shift.value;
+    _wo.wo_type   = 'EX';
     return _wo;
   }
   // save data
@@ -2372,46 +2335,49 @@ export class CreateBobineWoComponent implements OnInit {
     this.itemsService.getByOne({pt_draw:'SQUELETTE', pt_dsgn_grp:'N/BROY',pt_break_cat: controls.product_color.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)
-        this.codeService.getBy({code_fldname:'LIMIT',code_value:respopart.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
-  
-     this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: respopart.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
-      (respo: any) => {
-        this.sct = respo.data
-        console.log(this.sct)
-    
-        if(controls.wo_qty_rjct.value > this.seuil || controls.wo_qty_rjct.value < 0){
-          this.message = "la quantité que vous avez saisi est erroné";
-        this.hasFormErrors = true;
-        return;} 
-     this.gridServicesq.addItem(
-      {
-        id: this.sqdataset.length + 1,
-        tr_line: this.sqdataset.length + 1,
-        tr_part: respopart.data.pt_part,
-        tr__chr02:respopart.data.pt_break_cat,
-        cmvid: "",
-        tr_desc: respopart.data.pt_desc1,
-        // qty_oh: this.lddet.ld_qty_oh,
-        tr_qty_loc: sqqty,
-        tr_site: controls.wo_site.value,
-        tr_loc: respopart.data.pt_loc,
-        tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null,
-        tr_um:respopart.data.pt_um,
-        tr_um_conv:1,
-        tr_price: this.sct.sct_mtl_tl,
-        cmvids: "",
-        tr_ref: null,
-        tr_serial: "",
-        tr_program: timedate,
-        // tr_status: this.stat,
+        this.codeService.getBy({code_fldname:'LIMIT',code_value:respopart.data.pt_draw}).subscribe((coderesp:any)=>{
+          if(coderesp.data.length != 0){this.seuil = Number(coderesp.data.code_cmmt)}
+          this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: respopart.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
+            (respo: any) => {
+              this.sct = respo.data
+              console.log(this.seuil)
+          
+              if(controls.wo_qty_rjct.value > this.seuil || controls.wo_qty_rjct.value < 0){
+                this.message = "la quantité de squelette ne doit pas dépasser" + this.seuil;
+              this.hasFormErrors = true;
+              return;} 
+           this.gridServicesq.addItem(
+            {
+              id: this.sqdataset.length + 1,
+              tr_line: this.sqdataset.length + 1,
+              tr_part: respopart.data.pt_part,
+              tr__chr02:respopart.data.pt_break_cat,
+              cmvid: "",
+              tr_desc: respopart.data.pt_desc1,
+              // qty_oh: this.lddet.ld_qty_oh,
+              tr_qty_loc: sqqty,
+              tr_site: controls.wo_site.value,
+              tr_loc: respopart.data.pt_loc,
+              tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null,
+              tr_um:respopart.data.pt_um,
+              tr_um_conv:1,
+              tr_price: this.sct.sct_mtl_tl,
+              cmvids: "",
+              tr_ref: null,
+              tr_serial: "",
+              tr_program: timedate,
+              // tr_status: this.stat,
+              
+            },
+            { position: "bottom" },
+            
+          );
+          controls.wo_qty_rjct.setValue(0);
         
-      },
-      { position: "bottom" },
-      
-    );
-    controls.wo_qty_rjct.setValue(0);
+           });
+        })
   
-     });
+     
     }); 
   
  
@@ -2608,7 +2574,7 @@ export class CreateBobineWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));
   }
 
   handleSelectedRowsChangedemp(e, args) {
@@ -3029,4 +2995,298 @@ export class CreateBobineWoComponent implements OnInit {
     if(controls.adduser2.value == true){this.adduser = false}
     else {this.adduser = true,controls.wo_user2.setValue(null); this.emps2=[]}
   }
+  onPrint() {
+    const controls = this.woForm.controls;
+
+    this.printpdf(); //printBc(this.provider, this.dataset, po, this.curr);
+    //this.goBack();
+  }
+  printpdf() {
+    // const controls = this.totForm.controls
+    const controls = this.woForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF("l");
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image();
+    img.src = "./assets/media/logos/companylogo.png";
+    //ENTETE DOCUMENT
+    doc.addImage(img, "png", 20, 11, 20, 20);
+    doc.setFontSize(12);
+    doc.line(10, 10, 288, 10);
+    doc.line(10, 10, 10, 35);
+    doc.text("SUIVI DE LA PRODUCTION ET CONTROLE QUALITE DES BOBINES   " , 40, 25);
+    doc.line(10, 30, 82, 30);
+    doc.line(82, 10, 82, 35);
+    doc.line(216, 10, 216, 35);
+    doc.setFontSize(8);
+    doc.text("Code: FO-PR-002/02  " , 225, 15);
+    doc.line(216, 20, 288, 20);
+    doc.text("Date: 2024/09/02  " , 225, 25);
+    doc.line(216, 30, 288, 30);
+    doc.text("PAGE  " , 225, 33);
+    
+    doc.text("type : Formulaire" , 11, 33);
+    doc.line(10, 35, 288, 35);
+    doc.line(288, 10, 288, 35);
+    doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
+    doc.setFontSize(8);
+    
+    
+    // TABLEAU 2 
+    doc.line(0, 45, 300, 45);
+    doc.line(0, 50, 300, 50);
+    doc.line(0, 45, 0, 50);
+    doc.text("DIMENSION", 1, 48.5);
+    doc.line(14, 45, 14, 50);
+    doc.text("COULEUR", 20, 48.5);
+    doc.line(41, 45, 41, 50);
+    doc.text("HEURE", 42, 48.5);
+    doc.line(49, 45, 49, 50);
+    doc.text("NUM BOB", 50, 48.5);
+    doc.line(63, 45, 63, 50);
+    doc.text("REF BOBINE", 64, 48.5);
+    doc.line(77, 45, 77, 50);
+    doc.text("KG", 45, 48.5);
+    doc.line(91, 45, 91, 50);
+    doc.text("C/NC", 95, 48.5);
+    doc.line(118, 45, 118, 50);
+    doc.text("N° PALETTE", 119, 48.5);
+    doc.line(126, 45, 126, 50);
+    doc.text("KG PALETTE", 129, 48.5);
+    doc.line(142, 45, 142, 50);
+    doc.text("REF SQUELETTE", 143, 48.5);
+    doc.line(154, 45, 154, 50);
+    doc.text("KG SQUELETTE", 157, 48.5);
+    doc.line(166, 45, 166, 50);
+    doc.text("HEURE", 170, 48.5);
+    doc.line(189, 45, 189, 50);
+    doc.text("BARRE FILTRE", 190, 48.5);
+    doc.line(197, 45, 197, 50);
+    doc.text("BARRE CONSOMMATION", 198, 48.5);
+    doc.line(209, 45, 209, 50);
+    doc.text("COUCHE", 210, 48.5);
+    doc.line(221, 45, 221, 50);
+    doc.text("QTE FILTRE", 222, 48.5);
+    doc.line(235, 45, 235, 50);
+    doc.text("COUCHE SIL", 241, 48.5);
+    doc.line(267, 45, 267, 50);
+    doc.text("DEBIT COLORANT", 268, 48.5);
+    doc.line(275, 45, 275, 50);
+    doc.line(0, 50, 300, 50);
+    
+
+    var i = 95;
+    
+    doc.setFontSize(6);
+    
+    for (let j = 0; j < this.dataset.length; j++) {
+      if (i > 170){
+        doc.addPage();
+        //ENTETE DOCUMENT
+        doc.addImage(img, "png", 20, 11, 20, 20);
+        doc.setFontSize(12);
+        doc.line(10, 10, 288, 10);
+        doc.line(10, 10, 10, 35);
+        doc.text("SUIVI DE LA PRODUCTION ET CONTROLE QUALITE DES BOBINES   " , 40, 25);
+        doc.line(10, 30, 82, 30);
+        doc.line(82, 10, 82, 35);
+        doc.line(216, 10, 216, 35);
+        doc.setFontSize(8);
+        doc.text("Code: FO-PR-002/02  " , 225, 15);
+        doc.line(216, 20, 288, 20);
+        doc.text("Date: 2024/09/02  " , 225, 25);
+        doc.line(216, 30, 288, 30);
+        doc.text("PAGE  " , 225, 33);
+        
+        doc.text("type : Formulaire" , 11, 33);
+        doc.line(10, 35, 288, 35);
+        doc.line(288, 10, 288, 35);
+        doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
+        doc.setFontSize(8);
+        
+        
+        // TABLEAU 2 
+        doc.line(0, 45, 300, 45);
+        doc.line(0, 50, 300, 50);
+        doc.line(0, 45, 0, 50);
+        doc.text("DIMENSION", 1, 48.5);
+        doc.line(14, 45, 14, 50);
+        doc.text("COULEUR", 20, 48.5);
+        doc.line(41, 45, 41, 50);
+        doc.text("HEURE", 42, 48.5);
+        doc.line(49, 45, 49, 50);
+        doc.text("NUM BOB", 50, 48.5);
+        doc.line(63, 45, 63, 50);
+        doc.text("REF BOBINE", 64, 48.5);
+        doc.line(77, 45, 77, 50);
+        doc.text("KG", 45, 48.5);
+        doc.line(91, 45, 91, 50);
+        doc.text("C/NC", 95, 48.5);
+        doc.line(118, 45, 118, 50);
+        doc.text("N° PALETTE", 119, 48.5);
+        doc.line(126, 45, 126, 50);
+        doc.text("KG PALETTE", 129, 48.5);
+        doc.line(142, 45, 142, 50);
+        doc.text("REF SQUELETTE", 143, 48.5);
+        doc.line(154, 45, 154, 50);
+        doc.text("KG SQUELETTE", 157, 48.5);
+        doc.line(166, 45, 166, 50);
+        doc.text("HEURE", 170, 48.5);
+        doc.line(189, 45, 189, 50);
+        doc.text("BARRE FILTRE", 190, 48.5);
+        doc.line(197, 45, 197, 50);
+        doc.text("BARRE CONSOMMATION", 198, 48.5);
+        doc.line(209, 45, 209, 50);
+        doc.text("COUCHE", 210, 48.5);
+        doc.line(221, 45, 221, 50);
+        doc.text("QTE FILTRE", 222, 48.5);
+        doc.line(235, 45, 235, 50);
+        doc.text("COUCHE SIL", 241, 48.5);
+        doc.line(267, 45, 267, 50);
+        doc.text("DEBIT COLORANT", 268, 48.5);
+        doc.line(275, 45, 275, 50);
+        doc.line(0, 50, 300, 50);
+
+        i = 95;
+    
+      }  
+        doc.text(this.dataset[j].PAYREF, 1, i - 1);
+        doc.line(14, i - 5, 14, i);
+        doc.text(this.dataset[j].PAYCOLOR, 15, i - 1);
+        doc.line(41, i - 5, 41, i);
+        doc.text(String((this.dataset[j].PAYQTY)), 42, i - 1);
+        doc.line(49, i - 5, 49, i);
+        doc.text(this.dataset[j].PAYTIME, 50, i - 1);
+        doc.line(63, i - 5, 63, i);
+        doc.text(this.dataset[j].PAYDEBIT, 64, i - 1);
+        doc.line(77, i - 5, 77, i);
+        doc.text(String(this.dataset[j].SQLREF), 78, i - 1);
+        doc.line(91, i - 5, 91, i);
+        doc.text(String(this.dataset[j].SQLCOLOR), 92, i - 1);
+        doc.line(118, i - 5, 118, i);
+        doc.text(String((this.dataset[j].SQLQTY)), 119, i - 1);
+        doc.line(126, i - 5, 126, i);
+        doc.text(this.dataset[j].SQLTIME, 127, i - 1);
+        doc.line(142, i - 5, 142, i);
+        doc.text(this.dataset[j].SQLDEBIT, 143, i - 1);
+        doc.line(154, i - 5, 154, i);
+        doc.text(String(this.dataset[j].PREREF), 155, i - 1);
+        doc.line(166, i - 5, 166, i);
+        doc.text(String(this.dataset[j].PRECOLOR), 167, i - 1);
+        doc.line(189, i - 5, 189, i);
+        doc.text(String((this.dataset[j].PREQTY)), 190, i - 1);
+        doc.line(197, i - 5, 197, i);
+        doc.text(this.dataset[j].PRETIME, 198, i - 1);
+        doc.line(209, i - 5, 209, i);
+        doc.text(this.dataset[j].PREDEBIT, 210, i - 1);
+        doc.line(221, i - 5, 221, i);
+        doc.text(String(this.dataset[j].ORGREF), 222, i - 1);
+        doc.line(235, i - 5, 235, i);
+        doc.text(String(this.dataset[j].ORGCOLOR), 236, i - 1);
+        doc.line(267, i - 5, 267, i);
+        doc.text(String((this.dataset[j].ORGQTY)), 268, i - 1);
+        doc.line(275, i - 5, 275, i);
+        doc.text(this.dataset[j].ORGTIME, 278, i - 1);
+        doc.line(289, i - 5, 289, i);
+        doc.text(this.dataset[j].ORGDEBIT, 265, i - 1);
+        doc.line(0, i , 300, i);
+        // doc.line(288, i - 5, 288, i);
+        i = i + 5;
+
+      
+    }
+    if (i > 170){
+      doc.addPage();
+      doc.addImage(img, "png", 20, 11, 20, 20);
+      doc.setFontSize(12);
+      doc.line(10, 10, 288, 10);
+      doc.line(10, 10, 10, 35);
+      doc.text("SUIVI ALIMENTATION EXTRUSION  " , 110, 25);
+      doc.line(10, 30, 82, 30);
+      doc.line(82, 10, 82, 35);
+      doc.line(216, 10, 216, 35);
+      doc.setFontSize(8);
+      doc.text("Code: FO-PR-001/DRFT  " , 225, 15);
+      doc.line(216, 20, 288, 20);
+      doc.text("Date: 2024/07/08  " , 225, 25);
+      doc.line(216, 30, 288, 30);
+      doc.text("PAGE  " , 225, 33);
+      
+      doc.text("type : Formulaire" , 11, 33);
+      doc.line(10, 35, 288, 35);
+      doc.line(288, 10, 288, 35);
+      doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
+      doc.setFontSize(8);
+      
+      
+      // TABLEAU 2 
+      doc.line(0, 80, 300, 80);
+      doc.line(0, 45, 300, 45);
+      doc.line(0, 80, 0, 45);
+      doc.text("PAILLETTE", 39, 82.5);
+      doc.line(77, 80, 77, 45);
+      doc.text("SQUELETTE", 111, 82.5);
+      doc.line(154, 80, 154, 45);
+      doc.text("PREFORME", 180, 82.5);
+      doc.line(221, 80, 221 , 45);
+      doc.text("ORIGINAL", 245, 82.5);
+      doc.line(300, 80, 300, 45);
+      doc.line(0, 45, 300, 45);
+      doc.line(0, 45, 0, 50);
+      doc.text("REF", 1, 48.5);
+      doc.line(14, 45, 14, 50);
+      doc.text("COULEUR", 20, 48.5);
+      doc.line(41, 45, 41, 50);
+      doc.text("KG", 42, 48.5);
+      doc.line(49, 45, 49, 50);
+      doc.text("HEURE", 50, 48.5);
+      doc.line(63, 45, 63, 50);
+      doc.text("DEBIT", 64, 48.5);
+      doc.line(77, 45, 77, 50);
+      doc.text("REF", 45, 48.5);
+      doc.line(91, 45, 91, 50);
+      doc.text("COULEUR", 95, 48.5);
+      doc.line(118, 45, 118, 50);
+      doc.text("KG", 119, 48.5);
+      doc.line(126, 45, 126, 50);
+      doc.text("HEURE", 129, 48.5);
+      doc.line(142, 45, 142, 50);
+      doc.text("DEBIT", 143, 48.5);
+      doc.line(154, 45, 154, 50);
+      doc.text("REF", 157, 48.5);
+      doc.line(166, 45, 166, 50);
+      doc.text("COULEUR", 170, 48.5);
+      doc.line(189, 45, 189, 50);
+      doc.text("KG", 190, 48.5);
+      doc.line(197, 45, 197, 50);
+      doc.text("HEURE", 198, 48.5);
+      doc.line(209, 45, 209, 50);
+      doc.text("DEBIT", 210, 48.5);
+      doc.line(221, 45, 221, 50);
+      doc.text("REF", 222, 48.5);
+      doc.line(235, 45, 235, 50);
+      doc.text("COULEUR", 241, 48.5);
+      doc.line(267, 45, 267, 50);
+      doc.text("KG", 268, 48.5);
+      doc.line(275, 45, 275, 50);
+      doc.text("HEURE", 278, 48.5);
+      doc.line(289, 45, 289, 50);
+      doc.text("DEBIT", 290, 48.5);
+      doc.line(300, 45, 300, 50);
+      doc.line(0, 50, 300, 50);
+      
+
+      i = 95;
+  
+    }  
+    
+    
+    
+    let nbr = String(new Date().getFullYear()+"/" + Number(new Date().getMonth() + 1) + "/" + Number(new Date().getDate()))
+    doc.save('RX-' + nbr + '.pdf')
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+    
+  } 
 }

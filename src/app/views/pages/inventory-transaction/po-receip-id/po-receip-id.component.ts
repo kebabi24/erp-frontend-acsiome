@@ -2253,6 +2253,7 @@ doc.addPage();
  
        // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('RC-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
 

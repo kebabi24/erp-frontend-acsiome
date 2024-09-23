@@ -313,7 +313,7 @@ export class IssBobineWoComponent implements OnInit {
             const sqlqty = controls.SQL_ISS.value
             const orgqty = controls.ORG_ISS.value
             let idpal;
-            let total = 0
+            let total = paiqty + prfqty + sqlqty + sqlqty
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
             this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
             this.itemsService.getByOne({pt_part: args.dataContext.tr_part  }).subscribe(
@@ -964,7 +964,7 @@ export class IssBobineWoComponent implements OnInit {
       wo_bom_code: [this.workOrder.wo_bom_code, Validators.required],
       wo_qty_ord: [{ value: 0 },this.workOrder.wo_qty_ord],
       total_bobine:  [{disabled: true}],
-      total_squelette:  [{ value: 0 },this.workOrder.wo_qty_rjct],
+      wo_qty_rjct:  [{ value: 0 },this.workOrder.wo_qty_rjct],
       ORG_PREV:  [0,{disabled: true}],
       SQL_PREV:  [0,{disabled: true}],
       PRF_PREV:  [0,{disabled: true}],
@@ -976,7 +976,7 @@ export class IssBobineWoComponent implements OnInit {
       total_prev:  [0,{disabled: true}],
       total_iss:  [0,{disabled: true}],
       wo_qty_comp: [{ value: 0 },this.workOrder.wo_qty_comp],
-      wo_qty_rjct: [{ value: 0 },this.workOrder.wo_qty_rjct],
+      
       emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial],
       printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
@@ -1101,7 +1101,7 @@ export class IssBobineWoComponent implements OnInit {
     // const prfqty = controls.PRF_ISS.value
     // const sqlqty = controls.SQL_ISS.value
     // const orgqty = controls.ORG_ISS.value
-    let total = 0
+    
     this.workOrderService.getByOne({ id }).subscribe((res: any) => {
       if (res.data.wo_status == "R" && res.data.wo_routing == controls.wo_routing.value) {
         this.woServer = res.data;
@@ -1111,7 +1111,7 @@ export class IssBobineWoComponent implements OnInit {
         controls.wo_part.setValue(this.woServer.wo_part);
         controls.wo_qty_ord.setValue(this.woServer.wo_qty_ord);
         controls.total_bobine.setValue(this.woServer.wo_qty_comp);
-        controls.total_squelette.setValue(this.woServer.wo_qty_rjct);
+        controls.wo_qty_rjct.setValue(this.woServer.wo_qty_rjct);
         controls.desc.setValue(this.woServer.item.pt_desc1);
         controls.product_type.setValue(this.woServer.item.pt_article);
         controls.product_color.setValue(this.woServer.item.pt_break_cat);
@@ -1140,7 +1140,7 @@ export class IssBobineWoComponent implements OnInit {
               let total = 0
               for (var object = 0; object < formule.length; object++) {
                 let calc = 0
-                console.log(total)
+                
                 calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(1 +formule[object].ps_scrp_pct) / Number(response.data.bom_batch)
                 if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
@@ -1204,7 +1204,7 @@ export class IssBobineWoComponent implements OnInit {
         //remplir les grids
         controls.wo_nbr.value
         console.log('remplir grid' ,controls.wo_nbr.value)
-        total = 0
+        let total = 0
         let Orgqty = 0
         let Sqlqty = 0
         let Prfqty = 0
@@ -2713,14 +2713,14 @@ onChangePal() {
   const prfqty = controls.PRF_ISS.value
   const sqlqty = controls.SQL_ISS.value
   const orgqty = controls.ORG_ISS.value
-  let total =0
+  let total = controls.total_iss.value
 var bol = false
 let idpal;
 if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
   this.message = "veuillez sélectionner les employés";
 this.hasFormErrors = true;
 return;}
- this.workOrderService.getBy({wo_nbr: controls.wo_nbr.value,id: controls.wo_lot.value,wo_status:'R'}).subscribe((res:any) =>{
+ this.workOrderService.getBy({wo_nbr: controls.wo_nbr.value,id: Number(controls.wo_lot.value),wo_status:'R'}).subscribe((res:any) =>{
   if (res.data.length == 0) {
     console.log(res.data,'CLOTURE OF')
     controls.ref.setValue(null)
@@ -2728,9 +2728,11 @@ return;}
     this.hasFormErrors = true;
     return;
   }
-  else {controls.total_bobine.setValue(res.data.wo_qty_comp)
-        controls.total_squelette.setValue(res.data.wo_qty_rjct)
-        this.pourcentage_squelette = Number(controls.total_squelette.value) * 100 / (Number(controls.total_squelette.value) + Number(controls.total_bobine.value))
+  else {console.log('calcul réalisation')
+    console.log(res.data.wo_qty_comp)
+        controls.total_bobine.setValue(res.data.wo_qty_comp)
+        controls.wo_qty_rjct.setValue(res.data.wo_qty_rjct)
+        this.pourcentage_squelette = Number(controls.wo_qty_rjct.value) * 100 / (Number(controls.wo_qty_rjct.value) + Number(controls.total_bobine.value))
   }
 })
 this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
@@ -2824,7 +2826,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
               }
               else
               {
-                if(respopart.data.pt_break_cat != controls.product_color.value )
+                if(respopart.data.pt_break_cat != controls.product_color.value && respopart.data.pt_break_cat != 'ORIGINAL' )
                   { console.log(respopart.data.pt_break_cat)
                     this.codeService.getBy({code_fldname:controls.product_color.value,code_value:respopart.data.pt_break_cat})
                                   .subscribe(
@@ -2835,69 +2837,70 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                                                               this.hasFormErrors = true;
                                                               return;
                                                           }
+                                                          if(respopart.data.pt_dsgn_grp == 'N/BROY')
+                                                            {controls.ref.setValue(null)
+                                                              this.message = "Le bigbag séléctionné n'est pas broyé";
+                                                              this.hasFormErrors = true;
+                                                              return;
+                                                          }
+                                                          if(respopart.data.pt_draw == 'ORIGINAL'){if(controls.ORG_ISS.value > controls.ORG_PREV.value) {controls.ref.setValue(null)
+                                                            this.layoutUtilsService.showActionNotification("quantité Originale dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                          }
+                                                          if(respopart.data.pt_draw == 'SQUELETTE'){if(controls.SQL_ISS.value > controls.SQL_PREV.value) {controls.ref.setValue(null)
+                                                            this.layoutUtilsService.showActionNotification("quantité Squelette dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                          }
+                                                          
+                                                          if(respopart.data.pt_draw == 'PREFORME'){if(controls.PRF_ISS.value > controls.PRF_PREV.value) {controls.ref.setValue(null)
+                                                            this.layoutUtilsService.showActionNotification("quantité Préforme dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                          
+                                                          }
+                                                          if(respopart.data.pt_draw == 'PAYETTE'){if(controls.PAI_ISS.value > controls.PAI_PREV.value) {controls.ref.setValue(null)
+                                                            this.layoutUtilsService.showActionNotification("quantité Payette dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                          }
+                    
+                                                          total = total + Number(this.lddet.ld_qty_oh)  
+                                                          controls.total_iss.setValue(total)     
+                                                          if(respopart.data.pt_draw == 'ORIGINAL'){let Orgqty = Number(Number(orgqty) + Number(this.lddet.ld_qty_oh));controls.ORG_ISS.setValue(Number(Orgqty))}
+                                                          else{if(respopart.data.pt_draw == 'SQUELETTE'){let Sqlqty = Number(Number(sqlqty) + Number(this.lddet.ld_qty_oh));controls.SQL_ISS.setValue(Number(Sqlqty))}
+                                                             else{if(respopart.data.pt_draw == 'PREFORME'){let Prfqty = Number(Number(prfqty) + Number(this.lddet.ld_qty_oh));controls.PRF_ISS.setValue(Number(Prfqty))}
+                                                                  else{if(respopart.data.pt_draw == 'PAYETTE'){let Paiqty = Number(Number(paiqty) + Number(this.lddet.ld_qty_oh));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
+                                              
+                                                          this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
+                                                          (respo: any) => {
+                                                            this.sct = respo.data
+                                                            console.log(this.sct)
+                                                            this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{
+                                                              if (res.data != null) {idpal = res.data.id
+                                                              console.log(idpal)
+                                                              this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
+                                                              }
+                                                            })
+                                                            this.gridService.addItem(
+                                                            {
+                                                              id: this.dataset.length + 1,
+                                                              tr_line: this.dataset.length + 1,
+                                                              tr_part: this.lddet.ld_part,
+                                                              cmvid: "",
+                                                              desc: this.lddet.item.pt_desc1,
+                                                              qty_oh: this.lddet.ld_qty_oh,
+                                                              tr_qty_loc: this.lddet.ld_qty_oh,
+                                                              tr_site: this.lddet.ld_site,
+                                                              tr_loc: this.lddet.ld_loc,
+                                                              tr_um: respopart.data.pt_um,
+                                                              tr_um_conv:1,
+                                                              tr_price: this.sct.sct_mtl_tl,
+                                                              cmvids: "",
+                                                              tr_ref: ref,
+                                                              tr_serial: this.lddet.ld_lot,
+                                                              tr_status: this.stat,
+                                                              tr_expire: this.lddet.ld_expire,
+                                                            },
+                                                            { position: "bottom" }
+                                                                        );
+                                                                        controls.ref.setValue(null)
+                                                          }); 
                                                         })
-                                                        if(respopart.data.pt_dsgn_grp == 'N/BROY')
-                                                          {controls.ref.setValue(null)
-                                                            this.message = "Le bigbag séléctionné n'est pas broyé";
-                                                            this.hasFormErrors = true;
-                                                            return;
-                                                        }
-                                                        if(respopart.data.pt_draw == 'ORIGINAL'){if(controls.ORG_ISS.value > controls.ORG_PREV.value) {controls.ref.setValue(null)
-                                                          this.layoutUtilsService.showActionNotification("quantité Originale dépasse consommation prévue", MessageType.Create, 3000, false, false);}
-                                                        }
-                                                        if(respopart.data.pt_draw == 'SQUELETTE'){if(controls.SQL_ISS.value > controls.SQL_PREV.value) {controls.ref.setValue(null)
-                                                          this.layoutUtilsService.showActionNotification("quantité Squelette dépasse consommation prévue", MessageType.Create, 3000, false, false);}
-                                                        }
                                                         
-                                                        if(respopart.data.pt_draw == 'PREFORME'){if(controls.PRF_ISS.value > controls.PRF_PREV.value) {controls.ref.setValue(null)
-                                                          this.layoutUtilsService.showActionNotification("quantité Préforme dépasse consommation prévue", MessageType.Create, 3000, false, false);}
-                                                        
-                                                        }
-                                                        if(respopart.data.pt_draw == 'PAYETTE'){if(controls.PAI_ISS.value > controls.PAI_PREV.value) {controls.ref.setValue(null)
-                                                          this.layoutUtilsService.showActionNotification("quantité Payette dépasse consommation prévue", MessageType.Create, 3000, false, false);}
-                                                        }
-                  
-                                                        total = total + Number(this.lddet.ld_qty_oh)  
-                                                        controls.total_iss.setValue(total)     
-                                                        if(respopart.data.pt_draw == 'ORIGINAL'){let Orgqty = Number(Number(orgqty) + Number(this.lddet.ld_qty_oh));controls.ORG_ISS.setValue(Number(Orgqty))}
-                                                        else{if(respopart.data.pt_draw == 'SQUELETTE'){let Sqlqty = Number(Number(sqlqty) + Number(this.lddet.ld_qty_oh));controls.SQL_ISS.setValue(Number(Sqlqty))}
-                                                           else{if(respopart.data.pt_draw == 'PREFORME'){let Prfqty = Number(Number(prfqty) + Number(this.lddet.ld_qty_oh));controls.PRF_ISS.setValue(Number(Prfqty))}
-                                                                else{if(respopart.data.pt_draw == 'PAYETTE'){let Paiqty = Number(Number(paiqty) + Number(this.lddet.ld_qty_oh));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
-                                            
-                                                        this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
-                                                        (respo: any) => {
-                                                          this.sct = respo.data
-                                                          console.log(this.sct)
-                                                          this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{
-                                                            if (res.data != null) {idpal = res.data.id
-                                                            console.log(idpal)
-                                                            this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
-                                                            }
-                                                          })
-                                                          this.gridService.addItem(
-                                                          {
-                                                            id: this.dataset.length + 1,
-                                                            tr_line: this.dataset.length + 1,
-                                                            tr_part: this.lddet.ld_part,
-                                                            cmvid: "",
-                                                            desc: this.lddet.item.pt_desc1,
-                                                            qty_oh: this.lddet.ld_qty_oh,
-                                                            tr_qty_loc: this.lddet.ld_qty_oh,
-                                                            tr_site: this.lddet.ld_site,
-                                                            tr_loc: this.lddet.ld_loc,
-                                                            tr_um: respopart.data.pt_um,
-                                                            tr_um_conv:1,
-                                                            tr_price: this.sct.sct_mtl_tl,
-                                                            cmvids: "",
-                                                            tr_ref: ref,
-                                                            tr_serial: this.lddet.ld_lot,
-                                                            tr_status: this.stat,
-                                                            tr_expire: this.lddet.ld_expire,
-                                                          },
-                                                          { position: "bottom" }
-                                                                      );
-                                                                      controls.ref.setValue(null)
-                                                        }); 
                   }
                 else
                   {
@@ -3558,7 +3561,7 @@ handleSelectedRowsChanged5(e, args) {
       controls.product_color.setValue(item.item.pt_break_cat);
       controls.product_quality.setValue(item.item.pt_rev);
       controls.total_bobine.setValue(item.wo_qty_comp);
-      controls.total_squelette.setValue(item.wo_qty_rjct);
+      controls.wo_qty_rjct.setValue(item.wo_qty_rjct);
       controls.wo_qty_ord.setValue(item.wo_qty_ord)
       controls.product_Cyl.setValue(item.item.pt_group)
       controls.wo_bom_code.setValue(item.wo_bom_code);
@@ -3612,21 +3615,20 @@ handleSelectedRowsChanged5(e, args) {
      this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
       (res: any) => {        
       this.dataset  = res.data;
+      let calc_iss = 0   
+      let Orgqty = 0
+      let Sqlqty = 0
+      let Prfqty = 0
+      let Paiqty = 0
       for (let item of this.dataset){
-        this.itemsService.getByOne({pt_part: item.tr_part  }).subscribe(
-          (respopart: any) => {
-            let calc_iss = 0   
-            let Orgqty = 0
-            let Sqlqty = 0
-            let Prfqty = 0
-            let Paiqty = 0
-        if(respopart.data.pt_draw == 'ORIGINAL'){ Orgqty = Number(Number(Orgqty) + Number(item.tr_qty_loc));controls.ORG_ISS.setValue(Number(Orgqty))}
-        else{if(respopart.data.pt_draw == 'SQUELETTE'){ Sqlqty = Number(Number(Sqlqty) + Number(item.tr_qty_loc));controls.SQL_ISS.setValue(Number(Sqlqty))}
-             else{if(respopart.data.pt_draw == 'PREFORME'){ Prfqty = Number(Number(Prfqty) + Number(item.tr_qty_loc));controls.PRF_ISS.setValue(Number(Prfqty))}
-                  else{if(respopart.data.pt_draw == 'PAYETTE'){ Paiqty = Number(Number(Paiqty) + Number(item.tr_qty_loc));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
+                    
+            if(item.tr__chr01 == 'ORIGINAL'){ Orgqty = Number(Number(Orgqty) - Number(item.tr_qty_loc));controls.ORG_ISS.setValue(Number(Orgqty))}
+            else{if(item.tr__chr01 == 'SQUELETTE'){ Sqlqty = Number(Number(Sqlqty) - Number(item.tr_qty_loc));controls.SQL_ISS.setValue(Number(Sqlqty))}
+                 else{if(item.tr__chr01 == 'PREFORME'){ Prfqty = Number(Number(Prfqty) - Number(item.tr_qty_loc));controls.PRF_ISS.setValue(Number(Prfqty))}
+                      else{if(item.tr__chr01 == 'PAYETTE'){ Paiqty = Number(Number(Paiqty) - Number(item.tr_qty_loc));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
          
-          calc_iss = Number(Orgqty) + Number(Sqlqty) + Number(Prfqty) + Number(Paiqty)   
-        controls.total_iss.setValue(calc_iss)  })
+            calc_iss = Number(Orgqty) + Number(Sqlqty) + Number(Prfqty) + Number(Paiqty)   
+            controls.total_iss.setValue(calc_iss)  
       }},)
       //remplir les grids
       controls.wo_nbr.value
@@ -3843,7 +3845,7 @@ prepareGridemp() {
   };
 
   // fill the dataset with your data
-  this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));
+  this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));
 }
 
 handleSelectedRowsChangedemp(e, args) {

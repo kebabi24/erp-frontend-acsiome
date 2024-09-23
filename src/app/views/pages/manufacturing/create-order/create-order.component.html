@@ -21,7 +21,7 @@
                         <div class="form-group col-2">
                             <label class="form-group">Date de creation:</label>
                             <div class="input-group input-group-sm">
-                                <input class="form-control form-control-sm form-control-solid"  formControlName="wo_ord_date" 
+                                <input class="form-control form-control-sm form-control-solid"  formControlName="wo_ord_date"  (change)="onChangeDate()"
                                      placeholder="jj-mm-aaaa" name="wo_ord_date" ngbDatepicker f
                                     #wo_ord_date="ngbDatepicker"  >
                                 <div class="input-group-append">
@@ -77,25 +77,19 @@
                             <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_so_job" aria-describedby="basic-addon2" (change)="onChangeprogram()"
                             >
     
-                            
-                        </div>
+                        </div>    
                         <div class="form-group col-2">
-                            <label class="form-group">N° Version: </label>
-                            <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_rev" disabled
-                            rows="2">
-    
-                            
+                            <label class="form-group">Cause:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control form-control-solid" formControlName="wo_rmks"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open6(content6)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-group">Remarque: </label>
-                            <textarea class="form-control form-control-sm form-control-solid" formControlName="wo_rmks"
-                            rows="2"></textarea>
-    
-                            
-                        </div>
-
+                    
                     </div>
                   
                     <div class="row">
@@ -231,6 +225,29 @@
                             (onAngularGridCreated)="angularGridReadygamme($event)"
                             (sgOnSelectedRowsChanged)="handleSelectedRowsChangedgamme($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptionsgamme" [dataset]="gammes">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content6 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la cause</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridcause"
+                            [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged6($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions6" [dataset]="causes">
                         </angular-slickgrid>
                     </div>
                 </div>

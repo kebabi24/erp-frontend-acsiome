@@ -147,7 +147,7 @@ export class CreateInvMobComponent implements OnInit {
 
     this.user = JSON.parse(localStorage.getItem("user"));
     console.log(this.user)
-    this.codeService.getByOne({code_fldname:"vente_contoire",code_value:this.user.usrd_code}).subscribe((respo: any) => {
+    this.codeService.getByOne({code_fldname:"vente_comptoir",code_value:this.user.usrd_code}).subscribe((respo: any) => {
      console.log(respo.data)
       this.role = respo.data.code_cmmt
       console.log(this.role)

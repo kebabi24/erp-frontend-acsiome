@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Declaration des Opérations" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Declaration des Arrêts" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
@@ -21,7 +21,7 @@
                     
                     
                     <div class="form-group col-2">
-                        <label class="form-group">Effet:</label>
+                        <label class="form-group">Date Effet:</label>
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-sm form-control-solid" formControlName="op_tran_date"
                                  placeholder="jj-mm-aaaa" name="op_tran_date" ngbDatepicker f
@@ -118,7 +118,7 @@
                     </div>
 
 
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Employé: *</label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="op_emp" id="op_emp" (change)="ChangeCode('op_emp')"
@@ -130,7 +130,7 @@
                             <div *ngIf="opForm.controls['op_emp'].errors && (opForm.controls['op_emp'].dirty || opForm.controls['op_emp'].touched) "
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
-                    </div>
+                    </div> -->
 
 
                 </div>
@@ -139,7 +139,7 @@
 
 
                 
-                <div class="row">
+                <!-- <div class="row">
                     <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
                 </div>
                 <div class="row">
@@ -147,7 +147,7 @@
                         [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
                         (onAngularGridCreated)="gridReady($event)">
                     </angular-slickgrid>
-                </div>
+                </div> -->
 
                 <div class="row">
                     <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItemdwn()">Ajouter un Arret</button>
@@ -159,7 +159,7 @@
                     </angular-slickgrid>
                 </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItemrjct()">Ajouter un Rejet</button>
                 </div>
                 <div class="row">
@@ -167,7 +167,7 @@
                         [columnDefinitions]="columnDefinitionsrjct" [gridOptions]="gridOptionsrjct" [dataset]="rjctdataset"
                         (onAngularGridCreated)="gridReadyrjct($event)">
                     </angular-slickgrid>
-                </div>
+                </div> -->
             </form>
         </div>
 
@@ -178,7 +178,7 @@
         <div>
             <ng-template #contentsite let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir Site </h4>
+                    <h4 class="modal-title">Choisir Site </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -213,7 +213,7 @@
         <div>
             <ng-template #content5 let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir ID</h4>
+                    <h4 class="modal-title">Choisir ID</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -241,7 +241,7 @@
         <div>
             <ng-template #content4 let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir ID</h4>
+                    <h4 class="modal-title">Choisir ID</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -268,7 +268,7 @@
         <div>
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir </h4>
+                    <h4 class="modal-title">Choisir </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -293,7 +293,7 @@
         <div>
             <ng-template #contentwkctr let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir Centre de Charge </h4>
+                    <h4 class="modal-title">Choisir Centre de Charge </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -320,7 +320,7 @@
         <div>
             <ng-template #contentmch let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir Machine </h4>
+                    <h4 class="modal-title">Choisir Machine </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -347,7 +347,7 @@
         <div>
             <ng-template #contentrsn let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir Cause</h4>
+                    <h4 class="modal-title">Choisir Cause</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -374,7 +374,7 @@
         <div>
             <ng-template #contentrejct let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir Cause</h4>
+                    <h4 class="modal-title">Choisir Cause</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -46,6 +46,7 @@ import {
   InventoryTransactionService,
 
 } from "../../../../core/erp";
+import { Reason, ReasonService} from "../../../../core/erp"
 import { addDays,addMs } from "@fullcalendar/angular";
 import { data } from "jquery";
 import date from "src/assets/plugins/formvalidation/src/js/validators/date";
@@ -91,6 +92,7 @@ export class CreateOrderComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
+  creation : boolean ;
   user: any;
   alertWarning: any;
   deletedid : number;
@@ -103,8 +105,10 @@ export class CreateOrderComponent implements OnInit {
 
   part: any;
   color:any;
+  oldcolor:any;
   micronage:any;
   vitesse:any;
+  transfert:any;
   gammes: [];
   rowkctr:any;
   columnDefinitionsgamme: Column[] = [];
@@ -117,6 +121,12 @@ export class CreateOrderComponent implements OnInit {
   gridOptions4: GridOption = {};
   gridObj4: any;
   angularGrid4: AngularGridInstance;
+
+  causes: []
+  columnDefinitions6: Column[] = []
+  gridOptions6: GridOption = {}
+  gridObj6: any
+  angularGrid6: AngularGridInstance
 
   boms: [];
   columnDefinitionsbom: Column[] = [];
@@ -161,6 +171,7 @@ export class CreateOrderComponent implements OnInit {
     private bomService: BomService,
     private bomPartService: BomPartService,
     private inventoryTransactionService: InventoryTransactionService,
+    private reasonService: ReasonService,
   ) {
     config.autoClose = true;
     this.initGrid();
@@ -202,8 +213,8 @@ export class CreateOrderComponent implements OnInit {
                 this.fin = new Date(this.echeance).toLocaleTimeString()
                 
                 this.gridService.updateItemById(args.dataContext.id = updateItem.id,{id:updateItem.id, line: Number(i) - 1,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,um:updateItem.um,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-                this.lancement = this.echeance,
-                this.debut = this.fin    
+                this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()    
               
             }
             
@@ -218,8 +229,7 @@ export class CreateOrderComponent implements OnInit {
         id: "line",
         name: "Ligne",
         field: "line",
-        minWidth: 30,
-        maxWidth: 30,
+        width: 80,
         selectable: true,
         editor: {
           model: Editors.float,
@@ -235,14 +245,14 @@ export class CreateOrderComponent implements OnInit {
           this.echeance = addMs(new Date(this.lancement),this.jours)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-          this.lancement = this.echeance
-          this.debut = new Date(this.echeance).toLocaleTimeString()
+          this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
           if(oldItem.wo_status == 'A'){this.jours = 0}else{this.jours = Number(Number(oldItem.wo_qty_ord) / (Number(oldItem.wo_lead_time))) *1000 * 60 * 60}
           this.echeance = addMs(new Date(this.lancement),this.jours)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
           this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: Number(oldItem.line) + 1 ,woid:oldItem.woid,wo_nbr:oldItem.wo_nbr,wo_part: oldItem.wo_part,desc:oldItem.desc, wo_qty_ord:oldItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: oldItem.wo_status,wo_bom_code: oldItem.wo_bom_code,  wo_vend: oldItem.wo_vend, wo_prod_pct: oldItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:oldItem.wo_lead_time})
-          this.lancement = this.echeance
-          this.debut = new Date(this.echeance).toLocaleTimeString()  
+          this.lancement = addMs(new Date(this.echeance),Number(oldItem.transfert)*60*60*1000)
+          this.debut = new Date(this.lancement).toLocaleTimeString()  
            let i = 0;
            for(i = Number(this.deletedid) + 1; i<=this.dataset.length; i++ ){
             
@@ -258,14 +268,14 @@ export class CreateOrderComponent implements OnInit {
               if(Number(this.updateid) < Number(nwid)){
               this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: Number(updateItem.line) + 1 ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
             
-              this.lancement = this.echeance,
-              this.debut = this.fin;
+              this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
             }
             if(Number(this.updateid) > Number(nwid)){
               this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line  ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
             
-              this.lancement = this.echeance,
-              this.debut = this.fin;
+              this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
             }
               setTimeout(() => {
                 console.log('delay');
@@ -297,36 +307,7 @@ export class CreateOrderComponent implements OnInit {
         sortable: true,
         width: 80,
         filterable: false,
-        // editor: {
-        //   model: Editors.text,
-        //   required: true,
-         
-
-        // },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          
-          this.itemsService.getByOne({pt_part: args.dataContext.wo_part }).subscribe((resp:any)=>{
-
-            if (resp.data) {
-             this.part = resp.data.pt_part
-              if (resp.data.pt_pm_code == "M") {
-                 this.color = resp.data.pt_break_cat
-                 this.micronage = resp.data.int01
-                 this.vitesse = resp.data.int03
-                 if (this.vitesse == 0 || this.vitesse == null){this.vitesse = 530}
-                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , um: resp.data.pt_um,wo_status : "F", wo_bom_code: resp.data.pt_bom_code,wo_lead_time: Number(this.vitesse) })
-              } else {
-                alert("Article N' est pas Production")
-                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_part: null })
-              } 
-            } else {
-
-                      alert("Article Nexiste pas")
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_part: null })
-              
-            } 
-          })
-        }  
+        
        
       },
       {
@@ -375,6 +356,8 @@ export class CreateOrderComponent implements OnInit {
 
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          const controls = this.woForm.controls
+          this.oldcolor = args.dataContext.color
           if (args.dataContext.wo_qty_ord < 0){
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext, wo_qty_ord:this.qty })
             this.message = "quantité négative interdite";
@@ -382,15 +365,16 @@ export class CreateOrderComponent implements OnInit {
             return;
           }
           if( args.dataContext.qty == 0 ){
-            if(this.lancement == null)  {this.lancement = new Date(), this.debut = new Date().toLocaleTimeString()}
-            else{this.lancement = new Date(args.dataContext.wo_rel_date),this.debut = args.dataContext.chr01}
+            let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
+   
+            if(this.lancement == null)  {this.lancement = new Date(ofdate), this.debut = new Date().toLocaleTimeString()}
+            else{this.lancement = addMs(new Date(this.lancement),Number(args.dataContext.transfert)*60*60*1000),this.debut = new Date(this.lancement).toLocaleTimeString}
             this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60
             this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
                 this.fin = new Date(this.echeance).toLocaleTimeString(),
                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),qty:args.dataContext.wo_qty_ord })
-                this.lancement = this.echeance
-                this.debut = new Date(this.echeance).toLocaleTimeString()    
-            
+                this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
               
           } 
           else { 
@@ -402,8 +386,8 @@ export class CreateOrderComponent implements OnInit {
               this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
               this.fin = new Date(this.echeance).toLocaleTimeString(),
               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-              this.lancement = this.echeance
-              this.debut = new Date(this.echeance).toLocaleTimeString()
+              this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
           }
           this.deletedid = args.dataContext.line
           let i = 0;
@@ -417,8 +401,8 @@ export class CreateOrderComponent implements OnInit {
             this.fin = new Date(this.echeance).toLocaleTimeString()
             console.log(i,this.updateid,updateItem.line)
             this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-            this.lancement = this.echeance,
-            this.debut = this.fin;
+            this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+            this.debut = new Date(this.lancement).toLocaleTimeString()
             setTimeout(() => {
               console.log('delay');
             }, 20000);
@@ -434,7 +418,7 @@ export class CreateOrderComponent implements OnInit {
         name: "Date Lancement",
         field: "wo_rel_date",
         sortable: true,
-        width: 100,
+        width: 150,
         filterable: false,
         formatter: Formatters.dateTimeIso ,
         type: FieldType.dateTime,
@@ -466,9 +450,8 @@ export class CreateOrderComponent implements OnInit {
           this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-          this.lancement = this.echeance
-          this.debut = new Date(this.echeance).toLocaleTimeString()
-          
+          this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
           this.deletedid = args.dataContext.line
           let i = 0;
           for(i = Number(this.deletedid) ; i<=this.dataset.length; ){
@@ -482,8 +465,8 @@ export class CreateOrderComponent implements OnInit {
             this.fin = new Date(this.echeance).toLocaleTimeString()
             console.log(i,this.updateid,updateItem.line)
             this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-            this.lancement = this.echeance,
-            this.debut = this.fin;
+            this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+                this.debut = new Date(this.lancement).toLocaleTimeString()
             setTimeout(() => {
               console.log('delay');
             }, 20000);
@@ -493,22 +476,13 @@ export class CreateOrderComponent implements OnInit {
         } 
        
       },
-      // {
-      //   id: "chr01",
-      //   name: "Heure lancement",
-      //   field: "chr01",
-      //   sortable: true,
-      //   width: 100,
-      //   filterable: false,
-       
-           
-      // },
+      
       {
         id: "wo_due_date",
         name: "Date Echéance",
         field: "wo_due_date",
         sortable: true,
-        width: 100,
+        width: 150,
         filterable: false,
         formatter: Formatters.dateTimeIso ,
         type: FieldType.dateTime,
@@ -522,7 +496,7 @@ export class CreateOrderComponent implements OnInit {
         name: "Temps Production",
         field: "chr03",
         sortable: true,
-        width: 100,
+        width: 80,
         filterable: false,
         
       },
@@ -531,7 +505,7 @@ export class CreateOrderComponent implements OnInit {
         name: "Code Formule",
         field: "wo_bom_code",
         sortable: true,
-        width: 80,
+        width: 60,
         filterable: false,
         type: FieldType.string,
         // editor: {
@@ -539,24 +513,24 @@ export class CreateOrderComponent implements OnInit {
         //     required: true,
           
         // },
-        onCellChange: (e: Event, args: OnEventArgs) => {
+        // onCellChange: (e: Event, args: OnEventArgs) => {
           
-          this.bomService.getBy({bom_parent: args.dataContext.wo_bom_code }).subscribe((resp:any)=>{
+        //   this.bomService.getBy({bom_parent: args.dataContext.wo_bom_code }).subscribe((resp:any)=>{
 
           
-            if (resp.data) {
+        //     if (resp.data) {
              
                
-                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,  wo_bom_code: resp.data.bom_parent })
+        //          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,  wo_bom_code: resp.data.bom_parent })
                
-            } else {
+        //     } else {
 
-                      alert("Code Formule N' existe pas")
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_bom_code: null })
+                      
+        //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_bom_code: null })
               
-            } 
-          })
-        }  
+        //     } 
+        //   })
+        // }  
         
       },
       {
@@ -574,21 +548,21 @@ export class CreateOrderComponent implements OnInit {
           element.click();
         },
       },
-      {
-        id: "wo_lot_next",
-        name: "Lot/Serie",
-        field: "wo_lot_next",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-        editor: {
-            model: Editors.text,
+      // {
+      //   id: "wo_lot_next",
+      //   name: "Lot/Serie",
+      //   field: "wo_lot_next",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.string,
+      //   // editor: {
+      //   //     model: Editors.text,
           
-        },
+      //   // },
     
         
-      },
+      // },
       {
         id: "wo_status",
         name: "Status",
@@ -676,54 +650,54 @@ export class CreateOrderComponent implements OnInit {
         }  
       },
       
-      {
-        id: "wo_vend",
-        name: "Fournisseur",
-        field: "wo_vend",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-        editor: {
-          model: Editors.text,
-          required: true,
+      // {
+      //   id: "wo_vend",
+      //   name: "Fournisseur",
+      //   field: "wo_vend",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.string,
+      //   editor: {
+      //     model: Editors.text,
+      //     required: true,
          
 
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
           
-          this.providersService.getBy({vd_addr: args.dataContext.wo_vend }).subscribe((resp:any)=>{
+      //     this.providersService.getBy({vd_addr: args.dataContext.wo_vend }).subscribe((resp:any)=>{
 
-            if (resp.data) {
+      //       if (resp.data) {
              
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_vend: resp.data.vd_addr })
+      //         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_vend: resp.data.vd_addr })
        
-            }else {
+      //       }else {
 
-              alert("Fournisseur N'existe pas")
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_vend: null })
+             
+      //         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_vend: null })
 
 
-            } 
-          })
-        }  
+      //       } 
+      //     })
+      //   }  
         
-      },
-      {
-        id: "vendvid",
-        field: "vendvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById(
-            "openVendsGrid"
-          ) as HTMLElement;
-          element.click();
-        },
-      },
+      // },
+      // {
+      //   id: "vendvid",
+      //   field: "vendvid",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById(
+      //       "openVendsGrid"
+      //     ) as HTMLElement;
+      //     element.click();
+      //   },
+      // },
       
       // {
       //   id: "wo_so_job",
@@ -745,7 +719,7 @@ export class CreateOrderComponent implements OnInit {
         name: "Vitesse",
         field: "wo_lead_time",
         sortable: true,
-        width: 80,
+        width: 60,
         filterable: false,
         type: FieldType.float,
         // formatter: Formatters.Number,
@@ -802,6 +776,7 @@ export class CreateOrderComponent implements OnInit {
     this.loadingSubject.next(false);
     this.workOrder = new WorkOrder();
     const date = new Date;
+    this.creation = true;
     this.woForm = this.woFB.group({
       wo_ord_date: [{
         year:date.getFullYear(),
@@ -825,6 +800,7 @@ export class CreateOrderComponent implements OnInit {
     this.workOrder = new WorkOrder();
     this.createForm();
     this.hasFormErrors = false;
+    this.creation = true;
     this.dataset =[]
     this.lancement = new Date()
   }
@@ -840,7 +816,7 @@ export class CreateOrderComponent implements OnInit {
             
             const { data } = response;
             if (!data) {
-              alert("Site n'existe pas")
+             
               controls.wo_site.setValue("")
               document.getElementById("site").focus();
             } 
@@ -856,7 +832,7 @@ export class CreateOrderComponent implements OnInit {
             
             const { data } = response;
             if (!data) {
-              alert("gamme n'existe pas")
+              
               controls.wo_routing.setValue("")
               document.getElementById("routing").focus();
             } 
@@ -872,7 +848,7 @@ export class CreateOrderComponent implements OnInit {
               this.workOrderService.getBy({wo_routing:controls.wo_routing.value,wo_ord_date:ofdate}).subscribe(
                 (res: any) => {        
                   this.dataset  = res.data;
-                  
+                  this.creation = false;
                    
                   
                   let j = 0;
@@ -895,12 +871,14 @@ export class CreateOrderComponent implements OnInit {
                   this.gridService.addItem(
                     {
                       id: item.id,
+                      oldline: item.wo_queue_eff,
                       line: item.wo_queue_eff,
                       woid:item.id,
                       wo_nbr:item.wo_nbr, 
+                      oldpart: item.wo_part,
                       wo_part: item.wo_part,
                       cmvid: "",
-                      desc: "",
+                      desc: item.item.pt_desc1,
                       wo_qty_ord: item.wo_qty_ord,
                       qty:item.wo_qty_ord,
                       olddate: new Date(item.wo_rel_date),
@@ -913,7 +891,10 @@ export class CreateOrderComponent implements OnInit {
                       wo_bom_code: item.wo_bom_code,
                       wo_vend: item.wo_vend,
                       wo_lead_time:item.wo_lead_time,
+                      transfert:item.dec01,
                       wo_prod_pct: item.wo_prod_pct,
+                      color:item.wo_batch,
+                      micronage:item.item.int01
                     },
                     { position: "bottom" }
                     
@@ -934,15 +915,167 @@ export class CreateOrderComponent implements OnInit {
             
             const { data } = response;
             if (!data) {
-              alert("programme n'existe pas pour cette gamme")
               controls.wo_so_job.setValue("")
               document.getElementById("job").focus();
+              this.message = "programme n'existe pas pour cette gamme"
+              this.hasFormErrors = true;
+              return;
+              
             }
             else{
               this.workOrderService.getBy({wo_so_job:controls.wo_so_job.value}).subscribe(
                 (res: any) => {        
                   this.dataset  = res.data;
                   
+                  if(res.data != null){version = Number(res.data.wo_rev) + 1, controls.wo_rev.setValue(version)}
+                  this.creation = false;
+                  let j = 0;
+                  for (let item of this.dataset){j = j + 1;
+                    var maxObj = null;
+                    var iddd = 0;
+      
+                    if (this.dataset.length > 0) {
+                      maxObj = this.dataset.reduce((accumulator, current) => {
+                        return accumulator.id > current.id ? accumulator : current;
+                      });
+                      
+                      iddd = maxObj.id + 1;
+                      
+                    } else {
+                      iddd = 1;
+                      
+                    }
+      
+                    this.gridService.addItem(
+                      {
+                        id: item.id,
+                        oldline: item.wo_queue_eff,
+                        line: item.wo_queue_eff,
+                      woid:item.id,
+                      wo_nbr:item.wo_nbr, 
+                      wo_part: item.wo_part,
+                      oldpart: item.wo_part,
+                      cmvid: "",
+                      desc: item.item.pt_desc1,
+                      wo_qty_ord: item.wo_qty_ord,
+                      qty:item.wo_qty_ord,
+                      olddate:new Date(item.wo_rel_date),
+                      wo_rel_date: new Date(item.wo_rel_date),
+                      wo_due_date:new Date(item.wo_due_date),
+                      chr01:item.chr01,
+                      chr02:item.chr02,
+                      chr03:item.chr03,
+                      wo_status: item.wo_status,
+                      wo_bom_code: item.wo_bom_code,
+                      wo_vend: item.wo_vend,
+                      wo_lead_time:item.wo_lead_time,
+                      transfert:item.dec01,
+                        wo_prod_pct: item.wo_prod_pct,
+                        color:item.wo_batch,
+                      micronage:item.item.int01
+                      },
+                      { position: "bottom" }
+                      
+                    )
+                    this.lancement=new Date(item.wo_due_date),
+                    this.debut=item.chr02
+                  }
+                },
+              )
+                
+            } 
+        })
+    }
+    
+  }
+  onChangeDate() {
+    const controls = this.woForm.controls
+    this.dataset = [];
+    let version = 1;
+    let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
+    if (controls.wo_so_job.value == ''|| controls.wo_so_job.value == null ){
+              console.log(ofdate)
+              this.workOrderService.getBy({wo_routing:controls.wo_routing.value,wo_ord_date:ofdate}).subscribe(
+                (res: any) => {        
+                  this.dataset  = res.data;
+                  this.creation = false;
+                   
+                  
+                  let j = 0;
+                  for (let item of this.dataset){j = j + 1;
+                    var maxObj = null;
+                    var iddd = 0;
+      
+                  if (this.dataset.length > 0) {
+                    maxObj = this.dataset.reduce((accumulator, current) => {
+                      return accumulator.id > current.id ? accumulator : current;
+                    });
+          
+                    iddd = maxObj.id + 1;
+          
+                  } else {
+                    iddd = 1;
+          
+                  }
+      
+                  this.gridService.addItem(
+                    {
+                      id: item.id,
+                      oldline: item.wo_queue_eff,
+                      line: item.wo_queue_eff,
+                      woid:item.id,
+                      wo_nbr:item.wo_nbr, 
+                      oldpart: item.wo_part,
+                      wo_part: item.wo_part,
+                      cmvid: "",
+                      desc: item.item.pt_desc1,
+                      wo_qty_ord: item.wo_qty_ord,
+                      qty:item.wo_qty_ord,
+                      olddate: new Date(item.wo_rel_date),
+                      wo_rel_date: new Date(item.wo_rel_date),
+                      wo_due_date:new Date(item.wo_due_date),
+                      chr01:item.chr01,
+                      chr02:item.chr02,
+                      chr03:item.chr03,
+                      wo_status: item.wo_status,
+                      wo_bom_code: item.wo_bom_code,
+                      wo_vend: item.wo_vend,
+                      wo_lead_time:item.wo_lead_time,
+                      transfert:item.dec01,
+                      wo_prod_pct: item.wo_prod_pct,
+                      color:item.wo_batch,
+                      micronage:item.item.int01
+                    },
+                    { position: "bottom" }
+                    
+                  )
+                  this.lancement=new Date(item.wo_due_date),
+                  this.debut=item.chr02
+                  controls.wo_rev.setValue(item.wo_rev)
+                }
+              })
+                
+    } 
+    else{
+      this.workOrderService
+        .getByOne({
+              wo_so_job: controls.wo_so_job.value,wo_routing: controls.wo_routing.value
+        })
+        .subscribe((response: any) => {
+            
+            const { data } = response;
+            if (!data) {
+              controls.wo_so_job.setValue("")
+              document.getElementById("job").focus();
+              this.message = "programme n'existe pas pour cette gamme à cette date"
+              this.hasFormErrors = true;
+              return;
+            }
+            else{
+              this.workOrderService.getBy({wo_so_job:controls.wo_so_job.value}).subscribe(
+                (res: any) => {        
+                  this.dataset  = res.data;
+                  this.creation = false;
                   if(res.data != null){version = Number(res.data.wo_rev) + 1, controls.wo_rev.setValue(version)}
                   
                   let j = 0;
@@ -965,12 +1098,14 @@ export class CreateOrderComponent implements OnInit {
                     this.gridService.addItem(
                       {
                         id: item.id,
-                      line: item.wo_queue_eff,
+                        oldline: item.wo_queue_eff,
+                        line: item.wo_queue_eff,
                       woid:item.id,
                       wo_nbr:item.wo_nbr, 
                       wo_part: item.wo_part,
+                      oldpart: item.wo_part,
                       cmvid: "",
-                      desc: "",
+                      desc: item.item.pt_desc1,
                       wo_qty_ord: item.wo_qty_ord,
                       qty:item.wo_qty_ord,
                       olddate:new Date(item.wo_rel_date),
@@ -983,7 +1118,10 @@ export class CreateOrderComponent implements OnInit {
                       wo_bom_code: item.wo_bom_code,
                       wo_vend: item.wo_vend,
                       wo_lead_time:item.wo_lead_time,
+                      transfert:item.dec01,
                         wo_prod_pct: item.wo_prod_pct,
+                        color:item.wo_batch,
+                      micronage:item.item.int01
                       },
                       { position: "bottom" }
                       
@@ -1003,6 +1141,7 @@ export class CreateOrderComponent implements OnInit {
   // save data
   onSubmit() {
     this.hasFormErrors = false;
+    this.creation = true;
     const controls = this.woForm.controls;
     /** check form */
     if (this.woForm.invalid) {
@@ -1168,31 +1307,7 @@ export class CreateOrderComponent implements OnInit {
       this.router.navigateByUrl("/manufacturing/list-wo")
         }
       );
-      this.inventoryTransactionService.ORDWO(it).subscribe(
-        (reponse) => console.log("response", reponse),
-        (error) => {
-            this.layoutUtilsService.showActionNotification(
-                "Erreur verifier les informations",
-                MessageType.Create,
-                10000,
-                true,
-                true
-            )
-            this.loadingSubject.next(false)
-        },
-        () => {
-            this.layoutUtilsService.showActionNotification(
-                "imprimé avec succès",
-                MessageType.Create,
-                10000,
-                true,
-                true
-            )
-            this.loadingSubject.next(false)
-            controls.ref.setValue(null)
-            // this.router.navigateByUrl("/")
-        }
-    )
+      
   }
   
   /**
@@ -1207,6 +1322,17 @@ export class CreateOrderComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls = this.woForm.controls;
+    if(controls.wo_rmks.value == null && this.creation == false){
+      this.message = "veuillez remplir le champs cause";
+       this.hasFormErrors = true;
+       return;
+    }
+    if(controls.wo_routing.value == null || controls.wo_routing.value == ''){
+      this.message = "veuillez sélectionner la lign de production";
+       this.hasFormErrors = true;
+       return;
+    }
     for (var i = 0; i < this.dataset.length; i++) {
       
       if (this.dataset[i].wo_part == "" || this.dataset[i].wo_part == null  ) {
@@ -1217,6 +1343,12 @@ export class CreateOrderComponent implements OnInit {
       }
       if (this.dataset[i].wo_qty_ord == 0  ) {
         this.message = "La quantité ne peut pas etre nulle";
+        this.hasFormErrors = true;
+        return;
+   
+       }
+       if (new Date(this.dataset[i].wo_rel_date) < new Date(this.dataset[i].olddate)  ) {
+        this.message = "La date ne peut pas etre inferieure à celle de la ligne précedente";
         this.hasFormErrors = true;
         return;
    
@@ -1239,12 +1371,14 @@ export class CreateOrderComponent implements OnInit {
       }
       
       if (this.lancement == null){this.lancement = new Date()}
+      
       console.log(iddd)
     this.gridService.addItem(
      
       {
         id: iddd,
         line: ligne,
+        oldline: ligne,
         woid:null,
         wo_nbr:"",
         wo_part: "",
@@ -1259,6 +1393,7 @@ export class CreateOrderComponent implements OnInit {
         wo_bom_code: null,
         wo_vend: null,
         wo_lead_time:0,
+        transfert:15/60,
         wo_prod_pct: 0,
               },
       { position: "bottom" }
@@ -1371,7 +1506,9 @@ export class CreateOrderComponent implements OnInit {
 
 
   handleSelectedRowsChanged4(e, args) {
+    
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    
     const controls = this.woForm.controls;
     
     if (Array.isArray(args.rows) && this.gridObj4) {
@@ -1385,13 +1522,21 @@ export class CreateOrderComponent implements OnInit {
         updateItem.um = item.pt_um;
         updateItem.wo_status = "F";
         updateItem.wo_bom_code = item.pt_bom_code;
-        
-        this.part = item.pt_part
+        updateItem.color = item.pt_break_cat
+        updateItem.micronage = item.int01
         this.color = item.pt_break_cat
-        this.micronage = item.int01
         this.vitesse = item.int03
+        if(this.row_number == 0){this.transfert = 0}
+        else{
+          
+          if(this.color != this.oldcolor && this.oldcolor != 'TRANSPARENT'){this.transfert = 1}
+          else{this.transfert=Number(15/60)}
+          console.log(this.row_number,this.color,this.oldcolor,this.transfert)
+        }
         if (this.vitesse == 0 || this.vitesse == null){this.vitesse = 530}
+      
         updateItem.wo_lead_time = this.vitesse
+        updateItem.transfert = this.transfert
         this.gridService.updateItem(updateItem);
       }) 
       
@@ -1617,7 +1762,9 @@ export class CreateOrderComponent implements OnInit {
         controls.wo_routing.setValue(item.ro_routing || "");
         this.gamme = item.ro_routing;
         this.rowkctr=item.ro_wkctr;
-        so_job = item.ro_routing + '-' + String(new Date().getFullYear()) + String(new Date().getMonth() + 1) + String(new Date().getDate()),
+        let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
+   
+        so_job = item.ro_routing + '-' + String(new Date(ofdate).getFullYear()) + String(new Date(ofdate).getMonth() + 1) + String(new Date(ofdate).getDate()),
         controls.wo_so_job.setValue(so_job)
         this.workOrderService.getBy({wo_so_job:so_job}).subscribe(
           (res: any) => {        
@@ -1625,7 +1772,7 @@ export class CreateOrderComponent implements OnInit {
           // let version = 1;
           // if(res.data != null){version = Number(res.data.wo_rev) + 1}
           // controls.wo_rev.setValue(version)
-         
+         if(res.date.length != 0){this.creation = false;}
           for (let item of this.dataset){
             var maxObj = null;
             var iddd = 0;
@@ -1642,8 +1789,11 @@ export class CreateOrderComponent implements OnInit {
             {
               id: item.id,
              line: item.wo_queue_eff,
+             oldline: item.wo_queue_eff,
       
         wo_part: item.wo_part,
+        oldpart: item.wo_part,
+        
         wo_nbr:item.wo_nbr,
         woid:item.id,
         cmvid: "",
@@ -1659,9 +1809,12 @@ export class CreateOrderComponent implements OnInit {
         wo_status: item.wo_status,
         wo_bom_code: item.wo_bom_code,
         wo_lead_time:item.wo_lead_time,
+        transfert:item.dec01,
         wo_vend: item.wo_vend,
         
         wo_prod_pct: item.wo_prod_pct,
+        color:item.wo_batch,
+        micronage:item.item.int01
             },
             { position: "bottom" }
             
@@ -1885,6 +2038,94 @@ export class CreateOrderComponent implements OnInit {
   onAlertClose($event) {
     this.hasFormErrors = false;
   }
+  handleSelectedRowsChanged6(e, args) {
+    const controls = this.woForm.controls
+    if (Array.isArray(args.rows) && this.gridObj6) {
+        args.rows.map((idx) => {
+            const cause = this.gridObj6.getDataItem(idx)
+            console.log(cause)
+            controls.wo_rmks.setValue(cause.rsn_ref || "")
+
+        })
+    }
+}
+angularGridReady6(angularGrid: AngularGridInstance) {
+    this.angularGrid6 = angularGrid
+    this.gridObj6 = (angularGrid && angularGrid.slickGrid) || {}
+}
+prepareGrid6() {
+    const controls = this.woForm.controls
+    this.columnDefinitions6 = [
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+       
+       
+        {
+          id: "rsn_ref",
+          name: "Code",
+          field: "rsn_ref",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+        {
+            id: "rsn_desc",
+            name: "Designation",
+            field: "rsn_desc",
+            sortable: true,
+            width: 200,
+            filterable: true,
+            type: FieldType.string,
+        },
+    ]
+
+    this.gridOptions6 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+            // optionally change the column index position of the icon (defaults to 0)
+            // columnIndexPosition: 1,
+
+            // remove the unnecessary "Select All" checkbox in header when in single selection mode
+            hideSelectAllCheckbox: true,
+
+            // you can override the logic for showing (or not) the expand icon
+            // for example, display the expand icon only on every 2nd row
+            // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            // True (Single Selection), False (Multiple Selections)
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+    
+    this.reasonService
+        .getBy ({rsn_type: 'WORKORDERCHANGE' })
+        .subscribe((response: any) => (this.causes = response.data))
+     
+}
+open6(content) {
+    this.prepareGrid6()
+    this.modalService.open(content, { size: "lg" })
+}
 
   }
 
