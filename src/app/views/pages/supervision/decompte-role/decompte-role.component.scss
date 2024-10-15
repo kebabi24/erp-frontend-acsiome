@@ -1,0 +1,12 @@
+#slickGridContainer-gridS {
+    .slickgrid-container .slick-row {
+        &.odd {
+            background: white;
+            &:hover {
+              background-color: #3f41c0;
+            }
+          }
+}
+}
+
+.highlight-bg { background-color: #ff7f85 !important }

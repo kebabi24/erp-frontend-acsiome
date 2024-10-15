@@ -347,6 +347,10 @@ export class MenuConfig {
               title: "Service roadmap",
               page: "/supervision/dashboard-service",
             },
+            {
+              title: "Décompte Role",
+              page: "/supervision/decompte-role",
+            },
           ],
         },
         {

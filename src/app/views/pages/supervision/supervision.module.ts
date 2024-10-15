@@ -48,7 +48,7 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import { ItineraryService, MobileServiceService, RoleService, UsersMobileService, MobileSettingsService, LoadRequestService, UnloadRequestService, MessageService, CustomerMobileService, CodeMobileService } from "../../../core/erp";
+import { ItineraryService, MobileServiceService, RoleService, UsersMobileService, MobileSettingsService, LoadRequestService, UnloadRequestService, MessageService, CustomerMobileService, CodeMobileService, DecompteService } from "../../../core/erp";
 import { ValidateDeChargeDemandeComponent } from "./validate-decharge-demande/validate-decharge-demande.component";
 import { CreateLoadRequestComponent } from "./create-load-request/create-load-request.component";
 import { ListDiffLoadrequestComponent } from "./list-diff-loadrequest/list-diff-loadrequest.component";
@@ -57,6 +57,7 @@ import { DashboardServiceComponent } from "./dashboard-service/dashboard-service
 import { MatRadioModule } from "@angular/material/radio";
 import { ValidateLrSupComponent } from './validate-lr-sup/validate-lr-sup.component';
 import { CreateLrSupComponent } from './create-lr-sup/create-lr-sup.component';
+import { DecompteRoleComponent } from './decompte-role/decompte-role.component';
 
 const routes: Routes = [
   {
@@ -96,9 +97,13 @@ const routes: Routes = [
     path: "validate-lr-sup",
     component: ValidateLrSupComponent,
   },
+  {
+    path: "decompte-role",
+    component: DecompteRoleComponent,
+  },
 ];
 @NgModule({
-  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent],
+  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent, DecompteRoleComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -148,6 +153,7 @@ const routes: Routes = [
     LoadRequestService,
     UnloadRequestService,
     MessageService,
+    DecompteService,
   ],
 })
 export class SupervisionModule {}

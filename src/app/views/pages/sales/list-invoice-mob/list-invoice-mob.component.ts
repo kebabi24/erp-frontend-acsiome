@@ -650,30 +650,7 @@ export class ListInvoiceMobComponent implements OnInit {
     }
     this.mvdataset = [];
     
-    console.log(this.user)
-    const controls = this.soForm.controls
-    const date = controls.calc_date.value
-    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
-    : null;
-  
-    const date1 = controls.calc_date1.value
-    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
-    : null;
-    console.log(date,controls.calc_date.value,date1)
-    const site = controls.site.value
-    let obj= {date,date1,site}
-    this.mobileSettingsService.getAllInvoices(obj).subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-       console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
-        
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+   
   }
   solist() {
     this.mvdataset = []
@@ -692,7 +669,7 @@ export class ListInvoiceMobComponent implements OnInit {
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
-     //  this.mvdataView.setItems(this.mvdataset);
+       this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {

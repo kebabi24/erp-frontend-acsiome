@@ -205,4 +205,5 @@ export { BarecodeinfosService } from "./_services/barecodeinfos.service";
 export { FinancialchargeService } from "./_services/financialcharge.service";
 export { PopulationemployeService } from "./_services/populationemploye.service";
 export { TrainingcalenderService } from "./_services/trainingcalender.service";
+export { DecompteService } from "./_services/decompte.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

@@ -620,6 +620,7 @@ export class LoadingVansScanComponent implements OnInit {
 
     // CHECK IF THE CODE WAS SCANNED BEFORE
     let index = this.scanned_codes.indexOf(pal);
+    console.log(this.scanned_codes,index)
     if (index != -1) {
       this.modalService.open(content1, { size: "lg" });
       controls.pal.setValue("");
@@ -634,7 +635,7 @@ export class LoadingVansScanComponent implements OnInit {
     let lot = pal.substring(this.lot_start_pos, this.lot_start_pos + this.lot_length); // stop at 8
     let serie = pal.substring(this.serie_start_pos, this.serie_start_pos + this.serie_length);
 
-    //console.log(prod, lot, serie);
+    console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
       if(response.data != null) {
       let desc = response.data.pt_desc2;
@@ -1082,8 +1083,10 @@ export class LoadingVansScanComponent implements OnInit {
     // doc.line(10, i - 5, 195, i - 5);
     //console.log(this.dataset, "DATASET");
     //console.log(this.printLines, "Lines");
+    this.total = 0,
+    this.totalCartons= 0,
     this.printLines.map((item) => {
-      this.total = Number(this.total) + Number(item.pt_price);
+      this.total = Number(this.total) + Number(item.pt_price) * Number(item.qt_request);
       this.totalCartons = this.totalCartons + item.qt_request;
     });
     ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
@@ -1289,8 +1292,11 @@ export class LoadingVansScanComponent implements OnInit {
     // doc.line(10, i - 5, 195, i - 5);
     //console.log(this.dataset, "DATASET");
     //console.log(this.printLines, "Lines");
+
+    this.total=0,
+    this.totalCartons = 0,
     this.printLines.map((item) => {
-      this.total = Number(this.total) + Number(item.pt_price);
+      this.total = Number(this.total) + Number(item.pt_price) * Number(item.qt_effected);
       this.totalCartons = this.totalCartons + item.qt_effected;
     });
     ElectronPrinter3.print3(this.loadRequestLineData, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);

@@ -1,0 +1,139 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="Consultation des Ventes" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+       
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="soForm">
+                
+              
+                    <div class="row">
+                        <div class="form-group col-2" >
+                            <label class="form-group">role: *</label>
+                        
+                            <div class="input-group input-group-sm">
+    
+                                <input type="text" formControlName="role" (change)="onChangerole()" id="role"
+                                    [className]="soForm.controls['role'].errors && (soForm.controls['role'].dirty || soForm.controls['role'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openrole(contentrole)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                                <div *ngIf="soForm.controls['role'].errors && (soForm.controls['role'].dirty || soForm.controls['role'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="form-group">Date: *</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" 
+                                     placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f
+                                    #calc_date="ngbDatepicker"   >
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" (click)="calc_date.toggle()"  type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+    
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="form-group">A: *</label>
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date1" 
+                                     placeholder="jj-mm-aaaa" name="calc_date1" ngbDatepicker f
+                                    #calc_date1="ngbDatepicker"   >
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" (click)="calc_date1.toggle()"  type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                                
+                            </div>
+    
+                        </div>
+                   
+                        
+                        <div class="form-group col-4">
+                            <label class="form-group">Valider: *</label>
+                            <div class="input-group input-group-sm">
+    
+                            <button type="button"  (click)="solist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
+                            </div>
+                        </div>    
+                    </div> 
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Chargemnt: *</label>
+                            
+                            <input type="number" formControlName="charge"   
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Versement: *</label>
+                            
+                            <input type="number" formControlName="payment"   
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Solde: *</label>
+                            
+                            <input type="number" formControlName="solde"   
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                    </div>
+                <div class="row">
+                    <angular-slickgrid class="col-12"  gridId="plagemvGrid"  
+                    (sgOnSelectedRowsChanged)="handleSelectedRowsChangedS($event.detail.eventData, $event.detail.args)"
+                          [columnDefinitions]="mvcolumnDefinitions"
+                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
+                          (onAngularGridCreated)="mvGridReady($event)">
+                    </angular-slickgrid>
+                </div>
+               
+               
+            </form>
+           
+        </div>
+
+       
+
+        <div>
+            <ng-template #contentrole let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Role </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridrole"
+                            [columnDefinitions]="columnDefinitionsrole"
+                            (onAngularGridCreated)="angularGridReadyrole($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedrole($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsrole" [dataset]="datarole">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openrolesGrid" class="btn btn-primary" (click)="openrole(contentrole)">Launch demo
+                modal</button>
+        </div>
+        
+       
+    </kt-portlet-body>
+</kt-portlet>
+
+
