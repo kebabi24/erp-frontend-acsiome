@@ -237,6 +237,44 @@ export class MenuConfig {
             },
           ],
         },
+        /**/
+        {
+          title: "Gestion des Fournisseurs STD",
+          bullet: "dot",
+          icon: "flaticon-customer",
+          root: true,
+          submenu: [
+            {
+              title: "La liste des Clients",
+              page: "/providers/provider-list",
+            },
+            {
+              title: "Ajouter Fournisseur STD",
+              page: "/providers/create-std-provider",
+            }
+          ],
+        },
+        /**/
+
+
+        /**/
+        {
+          title: "Gestion des Clients STD",
+          bullet: "dot",
+          icon: "flaticon-customer",
+          root: true,
+          submenu: [
+            {
+              title: "La liste des Clients",
+              page: "/customers/customer-list",
+            },
+            {
+              title: "Ajouter Clients STD",
+              page: "/customers/create-std-customer",
+            }
+          ],
+        },
+        /**/
         {
           title: "Gestion des Clients",
           bullet: "dot",
@@ -291,6 +329,7 @@ export class MenuConfig {
               title: "Ajouter Clients",
               page: "/customers-mobile/create-customer-mobile",
             },
+            
             {
               title: "Ajouter Cluster",
               page: "/customers-mobile/cluster-create",
