@@ -245,7 +245,7 @@ export class MenuConfig {
           root: true,
           submenu: [
             {
-              title: "La liste des Clients",
+              title: "La liste des Fournisseurs STD",
               page: "/providers/provider-list",
             },
             {
@@ -864,12 +864,32 @@ export class MenuConfig {
               page: "/account-receivable/create-vendor-payment",
             },
             {
+              title: "Recette Vendeur Détaillée",
+              page: "/account-receivable/create-vendor-payment-detail",
+            },
+            {
+              title: "Recette Role Détaillée",
+              page: "/account-receivable/create-role-payment-detail",
+            },
+            {
               title: "Liste des Recettes vendeurs",
               page: "/account-receivable/list-vendor-payment",
             },
             {
+              title: "Situation Caisse Détaillée",
+              page: "/account-receivable/list-bank-detail",
+            },
+            {
+              title: "Situation des Caisses",
+              page: "/account-receivable/list-caisse",
+            },
+            {
               title: "Transfert Entre Caisse",
               page: "/account-receivable/transfert-ar",
+            },
+            {
+              title: "Transfert Entre Caisses Détaillé",
+              page: "/account-receivable/transfert-caisse",
             },
             {
               title: "Liste des Transferts Recettes ",

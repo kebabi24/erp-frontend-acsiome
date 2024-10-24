@@ -82,14 +82,14 @@ export class Bank extends BaseModel {
   bk_num_doc: Date;
   bk_domain: String;
   bk_balance: Number;
-  bk_2000: Number;
-  bk_1000: Number;
-  bk_0500: Number;
-  bk_0200: Number;
-  bk_p200: Number;
-  bk_p100: Number;
-  bk_p050: Number;
-  bk_p020: Number;
-  bk_p010: Number;
-  bk_p005: Number;
+  // bk_2000: Number;
+  // bk_1000: Number;
+  // bk_0500: Number;
+  // bk_0200: Number;
+  // bk_p200: Number;
+  // bk_p100: Number;
+  // bk_p050: Number;
+  // bk_p020: Number;
+  // bk_p010: Number;
+  // bk_p005: Number;
 }

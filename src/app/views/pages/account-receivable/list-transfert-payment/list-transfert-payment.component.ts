@@ -148,9 +148,9 @@ export class ListTransfertPaymentComponent implements OnInit {
           }, 
          
           {
-            id: "bk_2000",
+            id: "bkh_amt",
             name: "Montant",
-            field: "bk_2000",
+            field: "bkh_amt",
             sortable: true,
             filterable: true,
             type: FieldType.string,

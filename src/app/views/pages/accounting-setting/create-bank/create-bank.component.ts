@@ -586,7 +586,7 @@ export class CreateBankComponent implements OnInit {
         
         bk_check: [{ value: this.bank.bk_check, disabled: !this.isExist }],
         bk_curr: [{ value: this.bank.bk_curr, disabled: !this.isExist }],
-        bk_type: [{ value: this.bank.bk_type, disabled: !this.isExist },Validators.required],
+        bk_type: [{ value: this.bank.bk_type, disabled: !this.isExist }],
         bk_entity: [{ value: this.bank.bk_entity, disabled: !this.isExist }],
       
         bk_bk_acct1: [{ value: this.bank.bk_bk_acct1, disabled: !this.isExist }],
