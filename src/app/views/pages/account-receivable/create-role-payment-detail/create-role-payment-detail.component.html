@@ -91,10 +91,42 @@
                 <input type="text" class="form-control form-control-solid"  formControlName="username" 
                     aria-describedby="basic-addon2">
             </div>
-
-        </div>
+          </div>  
           </div>
-          <div class="row">          
+          <div class="row">  
+            <div class="form-group col-2">
+              <label class="form-group">Type:</label>
+  
+              <select
+                [className]="
+                  rvForm.controls['bkh_terms'].errors &&
+                  (rvForm.controls['bkh_terms'].dirty ||
+                    rvForm.controls['bkh_terms'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="bkh_terms" (change)="onchangeterms()"
+               
+                id="exampleSelects7"
+              >
+              
+                <option value="CODPM1">ESPECE</option>
+                <option value="CODPM3">CHEQUE</option>
+              
+              </select>
+              <div
+                *ngIf="
+                  rvForm.controls['bkh_terms'].errors &&
+                  (rvForm.controls['bkh_terms'].dirty ||
+                    rvForm.controls['bkh_terms'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+       
+                  
             <div class="form-group col-2">
               <label class="form-group">Montant Encaissé:</label>
   
@@ -133,6 +165,32 @@
               >
                 Valider
               </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-1">
+              <label class="form-group" id="code">Cheque : </label>
+              <input
+                type="number" id="bkh_cheque" (change)="calcule()" 
+                [className]="
+                  rvForm.controls['bkh_cheque'].errors &&
+                  (rvForm.controls['bkh_cheque'].dirty ||
+                    rvForm.controls['bkh_cheque'].touched)
+                    ? 'form-control form-control-lg form-control-solid is-invalid'
+                    : 'form-control form-control-lg form-control-solid'
+                "
+                formControlName="bkh_cheque"
+              />
+              <div
+                *ngIf="
+                  rvForm.controls['bkh_cheque'].errors &&
+                  (rvForm.controls['bkh_cheque'].dirty ||
+                    rvForm.controls['bkh_cheque'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
             </div>
           </div>
 

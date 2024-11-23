@@ -76,6 +76,12 @@ export class TransfertCaisseComponent implements OnInit {
   gridOptionsbank: GridOption = {};
   gridObjbank: any;
   angularGridbank: AngularGridInstance;
+
+  banksd: [];
+  columnDefinitionsbankd: Column[] = [];
+  gridOptionsbankd: GridOption = {};
+  gridObjbankd: any;
+  angularGridbankd: AngularGridInstance;
   constructor(
     config: NgbDropdownConfig,
     private rvFB: FormBuilder,
@@ -436,6 +442,108 @@ export class TransfertCaisseComponent implements OnInit {
         }
         openbank(content) {
           this.prepareGridbank();
+          this.modalService.open(content, { size: "lg" });
+        }
+  
+
+
+
+
+        angularGridReadybankd(angularGrid: AngularGridInstance) {
+          this.angularGridbankd = angularGrid;
+          this.gridObjbankd = (angularGrid && angularGrid.slickGrid) || {};
+        }
+        
+        prepareGridbankd() {
+          this.columnDefinitionsbankd = [
+            {
+              id: "id",
+              name: "id",
+              field: "id",
+              sortable: true,
+              minWidth: 80,
+              maxWidth: 80,
+            },
+            {
+              id: "bk_code",
+              name: "code",
+              field: "bk_code",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "address.ad_name",
+              name: "Designation",
+              field: "address.ad_name",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "bk_curr",
+              name: "Devise",
+              field: "bk_curr",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "bk_entity",
+              name: "Entité",
+              field: "bk_entity",
+              sortable: true,
+              filterable: true,
+              type: FieldType.boolean,
+            },
+          ];
+        
+          this.gridOptionsbankd = {
+            enableSorting: true,
+            enableCellNavigation: true,
+            enableExcelCopyBuffer: true,
+            enableFiltering: true,
+            autoEdit: false,
+            autoHeight: false,
+            frozenColumn: 0,
+            frozenBottom: true,
+            enableRowSelection: true,
+            enableCheckboxSelector: true,
+            checkboxSelector: {
+              // optionally change the column index position of the icon (defaults to 0)
+              // columnIndexPosition: 1,
+        
+              // remove the unnecessary "Select All" checkbox in header when in single selection mode
+              hideSelectAllCheckbox: true,
+        
+              // you can override the logic for showing (or not) the expand icon
+              // for example, display the expand icon only on every 2nd row
+              // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+            },
+            multiSelect: false,
+            rowSelectionOptions: {
+              // True (Single Selection), False (Multiple Selections)
+              selectActiveRow: true,
+            },
+            dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+              var val = undefined;
+              try {
+                val = eval("item." + column.field);
+              } catch (e) {
+                // ignore
+              }
+              return val;
+            },
+          };
+          // fill the dataset with your data
+          this.bankService
+            .getAll()
+            .subscribe((response: any) => {
+              console.log(response.data)
+              this.banksd = response.data});
+        }
+        openbankd(content) {
+          this.prepareGridbankd();
           this.modalService.open(content, { size: "lg" });
         }
   

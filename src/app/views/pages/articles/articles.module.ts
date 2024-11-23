@@ -77,7 +77,10 @@ import { UpdateModComponent } from './update-mod/update-mod.component';
 import { CreateItemModComponent } from './create-item-mod/create-item-mod.component';
 import { CreateStdItemComponent } from './create-std-item/create-std-item.component';
 import { ListStdUpdateComponent } from './list-std-update/list-std-update.component';
-import { EditStdItemComponent } from './edit-std-item/edit-std-item.component'
+import { EditStdItemComponent } from './edit-std-item/edit-std-item.component';
+import { ListCopieComponent } from './list-copie/list-copie.component';
+import { CopieArticleComponent } from './copie-article/copie-article.component';
+import { EditProductpageComponent } from './edit-productpage/edit-productpage.component'
 
 
 const routes: Routes = [
@@ -147,6 +150,18 @@ const routes: Routes = [
                 path: "list-std-update",
                 component: ListStdUpdateComponent,
             },
+            {
+                path: "list-copie",
+                component: ListCopieComponent,
+            },
+            {
+                path: "copie-article/:id",
+                component: CopieArticleComponent,
+            },
+            {
+                path: "edit-productpage/:product_page_code",
+                component: EditProductpageComponent,
+            },
 
         ],
     },
@@ -171,6 +186,9 @@ const routes: Routes = [
         CreateStdItemComponent,
         ListStdUpdateComponent,
         EditStdItemComponent,
+        ListCopieComponent,
+        CopieArticleComponent,
+        EditProductpageComponent,
     ],
     imports: [
         CommonModule,

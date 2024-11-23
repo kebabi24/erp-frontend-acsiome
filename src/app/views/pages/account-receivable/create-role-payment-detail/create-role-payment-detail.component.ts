@@ -85,6 +85,7 @@ export class CreateRolePaymentDetailComponent implements OnInit {
   rolename: any
   nbr: any
   solde:Number
+  isExist:Boolean = false
   constructor(
     config: NgbDropdownConfig,
     private rvFB: FormBuilder,
@@ -281,7 +282,7 @@ export class CreateRolePaymentDetailComponent implements OnInit {
       role_code : ["", Validators.required],
       user_mobile_code : [{value:"",disabled:true}],
       username : [{value:"",disabled:true}],
-     
+      bkh_terms: ["CODPM1", Validators.required],
       montant_tr: [{value:"",disabled:true}, Validators.required],
       bkh_2000: [0, Validators.required],
       bkh_1000: [0, Validators.required],
@@ -296,6 +297,7 @@ export class CreateRolePaymentDetailComponent implements OnInit {
       bkh_p005: [0, Validators.required],
       bkh_bon: [0, Validators.required],
       bkh_rmks : [""],
+      bkh_cheque: [{value:0,disabled: !this.isExist}, Validators.required],
       
     });
     const controls = this.rvForm.controls
@@ -307,6 +309,70 @@ export class CreateRolePaymentDetailComponent implements OnInit {
    
   }
 
+  onchangeterms(){
+    const controls = this.rvForm.controls
+    if (controls.bkh_terms.value != "CODPM1") {
+      this.isExist= true
+      controls.bkh_cheque.enable()
+
+      controls.bkh_2000.disable()
+      
+      controls.bkh_1000.disable()
+      
+      controls.bkh_0500.disable()
+      
+      controls.bkh_0200.disable()
+      
+      controls.bkh_p200.disable()
+      
+      controls.bkh_p100.disable()
+      
+      controls.bkh_p050.disable() 
+      
+      controls.bkh_p020.disable()
+     
+      controls.bkh_p010.disable()
+      
+      controls.bkh_p005.disable()
+     
+      controls.bkh_bon.disable()
+     
+
+      controls.bkh_2000.setValue(0)
+      controls.bkh_1000.setValue(0)
+      controls.bkh_0500.setValue(0)
+      controls.bkh_0200.setValue(0)
+      controls.bkh_p200.setValue(0)
+      controls.bkh_p100.setValue(0)
+      controls.bkh_p050.setValue(0)
+      controls.bkh_p020.setValue(0)
+      controls.bkh_p010.setValue(0)
+      controls.bkh_p005.setValue(0)
+      controls.bkh_bon.setValue(0)
+
+
+    }
+    else {
+      console.log(this.isExist)
+      this.isExist= false
+      console.log(this.isExist)
+      controls.bkh_cheque.setValue(0)
+      controls.bkh_cheque.disable()
+      controls.bkh_2000.enable()
+      controls.bkh_1000.enable()
+
+      controls.bkh_0500.enable()
+      controls.bkh_0200.enable()
+  
+      controls.bkh_p200.enable()
+      controls.bkh_p100.enable()
+      controls.bkh_p050.enable() 
+      controls.bkh_p020.enable()
+      controls.bkh_p010.enable()
+      controls.bkh_p005.enable()
+      controls.bkh_bon.enable()
+    }
+  }
   calcule(){
     const controls = this.rvForm.controls
     
@@ -317,6 +383,7 @@ export class CreateRolePaymentDetailComponent implements OnInit {
                   + Number(controls.bkh_p050.value) * 50 + Number(controls.bkh_p020.value) * 20
                   + Number(controls.bkh_p010.value) * 10 + Number(controls.bkh_p005.value) * 5
                   + Number(controls.bkh_bon.value)
+                  + Number(controls.bkh_cheque.value)
 
       controls.montant_tr.setValue(total)            
   }     
@@ -562,12 +629,13 @@ export class CreateRolePaymentDetailComponent implements OnInit {
              doc.text("Piéce  10"  , 4, i+40 ); doc.text( String(Number(controls.bkh_p010.value)),20,i+40); doc.text( String(Number(controls.bkh_p010.value)* 10),40,i+ 40); 
              doc.text("Piéce  5"  , 4, i+45 ); doc.text( String(Number(controls.bkh_p005.value)),20,i+45); doc.text( String(Number(controls.bkh_p005.value)* 5),40,i+ 45); 
              doc.text("Bon"  , 4, i+55 ) ; doc.text( String(Number(controls.bkh_bon.value)),40,i+ 55); 
+             doc.text("Cheque"  , 4, i+65 ) ; doc.text( String(Number(controls.bkh_cheque.value)),40,i+ 65); 
              
              doc.setFontSize(14);
              doc.setFont("Times-Roman-bold");
-             doc.text("Total Versement"  , 4, i+70 ) ; doc.text( String(Number(controls.montant_tr.value).toFixed(2)),45,i+ 70); 
+             doc.text("Total Versement"  , 4, i+75 ) ; doc.text( String(Number(controls.montant_tr.value).toFixed(2)),45,i+ 75); 
              
-             doc.text("Nouveau Solde"  , 4, i+80 ) ; doc.text( String(Number((Number(this.solde) - Number(controls.montant_tr.value))).toFixed(2)),45,i+ 80); 
+             doc.text("Nouveau Solde"  , 4, i+85 ) ; doc.text( String(Number((Number(this.solde) - Number(controls.montant_tr.value))).toFixed(2)),45,i+ 85); 
              
 
             var blob = doc.output("blob");

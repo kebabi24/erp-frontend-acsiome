@@ -8,12 +8,14 @@ const path = require("path");
 var ElectronPrinter2 = (function () {
   console.log("herrereeeeeeeeee");
   return {
-    print2: function (dataset, load_request_code, role_code, loadRequestInfo, userInfo, username, printLines, userPrinter, total, totalCartons) {
+    print2: function (dataset, load_request_code, role_code, loadRequestInfo, userInfo, username, printLines, userPrinter, total, totalCartons,nchariot) {
      // console.log(userPrinter);
       const options = {
         printer: userPrinter,
         paperSize: "4x6",
+        oriontation:"180",
         scale:"fit",
+        copies: 1, // Number of copies to print
       };
       // // Get the current directory of the script
       // const currentDirectory = __dirname;
@@ -64,17 +66,18 @@ var ElectronPrinter2 = (function () {
       // );
 
       doc.setFont("Times-Roman");
-
+      const date = new Date()
       //console.log("initialy",initialY)
       doc.setFontSize(14);
       doc.text("Demande de chargement : " + load_request_code, 13, initialY + 5);
+      doc.text("Chariot : " + nchariot, 13, initialY + 10);
 
       doc.setFontSize(9);
-      doc.text("Role    : " + role_code, 5, initialY + 10);
-      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
+      doc.text("Date    : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 15);
+     // doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
       doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 20);
-      doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
-      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      // doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
+      // doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
       doc.setFontSize(9);
 
       doc.line(2, initialY + 25, 98, initialY + 25); // 85
@@ -93,7 +96,7 @@ var ElectronPrinter2 = (function () {
 
       var i = 40 + valueToAddToX;
       doc.setFontSize(8);
-
+console.log(printLines)
       for (let j = 0; j < printLines.length; j++) {
         if (j % 21 == 0 && j != 0) {
           doc.addPage();
@@ -104,7 +107,8 @@ var ElectronPrinter2 = (function () {
         }
         doc.setFontSize(8);
         let line = printLines[j];
-       // console.log("kamelkamel",line);
+        console.log("kamelkamel",line,j);
+        if(line.product_code != null) {
         doc.line(2, i - 5, 2, i);
         doc.text(String(line.line), 4, i - 2 );
         doc.line(10, i - 5, 10, i);
@@ -121,9 +125,11 @@ var ElectronPrinter2 = (function () {
 
         doc.line(2, i  , 98, i  );
         i = i + 5;
-
+        }
       }
 
+      doc.text("Total cartons    : " + totalCartons, 65, i+ 5);
+      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, i+10);
       doc.setFontSize(9);
       //doc.line(2, i - 14, 98, i - 14);
       doc.save(load_request_code + ".pdf");
@@ -179,14 +185,16 @@ var ElectronPrinter3 = (function () {
       console.log(userPrinter);
       const options = {
         printer: userPrinter,
-        paperSize: "4x6",
+        paperSize: "4x10",
+        oriontation:"180",
         scale:"fit",
+        copies: 1, // Number of copies to print
       };
      
       var doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: [100,150]
+        format: [100,250]
         })
         let initialY = 5;
         let valueToAddToX = 5;
@@ -244,15 +252,17 @@ var ElectronPrinter3 = (function () {
       // );
 
       doc.setFont("Times-Roman");
+const date= new Date()
+      doc.text("VALIDATION : " , 13, initialY + 5);
 
-      doc.text("Demande de chargement : " + load_request_code, 13, initialY + 5);
+      doc.text("Demande de chargement : " + load_request_code, 13, initialY + 10);
 
       doc.setFontSize(9);
-      doc.text("Role    : " + role_code, 5, initialY + 10);
-      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
-      doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 20);
-      doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
-      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      doc.text("Date    : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 15);
+    
+      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 20);
+      doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 25);
+     
       doc.setFontSize(9);
 
 //      doc.setFontSize(22);
@@ -364,7 +374,8 @@ var ElectronPrinter3 = (function () {
         i = i + 5;
 
       }
-
+      doc.text("Total cartons    : " + totalCartons, 65, i + 5);
+      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, i + 10);
      
       //doc.line(2, i - 14, 210, i - 14);
       doc.save(load_request_code + ".pdf");

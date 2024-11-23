@@ -203,7 +203,7 @@ export class LoadRequestListComponent implements OnInit {
                   filterable: true,
                   type: FieldType.string, 
                   filter: {
-                    collection: [{value:"0",label:"0 Créée"},{value:"10",label:"10 Validée"},{value:"20",label:"20 Chargée"}],
+                    collection: [{value:"0",label:"0 Créée"},{value:"10",label:"10 Validée"},{value:"20",label:"20 Chargée"},{value:"40",label:"40 Transferet"},{value:"50",label:"50 Acceptée"}],
                      model: Filters.multipleSelect,
                     
                    },
@@ -618,7 +618,7 @@ angularGridReady3(angularGrid: AngularGridInstance) {
     )
  }
 
-
+ 
 updateDates(){
   this.canPrint = false
   const controls = this.dataForm.controls

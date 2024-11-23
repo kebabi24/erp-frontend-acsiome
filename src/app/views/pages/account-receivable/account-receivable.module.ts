@@ -66,6 +66,7 @@ import { CreateRolePaymentDetailComponent } from './create-role-payment-detail/c
 import { ListBankDetailComponent } from './list-bank-detail/list-bank-detail.component';
 import { ListCaisseComponent } from './list-caisse/list-caisse.component';
 import { TransfertCaisseComponent } from './transfert-caisse/transfert-caisse.component';
+import { TransfertCaisseDetComponent } from './transfert-caisse-det/transfert-caisse-det.component';
 
   const routes: Routes = [
     {
@@ -135,13 +136,17 @@ import { TransfertCaisseComponent } from './transfert-caisse/transfert-caisse.co
                 path: "transfert-caisse",
                 component: TransfertCaisseComponent,
               },
+              {
+                path: "transfert-caisse-det",
+                component: TransfertCaisseDetComponent,
+              },
           
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent],
   imports: [
     CommonModule,
     HttpClientModule,

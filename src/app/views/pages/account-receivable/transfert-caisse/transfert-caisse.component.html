@@ -89,13 +89,13 @@
               </div>
             </div>
             <div class="form-group col-1">
-                <label class="form-group">Banque:</label>
+                <label class="form-group">Banque A:</label>
                 <div class="input-group input-group-sm">
 
                     <input type="text" class="form-control form-control-solid"  formControlName="bank_code_dest"  id= "bank_code_dest" 
                         aria-describedby="basic-addon2">
                     <div class="input-group-append">
-                        <span class="input-group-text"  (click)="openbank(contentbankd)">
+                        <span class="input-group-text"  (click)="openbankd(contentbankd)">
                             <i class="text-dark-50 flaticon2-search"></i> </span>
                     </div>
                 </div>
@@ -478,9 +478,9 @@
             <div class="modal-body">
                 <div class="row">
                     <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
-                        [columnDefinitions]="columnDefinitionsbank" (onAngularGridCreated)="angularGridReadybank($event)"
+                        [columnDefinitions]="columnDefinitionsbankd" (onAngularGridCreated)="angularGridReadybankd($event)"
                         (sgOnSelectedRowsChanged)="handleSelectedRowsChangedbankd($event.detail.eventData, $event.detail.args)"
-                        [gridOptions]="gridOptionsbank" [dataset]="banks">
+                        [gridOptions]="gridOptionsbankd" [dataset]="banksd">
                     </angular-slickgrid>
                 </div>
             </div>

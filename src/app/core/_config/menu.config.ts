@@ -353,7 +353,7 @@ export class MenuConfig {
           ],
         },
         {
-          title: "Supervision",
+          title: "Préparation Sortie Camion",
           bullet: "dot",
           icon: "flaticon-user-settings",
           root: true,
@@ -366,21 +366,11 @@ export class MenuConfig {
               title: "Validation des demandes de chargement",
               page: "/supervision/validate-charge-demande",
             },
+            
+           
             {
-              title: "Validation des demandes de chargement Sup",
-              page: "/supervision/validate-lr-sup",
-            },
-            {
-              title: "Validation des demandes de dechargement",
-              page: "/supervision/validate-decharge-demande",
-            },
-            {
-              title: "Transfert demandes de chargement à la livraison",
+              title: "Transfert à la livraison",
               page: "/supervision/transfer-charge-demande-delivery",
-            },
-            {
-              title: "Liste des Chargement non Respectés",
-              page: "/supervision/list-diff-loadrequest",
             },
             {
               title: "Service roadmap",
@@ -390,6 +380,75 @@ export class MenuConfig {
               title: "Décompte Role",
               page: "/supervision/decompte-role",
             },
+            {
+              title: "Créer un nouveau service",
+              page: "/services/create-new-service",
+            },
+            {
+              title: "Consultation des Services",
+              page: "/services/list-service",
+            },
+            {
+              title: "Validation des demandes de dechargement",
+              page: "/supervision/validate-decharge-demande",
+            },
+    
+          ],
+        },
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon-user-settings",
+          root: true,
+          submenu: [
+            {
+              title: "Crée Demande Chargement",
+              page: "/supervision/create-lr-sup",
+            },
+            {
+              title: "Validation des Demandes de Chargement Sup",
+              page: "/supervision/validate-lr-sup",
+            },
+            // {
+            //   title: "Validation des demandes de dechargement",
+            //   page: "/supervision/validate-decharge-demande",
+            // },
+            // {
+            //   title: "Transfert demandes de chargement à la livraison",
+            //   page: "/supervision/transfer-charge-demande-delivery",
+            // },
+            {
+              title: "Liste des Chargement non Respectés",
+              page: "/supervision/list-diff-loadrequest",
+            },
+            {
+              title: "Liste des Factures Par Role",
+              page: "/supervision/list-invoice-role",
+            },
+            {
+              title: "Liste des Payments Par Role ",
+              page: "/supervision/list-payment-role",
+            },
+            {
+              title: "Liste des Visites Par Role ",
+              page: "/supervision/list-visite-role",
+            },
+            {
+              title: "Liste des Ventes Par Role ",
+              page: "/supervision/list-sales-role",
+            },
+            {
+              title: "Stock Camion Valorisé",
+              page: "/supervision/list-inventory-role",
+            },
+            // {
+            //   title: "Service roadmap",
+            //   page: "/supervision/dashboard-service",
+            // },
+            // {
+            //   title: "Décompte Role",
+            //   page: "/supervision/decompte-role",
+            // },
           ],
         },
         {
@@ -448,11 +507,11 @@ export class MenuConfig {
           root: true,
           submenu: [
             {
-              title: "Créer un nouveau service",
+              title: "Création service",
               page: "/services/create-new-service",
             },
             {
-              title: "Consultation des Services",
+              title: "Consultation  Services",
               page: "/services/list-service",
             },
           ],
@@ -491,6 +550,10 @@ export class MenuConfig {
             {
               title: "Modification des articles",
               page: "/articles/list-update",
+            },
+            {
+              title: "Copie des Articles",
+              page: "/articles/list-copie",
             },
             {
               title: "Génération Article",
@@ -887,9 +950,10 @@ export class MenuConfig {
               title: "Transfert Entre Caisse",
               page: "/account-receivable/transfert-ar",
             },
+
             {
               title: "Transfert Entre Caisses Détaillé",
-              page: "/account-receivable/transfert-caisse",
+              page: "/account-receivable/transfert-caisse-det",
             },
             {
               title: "Liste des Transferts Recettes ",
@@ -901,6 +965,28 @@ export class MenuConfig {
             },
           ],
         },
+        {
+          title: "Gestion des Dépenses",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-rocket",
+          submenu: [
+            {
+              title: "Maint Charge",
+              page: "/financialcharge/create-fc",
+            },
+
+            {
+              title: "Liste des charges",
+              page: "/financialcharge/list-forcast",
+            },
+            {
+              title: "Modification des charges",
+              page: "/financialcharge/update-forcast",
+            },
+          ],
+        },
+
         {
           title: "Gestion des Prévisions",
           root: true,

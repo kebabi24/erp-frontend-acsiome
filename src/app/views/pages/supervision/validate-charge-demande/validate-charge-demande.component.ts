@@ -43,6 +43,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
   user;
   domain;
   angularGridld: AngularGridInstance;
+  total: number = 0;
+  totalCartons: number = 0;
   constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService,private roleService:  RoleService) {
     config.autoClose = true;
   }
@@ -57,6 +59,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
   }
 
   onSubmit() {
+       this.printLines=[]
+
     let i = 1;
     // this.loadRequestData.forEach((page) => {
     //   for (const product of page.products) {
@@ -88,8 +92,10 @@ export class ValidateChargeDemandeComponent implements OnInit {
           this.printpdf();
         }
         this.loadRequestData = [];
+        this.printLines = [];
         this.load_request_code = "";
         this.role_code = "";
+        this.resetData()
         this.createForm();
       },
       (error) => {
@@ -102,6 +108,18 @@ export class ValidateChargeDemandeComponent implements OnInit {
         this.router.navigateByUrl("/supervision/validate-charge-demande");
       }
     );
+
+
+  }
+
+  resetData() {
+    for (const page of this.loadRequestData) {
+      for (const product of page.products) {
+        product.qt_request = 0;
+        product.qt_validated = 0;
+      }
+    }
+    this.printLines = [];
   }
 
   goBack() {
@@ -321,10 +339,23 @@ export class ValidateChargeDemandeComponent implements OnInit {
     const controlss = this.validationForm.controls;
     console.log("pdf");
     var doc = new jsPDF();
+    const date = new Date();
     let initialY = 65;
     let valueToAddToX = 5;
+    
+    this.total = 0,
+    this.totalCartons= 0,
+    console.log(this.printLines)
+    this.printLines.map((element) => {
+      if(element.item.pt_part != null) {
+      this.total = Number(this.total) + Number(element.item.loadRequestLines[0].pt_price) * Number(element.item.loadRequestLines[0].qt_validated);
+      this.totalCartons = this.totalCartons + Number(element.item.loadRequestLines[0].qt_validated);
+      }
+    });
+
     var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
+
     doc.addImage(img, "png", 150, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -347,7 +378,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
     doc.setFontSize(12);
     doc.text("Demande de chargement : " + this.load_request_code, 70, initialY + 5);
     doc.setFontSize(10);
-    doc.text("Role    : " + this.role_code, 20, initialY + 10);
+    doc.text("Date     : " + + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 20, initialY + 10);
+    doc.text("Role    : " + this.role_code, 20, initialY + 15);
     // doc.text("Date    : " + this.load_request_header.date_creation, 20, initialY + 15);
     doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, initialY + 20);
     doc.setFontSize(9);
@@ -361,10 +393,10 @@ export class ValidateChargeDemandeComponent implements OnInit {
     doc.text("Code Article", 25, initialY + 28.5); // 88.5
     doc.line(45, initialY + 25, 45, initialY + 30); // 90
     doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-    doc.line(100, initialY + 25, 100, initialY + 30); // 90
-    doc.text("Prix", 107, initialY + 28.5); // 88.5
-    doc.line(120, initialY + 25, 120, initialY + 30); // 90
-    doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
+    // doc.line(100, initialY + 25, 100, initialY + 30); // 90
+    // doc.text("Prix", 107, initialY + 28.5); // 88.5
+    // doc.line(120, initialY + 25, 120, initialY + 30); // 90
+    // doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
     doc.line(145, initialY + 25, 145, initialY + 30); // 90
     doc.text("QTE Validée", 148, initialY + 28.5); // 88.5
     doc.line(170, initialY + 25, 170, initialY + 30); // 90
@@ -375,7 +407,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
     for (let j = 0; j < this.printLines.length; j++) {
       console.log(this.printLines[j].item.loadRequestLines[0].qt_request,this.printLines[j].item.loadRequestLines[0].qt_validated)
      if(this.printLines[j].item.loadRequestLines[0].qt_request != 0 || this.printLines[j].item.loadRequestLines[0].qt_validated != 0) { 
-      if (j % 30 == 0 && j != 0) {
+      if (j % 38 == 0 && j != 0) {
         doc.addPage();
         img.src = "./assets/media/logos/companylogo.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
@@ -398,16 +430,16 @@ export class ValidateChargeDemandeComponent implements OnInit {
         });
         doc.setFont("Times-Roman");
         doc.setFontSize(12);
-            
-        doc.text(this.load_request_code, 70, 40);
-        doc.setFontSize(8);
-        doc.setFontSize(12);
-        doc.text("Demande de chargement : " + this.load_request_code, 70, 60);
-        doc.setFontSize(8);
-        doc.setFontSize(8);
-        doc.text("Role    : " + this.role_code, 20, 70);
-        doc.text("Date    : " + this.load_request_header.date_creation, 20, 75);
-        doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, 80);
+        doc.text("Demande de chargement : " + this.load_request_code, 70, initialY + 5);
+        doc.setFontSize(10);
+        doc.text("Date     : " + + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 20, initialY + 10);
+   
+        doc.text("Role    : " + this.role_code, 20, initialY + 15);
+        // doc.text("Date    : " + this.load_request_header.date_creation, 20, initialY + 15);
+        doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, initialY + 20);
+        doc.setFontSize(9);
+        doc.setFontSize(9);
+        //  initialY+20
         doc.line(10, initialY + 25, 195, initialY + 25); // 85
         doc.line(10, initialY + 30, 195, initialY + 30); // 90
         doc.line(10, initialY + 25, 10, initialY + 30); // 90
@@ -416,16 +448,17 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.text("Code Article", 25, initialY + 28.5); // 88.5
         doc.line(45, initialY + 25, 45, initialY + 30); // 90
         doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-        doc.line(100, initialY + 25, 100, initialY + 30); // 90
-        doc.text("Prix", 107, initialY + 28.5); // 88.5
-        doc.line(120, initialY + 25, 120, initialY + 30); // 90
-        doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
+        // doc.line(100, initialY + 25, 100, initialY + 30); // 90
+        // doc.text("Prix", 107, initialY + 28.5); // 88.5
+        // doc.line(120, initialY + 25, 120, initialY + 30); // 90
+        // doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
         doc.line(145, initialY + 25, 145, initialY + 30); // 90
         doc.text("QTE Validée", 148, initialY + 28.5); // 88.5
         doc.line(170, initialY + 25, 170, initialY + 30); // 90
         doc.text("QTE Chargée", 173, initialY + 28.5); // 88.5
         doc.line(195, initialY + 25, 195, initialY + 30); // 90
         var i = 95 + valueToAddToX;
+        doc.setFontSize(14);
       }
       if (this.printLines[j].item.pt_desc1.length > 25) {
         doc.setFontSize(10);
@@ -440,11 +473,14 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.line(20, i - 5, 20, i);
         doc.text(line.pt_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
+        doc.setFontSize(14);
         doc.text(desc1, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(this.printLines[j].item.loadRequestLines[0].pt_price), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
+        doc.setFontSize(10);
+      
+        // doc.line(100, i - 5, 100, i);
+        // doc.text(String(this.printLines[j].item.loadRequestLines[0].pt_price), 118, i - 1, { align: "right" });
+        // doc.line(120, i - 5, 120, i);
+        // doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
         doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
@@ -455,25 +491,27 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
         doc.line(45, i - 5, 45, i);
-        doc.line(100, i - 5, 100, i);
-        doc.line(120, i - 5, 120, i);
+        // doc.line(100, i - 5, 100, i);
+        // doc.line(120, i - 5, 120, i);
         doc.line(145, i - 5, 145, i);
         doc.line(170, i - 5, 170, i);
         doc.line(195, i - 5, 195, i);
         i = i + 5;
       } else {
-        doc.setFontSize(8);
+        doc.setFontSize(10);
         let line = this.printLines[j];
         doc.line(10, i - 5, 10, i);
         doc.text(String(this.printLines[j].line), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(this.printLines[j].item.pt_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
+        doc.setFontSize(14);
         doc.text(this.printLines[j].item.pt_desc1, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(this.printLines[j].item.loadRequestLines[0].pt_price), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
+        doc.setFontSize(10);
+        // doc.line(100, i - 5, 100, i);
+        // doc.text(String(this.printLines[j].item.loadRequestLines[0].pt_price), 118, i - 1, { align: "right" });
+        // doc.line(120, i - 5, 120, i);
+        // doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
         doc.text(String(this.printLines[j].item.loadRequestLines[0].qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
@@ -482,9 +520,14 @@ export class ValidateChargeDemandeComponent implements OnInit {
         i = i + 5;
       }
       doc.line(10, i - 5, 195, i - 5);
+
     }
     }/*for*/
     doc.line(10, i - 5, 195, i - 5);
+    doc.setFontSize(14);
+    doc.text("Total cartons    : " + this.totalCartons, 130, i + 5);
+    doc.text("Valeur : " + Number(this.total * 1.2019).toFixed(2) + " DZD", 130, i + 10);
+    doc.setFontSize(10);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }

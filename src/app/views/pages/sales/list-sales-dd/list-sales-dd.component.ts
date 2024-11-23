@@ -189,16 +189,16 @@ export class ListSalesDdComponent implements OnInit {
           }
         },
       },*/
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   excludeFromHeaderMenu: true,
       
-        minWidth: 30,
-        maxWidth: 30,
+      //   minWidth: 30,
+      //   maxWidth: 30,
         
-      },
+      // },
       {
         id: "site",
         name: "Site",
@@ -331,6 +331,27 @@ export class ListSalesDdComponent implements OnInit {
        
       }, 
       {
+        id: "customer_name",
+        name: "Nom Client",
+        field: "customer_name",
+        sortable: true,
+        width: 150,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'customer_name',
+          formatter: (g) => `Nom Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      }, 
+      {
         id: "product_code",
         name: "Code Produit",
         field: "product_code",
@@ -340,8 +361,8 @@ export class ListSalesDdComponent implements OnInit {
         type: FieldType.text,
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
         grouping: {
-          getter: 'Code produit',
-          formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          getter: 'product_code',
+          formatter: (g) => `Code Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregators: [
             new Aggregators.Sum('quantity'),  
             new Aggregators.Sum('amount'),
@@ -417,7 +438,10 @@ export class ListSalesDdComponent implements OnInit {
         width: 50,
         filterable: true,
         groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        type: FieldType.float,
+        type: FieldType.number,
+        formatter:Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2, exportWithFormatter: true }, 
+       
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
       
@@ -431,30 +455,31 @@ export class ListSalesDdComponent implements OnInit {
         preHeaderPanelHeight: 40,
         enableFiltering: true,
         enableAutoResize: true,
+        enableAutoResizeColumnsByCellContent:true,
         enableSorting: true,
         exportOptions: {
           sanitizeDataExport: true
         },
        
         //enableRowSelection: true,
-        enableCellNavigation: true,
-        enableCheckboxSelector: true,
-        checkboxSelector: {
-          // optionally change the column index position of the icon (defaults to 0)
-          // columnIndexPosition: 1,
+      //   enableCellNavigation: true,
+      //   enableCheckboxSelector: true,
+      //   checkboxSelector: {
+      //     // optionally change the column index position of the icon (defaults to 0)
+      //     // columnIndexPosition: 1,
   
-          // remove the unnecessary "Select All" checkbox in header when in single selection mode
-          hideSelectAllCheckbox: true,
+      //     // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      //     hideSelectAllCheckbox: true,
   
-          // you can override the logic for showing (or not) the expand icon
-          // for example, display the expand icon only on every 2nd row
-          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
-        },
-       // multiSelect: false,
-        rowSelectionOptions: {
-          // True (Single Selection), False (Multiple Selections)
-          selectActiveRow: true,
-        },
+      //     // you can override the logic for showing (or not) the expand icon
+      //     // for example, display the expand icon only on every 2nd row
+      //     // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      //   },
+      //  // multiSelect: false,
+      //   rowSelectionOptions: {
+      //     // True (Single Selection), False (Multiple Selections)
+      //     selectActiveRow: true,
+      //   },
        
         formatterOptions: {
         
@@ -463,6 +488,7 @@ export class ListSalesDdComponent implements OnInit {
     
           // Defaults to undefined, minimum number of decimals
           minDecimal: 2,
+          maxDecimal:2,
     
           // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
           thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''

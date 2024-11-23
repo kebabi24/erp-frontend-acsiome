@@ -89,4 +89,9 @@ export class LocationDetailService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/up', data, { headers: httpHeaders })
     }
+    public getByPrice(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbyprice`,data, { headers: httpHeaders })
+ 
+    }
 }

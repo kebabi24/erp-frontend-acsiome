@@ -173,15 +173,15 @@ export class InventoryListComponent implements OnInit {
               lazyTotalsCalculation:true,
             }
           }, 
-          // {
-          //   id: "item.pt_desc1",
-          //   name: "Description",
-          //   field: "item.pt_desc1",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
+          {
+            id: "item.pt_desc1",
+            name: "Description",
+            field: "item.pt_desc1",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
             
-          // }, 
+          }, 
           {
             id: "item.pt_draw",
             name: "FAMILLE",

@@ -353,6 +353,16 @@ export class ListInvoiceMobComponent implements OnInit {
        
       }, 
       {
+        id: "sdelivery_note_code",
+        name: "Nom Client",
+        field: "sdelivery_note_code",
+        sortable: true,
+        width: 150,
+        filterable: true,
+        type: FieldType.text,
+       
+      }, 
+      {
         id: "service_code",
         name: "Service",
         field: "service_code",
@@ -645,6 +655,15 @@ export class ListInvoiceMobComponent implements OnInit {
           onGroupChanged: (e, args) => this.onGroupChanged(args),
           onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
       },
 
     }

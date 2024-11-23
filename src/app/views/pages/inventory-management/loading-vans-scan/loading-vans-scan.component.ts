@@ -47,6 +47,7 @@ export class LoadingVansScanComponent implements OnInit {
   filteredData: any[] = [];
   user: any;
   printLines: any[] = [];
+  printLines2: any[] = [];
   total: number = 0;
   totalCartons: number = 0;
   // GRID
@@ -70,6 +71,14 @@ export class LoadingVansScanComponent implements OnInit {
   datasetun: any[];
 
 
+  angularGridchar: AngularGridInstance;
+  gridchar: any;
+
+  gridServicechar: GridService;
+  dataViewchar: any;
+  columnDefinitionschar: Column[];
+  gridOptionschar: GridOption;
+  datasetchar: any[];
 
   angularGriddif: AngularGridInstance;
   griddif: any;
@@ -92,6 +101,17 @@ export class LoadingVansScanComponent implements OnInit {
   serie_start_pos: number;
   serie_length: number;
   userPrinter: any;
+  nchariot: any
+
+  chariotnum: any
+  gridServicechardet: GridService;
+  dataViewchardet: any;
+  columnDefinitionschardet: Column[];
+  gridOptionschardet: GridOption;
+  datasetchardet: any[];
+  angularGridchardet: AngularGridInstance;
+  gridchardet: any;
+  row_number;
   constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private unloadFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private barecodeinfosService: BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
     config.autoClose = true;
 
@@ -121,6 +141,7 @@ export class LoadingVansScanComponent implements OnInit {
     this.chargeForm = this.tagFB.group({
       load_request_code: [null],
       pal: [],
+      qty_cart:[0],
       print: [true],
     });
     document.getElementById("load_request_code").focus();
@@ -144,11 +165,20 @@ export class LoadingVansScanComponent implements OnInit {
 
   //reste form
   reset() {
+    
+  //  this.modalService.dismissAll()
     this.createForm();
+    document.getElementById("load_request_code").focus();
+    this.dataset = []
     this.hasFormErrors = false;
+    console.log("hhhhhhhhhhhhhhhhhhh")
+    //this.router.navigateByUrl("/inventory-management/loading-vans-scan")
   }
   // save data
-  onSubmit() {
+  onSubmit(content10,content11) {
+    const controls = this.chargeForm.controls
+    console.log(controls.load_request_code.value,this.dataset.length)
+    if(controls.load_request_code.value != null && this.dataset.length > 0) {
     const details = [];
     const lines = [];
     this.filteredData = [];
@@ -182,37 +212,117 @@ export class LoadingVansScanComponent implements OnInit {
       console.log("details", details);
     });
 
-    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines).subscribe(
+    for (let dataa of this.dataset) {
+      delete dataa.id
+    }
+    console.log(this.dataset)
+    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines,this.dataset).subscribe(
       (response: any) => {
+        console.log(response.data)
+        this.nchariot = response.data
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
-           this.printpdf();
+            this.printpdf();
+           /*print2fois*/
+           this.modalService.open(content10, {backdrop: 'static',  size: "lg" });
+          
+           document.getElementById("load_request_code").focus();
         }
 
-        this.loadRequestData = [];
-        this.dataset = [];
-        this.printLines = [];
-        this.username = "";
-        // this.load_request_code = "";
-        this.scanned_codes = [];
+        // this.loadRequestData = [];
+        // this.dataset = [];
+        // this.printLines = [];
+        // this.username = "";
+        // // this.load_request_code = "";
+        // this.scanned_codes = [];
 
-        this.role_code = "";
-        this.total = 0;
-        this.totalCartons = 0;
+        // this.role_code = "";
+        // this.total = 0;
+        // this.totalCartons = 0;
       },
       (error) => {
         // this.loadRequestData = []
         console.log(error);
       },
       () => {
-        this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
+        this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 1000, true, true);
         this.loadingSubject.next(false);
-        this.reset()
+       // this.reset()
         // this.router.navigateByUrl("/customers-mobile/cluster-create")
       }
     );
-  }
+    }
+    else {
+      this.modalService.open(content11, {size: "lg" });
 
+    }
+  }
+  print2ticket() {
+    this.printpdf()
+    
+    // this.modalService.dismissAll()
+    // this.printLines= []
+    // this.dataset=[]
+    // this.reset()
+  }
+  print2ticket2() {
+    this.printpdf2()
+    
+    // this.modalService.dismissAll()
+    // this.printLines= []
+    // this.dataset=[]
+    // this.reset()
+  }
+  exitprint(){
+    const controls = this.chargeForm.controls
+    this.loadRequestData = [];
+    this.dataset = [];
+    this.printLines = [];
+    this.username = "";
+    // this.load_request_code = "";
+    this.scanned_codes = [];
+
+    this.role_code = "";
+    this.total = 0;
+    this.totalCartons = 0;
+    
+    controls.load_request_code.setValue(null)
+    controls.qty_cart.setValue(0)
+    document.getElementById("load_request_code").focus();
+     //this.reset()
+     this.modalService.dismissAll()
+     controls.load_request_code.setValue(null)
+     document.getElementById("load_request_code").focus();
+     
+    
+  }
+  exitprint2(){
+    const controls = this.chargeForm.controls
+    this.loadRequestData = [];
+    this.dataset = [];
+    this.printLines = [];
+    this.username = "";
+    // this.load_request_code = "";
+    this.scanned_codes = [];
+
+    this.role_code = null;
+    this.total = 0;
+    this.totalCartons = 0;
+    
+    this.dataset = [];
+    this.username = null;
+    this.load_request_code = null;
+    this.role_code = null;
+    
+    controls.load_request_code.setValue(null)
+    document.getElementById("load_request_code").focus();
+     //this.reset()
+     this.modalService.dismissAll()
+     controls.load_request_code.setValue(null)
+     document.getElementById("load_request_code").focus();
+     
+    
+  }
   onSaveCharge(content4, content5, content6) {
     const controls = this.chargeForm.controls;
     console.log(controls.load_request_code.value);
@@ -242,7 +352,8 @@ export class LoadingVansScanComponent implements OnInit {
       });
     }
   }
-  confirmPrinting() {
+  confirmPrinting(content12) {
+    const controls = this.chargeForm.controls;
     const details = [];
     const lines = [];
 
@@ -279,12 +390,14 @@ export class LoadingVansScanComponent implements OnInit {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
           this.printpdf2();
+          this.modalService.open(content12, {backdrop: 'static',  size: "lg" });
+          document.getElementById("load_request_code").focus();
         }
-        this.loadRequestData = [];
-        this.dataset = [];
-        this.username = "";
-        this.load_request_code = "";
-        this.role_code = "";
+        // this.loadRequestData = [];
+        // this.dataset = [];
+        // this.username = "";
+        // this.load_request_code = null;
+        // this.role_code = "";
       },
       (error) => {
         // this.loadRequestData = []
@@ -297,7 +410,9 @@ export class LoadingVansScanComponent implements OnInit {
       }
     );
 
-    this.modalService.dismissAll();
+    // controls.load_request_code.setValue(null);
+    // document.getElementById("load_request_code").focus();
+    // this.modalService.dismissAll();
   }
 
 
@@ -336,7 +451,11 @@ export class LoadingVansScanComponent implements OnInit {
       console.log("details", details);
     });
 
-    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines).subscribe(
+    for (let dat of this.datasetun) {
+      delete dat.id
+      dat.quantity = - dat.quantity
+    }
+    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines,this.datasetun).subscribe(
       (response: any) => {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
@@ -392,19 +511,19 @@ export class LoadingVansScanComponent implements OnInit {
 
   prepareGrid() {
     this.columnDefinitions = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.deleteIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.angularGrid.gridService.deleteItem(args.dataContext);
-          }
-        },
-      },
+      // {
+      //   id: "id",
+      //   field: "id",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.deleteIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+      //       this.angularGrid.gridService.deleteItem(args.dataContext);
+      //     }
+      //   },
+      // },
       {
         id: "line",
         name: "Ligne",
@@ -455,6 +574,7 @@ export class LoadingVansScanComponent implements OnInit {
         maxWidth: 100,
         type: FieldType.text,
       },
+      
     ];
 
     this.gridOptions = {
@@ -463,12 +583,12 @@ export class LoadingVansScanComponent implements OnInit {
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       autoEdit: false,
-      autoHeight: false,
-      frozenColumn: 0,
-      frozenBottom: true,
-      enableAutoResize: true,
+     // autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableAutoResize: false,
       // enableRowSelection: true,
-      enableCheckboxSelector: true,
+      // enableCheckboxSelector: true,
     };
 
     this.dataset = [];
@@ -615,7 +735,7 @@ export class LoadingVansScanComponent implements OnInit {
       this.playAudio()
       return;
     }
-
+    else {  
     let pal = controls.pal.value;
 
     // CHECK IF THE CODE WAS SCANNED BEFORE
@@ -628,8 +748,8 @@ export class LoadingVansScanComponent implements OnInit {
       this.playAudio()
       return;
     }
-
-    this.scanned_codes.push(pal);
+else {
+    
     let prod = pal.substring(this.code_start_pos, this.code_start_pos + this.code_length);
     //console.log(this.code_start_pos , this.code_length)
     let lot = pal.substring(this.lot_start_pos, this.lot_start_pos + this.lot_length); // stop at 8
@@ -640,6 +760,7 @@ export class LoadingVansScanComponent implements OnInit {
       if(response.data != null) {
       let desc = response.data.pt_desc2;
       let price = response.data.pt_price;
+      this.scanned_codes.push(pal);
       this.gridService.addItem(
         {
           id: this.dataset.length + 1,
@@ -653,7 +774,7 @@ export class LoadingVansScanComponent implements OnInit {
         },
         { position: "bottom" }
       );
-
+      
       this.printLines.push({
         id: this.dataset.length + 1,
         code_prod: prod,
@@ -663,13 +784,17 @@ export class LoadingVansScanComponent implements OnInit {
         price: price,
         quantity: 1,
       });
+      controls.qty_cart.setValue(this.dataset.length )
+      
     } else {
       this.playAudio()
       this.modalService.open(content8, { size: "lg" });
     }
     });
-    controls.pal.setValue("");
+    controls.pal.setValue(null);
     document.getElementById("pal").focus();
+  }
+  }
   }
 
 
@@ -701,6 +826,10 @@ export class LoadingVansScanComponent implements OnInit {
     //console.log(this.code_start_pos , this.code_length)
     let lot = palu.substring(this.lot_start_pos, this.lot_start_pos + this.lot_length); // stop at 8
     let serie = palu.substring(this.serie_start_pos, this.serie_start_pos + this.serie_length);
+
+    /*verifier si le code a bare a deja imputer sur la demande*/
+
+    /*verifier si le code a bare a deja imputer sur la demande*/
 
     //console.log(prod, lot, serie);
     this.itemService.getByOne({ pt_part: prod }).subscribe((response: any) => {
@@ -877,27 +1006,13 @@ export class LoadingVansScanComponent implements OnInit {
         occurences: value,
       });
     }
-//    console.log(filteredData)
-
-//    let  groups = ['code_prod', 'lot']
-//    let grouped = [];
-
-// this.printLines.forEach(function (a) {
-//     groups.reduce(function (o, g, i) {                            // take existing object,
-//         o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {}); // or generate new obj, or
-//         return o[a[g]];                                           // at last, then an array
-//     }, grouped).push(a);
-// });
-// for(let p of grouped) {
-// console.log(p)
-// }
-// console.log("grouped" , grouped)
-
-    this.printLines = [];
+   // this.printLines = [];
+   console.log("aaa",this.printLines)
+    this.printLines2 = [];
     let k = 1;
     filteredData.forEach((prod) => {
       //console.log(prod);
-      this.printLines.push({
+      this.printLines2.push({
         line: k,
         product_code: prod.occurences[0].code_prod,
         product_name: prod.occurences[0].desc_prod,
@@ -909,188 +1024,17 @@ export class LoadingVansScanComponent implements OnInit {
       });
       k++;
     });
+console.log("this.printline",this.printLines2)
 
-    // var doc = new jsPDF();
-    // let initialY = 65;
-    // let valueToAddToX = 5;
-
-    // var img = new Image();
-    // img.src = "./assets/media/logos/companylogo.png";
-    // doc.addImage(img, "png", 150, 5, 50, 30);
-    // doc.setFontSize(9);
-
-    // // if (this.domain.dom_name != null) {
-    // //   doc.text(this.domain.dom_name, 10, 10);
-    // // }
-    // // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    // // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    // // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    // doc.setFontSize(14);
-
-    // doc.line(10, 35, 200, 35);
-    // doc.setFontSize(12);
-
-    // doc.barcode(this.load_request_code, {
-    //   fontSize: 70,
-    //   textColor: "#000000",
-    //   x: 100,
-    //   y: 60,
-    //   textOptions: { align: "center" }, // optional text options
-    // });
-
-    // doc.setFont("Times-Roman");
-
-    // doc.setFontSize(12);
-    // doc.text("Demande de chargement : " + this.load_request_code, 70, initialY + 5);
-
-    // doc.setFontSize(10);
-    // doc.text("Role    : " + this.role_code, 20, initialY + 10);
-    // doc.text("Date    : " + this.loadRequestInfo.date_creation, 20, initialY + 15);
-    // doc.text("Vendeur : " + this.userInfo.user_mobile_code + " - " + this.username, 20, initialY + 20);
-    // doc.setFontSize(9);
-
-    // doc.line(10, initialY + 25, 195, initialY + 25); // 85
-    // doc.line(10, initialY + 30, 195, initialY + 30); // 90
-    // doc.line(10, initialY + 25, 10, initialY + 30); // 90
-    // doc.text("N", 12.5, initialY + 28.5); // 88.5
-    // doc.line(20, initialY + 25, 20, initialY + 30); // 90
-    // doc.text("Code Article", 25, initialY + 28.5); // 88.5
-    // doc.line(45, initialY + 25, 45, initialY + 30); // 90
-    // doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-    // doc.line(100, initialY + 25, 100, initialY + 30); // 90
-    // doc.text("Prix", 107, initialY + 28.5); // 88.5
-    // doc.line(120, initialY + 25, 120, initialY + 30); // 90
-    // doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
-    // doc.line(145, initialY + 25, 145, initialY + 30); // 90
-    // doc.text("QTE Validée", 148, initialY + 28.5); // 88.5
-    // doc.line(170, initialY + 25, 170, initialY + 30); // 90
-    // doc.text("QTE Chargée", 173, initialY + 28.5); // 88.5
-    // doc.line(195, initialY + 25, 195, initialY + 30); // 90
-    // var i = 95 + valueToAddToX;
-    // doc.setFontSize(10);
-
-    // for (let j = 0; j < this.dataset.length; j++) {
-    //   if (j % 30 == 0 && j != 0) {
-    //     doc.addPage();
-    //     img.src = "./assets/media/logos/companylogo.png";
-    //     doc.addImage(img, "png", 150, 5, 50, 30);
-    //     doc.setFontSize(9);
-    //     //  if (this.domain.dom_name != null) {
-    //     //    doc.text(this.domain.dom_name, 10, 10);
-    //     //  }
-    //     //  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    //     //  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    //     //  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    //     doc.setFontSize(14);
-    //     doc.line(10, 35, 200, 35);
-
-    //     doc.setFontSize(12);
-    //     doc.text(this.load_request_code, 70, 40);
-    //     doc.setFontSize(8);
-
-    //     doc.setFontSize(12);
-    //     doc.text("Demande de chargement : " + this.load_request_code, 70, 60);
-    //     doc.setFontSize(8);
-
-    //     doc.setFontSize(8);
-    //     doc.text("Role    : " + this.role_code, 20, 70);
-    //     doc.text("Date    : " + this.loadRequestInfo.date_creation, 20, 75);
-    //     doc.text("Vendeur : " + this.userInfo.user_mobile_code + " - " + this.username, 20, 80);
-
-    //     doc.line(10, initialY + 25, 195, initialY + 25); // 85
-    //     doc.line(10, initialY + 30, 195, initialY + 30); // 90
-    //     doc.line(10, initialY + 25, 10, initialY + 30); // 90
-    //     doc.text("N", 12.5, initialY + 28.5); // 88.5
-    //     doc.line(20, initialY + 25, 20, initialY + 30); // 90
-    //     doc.text("Code Article", 25, initialY + 28.5); // 88.5
-    //     doc.line(45, initialY + 25, 45, initialY + 30); // 90
-    //     doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-    //     doc.line(100, initialY + 25, 100, initialY + 30); // 90
-    //     doc.text("Prix", 107, initialY + 28.5); // 88.5
-    //     doc.line(120, initialY + 25, 120, initialY + 30); // 90
-    //     doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
-    //     doc.line(145, initialY + 25, 145, initialY + 30); // 90
-    //     doc.text("QTE Validée", 148, initialY + 28.5); // 88.5
-    //     doc.line(170, initialY + 25, 170, initialY + 30); // 90
-    //     doc.text("QTE Chargée", 173, initialY + 28.5); // 88.5
-    //     doc.line(195, initialY + 25, 195, initialY + 30); // 90
-    //     var i = 95 + valueToAddToX;
-    //   }
-
-    //   if (this.printLines[j].product_name.length > 35) {
-    //     doc.setFontSize(8);
-
-    //     let line = this.printLines[j];
-
-    //     let desc1 = line.product_name.substring(0, 34);
-    //     let ind = desc1.lastIndexOf(" ");
-    //     desc1 = line.product_name.substring(0, ind);
-    //     let desc2 = line.product_name.substring(ind + 1);
-
-    //     doc.line(10, i - 5, 10, i);
-    //     doc.text(String(line.line), 12.5, i - 1);
-    //     doc.line(20, i - 5, 20, i);
-    //     doc.text(line.product_code, 25, i - 1);
-    //     doc.line(45, i - 5, 45, i);
-    //     doc.text(desc1, 47, i - 1);
-    //     doc.line(100, i - 5, 100, i);
-    //     doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
-    //     doc.line(120, i - 5, 120, i);
-    //     doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
-    //     doc.line(145, i - 5, 145, i);
-    //     doc.text(String(line.qt_validated), 168, i - 1, { align: "right" });
-    //     doc.line(170, i - 5, 170, i);
-    //     doc.text(String(line.qt_effected), 193, i - 1, { align: "right" });
-    //     doc.line(195, i - 5, 195, i);
-
-    //     i = i + 5;
-
-    //     doc.text(desc2, 47, i - 1);
-
-    //     doc.line(10, i - 5, 10, i);
-    //     doc.line(20, i - 5, 20, i);
-    //     doc.line(45, i - 5, 45, i);
-    //     doc.line(100, i - 5, 100, i);
-    //     doc.line(120, i - 5, 120, i);
-    //     doc.line(145, i - 5, 145, i);
-    //     doc.line(170, i - 5, 170, i);
-    //     doc.line(195, i - 5, 195, i);
-
-    //     i = i + 5;
-    //   } else {
-    //     doc.setFontSize(8);
-    //     let line = this.printLines[j];
-    //     doc.line(10, i - 5, 10, i);
-    //     doc.text(String(line.line), 12.5, i - 1);
-    //     doc.line(20, i - 5, 20, i);
-    //     doc.text(line.product_code, 25, i - 1);
-    //     doc.line(45, i - 5, 45, i);
-    //     doc.text(line.product_name, 47, i - 1);
-    //     doc.line(100, i - 5, 100, i);
-    //     doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
-    //     doc.line(120, i - 5, 120, i);
-    //     doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
-    //     doc.line(145, i - 5, 145, i);
-    //     doc.text(String(line.qt_validated), 168, i - 1, { align: "right" });
-    //     doc.line(170, i - 5, 170, i);
-    //     doc.text(String(line.qt_effected), 193, i - 1, { align: "right" });
-    //     doc.line(195, i - 5, 195, i);
-    //     i = i + 5;
-    //   }
-    //   doc.line(10, i - 5, 195, i - 5);
-    // }
-
-    // doc.line(10, i - 5, 195, i - 5);
-    //console.log(this.dataset, "DATASET");
-    //console.log(this.printLines, "Lines");
     this.total = 0,
     this.totalCartons= 0,
-    this.printLines.map((item) => {
+    this.printLines2.map((item) => {
+      if(item.product_code != null) {
       this.total = Number(this.total) + Number(item.pt_price) * Number(item.qt_request);
       this.totalCartons = this.totalCartons + item.qt_request;
+      }
     });
-    ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines, this.userPrinter, this.total, this.totalCartons);
-
+    ElectronPrinter2.print2(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines2, this.userPrinter, this.total, this.totalCartons,this.nchariot)
     // saveAs(blob, this.load_request_code + ".pdf");
   }
   printpdf2() {
@@ -1308,5 +1252,190 @@ export class LoadingVansScanComponent implements OnInit {
     audio.src = "../../../assets/media/error/error.mp3";
     audio.load();
     audio.play();
+  }
+
+
+  prepareGridchar() {
+    this.columnDefinitionschar = [
+     
+      // {
+      //   id: "id",
+      //   name: "ID",
+      //   field: "id",
+      //   minWidth: 80,
+      //   maxWidth: 80,
+      //   type: FieldType.number,
+      // },
+
+      {
+        id: "chariot_nbr",
+        name: "N° Chariot",
+        field: "chariot_nbr",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.integer,
+      },
+
+      {
+        id: "idprint",
+        field: "idprint",
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" >
+                 <i class="flaticon2-printer" ></i>
+                 
+             </a>
+             `;
+        },
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.printLines= this.datasetchardet
+          console.log("hhhhoun",this.printLines)
+          this.nchariot = args.dataContext.chariot_nbr
+       this.printpdf()
+        },
+      },
+
+          ];
+
+    this.gridOptionschar = {
+      enableSorting: false,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: false,
+      enableFiltering: false,
+      autoEdit: false,
+      autoHeight: false,
+      enableAutoResize: false,
+      // enableRowSelection: true,
+      enableCheckboxSelector: true,
+    };
+
+    this.datasetchar = [];
+    this.loadRequestService.getByChariot({load_request_code : this.load_request_code}).subscribe(
+      (response: any) => (this.datasetchar = response.data),
+      (error) => {
+          this.datasetchar = []
+      },
+      () => {}
+  )
+  }
+
+  angularGridReadychar(angularGrid: AngularGridInstance) {
+    this.angularGridchar = angularGrid;
+    this.dataViewchar = angularGrid.dataView;
+    this.gridchar = angularGrid.slickGrid;
+    this.gridServicechar = angularGrid.gridService;
+    
+    this.gridchar.invalidate();
+    this.gridchar.render();
+  }
+  Openchariot(content){
+    this.prepareGridchar();
+    this.prepareGridchardet();
+    this.modalService.open(content, { size: "lg" });
+  }
+  onSelectedRowsChangedchar(e, args) {
+    // console.log('indexs', args.rows);
+    let updateItem = this.gridServicechar.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridchar) {
+      args.rows.map((idx) => {
+        const item = this.gridchar.getDataItem(idx);
+    this.chariotnum = item.chariot_nbr
+    
+    this.loadRequestService.getByChariotDet({load_request_code :this.load_request_code, chariot_nbr : this.chariotnum }).subscribe(
+
+      (response: any) => {
+        this.datasetchardet = response.data
+        this.dataViewchardet.setItems(this.datasetchardet)
+      },)
+    
+    });
+  }
+  }
+
+  prepareGridchardet() {
+    this.columnDefinitionschardet = [
+     
+      {
+        id: "line",
+        name: "Ligne",
+        field: "line",
+        minWidth: 20,
+        maxWidth: 40,
+        type: FieldType.number,
+      },
+
+      {
+        id: "code_prod",
+        name: "Code produit",
+        field: "code_prod",
+        minWidth:60,
+        maxWidth:60,
+        type: FieldType.text,
+      },
+
+      {
+        id: "desc_prod",
+        name: "Description",
+        field: "desc_prod",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.text,
+      },
+      {
+        id: "lot",
+        name: "N° Lot",
+        field: "lot",
+        minWidth: 100,
+        maxWidth: 100,
+        type: FieldType.text,
+      },
+      {
+        id: "quantity",
+        name: "QTE",
+        field: "quantity",
+        minWidth: 20,
+        maxWidth: 20,
+        type: FieldType.text,
+      },
+      {
+        id: "serie",
+        name: "N° série",
+        field: "serie",
+        minWidth: 40,
+        maxWidth: 40,
+        type: FieldType.text,
+      },
+
+          ];
+
+    this.gridOptionschardet = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      
+      enableAutoResize: true,
+      // enableRowSelection: true,
+      
+    };
+
+    this.datasetchar = [];
+    
+  
+  }
+
+  angularGridReadychardet(angularGrid: AngularGridInstance) {
+    this.angularGridchardet = angularGrid;
+    this.dataViewchardet = angularGrid.dataView;
+    this.gridchardet = angularGrid.slickGrid;
+    this.gridServicechardet = angularGrid.gridService;
+    this.gridchar.invalidate();
+    this.gridchar.render();
   }
 }

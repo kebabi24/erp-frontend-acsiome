@@ -1,8 +1,9 @@
 <kt-portlet>
   <kt-portlet-header [sticky]="true" [title]="'Chargement Des Vans (Scan) '" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder</button>
-      <button type="button" (click)="onSaveCharge(content4, content5, content6)" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button>
+      <button type="button" (click)="onSubmit(content10,content11)" class="btn btn-success btn-sm mr-2">Sauvegarder</button>
+      
+      <button type="button" (click)="onSaveCharge(content4, content5, content6)" class="btn btn-danger btn-sm mr-2">Fermer Chargement</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -50,13 +51,22 @@
           <h5>Liste de palettes</h5>
 
           <div class="row">
-            <div class="form-group col-6">
+            <div class="form-group col-4">
               <label class="form-group">Palette:</label>
               <div class="input-group input-group-sm">
                 <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal(content1, content2,content8)" aria-describedby="basic-addon2" />
               </div>
             </div>
-            <div class="col-2">
+            <div class="form-group col-2">
+              <label class="form-group">QTE:</label>
+              <input
+                type="number"
+                class="form-control form-control-sm form-control-solid"
+                formControlName="qty_cart"
+                disabled
+              />
+            </div>
+            <div class="col-2" >
               <a (click)="openUnload(contentUnload)" class="btn btn-primary btn-sm font-weight-bolder">
                 <span class="svg-icon svg-icon-md">
                   <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Design/Flatten.svg-->
@@ -71,10 +81,27 @@
                 >Retour Chariot</a
               >
             </div>
+           
+
+            <div class="col-2">
+              <a (click)="Openchariot(contentchariot)" class="btn btn-dark btn-sm font-weight-bolder">
+                <span class="svg-icon svg-icon-md">
+                  <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Design/Flatten.svg-->
+                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                      <rect x="0" y="0" width="24" height="24"></rect>
+                      <circle fill="#000000" cx="9" cy="15" r="6"></circle>
+                      <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3"></path>
+                    </g>
+                  </svg>
+                  <!--end::Svg Icon--> </span
+                >List Chariots</a
+              >
+            </div>
           </div>
         </form>
         <br />
-        <angular-slickgrid gridId="gridS" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
+        <angular-slickgrid gridId="gridS" gridHeight="300" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
       </div>
       <!-- FORM END -->
     </div>
@@ -186,7 +213,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Non</button>
-        <button type="button" class="btn btn-primary" (click)="confirmPrinting()">Oui</button>
+        <button type="button" class="btn btn-primary" (click)="confirmPrinting(content12)">Oui</button>
       </div>
     </ng-template>
   </div>
@@ -275,6 +302,87 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
         <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+
+
+  <div>
+    <ng-template #content10 let-c="close"   let-d="dismiss" aria-hidden="true">
+      <div class="modal-header"  aria-hidden="true" >
+        <h4 class="modal-title">Réimpression</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Voulez vous réimprimer le ticket de chariot</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="exitprint()" >Non</button>
+        <button type="button" class="btn btn-primary" (click)="print2ticket()">OUI</button>
+      </div>
+    </ng-template>
+  </div>
+
+  <div>
+    <ng-template #content11 let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">une erreur s'est produite</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Scannez une demande de chargement et réessayez</span>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="reset()">Ok</button>
+      </div>
+    </ng-template>
+  </div>
+
+  <div>
+    <ng-template #contentchariot let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">List Chariots</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="example-preview2">
+
+            <div class="row">
+
+              <angular-slickgrid class="col-4" gridId="gridchar" gridHeight="300" [columnDefinitions]="columnDefinitionschar" (onAngularGridCreated)="angularGridReadychar($event)" [gridOptions]="gridOptionschar"  (sgOnSelectedRowsChanged)="onSelectedRowsChangedchar($event.detail.eventData, $event.detail.args)" [dataset]="datasetchar"> </angular-slickgrid>
+
+              <angular-slickgrid class="col-8" gridId="gridchardet" gridHeight="300" [columnDefinitions]="columnDefinitionschardet" (onAngularGridCreated)="angularGridReadychardet($event)" [gridOptions]="gridOptionschardet" [dataset]="datasetchardet"> </angular-slickgrid>
+  
+            </div>
+            
+        </div>
+
+        </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-primary"  (click)="c('Close click')">OK</button>
+      </div>
+    </ng-template>
+  </div>
+  <div>
+    <ng-template #content12 let-c="close"   let-d="dismiss" aria-hidden="true">
+      <div class="modal-header"  aria-hidden="true" >
+        <h4 class="modal-title">Réimpression</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <span>Voulez vous réimprimer le ticket de chariot</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="exitprint2()" >Non</button>
+        <button type="button" class="btn btn-primary" (click)="print2ticket2()">OUI</button>
       </div>
     </ng-template>
   </div>
