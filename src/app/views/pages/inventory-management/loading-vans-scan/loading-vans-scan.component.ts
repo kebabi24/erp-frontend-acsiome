@@ -715,11 +715,13 @@ export class LoadingVansScanComponent implements OnInit {
           this.username = response.data.userMobile.username;
           document.getElementById("pal").focus();
         } else {
+          this.playAudio()
           this.modalService.open(content7, { size: "lg" });
           controls.load_request_code.setValue(null);
           document.getElementById("load_request_code").focus();  
         }
       } else {
+        this.playAudio()
         this.modalService.open(content3, { size: "lg" });
         controls.load_request_code.setValue(null);
         document.getElementById("load_request_code").focus();

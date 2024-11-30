@@ -392,6 +392,10 @@ export class MenuConfig {
               title: "Validation des demandes de dechargement",
               page: "/supervision/validate-decharge-demande",
             },
+            {
+              title: "Impression Facture Camion",
+              page: "/supervision/print-inventory-role",
+            },
     
           ],
         },
@@ -897,7 +901,10 @@ export class MenuConfig {
               title: "Ajouter Facture DD",
               page: "/sales/create-inv-mob",
             },
-            
+            {
+              title: "Chiffre d'affaire Par Client",
+              page: "/sales/list-ca-dd",
+            },
             {
               title: "Liste des Factures DD",
               page: "/sales/list-invoice-mob",

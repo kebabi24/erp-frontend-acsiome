@@ -277,7 +277,7 @@ export class DecompteRoleComponent implements OnInit {
         formatterOptions: {
         
           // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-          displayNegativeNumberWithParentheses: true,
+          displayNegativeNumberWithParentheses: false,
     
           // Defaults to undefined, minimum number of decimals
           minDecimal: 2,

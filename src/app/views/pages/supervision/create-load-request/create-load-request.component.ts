@@ -353,7 +353,7 @@ reset() {
     doc.text("Demande de chargement : " + this.saved_data.load_request_code, 70, initialY + 5);
 
      doc.setFontSize(10);
-    doc.text("Date     : " + + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 20, initialY + 10);
+    doc.text("Date     : " +  String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 20, initialY + 10);
     doc.text("Role    : " + this.role_code, 20, initialY + 15);
     // doc.text("Date    : " + this.load_request_header.date_creation, 20, initialY + 15);
     doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, initialY + 20);

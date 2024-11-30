@@ -108,4 +108,8 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllInvoicesRole/`, data,{ headers: httpHeaders })
     }
+    public   getAllCA(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findallca/`, data,{ headers: httpHeaders })
+    }
 }

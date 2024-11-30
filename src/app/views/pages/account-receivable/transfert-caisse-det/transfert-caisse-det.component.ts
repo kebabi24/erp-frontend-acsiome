@@ -158,7 +158,7 @@ bkh_cheque: number
         Validators.required,
       ],
       montant_tr: [0, Validators.required],
-      chr02: [""],
+      chr03: [""],
       bkh_2000: [0, Validators.required],
       bkh_1000: [0, Validators.required],
       bkh_0500: [0, Validators.required],
@@ -365,7 +365,7 @@ bkh_cheque: number
         amt_rl: controls.montant_rl.value,
         amt_tr: controls.montant_tr.value,
         site: this.user.usrd_site,
-        chr02: controls.chr02.value,
+        chr03: controls.chr03.value,
         bkh_2000: Number(controls.bkh_2000.value),
         bkh_1000: Number(controls.bkh_1000.value),
         bkh_0500: Number(controls.bkh_0500.value),
@@ -692,7 +692,7 @@ bkh_cheque: number
           doc.text("Caisse    : " + controls.bank_code.value + " " + controls.bank_name.value , 5, initialY + 10);
           doc.text("A           : " + controls.bank_code_dest.value + " " + controls.bank_dest_name.value , 5 , initialY + 15);
           doc.text("Vider Le  : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 20);
-          doc.text("Récap    : " + controls.chr02.value, 5, initialY + 25);
+          doc.text("Récap    : " + controls.chr03.value, 5, initialY + 25);
          
           // doc.text("Vendeur : " + controls.user_mobile_code.value + " - " + controls.username.value, 5, initialY + 20);
       //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);

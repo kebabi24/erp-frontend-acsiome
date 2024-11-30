@@ -1,0 +1,71 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Stock Camion'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+      <ng-container ktPortletTools>
+        <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder</button-->
+  
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button class="dropdown-item">Sauvegarder et quitter</button>
+          </div>
+        </div>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <div class="example-preview">
+        <!-- *************** FORM ******************* -->
+  
+    
+          <form class="form" [formGroup]="ldForm">
+            <div class="row">
+              <div class="form-group col-3">
+                <label class="form-group">Role:</label>
+                <select (change)="onSelectRole($event.target.value)" name="role_code" id="role_code" formControlName="role_code" class="form-control form-control-sm form-control-solid">
+                  <option value=""></option>
+                  <option *ngFor="let elem of roles" [value]="elem.role_code">{{ elem.role_code }} {{ elem.role_name }}</option>
+                </select>
+              </div>
+              <div class="form-group col-2">
+                <label class="form-group">QTE:</label>
+                <input
+                  type="number"
+                  class="form-control form-control-sm form-control-solid"
+                  formControlName="qty"
+                  disabled
+                />
+              </div>
+              <div class="form-group col-2">
+                <label class="form-group">Monatnt:</label>
+                <input
+                  type="number"
+                  class="form-control form-control-sm form-control-solid"
+                  formControlName="amt"
+                  disabled
+                />
+              </div>
+              <div class="form-group col-4">
+                <label class="form-group">Imprimer: *</label>
+                <div class="input-group input-group-sm">
+                     <button type="button" (click)="printpdf()" class="btn  btn-primary btn-sm mr-2">Imprimer</button>
+                </div>
+              </div>    
+            </div>
+  
+            <br />
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="mGrid"
+                    [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                    (onAngularGridCreated)="angularGridReady($event)">
+                </angular-slickgrid>
+            </div>
+          </form>
+    
+      
+      </div>
+  
+        
+     
+    </kt-portlet-body>
+  </kt-portlet>
+  
+

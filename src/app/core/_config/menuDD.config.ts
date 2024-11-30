@@ -197,6 +197,10 @@ export class MenuDDConfig {
                 title: "Décompte Role",
                 page: "/supervision/decompte-role",
               },
+              {
+                title: "Impression Facture Camion",
+                page: "/supervision/print-inventory-role",
+              },
       
             ],
           },
@@ -489,6 +493,10 @@ export class MenuDDConfig {
               {
                 title: "Liste des Visites",
                 page: "/sales/list-visit-mob",
+              },
+              {
+                title: "Chiffre d'affaire Par Client",
+                page: "/sales/list-ca-dd",
               },
             ],
           },
