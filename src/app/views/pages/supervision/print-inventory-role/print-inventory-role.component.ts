@@ -8,7 +8,7 @@ import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-b
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"  
 import { LayoutUtilsService, MessageType } from "src/app/core/_base/crud";
-import { MobileServiceService, MobileService, RoleService,LocationDetailService, ItineraryService, LoadRequestService, UsersMobileService } from "../../../../core/erp";
+import { MobileServiceService, MobileService, RoleService,LocationDetailService, ItineraryService, LoadRequestService, UsersMobileService, LocationService } from "../../../../core/erp";
 import { MobileSettingsService } from "../../../../core/erp";
 import jsPDF from "jspdf";
 import { NumberToLetters } from "src/app/core/erp/helpers/numberToString";
@@ -97,6 +97,7 @@ role_name: any
               private userMobileService: UsersMobileService, 
               private locationDetailService : LocationDetailService,
               private roleService: RoleService,
+              private locationService : LocationService,
               private sanitizer: DomSanitizer) {
     config.autoClose = true;
   }
@@ -164,6 +165,11 @@ console.log(this.roles[index])
         controls.qty.setValue(this.totalCartons)
         controls.amt.setValue(this.total.toFixed(2))
         console.log(response.data);
+        this.locationService.getByOne({ loc_loc: this.roles[index].role_loc, loc_site:this.roles[index].role_site }).subscribe((respo: any) => {
+         if(respo.data != null) {
+          controls.matricule.setValue(respo.data.loc_phys_addr)
+         }
+        });
       },
       (error) => {
         this.loadRequestData = [];
@@ -298,6 +304,7 @@ console.log(this.roles[index])
       role_code: [this.role_code],
       qty:[0],
       amt:[0],
+      matricule:[""]
     
     });
   }
@@ -360,6 +367,7 @@ console.log(this.roles[index])
     // console.log(this.customer.address.ad_misc2_id);
     doc.text("Client : " + this.role_code, 20, 50);
     doc.text("Nom    : " + this.role_name, 20, 55);
+    doc.text("Matricule    : " + controls.matricule.value, 20, 60);
     // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 60);
     doc.line(8, 25, 200, 25);
     doc.line(8, 32, 200, 32);
@@ -419,6 +427,7 @@ console.log(this.roles[index])
         // console.log(this.customer.address.ad_misc2_id);
         doc.text("Client : " + this.role_code, 20, 50);
         doc.text("Nom    : " + this.role_name, 20, 55);
+        doc.text("Matricule    : " + controls.matricule.value, 20, 60);
         // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 60);
         doc.line(8, 25, 200, 25);
         doc.line(8, 32, 200, 32);

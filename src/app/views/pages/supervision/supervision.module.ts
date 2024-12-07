@@ -48,7 +48,7 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import { ItineraryService, MobileServiceService, RoleService, UsersMobileService,LocationDetailService, MobileSettingsService, LoadRequestService, UnloadRequestService, MessageService, CustomerMobileService, CodeMobileService, DecompteService, SiteService } from "../../../core/erp";
+import { ItineraryService, MobileServiceService, RoleService, UsersMobileService,LocationDetailService, MobileSettingsService, LoadRequestService, UnloadRequestService, MessageService, CustomerMobileService, CodeMobileService, DecompteService, SiteService, LocationService } from "../../../core/erp";
 import { ValidateDeChargeDemandeComponent } from "./validate-decharge-demande/validate-decharge-demande.component";
 import { CreateLoadRequestComponent } from "./create-load-request/create-load-request.component";
 import { ListDiffLoadrequestComponent } from "./list-diff-loadrequest/list-diff-loadrequest.component";
@@ -185,7 +185,8 @@ const routes: Routes = [
     LocationDetailService,
     MessageService,
     DecompteService,
-    SiteService
+    SiteService,
+    LocationService,
   ],
 })
 export class SupervisionModule {}

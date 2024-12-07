@@ -870,6 +870,10 @@ export class MenuConfig {
               page: "/sales/payment-psh",
             },
             {
+              title: "Paiement des Commande",
+              page: "/sales/payment-so",
+            },
+            {
               title: "Facturation ",
               page: "/sales/create-invoice",
             },
