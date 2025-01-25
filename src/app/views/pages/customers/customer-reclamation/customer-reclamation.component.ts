@@ -432,14 +432,14 @@ export class CustomerReclamationComponent implements OnInit {
           this.initCustomerForm();
           this.createForm();
           this.layoutUtilsService.showActionNotification(
-            "Réclamation enregistr avec succès",
+            "Réclamation enregistrée avec succès",
             MessageType.Create,
             10000,
             true,
             true
           );
           this.loadingSubject.next(false);
-          // this.router.navigateByUrl("/customers-mobile/cluster-create")
+          this.router.navigateByUrl("/customers/customer-list")
         }
       );
   }
@@ -456,7 +456,7 @@ export class CustomerReclamationComponent implements OnInit {
    */
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/`;
+    const url = `/customers/customer-list`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 

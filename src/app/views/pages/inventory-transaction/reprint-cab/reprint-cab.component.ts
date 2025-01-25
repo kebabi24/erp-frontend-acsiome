@@ -241,6 +241,7 @@ export class ReprintCabComponent implements OnInit {
         _lb.lb_addr = cabs.lb_addr,
         _lb.lb_tel = cabs.lb_tel,
         _lb.lb_ref = cabs.lb_ref,
+        _lb.lb__chr01 = cabs.lb__chr01,
         this.labelService.addblob(_lb).subscribe((blob) => {                 
           Edelweiss.print3(_lb,this.currentPrinter);
           let tr = this.prepareIt();

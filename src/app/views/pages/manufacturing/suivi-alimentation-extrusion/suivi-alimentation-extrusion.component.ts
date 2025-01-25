@@ -864,7 +864,7 @@ export class SuiviAlimentationExtrusionComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     //ENTETE DOCUMENT
     doc.addImage(img, "png", 20, 11, 20, 20);
     doc.setFontSize(12);

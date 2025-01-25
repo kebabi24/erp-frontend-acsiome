@@ -3,6 +3,7 @@ import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { HttpClient } from "@angular/common/http"
 import { environment } from "../../../../../environments/environment"
+import { jsPDF } from "jspdf";
 const API_URL = environment.apiUrl + "/codes"
 // Angular slickgrid
 import {
@@ -42,7 +43,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import {
   ItemService, SiteService, BomService,BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService,
-  InventoryTransaction,
+  InventoryTransaction,LocationDetailService,
   InventoryTransactionService,
 
 } from "../../../../core/erp";
@@ -108,7 +109,7 @@ export class CreateOrderComponent implements OnInit {
   oldcolor:any;
   micronage:any;
   vitesse:any;
-  transfert:any;
+  
   gammes: [];
   rowkctr:any;
   columnDefinitionsgamme: Column[] = [];
@@ -147,10 +148,13 @@ export class CreateOrderComponent implements OnInit {
   qty:any;
   op:any;
   jours:any;
+  transfert:any;
   seq : any;
   nof : any;  
+  njob:any;
   row_number;
   message = "";
+  domain;
   httpOptions = this.httpUtils.getHTTPHeaders()
   constructor(
     private http: HttpClient,
@@ -170,7 +174,7 @@ export class CreateOrderComponent implements OnInit {
     private workRoutingService: WorkRoutingService,
     private bomService: BomService,
     private bomPartService: BomPartService,
-    private inventoryTransactionService: InventoryTransactionService,
+    private locationDetailService: LocationDetailService,
     private reasonService: ReasonService,
   ) {
     config.autoClose = true;
@@ -197,23 +201,31 @@ export class CreateOrderComponent implements OnInit {
             
             this.lancement = new Date(args.dataContext.wo_rel_date)
             this.debut = args.dataContext.chr01
-            
+            this.oldcolor = args.dataContext.color
             
             if(args.dataContext.woid != null) {this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,wo_status:'A',wo_due_date:this.lancement,chr02:this.debut,chr03:'0' });this.deletedid = Number(args.dataContext.line) + 1;}
             else{this.deletedid = args.dataContext.line;this.angularGrid.gridService.deleteItem(args.dataContext);}
             let i = 0;
             let iteration = this.dataset.length
             for(i = this.deletedid ; i<= iteration ; ){
-              
               let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
+              let oldItem:any;
+              if(i>1){oldItem = this.gridService.getDataItemByRowIndex(i - 2);}
+              this.transfert = 0;
+              if(i>1){if(updateItem.color == oldItem.color || oldItem.color == 'TRANSPARENT'){this.transfert = 15 * 60000} else {this.transfert = 60 * 60000}}
+              this.lancement = addMs(this.lancement,this.transfert)  
+              
               console.log(this.deletedid,i)
               i = Number(i) + 1
-              if(updateItem.wo_status == 'A'){this.jours = 0} else {this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60}
+              
+              if(updateItem.wo_status == 'A'){this.jours = 0} else {
+                
+                this.jours =  Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60}
                 this.echeance = addMs(new Date(this.lancement),this.jours)
                 this.fin = new Date(this.echeance).toLocaleTimeString()
                 
-                this.gridService.updateItemById(args.dataContext.id = updateItem.id,{id:updateItem.id, line: Number(i) - 1,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,um:updateItem.um,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-                this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+                this.gridService.updateItemById(args.dataContext.id = updateItem.id,{id:updateItem.id, line: Number(i) - 1,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_bo_chg:updateItem.wo_bo_chg,um:updateItem.um,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
+                this.lancement = new Date(this.echeance)
                 this.debut = new Date(this.lancement).toLocaleTimeString()    
               
             }
@@ -227,7 +239,7 @@ export class CreateOrderComponent implements OnInit {
 
       {
         id: "line",
-        name: "Ligne",
+        name: "Passage",
         field: "line",
         width: 80,
         selectable: true,
@@ -244,20 +256,26 @@ export class CreateOrderComponent implements OnInit {
           if(args.dataContext.wo_status == 'A'){this.jours = 0}else{this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60}
           this.echeance = addMs(new Date(this.lancement),this.jours)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
-          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-          this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0) })
+          if(oldItem.color == args.dataContext.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.echeance),15*60000)}else{this.lancement = addMs(new Date(this.echeance),60*60000)}
                 this.debut = new Date(this.lancement).toLocaleTimeString()
           if(oldItem.wo_status == 'A'){this.jours = 0}else{this.jours = Number(Number(oldItem.wo_qty_ord) / (Number(oldItem.wo_lead_time))) *1000 * 60 * 60}
           this.echeance = addMs(new Date(this.lancement),this.jours)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
-          this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: Number(oldItem.line) + 1 ,woid:oldItem.woid,wo_nbr:oldItem.wo_nbr,wo_part: oldItem.wo_part,desc:oldItem.desc, wo_qty_ord:oldItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: oldItem.wo_status,wo_bom_code: oldItem.wo_bom_code,  wo_vend: oldItem.wo_vend, wo_prod_pct: oldItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:oldItem.wo_lead_time})
-          this.lancement = addMs(new Date(this.echeance),Number(oldItem.transfert)*60*60*1000)
+          this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: Number(oldItem.line) + 1 ,woid:oldItem.woid,wo_nbr:oldItem.wo_nbr,wo_part: oldItem.wo_part,desc:oldItem.desc, wo_qty_ord:oldItem.wo_qty_ord,wo_bo_chg:oldItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: oldItem.wo_status,wo_bom_code: oldItem.wo_bom_code,  wo_vend: oldItem.wo_vend, wo_prod_pct: oldItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:oldItem.wo_lead_time})
+          if(oldItem.color == args.dataContext.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.echeance),15*60000)}else{this.lancement = addMs(new Date(this.echeance),60*60000)}
           this.debut = new Date(this.lancement).toLocaleTimeString()  
-           let i = 0;
+          this.oldcolor = args.dataContext.color
+          let i = 0;
            for(i = Number(this.deletedid) + 1; i<=this.dataset.length; i++ ){
             
             let ofstatus ='F'
             let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
+            let oldItem:any;
+              if(i>1){oldItem = this.gridService.getDataItemByRowIndex(i - 2);}
+              this.transfert = 0;
+              if(i>1){if(updateItem.color == oldItem.color || oldItem.color == 'TRANSPARENT'){this.transfert = 15 * 60000} else {this.transfert = 60 * 60000}}
+              this.lancement = addMs(this.lancement,this.transfert)
             this.updateid = updateItem.id
             
               this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
@@ -266,16 +284,15 @@ export class CreateOrderComponent implements OnInit {
               this.fin = new Date(this.echeance).toLocaleTimeString()
               console.log(updateItem.wo_status,nwid,this.jours,i,this.updateid,updateItem.line)
               if(Number(this.updateid) < Number(nwid)){
-              this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: Number(updateItem.line) + 1 ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-            
-              this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+              this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: Number(updateItem.line) + 1 ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
+              this.lancement = new Date(this.echeance)
                 this.debut = new Date(this.lancement).toLocaleTimeString()
             }
             if(Number(this.updateid) > Number(nwid)){
-              this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line  ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
+              this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line  ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
             
-              this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
-                this.debut = new Date(this.lancement).toLocaleTimeString()
+              this.lancement = new Date(this.echeance)
+            this.debut = new Date(this.lancement).toLocaleTimeString()
             }
               setTimeout(() => {
                 console.log('delay');
@@ -290,16 +307,16 @@ export class CreateOrderComponent implements OnInit {
            
       }
     },
-    {
-      id: "wo_nbr",
-      name: "N° OF",
-      field: "wo_nbr",
-      sortable: true,
-      width: 80,
-      filterable: false,
+    // {
+    //   id: "wo_nbr",
+    //   name: "N° OF",
+    //   field: "wo_nbr",
+    //   sortable: true,
+    //   width: 80,
+    //   filterable: false,
       
      
-    },
+    // },
       {
         id: "wo_part",
         name: "Article",
@@ -330,7 +347,8 @@ export class CreateOrderComponent implements OnInit {
         name: "Description",
         field: "desc",
         sortable: true,
-        width: 150,
+        minWidth: 400,
+        maxWidth: 400,
         filterable: false,
       },
       {
@@ -340,6 +358,97 @@ export class CreateOrderComponent implements OnInit {
         sortable: true,
         width: 30,
         filterable: false,
+      },
+      {
+        id: "qty_oh",
+        name: "Stock Bobine",
+        field: "qty_oh",
+        sortable: true,
+        width: 100,
+        filterable: false,
+      },
+      {
+        id: "dec01",
+        name: "Qté demandée",
+        field: "dec01",
+        sortable: true,
+        width: 100,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          required: true,
+          
+
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          const controls = this.woForm.controls
+          
+          if (args.dataContext.dec01 < 0){
+            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext, dec01:this.qty })
+            this.message = "quantité négative interdite";
+            this.hasFormErrors = true;
+            return;
+          }
+          else{
+            let qty_lance = Number(args.dataContext.dec01) - Number(args.dataContext.qty_oh)
+            console.log(qty_lance,args.dataContext.line)
+            if( args.dataContext.qty == 0 ){
+              let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
+              let oldItem:any;
+              if(args.dataContext.id>1){oldItem = this.gridService.getDataItemByRowIndex(args.dataContext.id - 2);}
+              this.transfert = 0;
+              if(args.dataContext.id>1){if(args.dataContext.color == oldItem.color || oldItem.color == 'TRANSPARENT'){this.transfert = 15 * 60000} else {this.transfert = 60 * 60000}}
+                 
+              if(this.lancement == null)  {this.lancement = new Date(ofdate)
+          
+                this.debut = new Date().toLocaleTimeString()}
+              else{this.lancement = addMs(this.lancement,this.transfert)
+                this.debut = new Date(this.lancement).toLocaleTimeString}
+              this.jours = Number(Number(qty_lance) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60
+              this.echeance = addMs(new Date(this.lancement),this.jours)
+                  this.fin = new Date(this.echeance).toLocaleTimeString(),
+                  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,wo_qty_ord:qty_lance, wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),qty:args.dataContext.wo_qty_ord })
+                  this.lancement = new Date(this.echeance)
+                  this.debut = new Date(this.lancement).toLocaleTimeString()
+                
+            } 
+            else { 
+              
+               
+                this.jours = Number(Number(qty_lance) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60
+                this.lancement = new Date(args.dataContext.wo_rel_date)
+                this.debut     = args.dataContext.chr01
+                this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
+                this.fin = new Date(this.echeance).toLocaleTimeString(),
+                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext, wo_qty_ord:qty_lance,wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0) })
+                this.lancement = new Date(this.echeance)
+                  this.debut = new Date(this.lancement).toLocaleTimeString()
+            }
+            this.deletedid = args.dataContext.line
+            let i = 0;
+            for(i = Number(this.deletedid) +1 ; i<=this.dataset.length; i++ ){
+              let ofstatus ='F'
+              let oldItem
+              if (i>=2){oldItem = this.gridService.getDataItemByRowIndex(i - 2);}
+              let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
+              this.updateid = updateItem.id
+              if(i>=2){if(oldItem.color == updateItem.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.lancement),15*60000)}else{this.lancement = addMs(new Date(this.lancement),60*60000)}}
+              this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
+              if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){this.echeance = this.lancement,ofstatus = updateItem.wo_status}else{this.echeance = addMs(this.lancement,this.jours),ofstatus='F'}
+              
+              this.fin = new Date(this.echeance).toLocaleTimeString()
+              console.log(i,this.updateid,updateItem.line)
+              this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord, wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
+              this.lancement = new Date(this.echeance)
+              this.debut = new Date(this.lancement).toLocaleTimeString()
+              setTimeout(() => {
+                console.log('delay');
+              }, 20000);
+         
+            
+            }
+          }
+        }
       },
       
       {
@@ -368,12 +477,16 @@ export class CreateOrderComponent implements OnInit {
             let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
    
             if(this.lancement == null)  {this.lancement = new Date(ofdate), this.debut = new Date().toLocaleTimeString()}
-            else{this.lancement = addMs(new Date(this.lancement),Number(args.dataContext.transfert)*60*60*1000),this.debut = new Date(this.lancement).toLocaleTimeString}
+            else{if(args.dataContext.id>=1){
+              let oldItem: any;
+              oldItem = this.gridService.getDataItemByRowIndex(args.dataContext.id-1)
+              if(oldItem.color == args.dataContext.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.lancement),15*60000)}else{this.lancement = addMs(new Date(this.lancement),60*60000)}}
+              this.lancement = new Date(this.lancement),this.debut = new Date(this.lancement).toLocaleTimeString}
             this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60
-            this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
+            this.echeance = addMs(new Date(this.lancement),this.jours)
                 this.fin = new Date(this.echeance).toLocaleTimeString(),
-                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),qty:args.dataContext.wo_qty_ord })
-                this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+                this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_rel_date:this.lancement,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),qty:args.dataContext.wo_qty_ord })
+                this.lancement = new Date(this.echeance)
                 this.debut = new Date(this.lancement).toLocaleTimeString()
               
           } 
@@ -385,23 +498,27 @@ export class CreateOrderComponent implements OnInit {
               this.debut     = args.dataContext.chr01
               this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
               this.fin = new Date(this.echeance).toLocaleTimeString(),
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-              this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0) })
+              this.lancement = new Date(this.echeance)
                 this.debut = new Date(this.lancement).toLocaleTimeString()
           }
           this.deletedid = args.dataContext.line
           let i = 0;
           for(i = Number(this.deletedid) +1 ; i<=this.dataset.length; i++ ){
             let ofstatus ='F'
+            let oldItem:any;
+            if(i >= 2){ oldItem = this.gridService.getDataItemByRowIndex(i - 2);}
             let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
             this.updateid = updateItem.id
             this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
+            if(i>=2){if(oldItem.color == updateItem.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.lancement),15*60000)}else{this.lancement = addMs(new Date(this.lancement),60*60000)}}
+              
             if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){this.echeance = this.lancement,ofstatus = updateItem.wo_status}else{this.echeance = addMs(this.lancement,this.jours),ofstatus='F'}
             
             this.fin = new Date(this.echeance).toLocaleTimeString()
             console.log(i,this.updateid,updateItem.line)
-            this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-            this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+            this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord, wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
+            this.lancement = new Date(this.echeance)
             this.debut = new Date(this.lancement).toLocaleTimeString()
             setTimeout(() => {
               console.log('delay');
@@ -412,7 +529,22 @@ export class CreateOrderComponent implements OnInit {
         },
       
       },
+      {
+        id: "wo_bo_chg",
+        name: "Poids Bobine",
+        field: "wo_bo_chg",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.float,
+          required: true,
+          
 
+        },
+        
+      
+      },
       {
         id: "wo_rel_date",
         name: "Date Lancement",
@@ -420,10 +552,10 @@ export class CreateOrderComponent implements OnInit {
         sortable: true,
         width: 150,
         filterable: false,
-        formatter: Formatters.dateTimeIso ,
-        type: FieldType.dateTime,
+        formatter: Formatters.dateTimeShortIso ,
+        type: FieldType.dateTimeShortIso,
         editor: {
-          model: Editors.text,
+          model: Editors.date,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           
@@ -449,23 +581,27 @@ export class CreateOrderComponent implements OnInit {
           this.debut     = new Date(args.dataContext.wo_rel_date).toLocaleTimeString()
           this.echeance = addMs(new Date(args.dataContext.wo_rel_date),this.jours)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
-          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-          this.lancement = addMs(new Date(this.echeance),Number(args.dataContext.transfert)*60*60*1000)
+          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0) })
+          this.lancement = new Date(this.echeance)
                 this.debut = new Date(this.lancement).toLocaleTimeString()
           this.deletedid = args.dataContext.line
           let i = 0;
           for(i = Number(this.deletedid) ; i<=this.dataset.length; ){
             i = i + 1
+            let oldItem : any;
             let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
+            if(i>1){oldItem = this.gridService.getDataItemByRowIndex(i - 2);}
             let ofstatus = 'F'
             this.updateid = updateItem.id
+            if(i>=2){if(oldItem.color == updateItem.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.lancement),15*60000)}else{this.lancement = addMs(new Date(this.lancement),60*60000)}}
+            
             this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
             if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){this.echeance = this.lancement,ofstatus = updateItem.wo_status}else{this.echeance = addMs(this.lancement,this.jours),ofstatus='F'}
             
             this.fin = new Date(this.echeance).toLocaleTimeString()
             console.log(i,this.updateid,updateItem.line)
-            this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-            this.lancement = addMs(new Date(this.echeance),Number(updateItem.transfert)*60*60*1000)
+            this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
+            this.lancement = new Date(this.echeance)
                 this.debut = new Date(this.lancement).toLocaleTimeString()
             setTimeout(() => {
               console.log('delay');
@@ -484,8 +620,8 @@ export class CreateOrderComponent implements OnInit {
         sortable: true,
         width: 150,
         filterable: false,
-        formatter: Formatters.dateTimeIso ,
-        type: FieldType.dateTime,
+        formatter: Formatters.dateTimeShortEuro ,
+        type: FieldType.dateTimeShortIso,
         // editor: {
         //   model: Editors.date,
         // },
@@ -499,55 +635,56 @@ export class CreateOrderComponent implements OnInit {
         width: 80,
         filterable: false,
         
-      },
-      {
-        id: "wo_bom_code",
-        name: "Code Formule",
-        field: "wo_bom_code",
-        sortable: true,
-        width: 60,
-        filterable: false,
-        type: FieldType.string,
-        // editor: {
-        //     model: Editors.text,
-        //     required: true,
-          
-        // },
-        // onCellChange: (e: Event, args: OnEventArgs) => {
-          
-        //   this.bomService.getBy({bom_parent: args.dataContext.wo_bom_code }).subscribe((resp:any)=>{
-
-          
-        //     if (resp.data) {
-             
-               
-        //          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,  wo_bom_code: resp.data.bom_parent })
-               
-        //     } else {
-
-                      
-        //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_bom_code: null })
-              
-        //     } 
-        //   })
-        // }  
         
       },
-      {
-        id: "bomvid",
-        field: "bomvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById(
-            "openBomsGrid"
-          ) as HTMLElement;
-          element.click();
-        },
-      },
+      // {
+      //   id: "wo_bom_code",
+      //   name: "Code Formule",
+      //   field: "wo_bom_code",
+      //   sortable: true,
+      //   width: 60,
+      //   filterable: false,
+      //   type: FieldType.string,
+      //   // editor: {
+      //   //     model: Editors.text,
+      //   //     required: true,
+          
+      //   // },
+      //   // onCellChange: (e: Event, args: OnEventArgs) => {
+          
+      //   //   this.bomService.getBy({bom_parent: args.dataContext.wo_bom_code }).subscribe((resp:any)=>{
+
+          
+      //   //     if (resp.data) {
+             
+               
+      //   //          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,  wo_bom_code: resp.data.bom_parent })
+               
+      //   //     } else {
+
+                      
+      //   //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , wo_bom_code: null })
+              
+      //   //     } 
+      //   //   })
+      //   // }  
+        
+      // },
+      // {
+      //   id: "bomvid",
+      //   field: "bomvid",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById(
+      //       "openBomsGrid"
+      //     ) as HTMLElement;
+      //     element.click();
+      //   },
+      // },
       // {
       //   id: "wo_lot_next",
       //   name: "Lot/Serie",
@@ -588,7 +725,7 @@ export class CreateOrderComponent implements OnInit {
           this.debut     = new Date(args.dataContext.wo_rel_date).toLocaleTimeString()
           this.echeance = new Date(args.dataContext.wo_rel_date)
           this.fin = new Date(this.echeance).toLocaleTimeString(),
-          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
+          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0) })
           this.lancement = this.echeance
           this.debut = new Date(this.echeance).toLocaleTimeString()
           
@@ -597,12 +734,16 @@ export class CreateOrderComponent implements OnInit {
           for(i = Number(this.deletedid) ; i<=this.dataset.length; ){
             i = i + 1
             let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
+            let oldItem:any;
+            if(i>1){oldItem = this.gridService.getDataItemByRowIndex(i - 2)}
+            if(i>=2){if(oldItem.color == updateItem.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.lancement),15*60000)}else{this.lancement = addMs(new Date(this.lancement),60*60000)}}
+            
             this.updateid = updateItem.id
             this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
             this.echeance = addMs(this.lancement,this.jours)
             this.fin = new Date(this.echeance).toLocaleTimeString()
             console.log(i,this.updateid,updateItem.line)
-            this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,wo_lead_time:updateItem.wo_lead_time,chr03:Number(this.jours)/(1000*60*60)})
+            this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: updateItem.wo_status,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,wo_lead_time:updateItem.wo_lead_time,chr03:Number((this.jours)/(1000*60*60)).toFixed(0)})
             this.lancement = this.echeance,
             this.debut = this.fin;
             setTimeout(() => {
@@ -612,41 +753,45 @@ export class CreateOrderComponent implements OnInit {
           
           }
           }
-          else{
-            if(args.dataContext.wo_status == 'R'){
-            this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60
-            this.lancement = new Date()
-            this.debut     = new Date().toLocaleTimeString()
-            this.echeance = addMs(this.lancement,this.jours)
-            this.fin = new Date(this.echeance).toLocaleTimeString(),
-            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60) })
-            this.lancement = this.echeance
-            this.debut = new Date(this.echeance).toLocaleTimeString()
+//           else{
+//             if(args.dataContext.wo_status == 'R'){
+//             this.jours = Number(Number(args.dataContext.wo_qty_ord) / (Number(args.dataContext.wo_lead_time))) *1000 * 60 * 60
+//             this.lancement = new Date(args.dataContext.wo_rel_date)
+//             this.debut     = new Date(this.lancement).toLocaleTimeString()
+//             this.echeance = addMs(this.lancement,this.jours)
+//             this.fin = new Date(this.echeance).toLocaleTimeString(),
+//             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext,chr01:this.debut, wo_due_date: this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0) })
+//             this.lancement = this.echeance
+//             this.debut = new Date(this.echeance).toLocaleTimeString()
             
-            this.deletedid = args.dataContext.line
-            let i = 0;
+//             this.deletedid = args.dataContext.line
+//             let i = 0;
             
-            for(i = Number(this.deletedid) ; i<=this.dataset.length; ){
-              i = i + 1
-              let ofstatus = 'F'
-              let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
-              this.updateid = updateItem.id
-              this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
-              if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){this.echeance = this.lancement,ofstatus = updateItem.wo_status}else{this.echeance = addMs(this.lancement,this.jours),ofstatus='F'}
-              this.fin = new Date(this.echeance).toLocaleTimeString()
-              console.log(i,this.updateid,updateItem.line)
-              // if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){ofstatus = updateItem.wo_status} else{ofstatus = 'F'}
-              this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_rel_date: this.lancement, chr01:this.debut,wo_status: ofstatus,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number(this.jours)/(1000*60*60),wo_lead_time:updateItem.wo_lead_time})
-              this.lancement = this.echeance,
-              this.debut = this.fin;
-              setTimeout(() => {
-                console.log('delay');
-              }, 20000);
+//             for(i = Number(this.deletedid) ; i<=this.dataset.length; ){
+//               i = i + 1
+//               let ofstatus = 'F'
+//               let updateItem = this.gridService.getDataItemByRowIndex(i - 1);
+// let oldItem:any;
+// if(i>1){oldItem = this.gridService.getDataItemByRowIndex(i - 2);}
+//               if(i>=2){if(oldItem.color == updateItem.color || oldItem.color == 'TRANSPARENT'){this.lancement = addMs(new Date(this.lancement),15*60000)}else{this.lancement = addMs(new Date(this.lancement),60*60000)}}
+            
+//               this.updateid = updateItem.id
+//               this.jours = Number(Number(updateItem.wo_qty_ord) / (Number(updateItem.wo_lead_time))) *1000 * 60 * 60
+//               if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){this.echeance = this.lancement,ofstatus = updateItem.wo_status}else{this.echeance = addMs(this.lancement,this.jours); if(updateItem.wo_status == 'C'){ofstatus='C'}else{ofstatus = 'F'}}
+//               this.fin = new Date(this.echeance).toLocaleTimeString()
+//               console.log(i,this.updateid,updateItem.line)
+//               // if (updateItem.wo_status == 'A' || updateItem.wo_status == 'D'){ofstatus = updateItem.wo_status} else{ofstatus = 'F'}
+//               this.gridService.updateItemById(args.dataContext.id = this.updateid,{id:this.updateid, line: updateItem.line ,woid:updateItem.woid,wo_nbr:updateItem.wo_nbr,wo_part: updateItem.wo_part,desc:updateItem.desc, wo_qty_ord:updateItem.wo_qty_ord,wo_bo_chg:updateItem.wo_bo_chg,wo_rel_date: this.lancement, chr01:this.debut,wo_status: ofstatus,wo_bom_code: updateItem.wo_bom_code,  wo_vend: updateItem.wo_vend, wo_prod_pct: updateItem.wo_prod_pct,wo_due_date:this.echeance,chr02:this.fin,chr03:Number((this.jours)/(1000*60*60)).toFixed(0),wo_lead_time:updateItem.wo_lead_time})
+//               this.lancement = this.echeance,
+//               this.debut = this.fin;
+//               setTimeout(() => {
+//                 console.log('delay');
+//               }, 20000);
         
             
-            }
-            }
-          }
+//             }
+//             }
+//           }
         }  
       },
       
@@ -768,7 +913,7 @@ export class CreateOrderComponent implements OnInit {
     this.loadingSubject.next(false);
     this.createForm();
     this.user =  JSON.parse(localStorage.getItem('user'))
-    
+    this.domain = JSON.parse(localStorage.getItem('domain'))
   }
 
   //create form
@@ -794,6 +939,80 @@ export class CreateOrderComponent implements OnInit {
     const controls = this.woForm.controls;
     
     controls.wo_rev.setValue('01');
+    controls.wo_routing.setValue('U1')
+    this.gamme = 'U1';
+    this.rowkctr='EXTRUSION';
+    let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
+        
+    
+    let nbr = 0
+    this.workOrderService.getByDistinct({wo_routing:'U1'}).subscribe(
+      (res: any) => {if (res.data.length != 0) {nbr = res.data.length + 2}
+      else{nbr = 1} 
+       controls.wo_so_job.setValue('P-'+ controls.wo_routing.value +  '-' + String('0000'+ String(nbr)).slice(-4))})
+        
+        this.workOrderService.getBy({wo_so_job:'P-'+ controls.wo_routing.value +  '-' + String('0000'+ String(nbr)).slice(-4)}).subscribe(
+          (res: any) => {        
+          this.dataset  = res.data;
+          // let version = 1;
+          // if(res.data != null){version = Number(res.data.wo_rev) + 1}
+          // controls.wo_rev.setValue(version)
+         if(res.data.length != 0){this.creation = false;}
+          for (let item of this.dataset){
+            var maxObj = null;
+            var iddd = 0;
+            if (this.dataset.length > 0) {
+            maxObj = this.dataset.reduce((accumulator, current) => {
+            return accumulator.id > current.id ? accumulator : current;
+          });
+          console.log(maxObj.id + 1);
+          iddd = maxObj.id + 1;
+        
+          } else { iddd = 1}
+          console.log(iddd,item.id)
+          this.gridService.addItem(
+            {
+              id: item.id,
+             line: item.wo_queue_eff,
+             oldline: item.wo_queue_eff,
+      
+        wo_part: item.wo_part,
+        oldpart: item.wo_part,
+        
+        wo_nbr:item.wo_nbr,
+        woid:item.id,
+        cmvid: "",
+        desc: "",
+        wo_qty_ord: item.wo_qty_ord,
+        wo_bo_chg:item.wo_bo_chg,
+        qty:item.wo_qty_ord,
+        um:"KG",
+        olddate:new Date(item.wo_rel_date),
+        wo_rel_date: new Date(item.wo_rel_date),
+        wo_due_date:new Date(item.wo_due_date),
+        chr01:item.chr01,
+        chr02:item.chr02,
+        chr03:String(Number(item.chr03).toFixed(0)),
+        wo_status: item.wo_status,
+        wo_bom_code: item.wo_bom_code,
+        wo_lead_time:item.wo_lead_time,
+       
+        wo_vend: item.wo_vend,
+        
+        wo_prod_pct: item.wo_prod_pct,
+        color:item.wo_batch,
+        micronage:item.item.int01,
+        
+                      int01:item.item.int01,
+                      int02:item.item.int02,
+                      wo_batch:item.wo_batch,
+                      wo_grade:item.wo_grade,
+            },
+            { position: "bottom" }
+            
+          )
+        this.lancement = new Date(item.wo_due_date),
+      this.debut = item.chr02}},)
       }
   //reste form
   reset() {
@@ -837,6 +1056,11 @@ export class CreateOrderComponent implements OnInit {
               document.getElementById("routing").focus();
             } 
      })
+     let nbr = 0;
+     this.workOrderService.getByDistinct({wo_routing:controls.wo_routing.value}).subscribe(
+      (res: any) => {if (res.data.length != 0) {nbr = res.data.length + 1}
+      else{nbr = 1} 
+       controls.wo_so_job.setValue('P-'+ controls.wo_routing.value +  '-' + String('0000'+ String(nbr)).slice(-4))})
   }
   onChangeprogram() {
     const controls = this.woForm.controls
@@ -855,7 +1079,8 @@ export class CreateOrderComponent implements OnInit {
                   for (let item of this.dataset){j = j + 1;
                     var maxObj = null;
                     var iddd = 0;
-      
+                    var qtyoh = 0;
+                    
                   if (this.dataset.length > 0) {
                     maxObj = this.dataset.reduce((accumulator, current) => {
                       return accumulator.id > current.id ? accumulator : current;
@@ -867,41 +1092,52 @@ export class CreateOrderComponent implements OnInit {
                     iddd = 1;
           
                   }
+                  this.locationDetailService.getqtyoh({ld_part:item.wo_part,ld_site:controls.wo_site.value}).subscribe((response: any) => (
+                    this.gridService.addItem(
+                      {
+                        id: item.id,
+                        oldline: item.wo_queue_eff,
+                        line: item.wo_queue_eff,
+                        woid:item.id,
+                        wo_nbr:item.wo_nbr, 
+                        oldpart: item.wo_part,
+                        wo_part: item.wo_part,
+                        cmvid: "",
+                        desc: item.item.pt_desc1,
+                        qty_oh:response.data[0].ld_qty_oh,
+                        wo_qty_ord: item.wo_qty_ord,
+                        wo_bo_chg:item.wo_bo_chg,
+                        um:"KG",
+                        qty:item.wo_qty_ord,
+                        olddate: new Date(item.wo_rel_date),
+                        wo_rel_date: new Date(item.wo_rel_date),
+                        wo_due_date:new Date(item.wo_due_date),
+                        chr01:item.chr01,
+                        chr02:item.chr02,
+                        chr03:String(Number(item.chr03).toFixed(0)),
+                        wo_status: item.wo_status,
+                        wo_bom_code: item.wo_bom_code,
+                        wo_vend: item.wo_vend,
+                        wo_lead_time:item.wo_lead_time,
+                        
+                        wo_prod_pct: item.wo_prod_pct,
+                        color:item.wo_batch,
+                        micronage:item.item.int01,
+                        int01:item.item.int01,
+                        int02:item.item.int02,
+                        wo_batch:item.wo_batch,
+                        wo_grade:item.wo_grade,
+                        dec01:item.dec01,
+                      },
+                      { position: "bottom" }
+                      
+                    ),
+                    this.lancement=new Date(item.wo_due_date),
+                    this.debut=item.chr02,
+                    controls.wo_rev.setValue(item.wo_rev)
+                  ));
       
-                  this.gridService.addItem(
-                    {
-                      id: item.id,
-                      oldline: item.wo_queue_eff,
-                      line: item.wo_queue_eff,
-                      woid:item.id,
-                      wo_nbr:item.wo_nbr, 
-                      oldpart: item.wo_part,
-                      wo_part: item.wo_part,
-                      cmvid: "",
-                      desc: item.item.pt_desc1,
-                      wo_qty_ord: item.wo_qty_ord,
-                      qty:item.wo_qty_ord,
-                      olddate: new Date(item.wo_rel_date),
-                      wo_rel_date: new Date(item.wo_rel_date),
-                      wo_due_date:new Date(item.wo_due_date),
-                      chr01:item.chr01,
-                      chr02:item.chr02,
-                      chr03:item.chr03,
-                      wo_status: item.wo_status,
-                      wo_bom_code: item.wo_bom_code,
-                      wo_vend: item.wo_vend,
-                      wo_lead_time:item.wo_lead_time,
-                      transfert:item.dec01,
-                      wo_prod_pct: item.wo_prod_pct,
-                      color:item.wo_batch,
-                      micronage:item.item.int01
-                    },
-                    { position: "bottom" }
-                    
-                  )
-                  this.lancement=new Date(item.wo_due_date),
-                  this.debut=item.chr02
-                  controls.wo_rev.setValue(item.wo_rev)
+                  
                 }
               })
                 
@@ -946,39 +1182,50 @@ export class CreateOrderComponent implements OnInit {
                       
                     }
       
-                    this.gridService.addItem(
-                      {
-                        id: item.id,
-                        oldline: item.wo_queue_eff,
-                        line: item.wo_queue_eff,
-                      woid:item.id,
-                      wo_nbr:item.wo_nbr, 
-                      wo_part: item.wo_part,
-                      oldpart: item.wo_part,
-                      cmvid: "",
-                      desc: item.item.pt_desc1,
-                      wo_qty_ord: item.wo_qty_ord,
-                      qty:item.wo_qty_ord,
-                      olddate:new Date(item.wo_rel_date),
-                      wo_rel_date: new Date(item.wo_rel_date),
-                      wo_due_date:new Date(item.wo_due_date),
-                      chr01:item.chr01,
-                      chr02:item.chr02,
-                      chr03:item.chr03,
-                      wo_status: item.wo_status,
-                      wo_bom_code: item.wo_bom_code,
-                      wo_vend: item.wo_vend,
-                      wo_lead_time:item.wo_lead_time,
-                      transfert:item.dec01,
-                        wo_prod_pct: item.wo_prod_pct,
-                        color:item.wo_batch,
-                      micronage:item.item.int01
-                      },
-                      { position: "bottom" }
-                      
-                    )
-                    this.lancement=new Date(item.wo_due_date),
-                    this.debut=item.chr02
+                    this.locationDetailService.getqtyoh({ld_part:item.wo_part,ld_site:controls.wo_site.value}).subscribe((response: any) => (
+                      this.gridService.addItem(
+                        {
+                          id: item.id,
+                          oldline: item.wo_queue_eff,
+                          line: item.wo_queue_eff,
+                          woid:item.id,
+                          wo_nbr:item.wo_nbr, 
+                          oldpart: item.wo_part,
+                          wo_part: item.wo_part,
+                          cmvid: "",
+                          desc: item.item.pt_desc1,
+                          qty_oh:response.data[0].ld_qty_oh,
+                          wo_qty_ord: item.wo_qty_ord,
+                          wo_bo_chg:item.wo_bo_chg,
+                          um:"KG",
+                          qty:item.wo_qty_ord,
+                          olddate: new Date(item.wo_rel_date),
+                          wo_rel_date: new Date(item.wo_rel_date),
+                          wo_due_date:new Date(item.wo_due_date),
+                          chr01:item.chr01,
+                          chr02:item.chr02,
+                          chr03:String(Number(item.chr03).toFixed(0)),
+                          wo_status: item.wo_status,
+                          wo_bom_code: item.wo_bom_code,
+                          wo_vend: item.wo_vend,
+                          wo_lead_time:item.wo_lead_time,
+                          
+                          wo_prod_pct: item.wo_prod_pct,
+                          color:item.wo_batch,
+                          micronage:item.item.int01,
+                          int01:item.item.int01,
+                          int02:item.item.int02,
+                          wo_batch:item.wo_batch,
+                          wo_grade:item.wo_grade,
+                          dec01:item.dec01,
+                        },
+                        { position: "bottom" }
+                        
+                      ),
+                      this.lancement=new Date(item.wo_due_date),
+                      this.debut=item.chr02,
+                      controls.wo_rev.setValue(item.wo_rev)
+                    ));
                   }
                 },
               )
@@ -1030,21 +1277,28 @@ export class CreateOrderComponent implements OnInit {
                       cmvid: "",
                       desc: item.item.pt_desc1,
                       wo_qty_ord: item.wo_qty_ord,
+                      wo_bo_chg:item.wo_bo_chg,
+                      um:"KG",
                       qty:item.wo_qty_ord,
                       olddate: new Date(item.wo_rel_date),
                       wo_rel_date: new Date(item.wo_rel_date),
                       wo_due_date:new Date(item.wo_due_date),
                       chr01:item.chr01,
                       chr02:item.chr02,
-                      chr03:item.chr03,
+                      chr03:String(Number(item.chr03).toFixed(0)),
                       wo_status: item.wo_status,
                       wo_bom_code: item.wo_bom_code,
                       wo_vend: item.wo_vend,
                       wo_lead_time:item.wo_lead_time,
-                      transfert:item.dec01,
+                     
                       wo_prod_pct: item.wo_prod_pct,
                       color:item.wo_batch,
-                      micronage:item.item.int01
+                      micronage:item.item.int01,
+                      int01:item.item.int01,
+                      int02:item.item.int02,
+                      wo_batch:item.wo_batch,
+                      wo_grade:item.wo_grade,
+                      dec01:item.dec01,
                     },
                     { position: "bottom" }
                     
@@ -1107,21 +1361,28 @@ export class CreateOrderComponent implements OnInit {
                       cmvid: "",
                       desc: item.item.pt_desc1,
                       wo_qty_ord: item.wo_qty_ord,
+                      wo_bo_chg:item.wo_bo_chg,
                       qty:item.wo_qty_ord,
+                      um:"KG",
                       olddate:new Date(item.wo_rel_date),
                       wo_rel_date: new Date(item.wo_rel_date),
                       wo_due_date:new Date(item.wo_due_date),
                       chr01:item.chr01,
                       chr02:item.chr02,
-                      chr03:item.chr03,
+                      chr03:String(Number(item.chr03).toFixed(0)),
                       wo_status: item.wo_status,
                       wo_bom_code: item.wo_bom_code,
                       wo_vend: item.wo_vend,
                       wo_lead_time:item.wo_lead_time,
-                      transfert:item.dec01,
+                    
                         wo_prod_pct: item.wo_prod_pct,
                         color:item.wo_batch,
-                      micronage:item.item.int01
+                      micronage:item.item.int01,
+                      int01:item.item.int01,
+                      int02:item.item.int02,
+                      wo_batch:item.wo_batch,
+                      wo_grade:item.wo_grade,
+                      dec01:item.dec01,
                       },
                       { position: "bottom" }
                       
@@ -1198,43 +1459,45 @@ export class CreateOrderComponent implements OnInit {
     }
     for (var i = 0; i < this.dataset.length; i++) {
       
-      if (this.dataset[i].wo_bom_code == "" || this.dataset[i].wo_bom_code == null  ) {
-       this.message = "Code formule ne peut pas etre vide";
-       this.hasFormErrors = true;
-       return;
-      }
-      }
+      // if (this.dataset[i].wo_bom_code == "" || this.dataset[i].wo_bom_code == null  ) {
+      //  this.message = "Code formule ne peut pas etre vide";
+      //  this.hasFormErrors = true;
+      //  return;
+      // }
+      
+    }
+    let wo = this.prepare()
+    this.addIt( this.dataset,wo);
 
-    this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe(
-      (response: any) => {
-    this.seq = response.data 
+//     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe(
+//       (response: any) => {
+//     this.seq = response.data 
         
-        if (this.seq) {
-         this.nof = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+//         if (this.seq) {
+//          this.nof = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
 
-         this.sequenceService.update(this.seq.id,{ seq_curr_val: Number(this.seq.seq_curr_val )+1 }).subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.message = "Erreur modification Sequence";
-            this.hasFormErrors = true;
-            return;
+//          this.sequenceService.update(this.seq.id,{ seq_curr_val: Number(this.seq.seq_curr_val )+1 }).subscribe(
+//           (reponse) => console.log("response", Response),
+//           (error) => {
+//             this.message = "Erreur modification Sequence";
+//             this.hasFormErrors = true;
+//             return;
        
           
-          },
-          )
+//           },
+//           )
     
-    let wo = this.prepare()
-    this.addIt( this.dataset,wo, this.nof);
+    
+//   }else {
+//     this.message = "Parametrage Manquant pour la sequence";
+//     this.hasFormErrors = true;
+//     return;
 
-  }else {
-    this.message = "Parametrage Manquant pour la sequence";
-    this.hasFormErrors = true;
-    return;
-
-   }
+//    }
 
 
-})
+// })
+
 
 
 
@@ -1269,7 +1532,7 @@ export class CreateOrderComponent implements OnInit {
    *
    * @param _it: it
    */ 
-   addIt( detail: any, it, nof) {
+   addIt( detail: any, it) {
     for (let data of detail) {
       delete data.id;
       delete data.desc;
@@ -1280,7 +1543,7 @@ export class CreateOrderComponent implements OnInit {
     const controls = this.woForm.controls;
     
     this.workOrderService
-      .add({detail, it,nof})
+      .add({detail, it})
       .subscribe(
        (reponse: any) => console.log(reponse),
         (error) => {
@@ -1302,6 +1565,7 @@ export class CreateOrderComponent implements OnInit {
             true
           );
           this.loadingSubject.next(false);
+          this.printpdf(it.wo_so_job)
       //    console.log(this.provider, po, this.dataset);
       //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
       this.router.navigateByUrl("/manufacturing/list-wo")
@@ -1341,12 +1605,12 @@ export class CreateOrderComponent implements OnInit {
        return;
   
       }
-      if (this.dataset[i].wo_qty_ord == 0  ) {
-        this.message = "La quantité ne peut pas etre nulle";
-        this.hasFormErrors = true;
-        return;
+      // if (this.dataset[i].wo_qty_ord == 0  ) {
+      //   this.message = "La quantité ne peut pas etre nulle";
+      //   this.hasFormErrors = true;
+      //   return;
    
-       }
+      //  }
        if (new Date(this.dataset[i].wo_rel_date) < new Date(this.dataset[i].olddate)  ) {
         this.message = "La date ne peut pas etre inferieure à celle de la ligne précedente";
         this.hasFormErrors = true;
@@ -1385,6 +1649,8 @@ export class CreateOrderComponent implements OnInit {
         cmvid: "",
         desc: "",
         wo_qty_ord: 0,
+        wo_bo_chg:0,
+        um:"KG",
         qty:0,
         olddate:this.lancement,
         wo_rel_date: this.lancement,
@@ -1393,7 +1659,6 @@ export class CreateOrderComponent implements OnInit {
         wo_bom_code: null,
         wo_vend: null,
         wo_lead_time:0,
-        transfert:15/60,
         wo_prod_pct: 0,
               },
       { position: "bottom" }
@@ -1516,27 +1781,26 @@ export class CreateOrderComponent implements OnInit {
 
         
         const item = this.gridObj4.getDataItem(idx);
-      
+      this.locationDetailService.getqtyoh({ld_part:item.pt_part,ld_site:controls.wo_site.value}).subscribe((response: any) => (updateItem.qty_oh = response.data[0].ld_qty_oh));
         updateItem.wo_part = item.pt_part;
         updateItem.desc = item.pt_desc1;
         updateItem.um = item.pt_um;
         updateItem.wo_status = "F";
         updateItem.wo_bom_code = item.pt_bom_code;
+        updateItem.wo_bo_chg = item.dec01
         updateItem.color = item.pt_break_cat
         updateItem.micronage = item.int01
         this.color = item.pt_break_cat
         this.vitesse = item.int03
-        if(this.row_number == 0){this.transfert = 0}
-        else{
-          
-          if(this.color != this.oldcolor && this.oldcolor != 'TRANSPARENT'){this.transfert = 1}
-          else{this.transfert=Number(15/60)}
-          console.log(this.row_number,this.color,this.oldcolor,this.transfert)
-        }
+        updateItem.int01=item.int01,
+        updateItem.int02=item.int02,
+        updateItem.wo_batch=item.pt_break_cat,
+        updateItem.wo_grade=item.pt_group
+       
         if (this.vitesse == 0 || this.vitesse == null){this.vitesse = 530}
       
         updateItem.wo_lead_time = this.vitesse
-        updateItem.transfert = this.transfert
+        
         this.gridService.updateItem(updateItem);
       }) 
       
@@ -1763,16 +2027,21 @@ export class CreateOrderComponent implements OnInit {
         this.gamme = item.ro_routing;
         this.rowkctr=item.ro_wkctr;
         let ofdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null
-   
-        so_job = item.ro_routing + '-' + String(new Date(ofdate).getFullYear()) + String(new Date(ofdate).getMonth() + 1) + String(new Date(ofdate).getDate()),
-        controls.wo_so_job.setValue(so_job)
-        this.workOrderService.getBy({wo_so_job:so_job}).subscribe(
+        
+    
+    let nbr = 0
+    this.workOrderService.getByDistinct({wo_routing:controls.wo_routing.value}).subscribe(
+      (res: any) => {if (res.data.length != 0) {nbr = res.data.length + 1}
+      else{nbr = 1} 
+       controls.wo_so_job.setValue('P-'+ controls.wo_routing.value +  '-' + String('0000'+ String(nbr)).slice(-4))})
+        
+        this.workOrderService.getBy({wo_so_job:'P-'+ controls.wo_routing.value +  '-' + String('0000'+ String(nbr)).slice(-4)}).subscribe(
           (res: any) => {        
           this.dataset  = res.data;
           // let version = 1;
           // if(res.data != null){version = Number(res.data.wo_rev) + 1}
           // controls.wo_rev.setValue(version)
-         if(res.date.length != 0){this.creation = false;}
+         if(res.data.length != 0){this.creation = false;}
           for (let item of this.dataset){
             var maxObj = null;
             var iddd = 0;
@@ -1799,22 +2068,30 @@ export class CreateOrderComponent implements OnInit {
         cmvid: "",
         desc: "",
         wo_qty_ord: item.wo_qty_ord,
+        wo_bo_chg:item.wo_bo_chg,
         qty:item.wo_qty_ord,
+        um:"KG",
         olddate:new Date(item.wo_rel_date),
         wo_rel_date: new Date(item.wo_rel_date),
         wo_due_date:new Date(item.wo_due_date),
         chr01:item.chr01,
         chr02:item.chr02,
-        chr03:item.chr03,
+        chr03:String(Number(item.chr03).toFixed(0)),
         wo_status: item.wo_status,
         wo_bom_code: item.wo_bom_code,
         wo_lead_time:item.wo_lead_time,
-        transfert:item.dec01,
+       
         wo_vend: item.wo_vend,
         
         wo_prod_pct: item.wo_prod_pct,
         color:item.wo_batch,
-        micronage:item.item.int01
+        micronage:item.item.int01,
+        
+                      int01:item.item.int01,
+                      int02:item.item.int02,
+                      wo_batch:item.wo_batch,
+                      wo_grade:item.wo_grade,
+                      dec01:item.dec01,
             },
             { position: "bottom" }
             
@@ -2044,7 +2321,7 @@ export class CreateOrderComponent implements OnInit {
         args.rows.map((idx) => {
             const cause = this.gridObj6.getDataItem(idx)
             console.log(cause)
-            controls.wo_rmks.setValue(cause.rsn_ref || "")
+            controls.wo_rmks.setValue(cause.rsn_desc || "")
 
         })
     }
@@ -2126,7 +2403,221 @@ open6(content) {
     this.prepareGrid6()
     this.modalService.open(content, { size: "lg" })
 }
+printpdf(nbr) {
+  // const controls = this.totForm.controls
+  const controlss = this.woForm.controls;
+  console.log("pdf");
+  var doc = new jsPDF('l');
+let date = new Date()
+  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+  var img = new Image();
+  img.src = "./assets/media/logos/companyentete.png";
+  doc.addImage(img, "png", 200, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.setFontSize(14);
 
+  doc.line(10, 35, 200, 35);
+  doc.setFontSize(12);
+  doc.text("Programme Extrusion N° : " + nbr, 70, 45);
+  doc.text("Date: " + date.toLocaleDateString() , 200, 40);
+  doc.text("Heure: " + new Date().toLocaleTimeString(), 200, 50);
+  // doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+  // if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+  // if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+  
+  // doc.setFontSize(8);
+  // //console.log(this.provider.ad_misc2_id)
+  // doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
+  // doc.text("Nom             : " + this.provider.ad_name, 20, 55);
+  // doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+  // if (this.provider.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
+  // }
+  // if (this.provider.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
+  // }
+  // if (this.provider.ad_pst_id) {
+  //   doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
+  // }
+  // if (this.provider.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
+  // }
+
+  doc.line(10, 85, 250, 85);
+  doc.line(10, 90, 250, 90);
+  doc.line(10, 85, 10, 90);
+  doc.text("Ordre", 11, 88.5);
+  doc.line(25, 85, 25, 90);
+  doc.text("Article", 26, 88.5);
+  doc.line(65, 85, 65, 90);
+  doc.text("Qualite", 67, 88.5);
+  doc.line(80, 85, 80, 90);
+  doc.text("Couleur", 82, 88.5);
+  doc.line(120, 85, 120, 90);
+  doc.text("Micron", 123, 88.5);
+  doc.line(140, 85, 140, 90);
+  doc.text("Laize", 143, 88.5);
+  doc.line(160, 85, 160, 90);
+  doc.text("tonage", 162, 88.5);
+  doc.line(180, 85, 180, 90);
+  doc.text("Stock", 182, 88.5);
+  doc.line(200, 85, 200, 90);
+  doc.text("Qté Prod", 202, 88.5);
+  doc.line(220, 85, 220, 90);
+  doc.text("SAAT", 223, 88.5);
+  doc.line(250, 85, 250, 90);
+  var i = 95;
+  doc.setFontSize(6);
+  let total = 0;
+  let ttc = 0;
+  for (let j = 0; j < this.dataset.length; j++) {
+    total = total +  Number(this.dataset[j].tr_qty_loc);
+    ttc = ttc +  Number(this.dataset[j].tr_qty_loc) * Number(this.dataset[j].tr_price);
+    if (j % 20 == 0 && j != 0) {
+      doc.addPage();
+      img.src = "./assets/media/logos/companyentete.png";
+      doc.addImage(img, "png", 200, 5, 50, 30);
+      doc.setFontSize(9);
+      if (this.domain.dom_name != null) {
+        doc.text(this.domain.dom_name, 10, 10);
+      }
+      if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+      doc.setFontSize(14);
+      doc.line(10, 35, 200, 35);
+
+      doc.setFontSize(12);
+      doc.text("Programme Extrusion N° : " + nbr, 70, 40);
+      doc.text("Date: " + date.toLocaleDateString() , 200, 40);
+      doc.text("Heure: " + new Date().toLocaleTimeString(), 200, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 200, 55);
+      // if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      // if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
+      // doc.setFontSize(8);
+      // console.log(this.provider.ad_misc2_id);
+      // doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
+      // doc.text("Nom             : " + this.provider.ad_name, 20, 55);
+      // doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+      // if (this.provider.ad_misc2_id != null) {
+      //   doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
+      // }
+      // if (this.provider.ad_gst_id != null) {
+      //   doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
+      // }
+      // if (this.provider.ad_pst_id) {
+      //   doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
+      // }
+      // if (this.provider.ad_misc1_id != null) {
+      //   doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
+      // }
+
+      doc.line(10, 85, 250, 85);
+      doc.line(10, 90, 250, 90);
+      doc.line(10, 85, 10, 90);
+      doc.text("Ordre", 11, 88.5);
+      doc.line(25, 85, 25, 90);
+      doc.text("Article", 26, 88.5);
+      doc.line(65, 85, 65, 90);
+      doc.text("Qualite", 67, 88.5);
+      doc.line(80, 85, 80, 90);
+      doc.text("Couleur", 82, 88.5);
+      doc.line(120, 85, 120, 90);
+      doc.text("Micron", 123, 88.5);
+      doc.line(140, 85, 140, 90);
+      doc.text("Laize", 143, 88.5);
+      doc.line(160, 85, 160, 90);
+      doc.text("tonage", 162, 88.5);
+      doc.line(180, 85, 180, 90);
+      doc.text("Stock", 182, 88.5);
+      doc.line(200, 85, 200, 90);
+      doc.text("Qté Prod", 202, 88.5);
+      doc.line(220, 85, 220, 90);
+      doc.text("SAAT", 223, 88.5);
+      doc.line(250, 85, 250, 90);
+    i = 95;
+      doc.setFontSize(6);
+    }
+
+    
+      doc.line(10, i - 5, 10, i);
+      doc.text(String(this.dataset[j].line), 15, i - 1);
+      doc.line(25, i - 5, 25, i);
+      doc.text(this.dataset[j].wo_part, 26, i - 1);
+      doc.line(65, i - 5, 65, i);
+      doc.text(this.dataset[j].wo_bom_code, 67, i - 1);
+      doc.line(80, i - 5, 80, i);
+      doc.text(String(this.dataset[j].wo_batch), 82, i - 1);
+      doc.line(120, i - 5, 120, i);
+      doc.text(String(this.dataset[j].int01), 123, i - 1);
+      doc.line(140, i - 5, 140, i);
+      doc.text(String(this.dataset[j].int02), 143, i - 1);
+      doc.line(160, i - 5, 160, i);
+      doc.text(String(this.dataset[j].dec01), 162, i - 1);
+      doc.line(180, i - 5, 180, i);
+      doc.text(String(this.dataset[j].qty_oh), 182, i - 1);
+      doc.line(200, i - 5, 200, i);
+      doc.text(String((this.dataset[j].wo_qty_ord)), 202, i - 1);
+      doc.line(220, i - 5, 220, i);
+      doc.text(String((this.dataset[j].chr03)), 223, i - 1);
+      doc.line(250, i - 5, 250, i);
+      doc.line(10, i, 250, i);
+      i = i + 5;
+    
+  }
+
+  // doc.line(10, i - 5, 200, i - 5);
+
+  // doc.line(130, i + 7, 205, i + 7);
+  // doc.line(130, i + 14, 205, i + 14);
+  // //  doc.line(130, i + 21, 200, i + 21 );
+  // //  doc.line(130, i + 28, 200, i + 28 );
+  // //  doc.line(130, i + 35, 200, i + 35 );
+  // doc.line(130, i + 7, 130, i + 14);
+  // doc.line(160, i + 7, 160, i + 14);
+  // doc.line(205, i + 7, 205, i + 14);
+  doc.setFontSize(10);
+
+  // doc.text("NOMBRE DE BIG BAG     " + String(this.dataset.length) + "    ,Total POIDS:   " + String(Number(total)), 40, i + 12, { align: "left" });
+  // doc.text("Validé par: " , 20, i + 22);
+  // doc.text("Note: " , 20, i + 32);
+  //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+  //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+  //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+
+  // doc.text(String(Number(total)), 198, i + 12, { align: "right" });
+  //  doc.text(String(Number(controls.tva.value)), 198 ,  i + 19 , { align: 'right' });
+  //  doc.text(String(Number(controls.timbre.value)), 198 ,  i + 26 , { align: 'right' });
+  //  doc.text(String(Number(controls.ttc.value))), 198 ,  i + 33 , { align: 'right' });
+
+  // doc.setFontSize(8);
+  // let mt = NumberToLetters(Number(ttc), "Dinars Algerien");
+
+  // if (mt.length > 95) {
+  //   let mt1 = mt.substring(90);
+  //   let ind = mt1.indexOf(" ");
+
+  //   mt1 = mt.substring(0, 90 + ind);
+  //   let mt2 = mt.substring(90 + ind);
+
+  //   doc.text("Arretée la présente Commande a la somme de :" + mt1, 20, i + 53);
+  //   doc.text(mt2, 20, i + 60);
+  // } else {
+  //   doc.text("Arretée la présente Commande a la somme de :" + mt, 20, i + 53);
+  // }
+  // window.open(doc.output('bloburl'), '_blank');
+  //window.open(doc.output('blobUrl'));  // will open a new tab
+  doc.save('PE-' + nbr + '.pdf')
+  var blob = doc.output("blob");
+  window.open(URL.createObjectURL(blob));
+}
   }
 
 

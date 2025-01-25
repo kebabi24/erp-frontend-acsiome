@@ -707,108 +707,7 @@ export class CreateInvMobComponent implements OnInit {
    *
    * @param _so: so
    */
-  // addSo(_so: any, detail: any) {
-  //   for (let data of detail) {
-  //     delete data.id;
-  //     delete data.cmvid;
-  //   }
-  //   this.loadingSubject.next(true);
-  //   let so = null;
-  //   const controls = this.soForm.controls;
-
-  //   this.saleOrderService.add({ saleOrder: _so, saleOrderDetail: detail }).subscribe(
-  //     (reponse: any) => {
-  //       so = reponse.data;
-  //       // const arrayOctet = new Uint8Array(reponse.pdf.data)
-  //       // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-  //       // const fileUrl = URL.createObjectURL(file);
-  //       // window.open(fileUrl)
-  //     },
-  //     (error) => {
-  //       alert("Erreur, vérifier les informations");
-  //       this.loadingSubject.next(false);
-  //     },
-  //     () => {
-  //       this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
-  //       this.loadingSubject.next(false);
-  //       console.log(this.dataset);
-  //       if (controls.print.value == true) this.printpdf(so.so_nbr); //printSO(this.customer, this.dataset, so);
-  //       this.router.navigateByUrl("/");
-  //     }
-  //   );
-  // }
-  // onChangeOC() {
-  //   const controls = this.soForm.controls;
-  //   const qo_nbr = controls.so_po.value;
-
-  //   this.quoteService.findByOne({ qo_nbr: qo_nbr }).subscribe((res: any) => {
-  //     const { quoteOrder, details } = res.data;
-  //     console.log(quoteOrder);
-  //     controls.so_cust.setValue(quoteOrder.qo_cust);
-  //     controls.so_curr.setValue(quoteOrder.qo_curr);
-  //     controls.so_cr_terms.setValue(quoteOrder.qo_cr_terms);
-  //     controls.so_taxable.setValue(quoteOrder.qo_taxable);
-  //     this.customersService.getBy({ cm_addr: quoteOrder.qo_cust }).subscribe((res: any) => {
-  //       //console.log(res);
-  //       const { data } = res;
-  //       this.customer = res.data;
-  //     });
-  //     for (const object in details) {
-  //       const detail = details[object];
-  //       console.log(detail.item);
-  //       this.gridService.addItem(
-  //         {
-  //           id: this.dataset.length + 1,
-  //           sod_line: this.dataset.length + 1,
-
-  //           sod_part: detail.qod_part,
-  //           cmvid: "",
-  //           desc: detail.item.pt_desc1,
-  //           sod_qty_ord: detail.qod_qty_ord,
-  //           sod_um: detail.qod_um,
-  //           sod_price: detail.qod_price,
-  //           sod_disc_pct: detail.qod_disc_pct,
-  //           sod_site: detail.item.pt_site,
-  //           sod_loc: detail.item.pt_loc,
-  //           sod_type: detail.item.pt_type,
-  //           sod_cc: "",
-  //           sod_taxable: detail.item.pt_taxable,
-  //           sod_tax_code: detail.item.pt_taxc,
-  //           sod_taxc: detail.item.taxe.tx2_tax_pct,
-  //         },
-  //         { position: "bottom" }
-  //       );
-  //       this.datasetPrint.push({
-  //         id: this.dataset.length + 1,
-  //         sod_line: this.dataset.length + 1,
-
-  //         sod_part: detail.qod_part,
-  //         cmvid: "",
-  //         desc: detail.item.pt_desc1,
-  //         sod_qty_ord: detail.qod_qty_ord,
-  //         sod_um: detail.qod_um,
-  //         sod_price: detail.qod_price,
-  //         sod_disc_pct: detail.qod_disc_pct,
-  //         sod_site: detail.item.pt_site,
-  //         sod_loc: detail.item.pt_loc,
-  //         sod_type: detail.item.pt_type,
-  //         sod_cc: "",
-  //         sod_taxable: detail.item.pt_taxable,
-  //         sod_tax_code: detail.item.pt_taxc,
-  //         sod_taxc: detail.item.taxe.tx2_tax_pct,
-  //         // taxe: detail.item.taxe.tx2_tax_pct,
-  //       });
-  //     }
-
-  //     // }
-  //     //);
-  //   }),
-  //     (error) => {
-  //       this.message = `Demande avec ce numero ${qo_nbr} n'existe pas`;
-  //       this.hasFormErrors = true;
-  //     },
-  //     () => {};
-  // }
+ 
   onChangeItin() {
     const controls = this.soForm.controls; // chof le champs hada wesh men form rah
     
@@ -1329,7 +1228,7 @@ export class CreateInvMobComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 170, 5, 30, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -1382,9 +1281,9 @@ export class CreateInvMobComponent implements OnInit {
     var i = 95;
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length; j++) {
-      if (j % 30 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        // img.src = "./assets/media/logos/companylogo.png";
+        // img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 170, 5, 30, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
@@ -1438,11 +1337,11 @@ export class CreateInvMobComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);

@@ -2,11 +2,11 @@
     <kt-portlet-header [sticky]="true" [title]="'Modification Status BC'" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
-        </ng-container>
+        </ng-container> 
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview">
@@ -16,7 +16,7 @@
                     (close)="onAlertClose($event)">
                     {{message}}
                 </kt-alert>
-                <div class="col-9">
+                <div class="col-6">
                     <div class="row">
                         <div class="form-group col-2">
                             <label class="form-group">Numero BC:</label>
@@ -90,28 +90,37 @@
                         </angular-slickgrid>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-6">
                     <span class="font-weight-bolder text-dark">Status</span>
                     <div  class="row example-preview">
                         <div class="row">
-                            <div class="form-group col-12">
+                            <div class="form-group col-2">
                                 <label class="form-group">Status:</label>
                                 <select class="form-control form-control-sm form-control-solid"
                                         id="exampleSelects2" formControlName="po_stat">
                                         <option value=""></option>
-                                        <option value="p">Planifier</option>
-                                        <option value="V">Valider</option>
-                                        <option value="I">Imprimer</option>
-                                        <option value="E">Envoyer</option>
-                                        <option value="X">Suprimer</option>
-                                        <option value="C">Cloturer</option>
+                                        
+                                        <option value="V">Validé</option>
+                                        <option value="I">Imprimé</option>
+                                        <option value="E">Envoyé</option>
+                                        <option value="R">Reçu</option>
+                                        <option value="A">Comptabilisé</option>
+                                        <option value="P">Payé</option>
+                                        <option value="X">Supprimé</option>
+                                        <option value="C">Cloturé</option>
 
 
                                     </select>
                             </div>
                         </div>
-
+                        <div class="form-group col-4">
+                            <label class="form-group"> Fichier joint: *</label>
+                            <div class="input-group input-group-sm">
+                              <input type="file" class="form-control form-control-solid" aria-describedby="basic-addon2" name="attach" (change)="uploadFile($event)" value="" />
+                            </div>
+                        </div>
                     </div>
+                     
                 </div>
             </form>
         </div>
@@ -136,7 +145,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

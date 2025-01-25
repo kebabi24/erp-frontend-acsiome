@@ -41,12 +41,14 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   
 @Component({
-  selector: 'kt-list-rep',
+  selector: 'kt-list-rep', 
   templateUrl: './list-rep.component.html',
   styleUrls: ['./list-rep.component.scss']
 })
 export class ListRepComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  user:any;
   
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
@@ -99,7 +101,7 @@ export class ListRepComponent implements OnInit {
           },
           {
             id: "name",
-            name: "Fournisseur",
+            name: "CLient",
             field: "chr01",
             sortable: true,
             filterable: true,
@@ -169,8 +171,10 @@ export class ListRepComponent implements OnInit {
       }
 
       // fill the dataset with your data
+      this.user =  JSON.parse(localStorage.getItem('user'))
       this.dataset = []
-      this.repertoryService.getByAddress({rep_type:"Customer"}).subscribe(
+      if(this.user.usrd_site == '*')
+      {this.repertoryService.getByAddress({rep_type:"Customer"}).subscribe(
           (response: any) => {this.dataset = response.data
             this.dataview.setItems(this.dataset);
           },
@@ -178,7 +182,25 @@ export class ListRepComponent implements OnInit {
               this.dataset = []
           },
           () => {}
-      )
+      )}
+      else{this.repertoryService.getByAddress({chr03:this.user.usrd_site,rep_type:"Customer"}).subscribe(
+        (response: any) => {this.dataset = response.data
+          this.dataview.setItems(this.dataset);
+        },
+        (error) => {
+            this.dataset = []
+        },
+        () => {}
+    )}
   }
-
+  createrep() {
+    this.loadingSubject.next(false)
+    const url = `/customers/create-rep`
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+customerlist() {
+  this.loadingSubject.next(false)
+  const url = `/customers/customer-list`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
 }

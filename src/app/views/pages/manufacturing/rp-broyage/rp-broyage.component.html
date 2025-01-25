@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="false" title="Etat des Broyages " [class]="'card-head-lg'" >
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button-->
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Imprimer </button>
 
         </ng-container>
     </kt-portlet-header> 
@@ -33,6 +33,16 @@
                         </div>
                     </div>
                     <div class="form-group col-2">
+                        <label class="form-group">Gamme:</label>
+            
+                        <div class="input-group input-group-sm">
+                          <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_routing" id="wo_routing"  (change)="onChangeGamme()"/>
+                          <div class="input-group-append">
+                            <span class="input-group-text" (click)="opengamme(contentgamme)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                          </div> 
+                        </div>   
+                    </div>
+                    <div class="form-group col-2">
                         <label class="form-group">Date: *</label>
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-sm form-control-solid"  formControlName="date" 
@@ -45,7 +55,14 @@
                             </div>
                             
                         </div>
-
+ 
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Heure debut :</label>
+                        <div class="input-group-sm">
+                            <input class="form-control" id="kt_timepicker_1"  placeholder="Select time" type="time" formControlName="start_time">
+                            
+                        </div>
                     </div>
                     <div class="form-group col-2">
                         <label class="form-group">A: *</label>
@@ -61,6 +78,13 @@
                             
                         </div>
 
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Heure Fin :</label>
+                        <div class="input-group-sm">
+                            <input class="form-control" id="kt_timepicker_1"  placeholder="Select time" type="time" formControlName="end_time">
+                            
+                        </div>
                     </div>
                     <div class="form-group col-4">
                         <label class="form-group">Valider: *</label>
@@ -97,14 +121,32 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
             <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
                 modal</button>
         </div>
-        
+        <div>
+            <ng-template #contentgamme let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">choisir Gamme</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser" [columnDefinitions]="columnDefinitionsgamme" (onAngularGridCreated)="angularGridReadygamme($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedgamme($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsgamme" [dataset]="gammes"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+              </div>
+            </ng-template>
+          </div>
         
     </kt-portlet-body>
 </kt-portlet>

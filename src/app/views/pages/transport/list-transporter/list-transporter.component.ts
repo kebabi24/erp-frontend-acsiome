@@ -169,7 +169,7 @@ export class ListTransporterComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.addressService.getAllBy({ad_type:"Transporter"}).subscribe(
+      this.addressService.getBy({ad_type:"Transporter"}).subscribe(
           (response: any) => {this.dataset = response.data
 console.log(response.data)
           },

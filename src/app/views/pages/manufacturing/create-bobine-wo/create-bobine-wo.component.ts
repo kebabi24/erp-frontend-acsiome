@@ -66,7 +66,7 @@ export class CreateBobineWoComponent implements OnInit {
   gridOptionsgamme: GridOption = {};
   gridObjgamme: any;
   angularGridgamme: AngularGridInstance;
-
+autorisation:boolean;
   items: [];
   columnDefinitions4: Column[] = [];
   gridOptions4: GridOption = {};
@@ -248,18 +248,11 @@ export class CreateBobineWoComponent implements OnInit {
         name: "Description",
         field: "tr_desc",
         sortable: true,
-        width: 180,
+        minWidth: 150,
         filterable: false,
       },
 
-      {
-        id: "tr__chr02",
-        name: "Couleur",
-        field: "tr__chr02",
-        sortable: true,
-        width: 100,
-        filterable: false,
-      },
+      
       {
         id: "tr_serial",
         name: "Lot/Serie",
@@ -269,16 +262,7 @@ export class CreateBobineWoComponent implements OnInit {
         filterable: false,
       },
 
-      // {
-      //     id: "tr_loc",
-      //     name: "Empl",
-      //     field: "tr_loc",
-      //     sortable: true,
-      //     width: 80,
-      //     filterable: false,
-      //     type: FieldType.string,
-
-      // },
+     
       {
         id: "tr_qty_loc",
         name: "QTE",
@@ -297,30 +281,10 @@ export class CreateBobineWoComponent implements OnInit {
         filterable: false,
       },
 
-      // {
-      //   id: "tr_um_conv",
-      //   name: "Conv UM",
-      //   field: "tr_um_conv",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      //  // editor: {
-      //  //     model: Editors.float,
-      //   //},
+     
 
-      // },
+      
 
-      // {
-      //     id: "tr_price",
-      //     name: "Prix unitaire",
-      //     field: "tr_price",
-      //     sortable: true,
-      //     width: 80,
-      //     filterable: false,
-      //     //type: FieldType.float,
-      //     formatter: Formatters.decimal,
-
-      // },
 
       {
         id: "tr_ref",
@@ -331,15 +295,17 @@ export class CreateBobineWoComponent implements OnInit {
         filterable: false,
         //type: FieldType.float,
       },
+      {
+        id: "printed",
+        name: "imprimé",
+        field: "printed",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
 
-      // {
-      //   id: "tr_status",
-      //   name: "Status",
-      //   field: "tr_status",
-      //   sortable: true,
-      //   width: 80,
-      //   filterable: false,
-      // },
+    
       {
         id: "tr_program",
         name: "Heure",
@@ -369,7 +335,7 @@ export class CreateBobineWoComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
-          if(this.printable == true){
+          if(this.printable == true && args.dataContext.printed != true){
           this.itemsService.getByOne({pt_part:args.dataContext.tr_part }).subscribe( 
             (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type
                               this.miclaise = reponse.data.pt_article
@@ -397,6 +363,7 @@ export class CreateBobineWoComponent implements OnInit {
                                 _lb.lb_grp = controls.emp_shift.value;
                                 _lb.lb_cust = controls.wo_routing.value;
                                 _lb.lb_addr = controls.wo_user1.value;
+                                _lb.lb__chr01 = String(new Date().toLocaleTimeString())
                                 
                                 let lab = null;
                                 console.log(_lb);
@@ -404,7 +371,7 @@ export class CreateBobineWoComponent implements OnInit {
                                 this.labelService.add(_lb).subscribe(
                                   (reponse: any) => {
                                     lab = reponse.data;
-                                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc,printed:true });
                                     
                                     this.index = this.dataset.findIndex((el) => {
                                       return el.tr_line == args.dataContext.id;
@@ -416,12 +383,13 @@ export class CreateBobineWoComponent implements OnInit {
                                     _tr.tr_nbr = controls.wo_nbr.value;
                                     _tr.tr_lot = controls.wo_lot.value;
                                     _tr.tr_part = args.dataContext.tr_part;
-                                
+                                    _tr.tr_addr = controls.wo_routing.value;
                                     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
                                     _tr.tr_qty_loc = args.dataContext.tr_qty_loc;
                                     _tr.tr_serial = args.dataContext.tr_serial;
                                     _tr.tr_program = args.dataContext.tr_program;
                                     _tr.tr_user2 = controls.emp_shift.value;
+                                    _tr.tr_site = controls.wo_site.value;
                                     this.trdataset = [];
                                 
                                     if (args.dataContext.tr_qty_loc == null || args.dataContext.tr_qty_loc == 0) {
@@ -439,13 +407,7 @@ export class CreateBobineWoComponent implements OnInit {
                                 
                                       return;
                                     }
-                                    // if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
-                                    //   this.hasFormErrors = true;
-                                    //   this.message = "veuillez remplir le N° de lot";
-                                    
-                                
-                                    //   return;
-                                    // }
+                                   
                                     this.trdataset.push({
                                       tr_line: 1,
                                       tr_part: controls.wo_part.value,
@@ -469,9 +431,7 @@ export class CreateBobineWoComponent implements OnInit {
                                     });
                                   },
                                   (error) => {
-                                    this.message = "veuillez verifier votre connexion";
-                                      this.hasFormErrors = true;
-                                      return;
+                                
                                   },
                                  
                                 );
@@ -600,34 +560,35 @@ export class CreateBobineWoComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          if (args.dataContext.tr_ref != null) {
+          if (args.dataContext.tr_ref != null ) {
             this.message = "modification interdite";
                   this.hasFormErrors = true;
                   return;
-          } else {
-            this.row_number = args.row;
-            let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
-            element.click();
+          } 
+          else {
+            if( this.autorisation == false)
+              {
+                this.message = "modification interdite";
+                      this.hasFormErrors = true;
+                      return;
+              } else {
+                      this.autorisation= false;
+                      this.row_number = args.row;
+                      let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
+                      element.click();
+                    }
           }
-        },
+      }
       },
       {
         id: "tr_desc",
         name: "Description",
         field: "tr_desc",
         sortable: true,
-        width: 180,
+        minWidth: 150,
         filterable: false,
       },
 
-      {
-        id: "tr__chr02",
-        name: "Couleur",
-        field: "tr__chr02",
-        sortable: true,
-        width: 100,
-        filterable: false,
-      },
       {
         id: "tr_serial",
         name: "Lot/Serie",
@@ -666,7 +627,15 @@ export class CreateBobineWoComponent implements OnInit {
         filterable: false,
         //type: FieldType.float,
       },
-
+      {
+        id: "sqprinted",
+        name: "imprimé",
+        field: "sqprinted",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
       
       {
         id: "tr_program",
@@ -697,7 +666,7 @@ export class CreateBobineWoComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
-          if(this.printable == true){
+          if(this.printable == true && args.dataContext.sqprinted != true){
           if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
             const controls = this.woForm.controls;
             this.printbuttonState = true;
@@ -718,14 +687,14 @@ export class CreateBobineWoComponent implements OnInit {
             _lb.lb_grp = controls.emp_shift.value;
             _lb.lb_cust = controls.wo_routing.value;
             _lb.lb_addr = controls.wo_user1.value;
-            
+            _lb.lb__chr01 = String(new Date().toLocaleTimeString())
             let lab = null;
             console.log(_lb);
             // console.log(10 * 100.02)
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
+                this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc,sqprinted:true });
                 
                 this.index = this.dataset.findIndex((el) => {
                   return el.tr_line == args.dataContext.id;
@@ -737,7 +706,7 @@ export class CreateBobineWoComponent implements OnInit {
                 _tr.tr_nbr = controls.wo_nbr.value;
                 _tr.tr_lot = controls.wo_lot.value;
                 _tr.tr_part = args.dataContext.tr_part;
-            
+                _tr.tr_addr = controls.wo_routing.value;
                 _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
                 _tr.tr_qty_loc = args.dataContext.tr_qty_loc;
                 _tr.tr_serial = args.dataContext.tr_serial;
@@ -761,12 +730,12 @@ export class CreateBobineWoComponent implements OnInit {
             
                 //   return;
                 // }
-                if (this.dataset.length == 0) {
-                  this.hasFormErrors = true;
-                  this.message = "Verifier la liste des bobines";
+                // if (this.dataset.length == 0) {
+                //   this.hasFormErrors = true;
+                //   this.message = "Verifier la liste des bobines";
             
-                  return;
-                }
+                //   return;
+                // }
                 this.trdataset.push({
                   tr_line: 1,
                   tr_part: args.dataContext.tr_part,
@@ -895,7 +864,7 @@ export class CreateBobineWoComponent implements OnInit {
       adduser2:[false],
       wo_lot:[this.workOrder.wo_lot,],
       wo_nbr:[this.workOrder.wo_nbr,],
-      wo_part: [{ value: this.workOrder.wo_part, disabled: true }, Validators.required],
+      wo_part: [{ value: this.workOrder.wo_part, disabled: true }],
       desc: [{ value: null, disabled: true }],
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
@@ -904,7 +873,9 @@ export class CreateBobineWoComponent implements OnInit {
       total_bobine:  [{disabled: true}],
       total_squelette:  [{disabled: true}],
       wo_qty_comp: [{ value: 0 },this.workOrder.wo_qty_comp],
+
       wo_qty_rjct: [{ value: 0 },this.workOrder.wo_qty_rjct],
+      autorisation:[null],
       emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial],
       printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
@@ -931,6 +902,19 @@ export class CreateBobineWoComponent implements OnInit {
       },
       (error) => {}
     );
+  }
+  authorised(){
+    const controls = this.woForm.controls
+    let password:any;
+    this.codeService.getBy({code_fldname:'PASSWORD',code_value:controls.wo_routing.value}).subscribe((coderesp:any)=>{password = coderesp.data[0].code_cmmt
+    console.log(coderesp.data[0].code_cmmt)        
+    if(controls.autorisation.value == password){this.autorisation = true,controls.autorisation.setValue(null)}
+    else{controls.autorisation.setValue(null)
+      this.message = "Mot de passe erroné, veuillez réessayer";
+      this.hasFormErrors = true;
+      return;
+    }
+  })
   }
   onChangeOA() {
     this.dataset = [];
@@ -1000,7 +984,7 @@ export class CreateBobineWoComponent implements OnInit {
         //remplir les grids
         controls.wo_nbr.value
         console.log('remplir grid' ,controls.wo_nbr.value)
-        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
           (res: any) => {        
           this.dataset  = res.data;
           for (let item of this.dataset){
@@ -1029,7 +1013,7 @@ export class CreateBobineWoComponent implements OnInit {
             
           )}},)
           console.log('remplir grid' ,controls.wo_nbr.value)
-        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
           (res: any) => {        
           this.sqdataset  = res.data;
           for (let itemsq of this.sqdataset){
@@ -1183,7 +1167,7 @@ export class CreateBobineWoComponent implements OnInit {
                   this.hasFormErrors = true;
                   return;
           } else {
-            this.codeService.getBy({code_fldname:'LIMIT',code_value:data[0].pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
+            this.codeService.getBy({code_fldname:'LIMIT',code_value:data[0].pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data[0].code_cmmt)})
             controls.wo_part.setValue(data[0].pt_part);
             controls.desc.setValue(response.data[0].pt_desc1);
             this.desc2 = response.data[0].pt_desc2;
@@ -1295,7 +1279,7 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_nbr = controls.wo_nbr.value;
     _tr.tr_lot = controls.wo_lot.value;
     _tr.tr_part = controls.wo_part.value;
-
+    _tr.tr_addr = controls.wo_routing.value;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
@@ -1314,7 +1298,7 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_nbr = controls.wo_nbr.value;
     _tr.tr_lot = controls.wo_lot.value;
     _tr.tr_part = controls.wo_part.value;
-
+    _tr.tr_addr = controls.wo_routing.value;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_rjct.value;
     _tr.tr_serial = controls.wo_serial.value;
@@ -1509,6 +1493,7 @@ export class CreateBobineWoComponent implements OnInit {
     _tr.tr_lot = this.wolot;
     _tr.tr_user1 = this.user1;
     _tr.tr_user2 = this.user2;
+    _tr.tr_addr = controls.wo_routing.value;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     //_tr.tr_site = controls.wo_site.value
     // _tr.tr_so_job = controls.tr_so_job.value
@@ -1572,8 +1557,6 @@ export class CreateBobineWoComponent implements OnInit {
 
       if (this.seq) {
         this.nof = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-        
-        
         this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
           (reponse) => console.log("response", Response),
           (error) => {
@@ -1670,7 +1653,7 @@ export class CreateBobineWoComponent implements OnInit {
           controls.desc.setValue("");
           document.getElementById("part").focus();
         } else {
-          this.codeService.getBy({code_fldname:'LIMIT',code_value:response.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
+          this.codeService.getBy({code_fldname:'LIMIT',code_value:response.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data[0].code_cmmt)})
           controls.desc.setValue(response.data[0].pt_desc1);
           this.desc2 = response.data[0].pt_desc2;
           controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
@@ -1798,7 +1781,7 @@ export class CreateBobineWoComponent implements OnInit {
         controls.desc.setValue(item.pt_desc1);
         this.desc2 = item.pt_desc2;
         controls.wo_serial.setValue(item.pt_part_type + item.pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
-        this.codeService.getBy({code_fldname:'LIMIT',code_value:item.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
+        this.codeService.getBy({code_fldname:'LIMIT',code_value:item.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data[0].code_cmmt)})
         this.um = item.pt_um;
         this.loc = item.pt_loc;
         if (item.pt_rctwo_active) {
@@ -2245,8 +2228,10 @@ export class CreateBobineWoComponent implements OnInit {
   onChangePal() {
     /*kamel palette*/
     const controls = this.woForm.controls;
-    const qty= Number(controls.wo_qty_comp.value)
-    
+    let qty= Number(controls.wo_qty_comp.value)
+    this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
+      qty = qty - poids
+    })
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
@@ -2259,7 +2244,7 @@ export class CreateBobineWoComponent implements OnInit {
       this.message = "la quantité que vous avez saisi est erroné";
     this.hasFormErrors = true;
     return;}
-    this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value,id:controls.wo_lot.value }).subscribe((res: any) => {
+    this.workOrderService.getByOne({ wo_nbr: controls.wo_nbr.value }).subscribe((res: any) => {
       if (res.data.wo_status == "C" ){
         console.log(res.data.wo_status)
         this.message = "vous avez atteint la quantité prevue";
@@ -2277,44 +2262,44 @@ export class CreateBobineWoComponent implements OnInit {
       this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)
-  
-     this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: controls.wo_part.value, sct_sim: 'STD-CG' }).subscribe(
-      (respo: any) => {
-        this.sct = respo.data
-        console.log(this.sct)
+        this.gridService.addItem(
+          {
+            id: this.dataset.length + 1,
+            tr_line: this.dataset.length + 1,
+            tr_part: controls.wo_part.value,
+            tr__chr02:respopart.data.pt_break_cat,
+            cmvid: "",
+            tr_desc: controls.desc.value,
+            // qty_oh: this.lddet.ld_qty_oh,
+            tr_qty_loc: qty,
+            tr_site: controls.wo_site.value,
+            tr_loc: respopart.data.pt_loc,
+            tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}-${controls.wo_ord_date.value.month}-${controls.wo_ord_date.value.day}` : null,
+            tr_um:respopart.data.pt_um,
+            tr_um_conv:1,
+            tr_price: 0,
+            cmvids: "",
+            tr_ref: null,
+            tr_serial: "",
+            tr_program: timedate,
+            // tr_status: this.stat,
+            
+          },
+          { position: "bottom" },
+          
+        );
+        const TOTAL = Number(controls.total_bobine.value) + Number(controls.wo_qty_comp.value)
+        controls.total_bobine.setValue(TOTAL)
+        controls.wo_qty_comp.setValue(0);
+    //  this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: controls.wo_part.value, sct_sim: 'STD-CG' }).subscribe(
+    //   (respo: any) => {
+    //     this.sct = respo.data
+    //     console.log(this.sct)
     
   
-     this.gridService.addItem(
-      {
-        id: this.dataset.length + 1,
-        tr_line: this.dataset.length + 1,
-        tr_part: controls.wo_part.value,
-        tr__chr02:respopart.data.pt_break_cat,
-        cmvid: "",
-        tr_desc: controls.desc.value,
-        // qty_oh: this.lddet.ld_qty_oh,
-        tr_qty_loc: qty,
-        tr_site: controls.wo_site.value,
-        tr_loc: respopart.data.pt_loc,
-        tr_effdate: controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}-${controls.wo_ord_date.value.month}-${controls.wo_ord_date.value.day}` : null,
-        tr_um:respopart.data.pt_um,
-        tr_um_conv:1,
-        tr_price: this.sct.sct_mtl_tl,
-        cmvids: "",
-        tr_ref: null,
-        tr_serial: "",
-        tr_program: timedate,
-        // tr_status: this.stat,
-        
-      },
-      { position: "bottom" },
-      
-    );
-    const TOTAL = Number(controls.total_bobine.value) + Number(controls.wo_qty_comp.value)
-    controls.total_bobine.setValue(TOTAL)
-    controls.wo_qty_comp.setValue(0);
     
-     });
+    
+    //  });
     }); }
   }})
     
@@ -2323,7 +2308,10 @@ export class CreateBobineWoComponent implements OnInit {
   onChangeSq() {
     /*kamel palette*/
     const controls = this.woForm.controls;
-    const sqqty= Number(controls.wo_qty_rjct.value)
+    let  sqqty= Number(controls.wo_qty_rjct.value)
+    this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
+      sqqty = sqqty - poids
+    })
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
@@ -2336,7 +2324,7 @@ export class CreateBobineWoComponent implements OnInit {
       (respopart: any) => {
         console.log(respopart)
         this.codeService.getBy({code_fldname:'LIMIT',code_value:respopart.data.pt_draw}).subscribe((coderesp:any)=>{
-          if(coderesp.data.length != 0){this.seuil = Number(coderesp.data.code_cmmt)}
+          if(coderesp.data.length != 0){this.seuil = Number(coderesp.data[0].code_cmmt)}
           this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: respopart.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
             (respo: any) => {
               this.sct = respo.data
@@ -2574,7 +2562,7 @@ export class CreateBobineWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));
   }
 
   handleSelectedRowsChangedemp(e, args) {
@@ -2602,6 +2590,14 @@ export class CreateBobineWoComponent implements OnInit {
         maxWidth: 80,
       },
       {
+        id: "wo_so_job",
+        name: "Programme",
+        field: "wo_so_job",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
         id: "wo_nbr",
         name: "N° OF",
         field: "wo_nbr",
@@ -2616,14 +2612,42 @@ export class CreateBobineWoComponent implements OnInit {
         sortable: true,
         filterable: true,
         type: FieldType.date,
+        minWidth: 150,
       },
       {
-        id: "wo_part",
-        name: "Article",
-        field: "wo_part",
+        id: "wo_ref",
+        name: "BOBINE",
+        field: "wo_ref",
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        minWidth: 150,
+      },
+      {
+        id: "wo_batch",
+        name: "COULEUR",
+        field: "wo_batch",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        minWidth: 150,
+      },
+      {
+        id: "wo_bom_code",
+        name: "QUALITE",
+        field: "wo_bom_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "wo_grade",
+        name: "SILICONE",
+        field: "wo_grade",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+        minWidth: 150,
       },
       {
         id: "wo_status",
@@ -2712,7 +2736,7 @@ export class CreateBobineWoComponent implements OnInit {
         //remplir les grids
         controls.wo_nbr.value
         console.log('remplir grid' ,controls.wo_nbr.value)
-        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
           (res: any) => {        
           this.dataset  = res.data;
           for (let item of this.dataset){
@@ -2741,7 +2765,7 @@ export class CreateBobineWoComponent implements OnInit {
             
           )}})
           console.log('remplir grid' ,controls.wo_nbr.value)
-        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
           (res: any) => {        
           this.sqdataset  = res.data;
           for (let itemsq of this.sqdataset){
@@ -2998,8 +3022,7 @@ export class CreateBobineWoComponent implements OnInit {
   onPrint() {
     const controls = this.woForm.controls;
 
-    this.printpdf(); //printBc(this.provider, this.dataset, po, this.curr);
-    //this.goBack();
+    this.printpdf(); 
   }
   printpdf() {
     // const controls = this.totForm.controls
@@ -3009,7 +3032,7 @@ export class CreateBobineWoComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     //ENTETE DOCUMENT
     doc.addImage(img, "png", 20, 11, 20, 20);
     doc.setFontSize(12);
@@ -3196,90 +3219,7 @@ export class CreateBobineWoComponent implements OnInit {
 
       
     }
-    if (i > 170){
-      doc.addPage();
-      doc.addImage(img, "png", 20, 11, 20, 20);
-      doc.setFontSize(12);
-      doc.line(10, 10, 288, 10);
-      doc.line(10, 10, 10, 35);
-      doc.text("SUIVI ALIMENTATION EXTRUSION  " , 110, 25);
-      doc.line(10, 30, 82, 30);
-      doc.line(82, 10, 82, 35);
-      doc.line(216, 10, 216, 35);
-      doc.setFontSize(8);
-      doc.text("Code: FO-PR-001/DRFT  " , 225, 15);
-      doc.line(216, 20, 288, 20);
-      doc.text("Date: 2024/07/08  " , 225, 25);
-      doc.line(216, 30, 288, 30);
-      doc.text("PAGE  " , 225, 33);
-      
-      doc.text("type : Formulaire" , 11, 33);
-      doc.line(10, 35, 288, 35);
-      doc.line(288, 10, 288, 35);
-      doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
-      doc.setFontSize(8);
-      
-      
-      // TABLEAU 2 
-      doc.line(0, 80, 300, 80);
-      doc.line(0, 45, 300, 45);
-      doc.line(0, 80, 0, 45);
-      doc.text("PAILLETTE", 39, 82.5);
-      doc.line(77, 80, 77, 45);
-      doc.text("SQUELETTE", 111, 82.5);
-      doc.line(154, 80, 154, 45);
-      doc.text("PREFORME", 180, 82.5);
-      doc.line(221, 80, 221 , 45);
-      doc.text("ORIGINAL", 245, 82.5);
-      doc.line(300, 80, 300, 45);
-      doc.line(0, 45, 300, 45);
-      doc.line(0, 45, 0, 50);
-      doc.text("REF", 1, 48.5);
-      doc.line(14, 45, 14, 50);
-      doc.text("COULEUR", 20, 48.5);
-      doc.line(41, 45, 41, 50);
-      doc.text("KG", 42, 48.5);
-      doc.line(49, 45, 49, 50);
-      doc.text("HEURE", 50, 48.5);
-      doc.line(63, 45, 63, 50);
-      doc.text("DEBIT", 64, 48.5);
-      doc.line(77, 45, 77, 50);
-      doc.text("REF", 45, 48.5);
-      doc.line(91, 45, 91, 50);
-      doc.text("COULEUR", 95, 48.5);
-      doc.line(118, 45, 118, 50);
-      doc.text("KG", 119, 48.5);
-      doc.line(126, 45, 126, 50);
-      doc.text("HEURE", 129, 48.5);
-      doc.line(142, 45, 142, 50);
-      doc.text("DEBIT", 143, 48.5);
-      doc.line(154, 45, 154, 50);
-      doc.text("REF", 157, 48.5);
-      doc.line(166, 45, 166, 50);
-      doc.text("COULEUR", 170, 48.5);
-      doc.line(189, 45, 189, 50);
-      doc.text("KG", 190, 48.5);
-      doc.line(197, 45, 197, 50);
-      doc.text("HEURE", 198, 48.5);
-      doc.line(209, 45, 209, 50);
-      doc.text("DEBIT", 210, 48.5);
-      doc.line(221, 45, 221, 50);
-      doc.text("REF", 222, 48.5);
-      doc.line(235, 45, 235, 50);
-      doc.text("COULEUR", 241, 48.5);
-      doc.line(267, 45, 267, 50);
-      doc.text("KG", 268, 48.5);
-      doc.line(275, 45, 275, 50);
-      doc.text("HEURE", 278, 48.5);
-      doc.line(289, 45, 289, 50);
-      doc.text("DEBIT", 290, 48.5);
-      doc.line(300, 45, 300, 50);
-      doc.line(0, 50, 300, 50);
-      
-
-      i = 95;
-  
-    }  
+   
     
     
     

@@ -157,7 +157,7 @@ export class CreateTrainingCalanderComponent implements OnInit {
     
       tc_year: [this.trainingcalender.tc_year ,  Validators.required],
       
-      tc_site: [this.trainingcalender.tc_site,  Validators.required],
+      // tc_site: [this.trainingcalender.tc_site,  Validators.required],
       tc_service: [this.trainingcalender.tc_service,  Validators.required],
 
      
@@ -173,7 +173,7 @@ export class CreateTrainingCalanderComponent implements OnInit {
              
               tc_year:controls.tc_year.value,
               tc_service:controls.tc_service.value,
-              tc_site:controls.tc_site.value
+              //tc_site:controls.tc_site.value
         })
         .subscribe((response: any) => {
          
@@ -188,8 +188,8 @@ export class CreateTrainingCalanderComponent implements OnInit {
   }
   changeService(){
     const controls = this.trainingForm.controls // chof le champs hada wesh men form rah
-    const code_value  = controls.tc_site.value
-    this.codeService.getBy({code_fldname:"pt_draw",code_value:code_value}).subscribe((res:any)=>{
+    // const code_value  = controls.tc_site.value
+    this.codeService.getBy({code_fldname:"pt_draw"}).subscribe((res:any)=>{
         const {data} = res
         console.log(res)
         if (!data){ 
@@ -205,22 +205,22 @@ export class CreateTrainingCalanderComponent implements OnInit {
 
     },error=>console.log(error))
 }
-changeSite() {
-  const controls = this.trainingForm.controls;
-  const si_site = controls.tc_site.value;
+// changeSite() {
+//   const controls = this.trainingForm.controls;
+//   // const si_site = controls.tc_site.value;
   
-  this.siteService.getByOne({ si_site }).subscribe(
-    (res: any) => {
+//   this.siteService.getByOne({ si_site }).subscribe(
+//     (res: any) => {
 
-      if (!res.data) {
+//       if (!res.data) {
 
-          alert("Site n'existe pas  ")
-          controls.tc_site.setValue(null);
-          document.getElementById("tc_site").focus();
-        }
+//           alert("Site n'existe pas  ")
+//           controls.tc_site.setValue(null);
+//           document.getElementById("tc_site").focus();
+//         }
     
-    });
-}
+//     });
+// }
   
   //reste form
   reset() {
@@ -259,7 +259,7 @@ changeSite() {
     const _trainingcalender = new Trainingcalender();
     
     _trainingcalender.tc_year = controls.tc_year.value;
-    _trainingcalender.tc_site = controls.tc_site.value;
+    // _trainingcalender.tc_site = controls.tc_site.value;
     _trainingcalender.tc_service = controls.tc_service.value;
     return _trainingcalender;
   }
@@ -305,7 +305,7 @@ changeSite() {
    */
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/`;
+    const url = `/training/training-session-list`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
   initmvGrid() {
@@ -322,7 +322,7 @@ changeSite() {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             this.trainingcalenderService.deletes(
               {tc_year: controls.tc_year.value,
-               tc_site: controls.tc_site.value,
+              //  tc_site: controls.tc_site.value,
                tc_service: controls.tc_service.value,
                tc_part: args.dataContext.tc_part,
                tc_pop: args.dataContext.tc_pop,
@@ -352,6 +352,33 @@ changeSite() {
           }
         },
       },
+      {
+        id: "tc_site",
+        name: "Site",
+        field: "tc_site",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "svidl",
+        field: "sitevidl",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById(
+            "openSiteGrid"
+            ) as HTMLElement;
+            element.click();
+        },
+      }, 
       {
         id: "tc_part",
         name: "Code Formation",
@@ -432,7 +459,7 @@ changeSite() {
      
       {
         id: "tc_vend",
-        name: "Fournisseur",
+        name: "Organisme de formation",
         field: "tc_vend",
         sortable: true,
         width: 50,
@@ -599,15 +626,18 @@ changeSite() {
 
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.trainingForm.controls;
-  
-
+    let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
     if (Array.isArray(args.rows) && this.gridObjsite) {
       args.rows.map((idx) => {
         const item = this.gridObjsite.getDataItem(idx);
-        // TODO : HERE itterate on selected field and change the value of the selected field
-      
-            controls.tc_site.setValue(item.si_site || "");
-            this.onChangeCode()
+        console.log(item);
+
+       
+          updateItem.tc_site = item.si_site;
+          // updateItem.tc_desc = item.pt_desc1;
+          
+          this.mvgridService.updateItem(updateItem);
+       
       });
     }
   }
@@ -758,9 +788,9 @@ changeSite() {
        
       },      
       {
-        id: "pt_rollup",
+        id: "pt_phantom",
         name: "Fidélité",
-        field: "pt_rollup",
+        field: "pt_phantom",
         type: FieldType.boolean,
         formatter: Formatters.checkmark,
         filterable:true,
@@ -818,6 +848,7 @@ changeSite() {
     };
 
     // fill the dataset with your data
+    const controls = this.trainingForm.controls
      this.itemsService.getBy(
       {pt_part_type:"FORMATION"}).subscribe((response: any) => (this.items = response.data));
   }
@@ -963,7 +994,7 @@ changeSite() {
     },
     {
       id: "ad_name",
-      name: "Fournisseur",
+      name: "Formateur",
       field: "address.ad_name",
       sortable: true,
       filterable: true,

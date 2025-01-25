@@ -1,14 +1,14 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Declaration des Arrêts" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Declaration des Incidents" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
         </ng-container>
     </kt-portlet-header>
-    <kt-portlet-body>
+    <kt-portlet-body> 
         <div class="example-preview">
 
             <form class="form" [formGroup]="opForm">
@@ -21,13 +21,13 @@
                     
                     
                     <div class="form-group col-2">
-                        <label class="form-group">Date Effet:</label>
+                        <label class="form-group">Date:</label>
                         <div class="input-group input-group-sm">
-                            <input class="form-control form-control-sm form-control-solid" formControlName="op_tran_date"
-                                 placeholder="jj-mm-aaaa" name="op_tran_date" ngbDatepicker f
-                                #op_tran_date="ngbDatepicker">
+                            <input class="form-control form-control-sm form-control-solid" formControlName="op_date"
+                                 placeholder="jj-mm-aaaa" name="op_date" ngbDatepicker f
+                                #op_date="ngbDatepicker">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" (click)="op_tran_date.toggle()" type="button">
+                                <button class="btn btn-primary" (click)="op_date.toggle()" type="button">
                                     <i class="flaticon-calendar-with-a-clock-time-tools"></i>
                                 </button>
                             </div>
@@ -194,7 +194,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -228,7 +228,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -256,7 +256,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -283,7 +283,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -309,7 +309,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -336,7 +336,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -362,7 +362,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -389,7 +389,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

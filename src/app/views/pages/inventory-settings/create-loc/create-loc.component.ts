@@ -286,7 +286,7 @@ export class CreateLocComponent implements OnInit {
      */
     goBack() {
         this.loadingSubject.next(false)
-        const url = `/`
+        const url = `/inventory-settings/list-loc`
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
     handleSelectedRowsChangedsite(e, args) {

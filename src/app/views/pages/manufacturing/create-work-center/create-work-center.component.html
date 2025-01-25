@@ -2,9 +2,9 @@
     <kt-portlet-header [sticky]="true" title="Ajouter centre de charge" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
         </ng-container>
     </kt-portlet-header>
@@ -30,8 +30,6 @@
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
                     </div>
-
-
                     <div class="form-group col-2">
                         <label class="form-group">Machine: *</label>
                     
@@ -45,67 +43,37 @@
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
                     </div>
-
-
-                </div>
-
-               
-                <div class="row">    
-                    
-                        <div class="form-group col-5">
-                            <label class="form-group">Description: *</label>
-                            
-                            <input type="text"
-                            [className]="wcForm.controls['wc_desc'].errors && (wcForm.controls['wc_desc'].dirty || wcForm.controls['wc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                            formControlName="wc_desc">
-                        <div *ngIf="wcForm.controls['wc_desc'].errors && (wcForm.controls['wc_desc'].dirty || wcForm.controls['wc_desc'].touched)"
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
-    
-    
-                        </div>
-    
-                        <div class="form-group col-2">
-                            <label class="form-group">Département: *</label>
-                            <div class="input-group input-group-sm">
-                                <input type="text" id="dept"
-                                [className]="wcForm.controls['wc_dept'].errors && (wcForm.controls['wc_dept'].dirty || wcForm.controls['wc_dept'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                formControlName="wc_dept" (change)="changeCode('wc_dept')">
-                                <div class="input-group-append">
-                                    <span class="input-group-text" (click)="open3(content,'wc_dept')">
-                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                </div>
-                                <div *ngIf="wcForm.controls['wc_dept'].errors && (wcForm.controls['wc_dept'].dirty || wcForm.controls['wc_dept'].touched)"
-                                class="invalid-feedback">Ce Champs est obligatoire</div>
-    
-                             </div>
-                        </div>
-
-
+                    <div class="form-group col-4">
+                        <label class="form-group">Description: *</label>
                         
+                        <input type="text"
+                        [className]="wcForm.controls['wc_desc'].errors && (wcForm.controls['wc_desc'].dirty || wcForm.controls['wc_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="wc_desc">
+                    <div *ngIf="wcForm.controls['wc_desc'].errors && (wcForm.controls['wc_desc'].dirty || wcForm.controls['wc_desc'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Département: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="dept"
+                            [className]="wcForm.controls['wc_dept'].errors && (wcForm.controls['wc_dept'].dirty || wcForm.controls['wc_dept'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="wc_dept" (change)="changeCode('wc_dept')">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc_dept')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="wcForm.controls['wc_dept'].errors && (wcForm.controls['wc_dept'].dirty || wcForm.controls['wc_dept'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                         </div>
+                    </div>
+
                 </div>
-                <div class="row">    
+              
                 
-
-                    <div class="form-group col-2">
-                        <label class="form-group">Attente Amont: </label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" formControlName="wc_queue" class='form-control form-control-sm form-control-solid' >
-                        </div>    
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Attente Aval: </label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" formControlName="wc_wait" class='form-control form-control-sm form-control-solid' >
-                        </div>    
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Mach/op: </label>
-                        <div class="input-group input-group-sm"> 
-                            <input type="number" formControlName="wc_mch_op" class='form-control form-control-sm form-control-solid' >
-                        </div>    
-                    </div>
-
-                </div>
+                
                 <div class="row">    
 
                     <div class="form-group col-2">
@@ -126,9 +94,6 @@
                             <input type="number" formControlName="wc_men_mch" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                </div>
-                <div class="row">    
-
                     <div class="form-group col-2">
                         <label class="form-group">Taux éxecution: </label>
                         <div class="input-group input-group-sm">
@@ -136,35 +101,113 @@
                         </div>    
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">wc_mch: </label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" formControlName="wc_mch_wkctr" class='form-control form-control-sm form-control-solid' >
-                        </div>    
-                    </div>
-                    <div class="form-group col-2">
                         <label class="form-group">Taux FGV MO: </label>
                         <div class="input-group input-group-sm">
                             <input type="number" formControlName="wc_bdn_rate" class='form-control form-control-sm form-control-solid' >
                         </div>    
-                    </div>    
-
+                    </div> 
                 </div>
                 <div class="row">    
 
                     <div class="form-group col-2">
-                        <label class="form-group">Taux mach FGV: </label>
+                        <label class="form-group">Parent </label>
                         <div class="input-group input-group-sm">
-                            <input type="number" formControlName="wc_mch_bdn" class='form-control form-control-sm form-control-solid' >
+                            <input type="text" formControlName="wc_user1" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">% MO FGV: </label>
+                        <label class="form-group">Fonction: </label>
                         <div class="input-group input-group-sm">
-                            <input type="number" formControlName="wc_bdn_pct" class='form-control form-control-sm form-control-solid' >
+                            <input type="text" formControlName="wc_user2" class='form-control form-control-sm form-control-solid' >
                         </div>    
-                    </div>    
-                
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Categorie: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc_fsm_type" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Famille: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc__qadc01" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Sous-Famille: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc__qadc02" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div> 
                 </div>
+                <div class="row">    
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Site </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc__chr01" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Emplacement: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc_wk_loc" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Fournisseur: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc__chr02" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Constructeur: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc__chr03" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">N° Serie: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc__qadc03" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div> 
+                </div>
+                <div class="row">    
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Immo </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="chr01" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Responsable: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="chr02" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Date Installation: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc_mod_date" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Date mise au rebut: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="date01" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Nombre Année: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="dec01" class='form-control form-control-sm form-control-solid' >
+                        </div>    
+                    </div> 
+                </div>
+                
+                
             </form>
         </div>
     </kt-portlet-body>
@@ -186,7 +229,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>

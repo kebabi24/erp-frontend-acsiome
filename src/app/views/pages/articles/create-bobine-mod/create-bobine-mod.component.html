@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'créer une bobine'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
 
         </ng-container>
@@ -93,7 +93,7 @@
                                     <div class="form-group col-2">
                                         <label class="form-group">Code Article:</label>
 
-                                        <input type="text" formControlName="pt_part" 
+                                        <input type="text" formControlName="pt_part" disabled
                                             [className]="form1.controls['pt_part'].errors && (form1.controls['pt_part'].dirty || form1.controls['pt_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                                         <div *ngIf="form1.controls['pt_part'].errors && (form1.controls['pt_part'].dirty || form1.controls['pt_part'].touched)"
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
@@ -279,7 +279,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -303,7 +303,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -327,7 +327,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -351,7 +351,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -376,7 +376,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -400,7 +400,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -424,7 +424,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -447,7 +447,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -472,7 +472,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>

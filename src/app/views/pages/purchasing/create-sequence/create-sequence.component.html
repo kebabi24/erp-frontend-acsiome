@@ -11,7 +11,7 @@
         (click)="goBack()"
         class="btn btn-secondary btn-sm mr-2"
       >
-        Annuller
+        annuler
       </button>
       <button
         type="button"
@@ -25,7 +25,7 @@
         (click)="onSubmit()"
         class="btn btn-success btn-sm mr-2"
       >
-        Sauvgarder
+        enregistrer
       </button>
     </ng-container>
   </kt-portlet-header>
@@ -49,21 +49,25 @@
               id="exampleSelects7"
             >
               <option value=""></option>
-              <option value="RQ">RQ</option>
-              <option value="QO">QO</option>
-              <option value="PO">PO</option>
-              <option value="PR">PR</option>
-              <option value="SO">SO</option>
-              <option value="BL">BL</option>
-              <option value="OF">OF</option>
-              <option value="LP">LP</option>
-              <option value="IV">IV</option>
-              <option value="TR">TR</option>
-              <option value="PM">PM</option>
-              <option value="AP">AP</option>
-              <option value="AP">SR</option>
-              <option value="PL">PL</option>
-              
+              <option value="RQ">Demande Achat</option>
+              <option value="QO">Offre Commerciale</option>
+              <option value="PO">Ordre Achat</option>
+              <option value="PR">Bon de Réception</option>
+              <option value="RA">Réception Achat</option>
+              <option value="SO">Commande Client</option>
+              <option value="BL">Bon de livraison</option>
+              <option value="OF">Ordre de Fabrication</option>
+              <option value="LP">Liste de Prélevement</option>
+              <option value="IV">Facture</option>
+              <option value="TR">Tansfert</option>
+              <option value="PM">Projets</option>
+              <option value="AP">Facture Fournisseur</option>
+              <option value="SR">Service</option>
+              <option value="PL">Palettisation</option>
+              <option value="JOB">Compétence</option>
+              <option value="SN">Sortie non planifiée</option>
+              <option value="RN">Réception non planifiée</option>
+              <option value="RT">Retour</option>
             </select>
             <div
               *ngIf="
@@ -605,7 +609,7 @@
             class="btn btn-secondary"
             (click)="c('Close click')"
           >
-            Annuller
+            annuler
           </button>
           <button
             type="button"
@@ -657,7 +661,7 @@
             class="btn btn-secondary"
             (click)="c('Close click')"
           >
-            Annuller
+            annuler
           </button>
           <button
             type="button"

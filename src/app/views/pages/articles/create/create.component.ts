@@ -210,7 +210,7 @@ export class CreateComponent implements OnInit {
 
   sct1: CostSimulation;
   sct2: CostSimulation;
-
+ 
   sctForm: FormGroup;
   sctForm1: FormGroup;
 

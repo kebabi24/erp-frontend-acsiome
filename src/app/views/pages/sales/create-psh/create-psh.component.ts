@@ -2401,7 +2401,7 @@ printpdf(nbr) {
   console.log("pdf")
   var doc = new jsPDF();
   var img = new Image();
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 170, 5, 30, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -2448,7 +2448,7 @@ printpdf(nbr) {
   doc.setFontSize(6);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
       doc.addImage(img, 'png', 5, 5, 210, 30)
       doc.setFontSize(12);
@@ -2491,11 +2491,11 @@ doc.addPage();
 
 
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35)
+    if (this.dataset[j].desc.length > 45) {
+      let desc1 = this.dataset[j].desc.substring(45)
       let ind = desc1.indexOf(' ')
-      desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-      let desc2 = this.dataset[j].desc.substring(35+ind)
+      desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+      let desc2 = this.dataset[j].desc.substring(45+ind)
 
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.dataset[j].psh_line)).slice(-3), 12.5 , i  - 1);

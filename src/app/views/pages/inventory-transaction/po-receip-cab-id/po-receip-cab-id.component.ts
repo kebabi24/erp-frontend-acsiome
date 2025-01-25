@@ -712,7 +712,7 @@ export class PoReceipCabIdComponent implements OnInit {
     const controls = this.prhForm.controls;
     this.addressService.getBy({ ad_addr: this.poEdit.po_vend }).subscribe((resp: any) => {
       this.address = resp.data;
-      this.provider = resp.data;
+      this.provider = resp.data[0];
 
       controls.name.setValue(this.address.ad_name);
     });
@@ -904,7 +904,7 @@ export class PoReceipCabIdComponent implements OnInit {
       const ad_addr = this.prhServer.po_vend;
       console.log(ad_addr);
       this.addressService.getBy({ ad_addr: ad_addr }).subscribe((response: any) => {
-        this.provider = response.data;
+        this.provider = response.data[0];
 
         controls.name.setValue(this.provider.ad_name);
 
@@ -1181,7 +1181,7 @@ export class PoReceipCabIdComponent implements OnInit {
           const ad_addr = this.prhServer.po_vend;
           console.log(ad_addr);
           this.addressService.getBy({ ad_addr: ad_addr }).subscribe((response: any) => {
-            this.provider = response.data;
+            this.provider = response.data[0];
 
             controls.name.setValue(this.provider.ad_name);
 
@@ -1980,7 +1980,7 @@ export class PoReceipCabIdComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 170, 5, 30, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -1990,7 +1990,13 @@ export class PoReceipCabIdComponent implements OnInit {
     if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(12);
+    let date = new Date()
     doc.text("RC N° : " + nbr, 70, 40);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
     doc.setFontSize(8);
 
     doc.text("Code Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -2034,7 +2040,7 @@ export class PoReceipCabIdComponent implements OnInit {
     var i = 95;
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length; j++) {
-      if (j % 35 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
 
         doc.addImage(img, "png", 170, 5, 30, 30);
@@ -2047,6 +2053,11 @@ export class PoReceipCabIdComponent implements OnInit {
         if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(12);
         doc.text("RC N° : " + nbr, 70, 40);
+        doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
         doc.setFontSize(8);
 
         doc.text("Code Fournisseur : " + this.provider.vd_addr, 20, 50);
@@ -2091,11 +2102,11 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
@@ -2169,7 +2180,8 @@ export class PoReceipCabIdComponent implements OnInit {
     }
 
     // doc.line(10, i - 5, 200, i - 5);
-
+    doc.text("Validé par: " , 20, 235);
+    doc.text("Note: " , 20, 250);
     doc.setFontSize(10);
 
     // window.open(doc.output('bloburl'), '_blank');

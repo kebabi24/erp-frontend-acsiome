@@ -972,6 +972,7 @@ export class CreateStdItemComponent implements OnInit {
                   true
                 );
                 this.loadingSubject.next(false);
+                this.reset()
                // this.router.navigateByUrl("/articles/list");
               }
             );
@@ -984,6 +985,7 @@ export class CreateStdItemComponent implements OnInit {
   prepareSct1(): CostSimulation {
     // const controls = this.sctForm.controls;
     const control1 = this.formX.controls;
+    const controls1 = this.form1.controls;
     const _sct = new CostSimulation();
     
     _sct.sct_sim      = 'STD-CG'
@@ -999,7 +1001,7 @@ export class CreateStdItemComponent implements OnInit {
     _sct.sct_sub_tl   = 0;
     _sct.sct_sub_ll   = 0;
     _sct.sct_cst_tot  = 0;
-    _sct.sct_site     = control1.pt_site.value;
+    _sct.sct_site     = controls1.pt_site.value;
 
     return _sct;
   }
@@ -1007,6 +1009,7 @@ export class CreateStdItemComponent implements OnInit {
   prepareSct2(): CostSimulation {
     // const controls = this.sctForm1.controls;
     const control1 = this.formX.controls;
+    const controls1 = this.form1.controls;
     const _sct = new CostSimulation();
     _sct.sct_sim     = 'STD-CR'
     _sct.sct_part    = control1.pt_part.value
@@ -1021,7 +1024,7 @@ export class CreateStdItemComponent implements OnInit {
     _sct.sct_sub_tl  = 0;
     _sct.sct_sub_ll  = 0;
     _sct.sct_cst_tot = 0;
-    _sct.sct_site    = control1.pt_site.value;
+    _sct.sct_site    = controls1.pt_site.value;
     return _sct;
   }
 

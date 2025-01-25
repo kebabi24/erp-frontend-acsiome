@@ -1550,7 +1550,7 @@ export class WorctEntryPalComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
+    this.addressService.getBy({ad_type:'workcenter'}).subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
     this.prepareGrid2();

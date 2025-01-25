@@ -28,6 +28,7 @@ export class InterceptService implements HttpInterceptor {
       setHeaders: {
         USER_CODE: user ? user.usrd_code : "",
         USER_DOMAIN: user ? user.usrd_domain : "",
+        USER_site: user ? user.usrd_site : "",
       },
     });
 

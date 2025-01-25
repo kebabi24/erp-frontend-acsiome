@@ -288,6 +288,8 @@ export class EditTransactionListComponent implements OnInit {
                   // this.updatetrans(args.dataContext.id)
                   if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
                   else{
+                    if(args.dataContext.tr_type == 'RCT-PO') {this.addRCTPO(this.data, tr, this.trlot)}
+                    else{ 
                    if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
                    else{
                     if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
@@ -298,6 +300,7 @@ export class EditTransactionListComponent implements OnInit {
                      }
                     }
                    }
+                  }
                   }
                   // }
                 
@@ -362,9 +365,9 @@ export class EditTransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            editor: {
-              model: Editors.text,
-            },
+            // editor: {
+            //   model: Editors.text,
+            // },
             filter: {
 
              model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
@@ -443,7 +446,7 @@ export class EditTransactionListComponent implements OnInit {
             maxWidth: 30,
             onCellClick: (e: Event, args: OnEventArgs) => {
              
-                this.row_number = args.row;
+                this.row_number = args.row; 
                 let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
                 element.click();
               
@@ -809,7 +812,18 @@ export class EditTransactionListComponent implements OnInit {
               
               collapsed:true
             }
-          }, 
+          },
+          {
+            id: "printed",
+            name: "corrigé",
+            field: "printed",
+            sortable: true,
+            filterable: true,
+            type: FieldType.boolean,
+           
+           
+
+          },
           {
             id: "idprint",
             field: "idprint",
@@ -826,7 +840,10 @@ export class EditTransactionListComponent implements OnInit {
             minWidth: 30,
             maxWidth: 30,
             onCellClick: (e: Event, args: OnEventArgs) => {
-              
+              console.log(args.dataContext.tr_oldpart,args.dataContext.tr_part)
+              if(args.dataContext.printed != true){
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, printed:true })
+                
               if(args.dataContext.tr_part!=args.dataContext.tr_oldpart || args.dataContext.tr_addr!=args.dataContext.tr_oldaddr || args.dataContext.tr_serial!=args.dataContext.tr_oldserial || args.dataContext.tr_qty_loc!= args.dataContext.tr_qty_chg)   /*ajouter ligne tr_hist de suppression*/
                 { console.log('changement', args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,args.dataContext.tr_oldserial) 
                   
@@ -860,7 +877,7 @@ export class EditTransactionListComponent implements OnInit {
                   tr_expire: args.dataContext.tr_expire,
                   tr_rev:'CHANGED',
                 };
-                // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+                
                 args.dataContext.tr_qty_chg = 0;
                 this.oldata.push(oldobj);
                 let oldtr = oldobj;
@@ -869,65 +886,74 @@ export class EditTransactionListComponent implements OnInit {
                 console.log(args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,'old')
                 if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.oldata, oldtr, this.trlot)}
                 else{
-                if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.oldata, oldtr, this.trlot)}
-                else{
-                  if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.oldata, oldtr)}
+                  if(args.dataContext.tr_type == 'RCT-PO') {this.addRCTPO(this.oldata, oldtr, this.trlot)}
                   else{
-                  if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.oldata,oldtr)}
-                  else{ 
-                    if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.oldata,oldtr)}
-                  }
+                        if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.oldata, oldtr, this.trlot)}
+                        else{
+                          if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.oldata, oldtr)}
+                          else{
+                          if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.oldata,oldtr)}
+                          else{ 
+                            if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.oldata,oldtr)}
+                          }
+                          }
+                        }
                   }
                 }
-                }
-                      
+                console.log('delay');
+                this.data = [];
+                let obj = {
+                      tr_lot:args.dataContext.tr_lot,
+                      tr_nbr:args.dataContext.tr_nbr,
+                      tr_addr:args.dataContext.tr_addr,
+                      tr_rmks:'CORRECTION ADMINISTRATION',
+                      tr_gl_date: new Date(),
+                      tr_effdate: args.dataContext.tr_effdate,
+                      dec01:args.dataContext.dec01,
+                      dec02:args.dataContext.dec02,
+                      tr_line: args.dataContext.tr_line,
+                      tr_part: args.dataContext.tr_part,
+                      desc: args.dataContext.desc,
+                      tr_loc_begin: 0,
+                      tr_qty_loc: args.dataContext.tr_qty_loc  ,
+                      tr_gl_amt: (args.dataContext.tr_qty_loc ) * args.dataContext.tr_price * args.dataContext.tr_um_conv,
+                      tr_um: args.dataContext.tr_um,
+                      tr_um_conv: args.dataContext.tr_um_conv,
+                      tr_price: args.dataContext.tr_price,
+                      tr_site: args.dataContext.tr_site,
+                      tr_loc: args.dataContext.tr_loc,
+                      tr_serial: args.dataContext.tr_serial,
+                      tr_ref: args.dataContext.tr_ref,
+                      tr_status: args.dataContext.tr_status,
+                      tr_expire: args.dataContext.tr_expire,
+                };
                 
-              }
-              this.data = [];
-              let obj = {
-                    tr_lot:args.dataContext.tr_lot,
-                    tr_nbr:args.dataContext.tr_nbr,
-                    tr_addr:args.dataContext.tr_addr,
-                    tr_rmks:'CORRECTION ADMINISTRATION',
-                    tr_gl_date: new Date(),
-                    tr_effdate: args.dataContext.tr_effdate,
-                    dec01:args.dataContext.dec01,
-                    dec02:args.dataContext.dec02,
-                    tr_line: args.dataContext.tr_line,
-                    tr_part: args.dataContext.tr_part,
-                    desc: args.dataContext.desc,
-                    tr_loc_begin: args.dataContext.tr_qty_chg,
-                    tr_qty_loc: args.dataContext.tr_qty_loc  ,
-                    tr_gl_amt: (args.dataContext.tr_qty_loc ) * args.dataContext.tr_price * args.dataContext.tr_um_conv,
-                    tr_um: args.dataContext.tr_um,
-                    tr_um_conv: args.dataContext.tr_um_conv,
-                    tr_price: args.dataContext.tr_price,
-                    tr_site: args.dataContext.tr_site,
-                    tr_loc: args.dataContext.tr_loc,
-                    tr_serial: args.dataContext.tr_serial,
-                    tr_ref: args.dataContext.tr_ref,
-                    tr_status: args.dataContext.tr_status,
-                    tr_expire: args.dataContext.tr_expire,
-              };
-              // this.data.push(this.dataset[this.index])
-              this.data.push(obj);
-              let tr = obj;
-              this.trlot = args.dataContext.tr_lot;
-                  
-              if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
-              else{
-                  if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
-                  else{
-                    if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+              
+                setTimeout(() => {
+                  // this.data.push(this.dataset[this.index])
+                this.data.push(obj);
+                let tr = obj;
+                this.trlot = args.dataContext.tr_lot;
+                    
+                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
+                else{
+                  if(args.dataContext.tr_type == 'RCT-PO') {this.addRCTPO(this.data, tr, this.trlot)}
                     else{
-                    if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
-                    else{ 
-                      if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
-                    }
+                    if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
+                    else{
+                      if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                      else{
+                      if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                      else{ 
+                        if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
+                      }
+                      }
                     }
                   }
-              }
-              const controls = this.trForm.controls;
+                }
+                  
+                  console.log('delay')
+                  const controls = this.trForm.controls;
               let cabs : any;
               const _lb = new Label();
               this.labelService.getBy({ lb_ref: args.dataContext.tr_ref }).subscribe(
@@ -953,6 +979,7 @@ export class EditTransactionListComponent implements OnInit {
                 _lb.lb_addr = cabs.lb_addr,
                 _lb.lb_tel = cabs.lb_tel,
                 _lb.lb_ref = cabs.lb_ref,
+                _lb.lb__chr01 = cabs.lb__chr01,
 
                 this.labelService.addblob(_lb).subscribe((blob) => {                 
                   Edelweiss.print3(_lb,this.currentPrinter);
@@ -964,7 +991,17 @@ export class EditTransactionListComponent implements OnInit {
                   this.isExist = true;
                   return;
                 }
-              )
+              )  
+                },3000)
+                                    
+               
+              
+              
+              }}
+              else{ this.message = "vous avez dèjà modifié cette ligne";
+                this.hasFormErrors = true;
+                return;}
+              
             }
           },
           
@@ -1009,7 +1046,7 @@ export class EditTransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_addr",width:50},{columnId:"advid",width:20},{columnId:"mvid",width:20},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20},{columnId:"idprint",width:20}]
+          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_addr",width:50},{columnId:"advid",width:20},{columnId:"mvid",width:20},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20},{columnId:"printed",width:20},{columnId:"idprint",width:20}]
           
         },
        
@@ -1265,11 +1302,34 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
+        
+      }
+    );
+  }
+  addRCTPO(detail: any, it, nlot) {
+   
+    this.loadingSubject.next(true);
+    const controls = this.trForm.controls;
+  
+    this.inventoryTransactionService.addRCTPOCab({ detail, it, nlot }).subscribe(
+      (reponse: any) => {
+        console.log(reponse);
+        // const arrayOctet = new Uint8Array(reponse.pdf.data)
+        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        // const fileUrl = URL.createObjectURL(file);
+        // window.open(fileUrl)
+      },
+      (error) => {
+        this.message = "RCT-UNP";
+        this.isExist = true
+        return
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
 
-        // this.router.navigateByUrl("/");
+        
       }
     );
   }
@@ -1283,11 +1343,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       .subscribe(
        (reponse: any) => {
         console.log(reponse)
-      // this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-        // const arrayOctet = new Uint8Array(reponse.pdf.data)
-        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-        // const fileUrl = URL.createObjectURL(file);
-        // window.open(fileUrl)},
+      
        },
         (error) => {
           this.layoutUtilsService.showActionNotification(
@@ -1580,7 +1636,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
   open2(content) {
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
-        if (reponse.data == null) {
+        if (reponse.data == null || reponse.data.code_value != ' ') {
           this.prepareGrid2();
           this.modalService.open(content, { size: "lg" });
         }
@@ -1597,7 +1653,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     if (Array.isArray(args.rows) && this.gridObj4) {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
-        console.log(item);
+        console.log(item,this.dataset[idx].tr_oldpart);
 
         
             updateItem.tr_part = item.pt_part;

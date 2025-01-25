@@ -1036,7 +1036,8 @@ export class IssBobineWoComponent implements OnInit {
               for (var object = 0; object < formule.length; object++) {
                 let calc = 0
                 
-                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * (1 + Number(formule[object].ps_scrp_pct)) / Number(response.data.bom_batch)
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(Number(1) + Number(formule[object].ps_scrp_pct)) / Number(response.data.bom_batch)
+                console.log(calc)
                 if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PAYETTE'){ controls.PAI_PREV.setValue(calc )}
@@ -1076,7 +1077,7 @@ export class IssBobineWoComponent implements OnInit {
               for (var object = 0; object < formule.length; object++) {
                 let calc = 0
                 
-                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(1 +formule[object].ps_scrp_pct)  / Number(response.data.bom_batch)
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(Number(1) + Number(formule[object].ps_scrp_pct))  / Number(response.data.bom_batch)
                 if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PAYETTE'){ controls.PAI_PREV.setValue(calc )}
@@ -1141,7 +1142,7 @@ export class IssBobineWoComponent implements OnInit {
               for (var object = 0; object < formule.length; object++) {
                 let calc = 0
                 
-                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(1 +formule[object].ps_scrp_pct) / Number(response.data.bom_batch)
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(Number(1) + Number(formule[object].ps_scrp_pct)) / Number(response.data.bom_batch)
                 if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PAYETTE'){ controls.PAI_PREV.setValue(calc )}
@@ -1209,43 +1210,27 @@ export class IssBobineWoComponent implements OnInit {
         let Sqlqty = 0
         let Prfqty = 0
         let Paiqty = 0
-
-        this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        controls.ORG_ISS.setValue(0)
+        controls.SQL_ISS.setValue(0)
+        controls.PAI_ISS.setValue(0)
+        controls.PRF_ISS.setValue(0)
+        controls.total_iss.setValue(0)
+        this.inventoryTransactionService.getByRef({tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
           (res: any) => {        
-          this.dataset  = res.data;
-          for (let item of this.dataset){
+          
+          for (let item of res.data){
             this.itemsService.getByOne({pt_part: item.tr_part  }).subscribe(
               (respopart: any) => {
                 total = total + Number(item.tr_qty_loc)
+                console.log(total, respopart.data.pt_draw, this.domain)
             if(respopart.data.pt_draw == 'ORIGINAL'){ Orgqty = Number(Number(Orgqty) + Number(item.tr_qty_loc));controls.ORG_ISS.setValue(Number(Orgqty))}
             else{if(respopart.data.pt_draw == 'SQUELETTE'){ Sqlqty = Number(Number(Sqlqty) + Number(item.tr_qty_loc));controls.SQL_ISS.setValue(Number(Sqlqty))}
                  else{if(respopart.data.pt_draw == 'PREFORME'){ Prfqty = Number(Number(Prfqty) + Number(item.tr_qty_loc));controls.PRF_ISS.setValue(Number(Prfqty))}
                       else{if(respopart.data.pt_draw == 'PAYETTE'){ Paiqty = Number(Number(Paiqty) + Number(item.tr_qty_loc));controls.PAI_ISS.setValue(Number(Paiqty))}}}}
               })
-          this.gridService.addItem(
-            {
-              id: this.dataset.length + 1,
-              tr_line: this.dataset.length + 1,
-              tr_part: item.tr_part,
-              cmvid: "",
-              tr_desc: item.tr_desc,
-              tr__chr02:item.tr__chr02,
-              tr_qty_loc: item.tr_qty_loc,
-              tr_loc: item.tr_loc,
-              tr_effdate: item.tr_effdate,
-              tr_um:item.tr_um,
-              tr_um_conv: 1,
-              tr_price: item.tr_price,
-              cmvids: "",
-              tr_ref: item.tr_ref,
-              tr_serial: item.tr_serial,
-              tr_status: item.tr_status,
-              tr_expire: item.tr_expire,
-              tr_program: item.tr_program,
-            },
-            { position: "bottom" }
-            
-          )}},)
+        
+          
+        }},)
        
       } else {
        
@@ -1256,6 +1241,7 @@ export class IssBobineWoComponent implements OnInit {
   return;
       }
     });
+ 
   }
 
   //reste form
@@ -1419,7 +1405,7 @@ export class IssBobineWoComponent implements OnInit {
 
 
     for (var i = 0; i < this.dataset.length; i++) {
-      console.log(this.dataset[i]  )
+      
      if (this.dataset[i].tr_part == "" || this.dataset[i].tr_part == null  ) {
       this.message = "L' article ne peut pas etre vide";
       this.hasFormErrors = true;
@@ -1492,6 +1478,7 @@ export class IssBobineWoComponent implements OnInit {
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = this.nof;
     _tr.tr_lot = this.wolot;
+    _tr.tr_addr = controls.wo_routing.value;
     _tr.tr_user1 = this.user1;
     _tr.tr_user2 = this.user2;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1509,7 +1496,7 @@ export class IssBobineWoComponent implements OnInit {
     _tr.tr_lot = wocontrols.wo_lot.value
     _tr.tr_user1 = this.user1;
     _tr.tr_user2 = this.user2;
-    
+    _tr.tr_addr = wocontrols.wo_routing.value;
     _tr.tr_effdate = wocontrols.wo_ord_date.value
     ? `${wocontrols.wo_ord_date.value.year}/${wocontrols.wo_ord_date.value.month}/${wocontrols.wo_ord_date.value.day}`
     : null
@@ -1550,10 +1537,6 @@ export class IssBobineWoComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 500, false, false);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-
-        //    this.router.navigateByUrl("/");
       }
     );
   }
@@ -1619,8 +1602,7 @@ export class IssBobineWoComponent implements OnInit {
             document.getElementById("ref").focus();
             this.loadingSubject.next(false);
 
-            //    console.log(this.provider, po, this.dataset);
-            //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
+           
           }
         );
       }
@@ -1646,11 +1628,14 @@ export class IssBobineWoComponent implements OnInit {
    * @param _it: it
    */
   addIt( detail: any, it) {
+   
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
+      
      
     }
+    
     this.loadingSubject.next(true);
     const controls = this.woForm.controls;
 
@@ -1677,8 +1662,7 @@ export class IssBobineWoComponent implements OnInit {
             true
           );
           this.loadingSubject.next(false);
-      //    console.log(this.provider, po, this.dataset);
-      //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
+      
      
         this.router.navigateByUrl("/");
         }
@@ -1717,6 +1701,7 @@ export class IssBobineWoComponent implements OnInit {
         tr_serial: null,
         tr_status: null,
         tr_expire: null,
+        old:false,
       },
       { position: "bottom" }
     );
@@ -2682,7 +2667,7 @@ open2(content) {
 
 addsameItem(i ) {
   console.log(i)
-  console.log(this.dataset)
+  
   this.gridService.addItem(
     {
       id: this.dataset.length + 1,
@@ -2700,6 +2685,7 @@ addsameItem(i ) {
       tr_status: null,
       
       tr_expire: null,
+      old:false,
     },
     { position: "bottom" }
   );
@@ -2720,7 +2706,7 @@ if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
   this.message = "veuillez sélectionner les employés";
 this.hasFormErrors = true;
 return;}
- this.workOrderService.getBy({wo_nbr: controls.wo_nbr.value,id: Number(controls.wo_lot.value),wo_status:'R'}).subscribe((res:any) =>{
+ this.workOrderService.getBy({wo_nbr: controls.wo_nbr.value,wo_status:'R'}).subscribe((res:any) =>{
   if (res.data.length == 0) {
     console.log(res.data,'CLOTURE OF')
     controls.ref.setValue(null)
@@ -2729,9 +2715,9 @@ return;}
     return;
   }
   else {console.log('calcul réalisation')
-    console.log(res.data.wo_qty_comp)
-        controls.total_bobine.setValue(res.data.wo_qty_comp)
-        controls.wo_qty_rjct.setValue(res.data.wo_qty_rjct)
+    console.log(res.data[0].wo_qty_comp)
+        controls.total_bobine.setValue(Number(res.data[0].wo_qty_comp))
+        controls.wo_qty_rjct.setValue(Number(res.data[0].wo_qty_rjct))
         this.pourcentage_squelette = Number(controls.wo_qty_rjct.value) * 100 / (Number(controls.wo_qty_rjct.value) + Number(controls.total_bobine.value))
   }
 })
@@ -2758,35 +2744,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
    
     
    this.labelService.getBy({lb_cab: ref,lb__log01: true}).subscribe((res:any) =>{
-    // if (res.data.length != 0) {
-    //   console.log('PALETTE FORCEE')
-    //   controls.ref.setValue(null)
-    //   this.gridService.addItem(
-    //     {
-    //       id: this.dataset.length + 1,
-    //       tr_line: this.dataset.length + 1,
-    //       tr_part: this.lddet.ld_part,
-    //       cmvid: "",
-    //       tr_desc: this.lddet.ld_desc,
-    //       tr__chr02:this.lddet.ld__chr02,
-    //       tr_qty_loc: this.lddet.ld_qty_oh,
-    //       tr_loc: this.lddet.ld_loc,
-    //       tr_effdate: new Date(),
-    //       tr_um:this.lddet.ld_um,
-    //       tr_um_conv: 1,
-    //       tr_price: 0,
-    //       cmvids: "",
-    //       tr_ref: this.lddet.ld_ref,
-    //       tr_serial: this.lddet.ld_lot,
-    //       tr_status: this.lddet.ld_status,
-    //       tr_expire: this.lddet.ld_expire,
-    //       tr_program: new Date().toLocaleTimeString,
-    //     },
-    //     { position: "bottom" }
-        
-    //   ) 
-    //   }
-    //  else {
+    
         this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-WO" }).subscribe((resstat:any)=>{
           console.log(resstat)
           const { data } = resstat;
@@ -2819,6 +2777,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                         tr_serial: this.lddet.ld_lot,
                         tr_status: this.stat,
                         tr_expire: this.lddet.ld_expire,
+                        old:false,
                       },
                       { position: "bottom" }
                 );
@@ -2894,6 +2853,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                                                               tr_serial: this.lddet.ld_lot,
                                                               tr_status: this.stat,
                                                               tr_expire: this.lddet.ld_expire,
+                                                              old:false,
                                                             },
                                                             { position: "bottom" }
                                                                         );
@@ -2934,7 +2894,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                     this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
                     (respo: any) => {
                       this.sct = respo.data
-                      console.log(this.sct)
+                      
                       this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{
                         if (res.data != null) {idpal = res.data.id
                         console.log(idpal)
@@ -2960,10 +2920,11 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                         tr_serial: this.lddet.ld_lot,
                         tr_status: this.stat,
                         tr_expire: this.lddet.ld_expire,
+                        old:false,
                       },
                       { position: "bottom" }
-                                  );
-                                  controls.ref.setValue(null)
+                      );
+                      controls.ref.setValue(null)
                     });
                   }    
                   
@@ -3239,7 +3200,7 @@ handleSelectedRowsChangedbom(e, args) {
         console.log(formule)
         for (var object = 0; object < formule.length; object++) {
           let calc = 0
-          calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(1 + formule[object].ps_scrp_pct) / Number(response.data.bom_batch)
+          calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(Number(1) + Number(formule[object].ps_scrp_pct)) / Number(response.data.bom_batch)
           if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
           if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
           if (formule[object].ps_ref == 'PAYETTE'){ controls.PAI_PREV.setValue(calc )}
@@ -3471,14 +3432,43 @@ prepareGrid5() {
       sortable: true,
       filterable: true,
       type: FieldType.date,
+      minWidth: 150,
     },
     {
-      id: "wo_part",
-      name: "Article",
-      field: "wo_part",
+      id: "wo_ref",
+      name: "BOBINE",
+      field: "wo_ref",
       sortable: true,
       filterable: true,
       type: FieldType.string,
+      minWidth: 150,
+    },
+    {
+      id: "wo_batch",
+      name: "COULEUR",
+      field: "wo_batch",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 150,
+    },
+    {
+      id: "wo_bom_code",
+      name: "QUALITE",
+      field: "wo_bom_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+     
+    },
+    {
+      id: "wo_grade",
+      name: "SILICONE",
+      field: "wo_grade",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 150,
     },
     {
       id: "wo_status",
@@ -3593,8 +3583,8 @@ handleSelectedRowsChanged5(e, args) {
               for (var object = 0; object < formule.length; object++) {
                 let calc = 0
                 
-                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(1 +formule[object].ps_scrp_pct)/ Number(response.data.bom_batch)
-                
+                calc = Number(formule[object].ps_qty_per) * Number(controls.wo_qty_ord.value) * Number(Number(1) + Number(formule[object].ps_scrp_pct))/ Number(response.data.bom_batch)
+                console.log(calc)
                 if (formule[object].ps_ref == 'SQUELETTE'){ controls.SQL_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PREFORME'){ controls.PRF_PREV.setValue(calc )}
                 if (formule[object].ps_ref == 'PAYETTE'){ controls.PAI_PREV.setValue(calc )}
@@ -3612,15 +3602,20 @@ handleSelectedRowsChanged5(e, args) {
               
             }
      })
-     this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+     controls.ORG_ISS.setValue(0)
+     controls.SQL_ISS.setValue(0)
+     controls.PAI_ISS.setValue(0)
+     controls.PRF_ISS.setValue(0)
+     controls.total_iss.setValue(0)
+     this.inventoryTransactionService.getByRef({tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
       (res: any) => {        
-      this.dataset  = res.data;
+      
       let calc_iss = 0   
       let Orgqty = 0
       let Sqlqty = 0
       let Prfqty = 0
       let Paiqty = 0
-      for (let item of this.dataset){
+      for (let item of res.data){
                     
             if(item.tr__chr01 == 'ORIGINAL'){ Orgqty = Number(Number(Orgqty) - Number(item.tr_qty_loc));controls.ORG_ISS.setValue(Number(Orgqty))}
             else{if(item.tr__chr01 == 'SQUELETTE'){ Sqlqty = Number(Number(Sqlqty) - Number(item.tr_qty_loc));controls.SQL_ISS.setValue(Number(Sqlqty))}
@@ -3634,34 +3629,37 @@ handleSelectedRowsChanged5(e, args) {
       controls.wo_nbr.value
       
       console.log('remplir grid' ,controls.wo_nbr.value)
-      this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
-        (res: any) => {        
-        this.dataset  = res.data;
-        for (let item of this.dataset){
-        this.gridService.addItem(
-          {
-            id: this.dataset.length + 1,
-            tr_line: this.dataset.length + 1,
-            tr_part: item.tr_part,
-            cmvid: "",
-            tr_desc: item.tr_desc,
-            tr__chr02:item.tr__chr02,
-            tr_qty_loc: item.tr_qty_loc,
-            tr_loc: item.tr_loc,
-            tr_effdate: item.tr_effdate,
-            tr_um:item.tr_um,
-            tr_um_conv: 1,
-            tr_price: item.tr_price,
-            cmvids: "",
-            tr_ref: item.tr_ref,
-            tr_serial: item.tr_serial,
-            tr_status: item.tr_status,
-            tr_expire: item.tr_expire,
-            tr_program: item.tr_program,
-          },
-          { position: "bottom" }
+    //   this.inventoryTransactionService.getBy({tr_domain: this.domain,tr_type:'ISS-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+    //     (res: any) => {        
+    //     this.dataset  = res.data;
+    //     for (let item of this.dataset){
+    //   this.gridService.addItem(
+    //       {
+    //         id: this.dataset.length + 1,
+    //         tr_line: this.dataset.length + 1,
+    //         tr_part: item.tr_part,
+    //         cmvid: "",
+    //         tr_desc: item.tr_desc,
+    //         tr__chr02:item.tr__chr02,
+    //         tr_qty_loc: item.tr_qty_loc,
+    //         tr_loc: item.tr_loc,
+    //         tr_effdate: item.tr_effdate,
+    //         tr_um:item.tr_um,
+    //         tr_um_conv: 1,
+    //         tr_price: item.tr_price,
+    //         cmvids: "",
+    //         tr_ref: item.tr_ref,
+    //         tr_serial: item.tr_serial,
+    //         tr_status: item.tr_status,
+    //         tr_expire: item.tr_expire,
+    //         tr_program: item.tr_program,
+    //         old:true,
+    //       },
+    //       { position: "bottom" }
           
-        )}})
+    //   )
+    //   }
+    // })
        
       this.product = item.item;
       this.umd = item.item.pt_um;
@@ -3687,7 +3685,7 @@ handleSelectedRowsChanged5(e, args) {
       console.log(this.site);
       this.sctService.getByOne({ sct_site: this.site, sct_part: item.wo_part, sct_sim: "STD-CG" }).subscribe((resp: any) => {
         this.sct = resp.data;
-        console.log("sct", this.sct);
+       
       });
     });
   }
@@ -3707,7 +3705,7 @@ handleSelectedRowsChanged5(e, args) {
   //     this.address = resaddr.data;
   //   });
   // }
- 
+  
 }
 
  open5(content) {
@@ -3845,7 +3843,7 @@ prepareGridemp() {
   };
 
   // fill the dataset with your data
-  this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));
+  this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));
 }
 
 handleSelectedRowsChangedemp(e, args) {

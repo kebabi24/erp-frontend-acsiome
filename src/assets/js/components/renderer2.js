@@ -38,7 +38,7 @@ var ElectronPrinter2 = (function () {
       let valueToAddToX = 5;
       doc.setLineWidth(0.2);
       var img = new Image();
-      // img.src = "companylogo.png";
+      // img.src = "companyentete.png";
       // doc.addImage(img, "png", 150, 5, 50, 30);
       doc.setFontSize(12);
 
@@ -95,7 +95,7 @@ var ElectronPrinter2 = (function () {
       doc.setFontSize(8);
 
       for (let j = 0; j < printLines.length; j++) {
-        if (j % 21 == 0 && j != 0) {
+        if (j % 22 == 0 && j != 0) {
           doc.addPage();
 
           doc.setFontSize(8);
@@ -201,7 +201,7 @@ var ElectronPrinter3 = (function () {
       // // Combine the current directory with the new file name
       // const filePath = path.join(currentDirectory, newFileName);
       var img = new Image();
-      // img.src = "companylogo.png";
+      // img.src = "companyentete.png";
       // doc.addImage(img, "png", 150, 5, 50, 30);
       doc.setFontSize(14);
 
@@ -297,7 +297,7 @@ var ElectronPrinter3 = (function () {
       // doc.setFontSize(22);
 
       for (let j = 0; j < printLines.length; j++) {
-        if (j % 21 == 0 && j != 0) {
+        if (j % 22 == 0 && j != 0) {
           doc.addPage();
 
           doc.setFontSize(8);
@@ -413,15 +413,17 @@ var Edelweiss = (function () {
     
   return {
       print3: function (lb, userPrinter) {
+        console.log(edelweiss)
           const options = {
               printer: userPrinter,
 
           };
+          
           const pageWidth = 284; // Width of the page in points
           const pageHeight = 284; // Height of the page in points
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-          const time = new Date(lb.createdAt).toLocaleTimeString();
+          const time = lb.lb__chr01;
           console.log('renderer.js')
           doc.text('FOURNISSEUR : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
@@ -509,6 +511,7 @@ var Edelweiss2 = (function () {
     
   return {
       print3: function (lb, userPrinter) {
+        console.log('print3')
           const options = {
               printer: userPrinter,
 
@@ -517,7 +520,7 @@ var Edelweiss2 = (function () {
           const pageHeight = 284; // Height of the page in points
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-          const time = new Date(lb.createdAt).toLocaleTimeString();
+          const time = lb.lb__chr01;
           
           doc.text('MACHINE : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
@@ -606,3 +609,76 @@ var Edelweiss2 = (function () {
   }
 
 }(Edelweiss2 || {}))
+
+var asset = (function () {
+    
+  return {
+      printasset: function (lb, userPrinter) {
+        console.log('printasset')
+          const options = {
+              printer: userPrinter,
+
+          };
+          const pageWidth = 164; // Width of the page in points
+          const pageHeight = 127; // Height of the page in points
+          const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
+          doc.page.margins = { top: 1, bottom: 1, left: 1, right: 1 };
+          const time = lb.lb__chr01;
+          
+          doc
+          doc
+          .fontSize(10)
+          .text(lb.lb_cust, 5, 10)
+          .text(lb.lb_desc, 5,25)
+          .text('SN: ' + lb.lb_lot, 5,40);
+
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
+
+          doc.pipe(fs.createWriteStream(filenamepdf));
+
+
+          bwipjs.toBuffer(
+              {
+                  bcid: 'code128', // Barcode type (replace with the desired barcode format)
+                  text: lb.lb_ref, // Barcode data
+                  scale: 4, // Scaling factor for the barcode image
+                  includetext: false, // Include the barcode text
+                  height: 10,
+                  width: 40,
+              },
+              function (err, png) {
+                  if (err) {
+                      console.log(err);
+                      return;
+                  }
+
+                  // Load the barcode image from the generated PNG buffer
+                  const image = doc.openImage(png);
+
+                  // Draw the barcode image on the PDF document
+                  doc.image(image, 5, 75, {
+                      fit: [500, 30], // Adjust the size of the barcode image as needed
+                  });
+                  // Save the PDF document
+                  doc.end();
+              },
+          );
+
+          setTimeout(() => {
+              fs.readFile(filenamepdf, (err, data) => {
+                if (err) {
+                  console.error(err);
+                 
+                }
+                print(filenamepdf, options).then(console.log);
+                
+              });
+            }, 2000);
+          
+          console.log("all right")
+          
+      },
+
+  }
+
+}(asset || {}))

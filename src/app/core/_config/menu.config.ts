@@ -48,133 +48,133 @@ export class MenuConfig {
           ],
         },
 
-        {
-          title: "POS",
-          bullet: "dot",
-          icon: "flaticon2-shopping-cart",
-          root: true,
-          submenu: [
-            {
-              title: "Pos",
-              page: "/pos",
-            },
-            {
-              title: "Pos cafette",
-              page: "/pos-cafette",
-            },
-            {
-              title: "Weekly inventory",
-              page: "/weekly-inventory",
-            },
-            {
-              title: "Transfert des recettes",
-              page: "/revenue-transfer",
-            },
-            {
-              title: "Pos call center",
-              page: "/pos-visitor",
-            },
-          ],
-        },
-        {
-          title: "Rapports",
-          bullet: "dot",
-          icon: "flaticon-file-2",
-          root: true,
-          submenu: [
-            {
-              title: "Rapport Journalier",
-              page: "/sales/dayly-site-trans",
-            },
-            {
-              title: "Consultation des Ventes",
-              page: "/sales/list-sales",
-            },
-            {
-              title: "Consultation des Commandes",
-              page: "/sales/list-pos",
-            },
-            {
-              title: "Consultation des Caisses",
-              page: "/sales/list-caisse",
-            },
-            {
-              title: "Consultation des CA par Boutique",
-              page: "/sales/list-site-ca",
-            },
-            {
-              title: "Consultation des Transactions Grp ",
-              page: "/inventory-transaction/trans-list-grp",
-            },
-            {
-              title: "Consultation des Inventaires ",
-              page: "/inventory-transaction/list-inv",
-            },
-            {
-              title: "Consultation des Récéption ",
-              page: "/inventory-transaction/list-rct",
-            },
-            {
-              title: "Rapports detaillé par site ",
-              page: "/inventory-transaction/conso-report",
-            },
-          ],
-        },
+        // {
+        //   title: "POS",
+        //   bullet: "dot",
+        //   icon: "flaticon2-shopping-cart",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Pos",
+        //       page: "/pos",
+        //     },
+        //     {
+        //       title: "Pos cafette",
+        //       page: "/pos-cafette",
+        //     },
+        //     {
+        //       title: "Weekly inventory",
+        //       page: "/weekly-inventory",
+        //     },
+        //     {
+        //       title: "Transfert des recettes",
+        //       page: "/revenue-transfer",
+        //     },
+        //     {
+        //       title: "Pos call center",
+        //       page: "/pos-visitor",
+        //     },
+        //   ],
+        // },
+        // {
+        //   title: "Rapports",
+        //   bullet: "dot",
+        //   icon: "flaticon-file-2",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Rapport Journalier",
+        //       page: "/sales/dayly-site-trans",
+        //     },
+        //     {
+        //       title: "Consultation des Ventes",
+        //       page: "/sales/list-sales",
+        //     },
+        //     {
+        //       title: "Consultation des Commandes",
+        //       page: "/sales/list-pos",
+        //     },
+        //     {
+        //       title: "Consultation des Caisses",
+        //       page: "/sales/list-caisse",
+        //     },
+        //     {
+        //       title: "Consultation des CA par Boutique",
+        //       page: "/sales/list-site-ca",
+        //     },
+        //     {
+        //       title: "Consultation des Transactions Grp ",
+        //       page: "/inventory-transaction/trans-list-grp",
+        //     },
+        //     {
+        //       title: "Consultation des Inventaires ",
+        //       page: "/inventory-transaction/list-inv",
+        //     },
+        //     {
+        //       title: "Consultation des Récéption ",
+        //       page: "/inventory-transaction/list-rct",
+        //     },
+        //     {
+        //       title: "Rapports detaillé par site ",
+        //       page: "/inventory-transaction/conso-report",
+        //     },
+        //   ],
+        // },
         // CRM
-        {
-          title: "CRM",
-          bullet: "dot",
-          icon: "flaticon-event-calendar-symbol",
-          root: true,
-          submenu: [
-            {
-              title: "Agenda",
-              page: "/crm/agenda",
-            },
-            {
-              title: "Ajouter un paramètre CRM",
-              page: "/crm/param-add",
-            },
-            {
-              title: "Ajouter une population",
-              page: "/crm/population-add",
-            },
-            {
-              title: "Ajouter une réclamation",
-              page: "/customers/customer-reclamation",
-            },
-            {
-              title: "Ajouter une satisfaction",
-              page: "/customers/customer-satisfaction",
-            },
-          ],
-        },
+        // {
+        //   title: "CRM",
+        //   bullet: "dot",
+        //   icon: "flaticon-event-calendar-symbol",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Agenda",
+        //       page: "/crm/agenda",
+        //     },
+        //     {
+        //       title: "Ajouter un paramètre CRM",
+        //       page: "/crm/param-add",
+        //     },
+        //     {
+        //       title: "Ajouter une population",
+        //       page: "/crm/population-add",
+        //     },
+        //     {
+        //       title: "Ajouter une réclamation",
+        //       page: "/customers/customer-reclamation",
+        //     },
+        //     {
+        //       title: "Ajouter une satisfaction",
+        //       page: "/customers/customer-satisfaction",
+        //     },
+        //   ],
+        // },
 
         // PROMO
-        {
-          title: "Promotion",
-          bullet: "dot",
-          icon: "flaticon-event-calendar-symbol",
-          root: true,
-          submenu: [
-            {
-              title: "Ajouter population article",
-              page: "/promo/population-art-add",
-            },
-            {
-              title: "Ajouter population client",
-              page: "/promo/promo-cust-add",
-            },
-            {
-              title: "Ajouter avantage",
-              page: "/promo/advantage-add",
-            },
-            {
-              title: "Ajouter promotion",
-              page: "/promo/promo-add",
-            },
-          ],
-        },
+        // {
+        //   title: "Promotion",
+        //   bullet: "dot",
+        //   icon: "flaticon-event-calendar-symbol",
+        //   root: true,
+        //   submenu: [
+        //     {
+        //       title: "Ajouter population article",
+        //       page: "/promo/population-art-add",
+        //     },
+        //     {
+        //       title: "Ajouter population client",
+        //       page: "/promo/promo-cust-add",
+        //     },
+        //     {
+        //       title: "Ajouter avantage",
+        //       page: "/promo/advantage-add",
+        //     },
+        //     {
+        //       title: "Ajouter promotion",
+        //       page: "/promo/promo-add",
+        //     },
+        //   ],
+        // },
 
         {
           title: "Assurance de qualité",
@@ -228,7 +228,7 @@ export class MenuConfig {
               page: "/providers/create-rep",
             },
             {
-              title: "Répertoire Fournisseurs Métier",
+              title: "Répertoire Fournisseurs formateur",
               page: "/providers/create-rep-job",
             },
             {
@@ -458,12 +458,24 @@ export class MenuConfig {
               page: "/articles/add",
             },
             {
-              title: "Génerer Matiere via Modèle",
+              title: "Génerer Bien via Modèle",
               page: "/articles/create-mp-mod",
+            },
+            {
+              title: "Génerer Intrants via Modèle",
+              page: "/articles/create-div-mod",
             },
             {
               title: "Génerer Bobine par Modèle",
               page: "/articles/create-bobine-mod",
+            },
+            {
+              title: "Génerer Materiel par Modèle",
+              page: "/articles/create-materiel-mod",
+            },
+            {
+              title: "Génerer PF par Modèle",
+              page: "/articles/create-pf-mod",
             },
             {
               title: "MAINT Cout Article",
@@ -479,12 +491,24 @@ export class MenuConfig {
               icon: "flaticon2-delivery-package",
               submenu: [
                 {
-                  title: "Ajouter Un Modèle mp",
+                  title: "Ajouter Un Modèle ",
                   page: "/articles/create-mod-mp",
+                },
+                {
+                  title: "Ajouter Un Modèle Divers",
+                  page: "/articles/create-mod-div",
                 },
                 {
                   title: "Ajouter Un Modèle bobine",
                   page: "/articles/create-mod-bobine",
+                },
+                {
+                  title: "Ajouter Un Modèle Materiel",
+                  page: "/articles/create-mod-materiel",
+                },
+                {
+                  title: "Ajouter Un Modèle PF",
+                  page: "/articles/create-mod-pf",
                 },
                 {
                   title: "Liste des Modèles",
@@ -541,16 +565,57 @@ export class MenuConfig {
               page: "/inventory-transaction/transfer",
             },
             {
+              title: "Imprimer Bon de Transfert ",
+              page: "/inventory-transaction/rct-tr-print",
+            },
+            {
+              title: "Imprimer liste des Transferts ",
+              page: "/inventory-transaction/rct-tr-globalprint",
+            },
+            {
               title: "Sortie non Planifiée ",
               page: "/inventory-transaction/unplanified-issue",
             },
             {
-              title: "Entrée non Planifiée ",
+              title: "Impirmer Bon de Sortie non Planifiée ",
+              page: "/inventory-transaction/iss-unp-print",
+            },
+            {
+              title: "Impirmer liste des Sorties ",
+              page: "/inventory-transaction/iss-unp-globalprint",
+            },
+            
+            {
+              title: "déclaration réalisation  ",
               page: "/inventory-transaction/unplanified-recept",
             },
             {
               title: "Réception non Planifiée Etiquetage",
               page: "/inventory-transaction/unplanified-receipt-cab",
+            },
+            {
+              title: "Réception Achat Etiquetage",
+              page: "/inventory-transaction/purchase-receipt-cab",
+            },
+            {
+              title: "Réception Biens Etiquetage",
+              page: "/inventory-transaction/asset-receive-cab",
+            },
+            {
+              title: "Imprimer Bon de Réception non planifiée",
+              page: "/inventory-transaction/rct-unp-print",
+            },
+            {
+              title: "Imprimer Réceptions Achat",
+              page: "/inventory-transaction/rct-po-globalprint",
+            },
+            {
+              title: "liste des Réceptions non planifiées",
+              page: "/inventory-transaction/rct-unp-globalprint",
+            },
+            {
+              title: "Liste des réceptions achats",
+              page: "/inventory-transaction/rct-po-print",
             },
             {
               title: "Réception Bobines",
@@ -572,10 +637,7 @@ export class MenuConfig {
               title: "Controle Palette ",
               page: "/inventory-transaction/edit-status-ref",
             },
-            {
-              title: "Modification Palette ",
-              page: "/inventory-transaction/remodify-cab",
-            },
+            
             {
               title: "Réimprimer Palette ",
               page: "/inventory-transaction/reprint-cab",
@@ -674,13 +736,18 @@ export class MenuConfig {
               page: "/purchasing/req-list",
             },
             {
+              title: "Approuver les Demandes",
+              page: "/training/approval-req",
+            },
+            {
               title: "Approbation Demande",
               page: "/purchasing/purchase-order-approval",
             },
             {
-              title: "Approbation des Demandes d'achats",
+              title: "Approbation des Demandes globales",
               page: "/purchasing/list-approval",
             },
+            
             {
               title: "Offre Fournisseurs",
               page: "/purchasing/create-vendor-proposal",
@@ -956,7 +1023,7 @@ export class MenuConfig {
           icon: "flaticon2-quotation-mark",
           submenu: [
             {
-              title: "Maint Ordre de Fabrication",
+              title: "Création programme Extrusion",
               page: "/manufacturing/create-order",
             },
             {
@@ -995,6 +1062,10 @@ export class MenuConfig {
             {
               title: "Broyage",
               page: "/manufacturing/create-direct-wo",
+            },
+            {
+              title: "imprimer bon Broyage",
+              page: "/manufacturing/print-direct-wo",
             },
             {
               title: "OF de Tri",
@@ -1052,6 +1123,96 @@ export class MenuConfig {
           ],
         },
         {
+          title: "Gestion de la Maintenance",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-quotation-mark",
+          submenu: [
+            {
+              title: "Maint Equipements ",
+              page: "/manufacturing/create-work-center",
+            },
+            {
+              title: "List des Equipements",
+              page: "/manufacturing/list-work-center",
+            },
+            {
+              title: "Maint des Code Causes",
+              page: "/manufacturing/create-rsn",
+            },
+            {
+              title: "List des Codes Cause",
+              page: "/manufacturing/list-rsn",
+            },
+            {
+              title: "Gestion des Nomenclatures",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-tools-and-utensils",
+              submenu: [
+                {
+                  title: "ajouter Code Nomenclature",
+                  page: "/manufacturing/create-nomenclature",
+                },
+                {
+                  title: "Liste des codes Nomenclature",
+                  page: "/manufacturing/list-bom",
+                },
+                {
+                  title: "ajouter des composants Nomenclatures",
+                  page: "/manufacturing/create-ps",
+                },
+                {
+                  title: "Liste des Nomenclatures",
+                  page: "/manufacturing/list-ps",
+                },
+                
+              ],
+            },
+            {
+              title: "Gestion des Instructions",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon2-sms",
+              submenu: [
+                {
+                  title: "La liste des Instructions",
+                  page: "/task/list-task",
+                },
+                {
+                  title: "Ajouter une Instruction",
+                  page: "/task/create-task",
+                },
+              ],
+            },
+            {
+              title: "Déclaration des Incidents",
+              page: "/manufacturing/create-op",
+            },
+            {
+              title: "Liste des Incidents",
+              page: "/manufacturing/list-op",
+            },
+            {
+              title: "Ajouter un Bon de Travaux",
+              page: "/project/create-project",
+            },
+            {
+              title: "La liste des BT",
+              page: "/project/list-pm",
+            },
+            {
+              title: "Affectation des Employés",
+              page: "/accounting-setting/affect-emp",
+            },
+            {
+              title: "Rapport des activités",
+              page: "/project/add-report",
+            },
+            
+          ],
+        },
+        {
           title: "Gestion des Contrats",
           root: true,
           bullet: "dot",
@@ -1098,17 +1259,17 @@ export class MenuConfig {
               page: "/training/update-population",
             },
             {
-              title: "Gestion des Métier",
+              title: "Gestion des compétences",
               root: true,
               bullet: "dot",
               icon: "flaticon-network",
               submenu: [
                 {
-                  title: "La liste des Code Métiers",
+                  title: "La liste des Code compétences",
                   page: "/job/list-job",
                 },
                 {
-                  title: "Ajouter un Code Métier",
+                  title: "Ajouter un Code compétence",
                   page: "/job/create-job",
                 },
               ],
@@ -1147,7 +1308,7 @@ export class MenuConfig {
               page: "/training/list-training",
             },
             {
-              title: "Demande de Formation Maitier",
+              title: "Demande de Formation compétence",
               page: "/training/create-training-request",
             },
             {
@@ -1173,66 +1334,66 @@ export class MenuConfig {
           ],
         },
 
-        {
-          title: "Gestion des Patients",
-          root: true,
-          bullet: "dot",
-          icon: "flaticon-users-1",
-          submenu: [
-            {
-              title: "Ajouter un Patient",
-              page: "/patient/create-patient",
-            },
-            {
-              title: "Liste des Patients",
-              page: "/patient/list-patient",
-            },
-            {
-              title: "Modification des Patients",
-              page: "/patient/update-patient",
-            },
-            {
-              title: "Gestion des Association",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon-network",
-              submenu: [
-                {
-                  title: "Ajouter une Association",
-                  page: "/patient/create-ass",
-                },
-                {
-                  title: "Liste des Associations",
-                  page: "/patient/list-ass",
-                },
-                {
-                  title: "Modification des Associations",
-                  page: "/patient/update-ass",
-                },
-              ],
-            },
-            {
-              title: "Gestion des Docteurs",
-              root: true,
-              bullet: "dot",
-              icon: "flaticon-network",
-              submenu: [
-                {
-                  title: "Ajouter un Docteur",
-                  page: "/patient/create-doctor",
-                },
-                {
-                  title: "Liste des Docteurs",
-                  page: "/patient/list-doctor",
-                },
-                {
-                  title: "Modification des Docteurs",
-                  page: "/patient/update-doctor",
-                },
-              ],
-            },
-          ],
-        },
+        // {
+        //   title: "Gestion des Patients",
+        //   root: true,
+        //   bullet: "dot",
+        //   icon: "flaticon-users-1",
+        //   submenu: [
+        //     {
+        //       title: "Ajouter un Patient",
+        //       page: "/patient/create-patient",
+        //     },
+        //     {
+        //       title: "Liste des Patients",
+        //       page: "/patient/list-patient",
+        //     },
+        //     {
+        //       title: "Modification des Patients",
+        //       page: "/patient/update-patient",
+        //     },
+        //     {
+        //       title: "Gestion des Association",
+        //       root: true,
+        //       bullet: "dot",
+        //       icon: "flaticon-network",
+        //       submenu: [
+        //         {
+        //           title: "Ajouter une Association",
+        //           page: "/patient/create-ass",
+        //         },
+        //         {
+        //           title: "Liste des Associations",
+        //           page: "/patient/list-ass",
+        //         },
+        //         {
+        //           title: "Modification des Associations",
+        //           page: "/patient/update-ass",
+        //         },
+        //       ],
+        //     },
+        //     {
+        //       title: "Gestion des Docteurs",
+        //       root: true,
+        //       bullet: "dot",
+        //       icon: "flaticon-network",
+        //       submenu: [
+        //         {
+        //           title: "Ajouter un Docteur",
+        //           page: "/patient/create-doctor",
+        //         },
+        //         {
+        //           title: "Liste des Docteurs",
+        //           page: "/patient/list-doctor",
+        //         },
+        //         {
+        //           title: "Modification des Docteurs",
+        //           page: "/patient/update-doctor",
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // },
         {
           title: "Gestion des projets",
           root: true,
@@ -1380,23 +1541,7 @@ export class MenuConfig {
           ],
         },
 
-        /*{
-                    title: "Gestion des Maintenance",
-                    bullet: "dot",
-                    icon: "flaticon-profile",
-                    root: true,
-                    submenu: [
-                        {
-                            title: "La liste des profiles",
-                            page: "/profiles/profiles-list",
-                        },
-                        {
-                            title: "Ajouter un profil",
-                            page: "/profiles/create-profile",
-                        },
-                    ],
-                },
-*/
+        
         {
           title: "Comptabilité Générale",
           bullet: "dot",
@@ -1909,6 +2054,10 @@ export class MenuConfig {
               bullet: "dot",
               icon: "flaticon-settings-1",
               submenu: [
+                {
+                  title: "Type de Formation",
+                  page: "/training/create-training-type",
+                },
                 {
                   title: "Domaine de Formation",
                   page: "/training/create-training-domain",

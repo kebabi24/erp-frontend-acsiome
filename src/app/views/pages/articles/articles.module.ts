@@ -81,7 +81,13 @@ import { EditStdItemComponent } from './edit-std-item/edit-std-item.component';
 import { CreateModBobineComponent } from './create-mod-bobine/create-mod-bobine.component';
 import { CreateBobineModComponent } from './create-bobine-mod/create-bobine-mod.component';
 import { CreateModMpComponent } from './create-mod-mp/create-mod-mp.component';
-import { CreateMpModComponent } from './create-mp-mod/create-mp-mod.component'
+import { CreateMpModComponent } from './create-mp-mod/create-mp-mod.component';
+import { CreateModMaterielComponent } from './create-mod-materiel/create-mod-materiel.component';
+import { CreateMaterielModComponent } from './create-materiel-mod/create-materiel-mod.component';
+import { CreateModPfComponent } from './create-mod-pf/create-mod-pf.component';
+import { CreatePfModComponent } from './create-pf-mod/create-pf-mod.component';
+import { CreateModDivComponent } from './create-mod-div/create-mod-div.component';
+import { CreateDivModComponent } from './create-div-mod/create-div-mod.component'
 
 
 const routes: Routes = [
@@ -132,8 +138,20 @@ const routes: Routes = [
                 component: CreateModBobineComponent,
             },
             {
+                path: "create-mod-materiel",
+                component: CreateModMaterielComponent,
+            },
+            {
+                path: "create-mod-pf",
+                component: CreateModPfComponent,
+            },
+            {
                 path: "create-mod-mp",
                 component: CreateModMpComponent,
+            },
+            {
+                path: "create-mod-div",
+                component: CreateModDivComponent,
             },
             {
                 path: "list-mod",
@@ -151,9 +169,26 @@ const routes: Routes = [
                 path: "create-mp-mod",
                 component: CreateMpModComponent,
             },
+            
+            {
+                path: "create-div-mod",
+                component: CreateDivModComponent,
+            },
+            {
+                path: "create-materiel-mod",
+                component: CreateMaterielModComponent,
+            },
+            {
+                path: "create-pf-mod",
+                component: CreatePfModComponent,
+            },
             {
                 path: "create-bobine-mod",
                 component: CreateBobineModComponent,
+            },
+            {
+                path: "create-std-item",
+                component: CreateStdItemComponent,
             },
             {
                 path: "edit-std-item/:id",
@@ -191,6 +226,12 @@ const routes: Routes = [
         CreateBobineModComponent,
         CreateModMpComponent,
         CreateMpModComponent,
+        CreateModMaterielComponent,
+        CreateMaterielModComponent,
+        CreateModPfComponent,
+        CreatePfModComponent,
+        CreateModDivComponent,
+        CreateDivModComponent,
     ],
     imports: [
         CommonModule,

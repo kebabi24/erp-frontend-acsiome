@@ -8,6 +8,7 @@ import {
   Formatter,
   Editor,
   Editors,
+  Filters,
   AngularGridInstance,
   EditorValidator,
   EditorArgs,
@@ -96,7 +97,7 @@ export class TransferComponent implements OnInit {
     gridOptions: GridOption;
     dataset: any[];
     user
-    
+    globalState: boolean = false; 
     alertWarning: any;
    
     adresses: [];
@@ -158,6 +159,7 @@ export class TransferComponent implements OnInit {
     rqm: boolean;
     statusref: any;
     requisitions: [];
+    transactions: [];
     columnDefinitions5: Column[] = [];
     gridOptions5: GridOption = {};
     gridObj5: any;
@@ -215,7 +217,7 @@ export class TransferComponent implements OnInit {
       const date = new Date()
 
       this.trForm = this.trFB.group({
-        tr_so_job: [this.inventoryTransaction.tr_so_job],
+        tr_lot: [this.inventoryTransaction.tr_lot],
         tr_effdate: [{
           year:date.getFullYear(),
           month: date.getMonth()+1,
@@ -250,10 +252,13 @@ export class TransferComponent implements OnInit {
       reset() {
         this.inventoryTransaction = new InventoryTransaction();
         this.createForm();
+        this.dataset =[];
+        this.globalState = false;
         this.hasFormErrors = false;
       }
       // save data
       onSubmit() {
+        this.globalState = true;
         this.hasFormErrors = false;
         const controls = this.trForm.controls;
         /** check form */
@@ -306,8 +311,8 @@ export class TransferComponent implements OnInit {
         }
 
 
-
-        this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe(
+        if(controls.tr_lot.value == null){
+          this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe(
           (response: any) => {
         this.seq = response.data 
             
@@ -316,7 +321,7 @@ export class TransferComponent implements OnInit {
   
              this.sequenceService.update(this.seq.id,{ seq_curr_val: Number(this.seq.seq_curr_val )+1 }).subscribe(
               (reponse) => console.log("response", Response),
-              (error) => {
+              (error) => { 
                 this.message = "Erreur modification Sequence";
                 this.hasFormErrors = true;
                 return;
@@ -335,7 +340,24 @@ export class TransferComponent implements OnInit {
   
   
           })
-  
+        } 
+        else{
+          this.trlot = controls.tr_lot.value
+          let difdataset = []
+          for (var i = 0; i < this.dataset.length; i++) {
+            console.log(this.dataset[i]);
+            if(this.dataset[i].submitted != true)
+            {difdataset.push(this.dataset[i]);
+              console.log(difdataset)
+            }
+          }
+          setTimeout(() => {
+            console.log('delay')
+          }, 2000);
+          console.log(difdataset)
+          let tr = this.prepare()
+          this.addIt( difdataset,tr, this.trlot);
+        } 
           
   
 
@@ -346,7 +368,7 @@ export class TransferComponent implements OnInit {
       prepare(){
         const controls = this.trForm.controls;
         const _tr = new InventoryTransaction();
-        _tr.tr_so_job = controls.tr_so_job.value
+        _tr.tr_lot = controls.tr_lot.value
         _tr.tr_effdate = controls.tr_effdate.value
         ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
         : null
@@ -407,10 +429,7 @@ export class TransferComponent implements OnInit {
                 true
               );
               this.loadingSubject.next(false);
-          //    console.log(this.provider, po, this.dataset);
-          //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-          //console.log(it, this.dataset, nlot)
-          // if(controls.print.value == true) printTR(it, this.dataset, nlot)
+         
           if (controls.print.value == true) this.printpdf(nlot);
             this.router.navigateByUrl("/");
             }
@@ -447,6 +466,7 @@ export class TransferComponent implements OnInit {
             tr_serial: null,
             tr_status: null,
             tr_expire: null,
+            submitted:false
           },
           { position: "bottom" }
         );
@@ -548,6 +568,7 @@ export class TransferComponent implements OnInit {
                 tr_serial: this.lddet.ld_lot,
                 tr_status: this.stat,
                 tr_expire: this.lddet.ld_expire,
+                submitted: false
               },
               { position: "bottom" }
             );
@@ -657,7 +678,7 @@ export class TransferComponent implements OnInit {
     
       onChangeCC() {
         const controls = this.trForm.controls;
-        const rqm_nbr = controls.tr_so_job.value;
+        const rqm_nbr = controls.tr_lot.value;
        
         this.dataset = [];
             this.requisitionService.getBy({ rqm_nbr,rqm_aprv_stat: "3", rqm_open: true  }).subscribe(
@@ -700,9 +721,9 @@ export class TransferComponent implements OnInit {
     
           }else {
             alert("Demande n'existe pas ")
-            controls.tr_so_job.setValue("")
+            controls.tr_lot.setValue("")
             //console.log(response.data.length)
-            document.getElementById("tr_so_job").focus();
+            document.getElementById("tr_lot").focus();
           }
           })    
         
@@ -1098,79 +1119,79 @@ export class TransferComponent implements OnInit {
             
         },
              
-        //   {
-        //     id: "tr_status",
-        //     name: "Status",
-        //     field: "tr_status",
-        //     sortable: true,
-        //     width: 80,
-        //     filterable: false,
-        // //     editor: {
-        // //       model: Editors.text,
-        // //     },
-        // //     onCellChange: (e: Event, args: OnEventArgs) => {
-        // //       const controls = this.trForm.controls;
-        // //       console.log(args.dataContext.tr_status)
+          {
+            id: "tr_status",
+            name: "Status",
+            field: "tr_status",
+            sortable: true,
+            width: 80,
+            filterable: false,
+        //     editor: {
+        //       model: Editors.text,
+        //     },
+        //     onCellChange: (e: Event, args: OnEventArgs) => {
+        //       const controls = this.trForm.controls;
+        //       console.log(args.dataContext.tr_status)
              
-        // //       this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
-        // //         console.log(ress.data.inventoryStatus) 
-        // // if (ress.data.inventoryStatus) {
+        //       this.inventoryStatusService.getBy({is_status: args.dataContext.tr_status }).subscribe((ress:any)=>{
+        //         console.log(ress.data.inventoryStatus) 
+        // if (ress.data.inventoryStatus) {
   
   
-        // //       this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-TR" }).subscribe((res:any)=>{
-        // //       console.log(res)
-        // //       const { data } = res;
+        //       this.inventoryStatusService.getAllDetails({isd_status: args.dataContext.tr_status, isd_tr_type: "RCT-TR" }).subscribe((res:any)=>{
+        //       console.log(res)
+        //       const { data } = res;
     
-        // //     if (data) {
-        // //       alert ("Mouvement Interdit Pour ce Status")
-        // //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //     if (data) {
+        //       alert ("Mouvement Interdit Pour ce Status")
+        //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
               
-        // //      } else {
+        //      } else {
   
-        // //  console.log(args.dataContext.tr_part)
-        // //       let obj = {}
-        // //       obj = {
-        // //          ld_site: controls.tr_ref_site.value, 
-        // //          ld_loc: controls.tr_ref_loc.value, 
-        // //          ld_part: args.dataContext.tr_part, 
-        // //          ld_lot: args.dataContext.tr_serial
-        // //         }
-        // //         console.log(obj)
-        // //         status = args.dataContext.tr_status
-        // //       console.log(args.dataContext.tr_part) 
-        // //       console.log(status)
-        // //       this.locationDetailService.getByStatus({obj, status} ).subscribe(
-        // //         (response: any) => {
-        // //          console.log(response.data.length != 0   )
-        // //           if (response.data.length != 0) {
-        // //             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
-        // //               alert("lot existe avec un autre status")
+        //  console.log(args.dataContext.tr_part)
+        //       let obj = {}
+        //       obj = {
+        //          ld_site: controls.tr_ref_site.value, 
+        //          ld_loc: controls.tr_ref_loc.value, 
+        //          ld_part: args.dataContext.tr_part, 
+        //          ld_lot: args.dataContext.tr_serial
+        //         }
+        //         console.log(obj)
+        //         status = args.dataContext.tr_status
+        //       console.log(args.dataContext.tr_part) 
+        //       console.log(status)
+        //       this.locationDetailService.getByStatus({obj, status} ).subscribe(
+        //         (response: any) => {
+        //          console.log(response.data.length != 0   )
+        //           if (response.data.length != 0) {
+        //             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //               alert("lot existe avec un autre status")
    
-        // //           }  
+        //           }  
   
   
   
             
-        // //   })
-        // //     }
+        //   })
+        //     }
           
-        // //       })
-        // //     } else {
+        //       })
+        //     } else {
       
-        // //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
-        // //       alert("Status N' existe pas")
+        //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_status: null })
+        //       alert("Status N' existe pas")
       
       
-        // //     }
-        // //   })
-        // //   }
+        //     }
+        //   })
+        //   }
   
 
 
 
 
 
-        //   },
+          },
           // {
           //   id: "mvidlot",
           //   field: "cmvidlot",
@@ -2246,86 +2267,94 @@ if (this.lddet != null)
   /*choisir demande achat*/
   handleSelectedRowsChanged5(e, args) {
     const controls = this.trForm.controls;
-
-    const rqm_nbr = controls.tr_so_job.value;
+    
+    
     
     if (Array.isArray(args.rows) && this.gridObj5) {
       this.dataset = []
       args.rows.map((idx) => 
       {
         const item = this.gridObj5.getDataItem(idx);
-        controls.tr_so_job.setValue(item.rqm_nbr || "");
-
-
-        this.requisitionService.findBy({ rqm_nbr: item.rqm_nbr }).subscribe(
+        controls.tr_lot.setValue(item.tr_lot || "");
+        
+        controls.tr_site.setValue(item.tr_ref_site || "");
+        controls.tr_loc.setValue(item.tr_ref_loc || "");
+        controls.tr_rmks.setValue(item.tr_rmks || "");
+        controls.tr_ref_site.setValue(item.tr_site || "");
+        controls.tr_ref_loc.setValue(item.tr_loc || "");
+        let oldata=[]
+        this.inventoryTransactionService.getByRef({ tr_lot: item.tr_lot,tr_type:'RCT-TR',tr_effdate:item.tr_effdate }).subscribe(
           (res: any) => {
-            const { requisition, details } = res.data;
-            const det1 = details;
-            this.requistionServer = requisition;
-            const {
-              sequence: { seq_appr3_lev },
-              rqm_aprv_stat,
-            } = this.requistionServer;
-            console.log(
-              seq_appr3_lev,
-              rqm_aprv_stat,
-              rqm_aprv_stat !== `${seq_appr3_lev}`
-            );
-            if (rqm_aprv_stat !== `${seq_appr3_lev}`) {
-              this.hasFormErrors = true;
-              this.message = "Cette Demande D'Achat n'est pas encore validée";
-              return;
-            }
-                    for (const object in det1) {
-                      console.log("hna",details[object]);
-                      const detail = details[object];
-                      this.gridService.addItem(
-                        {
-                          id: this.dataset.length + 1,
-                          tr_line: this.dataset.length + 1,
-                          tr_part: detail.rqd_part,
-                          cmvid: "",
-                          desc: detail.rqd_desc,
-                          tr_qty_loc: detail.rqd_req_qty,
-                          tr_um: detail.item.pt_um,
-                          tr_um_conv: 1,
-                          tr_price: detail.item.pt_price,
-                          // pod_disc_pct: 0,
-                          
-                          //tr_type: detail.item.pt_type,
-                          // tr_cc: "",
-                          // pod_taxable: detail.item.pt_taxable,
-                          // pod_tax_code: detail.item.pt_taxc,
-                          // pod_taxc: detail.item.taxe.tx2_tax_pct,
-                        },
-                        { position: "bottom" }
-                      );
-                  }
+            oldata = res.data
+            for (let i = 0; i < oldata.length; i++)
+            {
+              this.gridService.addItem(
+                {
+                  id: this.dataset.length + 1,
+                  tr_line: this.dataset.length + 1,
+                  tr_part: res.data[i].tr_part,
+                  cmvid: "",
+                  desc: res.data[i].tr_desc,
+                  tr_qty_loc: res.data[i].tr_qty_loc,
+                  qty_oh: 0,
+                  tr_um: res.data[i].tr_um,
+                  tr_um_conv:1,
+                  tr_price:res.data[i].tr_price,
+                  cmvids: "",
+                  tr_ref: res.data[i].tr_ref,
+                  tr_serial: res.data[i].tr_serial,
+                  tr_status: res.data[i].tr_status,
+                  tr_expire: res.data[i].tr_expire,
+                  submitted: true
                 },
-                (error) => {
-                  this.message = ` erreur`;
-                  this.hasFormErrors = true;
-                },
-                () => {}
+                { position: "bottom" }
               );
+            }
+            
+         
           },
           (error) => {
-            this.message = `Demande avec ce numero ${rqm_nbr} n'existe pas`;
+            this.message = `Récéption n'existe pas`;
             this.hasFormErrors = true;
           },
           () => {}
         );
+        
+
+    this.locationService.getByOne({ loc_loc:item.tr_loc, loc_site:item.tr_site }).subscribe(
+      (res: any) => {
+        const { data } = res;
+
+        if (!data) {
+          this.layoutUtilsService.showActionNotification(
+            "cet Emplacement n'existe pas!",
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.error = true;
+        } else {
+          this.error = false;
+          this.statusref = data.loc_status
+           
+        }
+      },
+      (error) => console.log(error)
+    );
     
-     
+        
+      
+        })
     }
    // this.calculatetot();
   }
-
+  
   angularGridReady5(angularGrid: AngularGridInstance) {
     this.angularGrid5 = angularGrid;
     this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
   }
-
+  
   prepareGrid5() {
     this.columnDefinitions5 = [
       {
@@ -2337,39 +2366,62 @@ if (this.lddet != null)
         maxWidth: 80,
       },
       {
-        id: "rqm_nbr",
-        name: "N° Demande",
-        field: "rqm_nbr",
+        id: "tr_lot",
+        name: "N° Récéption",
+        field: "tr_lot",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "rqm_req_date",
+        id: "tr_effdate",
         name: "Date",
-        field: "rqm_req_date",
+        field: "tr_effdate",
+        sortable: true,
+        filterable: true,
+        formatter:Formatters.dateIso ,
+        type: FieldType.dateIso,
+        filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
+      },
+      {
+        id: "tr_site",
+        name: "Site",
+        field: "tr_site",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "rqm_total",
-        name: "Total",
-        field: "rqm_total",
+        id: "tr_loc",
+        name: "emplacement",
+        field: "tr_loc",
         sortable: true,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.string,
       },
       {
-        id: "rqm_status",
-        name: "status",
-        field: "rqm_status",
+        id: "tr_ref_site",
+        name: "Site",
+        field: "tr_ref_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "tr_ref_loc",
+        name: "emplacement",
+        field: "tr_ref_loc",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
     ];
-
+  
     this.gridOptions5 = {
       enableSorting: true,
       enableCellNavigation: true,
@@ -2387,26 +2439,27 @@ if (this.lddet != null)
         selectActiveRow: true,
       },
     };
-
+   const controls = this.trForm.controls
     // fill the dataset with your data
-    this.requisitionService
-      .getByAll({ rqm_aprv_stat: "3", rqm_open: true })
-      .subscribe((response: any) => (this.requisitions = response.data));
+    this.inventoryTransactionService
+      .getByGroup({ tr_type:"RCT-TR" })
+      .subscribe((response: any) => (this.transactions = response.data));
   }
   open5(content) {
     this.prepareGrid5();
     this.modalService.open(content, { size: "lg" });
   }
   
+  
   printpdf(nbr) {
     // const controls = this.totForm.controls
     const controlss = this.trForm.controls;
     console.log("pdf");
     var doc = new jsPDF();
-    
+    let date = new Date()
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, 'png', 150, 5, 50, 30)
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -2420,13 +2473,21 @@ if (this.lddet != null)
     doc.line(10, 35, 200, 35);
     doc.setFontSize(12);
     doc.text("Bon Transfert N° : " + nbr, 70, 45);
+    doc.text("Date: " + date.toLocaleDateString() , 160, 45);
+    
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+     
     doc.setFontSize(8);
     //console.log(this.provider.ad_misc2_id)
     doc.text("Site Source : " + controlss.tr_site.value, 20, 50);
     doc.text("Magasin     : " + controlss.tr_loc.value, 100, 50);
     doc.text("Site Dest   : " + controlss.tr_ref_site.value, 20, 55);
-    doc.text("Magasin     : " + controlss.tr_ref_loc.value, 100, 55);
-    
+    doc.text("Emplacement     : " + controlss.tr_ref_loc.value, 100, 55);
+    doc.text("Je soussigne, Mme, Mr:                              Fonction:               " , 100, 60);
+        doc.text("Déclare avoir reçu les articles cité ci-dessous:               " , 100, 65);
+        
    
 
     doc.line(10, 85, 205, 85);
@@ -2442,23 +2503,19 @@ if (this.lddet != null)
     doc.line(120, 85, 120, 90);
     doc.text("UM", 123, 88.5);
     doc.line(130, 85, 130, 90);
-    doc.text("PU", 138, 88.5);
-    doc.line(150, 85, 150, 90);
     doc.text("Lot/Série", 152, 88.5);
     doc.line(170, 85, 170, 90);
-    doc.text("N PAL", 172, 88.5);
+    doc.text("N Etiquette", 172, 88.5);
     doc.line(185, 85, 185, 90);
-    doc.text("THT", 195, 88.5);
-    doc.line(205, 85, 205, 90);
     var i = 95;
     doc.setFontSize(6);
     let total = 0
     for (let j = 0; j < this.dataset.length  ; j++) {
-      total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
+      total = total + Number(this.dataset[j].tr_qty_loc)
       
-      if ((j % 30 == 0) && (j != 0) ) {
-  doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
+      if ((j % 20 == 0) && (j != 0) ) {
+        doc.addPage();
+        img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, 'png', 150, 5, 50, 30)
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
@@ -2472,13 +2529,20 @@ if (this.lddet != null)
 
         doc.setFontSize(12);
         doc.text("Bon Transfert N° : " + nbr, 70, 45);
+        doc.text("Date: " + date.toLocaleDateString() , 160, 45);
+        
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
         doc.setFontSize(8);
         //console.log(this.provider.ad_misc2_id)
         doc.text("Site Source : " + controlss.tr_site.value, 20, 50);
         doc.text("Magasin     : " + controlss.tr_loc.value, 100, 50);
         doc.text("Site Dest   : " + controlss.tr_ref_site.value, 20, 55);
-        doc.text("Magasin     : " + controlss.tr_ref_loc.value, 100, 55);
-
+        doc.text("Emplacement     : " + controlss.tr_ref_loc.value, 100, 55);
+        doc.text("Je soussigne, Mme, Mr:                              Fonction:               " , 100, 60);
+        doc.text("Déclare avoir reçu les articles cité ci-dessous:               " , 100, 65);
         doc.line(10, 85, 205, 85);
         doc.line(10, 90, 205, 90);
         doc.line(10, 85, 10, 90);
@@ -2492,43 +2556,35 @@ if (this.lddet != null)
         doc.line(120, 85, 120, 90);
         doc.text("UM", 123, 88.5);
         doc.line(130, 85, 130, 90);
-        doc.text("PU", 138, 88.5);
-        doc.line(150, 85, 150, 90);
         doc.text("Lot/Série", 152, 88.5);
         doc.line(170, 85, 170, 90);
-        doc.text("N PAL", 172, 88.5);
+        doc.text("N Etiquette", 172, 88.5);
         doc.line(185, 85, 185, 90);
-        doc.text("THT", 195, 88.5);
-        doc.line(205, 85, 205, 90);
         i = 95;
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
-        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].tr_qty_loc.toFixed(2))), 118, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
-        doc.line(150, i - 5, 150, i);
         doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
         doc.line(185, i - 5, 185, i);
-        doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
-        doc.line(205, i - 5, 205, i);
         // doc.line(10, i, 200, i );
 
         i = i + 5;
@@ -2550,29 +2606,27 @@ if (this.lddet != null)
         i = i + 5;
       } else {
         doc.line(10, i - 5, 10, i);
-        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(this.dataset[j].desc, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].tr_qty_loc).toFixed(2)), 118, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
-        doc.line(150, i - 5, 150, i);
         doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
         doc.line(185, i - 5, 185, i);
-        doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
-        doc.line(205, i - 5, 205, i);
         doc.line(10, i, 205, i);
         i = i + 5;
       }
     }
-
+    // doc.text("NOMBRE DE BIG BAG    " + String(this.dataset.length) + "    ,TOTAL POIDS:   " + String(Number(total)), 40, i + 12, { align: "left" });
+    doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
     // doc.line(10, i - 5, 200, i - 5);
 /*
     doc.line(130, i + 7, 205, i + 7);

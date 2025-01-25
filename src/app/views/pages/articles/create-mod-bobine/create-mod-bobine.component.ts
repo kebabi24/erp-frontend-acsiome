@@ -1,7 +1,3 @@
-
-
-
-
 // Angular
 import {
   Component,
@@ -149,7 +145,10 @@ export class CreateModBobineComponent implements OnInit {
 
   isExist = false;
   user: any
-  
+  mic_inf:any;
+  mic_sup:any;
+  lai_inf:any;
+  lai_sup:any;
   
   data: [];
   columnDefinitions3: Column[] = [];
@@ -204,6 +203,18 @@ export class CreateModBobineComponent implements OnInit {
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))   
     this.createForm();
+    this.codeService
+      .getBy({ code_fldname: 'MIC_INF' })
+      .subscribe((response: any) => (this.mic_inf = Number(response.data[0].code_cmmt)));
+      this.codeService
+      .getBy({ code_fldname: 'MIC_SUP' })
+      .subscribe((response: any) => (this.mic_sup = Number(response.data[0].code_cmmt)));
+      this.codeService
+      .getBy({ code_fldname: 'LAI_INF' })
+      .subscribe((response: any) => (this.lai_inf = Number(response.data[0].code_cmmt)));
+      this.codeService
+      .getBy({ code_fldname: 'LAI_SUP' })
+      .subscribe((response: any) => (this.lai_sup = Number(response.data[0].code_cmmt)));
   }
   reset() {
     this.itemModel = new ItemModel();
@@ -277,7 +288,7 @@ export class CreateModBobineComponent implements OnInit {
   
     const controls = this.form1.controls
     console.log(controls.int01.value)
-    if(controls.int01.value < 110 || controls.int01.value > 1050 )
+    if(controls.int01.value < this.mic_inf || controls.int01.value > this.mic_sup )
     {
       controls.int01.setValue(0)
       this.message = 'la valeur Micronage est hors limite'
@@ -290,7 +301,8 @@ export class CreateModBobineComponent implements OnInit {
     
     const controls = this.form1.controls
     console.log(controls.int02.value)
-    if(controls.int02.value < 300 || controls.int02.value > 1100 )
+    
+    if(controls.int02.value < this.lai_inf || controls.int02.value > this.lai_sup )
     {
       controls.int02.setValue(0)
       this.message = 'la valeur laise est hors limite'
@@ -312,8 +324,8 @@ export class CreateModBobineComponent implements OnInit {
             return
             
           } else {
-              controls.mod_code.setValue(controls.mod_part_type.value + '-' + controls.int01.value + '/' + controls.int02.value )
-              controls.mod_desc.setValue('BOBINE ' + controls.mod_part_type.value + ' ' + controls.int01.value + '/' + controls.int02.value)
+              controls.mod_code.setValue('BOB-' + controls.mod_part_type.value + '-' + controls.int01.value + '/' + controls.int02.value )
+              controls.mod_desc.setValue('BOBINE ' + controls.mod_part_type.value + ' ' + controls.int01.value + ' ' + controls.int02.value)
               controls.mod_um.setValue('KG')
               
              

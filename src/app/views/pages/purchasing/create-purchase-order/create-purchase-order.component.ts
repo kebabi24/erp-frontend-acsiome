@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core"
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
-
+import { jsPDF } from "jspdf";
 // Angular slickgrid
 import {
     Column,
@@ -92,7 +92,9 @@ export class CreatePurchaseOrderComponent implements OnInit {
     
     row_number;
     user
-    message=''
+    domain: any;
+    message='';
+    nbr:any;
 
     constructor(
         config: NgbDropdownConfig,
@@ -242,9 +244,9 @@ export class CreatePurchaseOrderComponent implements OnInit {
                 
             },
             {
-                id: "rqd_desc",
+                id: "rqd_vpart",
                 name: "Observation",
-                field: "rqd_desc",
+                field: "rqd_vpart",
                 sortable: true,
                 width: 80,
                 filterable: false,
@@ -270,6 +272,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         this.loadingSubject.next(false)
         this.createForm()
         this.user =  JSON.parse(localStorage.getItem('user'))
+        this.domain = JSON.parse(localStorage.getItem("domain"));
     }
 
     //create form
@@ -314,7 +317,9 @@ export class CreatePurchaseOrderComponent implements OnInit {
                     controls.rqm_category.setValue("")
                     console.log(response.data.length)
                     document.getElementById("SEQUENCE").focus();
-                } 
+                }
+                this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
+console.log(this.nbr)
             })
     }
     
@@ -405,6 +410,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
                     true
                 )
                 this.loadingSubject.next(false)
+                this.printpdf(this.nbr);
                 this.router.navigateByUrl("/")
             }
         )
@@ -441,6 +447,19 @@ export class CreatePurchaseOrderComponent implements OnInit {
             args.rows.map((idx) => {
                 const item = this.gridObj1.getDataItem(idx)
                 controls.rqm_category.setValue(item.seq_seq || "")
+                this.sequencesService
+            .getBy({seq_seq: item.seq_seq, seq_type: 'RQ', seq_profile: this.user.usrd_profile})
+            .subscribe((response: any) => {
+                console.log(response)
+                if (response.data.length == 0) {
+                    alert("Sequence nexiste pas")
+                    controls.rqm_category.setValue("")
+                    console.log(response.data.length)
+                    document.getElementById("SEQUENCE").focus();
+                }
+                this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
+console.log(this.nbr)
+            })
             })
         }
     }
@@ -814,7 +833,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         // fill the dataset with your data
         
         this.itemsService
-            .getBy ({pt_buyer: controls.rqm_category.value })
+            .getBy ({ })
             .subscribe((response: any) => (this.items = response.data))
          
     }
@@ -913,5 +932,207 @@ export class CreatePurchaseOrderComponent implements OnInit {
     onAlertClose($event) {
         this.hasFormErrors = false
     }
-
+    printpdf(nbr) {
+        // const controls = this.totForm.controls
+        const controlss = this.reqForm.controls;
+        console.log("pdf");
+        var doc = new jsPDF();
+        let date = new Date()
+       // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+        var img = new Image()
+        img.src = "./assets/media/logos/companyentete.png";
+        doc.addImage(img, 'png', 150, 5, 50, 30)
+        doc.setFontSize(9);
+        if (this.domain.dom_name != null) {
+          doc.text(this.domain.dom_name, 10, 10);
+        }
+        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(14);
+    
+        doc.line(10, 35, 200, 35);
+        doc.setFontSize(12);
+        doc.text("DEMANDE D'APPROVISIONNEMENT N° : " + nbr, 40, 45);
+        doc.text("Date: " + date.toLocaleDateString() , 160, 45);
+        
+          doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+          doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+          
+         
+          doc.setFontSize(8);
+          //console.log(this.provider.ad_misc2_id)
+          doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value, 20, 55);
+          
+       
+    
+        doc.line(10, 85, 205, 85);
+        doc.line(10, 90, 205, 90);
+        doc.line(10, 85, 10, 90);
+        doc.text("LN", 12.5, 88.5);
+        doc.line(20, 85, 20, 90);
+        doc.text("Code Article", 25, 88.5);
+        doc.line(45, 85, 45, 90);
+        doc.text("Désignation", 67.5, 88.5);
+        doc.line(100, 85, 100, 90);
+        doc.text("QTE", 107, 88.5);
+        doc.line(120, 85, 120, 90);
+        doc.text("UM", 123, 88.5);
+        doc.line(130, 85, 130, 90);
+        doc.text("OBSERVATION", 152, 88.5);
+        doc.line(185, 85, 185, 90);
+        var i = 95;
+        doc.setFontSize(6);
+        let total = 0
+        for (let j = 0; j < this.dataset.length  ; j++) {
+          total = total + Number(this.dataset[j].tr_qty_loc)
+          
+          if ((j % 20 == 0) && (j != 0) ) {
+            doc.addPage();
+            img.src = "./assets/media/logos/companyentete.png";
+            doc.addImage(img, 'png', 150, 5, 50, 30)
+            doc.setFontSize(9);
+            if (this.domain.dom_name != null) {
+              doc.text(this.domain.dom_name, 10, 10);
+            }
+            if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+            if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+            if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+            doc.setFontSize(14);
+            doc.line(10, 35, 200, 35);
+    
+            doc.setFontSize(12);
+            doc.text("DEMANDE D'APPROVISIONNEMENT N° : " + nbr, 40, 45);
+            doc.text("Date: " + date.toLocaleDateString() , 160, 45);
+            
+            doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+            doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+          
+          
+            doc.setFontSize(8);
+            //console.log(this.provider.ad_misc2_id)
+            doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value, 20, 55);
+            
+            doc.line(10, 85, 205, 85);
+            doc.line(10, 90, 205, 90);
+            doc.line(10, 85, 10, 90);
+            doc.text("LN", 12.5, 88.5);
+            doc.line(20, 85, 20, 90);
+            doc.text("Code Article", 25, 88.5);
+            doc.line(45, 85, 45, 90);
+            doc.text("Désignation", 67.5, 88.5);
+            doc.line(100, 85, 100, 90);
+            doc.text("QTE", 107, 88.5);
+            doc.line(120, 85, 120, 90);
+            doc.text("UM", 123, 88.5);
+            doc.line(130, 85, 130, 90);
+            doc.text("OBSERVATION", 152, 88.5);
+            doc.line(185, 85, 185, 90);
+            i = 95;
+            doc.setFontSize(6);
+          }
+    
+          if (this.dataset[j].rqd_desc.length > 45) {
+            let desc1 = this.dataset[j].rqd_desc.substring(45);
+            let ind = desc1.indexOf(" ");
+            desc1 = this.dataset[j].rqd_desc.substring(0, 45 + ind);
+            let desc2 = this.dataset[j].rqd_desc.substring(45 + ind);
+    
+            doc.line(10, i - 5, 10, i);
+            doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
+            doc.line(20, i - 5, 20, i);
+            doc.text(this.dataset[j].rqd_part, 25, i - 1);
+            doc.line(45, i - 5, 45, i);
+            doc.text(desc1, 47, i - 1);
+            doc.line(100, i - 5, 100, i);
+            doc.text(String(Number(this.dataset[j].rqd_req_qty)), 118, i - 1, { align: "right" });
+            doc.line(120, i - 5, 120, i);
+            doc.text(this.dataset[j].rqd_um, 123, i - 1);
+            doc.line(130, i - 5, 130, i);
+            doc.text(String(this.dataset[j].rqd_vpart), 168, i - 1, { align: "right" });
+            doc.line(185, i - 5, 185, i);
+            // doc.line(10, i, 200, i );
+    
+            i = i + 5;
+    
+            doc.text(desc2, 47, i - 1);
+    
+            doc.line(10, i - 5, 10, i);
+            doc.line(20, i - 5, 20, i);
+            doc.line(45, i - 5, 45, i);
+            doc.line(100, i - 5, 100, i);
+            doc.line(120, i - 5, 120, i);
+            doc.line(130, i - 5, 130, i);
+            doc.line(150, i - 5, 150, i);
+            doc.line(170, i - 5, 170, i);
+            doc.line(185, i - 5, 185, i);
+            doc.line(205, i - 5, 205, i);
+            doc.line(10, i, 200, i);
+    
+            i = i + 5;
+          } else {
+            doc.line(10, i - 5, 10, i);
+            doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
+            doc.line(20, i - 5, 20, i);
+            doc.text(this.dataset[j].rqd_part, 25, i - 1);
+            doc.line(45, i - 5, 45, i);
+            doc.text(this.dataset[j].rqd_desc, 47, i - 1);
+            doc.line(100, i - 5, 100, i);
+            doc.text(String(Number(this.dataset[j].rqd_req_qty)), 118, i - 1, { align: "right" });
+            doc.line(120, i - 5, 120, i);
+            doc.text(this.dataset[j].rqd_um, 123, i - 1);
+            doc.line(130, i - 5, 130, i);
+            doc.text(String(this.dataset[j].rqd_vpart), 168, i - 1, { align: "right" });
+            doc.line(185, i - 5, 185, i);
+            doc.line(10, i, 205, i);
+            i = i + 5;
+          }
+        }
+        // doc.text("NOMBRE DE BIG BAG    " + String(this.dataset.length) + "    ,TOTAL POIDS:   " + String(Number(total)), 40, i + 12, { align: "left" });
+        doc.text("Validé par: " , 20, i + 22);
+        doc.text("Note: " , 20, i + 32);
+        // doc.line(10, i - 5, 200, i - 5);
+    /*
+        doc.line(130, i + 7, 205, i + 7);
+        doc.line(130, i + 14, 205, i + 14);
+        //  doc.line(130, i + 21, 200, i + 21 );
+        //  doc.line(130, i + 28, 200, i + 28 );
+        //  doc.line(130, i + 35, 200, i + 35 );
+        doc.line(130, i + 7, 130, i + 14);
+        doc.line(160, i + 7, 160, i + 14);
+        doc.line(205, i + 7, 205, i + 14);
+        doc.setFontSize(10);
+    
+        doc.text("Total HT", 140, i + 12, { align: "left" });
+        //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+        //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+        //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+    
+        doc.text(String(Number(total).toFixed(2)), 198, i + 12, { align: "right" });
+        //  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
+        //  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
+        //  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+    
+        doc.setFontSize(8);
+        let mt = NumberToLetters(Number(total).toFixed(2), "Dinars Algerien");
+    
+        if (mt.length > 95) {
+          let mt1 = mt.substring(90);
+          let ind = mt1.indexOf(" ");
+    
+          mt1 = mt.substring(0, 90 + ind);
+          let mt2 = mt.substring(90 + ind);
+    
+          doc.text("Arretée la présente Commande a la somme de :" + mt1, 20, i + 53);
+          doc.text(mt2, 20, i + 60);
+        } else {
+          doc.text("Arretée la présente Commande a la somme de :" + mt, 20, i + 53);
+        }
+        */
+        // window.open(doc.output('bloburl'), '_blank');
+        //window.open(doc.output('blobUrl'));  // will open a new tab
+        doc.save('DEMANDE-' + nbr + '.pdf')
+        var blob = doc.output("blob");
+        window.open(URL.createObjectURL(blob));
+      }
 }

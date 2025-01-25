@@ -8,6 +8,7 @@ import {
   Formatter,
   Editor,
   Editors,
+  Filters,
   AngularGridInstance,
   EditorValidator,
   EditorArgs,
@@ -164,7 +165,13 @@ export class UnplanifiedIssueComponent implements OnInit {
     gridOptionsstatus: GridOption = {};
     gridObjstatus: any;
     angularGridstatus: AngularGridInstance;
-  
+    
+    transactions: [];
+    columnDefinitions5: Column[] = [];
+    gridOptions5: GridOption = {};
+    gridObj5: any;
+    angularGrid5: AngularGridInstance;
+
     provider: any;
     row_number;
     message = "";
@@ -278,12 +285,12 @@ export class UnplanifiedIssueComponent implements OnInit {
                             } else {
                               this.stat = this.lddet.ld_status
                             }
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
+                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
                         tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_mtl_tl, qty_oh: this.lddet.ld_qty_oh, tr_expire: this.lddet.ld_expire})
                           });
                         }
                         else {
-                          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
+                          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
                             tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: null, tr_price: this.sct.sct_mtl_tl, qty_oh: 0, tr_expire: null})
                         
 
@@ -329,9 +336,9 @@ export class UnplanifiedIssueComponent implements OnInit {
           },
         },
         {
-          id: "desc",
+          id: "tr_desc",
           name: "Description",
-          field: "desc",
+          field: "tr_desc",
           sortable: true,
           width: 180,
           filterable: false,
@@ -800,7 +807,7 @@ export class UnplanifiedIssueComponent implements OnInit {
 
     this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
       (reponse: any) => {
-        if(reponse.data != null) {   
+        if(reponse.data != null || reponse.data.code_value != ' ') {   
           console.log("hahahahahahahaha", reponse.data)
           this.domconfig = true
           this.prodligne = reponse.data.code_cmmt
@@ -826,7 +833,7 @@ export class UnplanifiedIssueComponent implements OnInit {
       this.inventoryTransaction = new InventoryTransaction();
       const date = new Date;
       this.trForm = this.trFB.group({
-        tr_nbr: [this.inventoryTransaction.tr_nbr],
+        tr_lot: [this.inventoryTransaction.tr_lot],
         tr_effdate: [{
           year:date.getFullYear(),
           month: date.getMonth()+1,
@@ -847,7 +854,7 @@ export class UnplanifiedIssueComponent implements OnInit {
       // if(this.domconfig) {
         this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
           (reponse: any) => { 
-            if(reponse.data != null) {
+            if(reponse.data != null && reponse.data.code_value != ' ') {
             controls.tr_addr.setValue(reponse.data.code_value),
             controls.tr_addr.disable() 
             
@@ -855,7 +862,7 @@ export class UnplanifiedIssueComponent implements OnInit {
               //   const { data } = response;
                  console.log("aaaaaaaaaaa",response.data);
                  if (response.data != null) {
-                   this.provider = response.data;
+                   this.provider = response.data[0];
                    this.nom = this.provider.ad_name
                  }
                });
@@ -950,31 +957,47 @@ export class UnplanifiedIssueComponent implements OnInit {
 
       }
 
-      this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe(
+      this.sequenceService.getByOne({ seq_type: "SN", seq_profile: this.user.usrd_profile }).subscribe(
         (response: any) => {
       this.seq = response.data
       console.log(this.seq)   
           if (this.seq) {
-           this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
-          console.log(this.trlot)
-           const id = Number(this.seq.id)
-        let obj = { }
-        obj = {
-          seq_curr_val: Number(this.seq.seq_curr_val )+1
-        }
-        this.sequenceService.update(id , obj ).subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.message = "Erreur modification Sequence";
-            this.hasFormErrors = true;
-            return;
-       
+            if(this.trlot == null)
+           {this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+            let tr = this.prepare()
+            this.addIt( this.dataset,tr, this.trlot);
+            console.log(this.trlot)
+            const id = Number(this.seq.id)
+            let obj = { }
+            obj = {
+              seq_curr_val: Number(this.seq.seq_curr_val )+1 
+            }
+            this.sequenceService.update(id , obj ).subscribe(
+              (reponse) => console.log("response", Response),
+              (error) => {
+                this.message = "Erreur modification Sequence";
+                this.hasFormErrors = true;
+                return;
+              },
+            )}
+            else{
+            
+              let difdataset = []
+              for (var i = 0; i < this.dataset.length; i++) {
+                console.log(this.dataset[i]);
+                if(this.dataset[i].submitted != true)
+                {difdataset.push(this.dataset[i]);
+                  console.log(difdataset)
+                }
+              }
+              setTimeout(() => {
+                console.log('delay')
+              }, 2000);
+              console.log(difdataset)
+              let tr = this.prepare()
+              this.addIt( difdataset,tr, this.trlot);
+            } 
           
-          },
-          )
-
-          let tr = this.prepare()
-          this.addIt( this.dataset,tr, this.trlot);
 
           }else {
             this.message = "Parametrage Manquant pour la sequence";
@@ -995,7 +1018,7 @@ export class UnplanifiedIssueComponent implements OnInit {
     prepare(){
       const controls = this.trForm.controls;
       const _tr = new InventoryTransaction();
-      _tr.tr_nbr = controls.tr_nbr.value
+      
       
       _tr.tr_effdate = controls.tr_effdate.value
       ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}`
@@ -1032,11 +1055,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         .subscribe(
          (reponse: any) => {
           console.log(reponse)
-          this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-          // const arrayOctet = new Uint8Array(reponse.pdf.data)
-          // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-          // const fileUrl = URL.createObjectURL(file);
-          // window.open(fileUrl)},
+          this.printpdf(this.trlot); 
          },
           (error) => {
             this.layoutUtilsService.showActionNotification(
@@ -1092,7 +1111,7 @@ export class UnplanifiedIssueComponent implements OnInit {
           tr_line: this.dataset.length + 1,
           tr_part: "",
           cmvid: "",
-          desc: "",
+          tr_desc: "",
           tr_qty_loc: 0,
           tr_um: "",
           tr_um_conv: 1,
@@ -1103,6 +1122,7 @@ export class UnplanifiedIssueComponent implements OnInit {
           tr_serial: null,
           tr_status: null,
           tr_expire: null,
+          submitted:false,
         },
         { position: "bottom" }
       );
@@ -1139,7 +1159,7 @@ export class UnplanifiedIssueComponent implements OnInit {
                         }
               
                 updateItem.tr_part = item.pt_part;
-                updateItem.desc = item.pt_desc1;
+                updateItem.tr_desc = item.pt_desc1;
                 updateItem.tr_um = item.pt_um;
                 updateItem.tr_conv_um = 1;
                 
@@ -1156,7 +1176,7 @@ export class UnplanifiedIssueComponent implements OnInit {
             }
             else {
               updateItem.tr_part = item.pt_part;
-              updateItem.desc = item.pt_desc1;
+              updateItem.tr_desc = item.pt_desc1;
               updateItem.tr_um = item.pt_um;
               updateItem.tr_conv_um = 1;
               
@@ -2086,7 +2106,7 @@ console.log(updateItem.tr_part)
   open2(content) {
     this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
       (reponse: any) => { 
-       if (reponse.data == null) {
+       if (reponse.data == null || reponse.data.code_value != ' ') {
         this.prepareGrid2();
         this.modalService.open(content, { size: "lg" }); 
       
@@ -2112,7 +2132,7 @@ console.log(updateItem.tr_part)
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
       } else {
-        this.provider = response.data;
+        this.provider = response.data[0];
         this.nom = this.provider.ad_name
       }
     });
@@ -2188,7 +2208,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
         tr_line: this.dataset.length + 1,
         tr_part: this.lddet.ld_part,
         cmvid: "",
-        desc: respopart.data.pt_desc1,
+        tr_desc: respopart.data.pt_desc1,
         tr_qty_loc: this.lddet.ld_qty_oh,
         qty_oh: this.lddet.ld_qty_oh,
         tr_site:  this.lddet.ld_site,
@@ -2201,6 +2221,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
         tr_serial: this.lddet.ld_lot,
         tr_status: this.stat,
         tr_expire: this.lddet.ld_expire,
+        submitted: false
       },
       { position: "bottom" }
     );
@@ -2247,10 +2268,10 @@ printpdf(nbr) {
   const controlss = this.trForm.controls;
   console.log("pdf");
   var doc = new jsPDF();
-  
+  let date = new Date()
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   if (this.domain.dom_name != null) {
@@ -2263,12 +2284,19 @@ printpdf(nbr) {
 
   doc.line(10, 35, 200, 35);
   doc.setFontSize(12);
-  doc.text("Bon Récéption N° : " + nbr, 70, 45);
+  doc.text("Bon Sortie N° : " + nbr, 70, 45);
+  doc.text("Date: " + date.toLocaleDateString(), 160, 45);
+  
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
   doc.setFontSize(8);
   //console.log(this.provider.ad_misc2_id)
-  doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
+  doc.text("Adresse : " + this.provider.ad_addr, 20, 50);
   doc.text("Nom             : " + this.provider.ad_name, 20, 55);
-  doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+  doc.text("Lieu       : " + this.provider.ad_line1, 20, 60);
   if (this.provider.ad_misc2_id != null) {
     doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
   }
@@ -2307,11 +2335,11 @@ printpdf(nbr) {
   doc.setFontSize(6);
   let total = 0
   for (let j = 0; j < this.dataset.length  ; j++) {
-    total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
+    total = total +  Number(this.dataset[j].tr_qty_loc)
     
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      img.src = "./assets/media/logos/companylogo.png";
+      img.src = "./assets/media/logos/companyentete.png";
       doc.addImage(img, 'png', 150, 5, 50, 30)
       doc.setFontSize(9);
       if (this.domain.dom_name != null) {
@@ -2325,11 +2353,18 @@ doc.addPage();
 
       doc.setFontSize(12);
       doc.text("Bon Sortie N° : " + nbr, 70, 40);
+      doc.text("Date: " + date.toLocaleDateString() , 160, 40);
+      
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
       doc.setFontSize(8);
       console.log(this.provider.ad_misc2_id);
-      doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
+      doc.text("Adresse : " + this.provider.ad_addr, 20, 50);
       doc.text("Nom             : " + this.provider.ad_name, 20, 55);
-      doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+      doc.text("Lieu       : " + this.provider.ad_line1, 20, 60);
       if (this.provider.ad_misc2_id != null) {
         doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
       }
@@ -2368,24 +2403,24 @@ doc.addPage();
       doc.setFontSize(6);
     }
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35);
+    if (this.dataset[j].tr_desc.length > 45) {
+      let desc1 = this.dataset[j].tr_desc.substring(45);
       let ind = desc1.indexOf(" ");
-      desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-      let desc2 = this.dataset[j].desc.substring(35 + ind);
+      desc1 = this.dataset[j].tr_desc.substring(0, 45 + ind);
+      let desc2 = this.dataset[j].tr_desc.substring(45 + ind);
 
       doc.line(10, i - 5, 10, i);
-      doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+      doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
       doc.line(20, i - 5, 20, i);
       doc.text(this.dataset[j].tr_part, 25, i - 1);
       doc.line(45, i - 5, 45, i);
       doc.text(desc1, 47, i - 1);
       doc.line(100, i - 5, 100, i);
-      doc.text(String(Number(this.dataset[j].tr_qty_loc).toFixed(2)), 118, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
       doc.text(this.dataset[j].tr_um, 123, i - 1);
       doc.line(130, i - 5, 130, i);
-      doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
+      doc.text(String(Number(this.dataset[j].tr_price)), 148, i - 1, { align: "right" });
       doc.line(150, i - 5, 150, i);
       doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
       doc.line(170, i - 5, 170, i);
@@ -2414,11 +2449,11 @@ doc.addPage();
       i = i + 5;
     } else {
       doc.line(10, i - 5, 10, i);
-      doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+      doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
       doc.line(20, i - 5, 20, i);
       doc.text(this.dataset[j].tr_part, 25, i - 1);
       doc.line(45, i - 5, 45, i);
-      doc.text(this.dataset[j].desc, 47, i - 1);
+      doc.text(this.dataset[j].tr_desc, 47, i - 1);
       doc.line(100, i - 5, 100, i);
       doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
       doc.line(120, i - 5, 120, i);
@@ -2439,41 +2474,43 @@ doc.addPage();
 
   // doc.line(10, i - 5, 200, i - 5);
 
-  doc.line(130, i + 7, 205, i + 7);
-  doc.line(130, i + 14, 205, i + 14);
-  //  doc.line(130, i + 21, 200, i + 21 );
-  //  doc.line(130, i + 28, 200, i + 28 );
-  //  doc.line(130, i + 35, 200, i + 35 );
-  doc.line(130, i + 7, 130, i + 14);
-  doc.line(160, i + 7, 160, i + 14);
-  doc.line(205, i + 7, 205, i + 14);
-  doc.setFontSize(10);
+  // doc.line(130, i + 7, 205, i + 7);
+  // doc.line(130, i + 14, 205, i + 14);
+  // //  doc.line(130, i + 21, 200, i + 21 );
+  // //  doc.line(130, i + 28, 200, i + 28 );
+  // //  doc.line(130, i + 35, 200, i + 35 );
+  // doc.line(130, i + 7, 130, i + 14);
+  // doc.line(160, i + 7, 160, i + 14);
+  // doc.line(205, i + 7, 205, i + 14);
+  // doc.setFontSize(10);
 
-  doc.text("Total HT", 140, i + 12, { align: "left" });
+  doc.text("NOMBRE DE BIG BAG     " + String(this.dataset.length) + "     ,Total POIDS" + String(Number(total)), 40, i + 12, { align: "left" });
+  doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
   //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
   //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
   //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
 
-  doc.text(String(Number(total).toFixed(2)), 198, i + 12, { align: "right" });
-  //  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
-  //  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
-  //  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+  // doc.text(String(Number(total)), 198, i + 12, { align: "right" });
+  //  doc.text(String(Number(controls.tva.value)), 198 ,  i + 19 , { align: 'right' });
+  //  doc.text(String(Number(controls.timbre.value)), 198 ,  i + 26 , { align: 'right' });
+  //  doc.text(String(Number(controls.ttc.value))), 198 ,  i + 33 , { align: 'right' });
 
   doc.setFontSize(8);
-  let mt = NumberToLetters(Number(total).toFixed(2), "Dinars Algerien");
+  // let mt = NumberToLetters(Number(total), "Dinars Algerien");
 
-  if (mt.length > 95) {
-    let mt1 = mt.substring(90);
-    let ind = mt1.indexOf(" ");
+  // if (mt.length > 95) {
+  //   let mt1 = mt.substring(90);
+  //   let ind = mt1.indexOf(" ");
 
-    mt1 = mt.substring(0, 90 + ind);
-    let mt2 = mt.substring(90 + ind);
+  //   mt1 = mt.substring(0, 90 + ind);
+  //   let mt2 = mt.substring(90 + ind);
 
-    doc.text("Arretée la présente Commande a la somme de :" + mt1, 20, i + 53);
-    doc.text(mt2, 20, i + 60);
-  } else {
-    doc.text("Arretée la présente Commande a la somme de :" + mt, 20, i + 53);
-  }
+  //   doc.text("Arretée la présente Commande a la somme de :" + mt1, 20, i + 53);
+  //   doc.text(mt2, 20, i + 60);
+  // } else {
+  //   doc.text("Arretée la présente Commande a la somme de :" + mt, 20, i + 53);
+  // }
   // window.open(doc.output('bloburl'), '_blank');
   //window.open(doc.output('blobUrl'));  // will open a new tab
   doc.save('SU-' + nbr + '.pdf')
@@ -2612,10 +2649,10 @@ prepareGridemp() {
 
   // fill the dataset with your data
   const controls = this.trForm.controls;
-    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}
-    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
-          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
-               else{this.employeService.getBy({emp_job:'MAG',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}}
+    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));}
+    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data))}
+          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR',}).subscribe((response: any) => (this.emps = response.data))}
+               else{this.employeService.getBy({emp_job:'MAG'}).subscribe((response: any) => (this.emps = response.data));}}
   }
 }
 
@@ -2776,6 +2813,212 @@ onChangeuser() {
   
   if(controls.adduser2.value == true){this.adduser = false}
   else {this.adduser = true,controls.tr_user2.setValue(null); this.emps2=[]}
+}
+handleSelectedRowsChanged5(e, args) {
+  const controls = this.trForm.controls;
+
+  
+  
+  if (Array.isArray(args.rows) && this.gridObj5) {
+    this.dataset = []
+    args.rows.map((idx) => 
+    {
+      const item = this.gridObj5.getDataItem(idx);
+      controls.tr_lot.setValue(item.tr_lot || "");
+      this.trlot = item.tr_lot;
+      controls.tr_addr.setValue(item.tr_addr || "")
+      controls.tr_user1.setValue(item.tr_user1 || "");
+      controls.tr_user2.setValue(item.tr_user2 || "");
+      controls.tr_rmks.setValue(item.tr_rmks || "");
+      controls.tr_addr.setValue(item.tr_addr || "");
+      controls.tr_effdate.setValue({ year: new Date(item.tr_effdate).getFullYear(),
+        month: new Date(item.tr_effdate).getMonth() + 1,
+        day: new Date(item.tr_effdate).getDate(),});
+        let oldata=[]
+      this.inventoryTransactionService.getByRef({ tr_lot: item.tr_lot,tr_type:'ISS-UNP',tr_effdate:item.tr_effdate,tr_addr:item.tr_addr }).subscribe(
+        (res: any) => {
+          oldata = res.data
+          for (let i = 0; i < oldata.length; i++)
+          {
+            this.gridService.addItem(
+              {
+                id: this.dataset.length + 1,
+                tr_line: this.dataset.length + 1,
+                tr_part: res.data[i].tr_part,
+                tr_desc:res.data[i].tr_desc,
+                tr_site: res.data[i].tr_site,
+                cmvids: "",
+                tr_loc: res.data[i].tr_loc,
+                
+                tr_qty_loc: res.data[i].tr_qty_loc * (-1),
+                qty_oh: 0,
+                tr_um: res.data[i].tr_um,
+                tr_um_conv:1,
+                tr_price:res.data[i].tr_price,
+                
+                tr_ref: res.data[i].tr_ref,
+                tr_serial: res.data[i].tr_serial,
+                tr_status: res.data[i].tr_status,
+                tr_expire: res.data[i].tr_expire,
+                submitted: true
+              },
+              { position: "bottom" }
+            );
+          }
+       
+        },
+        (error) => {
+          this.message = `Sortie n'existe pas`;
+          this.hasFormErrors = true;
+        },
+        () => {}
+      );
+  
+      this.addressService.getBy({ad_addr: item.tr_addr}).subscribe((response: any)=>{
+                
+                
+        this.provider = response.data[0]
+        console.log(this.provider)
+      // controls.name.setValue(this.provider.ad_name);
+      })
+    
+      })
+  }
+ // this.calculatetot();
+}
+
+angularGridReady5(angularGrid: AngularGridInstance) {
+  this.angularGrid5 = angularGrid;
+  this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGrid5() {
+  this.columnDefinitions5 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "tr_lot",
+      name: "N° Sortie",
+      field: "tr_lot",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_addr",
+      name: "Fournisseur",
+      field: "tr_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_effdate",
+      name: "Date",
+      field: "tr_effdate",
+      sortable: true,
+      filterable: true,
+      formatter:Formatters.dateIso ,
+      type: FieldType.dateIso,
+      filter: {
+        model: Filters.dateRange,
+        operator: 'RangeInclusive',
+        // override any of the Flatpickr options through "filterOptions"
+        //editorOptions: { minDate: 'today' } as FlatpickrOption
+      },
+    },
+    {
+      id: "tr_user1",
+      name: "employés",
+      field: "tr_user1",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_user2",
+      name: "Employé remplaçant",
+      field: "tr_user2",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptions5 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {},
+    multiSelect: false,
+    rowSelectionOptions: {
+      selectActiveRow: true,
+    },
+  };
+ const controls = this.trForm.controls
+  // fill the dataset with your data
+  this.inventoryTransactionService
+    .getByGroup({ tr_type:"ISS-UNP" })
+    .subscribe((response: any) => (this.transactions = response.data));
+}
+open5(content) {
+  this.prepareGrid5();
+  this.modalService.open(content, { size: "lg" });
+}
+onChangeCC() {
+  const controls = this.trForm.controls;
+  //const rqm_nbr = controls.tr_so_job.value;
+ 
+  this.dataset = [];
+      this.inventoryTransactionService.getByNbr({ tr_lot: controls.tr_lot.value, tr_type:"ISS-UNP",tr_addr:controls.tr_addr.value }).subscribe(
+        (res: any) => {
+          console.log(res)
+         this.dataset = res.data;
+         if (this.dataset.length > 0) {
+          this.dataView.setItems(this.dataset)
+     
+          this.inventoryTransactionService.getByRef({ tr_lot: controls.tr_lot.value, tr_type:"ISS-UNP",tr_addr:controls.tr_addr.value }).subscribe(
+            (resp: any) => {
+              console.log(resp)
+              controls.tr_lot.setValue(resp.data[0].tr_lot || "");
+              controls.tr_effdate.setValue(resp.data[0].tr_effdate);
+              controls.tr_site.setValue(resp.data[0].tr_site || "");
+              controls.tr_loc.setValue(resp.data[0].tr_loc || "");
+              controls.tr_rmks.setValue(resp.data[0].tr_rmks || "");
+              controls.tr_addr.setValue(resp.data[0].tr_addr || "");
+              this.addressService.getBy({ad_name: resp.data[0].tr_addr}).subscribe((response: any)=>{
+            
+            
+                this.provider = response.data[0]
+        
+              controls.name.setValue(this.provider.ad_name);
+              }) 
+
+            })
+
+    }else {
+      alert("SORTIE n'existe pas ")
+      controls.tr_lot.setValue(null)
+      //console.log(response.data.length)
+      document.getElementById("tr_lot").focus();
+    }
+    })    
+  
+
+  
 }
 }
   

@@ -443,8 +443,8 @@ export class CreateOpComponent implements OnInit {
 
        
         let time = args.dataContext.fin
-     
-        if (time.substring(0,2) > 24) {
+     if(time != null && time != '')
+      {  if (time.substring(0,2) > 24) {
           alert("Heure ne doit pas depassé 24")
           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , fin: "HH:MM" })
         }
@@ -453,6 +453,7 @@ export class CreateOpComponent implements OnInit {
           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , fin: "HH:MM" })
         }
       }
+    }
      
       
   },
@@ -575,27 +576,20 @@ export class CreateOpComponent implements OnInit {
       minWidth: 120,
       maxWidth: 120,
       filterable: false,
-      editor: {
-        model: Editors.text,
-        required: true,
-        
-        
-    },
+      type: FieldType.dateTimeShortIso,
+        editor: {
+          model: Editors.text,
+        },
 
     onCellChange: (e: Event, args: OnEventArgs) => {
 
        
       let time = args.dataContext.debut_cause
       
-      if (Number(time.substring(0,2)) > 24) {
-        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , debut_cause: "HH:MM" })
-        this.message = "Heure ne doit pas depassé 24"
-        this.hasFormErrors = true;
-        return
-      }
-      if (Number(time.substring(3,5)) > 59) {
-        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , debut_cause: "HH:MM" })
-        this.message = "Minutes ne doit pas depassé 59"
+      
+      if (time > new Date()) {
+        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , debut_cause: new Date() })
+        this.message = "debut d'arret ne peut pas dépasser date du jour"
         this.hasFormErrors = true;
         return
       }
@@ -611,29 +605,32 @@ export class CreateOpComponent implements OnInit {
       minWidth: 120,
       maxWidth: 120,
       filterable: false,
+      type: FieldType.dateTimeShortIso,
       editor: {
-        model: Editors.text,
-        //params: { decimalPlaces: 2 },
-        required: true,
-        
-        
-    },
+        model: Editors.date,
+      },
     onCellChange: (e: Event, args: OnEventArgs) => {
 
        
       let time = args.dataContext.fin_cause
    
-      if (time.substring(0,2) > 24) {
-        alert("Heure ne doit pas depassé 24")
-        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: "HH:MM" })
+if(time !=null )     
+  { if (time > new Date()) {
+        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: new Date() })
+        this.message = "Fin d'arret ne peut pas dépasser date du jour"
+        this.hasFormErrors = true;
+        return
       }
-      if (time.substring(3,5) > 59) {
-        alert("Minute ne doit pas depassé 59")
-        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: "HH:MM" })
-      }
-    }
+      if(time < args.dataContext.debut_cause)
+        {
+          this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: new Date() })
+          this.message = "Fin d'arret ne peut pas dépasser date debut d'arret"
+          this.hasFormErrors = true;
+          return
+        }
    
-      
+    } 
+  } 
     },
     {
       id: "op_comment",
@@ -901,7 +898,7 @@ export class CreateOpComponent implements OnInit {
     this.operationHistory = new OperationHistory();
     const date = new Date;
     this.opForm = this.opFB.group({
-      op_tran_date: [{
+      op_date: [{
         year:date.getFullYear(),
         month: date.getMonth()+1,
         day: date.getDate()
@@ -963,6 +960,13 @@ export class CreateOpComponent implements OnInit {
        return;
   
       }
+      // if(this.dwndataset[i].fin_cause < this.dwndataset[i].debut_cause)
+      //   {
+      //     // this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: new Date() })
+      //     this.message = "Fin d'arret ne peut pas dépasser date debut d'arret"
+      //     this.hasFormErrors = true;
+      //     return
+      //   }
      
      }
 
@@ -1048,8 +1052,8 @@ export class CreateOpComponent implements OnInit {
     
     
     
-    _op.op_tran_date = controls.op_tran_date.value
-    ? `${controls.op_tran_date.value.year}/${controls.op_tran_date.value.month}/${controls.op_tran_date.value.day}`
+    _op.op_date = controls.op_date.value
+    ? `${controls.op_date.value.year}/${controls.op_date.value.month}/${controls.op_date.value.day}`
     : null
    
     return _op
@@ -1226,9 +1230,12 @@ export class CreateOpComponent implements OnInit {
         op_rsn_down: null,
         cmvid: "",
         desc_cause: "",
-        debut_cause: "HH:MM",
-        fin_cause: "HH:MM",
+        debut_cause: new Date(),
+        
+        fin_cause: null,
         op_comment: "",
+        debut: "HH:MM",
+        fin: "HH:MM",
       },
       { position: "bottom" }
     );
@@ -1761,7 +1768,20 @@ export class CreateOpComponent implements OnInit {
             controls.op_wkctr.setValue(item.wc_wkctr || "")
             controls.op_dept.setValue(item.wc_dept || "")
             controls.op_mch.setValue(item.wc_mch || "")
-            
+            this.dwndataset = []
+            let date =  controls.op_date.value
+            ? `${controls.op_date.value.year}/${controls.op_date.value.month}/${controls.op_date.value.day}`
+            : null
+            this.operationHistoryService.getBy({op_wkctr:item.wc_wkctr,op_mch:item.wc_mch,op_date:date}).subscribe(
+                (response: any) => {this.dwndataset = response.data
+                 // console.log(this.dataset)
+                  this.dataViewdwn.setItems(this.dwndataset)},
+         
+                (error) => {
+                    this.dwndataset = []
+                },
+                () => {}
+            )  
       });
    
         }

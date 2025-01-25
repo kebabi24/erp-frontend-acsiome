@@ -860,7 +860,7 @@ export class BobineIssueComponent implements OnInit {
               //   const { data } = response;
                  console.log("aaaaaaaaaaa",response.data);
                  if (response.data != null) {
-                   this.provider = response.data;
+                   this.provider = response.data[0];
                    this.nom = this.provider.ad_name
                  }
                });
@@ -955,7 +955,7 @@ export class BobineIssueComponent implements OnInit {
 
       }
 
-      this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe(
+      this.sequenceService.getByOne({ seq_type: "SN", seq_profile: this.user.usrd_profile }).subscribe(
         (response: any) => {
       this.seq = response.data
       console.log(this.seq)   
@@ -1037,11 +1037,7 @@ export class BobineIssueComponent implements OnInit {
         .subscribe(
          (reponse: any) => {
           console.log(reponse)
-          this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-          // const arrayOctet = new Uint8Array(reponse.pdf.data)
-          // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-          // const fileUrl = URL.createObjectURL(file);
-          // window.open(fileUrl)},
+          this.printpdf(this.trlot); 
          },
           (error) => {
             this.layoutUtilsService.showActionNotification(
@@ -2124,7 +2120,7 @@ console.log(updateItem.tr_part)
           this.error = true;
         }
         else{
-          this.provider = response.data;
+          this.provider = response.data[0];
          this.nom = this.provider.ad_name
         }
         
@@ -2268,10 +2264,10 @@ printpdf(nbr) {
   const controlss = this.trForm.controls;
   console.log("pdf");
   var doc = new jsPDF();
-  
+  let date = new Date()
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   if (this.domain.dom_name != null) {
@@ -2285,6 +2281,12 @@ printpdf(nbr) {
   doc.line(10, 35, 200, 35);
   doc.setFontSize(12);
   doc.text("Bon Consommation Bobine N° : " + nbr, 70, 45);
+  doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
   doc.setFontSize(8);
   //console.log(this.provider.ad_misc2_id)
   doc.text("Machine : " + this.provider.ad_addr, 20, 50);
@@ -2330,9 +2332,9 @@ printpdf(nbr) {
   for (let j = 0; j < this.dataset.length  ; j++) {
     total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
     
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      img.src = "./assets/media/logos/companylogo.png";
+      img.src = "./assets/media/logos/companyentete.png";
       doc.addImage(img, 'png', 150, 5, 50, 30)
       doc.setFontSize(9);
       if (this.domain.dom_name != null) {
@@ -2346,6 +2348,12 @@ doc.addPage();
 
       doc.setFontSize(12);
       doc.text("Bon Consommation Bobine N° : " + nbr, 70, 40);
+      doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
       doc.setFontSize(8);
       console.log(this.provider.ad_misc2_id);
       doc.text("Machine : " + this.provider.ad_addr, 20, 50);
@@ -2389,11 +2397,11 @@ doc.addPage();
       doc.setFontSize(6);
     }
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35);
+    if (this.dataset[j].desc.length > 45) {
+      let desc1 = this.dataset[j].desc.substring(45);
       let ind = desc1.indexOf(" ");
-      desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-      let desc2 = this.dataset[j].desc.substring(35 + ind);
+      desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+      let desc2 = this.dataset[j].desc.substring(45 + ind);
 
       doc.line(10, i - 5, 10, i);
       doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
@@ -2471,6 +2479,8 @@ doc.addPage();
   doc.setFontSize(10);
 
   doc.text("Total HT", 140, i + 12, { align: "left" });
+  doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
   //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
   //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
   //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
@@ -2633,10 +2643,10 @@ prepareGridemp() {
 
   // fill the dataset with your data
   const controls = this.trForm.controls;
-    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}
-    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
-          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
-               else{this.employeService.getBy({emp_job:'MAG',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}}
+    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));}
+    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data))}
+          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR'}).subscribe((response: any) => (this.emps = response.data))}
+               else{this.employeService.getBy({emp_job:'MAG'}).subscribe((response: any) => (this.emps = response.data));}}
   }
 }
 

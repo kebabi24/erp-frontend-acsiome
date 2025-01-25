@@ -2,7 +2,9 @@
     <kt-portlet-header [sticky]="true" [title]="'Consultations des Stocks'" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
             
-
+                <button type="button"  (click)="reset()"class="btn btn-secondary btn-sm ml-2">Raffraichir </button>
+                <button type="button"  (click)="printpdf()"class="btn btn-secondary btn-sm ml-2">Imprimer état </button>
+                
         </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>

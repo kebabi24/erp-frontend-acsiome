@@ -1,12 +1,100 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'La liste des Employés'" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="'La liste des Etudiants'" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
-            
+            <button type="button" (click)="createemp()" class="btn btn-secondary btn-sm ml-2">Ajouter un etudiant</button>
+ 
+          <!-- <button type="button" (click)="listsession()" class="btn btn-secondary btn-sm ml-2">Sessions</button> -->
+          <!-- <button type="button" (click)="createtraining()" class="btn btn-secondary btn-sm ml-2">créer une formations</button> -->
+          <!-- <button type="button" (click)="listtraining()" class="btn btn-secondary btn-sm ml-2">Formations</button> -->
+          <button type="button" (click)="students()" class="btn btn-secondary btn-sm ml-2">Recherche Etudiants </button>
+          <!-- <button type="button" (click)="createsession()" class="btn btn-secondary btn-sm ml-2">Sessions</button> -->
+          <!-- <button type="button" (click)="approverequest()" class="btn btn-secondary btn-sm ml-2">Demandes </button> -->
+          <!-- <button type="button" (click)="createTrainor()" class="btn btn-secondary btn-sm ml-2">Formateurs</button> -->
+          <!-- <button type="button" (click)="createlocation()" class="btn btn-secondary btn-sm ml-2">Salles </button> -->
+          
+          <button type="button" (click)="payment()" class="btn btn-secondary btn-sm ml-2">Paiement Facture </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
 
         </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
+
         <div class="example-preview">
+            <form class="kt-form" [formGroup]="repForm">
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                {{message}}
+                </kt-alert>
+            <div class="row">
+               <div class="row">
+                    
+                    
+                    <div class="form-group col-3">
+                        <label class="form-group">Prénom: </label>
+                    
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="filter1" (change)="getemp1()"
+                            aria-describedby="basic-addon2">
+                            <!-- <div class="input-group-append">
+                                <span class="input-group-text" (click)="open(content)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div> -->
+                           
+                        </div>
+                    </div>
+                    <div class="form-group col-3">
+                    <label class="form-group">Nom: </label>
+                
+                    <div class="input-group input-group-sm">
+
+                        <input type="text" class="form-control form-control-solid" formControlName="filter2" (change)="getemp2()"
+                        aria-describedby="basic-addon2">
+                        <!-- <div class="input-group-append">
+                            <span class="input-group-text" (click)="open(content)">
+                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                        </div> -->
+                       
+                    </div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="form-group">Niveau: </label>
+                    
+                        <div class="input-group input-group-sm">
+    
+                            <input type="text" class="form-control form-control-solid" formControlName="filter3" (change)="getemp3()"
+                            aria-describedby="basic-addon2">
+                            <!-- <div class="input-group-append">
+                                <span class="input-group-text" (click)="open(content)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div> -->
+                           
+                        </div>
+                        </div>
+                
+               </div>
+            </div>
             <div class="row">
                 <angular-slickgrid class="col-12" gridId="gridCode" [columnDefinitions]="columnDefinitions"
                 (onAngularGridCreated)="angularGridReady($event)"
@@ -14,6 +102,7 @@
                 </angular-slickgrid>
             </div>
             
+        </form>
         </div>
 
     </kt-portlet-body>

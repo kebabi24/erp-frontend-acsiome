@@ -43,6 +43,11 @@ export class AddReportService {
         
         
     }
+    
+
+        
+        
+    
     // UPDATE
     public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

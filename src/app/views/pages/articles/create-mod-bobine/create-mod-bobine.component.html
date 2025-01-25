@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Création Modéle Bobine'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
 
 
@@ -11,7 +11,7 @@
                 <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
                         class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <button class="dropdown-item">Sauvgarder et quitter</button>
+                    <button class="dropdown-item">enregistrer et quitter</button>
 
                 </div>
             </div> -->
@@ -37,7 +37,7 @@
                         formControlName="mod_part_type" id="exampleSelects1">
                         <option value=""></option>
                         <option *ngFor="let elem of mod_part_type" [value]="elem.code_value">
-                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+                           {{elem.code_cmmt}}</option>
 
                     </select>
                     <div *ngIf="form1.controls['mod_part_type'].errors && (form1.controls['mod_part_type'].dirty || form1.controls['mod_part_type'].touched)"
@@ -93,10 +93,10 @@
                             <input type="text" formControlName="mod_um"
                                 [className]="form1.controls['mod_um'].errors && (form1.controls['mod_um'].dirty || form1.controls['mod_um'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 (change)="changeUm()" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
+                            <!-- <div class="input-group-append">
                                 <span class="input-group-text" (click)="open3(content,'pt_um')">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
+                            </div> -->
                             <div *ngIf="form1.controls['mod_um'].errors && (form1.controls['mod_um'].dirty || form1.controls['mod_um'].touched)"
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
@@ -152,7 +152,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -175,7 +175,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -199,7 +199,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -223,7 +223,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>

@@ -52,8 +52,11 @@ export class ListLocComponent implements OnInit {
   }
 
   createCode() {
-      this.router.navigateByUrl("inventory-setting/create-loc")
+      this.router.navigateByUrl("inventory-settings/create-loc")
   }
+  createsession() {
+    this.router.navigateByUrl("training/training-session-list")
+}
   prepareGrid() {
       this.columnDefinitions = [
           {

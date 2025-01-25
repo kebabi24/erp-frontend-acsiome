@@ -22,7 +22,8 @@ const myCustomStringFormatter: Formatter = (row: number, cell: number, value: an
   styleUrls: ['./list-training.component.scss']
 })
 export class ListTrainingComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true)
+  loading$: Observable<boolean>
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
@@ -31,7 +32,8 @@ export class ListTrainingComponent implements OnInit {
   gridOptions1: GridOption = {};
   gridObj1: any;
   angularGrid1: AngularGridInstance;
-  item: any
+  item: any;
+  user:any;
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -50,6 +52,38 @@ export class ListTrainingComponent implements OnInit {
 
   prepareGrid() {
     this.columnDefinitions = [
+      {
+        id: "mod",
+        name: "Edit",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+       // formatter: Formatters.editIcon,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Formation">
+               <i class="flaticon2-pen"></i>
+           </a>
+           `;
+        },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id
+                // if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
+          // this.router.navigateByUrl(`/purchasing/edit-po/${id}`)
+          this.router.navigateByUrl(`/training/edit-training/${id}`)
+          // }
+          // else {
+          //   alert("Modification Impossible pour ce Status")
+          // }
+            
+        // })
+        },
+      },
           {
               id: "id",
               name: "id",
@@ -78,7 +112,15 @@ export class ListTrainingComponent implements OnInit {
               maxWidth: 350,
               type: FieldType.string,
               filterable:true,
-          },      
+          }, 
+          {
+            id: "pt_dsgn_grp",
+            name: "Type",
+            field: "pt_dsgn_grp",
+            type: FieldType.string,
+            sortable: true,
+            filterable:true,
+          },         
           {
             id: "pt_draw",
             name: "Domaine",
@@ -96,19 +138,9 @@ export class ListTrainingComponent implements OnInit {
            
           },     
           {
-            id: "pt_formula",
-            name: "Ext / Int",
-            field: "pt_formula",
-            type: FieldType.boolean,
-            formatter: Formatters.checkmark,
-            filterable:true,
-            sortable: true,
-           
-          },      
-          {
-            id: "pt_ms",
-            name: "Certification",
-            field: "pt_ms",
+            id: "pt_iss_pol",
+            name: "Interne",
+            field: "pt_iss_pol",
             type: FieldType.boolean,
             formatter: Formatters.checkmark,
             filterable:true,
@@ -117,8 +149,38 @@ export class ListTrainingComponent implements OnInit {
           },      
           {
             id: "pt_rollup",
-            name: "Fidélité",
+            name: "Certifiante",
             field: "pt_rollup",
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark,
+            filterable:true,
+            sortable: true,
+           
+          }, 
+          {
+            id: "pt_critical",
+            name: "Qualifiante",
+            field: "pt_critical",
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark,
+            filterable:true,
+            sortable: true,
+           
+          },         
+          {
+            id: "pt_insp_rqd",
+            name: "Habilitation",
+            field: "pt_insp_rqd",
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark,
+            filterable:true,
+            sortable: true,
+           
+          },         
+          {
+            id: "pt_phantom",
+            name: "Fidélité",
+            field: "pt_phantom",
             type: FieldType.boolean,
             formatter: Formatters.checkmark,
             filterable:true,
@@ -135,14 +197,32 @@ export class ListTrainingComponent implements OnInit {
            
           },      
           {
-            id: "pt_meter_um",
+            id: "pt_bom_code",
             name: "Mesure d'accompagnement",
-            field: "pt_meter_um",
+            field: "pt_bom_code",
             type: FieldType.string,
             filterable:true,
             sortable: true,
            
-          },      
+          },     
+          {
+            id: "pt_shelflife",
+            name: "Durée",
+            field: "pt_shelflife",
+            type: FieldType.string,
+            filterable:true,
+            sortable: true,
+           
+          },   
+          {
+            id: "pt_price",
+            name: "Prix",
+            field: "pt_price",
+            type: FieldType.string,
+            filterable:true,
+            sortable: true,
+           
+          }, 
           {
             id: "det",
             name: "Détail",
@@ -199,8 +279,9 @@ export class ListTrainingComponent implements OnInit {
         sorters: [{ columnId: "id", direction: "ASC" }],
       } 
     }
-  
-    this.itemService.getBy(
+    this.user = JSON.parse(localStorage.getItem("user"));
+    if(this.user.usrd_site == '*')
+    {this.itemService.getBy(
       {pt_part_type:"FORMATION"},
       ).subscribe(
       (response: any) => {
@@ -218,6 +299,26 @@ export class ListTrainingComponent implements OnInit {
       },
     )
   }
+  else{
+    this.itemService.getBy(
+      {pt_site:this.user.usrd_site,pt_part_type:"FORMATION"},
+      ).subscribe(
+      (response: any) => {
+        console.log(response.data)
+        this.dataset = response.data
+        console.log(this.dataset)
+        
+      
+        // this.dataView.setItems(this.dataset)
+         
+      },
+      (error) => {
+          console.log(error)
+          this.dataset=[]
+      },
+    )
+  }
+  }
   openDet(content) {
     this.prepareGrid1();
     this.modalService.open(content, { size: "lg" });
@@ -229,14 +330,27 @@ export class ListTrainingComponent implements OnInit {
   
   prepareGrid1() {
     this.columnDefinitions1 = [
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        minWidth: 10,
-        sortable:true,
+    //   {
+    //     id: "id",
+    //     name: "id",
+    //     field: "id",
+    //     excludeFromHeaderMenu: true,
+    //     minWidth: 10,
+    //     sortable:true,
+    // },
+    {
+      id: "chr01",
+      name: "Type",
+      field: "chr01",
+      sortable: true,
+      minWidth: 50,
+      filterable: true,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
     },
+
       {
         id: "ptd_desc",
         name: "Désignation",
@@ -286,4 +400,44 @@ export class ListTrainingComponent implements OnInit {
   
     // this.codeService.getBy({ code_fldname: "pt_draw" }).subscribe((response: any) => (this.codes = response.data));
   }
+  createtraining() {
+    this.loadingSubject.next(false)
+    const url = `/training/create-training`
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+goback() {
+  this.loadingSubject.next(false)
+  const url = `/training/training-session-list`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+listtraining() {
+  this.loadingSubject.next(false)
+  const url = `/training/list-training`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+students() {
+this.loadingSubject.next(false)
+const url = `/accounting-setting/list-employe`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+createsession() {
+this.loadingSubject.next(false)
+const url = `/training/create-training-session`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+approverequest() {
+this.loadingSubject.next(false)
+const url = `/training/approval-req`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+createTrainor() {
+this.loadingSubject.next(false)
+const url = `/providers/create-rep-job`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+createlocation() {
+this.loadingSubject.next(false)
+const url = `/inventory-settings/list-loc`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
 }

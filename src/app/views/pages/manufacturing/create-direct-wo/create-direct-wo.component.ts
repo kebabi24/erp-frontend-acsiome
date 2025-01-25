@@ -18,7 +18,7 @@ declare var Edelweiss: any;
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 @Component({
-  selector: "kt-create-direct-wo",
+  selector: "kt-create-direct-wo", 
   templateUrl: "./create-direct-wo.component.html",
   styleUrls: ["./create-direct-wo.component.scss"],
 })
@@ -399,7 +399,7 @@ export class CreateDirectWoComponent implements OnInit {
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
       ref: [{ value: null, disabled: true }],
-
+      wo_qty_chg:[this.workOrder.wo_qty_chg],
       wo_qty_comp: [this.workOrder.wo_qty_comp],
       emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial],
@@ -424,7 +424,7 @@ export class CreateDirectWoComponent implements OnInit {
             //   const { data } = response;
                console.log("aaaaaaaaaaa",response.data);
                if (response.data != null) {
-                 this.provider = response.data;
+                 this.provider = response.data[0];
                }
              });
         }
@@ -434,10 +434,12 @@ export class CreateDirectWoComponent implements OnInit {
   }
   //reste form
   reset() {
-    this.globalState = true
+    this.globalState = false
     this.validate = false
     this.workOrder = new WorkOrder();
     this.createForm();
+    this.getProductColors();
+    this.getProductTypes();
     // this.dataset = [];
     // this.trdataset = [];
 
@@ -506,6 +508,8 @@ export class CreateDirectWoComponent implements OnInit {
     controls.product_color.value;
     this.color = controls.product_color.value;
     this.type = controls.product_type.value;
+    this.product_types = [];
+    this.product_colors = [];
     this.itemsService
       .getBy({
         pt_draw: controls.product_type.value,
@@ -594,7 +598,7 @@ export class CreateDirectWoComponent implements OnInit {
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
     // _lb.int02   = this.product.int02
-
+    _lb.lb__chr01 = String(new Date().toLocaleTimeString())
     _lb.lb_printer = this.currentPrinter;
 
     let lab = null;
@@ -715,7 +719,7 @@ export class CreateDirectWoComponent implements OnInit {
     _wo.wo_user2 = this.user2;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
-    _wo.wo_qty_ord = controls.wo_qty_comp.value;
+    _wo.wo_qty_ord = 1;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
@@ -1251,7 +1255,7 @@ export class CreateDirectWoComponent implements OnInit {
           //   const { data } = response;
              console.log("aaaaaaaaaaa",response.data);
              if (response.data != null) {
-               this.provider = response.data;
+               this.provider = response.data[0];
              }
            });
       });
@@ -1524,8 +1528,8 @@ export class CreateDirectWoComponent implements OnInit {
                       this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                         
                         this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
-                          if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true && respopart.data.pt_draw != 'PERTE' ) {
-                            this.codeService.getBy({code_fldname:controls.product_type.value,code_value:respopart.data.pt_draw}).subscribe((coderesp:any) => {if(coderesp.data!=null){this.ok_types = true}})
+                          if (respopart.data.pt_draw != this.type && respopal.data.label.lb__log01 != true && respopart.data.pt_draw != 'PERTE' ) {
+                            this.codeService.getBy({code_fldname:this.type,code_value:respopart.data.pt_draw}).subscribe((coderesp:any) => {if(coderesp.data!=null){this.ok_types = true}})
                             if(this.ok_types == false){
                             this.message = "type ne correspond pas au produit broyé";
                             this.hasFormErrors = true;
@@ -1535,7 +1539,7 @@ export class CreateDirectWoComponent implements OnInit {
                               this.sct = respo.data;
                               console.log(this.sct);
 
-                              this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
+                              this.codeService.getBy({ code_fldname: this.color, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
                                 console.log(rescode);
                                 if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true || respopart.data.pt_draw == 'PERTE') {
                                   this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
@@ -1562,9 +1566,36 @@ export class CreateDirectWoComponent implements OnInit {
                                     { position: "bottom" }
                                   );
                                 } else {
-                                  this.message = "couleur ne correspond pas au produit broyé";
-                                  this.hasFormErrors = true;
-                                  return;
+                                  if(respopart.data.pt_break_cat == this.color){
+                                    this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
+                                  this.gridService.addItem(
+                                    {
+                                      id: this.dataset.length + 1,
+                                      tr_line: this.dataset.length + 1,
+                                      tr_part: this.lddet.ld_part,
+                                      break: respopart.data.pt_break_cat,
+                                      cmvid: "",
+                                      desc: respopart.data.pt_desc1,
+                                      tr_qty_loc: this.lddet.ld_qty_oh,
+                                      tr_loc: this.lddet.ld_loc,
+                                      tr_um: respopart.data.pt_um,
+                                      tr_um_conv: 1,
+                                      tr_price: this.sct.sct_mtl_tl,
+                                      cmvids: "",
+                                      tr_ref: ref,
+                                      tr_serial: this.lddet.ld_lot,
+                                      tr_status: this.stat,
+                                      tr_expire: this.lddet.ld_expire,
+                                      tr_program: timedate,
+                                    },
+                                    { position: "bottom" }
+                                    )
+                                  }
+                                  else{
+                                    this.message = "couleur ne correspond pas au produit broyé";
+                                    this.hasFormErrors = true;
+                                    return;
+                                  }
                                 }
                               });
                             });
@@ -1783,7 +1814,7 @@ export class CreateDirectWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService.getBy({emp_job:'BR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data));
   }
 
   handleSelectedRowsChangedemp(e, args) {
@@ -1820,17 +1851,22 @@ export class CreateDirectWoComponent implements OnInit {
   onChangeqty() {
     
     const controls = this.woForm.controls;
-    const qty= Number(controls.wo_qty_comp.value)
+    const qty= Number(controls.wo_qty_chg.value)
     
     const timedate = new Date().toLocaleTimeString();
     
     var bol = false;
     
-    if(controls.wo_qty_comp.value > this.seuil || controls.wo_qty_comp.value < 0){
-      controls.wo_qty_comp.setValue(0)
+    if(controls.wo_qty_chg.value > this.seuil || controls.wo_qty_chg.value < 0){
+      controls.wo_qty_chg.setValue(0)
       this.message = "la quantité que vous avez saisi est erroné";
     this.hasFormErrors = true;
     return;}
+    else{
+      this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
+        controls.wo_qty_comp.setValue(controls.wo_qty_chg.value - poids)
+      })
+    }
     
     
  
@@ -1840,11 +1876,11 @@ export class CreateDirectWoComponent implements OnInit {
     const controls = this.woForm.controls;
     console.log("pdf");
     var doc = new jsPDF();
-    
+    let date = new Date()
    
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, 'png', 150, 5, 50, 30)
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -1858,6 +1894,12 @@ export class CreateDirectWoComponent implements OnInit {
     doc.line(10, 35, 200, 35);
     doc.setFontSize(12);
     doc.text("Rapport de broyage N° : " + nbr, 70, 45);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
     doc.setFontSize(8);
     //console.log(this.provider.ad_misc2_id)
     doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
@@ -1896,9 +1938,9 @@ export class CreateDirectWoComponent implements OnInit {
     for (let j = 0; j < this.dataset.length  ; j++) {
       // total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
       
-      if ((j % 30 == 0) && (j != 0) ) {
+      if ((j % 20 == 0) && (j != 0) ) {
   doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
+        img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, 'png', 150, 5, 50, 30)
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
@@ -1911,6 +1953,12 @@ export class CreateDirectWoComponent implements OnInit {
         doc.line(10, 35, 200, 35);
     doc.setFontSize(12);
     doc.text("Rapport de broyage N° : " + nbr, 70, 40);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
     doc.text("**SUITE** " + nbr, 70, 45);
     doc.setFontSize(8);
     //console.log(this.provider.ad_misc2_id)
@@ -1947,11 +1995,11 @@ export class CreateDirectWoComponent implements OnInit {
         doc.setFontSize(6);
       }
   
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
   
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
@@ -1960,7 +2008,7 @@ export class CreateDirectWoComponent implements OnInit {
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].tr_qty_loc.toFixed(2))), 118, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
@@ -2019,7 +2067,8 @@ export class CreateDirectWoComponent implements OnInit {
     doc.line(160, i + 7, 160, i + 14);
     doc.line(205, i + 7, 205, i + 14);
     doc.setFontSize(10);
-  
+    doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
    
     doc.setFontSize(8);
     doc.save('EB-' + nbr + '.pdf')

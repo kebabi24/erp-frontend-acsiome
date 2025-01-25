@@ -430,9 +430,10 @@ export class PaymentAuComponent implements OnInit {
    * Go back to the list
    *
    */
+  
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/`;
+    const url = `/inventory-transaction/inventory-list`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 

@@ -287,7 +287,9 @@ export class CreateChargePaymentComponent implements OnInit {
              
         }
         else {
-          alert("Balance de caisse inférieure")
+          
+          let as = this.prepareAS()
+          this.addAS(as, this.mvdataset);
         }       
      
 
@@ -373,14 +375,6 @@ export class CreateChargePaymentComponent implements OnInit {
         }
       );
   }
- 
-  
-
-
-  
-  
-  
-
   onChangeCheck() {
     const controls = this.asForm.controls;
     const au_check = controls.au_check.value;
@@ -424,7 +418,7 @@ export class CreateChargePaymentComponent implements OnInit {
    */
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/`;
+    const url = `/account-payable/create-charge-payment`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
@@ -913,5 +907,10 @@ handleSelectedRowsChangedc(e, args) {
     });
   }
   console.log(this.selectedc)
+}
+charge(){
+  this.loadingSubject.next(false);
+    const url = `/financialcharge/create-fc`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
 }
 }

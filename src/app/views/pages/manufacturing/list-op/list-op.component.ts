@@ -145,9 +145,9 @@ dataset: any[] = [];
           type: FieldType.string,
         },     
         {
-          id: "op_tran_date",
-          name: "Date Effet",
-          field: "op_tran_date",
+          id: "op_date",
+          name: "Date ",
+          field: "op_date",
           sortable: true,
           width: 100,
           filterable: true,
@@ -178,7 +178,7 @@ dataset: any[] = [];
           sortable: true,
           width: 60,
           filterable: true,
-          type: FieldType.string,
+          type: FieldType.dateIso,
         },
         {
           id: "chr02",
@@ -187,7 +187,7 @@ dataset: any[] = [];
           sortable: true,
           width: 60,
           filterable: true,
-          type: FieldType.string,
+          type: FieldType.dateIso,
         },
         {
           id: "op_rsn_down",

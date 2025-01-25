@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { saveAs } from "file-saver";
 // Angular slickgrid
-import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs, AutoCompleteEditor } from "angular-slickgrid";
+import { Column, GridOption, Formatter, Editor,Filters, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs, AutoCompleteEditor } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -17,7 +17,29 @@ import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 declare var ElectronPrinter3: any;
 import { MatAutocomplete } from "@angular/material/autocomplete";
+import { HttpUtilsService } from "../../../../core/_base/crud"
+import { HttpClient } from "@angular/common/http"
+import { environment } from "../../../../../environments/environment"
+const API_URL = environment.apiUrl + "/codes"
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value=="BIGBAG"){
+    return `<div class="text"  aria-hidden="BIGBAG">BIGBAG</div>`
+  }
+  if (value=="CARTON"){
+    return `<div class="text"  aria-hidden="CARTON">CARTON</div>`
+  }
+  if (value=="F"){
+    return `<div class="text"  aria-hidden="F">Valide</div>`
+  }
+  if (value=="D"){
+    return `<div class="text"  aria-hidden="D">Reporté</div>`
+  }
+  if (value=="A"){
+    return `<div class="text"  aria-hidden="A">Annulé</div>`
+  }
 
+
+  }
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
   const grid = args && args.grid;
@@ -41,6 +63,7 @@ declare var Edelweiss: any;
 })
 export class UnplanifiedReceiptCabComponent implements OnInit {
   seuil : any;
+  poids:any;
   nom:any;
   currentPrinter: string;
   PathPrinter: string;
@@ -118,7 +141,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   gridObj2: any;
   angularGrid2: AngularGridInstance;
 
-  
+  transactions: [];
+  columnDefinitions5: Column[] = [];
+  gridOptions5: GridOption = {};
+  gridObj5: any;
+  angularGrid5: AngularGridInstance;
 
   user: any;
   trlot: string;
@@ -145,8 +172,11 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   angularGridprinter: AngularGridInstance;
   nligne: any;
   pdl: any;
-  
-  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService) {
+  httpOptions = this.httpUtils.getHTTPHeaders()
+  constructor(config: NgbDropdownConfig, private trFB: FormBuilder, private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private siteService: SiteService, private addressService: AddressService, private locationService: LocationService, private locationDetailService: LocationDetailService, private codeService: CodeService, private mesureService: MesureService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private labelService: LabelService, private domainService: DomainService, private printerService: PrintersService, private employeService: EmployeService,
+    private http: HttpClient,
+    private httpUtils: HttpUtilsService,
+  ) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -180,6 +210,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
               this.index = this.dataset.findIndex((el) => {
                 return el.tr_line == args.dataContext.tr_line;
               });
+              args.dataContext.tr_qty_chg = args.dataContext.tr_qty_chg * -1;
               args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
               // this.onSubmit();
               // }
@@ -248,7 +279,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
                     } else {
                       this.stat = this.location.loc_status;
                     }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: resp.data.pt_price });
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: resp.data.pt_price });
                   });
                 });
                 this.codeService.getByOne({code_fldname:'LIMIT',code_value:resp.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
@@ -283,11 +314,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
       },
       {
-        id: "desc",
+        id: "tr_desc",
         name: "Description",
-        field: "desc",
+        field: "tr_desc",
         sortable: true,
-        width: 180,
+        minWidth: 350,
+        maxWidth: 350,
         filterable: false,
       },
       {
@@ -295,16 +327,35 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         name: "Code",
         field: "tr_batch",
         sortable: true,
-        width: 180,
+        width: 80,
         filterable: false,
         editor: {
           model: Editors.text,
         },
       },
       {
-        id: "tr_qty_loc",
+        id: "emballage",
+        name: "emballage",
+        field: "emballage",
+        
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+        formatter: myCustomCheckboxFormatter,
+        editor: {
+          model: Editors.singleSelect,
+
+          enableRenderHtml: true,
+          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+      
+         
+        },
+      },
+      {
+        id: "tr_qty_chg",
         name: "QTE",
-        field: "tr_qty_loc",
+        field: "tr_qty_chg",
         sortable: true,
         width: 80,
         filterable: false,
@@ -317,24 +368,40 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         onCellChange: (e: Event, args: OnEventArgs) => {
           
           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
-            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_chg: args.dataContext.qty,tr_qty_loc:args.dataContext.qty_loc });
             this.message = "vous ne pouvez pas modifier cette ligne";
             this.hasFormErrors = true;
             return;
             
           } else {console.log(this.seuil)
-            if(args.dataContext.tr_qty_loc < this.seuil && args.dataContext.tr_qty_loc > 0){
+            if(args.dataContext.tr_qty_chg < this.seuil && args.dataContext.tr_qty_chg > 0){
             this.printable = true
-            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
+            this.poids = 0
+            this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:args.dataContext.emballage}).subscribe((coderesp:any)=>{this.poids = Number(coderesp.data.code_cmmt)
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext,tr_qty_loc:args.dataContext.tr_qty_chg - this.poids, qty: args.dataContext.tr_qty_chg,qty_loc:args.dataContext.tr_qty_chg - this.poids });
+            })
+            
             }  
             else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_chg: args.dataContext.qty,tr_qty_loc: args.dataContext.qty_loc });
             this.message = "la quantité dépasse la limite";
             this.hasFormErrors = true;
             return;
             }      
           }
         },
+      },
+      {
+        id: "tr_qty_loc",
+        name: "QTE",
+        field: "tr_qty_loc",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.float,
+
+        
+       
       },
       // {
       //   id: "tr_um",
@@ -418,92 +485,92 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       //   //},
       // },
 
-      {
-        id: "tr_price",
-        name: "Prix unitaire",
-        field: "tr_price",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        //type: FieldType.float,
-        // editor: {
-        //   model: Editors.float,
-        //   params: { decimalPlaces: 2 },
-        // },
-        formatter: Formatters.decimal,
-      },
-      {
-        id: "tr_site",
-        name: "Site",
-        field: "tr_site",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        // editor: {
-        //   model: Editors.text,
-        // },
-        // onCellChange: (e: Event, args: OnEventArgs) => {
-        //   this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
-        //     console.log(response.data);
-
-        //     if (response.data) {
-        //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
-        //     } else {
-        //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
-
-        //       // this.gridService.onItemUpdated;
-             
-        //     }
-        //   });
-        // },
-      },
       // {
-      //   id: "mvids",
-      //   field: "cmvids",
-      //   excludeFromHeaderMenu: true,
-      //   formatter: Formatters.infoIcon,
-      //   minWidth: 30,
-      //   maxWidth: 30,
-      //   onCellClick: (e: Event, args: OnEventArgs) => {
-      //     this.row_number = args.row;
-      //     let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
-      //     element.click();
-      //   },
+      //   id: "tr_price",
+      //   name: "Prix unitaire",
+      //   field: "tr_price",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   //type: FieldType.float,
+      //   // editor: {
+      //   //   model: Editors.float,
+      //   //   params: { decimalPlaces: 2 },
+      //   // },
+      //   formatter: Formatters.decimal,
       // },
-      {
-        id: "tr_loc",
-        name: "Emplacement",
-        field: "tr_loc",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        // editor: {
-        //   model: Editors.text,
-        // },
-        // onCellChange: (e: Event, args: OnEventArgs) => {
-        //   console.log(args.dataContext.tr_loc);
+      // {
+      //   id: "tr_site",
+      //   name: "Site",
+      //   field: "tr_site",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   // editor: {
+      //   //   model: Editors.text,
+      //   // },
+      //   // onCellChange: (e: Event, args: OnEventArgs) => {
+      //   //   this.siteService.getByOne({ si_site: args.dataContext.tr_site }).subscribe((response: any) => {
+      //   //     console.log(response.data);
 
-        //   this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
-        //     this.location = response.data;
-        //     if (response.data) {
-        //       this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-        //         console.log(resstat);
-        //         const { data } = resstat;
+      //   //     if (response.data) {
+      //   //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: response.data.si_site });
+      //   //     } else {
+      //   //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_site: null });
 
-        //         if (data) {
-        //           this.stat = null;
-        //         } else {
-        //           this.stat = this.location.loc_status;
-        //         }
-        //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
-        //       });
-        //     } else {
+      //   //       // this.gridService.onItemUpdated;
+             
+      //   //     }
+      //   //   });
+      //   // },
+      // },
+      // // {
+      // //   id: "mvids",
+      // //   field: "cmvids",
+      // //   excludeFromHeaderMenu: true,
+      // //   formatter: Formatters.infoIcon,
+      // //   minWidth: 30,
+      // //   maxWidth: 30,
+      // //   onCellClick: (e: Event, args: OnEventArgs) => {
+      // //     this.row_number = args.row;
+      // //     let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
+      // //     element.click();
+      // //   },
+      // // },
+      // {
+      //   id: "tr_loc",
+      //   name: "Emplacement",
+      //   field: "tr_loc",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   // editor: {
+      //   //   model: Editors.text,
+      //   // },
+      //   // onCellChange: (e: Event, args: OnEventArgs) => {
+      //   //   console.log(args.dataContext.tr_loc);
+
+      //   //   this.locationService.getByOne({ loc_loc: args.dataContext.tr_loc, loc_site: args.dataContext.tr_site }).subscribe((response: any) => {
+      //   //     this.location = response.data;
+      //   //     if (response.data) {
+      //   //       this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+      //   //         console.log(resstat);
+      //   //         const { data } = resstat;
+
+      //   //         if (data) {
+      //   //           this.stat = null;
+      //   //         } else {
+      //   //           this.stat = this.location.loc_status;
+      //   //         }
+      //   //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.stat });
+      //   //       });
+      //   //     } else {
               
-        //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
-        //     }
-        //   });
-        // },
-      },
+      //   //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_loc: null, tr_status: null });
+      //   //     }
+      //   //   });
+      //   // },
+      // },
       // {
       //   id: "mvidl",
       //   field: "cmvidl",
@@ -566,6 +633,15 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         //   model: Editors.text,
         // },
       },
+      {
+        id: "printed",
+        name: "Imprimé",
+        field: "printed",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      
       // {
       //   id: "tr_status",
       //   name: "Status",
@@ -661,7 +737,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.printbuttonState = true;
-          let barcode = ''
+          
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
@@ -672,58 +748,87 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
       
             return;
           }
-          if (this.printable == true){
-          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != 0 && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+          if (args.dataContext.tr_part == null || args.dataContext.tr_part == '') {
+            this.hasFormErrors = true;
+            this.message = "veuillez selctionner l'article";
+          
+      
+            return;
+          }
+          if (args.dataContext.tr_qty_loc == 0 ) {
+            this.hasFormErrors = true;
+            this.message = "veuillez saisir le poids";
+          
+      
+            return;
+          }
+          if (args.dataContext.printed != true && this.printable == true){
+          if (args.dataContext.tr_qty_loc != 0 && args.dataContext.tr_ref == null ) {
             // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
             this.printbuttonState = true; 
             this.printable = false
             const _lb = new Label();
-            (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
-            _lb.lb_rmks = controls.tr_rmks.value;
-            _lb.lb_loc = args.dataContext.tr_loc;
-            _lb.lb_part = args.dataContext.tr_part;
-            _lb.lb_nbr = args.dataContext.tr_so_job; //this.trnbr
-            _lb.lb_lot = args.dataContext.tr_serial;
-            _lb.lb_date = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
-            _lb.lb_qty = args.dataContext.tr_qty_loc;
-            _lb.lb_um = args.dataContext.tr_um; 
-            _lb.lb_ld_status = args.dataContext.tr_status;
-            _lb.lb_desc = args.dataContext.desc;
-            _lb.lb_printer = this.PathPrinter;
-            _lb.lb_cust = this.provider.ad_name;
-            _lb.lb_grp = this.employeGrp;
-            _lb.lb_addr = this.provider.ad_line1;
-            _lb.lb_tel = this.provider.ad_phone;
-            let lab = null;
-            
-           
-            this.labelService.add(_lb).subscribe(
-              (reponse: any) => {
-                lab = reponse.data;
-                barcode = lab.lb_ref;
-                 this.index = this.dataset.findIndex((el) => {
-                  return el.tr_line == args.dataContext.id;
-                });
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });              
+            this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
+              //   const { data } = response;
+              console.log("aaaaaaaaaaa", response.data);
+              if (response.data != null) {
+                this.provider = response.data[0];
+                this.nom = this.provider.ad_name;
+                console.log(this.nom);
+                let lab = null;
+                (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
+                _lb.lb_rmks = controls.tr_rmks.value;
+                _lb.lb_loc = args.dataContext.tr_loc;
+                _lb.lb_part = args.dataContext.tr_part;
+                _lb.lb_nbr = args.dataContext.tr_so_job; //this.trnbr
+                _lb.lb_lot = args.dataContext.tr_serial;
+                _lb.lb_date = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
+                _lb.lb_qty = args.dataContext.tr_qty_loc;
+                _lb.lb_um = args.dataContext.tr_um; 
+                _lb.lb_ld_status = args.dataContext.tr_status;
+                _lb.lb_desc = args.dataContext.tr_desc;
+                _lb.lb_printer = this.PathPrinter;
+                _lb.lb_cust = this.nom;
+                _lb.lb_grp = this.employeGrp;
+                _lb.lb_addr = this.provider.ad_line1;
+                _lb.lb_tel = this.provider.ad_phone;
+                _lb.lb__chr01 = String(new Date().toLocaleTimeString())
                 
-                this.onSubmit();
+               
+                this.labelService.add(_lb).subscribe(
+                  (reponse: any) => {
+                    lab = reponse.data;
+                    let barcode = lab.lb_ref;
+                    
+                     this.index = this.dataset.findIndex((el) => {
+                      return el.tr_line == args.dataContext.id;
+                    });
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_chg,qty_loc: args.dataContext.tr_qty_loc, printed:true });              
+                    
+                     this.onSubmit(_lb,lab);
+
+                     
+                    
+                                  
+                    
+                  },
+                  (error) => {
+                    this.message = "l'impression n'a pas été enregistrée";
+                    this.hasFormErrors = true;
+                    return;
+                  },
+                  () => {
+                    
+    }
+                  
+                );
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_chg, qty_loc: args.dataContext.tr_qty_loc, printed:true })
                               
-                
-              },
-              (error) => {
-                this.message = "l'impression n'a pas été enregistrée";
-                this.hasFormErrors = true;
-                return;
-              },
-              () => {this.labelService.addblob(_lb).subscribe((blob) => {                 
-                Edelweiss.print3(lab,this.currentPrinter);
-                
-              });
-}
-              
-            );
-          } else {
+              }
+            });
+            
+            } else {
             this.message = "veuillez choisir article et remplir le poids ";
             this.hasFormErrors = true;
             return;
@@ -817,7 +922,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.inventoryTransaction = new InventoryTransaction();
     const date = new Date();
     this.trForm = this.trFB.group({
-      tr_nbr: [this.inventoryTransaction.tr_nbr],
+      tr_lot: [this.inventoryTransaction.tr_lot],
       tr_effdate: [
         {
           year: date.getFullYear(),
@@ -840,43 +945,25 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     // if(this.domconfig) {
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
-        if (reponse.data != null) {
+        if (reponse.data != null && reponse.data.code_value != ' ') {
           controls.tr_addr.setValue(reponse.data.code_value), controls.tr_addr.disable();
           
           this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
             //   const { data } = response;
             console.log("aaaaaaaaaaa", response.data);
             if (response.data != null) {
-              this.provider = response.data;
+              this.provider = response.data[0];
               this.nom = this.provider.ad_name;
+              console.log(this.provider);
             }
           });
-          console.log("hehehehehehehehehehe");
+          
         }
       },
       (error) => {}
     );
 
-    this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-      this.seq = response.data;
-
-      if (this.seq) {
-        this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-
-        this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.message = "Erreur modification Sequence";
-            this.hasFormErrors = true;
-            return;
-          }
-        );
-      } else {
-        this.message = "Parametrage Manquant pour la sequence";
-        this.hasFormErrors = true;
-        return;
-      }
-    });
+   
 
     // }
   }
@@ -897,7 +984,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
       } else {
-        this.provider = response.data;
+        this.provider = response.data[0];
         this.nom = this.provider.ad_name;
       }
     });
@@ -909,14 +996,14 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.hasFormErrors = false;
   }
   // save data
-  onSubmit() {
+  onSubmit(lb:any,lab:any) {
     this.hasFormErrors = false;
     
     this.data = [];
     let obj = {
       tr_line: this.dataset[this.index].tr_line,
       tr_part: this.dataset[this.index].tr_part,
-      desc: this.dataset[this.index].desc,
+      tr_desc: this.dataset[this.index].tr_desc,
       tr_qty_loc: this.dataset[this.index].tr_qty_loc,
       tr_um: this.dataset[this.index].tr_um,
       tr_um_conv: this.dataset[this.index].tr_um_conv,
@@ -989,39 +1076,36 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     // console.log("here obj",obj)
     // this.data = []
     // this.data.push(obj)
-    this.addIt(this.data, tr, this.trlot);
+    this.sequenceService.getByOne({ seq_type: "RN", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
+      this.seq = response.data;
 
-    // this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-    //   this.seq = response.data;
-
-    //   if (this.seq) {
-    //     this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-
-    //     this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-    //       (reponse) => console.log("response", Response),
-    //       (error) => {
-    //         this.message = "Erreur modification Sequence";
-    //         this.hasFormErrors = true;
-    //         return;
-    //       }
-    //     );
-
-    //     let tr = this.prepare();
-    //     this.addIt(this.dataset, tr, this.trlot);
-    //   } else {
-    //     this.message = "Parametrage Monquant pour la sequence";
-    //     this.hasFormErrors = true;
-    //     return;
-    //   }
-    // });
-
-    // tslint:disable-next-line:prefer-const
-  }
+      if (this.seq) {
+        if(this.trlot == null)
+        {
+          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+          this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+            this.message = "Erreur modification Sequence";
+            this.hasFormErrors = true;
+            return;
+          });
+        }
+        this.addIt(this.data, tr, this.trlot,lb,lab);
+      } else {
+        this.message = "Parametrage Manquant pour la sequence";
+        this.hasFormErrors = true;
+        return;
+      }
+    });
+    
+    
+   }
 
   prepare() {
     const controls = this.trForm.controls;
     const _tr = new InventoryTransaction();
-    _tr.tr_nbr = controls.tr_nbr.value;
+    
 
     _tr.tr_effdate = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
     _tr.tr_so_job = controls.tr_so_job.value;
@@ -1042,7 +1126,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
    *
    * @param _it: it
    */
-  addIt(detail: any, it, nlot) {
+  addIt(detail: any, it, nlot,lb,lab) {
     console.log("here data", detail);
     // for (let data of detail) {
     //   delete data.id;
@@ -1068,21 +1152,21 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.loadingSubject.next(false);
       },
       () => {
+        this.labelService.addblob(lb).subscribe((blob) => {                 
+          Edelweiss.print3(lab,this.currentPrinter);
+          
+        });
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
-
-        //    console.log(this.provider, po, this.dataset);
-        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
-
-        // this.router.navigateByUrl("/");
+      
+        
       }
     );
   }
   onPrint() {
     const controls = this.trForm.controls;
 
-    if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
+    if (controls.print.value == true) this.printpdf(this.trlot); 
     this.goBack();
   }
   /**
@@ -1098,34 +1182,38 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   // add new Item to Datatable
   addNewItem() {
     const controls = this.trForm.controls;
-    if (controls.tr_user1.value == null) {
+    
+      if (controls.tr_user1.value == null) {
       this.message = "veuillez selectionner les employés";
       this.hasFormErrors = true;
-      return;}
-    else{  
-    if (controls.tr_addr.value == null) {
-      this.message = "veuillez remplir l'adresse";
-      this.hasFormErrors = true;
       return;
-    } else {
-      var maxObj = null;
-      var iddd = 0;
-      if (this.dataset.length > 0) {
-        maxObj = this.dataset.reduce((accumulator, current) => {
-          return accumulator.id > current.id ? accumulator : current;
-        });
-        console.log(maxObj.id + 1);
-        iddd = maxObj.id + 1;
-      } else {
-        iddd = 1;
       }
-      this.gridService.addItem(
+      else{  
+        if (controls.tr_addr.value == null) {
+        this.message = "veuillez remplir l'adresse";
+        this.hasFormErrors = true;
+        return;
+        } 
+        else {
+          var maxObj = null;
+          var iddd = 0;
+          if (this.dataset.length > 0) {
+            maxObj = this.dataset.reduce((accumulator, current) => {
+            return accumulator.id > current.id ? accumulator : current;
+          });
+          console.log(maxObj.id + 1);
+          iddd = maxObj.id + 1;
+          } else 
+          {
+            iddd = 1;
+          }
+          this.gridService.addItem(
         {
           id: iddd,
           tr_line: iddd,
           tr_part: "",
           cmvid: "",
-          desc: "",
+          tr_desc: "",
           tr_qty_loc: 0,
           tr_um: "",
           tr_price: 0,
@@ -1136,11 +1224,14 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           tr_status: null,
           tr_expire: null,
           qty: 0,
+          qty_loc:0
         },
         { position: "bottom" }
-      );
-    }
-  }
+          );
+        }
+      }  
+    
+   
   }
 
   addsameItem() {
@@ -1161,7 +1252,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           tr_line: iddd,
           tr_part: this.dataset[i - 1].tr_part,
           cmvid: "",
-          desc: this.dataset[i - 1].desc,
+          tr_desc: this.dataset[i - 1].tr_desc,
           tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
           tr_um: this.dataset[i - 1].tr_um,
           tr_um_conv: this.dataset[i - 1].tr_um_conv,
@@ -1174,6 +1265,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           tr_status: this.dataset[i - 1].tr_status,
           tr_expire: this.dataset[i - 1].tr_expire,
           qty: 0,
+          qty_loc:0
         },
         { position: "bottom" }
       );
@@ -1190,7 +1282,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         tr_line: this.dataset.length + 1,
         tr_part: this.dataset[i - 1].tr_part,
         cmvid: "",
-        desc: this.dataset[i - 1].desc,
+        tr_desc: this.dataset[i - 1].tr_desc,
         tr_qty_loc: this.dataset[i - 1].tr_qty_loc * -1,
         tr_um: this.dataset[i - 1].tr_um,
         tr_um_conv: this.dataset[i - 1].tr_um_conv,
@@ -1232,7 +1324,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
             }
 
             updateItem.tr_part = item.pt_part;
-            updateItem.desc = item.pt_desc1;
+            updateItem.tr_desc = item.pt_desc1;
             updateItem.tr_um = item.pt_um;
             updateItem.tr_um_conv = 1;
             updateItem.tr_site = item.pt_site;
@@ -1278,6 +1370,8 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         id: "pt_desc1",
         name: "desc",
         field: "pt_desc1",
+        minWidth: 350,
+        maxWidth: 350,
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1925,12 +2019,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
+    this.addressService.getBy({ad_type:'Machine'}).subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
-        if (reponse.data == null) {
+        if (reponse.data == null || reponse.data.code_value != ' ') {
           this.prepareGrid2();
           this.modalService.open(content, { size: "lg" });
         }
@@ -1948,10 +2042,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     const controlss = this.trForm.controls;
     console.log("pdf");
     var doc = new jsPDF();
-
+let date = new Date()
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 150, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -1965,6 +2059,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     doc.line(10, 35, 200, 35);
     doc.setFontSize(12);
     doc.text("Bon Récéption N° : " + nbr, 70, 45);
+    doc.text("Date: " + date.toLocaleDateString() , 160, 40);
+    doc.text("Heure: " + new Date().toLocaleTimeString(), 160, 50);
+    doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+    if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+    if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+    
     doc.setFontSize(8);
     //console.log(this.provider.ad_misc2_id)
     doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -2007,12 +2107,13 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     var i = 95;
     doc.setFontSize(6);
     let total = 0;
+    let ttc = 0;
     for (let j = 0; j < this.dataset.length; j++) {
-      total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc);
-
-      if (j % 30 == 0 && j != 0) {
+      total = total +  Number(this.dataset[j].tr_qty_loc);
+      ttc = ttc +  Number(this.dataset[j].tr_qty_loc) * Number(this.dataset[j].tr_price);
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
+        img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
@@ -2026,6 +2127,12 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
         doc.setFontSize(12);
         doc.text("Bon Récéption N° : " + nbr, 70, 40);
+        doc.text("Date: " + date.toLocaleDateString() , 160, 40);
+        doc.text("Heure: " + new Date().toLocaleTimeString(), 160, 50);
+        doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+        if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+        if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+        
         doc.setFontSize(8);
         console.log(this.provider.ad_misc2_id);
         doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -2069,30 +2176,30 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].tr_desc.length > 45) {
+        let desc1 = this.dataset[j].tr_desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].tr_desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].tr_desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
-        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_qty_loc), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].tr_price)), 148, i - 1, { align: "right" });
         doc.line(150, i - 5, 150, i);
         doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
         doc.line(185, i - 5, 185, i);
-        doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc)), 203, i - 1, { align: "right" });
         doc.line(205, i - 5, 205, i);
         // doc.line(10, i, 200, i );
 
@@ -2115,23 +2222,23 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         i = i + 5;
       } else {
         doc.line(10, i - 5, 10, i);
-        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
-        doc.text(this.dataset[j].desc, 47, i - 1);
+        doc.text(this.dataset[j].tr_desc, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].tr_qty_loc), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].tr_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].tr_price).toFixed(2)), 148, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].tr_price)), 148, i - 1, { align: "right" });
         doc.line(150, i - 5, 150, i);
         doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
         doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
         doc.line(185, i - 5, 185, i);
-        doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.text(String((this.dataset[j].tr_price * this.dataset[j].tr_qty_loc)), 203, i - 1, { align: "right" });
         doc.line(205, i - 5, 205, i);
         doc.line(10, i, 205, i);
         i = i + 5;
@@ -2140,28 +2247,30 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
     // doc.line(10, i - 5, 200, i - 5);
 
-    doc.line(130, i + 7, 205, i + 7);
-    doc.line(130, i + 14, 205, i + 14);
-    //  doc.line(130, i + 21, 200, i + 21 );
-    //  doc.line(130, i + 28, 200, i + 28 );
-    //  doc.line(130, i + 35, 200, i + 35 );
-    doc.line(130, i + 7, 130, i + 14);
-    doc.line(160, i + 7, 160, i + 14);
-    doc.line(205, i + 7, 205, i + 14);
+    // doc.line(130, i + 7, 205, i + 7);
+    // doc.line(130, i + 14, 205, i + 14);
+    // //  doc.line(130, i + 21, 200, i + 21 );
+    // //  doc.line(130, i + 28, 200, i + 28 );
+    // //  doc.line(130, i + 35, 200, i + 35 );
+    // doc.line(130, i + 7, 130, i + 14);
+    // doc.line(160, i + 7, 160, i + 14);
+    // doc.line(205, i + 7, 205, i + 14);
     doc.setFontSize(10);
 
-    doc.text("Total HT", 140, i + 12, { align: "left" });
+    doc.text("NOMBRE DE BIG BAG     " + String(this.dataset.length) + "    ,Total POIDS:   " + String(Number(total)), 40, i + 12, { align: "left" });
+    doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
     //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
     //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
     //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
 
-    doc.text(String(Number(total).toFixed(2)), 198, i + 12, { align: "right" });
-    //  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
-    //  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
-    //  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+    // doc.text(String(Number(total)), 198, i + 12, { align: "right" });
+    //  doc.text(String(Number(controls.tva.value)), 198 ,  i + 19 , { align: 'right' });
+    //  doc.text(String(Number(controls.timbre.value)), 198 ,  i + 26 , { align: 'right' });
+    //  doc.text(String(Number(controls.ttc.value))), 198 ,  i + 33 , { align: 'right' });
 
     doc.setFontSize(8);
-    let mt = NumberToLetters(Number(total).toFixed(2), "Dinars Algerien");
+    let mt = NumberToLetters(Number(ttc), "Dinars Algerien");
 
     if (mt.length > 95) {
       let mt1 = mt.substring(90);
@@ -2279,7 +2388,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     l = "";
     console.log(l.length);
     this.selectedIndexes.forEach((index) => {
-      if (index == 0) {
+      if (l == "") {
         l = this.emps[index]["emp_fname"];
       } else {
         l = l + "," + this.emps[index]["emp_fname"];
@@ -2423,10 +2532,10 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
   
     // fill the dataset with your data
     const controls = this.trForm.controls;
-    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}
-    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
-          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data))}
-               else{this.employeService.getBy({emp_job:'MAG',emp_userid:this.user.usrd_code}).subscribe((response: any) => (this.emps = response.data));}}
+    if(controls.tr_addr.value == 'U1') {this.employeService.getBy({emp_job:'EX'}).subscribe((response: any) => (this.emps = response.data));}
+    else{if(controls.tr_addr.value == 'B1' ||controls.tr_addr.value == 'B2'){this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data))}
+          else {if(controls.tr_addr.value == 'M1' ||controls.tr_addr.value == 'M2' ||controls.tr_addr.value == 'M3'){this.employeService.getBy({emp_job:'TR'}).subscribe((response: any) => (this.emps = response.data))}
+               else{this.employeService.getBy({emp_job:'MAG'}).subscribe((response: any) => (this.emps = response.data));}}
   }}
   
   handleSelectedRowsChangedemp(e, args) {
@@ -2444,8 +2553,6 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     this.gridServiceemp2 = angularGrid.gridService;
     this.dataViewemp2 = angularGrid.dataView;
   }
-  
-  // GRID IN
   prepareGridemp2() {
     this.columnDefinitionsemp2 = [
       {
@@ -2587,4 +2694,151 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
     if(controls.adduser2.value == true){this.adduser = false}
     else {this.adduser = true,controls.tr_user2.setValue(null); this.emps2=[]}
   }
+    /*choisir demande achat*/
+handleSelectedRowsChanged5(e, args) {
+  const controls = this.trForm.controls;
+
+  
+  
+  if (Array.isArray(args.rows) && this.gridObj5) {
+    this.dataset = []
+    args.rows.map((idx) => 
+    {
+      const item = this.gridObj5.getDataItem(idx);
+      console.log(item.tr_user1,item.tr_effdate)
+      controls.tr_lot.setValue(item.tr_lot || "");
+      this.trlot = item.tr_lot;
+      controls.tr_user1.setValue(item.tr_user1 || null);
+      controls.tr_user2.setValue(item.tr_user2 || null);
+      controls.tr_rmks.setValue(item.tr_rmks || null);
+      controls.tr_addr.setValue(item.tr_addr || "");
+      controls.tr_effdate.setValue({ year: new Date(item.tr_effdate).getFullYear(),
+      month: new Date(item.tr_effdate).getMonth() + 1,
+      day: new Date(item.tr_effdate).getDate(),});
+      
+      this.inventoryTransactionService.getByRef({ tr_lot: item.tr_lot,tr_type:'RCT-UNP',tr_effdate:item.tr_effdate,tr_addr:item.tr_addr }).subscribe(
+        (res: any) => {
+          this.dataset = res.data
+          this.dataView.setItems(this.dataset)
+       
+        },
+        (error) => {
+          this.message = `Récéption n'existe pas`;
+          this.hasFormErrors = true;
+        },
+        () => {}
+      );
+  
+      this.addressService.getBy({ad_addr: item.tr_addr}).subscribe((response: any)=>{
+                
+                
+        this.provider = response.data[0]
+
+      // controls.name.setValue(this.provider.ad_name);
+      })
+    
+      })
+  }
+ // this.calculatetot();
+}
+
+angularGridReady5(angularGrid: AngularGridInstance) {
+  this.angularGrid5 = angularGrid;
+  this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGrid5() {
+  this.columnDefinitions5 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "tr_lot",
+      name: "N° Récéption",
+      field: "tr_lot",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_addr",
+      name: "Fournisseur",
+      field: "tr_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_effdate",
+      name: "Date",
+      field: "tr_effdate",
+      sortable: true,
+      filterable: true,
+      formatter:Formatters.dateIso ,
+      type: FieldType.dateIso,
+      filter: {
+        model: Filters.dateRange,
+        operator: 'RangeInclusive',
+        // override any of the Flatpickr options through "filterOptions"
+        //editorOptions: { minDate: 'today' } as FlatpickrOption
+      },
+    },
+    {
+      id: "tr_user1",
+      name: "employés",
+      field: "tr_user1",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_user2",
+      name: "Employé remplaçant",
+      field: "tr_user2",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "tr_rmks",
+      name: "Remarques",
+      field: "tr_user2",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptions5 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {},
+    multiSelect: false,
+    rowSelectionOptions: {
+      selectActiveRow: true,
+    },
+  };
+ const controls = this.trForm.controls
+  // fill the dataset with your data
+  this.inventoryTransactionService
+    .getByGroup({ tr_type:"RCT-UNP" })
+    .subscribe((response: any) => (this.transactions = response.data));
+}
+open5(content) {
+  this.prepareGrid5();
+  this.modalService.open(content, { size: "lg" });
+}
 }

@@ -1,13 +1,13 @@
 <kt-portlet>
-  <kt-portlet-header [sticky]="true" title="Réception Non Planifiée" [class]="'card-head-lg'" [viewLoading$]="loading$">
+  <kt-portlet-header [sticky]="true" title="Réception Bien" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+      <button type="button" (click)="stklist()" class="btn btn-secondary btn-sm mr-2">Retour</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-      <button type="button" id="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder</button>
+      <button type="button" id="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
-    <div class="example-preview">
+    <div class="example-preview"> 
       <form class="form" [formGroup]="trForm">
         <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)">
           {{ message }}
@@ -26,15 +26,15 @@
           </div>
 
           <div class="form-group col-4">
-            <label class="form-group">N° Bon Source:</label>
+            <label class="form-group">N° document:</label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-solid" formControlName="tr_so_job" aria-describedby="basic-addon2" />
             </div>
           </div>
           <div class="form-group col-2">
-            <label class="form-group">Adresse :</label>
+            <label class="form-group">Site :</label>
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="tr_addr" (change)="onChangeVend()" aria-describedby="basic-addon2" />
+              <input type="text" class="form-control form-control-solid" formControlName="tr_site" (change)="onChangeVend()" aria-describedby="basic-addon2" />
               <div class="input-group-append">
                 <span class="input-group-text" (click)="open2(content2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
               </div>
@@ -47,7 +47,7 @@
             <label class="form-group">Observation:</label>
             <textarea class="form-control form-control-sm form-control-solid" formControlName="tr_rmks" rows="2"></textarea>
           </div>
-          <div class="form-group col-2">
+          <!-- <div class="form-group col-2">
             <label class="form-group">choix de l'imprimante</label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
@@ -55,7 +55,7 @@
                 <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="form-group col-2">
             <label class="form-group">Imprimer:</label>
             <div class="input-group input-group-sm">
@@ -81,7 +81,7 @@
     <div>
       <ng-template #content4 let-c="close" let-d="dismiss">
         <div class="modal-header">
-          <h4 class="modal-title">Choissir l'article</h4>
+          <h4 class="modal-title">Choisir l'article</h4>
           <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -92,7 +92,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -101,7 +101,7 @@
     <div>
       <ng-template #contentsite let-c="close" let-d="dismiss">
         <div class="modal-header">
-          <h4 class="modal-title">Choissir Site</h4>
+          <h4 class="modal-title">Choisir Site</h4>
           <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -112,7 +112,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -133,7 +133,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -153,7 +153,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -173,7 +173,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -193,7 +193,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -212,7 +212,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>

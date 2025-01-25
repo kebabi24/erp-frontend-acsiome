@@ -17,6 +17,6 @@ export class ItemModel extends BaseModel{
     mod_site: String
     mod_loc: String
     mod_iss_pol: Boolean
-
+    mod_promo:String
     
 }

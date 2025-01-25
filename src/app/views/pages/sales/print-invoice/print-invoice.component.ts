@@ -485,28 +485,42 @@ export class PrintInvoiceComponent implements OnInit {
     const controls = this.ihForm.controls;
     const controlstot = this.totForm.controls 
     const _ih = new InvoiceOrderTemp();
-    _ih.ith_category =  controls.ith_category.value
+    _ih.ith_category =  controls.ith_category.value;
     _ih.ith_cust = controls.ith_cust.value;
-    _ih.ith_bill = controls.ith_bill.value;
-    _ih.ith_nbr = controls.ith_nbr.value;
+      _ih.ith_bill = controls.ith_bill.value;
+      _ih.ith_nbr = controls.ith_nbr.value;
+      
+      _ih.ith_inv_date = controls.ith_inv_date.value
+        ? `${controls.ith_inv_date.value.year}/${controls.ith_inv_date.value.month}/${controls.ith_inv_date.value.day}`
+        : null;
+      
+        if (controls.ith_taxable.value == null || controls.ith_taxable.value == "" ) { _ih.ith_taxable = false} else { _ih.ith_taxable = controls.ith_taxable.value}
+      
+     
+      _ih.ith_rmks = controls.ith_rmks.value;
+      
+      _ih.ith_rmks = controls.ith_rmks.value;
+      _ih.ith_curr = controls.ith_curr.value;
+      _ih.ith_ex_rate = controls.ith_ex_rate.value;
+      _ih.ith_ex_rate2 = controls.ith_ex_rate2.value;
+      _ih.ith_cr_terms = controls.ith_cr_terms.value;
+      _ih.ith_amt = controlstot.tht.value;
+      _ih.ith_tax_amt = controlstot.tva.value;
+      _ih.ith_trl1_amt = controlstot.timbre.value;
+    this.sequenceService.getBy({ seq_type: "IV", seq_profile: this.user.usrd_profile }).subscribe(
+      (response: any) => {
+    this.seq = response.data[0]
     
-    _ih.ith_inv_date = controls.ith_inv_date.value
-      ? `${controls.ith_inv_date.value.year}/${controls.ith_inv_date.value.month}/${controls.ith_inv_date.value.day}`
-      : null;
-    
-      if (controls.ith_taxable.value == null || controls.ith_taxable.value == "" ) { _ih.ith_taxable = false} else { _ih.ith_taxable = controls.ith_taxable.value}
-    
-   
-    _ih.ith_rmks = controls.ith_rmks.value;
-    
-    _ih.ith_rmks = controls.ith_rmks.value;
-    _ih.ith_curr = controls.ith_curr.value;
-    _ih.ith_ex_rate = controls.ith_ex_rate.value;
-    _ih.ith_ex_rate2 = controls.ith_ex_rate2.value;
-    _ih.ith_cr_terms = controls.ith_cr_terms.value;
-    _ih.ith_amt = controlstot.tht.value;
-    _ih.ith_tax_amt = controlstot.tva.value;
-    _ih.ith_trl1_amt = controlstot.timbre.value;
+    if (this.seq) {
+      this.pshnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
+      console.log(this.seq.seq_prefix)
+      console.log(this.seq.seq_curr_val)
+      _ih.ith_inv_nbr = this.pshnbr;
+      
+      
+  
+    }
+      })
     
     return _ih;
   
@@ -598,7 +612,7 @@ var j = 0
   console.log("hnahna", iharray)
   
 
-          if(controls.print.value == true) printIH(this.customer, iharray, ih,this.curr);
+          if(controls.print.value == true) printIH(this.customer, iharray, _ih,this.curr);
           this.reset()
           this.router.navigateByUrl("/sales/print-invoice");
           this.reset()

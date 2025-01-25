@@ -113,15 +113,15 @@ export class ListComponent implements OnInit {
         minWidth: 250,
         type: FieldType.string,
       },
-      {
-        id: "pt_desc2",
-        name: "Description Interne",
-        field: "pt_desc2",
-        sortable: true,
-        filterable: true,
-        minWidth: 150,
-        type: FieldType.string,
-      },
+      // {
+      //   id: "pt_desc2",
+      //   name: "Description Interne",
+      //   field: "pt_desc2",
+      //   sortable: true,
+      //   filterable: true,
+      //   minWidth: 150,
+      //   type: FieldType.string,
+      // },
       {
         id: "pt_um",
         name: "UM",
@@ -351,15 +351,21 @@ export class ListComponent implements OnInit {
         // type: FieldType.text,
         minWidth: 80,
       },
-      // {
-      //   id: "pt_plan_ord",
-      //   name: "Demande Obligatoire",
-      //   field: "pt_plan_ord",
-      //   sortable: true,
-      //   filterable: true,
-      //   // type: FieldType.text,
-      //   minWidth: 80,
-      // },
+      {
+        id: "pt_rev",
+        name: "Qualité",
+        field: "pt_rev",
+        sortable: true,
+        filterable: true,
+        type: FieldType.text,
+        minWidth: 80,
+        grouping: {
+          getter: 'pt_rev',
+          formatter: (g) => `Qualité: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
+      },
       // {
       //   id: "pt_drwg_size",
       //   name: "Unité/Sachet",
@@ -378,15 +384,21 @@ export class ListComponent implements OnInit {
       //   type: FieldType.number,
       //   minWidth: 80,
       // },
-      // {
-      //   id: "pt_model",
-      //   name: "Format",
-      //   field: "pt_model",
-      //   sortable: true,
-      //   filterable: true,
-      //   // type: FieldType.text,
-      //   minWidth: 80,
-      // },
+      {
+        id: "pt_article",
+        name: "Modele",
+        field: "pt_article",
+        sortable: true,
+        filterable: true,
+        // type: FieldType.text,
+        minWidth: 80,
+        grouping: {
+          getter: 'pt_article',
+          formatter: (g) => `Modèle: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: true,
+          collapsed: true,
+        }
+      },
 
      
       {
@@ -544,5 +556,25 @@ export class ListComponent implements OnInit {
     }
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
-
+  part() {
+    
+      
+    const url = `/articles/create-div-mod`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  stklist() {
+  
+    
+    const url = `/inventory-transaction/inventory-list`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  receive() {
+  
+    
+    const url = `/inventory-transaction/unplanified-recept`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
 }

@@ -64,6 +64,14 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })   
     }
+    public getPrograms(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findprogram`,data, { headers: httpHeaders })   
+    }
+    public getByDistinct(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findDistinct`,data, { headers: httpHeaders })   
+    }
     
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

@@ -277,7 +277,7 @@ error = false;
             if (resp.data) {
               console.log(resp.data)
                           
-              if (resp.data.pt_phantom) {
+              if (resp.data.pt_phantom || resp.data.pt_part_type == 'FORMATION') {
                 this.type = 'M'
               
               } else {
@@ -2481,7 +2481,7 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
@@ -2525,7 +2525,7 @@ printpdf(nbr) {
   doc.setFontSize(6);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
 doc.addImage(img, 'png', 150, 5, 50, 30)
 doc.setFontSize(9);

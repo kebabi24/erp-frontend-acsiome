@@ -1,8 +1,40 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="false" [title]="'La liste des Clients'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="createcustomer()" class="btn btn-secondary btn-sm ml-2">Créer un Client</button>
+            <button type="button" (click)="replist()" class="btn btn-secondary btn-sm ml-2">Liste des Contacts</button>
+            <button type="button" (click)="quotelist()" class="btn btn-secondary btn-sm ml-2">Liste des Offres</button>
+            <button type="button" (click)="invoicelist()" class="btn btn-secondary btn-sm ml-2">Liste des Factures</button>
+            <button type="button" (click)="recouvrement()" class="btn btn-secondary btn-sm ml-2">Recouvrement</button>
+            <button type="button" (click)="reqlist()" class="btn btn-secondary btn-sm ml-2">Demandes Formations </button>
+            <!-- <button type="button"  class="btn btn-secondary btn-sm ml-2">Reclamation</button> -->
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+            <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+   
+          </ng-container>
     </kt-portlet-header>
    
-    <kt-portlet-body>
+    <kt-portlet-body> 
         <div class="example-preview">
             <div class="row">
                 <angular-slickgrid class="col-12" gridId="grid2"

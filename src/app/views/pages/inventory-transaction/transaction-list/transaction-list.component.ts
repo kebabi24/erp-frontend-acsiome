@@ -6,7 +6,7 @@ import {
   Editors,
   OnEventArgs,
   AngularGridInstance,
-  Aggregators,
+  Aggregators, 
   Column,
   DelimiterType,
   FieldType,
@@ -899,7 +899,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
    
   //  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   //   var img = new Image()
-  //   img.src = "./assets/media/logos/companylogo.png";
+  //   img.src = "./assets/media/logos/companyentete.png";
   //   doc.addImage(img, 'png', 150, 5, 50, 30)
   //   doc.setFontSize(9);
   //   if (this.domain.dom_name != null) {
@@ -953,7 +953,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       
   //     if ((j % 30 == 0) && (j != 0) ) {
   // doc.addPage();
-  //       img.src = "./assets/media/logos/companylogo.png";
+  //       img.src = "./assets/media/logos/companyentete.png";
   //       doc.addImage(img, 'png', 150, 5, 50, 30)
   //       doc.setFontSize(9);
   //       if (this.domain.dom_name != null) {
@@ -1081,4 +1081,32 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
   //   var blob = doc.output("blob");
   //   window.open(URL.createObjectURL(blob));
   // }
+  vendorlist() {
+    
+      
+    const url = `/providers/list`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  stklist() {
+  
+    
+    const url = `/inventory-transaction/inventory-list`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  receive() {
+  
+    
+    const url = `/inventory-transaction/unplanified-recept`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  caisse() {
+  
+    
+    const url = `/purchasing/payment-au`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
 }

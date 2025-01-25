@@ -373,7 +373,7 @@ export class CreateBobineModComponent implements OnInit {
       pt_rev: [{ value: this.item.pt_rev, disabled: !this.isExist }],
       pt_group: [{ value: this.item.pt_group, disabled: !this.isExist }],
 
-      pt_part: [{value:this.item.pt_part, disabled:true},Validators.required],
+      pt_part: [{value:this.item.pt_part, disabled:true}],
       pt_desc1: [{ value: this.item.pt_desc1, disabled: !this.isExist },Validators.required],
       pt_um: [{ value: this.item.pt_um, disabled: !this.isExist },Validators.required],
 
@@ -546,8 +546,8 @@ onChangesilicone() {
             controls1.int02.setValue(modeleresponse.data.int02)
             if(Number(modeleresponse.data.int01) == 110 || Number(modeleresponse.data.int01) == 152){vitesse = 380}
             controls1.int03.setValue(vitesse)
-            controls1.pt_part.setValue('BOB-' + controls1.pt_article.value + 'Q' + controls1.pt_rev.value + code_couleur + code_silicone)
-            controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_article.value + " QUALITE " + controls1.pt_rev.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
+            controls1.pt_part.setValue(controls1.pt_article.value + '-Q' + controls1.pt_rev.value + "-" + code_couleur + "-" + code_silicone)
+            controls1.pt_desc1.setValue(modeleresponse.data.mod_desc + " QUALITE " + controls1.pt_rev.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
             controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_article.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
             controls1.pt_part.enable()
             controls1.pt_desc1.enable()

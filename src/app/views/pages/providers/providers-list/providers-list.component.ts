@@ -3,7 +3,7 @@ import {
   Formatter,
   Editor,
   Editors,
-  OnEventArgs,
+  OnEventArgs, 
   AngularGridInstance,
   Aggregators,
   Column,
@@ -273,5 +273,26 @@ export class ProvidersListComponent implements OnInit {
           () => {}
       )
   }
-
+  vendor() {
+    
+      
+    const url = `/providers/add`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  stklist() {
+  
+    
+    const url = `/inventory-transaction/inventory-list`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  polist() {
+  
+    
+    const url = `/inventory-transaction/transaction-list`;
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+  
+  }
+  
 }

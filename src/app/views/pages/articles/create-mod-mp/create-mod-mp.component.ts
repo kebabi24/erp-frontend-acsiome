@@ -93,7 +93,7 @@ const myCustomCheckmarkFormatter: Formatter = (
         </div>
     </div>
 	`;
-};
+}; 
 
 @Component({
   selector: 'kt-create-mod-mp',
@@ -146,7 +146,7 @@ export class CreateModMpComponent implements OnInit {
 
   isExist = false;
   user: any
-  
+  surface:any;
   
   data: [];
   columnDefinitions3: Column[] = [];

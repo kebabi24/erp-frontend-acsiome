@@ -67,6 +67,18 @@ import { ReprintCabComponent } from './reprint-cab/reprint-cab.component';
 import { ReturnCabComponent } from './return-cab/return-cab.component';
 import { RemodifyCabComponent } from './remodify-cab/remodify-cab.component';
 import { ListInvBobineComponent } from './list-inv-bobine/list-inv-bobine.component';
+import { RctUnpPrintComponent } from './rct-unp-print/rct-unp-print.component';
+import { RctTrPrintComponent } from './rct-tr-print/rct-tr-print.component';
+import { IssUnpPrintComponent } from './iss-unp-print/iss-unp-print.component';
+import { PurchaseReceiptCabComponent } from './purchase-receipt-cab/purchase-receipt-cab.component';
+import { RctPoPrintComponent } from './rct-po-print/rct-po-print.component';
+import { MachineActivityPrintComponent } from './machine-activity-print/machine-activity-print.component';
+import { RctUnpGlobalprintComponent } from './rct-unp-globalprint/rct-unp-globalprint.component';
+import { RctTrGlobalprintComponent } from './rct-tr-globalprint/rct-tr-globalprint.component';
+import { RctPoGlobalprintComponent } from './rct-po-globalprint/rct-po-globalprint.component';
+import { IssUnpGlobalprintComponent } from './iss-unp-globalprint/iss-unp-globalprint.component';
+import { AssetReceiveCabComponent } from './asset-receive-cab/asset-receive-cab.component';
+
 // import { CreateComponent } from "../articles/create/create.component";
 
 const routes: Routes = [
@@ -83,8 +95,52 @@ const routes: Routes = [
     component: UnplanifiedReceptComponent,
   },
   {
+    path: "rct-tr-print",
+    component: RctTrPrintComponent,
+  },
+  {
+    path: "iss-unp-print",
+    component: IssUnpPrintComponent,
+  },
+  {
+    path: "rct-tr-globalprint",
+    component: RctTrGlobalprintComponent,
+  },
+  {
+    path: "iss-unp-globalprint",
+    component: IssUnpGlobalprintComponent,
+  },
+  {
+    path: "machine-activity-print",
+    component: MachineActivityPrintComponent,
+  },
+  {
+    path: "rct-unp-print",
+    component: RctUnpPrintComponent,
+  },
+  {
+    path: "rct-po-print",
+    component: RctPoPrintComponent,
+  },
+  {
+    path: "rct-unp-globalprint",
+    component: RctUnpGlobalprintComponent,
+  },
+  {
+    path: "rct-po-globalprint",
+    component: RctPoGlobalprintComponent,
+  },
+  {
     path: "unplanified-receipt-cab",
     component: UnplanifiedReceiptCabComponent,
+  },
+  {
+    path: "purchase-receipt-cab",
+    component: PurchaseReceiptCabComponent,
+  },
+  {
+    path: "asset-receive-cab",
+    component: AssetReceiveCabComponent,
   },
   {
     path: "bobine-receipt-cab",
@@ -181,7 +237,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent],
   imports: [
     CommonModule,
     HttpClientModule,

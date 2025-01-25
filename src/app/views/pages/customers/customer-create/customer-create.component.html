@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter un Client'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
 
 
@@ -143,13 +143,13 @@
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                                         
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group ">Pst:</label>
                                     
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_ext">
                                         
-                                    </div>
+                                    </div> -->
                                     <div class="form-group col-2">
                                         <label class="form-group ">Fax:</label>
                                         
@@ -245,14 +245,39 @@
                                             </select>
                                         
                                     </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Classe:</label>
+                                        
+                                        <select class="form-control form-control-sm form-control-solid"
+                                            formControlName="cm_class" id="exampleSelects8">
+                                            <option value=""></option>
+                                            <option *ngFor="let elem of cm_class" [value]="elem.code_value">
+                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                        </select>
+                                    
+                                    </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-4">
+                                    <!-- <div class="form-group col-4">
                                         <label class="form-group">Representant:</label>
                                         
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="cm_slspn">
                                         
+                                    </div> -->
+                                    <div class="form-group col-2">
+                                        <label class="form-group "> Site:</label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" formControlName="cm_site">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="opensite(contentsite,'cm_site')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
                                     </div>
                                     <div class="form-group col-2">
                                         <label class="form-group ">Region:</label>
@@ -266,19 +291,15 @@
                                             </select>
                                         
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-4">
-                                        <label class="form-group">Mode Expedition:</label>
-                                        
-                                        <select class="form-control form-control-sm form-control-solid"
-                                        formControlName="cm_shipvia" id="exampleSelects4">
-                                        <option value=""></option>
-                                        <option *ngFor="let elem of cm_shipvia" [value]="elem.code_value">
-                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                    <div class="form-group col-2">
+                                        <label class="form-group "> Langue:</label>
+                                            <select class="form-control form-control-sm form-control-solid"
+                                                id="exampleSelects6" formControlName="cm_lang">
+                                                <option value=""></option>
+                                                <option *ngFor="let elem of cm_lang" [value]="elem.code_value">
+                                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
 
-                                    </select>
-                                        
+                                            </select>
                                     </div>
                                     <div class="form-group col-2">
                                        
@@ -296,7 +317,22 @@
                                         
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
+                                    <div class="form-group col-4">
+                                        <label class="form-group">Mode Expedition:</label>
+                                        
+                                        <select class="form-control form-control-sm form-control-solid"
+                                        formControlName="cm_shipvia" id="exampleSelects4">
+                                        <option value=""></option>
+                                        <option *ngFor="let elem of cm_shipvia" [value]="elem.code_value">
+                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                    </select>
+                                        
+                                    </div>
+                                    
+                                </div> -->
+                                <!-- <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group ">Compte CC:</label>
                                        
@@ -336,10 +372,10 @@
                                             </div>
                                     </div>
 
-                                </div>
+                                </div> -->
                                 
                                 
-                                <div class="row">    
+                                <!-- <div class="row">    
                                     <div class="form-group col-2">
                                         <label class="form-group "> Revente:</label>
                                         
@@ -350,46 +386,14 @@
                                                 
                                             </div>
                                     </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group "> Site:</label>
-                                        
-                                            <div class="input-group input-group-sm">
-
-                                                <input type="text" class="form-control form-control-solid"
-                                                    aria-describedby="basic-addon2" formControlName="cm_site">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" (click)="opensite(contentsite,'cm_site')">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            </div>
-                                    </div>
                                     
-                                    <div class="form-group col-2">
-                                        <label class="form-group "> Langue:</label>
-                                            <select class="form-control form-control-sm form-control-solid"
-                                                id="exampleSelects6" formControlName="cm_lang">
-                                                <option value=""></option>
-                                                <option *ngFor="let elem of cm_lang" [value]="elem.code_value">
-                                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                    
+                                    
 
-                                            </select>
-                                    </div>
-
-                                </div>
+                                </div> -->
                                 
                                 <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Classe:</label>
-                                        
-                                        <select class="form-control form-control-sm form-control-solid"
-                                            formControlName="cm_class" id="exampleSelects8">
-                                            <option value=""></option>
-                                            <option *ngFor="let elem of cm_class" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-
-                                        </select>
                                     
-                                    </div>
                                     <div class="form-group col-2">
                                         <label class="form-group "> Banque:</label>
                                         
@@ -418,7 +422,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group "> SIC:</label>
                                         
@@ -430,9 +434,9 @@
                                             </div>
                                     </div>
                                     
-                                </div>
+                                </div> -->
                                 
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group">Prix Fixe:</label>
                                             <span class="switch switch-icon">
@@ -467,7 +471,7 @@
                                             </span>
                                     </div>
                                     
-                                </div>
+                                </div> -->
 
 
                             </form>
@@ -505,7 +509,7 @@
                                                 </label>
                                             </span>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group ">Zone taxe:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             id="exampleSelects2" formControlName="ad_tax_zone">
@@ -514,7 +518,7 @@
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
 
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group col-2">
                                         <label class="form-group ">Taux tax:</label>
                                         <div class="input-group input-group-sm">
@@ -537,7 +541,7 @@
 
                                         </select>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Tax comprise:</label>
                                         <span class="switch switch-icon">
                                             <label>
@@ -547,7 +551,7 @@
                                                 <span></span>
                                             </label>
                                         </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     
@@ -669,7 +673,7 @@
                                                 </label>
                                             </span>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Frais Financier:</label>
                                             <span class="switch switch-icon">
                                                 <label>
@@ -679,8 +683,8 @@
                                                     <span></span>
                                                 </label>
                                             </span>
-                                    </div>
-                                    <div class="form-group col-2">
+                                    </div> -->
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Releve:</label>
                                             <span class="switch switch-icon">
                                                 <label>
@@ -690,7 +694,7 @@
                                                     <span></span>
                                                 </label>
                                             </span>
-                                    </div>
+                                    </div> -->
                                     
 
                                 </div>
@@ -732,7 +736,7 @@
                                     </div>
                 
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     
                                 
                                     <div class="form-group col-4">
@@ -772,7 +776,7 @@
                                     </div>
                                 
 
-                                </div>    
+                                </div>     -->
 
                             </form>
                         </ng-template>
@@ -800,7 +804,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -823,7 +827,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -846,7 +850,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -869,7 +873,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -893,7 +897,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -916,7 +920,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -939,7 +943,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -962,7 +966,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

@@ -305,7 +305,7 @@ export class CreateLoadRequestComponent implements OnInit {
     let valueToAddToX = 5;
 
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 150, 5, 50, 30);
     doc.setFontSize(9);
 
@@ -360,9 +360,9 @@ export class CreateLoadRequestComponent implements OnInit {
     doc.setFontSize(10);
 
     for (let j = 0; j < this.printLines.length; j++) {
-      if (j % 30 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
+        img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {

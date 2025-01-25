@@ -37,39 +37,58 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { EmployeService} from "../../../../core/erp"
+import { EmployeService,UsersService,} from "../../../../core/erp"
 
-@Component({
+@Component({ 
   selector: 'kt-list-employe',
   templateUrl: './list-employe.component.html',
   styleUrls: ['./list-employe.component.scss']
 })
 export class ListEmployeComponent implements OnInit {
+  repForm: FormGroup;
+  loadingSubject = new BehaviorSubject<boolean>(true)
+  loading$: Observable<boolean>
+  hasFormErrors = false
   grid: any;
   gridService: GridService;
-  dataview: any;
+  dataView: any;
+  user;
+  domain;
   angularGrid: AngularGridInstance;
   draggableGroupingPlugin: any;    
   columnDefinitions: Column[] = []
     gridOptions: GridOption = {}
     dataset: any[] = []
     constructor(
+        private repFB: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private router: Router,
         public dialog: MatDialog,
         private layoutUtilsService: LayoutUtilsService,
-        private employeService: EmployeService
+        private employeService: EmployeService,
+        private userService: UsersService,
     ) {
         this.prepareGrid()
     }
 
     ngOnInit(): void {
+      this.loading$ = this.loadingSubject.asObservable();
+    this.loadingSubject.next(false);
+      this.user = JSON.parse(localStorage.getItem("user"));
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+      
+      
+      
+      this.createForm();
+      this.hasFormErrors = false
+     
     }
+    
 
     angularGridReady(angularGrid: AngularGridInstance) {
       this.angularGrid = angularGrid;
       this.grid = angularGrid.slickGrid; // grid object
-      this.dataview = angularGrid.dataView;
+      this.dataView = angularGrid.dataView;
       this.gridService = angularGrid.gridService;
     }
     prepareGrid() {
@@ -93,7 +112,7 @@ export class ListEmployeComponent implements OnInit {
                 // use onCellClick OR grid.onClick.subscribe which you can see down below
                 onCellClick: (e: Event, args: OnEventArgs) => {
                     const id = args.dataContext.id
-                    this.router.navigateByUrl(`/accounting-setting/edit-employe/${id}`)
+                    this.router.navigateByUrl(`/training/edit-student/${id}`)
                 },
             },
             {
@@ -106,7 +125,7 @@ export class ListEmployeComponent implements OnInit {
             },
             {
                 id: "emp_addr",
-                name: "Code Employe",
+                name: "Code",
                 field: "emp_addr",
                 sortable: true,
                 filterable: true,
@@ -151,7 +170,7 @@ export class ListEmployeComponent implements OnInit {
             
             {
               id: "emp_job",
-              name: "Métier",
+              name: "Domaine de formation",
               field: "emp_job",
               sortable: true,
               filterable: true,
@@ -177,46 +196,23 @@ export class ListEmployeComponent implements OnInit {
               type: FieldType.string,
             },
             
-            {
-              id: "emp_shift",
-              name: "Equipe",
-              field: "emp_shift",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
+            // {
+            //   id: "emp_shift",
+            //   name: "Equipe",
+            //   field: "emp_shift",
+            //   sortable: true,
+            //   filterable: true,
+            //   type: FieldType.string,
+            // },
          
-            {
-              id: "emp_rate",
-              name: "Taux",
-              field: "emp_rate",
-              sortable: true,
-              filterable: true,
-              type: FieldType.float,
-            },
-            {
-              id: "emp_mrate",
-              name: "Taux Multiple",
-              field: "emp_mrate",
-              sortable: true,
-              filterable: true,
-              type: FieldType.float,
-            },
-            {
-              id: "emp_arate",
-              name: "Taux",
-              field: "emp_arate",
-              sortable: true,
-              filterable: true,
-              type: FieldType.float,
-            },
+           
         ]
 
         this.gridOptions = {
             enableSorting: true,
             enableCellNavigation: true,
             enableExcelCopyBuffer: true,
-            enableFiltering: true,
+            // enableFiltering: true,
             autoEdit: false,
             autoHeight: false,
             enableAutoResize:true,
@@ -227,13 +223,429 @@ export class ListEmployeComponent implements OnInit {
 
         // fill the dataset with your data
         this.dataset = []
-        this.employeService.getAll().subscribe(
-            (response: any) => {this.dataset = response.data
-              this.dataview.setItems(this.dataset)},
-            (error) => {
-                this.dataset = []
-            },
-            () => {}
-        )
+        this.user = JSON.parse(localStorage.getItem("user"));
+        console.log(this.user)
+      //   if(this.user.usrd_site == '*')
+      //   {this.employeService.getAll().subscribe(
+      //       (response: any) => {this.dataset = response.data
+      //         this.dataView.setItems(this.dataset)},
+      //       (error) => {
+      //           this.dataset = []
+      //       },
+      //       () => {}
+      //   )}
+      //   else{this.employeService.getBy({emp_site:this.user.usrd_site}).subscribe(
+      //     (response: any) => {this.dataset = response.data
+      //       this.dataView.setItems(this.dataset)},
+      //     (error) => {
+      //         this.dataset = []
+      //     },
+      //     () => {}
+      // )}
     }
+    createemp() {
+      this.loadingSubject.next(false)
+      const url = `/accounting-setting/create-student`
+      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+  }
+  students() {
+    this.loadingSubject.next(false)
+    const url = `/accounting-setting/list-employe`
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+listsession() {
+  this.loadingSubject.next(false)
+  const url = `/training/training-session-list`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+listtraining() {
+  this.loadingSubject.next(false)
+  const url = `/training/list-training`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+createtraining() {
+  this.loadingSubject.next(false)
+  const url = `/training/create-training`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+
+createsession() {
+this.loadingSubject.next(false)
+const url = `/training/create-training-session`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+approverequest() {
+this.loadingSubject.next(false)
+const url = `/training/approval-req`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+createTrainor() {
+this.loadingSubject.next(false)
+const url = `/providers/create-rep-job`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+createlocation() {
+this.loadingSubject.next(false)
+const url = `/inventory-settings/list-loc`
+this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+payment() {
+  this.loadingSubject.next(false)
+  const url = `/sales/payment-psh`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+  }
+  createForm() {
+    this.loadingSubject.next(false)
+  //create form
+  
+  this.repForm = this.repFB.group({
+      filter1: [ ""],
+      filter2: [ ""],
+      filter3: [ ""]
+  
+  })
+}
+getemp1() {
+  this.dataset = []
+ 
+  const controls = this.repForm.controls
+  if(controls.filter1.value == ''){
+    if(controls.filter2.value == '' ){
+      if(controls.filter3.value == ''){this.dataset =[]}
+      else{this.employeService.getBy({ emp_level : controls.filter3.value}).subscribe(
+            (response: any) => {   
+            this.dataset = response.data
+            console.log(this.dataset)
+            this.dataView.setItems(this.dataset);
+          
+              },
+              (error) => {
+                this.dataset = []
+                },
+              () => {}
+            )
+          }
+    }
+    else{
+      if(controls.filter3.value == ''){this.employeService.getBy({ emp_lname : controls.filter2.value}).subscribe(
+        (response: any) => {   
+        this.dataset = response.data
+        console.log(this.dataset)
+        this.dataView.setItems(this.dataset);
+      
+          },
+          (error) => {
+            this.dataset = []
+            },
+          () => {}
+        )}
+      else{this.employeService.getBy({ emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
+            (response: any) => {   
+            this.dataset = response.data
+            console.log(this.dataset)
+            this.dataView.setItems(this.dataset);
+          
+              },
+              (error) => {
+                this.dataset = []
+                },
+              () => {}
+            )
+          }
+    }
+  } 
+  else{
+    if(controls.filter2.value == ''){
+      if(controls.filter3.value == ''){console.log('getemp1-1',controls.filter1.value)
+        this.employeService.getBy({ emp_fname : controls.filter1.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+      else{console.log('getemp1-2')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+    }
+    else {
+      if(controls.filter3.value == ''){console.log('getemp1-3')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname : controls.filter2.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+      else{console.log('getemp1-4')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+    }
+  } 
+
+ 
+  
+}
+getemp2() {
+  this.dataset = []
+ 
+  const controls = this.repForm.controls
+  if(controls.filter2.value == ''){
+    if(controls.filter1.value == '' ){
+      if(controls.filter3.value == ''){this.dataset =[]}
+      else{this.employeService.getBy({ emp_level : controls.filter3.value}).subscribe(
+            (response: any) => {   
+            this.dataset = response.data
+            console.log(this.dataset)
+            this.dataView.setItems(this.dataset);
+          
+              },
+              (error) => {
+                this.dataset = []
+                },
+              () => {}
+            )
+          }
+    }
+    else{
+      if(controls.filter3.value == ''){this.employeService.getBy({ emp_fname : controls.filter1.value}).subscribe(
+        (response: any) => {   
+        this.dataset = response.data
+        console.log(this.dataset)
+        this.dataView.setItems(this.dataset);
+      
+          },
+          (error) => {
+            this.dataset = []
+            },
+          () => {}
+        )}
+      else{this.employeService.getBy({ emp_fname:controls.filter1.value,emp_level : controls.filter3.value}).subscribe(
+            (response: any) => {   
+            this.dataset = response.data
+            console.log(this.dataset)
+            this.dataView.setItems(this.dataset);
+          
+              },
+              (error) => {
+                this.dataset = []
+                },
+              () => {}
+            )
+          }
+    }
+  } 
+  else{
+    if(controls.filter1.value == ''){
+      if(controls.filter3.value == ''){console.log('getemp1-1',controls.filter2.value)
+        this.employeService.getBy({ emp_lname : controls.filter2.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+      else{console.log('getemp1-2')
+        this.employeService.getBy({ emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+    }
+    else {
+      if(controls.filter3.value == ''){console.log('getemp1-3')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname : controls.filter2.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+      else{console.log('getemp1-4')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+    }
+  } 
+  
+}
+
+getemp3() {
+  this.dataset = []
+ 
+  const controls = this.repForm.controls
+  if(controls.filter3.value == ''){
+    if(controls.filter1.value == '' ){
+      if(controls.filter2.value == ''){this.dataset =[]}
+      else{this.employeService.getBy({ emp_lname : controls.filter2.value}).subscribe(
+            (response: any) => {   
+            this.dataset = response.data
+            console.log(this.dataset)
+            this.dataView.setItems(this.dataset);
+          
+              },
+              (error) => {
+                this.dataset = []
+                },
+              () => {}
+            )
+          }
+    }
+    else{
+      if(controls.filter2.value == ''){this.employeService.getBy({ emp_fname : controls.filter1.value}).subscribe(
+        (response: any) => {   
+        this.dataset = response.data
+        console.log(this.dataset)
+        this.dataView.setItems(this.dataset);
+      
+          },
+          (error) => {
+            this.dataset = []
+            },
+          () => {}
+        )}
+      else{this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname : controls.filter2.value}).subscribe(
+            (response: any) => {   
+            this.dataset = response.data
+            console.log(this.dataset)
+            this.dataView.setItems(this.dataset);
+          
+              },
+              (error) => {
+                this.dataset = []
+                },
+              () => {}
+            )
+          }
+    }
+  } 
+  else{
+    if(controls.filter1.value == ''){
+      if(controls.filter2.value == ''){console.log('getemp1-1',controls.filter2.value)
+        this.employeService.getBy({ emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+      else{console.log('getemp1-2')
+        this.employeService.getBy({ emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+    }
+    else {
+      if(controls.filter2.value == ''){console.log('getemp1-3')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+      else{console.log('getemp1-4')
+        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
+          (response: any) => {   
+            this.dataset = response.data
+           console.log(this.dataset)
+           this.dataView.setItems(this.dataset);
+            
+             },
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+      }
+    }
+  } 
+  
+  
+}
 }

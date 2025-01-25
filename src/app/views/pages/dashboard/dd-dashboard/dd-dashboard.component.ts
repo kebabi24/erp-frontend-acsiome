@@ -67,7 +67,12 @@ export class DdDashboardComponent implements OnInit {
 
  visit_rate : any 
  visit_rate_data : any = []
- 
+ nb_session:any
+ nb_employe_trained:any
+ nb_employe_present:any
+ nb_satisfied:any
+ training_cost:any
+ training_time:any
  success_rate_visit : any 
  success_rate_itin : any 
  sucess_rate_data : any = []
@@ -165,6 +170,12 @@ updateData(){
     .subscribe(
       
       (res: any) => {
+        this.nb_session = res.nb_session
+        this.nb_employe_trained = res.nb_employe_trained
+        this.nb_employe_present = res.nb_employe_present
+        this.nb_satisfied = res.nb_satisfied
+        this.training_cost = res.training_cost
+        this.training_time = res.training_time
         this.visit_rate = res.visit_rate
         this.visit_rate_data = res.visit_rate_data
         this.success_rate_visit = res.success_rate_visit
@@ -213,6 +224,12 @@ getDashboarData(startDate: any , endDate:any){
     .subscribe(
       
       (res: any) => {
+        this.nb_session = res.nb_session
+        this.nb_employe_trained = res.nb_employe_trained
+        this.nb_employe_present = res.nb_employe_present
+        this.nb_satisfied = res.nb_satisfied
+        this.training_cost = res.training_cost
+        this.training_time = res.training_time
         this.visit_rate = res.visit_rate
         this.visit_rate_data = res.visit_rate_data
         this.success_rate_visit = res.success_rate_visit
@@ -294,9 +311,9 @@ createSuccessRateChart(){
 
   chart.data = this.sucess_rate_data;
 
-  this.createSeries2('nb_clients', 'Client visite',chart);
-  this.createSeries2('nb_invoice', 'Client facturee',chart);
-  this.createSeries2('nb_visits', 'Client tournee',chart);
+  this.createSeries2('nb_clients', 'Nombre de session',chart);
+  // this.createSeries2('nb_invoice', 'Client facturee',chart);
+  // this.createSeries2('nb_visits', 'Client tournee',chart);
 }
 
 createDistributionRateChart(){
@@ -319,9 +336,9 @@ createDistributionRateChart(){
 
   chart.data = this.distribution_rate_data;
 
-  this.createSeries3('nb_products_sold', 'Produit vendues',chart);
-  this.createSeries3('nb_products_loaded', 'Produit charges',chart);
-  this.createSeries3('nb_products', 'Nombre total de produits',chart);
+  this.createSeries3('nb_products_sold', 'nombre de formation',chart);
+  // this.createSeries3('nb_products_loaded', 'Produit charges',chart);
+  // this.createSeries3('nb_products', 'Nombre total de produits',chart);
 }
 
 createCaItinChart(){

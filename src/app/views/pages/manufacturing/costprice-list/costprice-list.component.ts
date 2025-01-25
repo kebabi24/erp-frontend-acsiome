@@ -576,7 +576,7 @@ export class CostpriceListComponent implements OnInit {
         controls.qtycomp.setValue(this.woServer.wo_qty_comp);
         controls.qtyrjct.setValue(this.woServer.wo_qty_rjct);
       
-        this.inventoryTransactionService.getBy({tr_lot:String(this.woServer.id),tr_nbr:this.woServer.wo_nbr,tr_type:"RCT-WO"}).subscribe(
+        this.inventoryTransactionService.getByRef({tr_lot:String(this.woServer.id),tr_nbr:this.woServer.wo_nbr,tr_type:"RCT-WO"}).subscribe(
           (res: any) => {
         
           //(response: any) => (this.dataset = response.data),
@@ -832,7 +832,7 @@ handleSelectedRowsChanged5(e, args) {
       controls.desc.setValue(item.item.pt_desc1)
       controls.qtycomp.setValue(item.wo_qty_comp);
       controls.qtyrjct.setValue(item.wo_qty_rjct);
-        this.inventoryTransactionService.getBy({tr_lot:String(item.id),tr_nbr:item.wo_nbr,tr_type:"RCT-WO"}).subscribe(
+        this.inventoryTransactionService.getByRef({tr_lot:String(item.id),tr_nbr:item.wo_nbr,tr_type:"RCT-WO"}).subscribe(
           (res: any) => {
         
           //(response: any) => (this.dataset = response.data),

@@ -3005,7 +3005,7 @@ export class CreateProjectInvoiceComponent implements OnInit {
     var i = 95;
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length; j++) {
-      if (j % 30 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
         doc.addImage(img, "png", 5, 5, 210, 30);
         doc.setFontSize(12);
@@ -3053,11 +3053,11 @@ export class CreateProjectInvoiceComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].itdh_line).slice(-3), 12.5, i - 1);

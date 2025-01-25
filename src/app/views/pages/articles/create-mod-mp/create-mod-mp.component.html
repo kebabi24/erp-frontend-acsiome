@@ -1,9 +1,9 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Création Modéle MP'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'Création Modéle '" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
 
 
@@ -11,7 +11,7 @@
                 <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
                         class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <button class="dropdown-item">Sauvgarder et quitter</button>
+                    <button class="dropdown-item">enregistrer et quitter</button>
 
                 </div>
             </div> -->
@@ -36,7 +36,7 @@
                         formControlName="mod_prod_line" id="exampleSelects1" (change)=" onChangepl()">
                         <option value=""></option>
                         <option *ngFor="let elem of mod_prod_line" [value]="elem.code_value">
-                             {{elem.code_value}}</option>
+                             {{elem.code_cmmt}}</option>
 
                     </select>
                     <div *ngIf="form1.controls['mod_prod_line'].errors && (form1.controls['mod_prod_line'].dirty || form1.controls['mod_prod_line'].touched)"
@@ -51,7 +51,7 @@
                         formControlName="mod_part_type" id="exampleSelects1" (change)=" onChangetype()">
                         <option value=""></option>
                         <option *ngFor="let elem of mod_part_type" [value]="elem.code_value">
-                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+                           {{elem.code_cmmt}}</option>
 
                     </select>
                     <div *ngIf="form1.controls['mod_part_type'].errors && (form1.controls['mod_part_type'].dirty || form1.controls['mod_part_type'].touched)"
@@ -65,7 +65,7 @@
                         formControlName="mod_draw" id="exampleSelects1" (change)=" onChangedraw()">
                         <option value=""></option>
                         <option *ngFor="let elem of mod_draw" [value]="elem.code_value">
-                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+                            {{elem.code_cmmt}}</option>
 
                     </select>
                     <div *ngIf="form1.controls['mod_draw'].errors && (form1.controls['mod_draw'].dirty || form1.controls['mod_draw'].touched)"
@@ -171,7 +171,7 @@
     <div>
         <ng-template #contentsite let-c="close" let-d="dismiss">
             <div class="modal-header">
-                <h4 class="modal-title">Choissir Site </h4>
+                <h4 class="modal-title">Choisir Site </h4>
                 <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -187,7 +187,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -210,7 +210,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -234,7 +234,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -258,7 +258,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>

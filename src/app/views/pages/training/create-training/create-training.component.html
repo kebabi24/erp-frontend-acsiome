@@ -1,9 +1,39 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter Formation'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button (click)="goBack()" type="button" class="btn btn-secondary btn-lg mr-2">Annuller</button>
-            <button (click)="reset()" type="button" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
-            <button (click)="onSubmit()" type="button" class="btn btn-success btn-lg mr-2">Sauvgarder </button>
+        <button type="button" (click)="createtraining()" class="btn btn-secondary btn-sm ml-2">Thèmes de Formations</button>
+          <!-- <button type="button" (click)="students()" class="btn btn-secondary btn-sm ml-2">Etudiants </button> -->
+          <!-- <button type="button" (click)="createsession()" class="btn btn-secondary btn-sm ml-2">Sessions</button> -->
+          <!-- <button type="button" (click)="approverequest()" class="btn btn-secondary btn-sm ml-2">Demandes </button> -->
+          <!-- <button type="button" (click)="createTrainor()" class="btn btn-secondary btn-sm ml-2">Formateurs</button> -->
+          <!-- <button type="button" (click)="createlocation()" class="btn btn-secondary btn-sm ml-2">Salles </button> -->
+           
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button type="button"  class="btn btn-secondary btn-sm ml-2"> </button>
+          <button (click)="goBack()" type="button" class="btn btn-secondary btn-lg mr-2">annuler</button>
+          <button (click)="reset()" type="button" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
+          <button (click)="onSubmit()" type="button" class="btn btn-success btn-lg mr-2">enregistrer </button>
 
 
         </ng-container>
@@ -17,18 +47,58 @@
                     Ce Code existe deja
                 </kt-alert>
                 <form [formGroup]="formX" class="form">   
-                <div class="row">
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Type</label>
+    
+                            <select
+                            class="form-control form-control-lg"
+                            formControlName="pt_dsgn_grp" id="pt_dsgn_grp" (change)="onchangetype()">
+                                <option value=""></option>
+                                <option *ngFor="let elem of pt_dsgn_grp" [value]="elem.code_value">
+                                     {{elem.code_cmmt}}</option>
+                            </select>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Domaine</label>
+    
+                            <select
+                            class="form-control form-control-lg"
+                            formControlName="pt_draw" id="pt_draw" (change)="onchangedomain()">
+                                <option value=""></option>
+                                <option *ngFor="let elem of pt_draw" [value]="elem.code_value">
+                                     {{elem.code_cmmt}}</option>
+                            </select>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Rubrique</label>
+    
+                            <select
+                            class="form-control form-control-lg"
+                            formControlName="pt_group" id="pt_group" (change)="onchangegroup()">
+                                <option value=""></option>
+                                <option *ngFor="let elem of pt_group" [value]="elem.code_value">
+                                     {{elem.code_cmmt}}</option>
+                            </select>
+                           
+                        </div>
+                       
+                       
+                    </div>    
+                    <div class="row">
                     <div class="form-group col-2">
                         <label class="form-group">Code Formation:</label>
 
-                        <input type="text" formControlName="pt_part" (change)="onChangeCode()"
+                        <input type="text" formControlName="pt_part" disabled (change)="onChangeCode()"
                             [className]="formX.controls['pt_part'].errors && (formX.controls['pt_part'].dirty || formX.controls['pt_part'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
                         <div *ngIf="formX.controls['pt_part'].errors && (formX.controls['pt_part'].dirty || formX.controls['pt_part'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                     </div>
                     <div class="form-group col-6">
-                        <label class="form-group">Description:</label>
+                        <label class="form-group">Thématique:</label>
                         <input type="text" id="pt_desc1" (change)="onchangedesc()"
                             [className]="formX.controls['pt_desc1'].errors && (formX.controls['pt_desc1'].dirty || formX.controls['pt_desc1'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
                             formControlName="pt_desc1">
@@ -36,58 +106,14 @@
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                     </div>
-                   
-                </div>
-
-                <div class="row">
                     <div class="form-group col-2">
-                        <label class="form-group ">Domaine</label>
-
-                        <select
-                        class="form-control form-control-lg"
-                        formControlName="pt_draw" id="pt_draw" (change)="onchangedomain()">
-                            <option value=""></option>
-                            <option *ngFor="let elem of pt_draw" [value]="elem.code_value">
-                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                        </select>
-                       
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group ">Rubrique</label>
-
-                        <select
-                        class="form-control form-control-lg"
-                        formControlName="pt_group" id="pt_group" >
-                            <option value=""></option>
-                            <option *ngFor="let elem of pt_group" [value]="elem.code_value">
-                                {{elem.code_value}} {{elem.code_cmmt}}</option>
-                        </select>
-                       
-                    </div>
-                    <div class="form-group col-2">
-                        <label class="form-group">Interne/ Externe:</label>
+                        <label class="form-group">Interne:</label>
                         <div class="col-6">
                             <span class="switch switch-lg switch-icon">
                                 <label>
                                     <input type="checkbox"
                                        
-                                        formControlName="pt_formula" id="pt_formula" />
-                                    <span></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-                   
-                </div>
-                <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Certification:</label>
-                        <div class="col-6">
-                            <span class="switch switch-lg switch-icon">
-                                <label>
-                                    <input type="checkbox"
-                                       
-                                        formControlName="pt_ms" id="pt_ms" />
+                                        formControlName="pt_iss_pol" id="pt_iss_pol" />
                                     <span></span>
                                 </label>
                             </span>
@@ -100,14 +126,70 @@
                                 <label>
                                     <input type="checkbox"
                                        
+                                        formControlName="pt_phantom" id="pt_phantom" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                   
+                    </div>
+
+                
+                    <div class="row">
+                    <!-- <div class="form-group col-2">
+                        <label class="form-group">Certifiante:</label>
+                        <div class="col-6">
+                            <span class="switch switch-lg switch-icon">
+                                <label>
+                                    <input type="checkbox"
+                                       
                                         formControlName="pt_rollup" id="pt_rollup" />
                                     <span></span>
                                 </label>
                             </span>
                         </div>
                     </div>
+                   
                     <div class="form-group col-2">
-                        <label class="form-group ">Pays:</label>
+                        <label class="form-group">qualifiante:</label>
+                        <div class="col-6">
+                            <span class="switch switch-lg switch-icon">
+                                <label>
+                                    <input type="checkbox"
+                                       
+                                        formControlName="pt_critical" id="pt_critical" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div> -->
+                        <!-- <div class="form-group col-2">
+                        <label class="form-group">habilitation:</label>
+                        <div class="col-6">
+                            <span class="switch switch-lg switch-icon">
+                                <label>
+                                    <input type="checkbox"
+                                       
+                                        formControlName="pt_insp_rqd" id="pt_insp_rqd" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                        </div> -->
+                        <div class="form-group col-2">
+                            <label class="form-group ">Cible:</label>
+                            <select class="form-control form-control-lg form-control-solid"
+                                id="exampleSelects1" formControlName="pt_network">
+                                <option value=""></option>
+                                <option *ngFor="let elem of pt_network" [value]="elem.code_value">
+                                    {{elem.code_cmmt}}</option>
+                             </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group ">Lieu:</label>
                         <select class="form-control form-control-lg form-control-solid"
                             id="exampleSelects1" formControlName="pt_origin">
                             <option value=""></option>
@@ -118,28 +200,62 @@
                     <div class="form-group col-2">
                         <label class="form-group ">Mesure d'accompagnement:</label>
                         <select class="form-control form-control-lg form-control-solid"
-                            id="exampleSelects1" formControlName="pt_meter_um">
+                            id="exampleSelects1" formControlName="pt_bom_code">
                             <option value=""></option>
-                            <option *ngFor="let elem of pt_meter_um" [value]="elem.code_value">
-                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+                            <option *ngFor="let elem of pt_bom_code" [value]="elem.code_value">
+                               {{elem.code_cmmt}}</option>
                          </select>
                     </div>
-                </div>
-                <br> <br>
-                <div class="form-group col-12 row">
+                    <div class="form-group col-2">
+                        <label class="form-group ">Duree de formation :</label>
+
+                        <input type="number" class="form-control form-control-lg form-control-solid"
+                            formControlName="pt_shelflife">
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Prix HT:</label>
+                        
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                formControlName="pt_price">
+                        
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Prix TTC:</label>
+                        
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                formControlName="pt_pur_price">
+                        
+                    </div>
+
+ 
+                    </div>
+                    <br> <br>
+                    <div class="form-group col-12 row">
                     <label class="col-2 col-form-label text-right"> Détail Formation: </label>
-                </div>
+                    </div>
 
 
-                <div class="row col-lg-12">
-                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter Une Ligne</button>
-                </div>
-                <br>
-                <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
-                    [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
-                </angular-slickgrid>
-                </div>
+                    <div class="row ">
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewprog()">Objectif Pédagogique</button>
+                    <label class="col-2 col-form-label text-right">             </label>
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewobje()">Objectif Opérationnel</button>
+                    <label class="col-2 col-form-label text-right">             </label>   
+                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewmeth()">Ajouter Methode de formation</button>
+                    </div>
+                    <br>
+                    <div class="row">
+                    <angular-slickgrid class="col-4" gridHeight="300" gridId="progGrid" [columnDefinitions]="progcolumnDefinitions"
+                    [gridOptions]="proggridOptions" [dataset]="progdataset" (onAngularGridCreated)="progGridReady($event)">
+                    </angular-slickgrid>
+                
+                    <angular-slickgrid class="col-4" gridHeight="300" gridId="objeGrid" [columnDefinitions]="objecolumnDefinitions"
+                    [gridOptions]="objegridOptions" [dataset]="objedataset" (onAngularGridCreated)="objeGridReady($event)">
+                    </angular-slickgrid>
+                
+                    <angular-slickgrid class="col-4" gridHeight="300" gridId="methGrid" [columnDefinitions]="methcolumnDefinitions"
+                    [gridOptions]="methgridOptions" [dataset]="methdataset" (onAngularGridCreated)="methGridReady($event)">
+                    </angular-slickgrid>
+                    </div>
                 </form>
             </div>
         </div>
@@ -150,7 +266,7 @@
     <div>
         <ng-template #content1 let-c="close" let-d="dismiss">
           <div class="modal-header">
-            <h4 class="modal-title">Choissir Métier</h4>
+            <h4 class="modal-title">Choissir compétence</h4>
             <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -165,7 +281,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>

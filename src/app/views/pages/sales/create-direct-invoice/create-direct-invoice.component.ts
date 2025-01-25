@@ -277,7 +277,7 @@ error = false;
             if (resp.data) {
               console.log(resp.data)
                           
-              if (resp.data.pt_phantom) {
+              if (resp.data.pt_phantom || resp.data.pt_part_type == 'FORMATION') {
                 this.type = 'M'
               
               } else {
@@ -302,14 +302,14 @@ error = false;
                       this.stat = this.lddet.ld_status
                     }
                     this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , sod_site:resp.data.pt_site, sod_loc: resp.data.pt_loc, sod_serial: null,
-                      sod_um:resp.data.pt_um, sod_um_conv:1, sod_price: resp.data.pt_price, sod_disc_pct:0, sod_expire:this.lddet.ld_expire,sod_status: this.stat, qty_oh: this.lddet.ld_qty_oh, sod_type: this.type , sod_taxc: resp.data.pt_taxc, sod_taxable: this.taxable})
+                      sod_um:resp.data.pt_um, sod_um_conv:1, sod_price: resp.data.pt_price, sod_disc_pct:0, sod_expire:this.lddet.ld_expire,sod_status: this.stat, qty_oh: this.lddet.ld_qty_oh, sod_type: "M" , sod_taxc: resp.data.pt_taxc, sod_taxable: this.taxable})
              
        // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext ,   sod_status: this.stat, qty_oh: this.lddet[0].ld_qty_oh})
                   });     
     
               } else { 
                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , sod_site:resp.data.pt_site, sod_loc: resp.data.pt_loc, sod_serial: null,
-                  sod_um:resp.data.pt_um, sod_um_conv:1, sod_price: resp.data.pt_price, sod_disc_pct:0,sod_expire: null, sod_status: null, qty_oh: 0, sod_type: this.type , sod_taxc: resp.data.pt_taxc, sod_taxable: this.taxable})
+                  sod_um:resp.data.pt_um, sod_um_conv:1, sod_price: resp.data.pt_price, sod_disc_pct:0,sod_expire: null, sod_status: null, qty_oh: 0, sod_type: 'M' , sod_taxc: resp.data.pt_taxc, sod_taxable: this.taxable})
          
 
               }
@@ -628,13 +628,11 @@ error = false;
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           const controls = this.soForm.controls
-          console.log(args.dataContext.sod_part)
-          console.log(controls.so_cust.value)
-          console.log(args.dataContext.sod_qty_ord)
+          
           let pricebefore = args.dataContext.sod_price
-          console.log(pricebefore)
-          this.price = null;
-          this.disc = null;
+          
+          this.price = 0;
+          this.disc = 0;
           if (args.dataContext.sod_type != "M"){
             if (args.dataContext.sod_qty_ord * args.dataContext.sod_um_conv   > args.dataContext.qty_oh) {
              
@@ -667,6 +665,7 @@ error = false;
           this.pricelistService.getPrice(obj).subscribe((res:any)=>{
             console.log(res)
             this.price = res.data
+            if(this.price == null){this.price = 0}
             if (this.price != 0) { 
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: this.price })
             }
@@ -686,6 +685,7 @@ error = false;
         this.pricelistService.getDiscPct(objr).subscribe((resdisc:any)=>{
           console.log(resdisc)
           this.disc = resdisc.data
+          if(this.disc == null){this.disc = 0}
           if (this.disc != 0) {
           //this.dataset[this.row_number].sod_disc_pct = this.disc
           this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: this.price ,sod_disc_pct: this.disc })
@@ -889,7 +889,7 @@ error = false;
                   sod_disc_pct: detail.qod_disc_pct,
                   sod_site: detail.item.pt_site,
                   sod_loc: detail.item.pt_loc,
-                  sod_type: detail.item.pt_type,
+                  sod_type: "M",
                   sod_cc: "",
                   sod_taxable: detail.item.pt_taxable,
                   sod_tax_code: detail.item.taxe.tx2_tax_code,
@@ -910,7 +910,7 @@ error = false;
                 sod_disc_pct: detail.qod_disc_pct,
                 sod_site: detail.item.pt_site,
                 sod_loc: detail.item.pt_loc,
-                sod_type: detail.item.pt_type,
+                sod_type: "M",
                 sod_cc: "",
                 sod_taxable: detail.item.pt_taxable,
                 sod_tax_code: detail.item.taxe.tx2_tax_code,
@@ -1150,7 +1150,7 @@ error = false;
           );
           this.loadingSubject.next(false);
           console.log(this.dataset);
-          if(controls.print.value == true)  this.printpdf(so.so_nbr) // printSO(this.customer, this.dataset, so);
+          if(controls.print.value == true) {this.printpdf(so.so_nbr)} // printSO(this.customer, this.dataset, so);
           this.reset();
           this.loadingSubject.next(true);
           this.router.navigateByUrl("/sales/create-direct-invoice");
@@ -1266,7 +1266,7 @@ error = false;
                       sod_disc_pct: detail.qod_disc_pct,
                       sod_site: detail.item.pt_site,
                       sod_loc: detail.item.pt_loc,
-                      sod_type: detail.item.pt_type,
+                      sod_type: "M",
                       sod_cc: "",
                       sod_taxable: detail.item.pt_taxable,
                       sod_tax_code: detail.item.pt_taxc,
@@ -1287,7 +1287,7 @@ error = false;
                     sod_disc_pct: detail.qod_disc_pct,
                     sod_site: detail.item.pt_site,
                     sod_loc: detail.item.pt_loc,
-                    sod_type: detail.item.pt_type,
+                    sod_type: "M",
                     sod_cc: "",
                     sod_taxable: detail.item.pt_taxable,
                     sod_tax_code: detail.item.pt_taxc,
@@ -1815,7 +1815,7 @@ changeTax(){
               updateItem.sod_taxable = this.taxable
               updateItem.sod_tax_code = item.pt_taxc
               updateItem.sod_taxc = item.taxe.tx2_tax_pct
-              updateItem.sod_type = this.type
+              updateItem.sod_type = "M"
               updateItem.sod_price = item.pt_price
               updateItem.sod_disc_pct = 0
               updateItem.qty_oh = this.lddet.ld_qty_oh
@@ -1837,7 +1837,7 @@ changeTax(){
             updateItem.sod_taxable = this.taxable
             updateItem.sod_taxc = item.taxe.tx2_tax_pct
             updateItem.sod_tax_code = item.taxe.tx2_tax_code
-            updateItem.sod_type = this.type
+            updateItem.sod_type = "M"
             updateItem.sod_price = item.pt_price
             updateItem.sod_disc_pct = 0
             updateItem.qty_oh = 0
@@ -1985,7 +1985,7 @@ changeTax(){
                           sod_disc_pct: detail.qod_disc_pct,
                           sod_site: detail.item.pt_site,
                           sod_loc: detail.item.pt_loc,
-                          sod_type: detail.item.pt_type,
+                          sod_type: "M",
                           sod_cc: "",
                           sod_taxable: detail.item.pt_taxable,
                           sod_tax_code: detail.item.pt_taxc,
@@ -2006,7 +2006,7 @@ changeTax(){
                         sod_disc_pct: detail.qod_disc_pct,
                         sod_site: detail.item.pt_site,
                         sod_loc: detail.item.pt_loc,
-                        sod_type: detail.item.pt_type,
+                        sod_type: "M",
                         sod_cc: "",
                         sod_taxable: detail.item.pt_taxable,
                         sod_tax_code: detail.item.pt_taxc,
@@ -3212,7 +3212,7 @@ printpdf(nbr) {
   doc.setFontSize(6);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
       doc.addImage(img, 'png', 5, 5, 210, 30)
       doc.setFontSize(12);
@@ -3255,11 +3255,11 @@ doc.addPage();
 
 
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35)
+    if (this.dataset[j].desc.length > 45) {
+      let desc1 = this.dataset[j].desc.substring(45)
       let ind = desc1.indexOf(' ')
-      desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-      let desc2 = this.dataset[j].desc.substring(35+ind)
+      desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+      let desc2 = this.dataset[j].desc.substring(45+ind)
 
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.dataset[j].sod_line)).slice(-3), 12.5 , i  - 1);
@@ -3357,7 +3357,7 @@ doc.addPage();
 
  doc.setFontSize(8);
     let mt = NumberToLetters(
-      Number(controls.ttc.value).toFixed(2),this.curr.cu_desc)
+      Number(controls.ttc.value).toFixed(2),'DINARS ALGERIENS')
 
       if (mt.length > 95) {
         let mt1 = mt.substring(90)

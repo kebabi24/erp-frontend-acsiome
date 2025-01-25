@@ -588,11 +588,9 @@ angularGridReady3(angularGrid: AngularGridInstance) {
   }
 
   printpdf(nbr) {
-    // printpdf(nbr,wodlot,wodnbr,part,descr,routing,gamme,qte) {
-  //   //const controls = this.totForm.controls 
-  //   const controlss = this.wodForm.controls 
+    
      var doc = new jsPDF();
-   
+   let date = new Date()
     var img = new Image()
     img.src = "./assets/media/logos/asset_down.png";
     doc.addImage(img, 'png', 5, 5, 200, 30)

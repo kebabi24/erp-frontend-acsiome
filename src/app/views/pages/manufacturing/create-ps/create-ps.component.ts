@@ -154,7 +154,7 @@ export class CreatePsComponent implements OnInit {
         onCellChange: (e: Event, args: OnEventArgs) => {
           const controls = this.psForm.controls
           console.log(args.dataContext.ps_comp)
-          this.itemsService.getByOne({pt_part: args.dataContext.ps_comp,pt_bom_code:controls.type.value,pt_break_cat:controls.color.value }).subscribe((resp:any)=>{
+          this.itemsService.getByOne({pt_part: args.dataContext.ps_comp,pt_part_type:'CONSOMMABLE',pt_break_cat:controls.color.value }).subscribe((resp:any)=>{
 
             if (resp.data) {
               console.log(resp.data)
@@ -512,13 +512,13 @@ export class CreatePsComponent implements OnInit {
 
       return;
     }
-    if (this.percent < 100) {
+    // if (this.percent < 100) {
       
-      this.message = "la somme des quantités saisies n'atteint pas 100%";
-      this.hasFormErrors = true;
+    //   this.message = "la somme des quantités saisies n'atteint pas 100%";
+    //   this.hasFormErrors = true;
 
-      return;
-    }
+    //   return;
+    // }
 
     if (!this.dataset.length) {
       this.message = "La liste des article ne peut pas etre vide";
@@ -870,7 +870,7 @@ export class CreatePsComponent implements OnInit {
     // fill the dataset with your data
     const controls = this.psForm.controls
     this.itemsService
-      .getBy({pt_bom_code:controls.type.value})
+      .getBy({pt_part_type:'CONSOMMABLE'})
       .subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {

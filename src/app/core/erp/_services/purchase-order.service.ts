@@ -84,7 +84,9 @@ export class PurchaseOrderService {
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
+        const headers = { "Content-Type": "multipart/form-data" }; // Set the Content-Type header to multipart/form-data
+    
+        return this.http.put(`${API_URL}/${id}`, data)
     }
     public updatedet(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

@@ -1,14 +1,14 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter un Employé'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Retour</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-lg mr-2">Sauvgarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-lg mr-2">enregistrer </button>
 
 
         </ng-container>
     </kt-portlet-header>
-    <kt-portlet-body>
+    <kt-portlet-body> 
         <div class="example-preview">
             <div>
                 <ngb-tabset>
@@ -331,7 +331,21 @@
                         </ng-template>
                         <ng-template ngbTabContent>
                             <form [formGroup]="empForm" class="form">
+                                <div class="form-group col-2">
+                                    <label class="form-group">Client : *</label>
+                                    <div class="input-group input-group-lg">
 
+                                        <input type="text" class="form-control form-control-solid" 
+                                            aria-describedby="basic-addon2" formControlName="emp_line2" (change)="onChangecust()" id="emp_line2">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" (click)="opencust(contentcust)">
+                                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                                        </div>
+                                    
+                                    </div>
+            
+                                    
+                                </div>
                                 <div class="row"> 
                                     <div class="form-group col-2">
                                         <label class="form-group">Responsable : *</label>
@@ -556,7 +570,7 @@
 
 
                                 <div class="form-group col-12 row">
-                                    <label class="col-2 col-form-label text-right"> Detail Metier: </label>
+                                    <label class="col-2 col-form-label text-right"> Detail Compétence: </label>
                                 </div>
                 
                                 
@@ -637,7 +651,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -661,7 +675,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -684,7 +698,30 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentcust let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Client </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridcust"
+                            [columnDefinitions]="columnDefinitionscust" (onAngularGridCreated)="angularGridReadycust($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedcust($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionscust" [dataset]="datacust">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -707,7 +744,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -715,7 +752,7 @@
         <div>
             <ng-template #content2 let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choissir Metier</h4>
+                    <h4 class="modal-title">Choissir Compétence</h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -730,7 +767,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -757,7 +794,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -780,7 +817,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -803,7 +840,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

@@ -438,7 +438,7 @@ export class PrintPoComponent implements OnInit {
         this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                 
                 
-          this.provider = response.data
+          this.provider = response.data[0]
 
         controls.name.setValue(this.provider.ad_name);
       
@@ -555,7 +555,7 @@ export class PrintPoComponent implements OnInit {
             this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                     
                     
-              this.provider = response.data
+              this.provider = response.data[0]
     
             controls.name.setValue(this.provider.ad_name);
           
@@ -724,7 +724,7 @@ export class PrintPoComponent implements OnInit {
     var site = ( this.prhServer.po_site != null) ?  this.prhServer.po_site : ""
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, 'png', 150, 5, 50, 30)
     doc.setFontSize(9);
     doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
@@ -775,9 +775,9 @@ export class PrintPoComponent implements OnInit {
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length  ; j++) {
       
-      if ((j % 30 == 0) && (j != 0) ) {
+      if ((j % 20 == 0) && (j != 0) ) {
   doc.addPage();
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
@@ -829,11 +829,11 @@ export class PrintPoComponent implements OnInit {
   
   
   
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35)
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45)
         let ind = desc1.indexOf(' ')
-        desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-        let desc2 = this.dataset[j].desc.substring(35+ind)
+        desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+        let desc2 = this.dataset[j].desc.substring(45+ind)
   
         doc.line(10, i - 5, 10, i );
         doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);

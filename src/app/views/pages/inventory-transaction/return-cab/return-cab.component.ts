@@ -842,6 +842,7 @@ export class ReturnCabComponent implements OnInit {
             _lb.lb_grp = this.employeGrp;
             _lb.lb_addr = 'DKAKNA';
             _lb.lb_tel = '';
+            _lb.lb__chr01 = String(new Date().toLocaleTimeString())
             let lab = null;
             
            
@@ -932,7 +933,7 @@ export class ReturnCabComponent implements OnInit {
 
   this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
     (reponse: any) => {
-      if(reponse.data != null) {   
+      if(reponse.data != null ) {   
         
         this.domconfig = true
         this.prodligne = reponse.data.code_cmmt
@@ -979,7 +980,7 @@ export class ReturnCabComponent implements OnInit {
     // if(this.domconfig) {
       this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
         (reponse: any) => { 
-          if(reponse.data != null) {
+          if(reponse.data != null && reponse.data.code_value != ' ') {
           controls.tr_addr.setValue(reponse.data.code_value),
           controls.tr_addr.disable() 
 
@@ -998,26 +999,7 @@ export class ReturnCabComponent implements OnInit {
         },
        
       );
-      this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-        this.seq = response.data;
-  
-        if (this.seq) {
-          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-  
-          this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-            (reponse) => console.log("seq"),
-            (error) => {
-              this.message = "Erreur modification Sequence";
-              this.hasFormErrors = true;
-              return;
-            }
-          );
-        } else {
-          this.message = "Parametrage Manquant pour la sequence";
-          this.hasFormErrors = true;
-          return;
-        }
-      });
+    
   
       
 
@@ -1086,7 +1068,29 @@ export class ReturnCabComponent implements OnInit {
     }
 
         let tr = this.prepare();
-    this.addIt(this.data, tr, this.trlot);
+        this.sequenceService.getByOne({ seq_type: "RT", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
+          this.seq = response.data;
+    
+          if (this.seq) {
+            
+            if(this.trlot == null)
+            { this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+              this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
+              (reponse) => console.log("seq"),
+              (error) => {
+                this.message = "Erreur modification Sequence";
+                this.hasFormErrors = true;
+                return;
+              });
+              this.addIt(this.data, tr, this.trlot);
+            }
+          } else {
+            this.message = "Parametrage Manquant pour la sequence";
+            this.hasFormErrors = true;
+            return;
+          }
+        });
+    
 
     controls.tr_ref.setValue(null)
     // tslint:disable-next-line:prefer-const
@@ -1140,11 +1144,7 @@ export class ReturnCabComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
-
-        // this.router.navigateByUrl("/");
+       
       }
     );
   }
@@ -1166,11 +1166,7 @@ export class ReturnCabComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
-
-        // this.router.navigateByUrl("/");
+        
       }
     );
   }
@@ -2195,7 +2191,7 @@ prepareGrid2() {
 open2(content) {
   this.codeService.getByOne({code_fldname: this.user.usrd_code}).subscribe(
     (reponse: any) => { 
-     if (reponse.data == null) {
+     if (reponse.data == null || reponse.data.code_value != ' ') {
       this.prepareGrid2();
       this.modalService.open(content, { size: "lg" }); 
     
@@ -2221,7 +2217,7 @@ onChangeVend() {
       this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
       this.error = true;
     } else {
-      this.provider = response.data;
+      this.provider = response.data[0];
     }
   });
 }
@@ -2355,10 +2351,10 @@ printpdf(nbr) {
 const controlss = this.trForm.controls;
 console.log("pdf");
 var doc = new jsPDF();
-
+let date = new Date()
 // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
 var img = new Image()
-img.src = "./assets/media/logos/companylogo.png";
+img.src = "./assets/media/logos/companyentete.png";
 doc.addImage(img, 'png', 150, 5, 50, 30)
 doc.setFontSize(9);
 if (this.domain.dom_name != null) {
@@ -2372,6 +2368,11 @@ doc.setFontSize(14);
 doc.line(10, 35, 200, 35);
 doc.setFontSize(12);
 doc.text("Bon Récéption N° : " + nbr, 70, 45);
+doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
 doc.setFontSize(8);
 //console.log(this.provider.ad_misc2_id)
 doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -2417,9 +2418,9 @@ let total = 0
 for (let j = 0; j < this.dataset.length  ; j++) {
   total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
   
-  if ((j % 30 == 0) && (j != 0) ) {
+  if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, 'png', 150, 5, 50, 30)
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -2433,6 +2434,10 @@ doc.addPage();
 
     doc.setFontSize(12);
     doc.text("Bon Sortie N° : " + nbr, 70, 40);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+     
     doc.setFontSize(8);
     console.log(this.provider.ad_misc2_id);
     doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -2476,11 +2481,11 @@ doc.addPage();
     doc.setFontSize(6);
   }
 
-  if (this.dataset[j].desc.length > 35) {
-    let desc1 = this.dataset[j].desc.substring(35);
+  if (this.dataset[j].desc.length > 45) {
+    let desc1 = this.dataset[j].desc.substring(45);
     let ind = desc1.indexOf(" ");
-    desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-    let desc2 = this.dataset[j].desc.substring(35 + ind);
+    desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+    let desc2 = this.dataset[j].desc.substring(45 + ind);
 
     doc.line(10, i - 5, 10, i);
     doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
@@ -2558,6 +2563,8 @@ doc.line(205, i + 7, 205, i + 14);
 doc.setFontSize(10);
 
 doc.text("Total HT", 140, i + 12, { align: "left" });
+doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
 //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
 //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
 //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
@@ -2690,11 +2697,7 @@ addRCTUNP(detail: any, it, nlot) {
       this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
       this.loadingSubject.next(false);
 
-      //    console.log(this.provider, po, this.dataset);
-      // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-      // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
-
-      // this.router.navigateByUrl("/");
+      
     }
   );
 }
@@ -2708,11 +2711,7 @@ addISSUNP( detail: any, it, nlot) {
     .subscribe(
      (reponse: any) => {
       console.log(reponse)
-    // this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-      // const arrayOctet = new Uint8Array(reponse.pdf.data)
-      // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-      // const fileUrl = URL.createObjectURL(file);
-      // window.open(fileUrl)},
+   
      },
       (error) => {
         this.layoutUtilsService.showActionNotification(

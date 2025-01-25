@@ -433,10 +433,9 @@ export class LaunchOrderComponent implements OnInit {
             true
           );
           this.loadingSubject.next(false);
-        // console.log(this.provider, poNbr, this.dataset);
-         // if(controls.print.value == true) printReceive(this.provider, this.dataset, poNbr);
+      
          this.printpdf(lpnbr,wodnbr,wodlot,part,descr,routing,gamme,qte)
-        // printLp( this.dataset, lpnbr,wodnbr,wodlot,part,descr,routing,gamme,qte );
+       
           this.router.navigateByUrl("/");
         }
       );
@@ -873,10 +872,10 @@ console.log(this.details)
     const controlss = this.wodForm.controls 
     console.log("pdf")
     var doc = new jsPDF();
-   
+    let date = new Date()
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
    var img = new Image()
-   img.src = "./assets/media/logos/companylogo.png";
+   img.src = "./assets/media/logos/companyentete.png";
    doc.addImage(img, 'png', 150, 5, 50, 30)
    doc.setFontSize(9);
    if (this.domain.dom_name != null) {
@@ -925,9 +924,9 @@ console.log(this.details)
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length  ; j++) {
       
-      if ((j % 35 == 0) && (j != 0) ) {
+      if ((j % 20 == 0) && (j != 0) ) {
   doc.addPage();
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   if (this.domain.dom_name != null) {
@@ -984,11 +983,11 @@ console.log(this.details)
   
   
   
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35)
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45)
         let ind = desc1.indexOf(' ')
-        desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-        let desc2 = this.dataset[j].desc.substring(35+ind)
+        desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+        let desc2 = this.dataset[j].desc.substring(45+ind)
   
         doc.line(10, i - 5, 10, i );
         doc.text(String(("000"+ this.dataset[j].wod_line)).slice(-3), 12.5 , i  - 1);

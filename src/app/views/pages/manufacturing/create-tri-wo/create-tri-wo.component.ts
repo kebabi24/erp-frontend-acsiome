@@ -563,7 +563,7 @@ export class CreateTriWoComponent implements OnInit {
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
     // _lb.int02   = this.product.int02
-
+    _lb.lb__chr01 = String(new Date().toLocaleTimeString())
     _lb.lb_printer = this.currentPrinter;
 
     let lab = null;

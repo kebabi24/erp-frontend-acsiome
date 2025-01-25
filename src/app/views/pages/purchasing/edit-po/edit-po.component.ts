@@ -395,7 +395,7 @@ export class EditPoComponent implements OnInit {
               this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                           
                           
-                    this.provider = response.data
+                    this.provider = response.data[0]
           
                     controls.name.setValue(this.provider.ad_name);
                 
@@ -447,7 +447,7 @@ export class EditPoComponent implements OnInit {
                       this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                                   
                                   
-                            this.provider = response.data
+                            this.provider = response.data[0]
                   
                             controls.name.setValue(this.provider.ad_name);
                       

@@ -227,7 +227,7 @@ export class CreatesaleorderComponent implements OnInit {
             if (resp.data) {
               console.log(resp.data);
 
-              if (resp.data.pt_phantom) {
+              if (resp.data.pt_phantom || resp.data.pt_part_type == 'FORMATION') {
                 this.type = "M";
               } else {
                 this.type = null;
@@ -864,7 +864,7 @@ export class CreatesaleorderComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         console.log(this.dataset);
-        if (controls.print.value == true) this.printpdf(so.so_nbr); //printSO(this.customer, this.dataset, so);
+        if (controls.print.value == true) {this.printpdf(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
         this.router.navigateByUrl("/");
       }
     );
@@ -2449,7 +2449,7 @@ export class CreatesaleorderComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 170, 5, 30, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -2502,9 +2502,9 @@ export class CreatesaleorderComponent implements OnInit {
     var i = 95;
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length; j++) {
-      if (j % 30 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        // img.src = "./assets/media/logos/companylogo.png";
+        // img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 170, 5, 30, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
@@ -2558,11 +2558,11 @@ export class CreatesaleorderComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
@@ -2571,17 +2571,17 @@ export class CreatesaleorderComponent implements OnInit {
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].sod_qty_ord), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].sod_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].sod_price)), 148, i - 1, { align: "right" });
         doc.line(150, i - 5, 150, i);
         doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
         doc.line(160, i - 5, 160, i);
         doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
         doc.line(170, i - 5, 170, i);
-        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord)), 198, i - 1, { align: "right" });
         doc.line(200, i - 5, 200, i);
         // doc.line(10, i, 200, i );
 
@@ -2610,17 +2610,17 @@ export class CreatesaleorderComponent implements OnInit {
         doc.line(45, i - 5, 45, i);
         doc.text(this.dataset[j].desc, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
+        doc.text(String(this.dataset[j].sod_qty_ord), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(this.dataset[j].sod_um, 123, i - 1);
         doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].sod_price)), 148, i - 1, { align: "right" });
         doc.line(150, i - 5, 150, i);
         doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
         doc.line(160, i - 5, 160, i);
         doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
         doc.line(170, i - 5, 170, i);
-        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord)), 198, i - 1, { align: "right" });
         doc.line(200, i - 5, 200, i);
         doc.line(10, i, 200, i);
         i = i + 5;
@@ -2644,13 +2644,13 @@ export class CreatesaleorderComponent implements OnInit {
     doc.text("Timbre", 140, i + 26, { align: "left" });
     doc.text("Total TC", 140, i + 33, { align: "left" });
 
-    doc.text(String(Number(controls.tht.value).toFixed(2)), 198, i + 12, { align: "right" });
-    doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
-    doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
-    doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
+    doc.text(String(Number(controls.tht.value)), 198, i + 12, { align: "right" });
+    doc.text(String(Number(controls.tva.value)), 198, i + 19, { align: "right" });
+    doc.text(String(Number(controls.timbre.value)), 198, i + 26, { align: "right" });
+    doc.text(String(Number(controls.ttc.value)), 198, i + 33, { align: "right" });
 
     doc.setFontSize(8);
-    let mt = NumberToLetters(Number(controls.ttc.value).toFixed(2), this.curr.cu_desc);
+    let mt = NumberToLetters(Number(controls.ttc.value), this.curr.cu_desc);
 
     if (mt.length > 95) {
       let mt1 = mt.substring(90);

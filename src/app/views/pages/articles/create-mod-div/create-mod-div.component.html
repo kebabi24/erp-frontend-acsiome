@@ -1,0 +1,239 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Création Modéle Intrants'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
+
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">enregistrer et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="form1">
+
+                <kt-alert *ngIf="hasFormErrors1" type="warn" [showCloseButton]="true" [duration]="10000"
+                (close)="onAlertClose($event)">
+                {{ message }}
+            </kt-alert>
+            <div class="row">
+                <div class="form-group col-2">
+                    <label class="form-group ">Famille Article:</label>
+
+                    <select
+                        [className]="form1.controls['mod_prod_line'].errors && (form1.controls['mod_prod_line'].dirty || form1.controls['mod_prod_line'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="mod_prod_line" id="exampleSelects1" (change)=" onChangepl()">
+                        <option value=""></option>
+                        <option *ngFor="let elem of mod_prod_line" [value]="elem.code_value">
+                             {{elem.code_value}}</option>
+
+                    </select>
+                    <div *ngIf="form1.controls['mod_prod_line'].errors && (form1.controls['mod_prod_line'].dirty || form1.controls['mod_prod_line'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                </div>
+                   
+                <div class="form-group col-2">
+                    <label class="form-group ">Type Article:</label>
+
+                    <select
+                        [className]="form1.controls['mod_part_type'].errors && (form1.controls['mod_part_type'].dirty || form1.controls['mod_part_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="mod_part_type" id="exampleSelects1" (change)=" onChangetype()">
+                        <option value=""></option>
+                        <option *ngFor="let elem of mod_part_type" [value]="elem.code_value">
+                            {{elem.code_cmmt}}</option>
+
+                    </select>
+                    <div *ngIf="form1.controls['mod_part_type'].errors && (form1.controls['mod_part_type'].dirty || form1.controls['mod_part_type'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                </div>
+                <div class="form-group col-2">
+                    <label class="form-group ">Sous-famille Article:</label>
+
+                    <select
+                        [className]="form1.controls['mod_draw'].errors && (form1.controls['mod_draw'].dirty || form1.controls['mod_draw'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="mod_draw" id="exampleSelects1" (change)=" onChangedraw()">
+                        <option value=""></option>
+                        <option *ngFor="let elem of mod_draw" [value]="elem.code_value">
+                            {{elem.code_cmmt}}</option>
+
+                    </select>
+                    <div *ngIf="form1.controls['mod_draw'].errors && (form1.controls['mod_draw'].dirty || form1.controls['mod_draw'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                </div>
+                
+              
+                
+                   
+                
+
+
+            </div>
+            <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Modèle:</label>
+
+                        <input type="text" formControlName="mod_code" disabled
+                            [className]="form1.controls['mod_code'].errors && (form1.controls['mod_code'].dirty || form1.controls['mod_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="form1.controls['mod_code'].errors && (form1.controls['mod_code'].dirty || form1.controls['mod_code'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+            </div>  
+            <div class="row">  
+                    <div class="form-group col-4">
+                        <label class="form-group">Description:</label>
+                        <input type="text"
+                            [className]="form1.controls['mod_desc'].errors && (form1.controls['mod_desc'].dirty || form1.controls['mod_desc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            formControlName="mod_desc">
+                        <div *ngIf="form1.controls['mod_desc'].errors && (form1.controls['mod_desc'].dirty || form1.controls['mod_desc'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Unite de mesure:</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="mod_um"
+                                [className]="form1.controls['mod_um'].errors && (form1.controls['mod_um'].dirty || form1.controls['mod_um'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                (change)="changeUm()" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'pt_um')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="form1.controls['mod_um'].errors && (form1.controls['mod_um'].dirty || form1.controls['mod_um'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+
+                    </div>
+                    
+                    
+                     
+                    
+            </div>
+                
+                
+
+                
+                
+                 
+
+               
+
+
+                    
+          
+
+            </form>
+        </div>
+
+    </kt-portlet-body>
+    <div>
+        <ng-template #contentsite let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Site </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionssite"
+                        (onAngularGridCreated)="angularGridReadysite($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionssite" [dataset]="datasite">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+    <div>
+        <ng-template #contentloc let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Emplacement </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionsloc" (onAngularGridCreated)="angularGridReadyloc($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedloc($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsloc" [dataset]="dataloc">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+
+    <div>
+        <ng-template #contentpl let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir la Famille</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                        [columnDefinitions]="columnDefinitionspl" (onAngularGridCreated)="angularGridReadypl($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedpl($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionspl" [dataset]="datapl">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+
+    </div>
+    <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions3" [dataset]="data">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+    
+</kt-portlet>
+
