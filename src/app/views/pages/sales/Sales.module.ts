@@ -53,7 +53,8 @@ import { QuoteService, UsersService, ItemService, CodeService, TaxeService, Sale
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
          ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService,
-         CostlistService, CustomerMobileService,ItineraryService,UsersMobileService, AccountOrderService} from '../../../core/erp';
+         CostlistService, CustomerMobileService,ItineraryService,UsersMobileService, AccountOrderService,
+         PriceListQuantityService,BarecodeinfosService} from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -84,6 +85,10 @@ import { ListSalesDdComponent } from './list-sales-dd/list-sales-dd.component';
 import { CreateInvMobComponent } from './create-inv-mob/create-inv-mob.component';
 import { ListCaDdComponent } from './list-ca-dd/list-ca-dd.component';
 import { PaymentSoComponent } from './payment-so/payment-so.component';
+import { ListSalesRoleComponent } from './list-sales-role/list-sales-role.component';
+import { ListSalesTypeComponent } from './list-sales-type/list-sales-type.component';
+import { CreateSoPlqComponent } from './create-so-plq/create-so-plq.component';
+import { CreatePshPlqComponent } from './create-psh-plq/create-psh-plq.component';
 
 
 const routes: Routes = [
@@ -217,14 +222,30 @@ const routes: Routes = [
           {
             path: "payment-so",
           component: PaymentSoComponent,
-        },
+          },
+          {
+            path: "list-sales-role",
+            component: ListSalesRoleComponent,
+          },
+          {
+            path: "list-sales-type",
+            component: ListSalesTypeComponent,
+          },
+          {
+            path: "create-so-plq",
+            component: CreateSoPlqComponent,
+          },
+          {
+            path: "create-psh-plq",
+            component: CreatePshPlqComponent,
+          },
           
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -292,6 +313,8 @@ const routes: Routes = [
         ItineraryService,
         UsersMobileService,
         AccountOrderService,
+        PriceListQuantityService,
+        BarecodeinfosService,
 
     ],
 

@@ -24,6 +24,7 @@ import { MobileSettingsComponent } from "./mobile-settings/mobile-settings.compo
 import { SupervisionComponent } from "./supervision/supervision.component";
 import { SettingPrintersComponent } from './setting-printers/setting-printers.component';
 
+
 @NgModule({
   declarations: [MyPageComponent, ServicesComponent, MobileMenuComponent, MobileSettingsComponent, SupervisionComponent, SettingPrintersComponent],
   exports: [],

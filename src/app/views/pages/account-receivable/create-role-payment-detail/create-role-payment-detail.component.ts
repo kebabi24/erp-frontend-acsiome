@@ -437,6 +437,8 @@ export class CreateRolePaymentDetailComponent implements OnInit {
         bkh_p010: Number(controls.bkh_p010.value),
         bkh_p005: Number(controls.bkh_p005.value),
         bkh_bon:  Number(controls.bkh_bon.value),
+        bkh_terms: controls.bkh_terms.value,
+        bkh_cheque: Number(controls.bkh_cheque.value),
         bkh_rmks: controls.bkh_rmks.value
 
       })

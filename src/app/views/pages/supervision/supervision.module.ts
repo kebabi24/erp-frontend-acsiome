@@ -64,6 +64,7 @@ import { ListPaymentRoleComponent } from './list-payment-role/list-payment-role.
 import { ListVisiteRoleComponent } from './list-visite-role/list-visite-role.component';
 import { ListSalesRoleComponent } from './list-sales-role/list-sales-role.component';
 import { PrintInventoryRoleComponent } from './print-inventory-role/print-inventory-role.component';
+import { ExportLrComponent } from './export-lr/export-lr.component';
 
 const routes: Routes = [
   {
@@ -131,9 +132,13 @@ const routes: Routes = [
     path: "print-inventory-role",
     component: PrintInventoryRoleComponent,
   },
+  {
+    path: "export-lr",
+    component: ExportLrComponent,
+  },
 ];
 @NgModule({
-  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent, DecompteRoleComponent, ListInventoryRoleComponent, ListInvoiceRoleComponent, ListPaymentRoleComponent, ListVisiteRoleComponent, ListSalesRoleComponent, PrintInventoryRoleComponent],
+  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent, DecompteRoleComponent, ListInventoryRoleComponent, ListInvoiceRoleComponent, ListPaymentRoleComponent, ListVisiteRoleComponent, ListSalesRoleComponent, PrintInventoryRoleComponent, ExportLrComponent],
   imports: [
     CommonModule,
     HttpClientModule,

@@ -37,8 +37,8 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { BankService} from "../../../../core/erp"
-
+import { BankService,RoleService} from "../../../../core/erp"
+import { jsPDF } from "jspdf";
 
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
@@ -73,6 +73,8 @@ export class ListVendorPaymentComponent implements OnInit {
   loading$: Observable<boolean>;
   error = false;
   user: any;
+  tr:any
+  role:any
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -80,6 +82,7 @@ export class ListVendorPaymentComponent implements OnInit {
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private bankService: BankService,
+      private roleService : RoleService,
       
   ) {
      // this.prepareGrid()
@@ -441,6 +444,41 @@ export class ListVendorPaymentComponent implements OnInit {
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
           },
+          {
+            id: "id",
+            field: "id",
+            excludeFromHeaderMenu: true,
+            formatter: (row, cell, value, columnDef, dataContext) => {
+              // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+              return `
+                <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
+                     <i class="flaticon2-printer"></i>
+                     
+                 </a>
+                 `;
+            },
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              const index = args.dataContext.bkh_code;
+              console.log(index)
+              this.bankService.getBKHBy({bkh_code:index,bkh_type : "P"}).subscribe(
+                          (response: any) => (this.tr = response.data[0],
+                            this.roleService.getByOne({ role_code: this.tr.chr01 }).subscribe((res: any) => {
+                              this.role = res.data
+                            
+                            this.printpdf()
+                             })
+                            ),
+                          (error) => {
+                             this.tr=null
+                          },
+                          () => {}
+                      )
+             
+                
+            }
+          },
 
       ]
 
@@ -519,4 +557,74 @@ export class ListVendorPaymentComponent implements OnInit {
       this.gridObj.invalidate(); // invalidate all rows and re-render
     }
    
+    printpdf() {
+     
+      var doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [100,150]
+        })
+        let initialY = 5;
+        doc.setLineWidth(0.2);
+      
+      var img = new Image();
+      // img.src = "companylogo.png";
+      // doc.addImage(img, "png", 150, 5, 50, 30);
+      doc.setFontSize(14);
+
+      const date1 = new Date(this.tr.bkh_effdate)
+      const date = new Date()
+      doc.setFontSize(14);
+
+      
+      doc.setFont("Times-Roman");
+
+      doc.text("Bon N° : " + this.tr.bkh_code + "   " + "Duplicata", 20, initialY + 5);
+
+      doc.setFontSize(9);
+      doc.text("Role    : " + this.tr.chr01 + " "+ this.role.role_name, 5, initialY + 10);
+      doc.text("Date Effet    : " + String(date1.getFullYear())+"/" + String(date1.getMonth() + 1) + "/" + String(date1.getDate()) , 5, initialY + 15);
+      doc.text("Date Impression  : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 20);
+   //   doc.text("Vendeur : " + controls.user_mobile_code.value + " - " + controls.username.value, 5, initialY + 20);
+  //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      doc.setFontSize(9);
+
+ var i = 35
+
+    
+
+      //   doc.line(2, i - 5, 2, i);
+         doc.text("Billet 2000"  , 4, i ); doc.text( String(Number(this.tr.bkh_2000)),20,i); doc.text( String(Number(this.tr.bkh_2000)* 2000),40,i); 
+         doc.text("Billet 1000"  , 4, i+5 ); doc.text( String(Number(this.tr.bkh_1000)),20,i+5); doc.text( String(Number(this.tr.bkh_1000)* 1000),40,i+5);              
+         doc.text("Billet 500"   , 4, i+10 ); doc.text( String(Number(this.tr.bkh_0500)),20,i+10); doc.text( String(Number(this.tr.bkh_0500)* 500),40,i+10);
+         doc.text("Billet 200"  , 4, i+15 ); doc.text( String(Number(this.tr.bkh_0200)),20,i+15); doc.text( String(Number(this.tr.bkh_0200)* 200),40,i+ 15); 
+
+         doc.text("Total Billet "  , 4, i+25 ); doc.text( String(Number(this.tr.bkh_2000)* 2000 + Number(this.tr.bkh_1000)* 1000+ Number(this.tr.bkh_0500)* 500 + Number(this.tr.bkh_0200)* 200),40,i+ 25); 
+
+         doc.text("Piéce  200"  , 4, i +35  ); doc.text( String(Number(this.tr.bkh_p200)),20,i+35); doc.text( String(Number(this.tr.bkh_p200)* 200),40,i+35); 
+         doc.text("Piéce  100"  , 4, i+40 ); doc.text( String(Number(this.tr.bkh_p100)),20,i+40); doc.text( String(Number(this.tr.bkh_p100)* 100),40,i+40);              
+         doc.text("Piéce  50"   , 4, i+45 ); doc.text( String(Number(this.tr.bkh_p050)),20,i+45); doc.text( String(Number(this.tr.bkh_p050)* 50),40,i+45);
+         doc.text("Piéce  20"  , 4, i+50 ); doc.text( String(Number(this.tr.bkh_p020)),20,i+50); doc.text( String(Number(this.tr.bkh_p020)* 20),40,i+ 50); 
+         doc.text("Piéce  10"  , 4, i+55 ); doc.text( String(Number(this.tr.bkh_p010)),20,i+55); doc.text( String(Number(this.tr.bkh_p010)* 10),40,i+ 55); 
+         doc.text("Piéce  5"  , 4, i+60 ); doc.text( String(Number(this.tr.bkh_p005)),20,i+60); doc.text( String(Number(this.tr.bkh_p005)* 5),40,i+ 60); 
+         
+         doc.text("Total Monnaie "  , 4, i+70 ); doc.text( String(Number(this.tr.bkh_p200)* 200 + Number(this.tr.bkh_p100)* 100 + Number(this.tr.bkh_p050)* 50 + Number(this.tr.bkh_p020)* 20 + Number(this.tr.bkh_p010)* 10 + Number(this.tr.bkh_p005)* 5 ),40,i+ 70); 
+
+         
+         doc.text("Bon"  , 4, i+80 ) ; doc.text( String(Number(this.tr.bkh_bon)),40,i+ 80); 
+
+         doc.text("Cheque"  , 4, i+85 ) ; doc.text( String(Number(this.tr.bkh_cheque)),40,i+ 85); 
+         
+         doc.setFontSize(14);
+         doc.setFont("Times-Roman-bold");
+         doc.text("Total Versement"  , 4, i+95 ) ; doc.text( String(Number(this.tr.bkh_amt).toFixed(2)),45,i+ 95); 
+      
+         
+         doc.text("Nouveau Solde"  , 4, i+100 ) ; doc.text( String(Number(this.role.solde).toFixed(2)),45,i+ 100); 
+         
+
+        var blob = doc.output("blob");
+        window.open(URL.createObjectURL(blob));   
+      }
+
 }

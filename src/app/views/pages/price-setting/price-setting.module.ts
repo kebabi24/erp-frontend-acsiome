@@ -51,7 +51,10 @@ import { AngularSlickgridModule } from 'angular-slickgrid'
 import { ListPriceComponent } from './list-price/list-price.component';
 import { EditPriceComponent } from './edit-price/edit-price.component';
 import { ItemService, CodeService, 
-  CustomerService, DeviseService, PricelistService} from '../../../core/erp';
+  CustomerService, DeviseService, PricelistService,PriceListQuantityService} from '../../../core/erp';
+import { CreatePriceQuantityComponent } from './create-price-quantity/create-price-quantity.component';
+import { ListPriceQuantityComponent } from './list-price-quantity/list-price-quantity.component';
+import { EditPriceQuantityComponent } from './edit-price-quantity/edit-price-quantity.component';
 
 const routes: Routes = [
   {
@@ -66,10 +69,22 @@ const routes: Routes = [
     path: 'edit-price/:id',
     component: EditPriceComponent
   },
+  {
+    path: 'create-price-quantity',
+    component: CreatePriceQuantityComponent
+  },
+  {
+    path: 'list-price-quantity',
+    component: ListPriceQuantityComponent
+  },
+  {
+    path: 'edit-price-quantity/:id',
+    component: EditPriceQuantityComponent
+  },
 ] 
 
 @NgModule({
-  declarations: [PriceSettingComponent, CreatePriceComponent, ListPriceComponent, EditPriceComponent],
+  declarations: [PriceSettingComponent, CreatePriceComponent, ListPriceComponent, EditPriceComponent, CreatePriceQuantityComponent, ListPriceQuantityComponent, EditPriceQuantityComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -113,6 +128,7 @@ providers: [
   CustomerService,
   DeviseService,
   PricelistService,
+  PriceListQuantityService,
 ],
 })
 

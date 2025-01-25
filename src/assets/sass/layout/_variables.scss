@@ -1214,7 +1214,7 @@ $header-topbar-config: (
 $aside-config: (
 	// Aside
 	base: (
-		width: 265px,
+		width: 297px, // 265px,
 		minimized-width: 70px,
 		zindex: 98,
 		scrollbar-width: 4px
@@ -1290,7 +1290,7 @@ $aside-menu-config: (
 
 						// Text
 						text:	(
-							font-size: 1rem,
+							font-size: 1.02rem,
 							font-weight: 400,
 							font-transform:	initial
 						),

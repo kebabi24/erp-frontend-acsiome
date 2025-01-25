@@ -450,16 +450,17 @@ export class ListSalesDdComponent implements OnInit {
 
     this.mvgridOptions = {
       enableDraggableGrouping: true,
-        createPreHeaderPanel: true,
-        showPreHeaderPanel: true,
-        preHeaderPanelHeight: 40,
-        enableFiltering: true,
-        enableAutoResize: true,
-        enableAutoResizeColumnsByCellContent:true,
-        enableSorting: true,
-        exportOptions: {
-          sanitizeDataExport: true
-        },
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 40,
+      enableFiltering: true,
+      enableAutoResize: true,
+      enableSorting: true,
+      enableExcelExport:true,
+      enableExcelCopyBuffer: true,
+      exportOptions: {
+        sanitizeDataExport: true
+      },
        
         //enableRowSelection: true,
       //   enableCellNavigation: true,

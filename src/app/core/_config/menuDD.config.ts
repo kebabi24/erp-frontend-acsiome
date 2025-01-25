@@ -201,6 +201,10 @@ export class MenuDDConfig {
                 title: "Impression Facture Camion",
                 page: "/supervision/print-inventory-role",
               },
+              {
+                title: "Export Demande Chargement",
+                page: "/supervision/export-lr",
+              },
       
             ],
           },
@@ -253,6 +257,10 @@ export class MenuDDConfig {
               {
                 title: "Décompte Role",
                 page: "/supervision/decompte-role",
+              },
+              {
+                title: "Export Demande Chargement",
+                page: "/supervision/export-lr",
               },
               // {
               //   title: "Service roadmap",
@@ -474,6 +482,14 @@ export class MenuDDConfig {
             icon: "flaticon2-delivery-package",
             submenu: [
               {
+                title: "Commande Clients",
+                page: "/sales/create-so-plq",
+              },
+              {
+                title: "Liste des Commandes",
+                page: "/sales/so-list",
+              },
+              {
                 title: "Ajouter Facture DD",
                 page: "/sales/create-inv-mob",
               },
@@ -497,6 +513,14 @@ export class MenuDDConfig {
               {
                 title: "Chiffre d'affaire Par Client",
                 page: "/sales/list-ca-dd",
+              },
+              {
+                title: "Chiffre d'affaire Par Type Produit",
+                page: "/sales/list-sales-type",
+              },
+              {
+                title: "Quantitée Vendue Par Role",
+                page: "/sales/list-sales-role",
               },
             ],
           },

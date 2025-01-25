@@ -396,6 +396,10 @@ export class MenuConfig {
               title: "Impression Facture Camion",
               page: "/supervision/print-inventory-role",
             },
+            {
+              title: "Export Demande Chargement",
+              page: "/supervision/export-lr",
+            },
     
           ],
         },
@@ -444,6 +448,10 @@ export class MenuConfig {
             {
               title: "Stock Camion Valorisé",
               page: "/supervision/list-inventory-role",
+            },
+            {
+              title: "Export Demande Chargement",
+              page: "/supervision/export-lr",
             },
             // {
             //   title: "Service roadmap",
@@ -924,6 +932,22 @@ export class MenuConfig {
             {
               title: "Liste des Visites",
               page: "/sales/list-visit-mob",
+            },
+            {
+              title: "Chiffre d'affaire Par Client",
+              page: "/sales/list-ca-dd",
+            },
+            {
+              title: "Chiffre d'affaire Par Type Produit",
+              page: "/sales/list-sales-type",
+            },
+            {
+              title: "Chiffre d'affaire Par Client",
+              page: "/sales/list-ca-dd",
+            },
+            {
+              title: "Quantitée Vendue Par Role",
+              page: "/sales/list-sales-role",
             },
           ],
         },

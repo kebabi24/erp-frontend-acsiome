@@ -143,4 +143,12 @@ public getByChariotDet(data: any) {
  // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
   
 }
+public ExportLoadRequest(load_requests_codes: any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders();
+  return this.http.post(`${API_URL}/exportlr/`, { load_requests_codes }, { headers: httpHeaders });
+}
+public getLoadRequest(load_request_code: any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders();
+  return this.http.get(`${API_URL_2}/getLoadRequest/${load_request_code}`, { headers: httpHeaders });
+}
 }

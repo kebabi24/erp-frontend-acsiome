@@ -182,6 +182,7 @@ export class CreateInvoiceComponent implements OnInit {
   user;
   pshnbr: String;
   iharray = [] ;
+  domain: any;
   constructor(
     config: NgbDropdownConfig,
     private ihFB: FormBuilder,
@@ -482,6 +483,7 @@ export class CreateInvoiceComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    this.domain = JSON.parse(localStorage.getItem("domain")); 
     this.createForm();
     this.createtotForm();
   }
@@ -680,10 +682,10 @@ export class CreateInvoiceComponent implements OnInit {
       .subscribe(
         (reponse: any) => {
           ih = reponse.data
-          const arrayOctet = new Uint8Array(reponse.pdf.data)
-          const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-          const fileUrl = URL.createObjectURL(file);
-          window.open(fileUrl)
+          // const arrayOctet = new Uint8Array(reponse.pdf.data)
+          // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+          // const fileUrl = URL.createObjectURL(file);
+          // window.open(fileUrl)
         },
         (error) => {
           this.layoutUtilsService.showActionNotification(
@@ -750,7 +752,7 @@ var j = 0
                          
   }
   console.log("hnahna", this.iharray)
-          //if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
+          if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
           this.router.navigateByUrl("/sales/create-invoice");
           this.reset()
         }
@@ -1658,7 +1660,15 @@ printpdf(nbr) {
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
   img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 170, 5, 45, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
   doc.setFontSize(12);
   doc.text( 'Facture N°: ' + nbr  , 70, 40);
   doc.setFontSize(8);
@@ -1698,7 +1708,15 @@ printpdf(nbr) {
     
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
-      doc.addImage(img, 'png', 5, 5, 210, 30)
+img.src = "./assets/media/logos/companylogo.png";
+doc.addImage(img, "png", 170, 5, 45, 30);
+doc.setFontSize(9);
+if (this.domain.dom_name != null) {
+  doc.text(this.domain.dom_name, 10, 10);
+}
+if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
       doc.setFontSize(12);
       doc.text( 'N° Facture : ' + nbr  , 70, 40);
       doc.setFontSize(8);

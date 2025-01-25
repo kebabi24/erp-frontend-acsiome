@@ -187,7 +187,7 @@ export class CustomerListComponent implements OnInit {
       },
       {
         id: "ad_format",
-        name: "Age",
+        name: "Format",
         field: "address.ad_format",
         sortable: true,
         filterable: true,
@@ -195,7 +195,7 @@ export class CustomerListComponent implements OnInit {
         grouping: {
           getter: "ad_format",
           formatter: (g) =>
-            `Age: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+            `Format: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregateCollapsed: false,
           collapsed: false,
         },
@@ -203,7 +203,7 @@ export class CustomerListComponent implements OnInit {
 
       {
         id: "ad_ref",
-        name: "Sexe",
+        name: "Ref",
         field: "address.ad_ref",
         sortable: true,
         filterable: true,
@@ -211,7 +211,7 @@ export class CustomerListComponent implements OnInit {
         grouping: {
           getter: "ad_ref",
           formatter: (g) =>
-            `Sexe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+            `Ref: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregateCollapsed: false,
           collapsed: false,
         },

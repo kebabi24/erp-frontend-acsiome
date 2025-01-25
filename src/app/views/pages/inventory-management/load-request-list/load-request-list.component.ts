@@ -281,7 +281,22 @@ export class LoadRequestListComponent implements OnInit {
                   const index = args.row;
                   this.select_load_code = this.gridService.getDataItemByRowIndex(index).load_request_code
                   this.load_request_data = this.gridService.getDataItemByRowIndex(index)
-                  this.printpdf()
+                  this.loadRequestService.getLoadRequest(this.select_load_code ).subscribe(
+
+                    
+                    (response: any) => {
+                      
+                      this.userMobileService.getByOne({user_mobile_code :this.load_request_data.user_mobile_code }).subscribe(
+
+                        (respo: any) => {
+                          this.user_mobile = respo.data
+                        
+                      console.log(response.data)
+                      this.printLines = response.data.loadRequestLines
+                      this.printpdf()
+                    },)
+                    },)
+                
                     
                 }
               },
@@ -743,7 +758,7 @@ updateDates(){
         var i = 95 + valueToAddToX;
         doc.setFontSize(10);
       
-
+console.log(this.printLines)
    for (let j = 0; j < this.printLines.length  ; j++) {
     
     
@@ -797,16 +812,16 @@ updateDates(){
        var i = 95 + valueToAddToX;
      }
 
-     if (this.printLines[j].pt_desc1.length > 35) {
+     if (this.printLines[j].item.pt_desc1.length > 35) {
        doc.setFontSize(10);
 
 
         let line = this.printLines[j]
 
-        let desc1 = line.pt_desc1.substring(0,34);
+        let desc1 = line.item.pt_desc1.substring(0,34);
         let ind = desc1.lastIndexOf(" ");
-        desc1 = line.pt_desc1.substring(0,ind);
-        let desc2 = line.pt_desc1.substring(ind +1);
+        desc1 = line.item.pt_desc1.substring(0,ind);
+        let desc2 = line.item.pt_desc1.substring(ind +1);
 
        
         doc.line(10, i - 5, 10, i);
@@ -822,7 +837,8 @@ updateDates(){
         doc.line(145, i - 5, 145, i);
         doc.text(String(line.qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
-        doc.text("", 193, i - 1, { align: "right" });
+
+        doc.text(String(line.qt_effected), 193, i - 1, { align: "right" });
         doc.line(195, i - 5, 195, i);
         
 
@@ -848,7 +864,7 @@ updateDates(){
         doc.line(20, i - 5, 20, i);
         doc.text(line.product_code, 25, i - 1);
         doc.line(45, i - 5, 45, i);
-        doc.text(line.pt_desc1, 47, i - 1);
+        doc.text(line.item.pt_desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
         doc.text(String(line.pt_price), 118, i - 1 , { align: "right" });
         doc.line(120, i - 5, 120, i);
