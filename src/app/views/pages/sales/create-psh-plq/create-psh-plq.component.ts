@@ -59,6 +59,8 @@ import {
   CodeService,
   AccountShiperService,
   BarecodeinfosService,
+  TimbreService,
+  PricelistService,
   printBL,
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
@@ -177,6 +179,12 @@ export class CreatePshPlqComponent implements OnInit {
   lot_length: number;
   serie_start_pos: number;
   serie_length: number;
+  price: Number;
+  disc: Number;
+  taxable: Boolean;
+  item:any;
+  pshshipdate : any
+  so_taxable: boolean
   constructor(
     config: NgbDropdownConfig,
     private prhFB: FormBuilder,
@@ -201,7 +209,9 @@ export class CreatePshPlqComponent implements OnInit {
     private mesureService: MesureService,
     private locationService: LocationService,
     private locationDetailService: LocationDetailService,
-    private barecodeinfosService: BarecodeinfosService
+    private barecodeinfosService: BarecodeinfosService,
+    private timbreService: TimbreService,
+    private pricelistService: PricelistService,
   ) {
     config.autoClose = true;
     this.barecodeinfosService.getAll().subscribe((response: any) => {
@@ -307,8 +317,66 @@ export class CreatePshPlqComponent implements OnInit {
           params: { decimalPlaces: 2 }
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
-          this.calculatetot();
-        }
+       
+            const controls = this.pshForm.controls;
+            console.log(args.dataContext.psh_part);
+            console.log(controls.psh_cust.value);
+            let pricebefore = args.dataContext.sod_price;
+            console.log(pricebefore);
+            this.price = null;
+            this.disc = null;
+            this.itemsService.getByOne({ pt_part: args.dataContext.psh_part }).subscribe((resp: any) => {
+              if (resp.data) {
+                console.log(resp.data);
+  
+                const date1 = new Date();
+                let obj: {};
+                const part = resp.data.pt_part;
+                const promo = resp.data.pt_promo;
+                const cust = this.customer.cm_addr;
+                const classe = this.customer.cm_class;
+                const qty = args.dataContext.psh_qty_ship;
+                const um = args.dataContext.psh_um;
+                const curr = this.curr.cu_curr; //controls.psh_curr.value;
+                const type = "PT";
+                const date = `${controls.psh_ship_date.value.year}-${controls.psh_ship_date.value.month}-${controls.psh_ship_date.value.day}`;
+  
+                obj = { part, promo, cust, classe, date, qty, um, curr, type };
+                this.pricelistService.getPrice(obj).subscribe((res: any) => {
+                  console.log("price", res);
+                  this.price = res.data;
+                  if (this.price != 0 && this.price != null) {
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, psh_price: this.price });
+                  }
+                  //    this.dataset[this.row_number].sod_price = this.price
+                  //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+                  this.calculatetot();
+                });
+  
+                let objr: {};
+                const typer = "PR";
+  
+                objr = { part, promo, cust, classe, date, qty, um, curr, typer };
+  
+                console.log(obj);
+  
+                this.pricelistService.getDiscPct(objr).subscribe((resdisc: any) => {
+                  console.log(resdisc);
+                  this.disc = resdisc.data;
+                  if (this.disc != 0 && this.disc != null) {
+                    //this.dataset[this.row_number].sod_disc_pct = this.disc
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, psh_price: this.price, psh_disc_pct: this.disc });
+                    // console.log(this.row_number,this.dataset[this.row_number].sod_price)
+                  }
+                  this.calculatetot();
+                });
+              }
+            });
+  
+            //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+            this.calculatetot();
+            document.getElementById("pal").focus();
+          },
       
         
       },
@@ -412,6 +480,17 @@ export class CreatePshPlqComponent implements OnInit {
         sorters: [
           { columnId: 'psh_line', direction: 'ASC' }
         ],
+        columns: [
+          
+        { columnId: 'id'},
+        { columnId: 'psh_line'},
+        { columnId: 'psh_part'},
+        { columnId: 'desc'},
+        { columnId: 'psh_serial'},
+        { columnId: 'psh_qty_ship'},
+        { columnId: 'psh_price'},
+        
+      ]
       },
     };
 
@@ -454,9 +533,9 @@ export class CreatePshPlqComponent implements OnInit {
         month: date.getMonth()+1,
         day: date.getDate()
       }],
-      psh_curr: [{value:this.saleShiper.psh_curr, disabled:true}],
+      // psh_curr: [{value:this.saleShiper.psh_curr, disabled:true}],
       
-      psh_so_taxable: [{value:this.saleShiper.psh_so_taxable, disabled:true}],
+      // psh_so_taxable: [{value:this.saleShiper.psh_so_taxable, disabled:true}],
       psh_cr_terms: [{value:this.saleShiper.psh_cr_terms, disabled:true}],
      
       print:[true],
@@ -579,10 +658,9 @@ export class CreatePshPlqComponent implements OnInit {
     console.log("\n\n tot : ", tot)
     /**********************************************/
     let ps = this.prepare()
+   
     this.addIt(this.dataset,ps, this.pshnbr, tot); //from this.totForm.controls;
-    let as = this.prepareAs()
-    console.log("hhhhhh", as)
-    this.addAs(as,this.pshnbr);
+    
      
   })
 
@@ -596,10 +674,10 @@ export class CreatePshPlqComponent implements OnInit {
     _ps.psh_ship_date = controls.psh_ship_date.value
     ? `${controls.psh_ship_date.value.year}/${controls.psh_ship_date.value.month}/${controls.psh_ship_date.value.day}`
     : null
-    _ps.psh_curr = controls.psh_curr.value
+    _ps.psh_curr = this.curr.cu_curr
     _ps.psh_ex_rate  = 1
     _ps.psh_ex_rate2 = 1
-    _ps.psh_so_taxable = controls.psh_so_taxable.value
+    _ps.psh_so_taxable = this.so_taxable
     return _ps
   }
 
@@ -610,16 +688,22 @@ export class CreatePshPlqComponent implements OnInit {
     const _as = new AccountShiper();
     _as.as_so_nbr = controls.psh_nbr.value
     _as.as_cust = controls.psh_cust.value
+    _as.as_bill = controls.psh_cust.value
     _as.as_effdate = controls.psh_ship_date.value
     ? `${controls.psh_ship_date.value.year}/${controls.psh_ship_date.value.month}/${controls.psh_ship_date.value.day}`
     : null
     _as.as_type = "I"
-    _as.as_curr = controls.psh_curr.value
+    _as.as_curr = this.curr.cu_curr //controls.psh_curr.value
     _as.as_ex_rate  = 1
     _as.as_ex_rate2 = 1
     // _as.as_po = controls.psh_rmks.value
     _as.as_amt = controls1.ttc.value
-    _as.as_base_amt = Number(controls1.ttc.value) * Number(controls.psh_ex_rate2.value) /  Number(controls.psh_ex_rate.value)
+    _as.as_base_amt = Number(controls1.ttc.value) 
+    _as.dec01 = Number(controls1.tht.value)
+    _as.dec02 = Number(controls1.tva.value)
+    _as.dec03 = Number(controls1.timbre.value)
+
+
 
     return _as
   }
@@ -703,6 +787,9 @@ export class CreatePshPlqComponent implements OnInit {
             true,
             true
           );
+          let as = this.prepareAs()
+          console.log("hhhhhh", as)
+          this.addAs(as,this.pshnbr);
           this.loadingSubject.next(false);
          console.log(this.customer, pshnbr, this.dataset);
          let cr_terms = controls.psh_cr_terms.value;
@@ -730,13 +817,15 @@ export class CreatePshPlqComponent implements OnInit {
             //console.log(this.pshServer.so_cust)
             controls.psh_nbr.setValue(this.pshServer.so_nbr|| "")
             controls.psh_cust.setValue(this.pshServer.so_cust|| "");
-            controls.psh_curr.setValue(this.pshServer.so_curr|| "");
+           // controls.psh_curr.setValue(this.pshServer.so_curr|| "");
+          //  this.curr = this.pshServer.so_curr
             // controls.psh_ex_rate.setValue(this.pshServer.so_ex_rate|| "1");
             // controls.psh_ex_rate2.setValue(this.pshServer.so_ex_rate2|| "1");
-            controls.psh_so_taxable.setValue(this.pshServer.so_taxable);
+            // controls.psh_so_taxable.setValue(this.pshServer.so_taxable);
+          this.so_taxable = this.pshServer.so_taxable
             controls.psh_cr_terms.setValue(this.pshServer.so_cr_terms|| "");
             const ad_addr = this.pshServer.so_cust;
-            this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
+            this.customersService.getBy({cm_addr: ad_addr}).subscribe((response: any)=>{
                     
               this.deviseService.getBy({ cu_curr: this.pshServer.so_curr }).subscribe(
                 (res: any) => {
@@ -749,40 +838,41 @@ export class CreatePshPlqComponent implements OnInit {
           })
               this.customer = response.data
     console.log(this.customer)
-            controls.name.setValue(this.customer.ad_name);
+            controls.name.setValue(this.customer.address.ad_name);
           
             })
           
-            for (var object = 0; object < det1.length; object++) {
-              const detail = det1[object];
-             console.log(detail)
-              this.datapsh.push({
-                      id: detail.sod_line, //this.dataset.length + 1,
-                      psh_line: detail.sod_line,   //this.dataset.length + 1,
-                      psh_part: detail.sod_part,
-                      cmvid: "",
-                      desc: detail.item.pt_desc1,
-                      psh_qty_toship: detail.sod_qty_ord - detail.sod_qty_ship,
-                      psh_qty_ship: 0, //detail.sod_qty_ord - detail.sod_qty_ship,
-                      psh_um: detail.sod_um,
-                      psh_um_conv: detail.sod_um_conv,
-                      psh_type: detail.sod_type,
-                      psh_price: detail.sod_price,
-                      psh_disc_pct: detail.sod_disc_pct,
-                      psh_so_taxable: detail.sod_taxable,
-                      psh_tax_code: detail.sod_tax_code,
-                      psh_taxc: detail.sod_taxc,
-                      psh_site: detail.sod_site,
-                      psh_loc: detail.sod_loc,
-                      psh_serial: null,
-                      qty_oh: 0,
-                      psh_status: null,
-                      psh_expire: null,
-                    });
+        //     for (var object = 0; object < det1.length; object++) {
+        //       const detail = det1[object];
+        //      console.log(detail)
+        //       this.datapsh.push({
+        //               id: detail.sod_line, //this.dataset.length + 1,
+        //               psh_line: detail.sod_line,   //this.dataset.length + 1,
+        //               psh_part: detail.sod_part,
+        //               cmvid: "",
+        //               desc: detail.item.pt_desc1,
+        //               psh_qty_toship: detail.sod_qty_ord - detail.sod_qty_ship,
+        //               psh_qty_ship: 0, //detail.sod_qty_ord - detail.sod_qty_ship,
+        //               psh_um: detail.sod_um,
+        //               psh_um_conv: detail.sod_um_conv,
+        //               psh_type: detail.sod_type,
+        //               psh_price: detail.sod_price,
+        //               psh_disc_pct: detail.sod_disc_pct,
+        //               psh_so_taxable: detail.sod_taxable,
+        //               psh_tax_code: detail.sod_tax_code,
+        //               psh_taxc: detail.sod_taxc,
+        //               psh_site: detail.sod_site,
+        //               psh_loc: detail.sod_loc,
+        //               psh_serial: null,
+        //               qty_oh: 0,
+        //               psh_status: null,
+        //               psh_expire: null,
+        //             });
           
           
-        }
+        // }
         console.log(this.datapsh)
+        document.getElementById("pal").focus();
       } else {
         alert ("Commande n'existe pas ou bloqué")
         document.getElementById("cc").focus();
@@ -1006,13 +1096,15 @@ export class CreatePshPlqComponent implements OnInit {
             //console.log(this.pshServer.so_cust)
             controls.psh_nbr.setValue(this.pshServer.so_nbr|| "")
             controls.psh_cust.setValue(this.pshServer.so_cust|| "");
-            controls.psh_curr.setValue(this.pshServer.so_curr|| "");
-            controls.psh_ex_rate.setValue(this.pshServer.so_ex_rate|| "1");
-            controls.psh_ex_rate2.setValue(this.pshServer.so_ex_rate2|| "1");
+           // controls.psh_curr.setValue(this.pshServer.so_curr|| "");
+            // this.curr = this.pshServer.so_curr
+            // controls.psh_ex_rate.setValue(this.pshServer.so_ex_rate|| "1");
+            // controls.psh_ex_rate2.setValue(this.pshServer.so_ex_rate2|| "1");
             controls.psh_so_taxable.setValue(this.pshServer.so_taxable);
+            this.so_taxable = this.pshServer.so_taxable
             controls.psh_cr_terms.setValue(this.pshServer.so_cr_terms|| "");
             const ad_addr = this.pshServer.so_cust;
-            this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
+            this.customersService.getBy({cm_addr: ad_addr}).subscribe((response: any)=>{
               this.deviseService.getBy({ cu_curr: this.pshServer.so_curr }).subscribe(
                 (res: any) => {
                   console.log(res);
@@ -1025,7 +1117,7 @@ export class CreatePshPlqComponent implements OnInit {
                     
               this.customer = response.data
     
-            controls.name.setValue(this.customer.ad_name);
+            controls.name.setValue(this.customer.address.ad_name);
           
             })
           
@@ -2046,22 +2138,39 @@ calculatetot(){
    for (var i = 0; i < this.dataset.length; i++) {
      console.log("here", this.dataset[i].psh_price,this.dataset[i].psh_qty_ship, this.dataset[i].psh_disc_pct, this.dataset[i].psh_taxc   )
      tht += round((this.dataset[i].psh_price * ((100 - this.dataset[i].psh_disc_pct) / 100 ) *  this.dataset[i].psh_qty_ship),2)
-     if(controlsso.psh_so_taxable.value == true) tva += round((this.dataset[i].psh_price * ((100 - this.dataset[i].psh_disc_pct) / 100 ) *  this.dataset[i].psh_qty_ship) * (this.dataset[i].psh_taxc ? this.dataset[i].psh_taxc / 100 : 0),2)
+     if(this.so_taxable == true) tva += round((this.dataset[i].psh_price * ((100 - this.dataset[i].psh_disc_pct) / 100 ) *  this.dataset[i].psh_qty_ship) * (this.dataset[i].psh_taxc ? this.dataset[i].psh_taxc / 100 : 0),2)
     
   
      
 
-     console.log(tva)
-     if(controlsso.psh_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-       if (timbre > 10000) { timbre = 10000} } 
+    //  console.log(tva)
+    //  if(controlsso.psh_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
+    //    if (timbre > 10000) { timbre = 10000} } 
   
    }
- ttc = round(tht + tva + timbre,2)
-console.log(tht,tva,timbre,ttc)
-controls.tht.setValue(tht.toFixed(2));
-controls.tva.setValue(tva.toFixed(2));
-controls.timbre.setValue(timbre.toFixed(2));
-controls.ttc.setValue(ttc.toFixed(2));
+   this.timbreService.getTimbreValue({ code: controlsso.psh_cr_terms.value, amt: round(tht + tva )}).subscribe(
+    (response: any) => {
+    //  console.log(response.data.value)
+     if(response.data != null) {
+
+      timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+      console.log("timbre",timbre)
+      if (timbre < 5) { timbre = 5}            
+     }else { timbre = 0}
+
+     ttc = round(tht + tva + timbre,2)
+
+      controls.tht.setValue(tht.toFixed(2));
+      controls.tva.setValue(tva.toFixed(2));
+      controls.timbre.setValue(timbre.toFixed(2));
+      controls.ttc.setValue(ttc.toFixed(2));
+     })
+//  ttc = round(tht + tva + timbre,2)
+// console.log(tht,tva,timbre,ttc)
+// controls.tht.setValue(tht.toFixed(2));
+// controls.tva.setValue(tva.toFixed(2));
+// controls.timbre.setValue(timbre.toFixed(2));
+// controls.ttc.setValue(ttc.toFixed(2));
 
 }
 
@@ -2071,11 +2180,14 @@ controls.ttc.setValue(ttc.toFixed(2));
 printpdf(nbr) {
   const controls = this.totForm.controls 
   const controlss = this.pshForm.controls 
+  this.pshshipdate = controlss.psh_ship_date.value
+  ? `${controlss.psh_ship_date.value.year}/${controlss.psh_ship_date.value.month}/${controlss.psh_ship_date.value.day}`
+  : null
   console.log("pdf")
   var doc = new jsPDF();
   var img = new Image();
   img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, "png", 170, 5, 45, 30);
+  doc.addImage(img, "png", 160, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
       doc.text(this.domain.dom_name, 10, 10);
@@ -2083,26 +2195,30 @@ printpdf(nbr) {
     if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
     if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    doc.barcode(nbr, {
-      fontSize: 45,
-      textColor: "#000000",
-      x: 120,
-      y: 50,
-      textOptions: { align: "center" }, // optional text options
-    });
+    doc.line(10, 32, 200, 32);
+    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+    doc.line(10, 40, 200, 40);
+    // doc.barcode(nbr, {
+    //   fontSize: 45,
+    //   textColor: "#000000",
+    //   x: 120,
+    //   y: 50,
+    //   textOptions: { align: "center" }, // optional text options
+    // });
     doc.setFont("Times-Roman");
   doc.setFontSize(12);
-  doc.text( 'Bon Livraison N° : ' + nbr  , 97, 55);
-  doc.setFontSize(8);
+  doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
+  doc.setFontSize(12);
   //console.log(this.customer.address.ad_misc2_id)
-  doc.text('Code Client : ' + this.customer.ad_addr, 20 , 50 )
-  doc.text('Nom             : ' + this.customer.ad_name, 20 , 55)
-  doc.text('Adresse       : ' + this.customer.ad_line1, 20 , 60)
-  if (this.customer.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.ad_misc2_id, 20 , 65)}
-      if (this.customer.ad_gst_id != null) {doc.text('RC          : ' + this.customer.ad_gst_id, 20 , 70)}
-      if (this.customer.ad_pst_id) {doc.text('AI            : ' + this.customer.ad_pst_id, 20 , 75)}
-      if (this.customer.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.ad_misc1_id, 20 , 80)}
-    
+  doc.text('Code Client : ' + this.customer.address.ad_addr, 20 , 50 )
+  doc.text('Date : ' +this.pshshipdate, 150 , 50 )
+  doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
+  doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
+  if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
+      if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 70)}
+      if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 75)}
+      if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 80)}
+      doc.setFontSize(8);  
   doc.line(10, 85, 200, 85);
   doc.line(10, 90, 200, 90);
   doc.line(10, 85, 10, 90);
@@ -2125,32 +2241,43 @@ printpdf(nbr) {
   doc.text('THT', 181 , 88.5);
   doc.line(200, 85, 200, 90);
   var i = 95;
-  doc.setFontSize(6);
+  doc.setFontSize(8);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
-doc.addImage(img, "png", 170, 5, 45, 30);
-doc.barcode(nbr, {
-  fontSize: 45,
-  textColor: "#000000",
-  x: 120,
-  y: 50,
-  textOptions: { align: "center" }, // optional text options
-});
+doc.addImage(img, "png", 160, 5, 50, 30);
+doc.setFontSize(9);
+if (this.domain.dom_name != null) {
+  doc.text(this.domain.dom_name, 10, 10);
+}
+if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+doc.line(10, 32, 200, 32);
+doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+doc.line(10, 40, 200, 40);
+// doc.barcode(nbr, {
+//   fontSize: 45,
+//   textColor: "#000000",
+//   x: 120,
+//   y: 50,
+//   textOptions: { align: "center" }, // optional text options
+// });
 doc.setFont("Times-Roman");
 doc.setFontSize(12);
-doc.text( 'Bon Livraison N° : ' + nbr  , 97, 55);
+doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
+      doc.setFontSize(12);
+      //console.log(this.customer.ad_misc2_id)
+      doc.text('Code Client : ' + this.customer.address.ad_addr, 20 , 50 )
+      doc.text('Date : ' +this.pshshipdate, 150 , 50 )
+      doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
+      doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
+      if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
+      if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 70)}
+      if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 75)}
+      if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 80)}
       doc.setFontSize(8);
-      console.log(this.customer.ad_misc2_id)
-      doc.text('Code Client : ' + this.customer.ad_addr, 20 , 50 )
-      doc.text('Nom             : ' + this.customer.ad_name, 20 , 55)
-      doc.text('Adresse       : ' + this.customer.ad_line1, 20 , 60)
-      if (this.customer.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.ad_misc2_id, 20 , 65)}
-      if (this.customer.ad_gst_id != null) {doc.text('RC          : ' + this.customer.ad_gst_id, 20 , 70)}
-      if (this.customer.ad_pst_id) {doc.text('AI            : ' + this.customer.ad_pst_id, 20 , 75)}
-      if (this.customer.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.ad_misc1_id, 20 , 80)}
-    
       doc.line(10, 85, 200, 85);
       doc.line(10, 90, 200, 90);
       doc.line(10, 85, 10, 90);
@@ -2322,11 +2449,16 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 97, 55);
 
     console.log(prod, lot, serie);
     console.log(this.datapsh)
-    let index = this.datapsh.findIndex((element) => {
-      return element.psh_part === prod;
-    });
-    console.log(index)
-      if(index != -1) {
+    // let index = this.datapsh.findIndex((element) => {
+    //   return element.psh_part === prod;
+    // });
+    // console.log(index)
+    //   if(index != -1) {
+      this.itemsService.getByOne({ pt_part: prod }).subscribe((resp: any) => {
+        if (resp.data) {
+          console.log(resp.data);
+          this.item = resp.data
+
         let ind = this.dataset.findIndex((item) => {
           return (item.psh_part === prod && item.psh_serial === lot);
         });
@@ -2338,19 +2470,19 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 97, 55);
                       psh_line: this.dataset.length + 1,   //this.dataset.length + 1,
                       psh_part: prod,
                       cmvid: "",
-                      desc: this.datapsh[index].desc,
+                      desc: this.item.pt_desc1,
                      // psh_qty_toship: detail.sod_qty_ord - detail.sod_qty_ship,
-                      psh_qty_ship: 1, //detail.sod_qty_ord - detail.sod_qty_ship,
-                      psh_um: this.datapsh[index].psh_um,
-                      psh_um_conv: this.datapsh[index].psh_um_conv,
-                      psh_type: this.datapsh[index].psh_type,
-                      psh_price: this.datapsh[index].psh_price,
-                      psh_disc_pct: this.datapsh[index].psh_disc_pct,
-                      psh_so_taxable: this.datapsh[index].psh_taxable,
-                      psh_tax_code: this.datapsh[index].psh_tax_code,
-                      psh_taxc: this.datapsh[index].psh_taxc,
-                      psh_site: this.datapsh[index].psh_site,
-                      psh_loc: this.datapsh[index].psh_loc,
+                      psh_qty_ship: 0, //detail.sod_qty_ord - detail.sod_qty_ship,
+                      psh_um: this.item.pt_um,
+                      psh_um_conv: 1,
+                      psh_type: (this.item.pt_phantom) ? "M" : null,
+                      psh_price: 0,
+                      psh_disc_pct: 0,
+                      psh_so_taxable: this.item.pt_taxable,
+                      psh_tax_code: this.item.pt_taxc,
+                      psh_taxc: this.item.taxe.tx2_tax_pct,
+                      psh_site: this.item.pt_site,
+                      psh_loc: this.item.pt_loc,
                       psh_serial: lot,
                       qty_oh: 0,
                       psh_status: null,
@@ -2371,14 +2503,20 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 97, 55);
       
      // controls.qty_cart.setValue(this.dataset.length )
       
-    } else {
-      this.playAudio()
-      this.modalService.open(content8, { size: "lg" });
-    }
+    // } else {
+    //   this.playAudio()
+    //   this.modalService.open(content8, { size: "lg" });
+    // }
    console.log(this.dataset)
     controls.pal.setValue(null);
     document.getElementById("pal").focus();
   
+      }
+     else {
+        this.playAudio()
+        this.modalService.open(content8, { size: "lg" });
+      }
+   })
   }
   }
   playAudio(){

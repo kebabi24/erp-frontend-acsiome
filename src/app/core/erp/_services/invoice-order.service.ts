@@ -33,6 +33,10 @@ export class InvoiceOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
     }
+    public getByOne(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findone', data, { headers: httpHeaders })
+    }
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL, { headers: httpHeaders })
@@ -41,9 +45,9 @@ export class InvoiceOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findAll`,data, { headers: httpHeaders })
     }
-    public getAllwithDetail() {
+    public getAllwithDetail(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.get(API_URL+'/allwithdetail', { headers: httpHeaders })
+        return this.http.post(API_URL+'/allwithdetail', data,{ headers: httpHeaders })
     }
     // UPDATE
     public update(data: any, id:any) {

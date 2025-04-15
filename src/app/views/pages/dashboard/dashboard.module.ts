@@ -63,6 +63,7 @@ import { CommercialDashboardComponent } from './commercial-dashboard/commercial-
 
 import { CRMService ,DashboardCommercialService } from '../../../core/erp';
 import { DdDashboardComponent } from './dd-dashboard/dd-dashboard.component';
+import { SalesDashboardComponent } from './sales-dashboard/sales-dashboard.component';
 
 
 
@@ -83,6 +84,10 @@ const routes: Routes = [
     path: 'dd-dashboard',
     component: DdDashboardComponent
   },
+  {
+    path: 'sales-dashboard',
+    component: SalesDashboardComponent
+  },
   
 ] 
 @NgModule({
@@ -91,7 +96,8 @@ const routes: Routes = [
     ManagerDashboardComponent,
     CRMDashboardComponent,
     CommercialDashboardComponent,
-    DdDashboardComponent
+    DdDashboardComponent,
+    SalesDashboardComponent
   ],
   imports: [
     CommonModule,

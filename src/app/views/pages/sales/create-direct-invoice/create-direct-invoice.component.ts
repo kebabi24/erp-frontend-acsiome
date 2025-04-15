@@ -57,6 +57,7 @@ import {
   PricelistService,
   LocationDetailService,
   InventoryStatusService,
+  TimbreService,
   printSO,
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
@@ -220,6 +221,7 @@ error = false;
     private inventoryStatusService: InventoryStatusService,
     private taxService: TaxeService,
     private pricelistService: PricelistService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
     this.codeService
@@ -667,12 +669,16 @@ error = false;
           this.pricelistService.getPrice(obj).subscribe((res:any)=>{
             console.log(res)
             this.price = res.data
-            if (this.price != 0) { 
+            console.log(res.data)
+            if (this.price != null) { 
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: this.price })
+            } else {
+              console.log("here")
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: pricebefore })
             }
         //    this.dataset[this.row_number].sod_price = this.price
             //console.log(this.row_number,this.dataset[this.row_number].sod_price)
-            this.calculatetot();
+            // this.calculatetot();
           });
           
           let objr: { }
@@ -686,12 +692,15 @@ error = false;
         this.pricelistService.getDiscPct(objr).subscribe((resdisc:any)=>{
           console.log(resdisc)
           this.disc = resdisc.data
-          if (this.disc != 0) {
+          console.log(resdisc.data)
+          if (this.disc != null) {
           //this.dataset[this.row_number].sod_disc_pct = this.disc
-          this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , sod_price: this.price ,sod_disc_pct: this.disc })
+         this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  ,sod_disc_pct: this.disc })
          // console.log(this.row_number,this.dataset[this.row_number].sod_price)
-          } 
-         this.calculatetot();
+          }  else {
+            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  ,sod_disc_pct: 0 })
+          }
+        
         
         });
 
@@ -2833,17 +2842,32 @@ calculatetot(){
          
             
        
-            
-            if(controlsso.so_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-              if (timbre > 10000) { timbre = 10000} } 
+        
+         
          
           }
-        ttc = round(tht + tva + timbre,2)
+          console.log(tht, tva)
+          this.timbreService.getTimbreValue({ code: controlsso.so_cr_terms.value, amt: round(tht + tva )}).subscribe(
+            (response: any) => {
+            //  console.log(response.data.value)
+             if(response.data != null) {
+
+              timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+              console.log("timbre",timbre)
+              if (timbre < 5) { timbre = 5}            
+             }else { timbre = 0}
+
+             ttc = round(tht + tva + timbre,2)
       
-      controls.tht.setValue(tht.toFixed(2));
-      controls.tva.setValue(tva.toFixed(2));
-      controls.timbre.setValue(timbre.toFixed(2));
-      controls.ttc.setValue(ttc.toFixed(2));
+              controls.tht.setValue(tht.toFixed(2));
+              controls.tva.setValue(tva.toFixed(2));
+              controls.timbre.setValue(timbre.toFixed(2));
+              controls.ttc.setValue(ttc.toFixed(2));
+             })
+     
+         
+         
+        
       
 }
 

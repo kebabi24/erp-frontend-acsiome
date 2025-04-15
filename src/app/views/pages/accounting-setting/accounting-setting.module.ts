@@ -61,7 +61,7 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import {AccountService, SubaccountService, CostcenterService, BankService, ProductLineService,DaybookService, EmployeService, JobService,
-        SiteService,AffectEmpService, ProviderService,ProjectService,TaskService, PayMethService, UsersService, ItemService} from '../../../core/erp';
+        SiteService,AffectEmpService, ProviderService,ProjectService,TaskService, PayMethService, UsersService, ItemService, TimbreService} from '../../../core/erp';
 import {TaxeService} from '../../../core/erp';
 import {CodeService} from '../../../core/erp';
 import { EditAccountComponent } from './edit-account/edit-account.component';
@@ -90,6 +90,7 @@ import { ListCcComponent } from './list-cc/list-cc.component';
 import { EditCcComponent } from './edit-cc/edit-cc.component';
 import { EmployeSalaryComponent } from './employe-salary/employe-salary.component';
 import { CreateStdBankComponent } from './create-std-bank/create-std-bank.component';
+import { CreateTaxpayementSettingsComponent } from './create-taxpayement-settings/create-taxpayement-settings.component';
 const routes: Routes = [
     {
         path: "create-account",
@@ -220,6 +221,10 @@ const routes: Routes = [
         path: "employe-salary",
         component: EmployeSalaryComponent,
     },
+    {
+        path: "create-taxpayement-settings",
+        component: CreateTaxpayementSettingsComponent,
+    },
 ]
 
 @NgModule({
@@ -259,6 +264,7 @@ const routes: Routes = [
         EditCcComponent,
         EmployeSalaryComponent,
         CreateStdBankComponent,
+        CreateTaxpayementSettingsComponent,
        
     ],
     imports: [
@@ -317,6 +323,7 @@ const routes: Routes = [
         ProductLineService,
         LayoutUtilsService,
         ItemService,
+        TimbreService,
     ],
     entryComponents: [
         ActionNotificationComponent,

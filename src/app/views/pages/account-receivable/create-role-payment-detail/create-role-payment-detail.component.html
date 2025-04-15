@@ -62,7 +62,7 @@
             <div class="form-group col-2">
                 <label class="form-group">Role Code:</label>
                 <select 
-                (change)="onSelectRole($event.target.value)"
+                (change)="onSelectRole()"
                 name="role_code"
                 id="role_code"
                 formControlName="role_code"
@@ -160,6 +160,7 @@
             
               <button
                 type="button"
+                id="submit"
                 (click)="onSubmit()"
                 class="btn btn-success btn-sm col-lg-4 mr-4 mt-9 "
               >

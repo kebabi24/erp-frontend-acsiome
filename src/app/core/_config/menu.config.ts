@@ -35,7 +35,7 @@ export class MenuConfig {
             },
             {
               title: "Dashboard Commercial",
-              page: "/dashboard/commercial-dashboard",
+              page: "/dashboard/sales-dashboard",
             },
             {
               title: "Dashboard CRM",
@@ -313,6 +313,10 @@ export class MenuConfig {
               title: "Chiffre d'affaires par clients",
               page: "/customers/Customer-calist",
             },
+            {
+              title: "Liste Soldes clients",
+              page: "/customers/customers-solde",
+            },
           ],
         },
         {
@@ -587,6 +591,10 @@ export class MenuConfig {
               title: "Créer une page de produits",
               page: "/articles/page",
             },
+            {
+              title: "Modification Prix Pour DD",
+              page: "/articles/update-price-dd",
+            },
 
             {
               title: "Gestion des Modèles",
@@ -629,6 +637,14 @@ export class MenuConfig {
             {
               title: "Dechargement Des Vans",
               page: "/inventory-management/unloading-vans",
+            },
+            {
+              title: "Chargement Des BLs",
+              page: "/sales/create-psh-plq",
+            },
+            {
+              title: "Liste des Chargements ",
+              page: "/supervision/list-chargement",
             },
             {
               title: "Consultation demandes de chargement",
@@ -844,6 +860,10 @@ export class MenuConfig {
               page: "/sales/create-so",
             },
             {
+              title: "Commande Clients Bare Code",
+              page: "/sales/create-so-bc",
+            },
+            {
               title: "Modification des Commandes",
               page: "/sales/list-so-edit",
             },
@@ -878,12 +898,20 @@ export class MenuConfig {
               page: "/sales/payment-psh",
             },
             {
+              title: "Liste des BLS",
+              page: "/sales/list-psh",
+            },
+            {
               title: "Paiement des Commande",
               page: "/sales/payment-so",
             },
             {
               title: "Facturation ",
               page: "/sales/create-invoice",
+            },
+            {
+              title: "Réimpression Facture ",
+              page: "/sales/reprint-invoice",
             },
             {
               title: "Facture en Attente ",
@@ -995,8 +1023,16 @@ export class MenuConfig {
               page: "/account-receivable/list-transfert-payment",
             },
             {
+              title: "Paiement Dépense Détaillé",
+              page: "/account-payable/create-charge-payable-detail",
+            },
+            {
               title: "Paiement Dépense",
               page: "/account-payable/create-charge-payment",
+            },
+            {
+              title: "Journal De Caisse",
+              page: "/account-receivable/bank-journal",
             },
           ],
         },

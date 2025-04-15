@@ -211,19 +211,19 @@ export class CreatePriceComponent implements OnInit {
     
       this.priceForm = this.priceFB.group({
           pi_list: [this.pricelist.pi_list, Validators.required],
-          pi_desc: [{ value: this.pricelist.pi_desc, disabled: !this.isExist },  Validators.required ],
-          pi_cs_code : [{ value: this.pricelist.pi_cs_code, disabled: !this.isExist }],
-          pi_part_code : [{ value: this.pricelist.pi_part_code, disabled: !this.isExist }],
-          pi_um: [{ value: this.pricelist.pi_um, disabled: !this.isExist }],
-          pi_curr: [{ value: this.pricelist.pi_curr, disabled: !this.isExist }],
-          pi_amt_type : [{ value: this.pricelist.pi_amt_type, disabled: !this.isExist }],
+          pi_desc: [this.pricelist.pi_desc,   Validators.required ],
+          pi_cs_code : [this.pricelist.pi_cs_code ],
+          pi_part_code : [this.pricelist.pi_part_code ],
+          pi_um: [this.pricelist.pi_um ],
+          pi_curr: [this.pricelist.pi_curr ],
+          pi_amt_type : [this.pricelist.pi_amt_type ],
           
           pi_start: [{
             year:date.getFullYear(),
             month: date.getMonth()+1,
             day: date.getDate() 
           , disabled: !this.isExist}], 
-          pi_expire: [{ value: this.pricelist.pi_expire, disabled: !this.isExist }],
+          pi_expire: [this.pricelist.pi_expire, ],
           
       })
   }
@@ -241,12 +241,12 @@ export class CreatePriceComponent implements OnInit {
                   this.isExist = true
                   console.log(response.data.length)
               } else {
-                  controls.pi_desc.enable()
-                  controls.pi_cs_code.enable() 
-                  controls.pi_part_code.enable()
-                  controls.pi_um.enable()
-                  controls.pi_curr.enable()
-                  controls.pi_amt_type.enable()
+                  controls.pi_desc.setValue(response.data.pi_desc)
+                  controls.pi_cs_code.setValue(response.data.pi_desc)
+                  // controls.pi_part_code.setValue(response.data.pi_desc)
+                  // controls.pi_um.setValue(response.data.pi_desc)
+                  // controls.pi_curr.setValue(response.data.pi_desc)
+                  // controls.pi_amt_type.enable()
                   controls.pi_start.enable()
                   controls.pi_expire.enable()
                   

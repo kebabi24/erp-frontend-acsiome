@@ -80,7 +80,8 @@ import { ListStdUpdateComponent } from './list-std-update/list-std-update.compon
 import { EditStdItemComponent } from './edit-std-item/edit-std-item.component';
 import { ListCopieComponent } from './list-copie/list-copie.component';
 import { CopieArticleComponent } from './copie-article/copie-article.component';
-import { EditProductpageComponent } from './edit-productpage/edit-productpage.component'
+import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
+import { UpdatePriceDdComponent } from './update-price-dd/update-price-dd.component'
 
 
 const routes: Routes = [
@@ -162,6 +163,10 @@ const routes: Routes = [
                 path: "edit-productpage/:product_page_code",
                 component: EditProductpageComponent,
             },
+            {
+                path: "update-price-dd",
+                component: UpdatePriceDdComponent,
+            },
 
         ],
     },
@@ -189,6 +194,7 @@ const routes: Routes = [
         ListCopieComponent,
         CopieArticleComponent,
         EditProductpageComponent,
+        UpdatePriceDdComponent,
     ],
     imports: [
         CommonModule,

@@ -111,9 +111,9 @@ export class ListPaymentComponent implements OnInit {
             type: FieldType.string,
           },
           {
-            id: "ad_name",
+            id: "cm_sort",
             name: "Nom",
-            field: "address.ad_name",
+            field: "customer.cm_sort",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -217,16 +217,13 @@ export class ListPaymentComponent implements OnInit {
       ]
 
       this.gridOptions = {
-          autoResize: {
-            containerId: 'demo-container',
-            sidePadding: 10
-          },
-         
+          
           createPreHeaderPanel: true,
           showPreHeaderPanel: true,
           preHeaderPanelHeight: 40,
           enableFiltering: true,
           enableSorting: true,
+          enableAutoResize:true,
           exportOptions: {
             sanitizeDataExport: true
           },
@@ -249,7 +246,7 @@ export class ListPaymentComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       this.accountReceivableService.getByWithAdress({ar_type : "P"}).subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => (this.dataset = response.data,console.log(this.dataset)),
           (error) => {
               this.dataset = []
           },

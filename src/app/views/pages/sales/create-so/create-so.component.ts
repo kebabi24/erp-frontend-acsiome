@@ -14,7 +14,9 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { SaleOrderService, QuoteService, SequenceService, CustomerService, UsersService, ItemService, SaleOrder, TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, PayMethService, CostlistService } from "../../../../core/erp";
+import { SaleOrderService, QuoteService, SequenceService, CustomerService, UsersService, ItemService, SaleOrder, TaxeService,
+   DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, 
+   PayMethService, CostlistService, TimbreService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
@@ -147,7 +149,8 @@ export class CreatesaleorderComponent implements OnInit {
     private pricelistService: PricelistService,
     private configService: ConfigService,
     private payMethService: PayMethService,
-    private costlistService: CostlistService
+    private costlistService: CostlistService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
 
@@ -1225,7 +1228,7 @@ export class CreatesaleorderComponent implements OnInit {
 
     // fill the dataset with your data
     const controls = this.soForm.controls;
-    this.customersService.getByAll({ cm_hold: false, cm_seq: controls.so_category.value }).subscribe((response: any) => (this.customers = response.data));
+    this.customersService.getByAll({ cm_hold: false }).subscribe((response: any) => (this.customers = response.data));
   }
   open2(content) {
     this.prepareGrid2();
@@ -2414,32 +2417,76 @@ export class CreatesaleorderComponent implements OnInit {
       }
     });
   }
-  calculatetot() {
-    const controls = this.totForm.controls;
-    const controlsso = this.soForm.controls;
-    let tht = 0;
-    let tva = 0;
-    let timbre = 0;
-    let ttc = 0;
-    for (var i = 0; i < this.dataset.length; i++) {
-      console.log("here here ", this.dataset[i]);
-      tht += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord, 2);
-      if (controlsso.so_taxable.value == true) tva += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord * (this.dataset[i].sod_taxc ? this.dataset[i].sod_taxc / 100 : 0), 2);
+  // calculatetot() {
+  //   const controls = this.totForm.controls;
+  //   const controlsso = this.soForm.controls;
+  //   let tht = 0;
+  //   let tva = 0;
+  //   let timbre = 0;
+  //   let ttc = 0;
+  //   for (var i = 0; i < this.dataset.length; i++) {
+  //     console.log("here here ", this.dataset[i]);
+  //     tht += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord, 2);
+  //     if (controlsso.so_taxable.value == true) tva += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord * (this.dataset[i].sod_taxc ? this.dataset[i].sod_taxc / 100 : 0), 2);
 
-      if (controlsso.so_cr_terms.value == "ES") {
-        timbre = round((tht + tva) / 100, 2);
-        if (timbre > 10000) {
-          timbre = 10000;
-        }
-      }
-    }
-    ttc = round(tht + tva + timbre, 2);
+  //     if (controlsso.so_cr_terms.value == "ES") {
+  //       timbre = round((tht + tva) / 100, 2);
+  //       if (timbre > 10000) {
+  //         timbre = 10000;
+  //       }
+  //     }
+  //   }
+  //   ttc = round(tht + tva + timbre, 2);
 
-    controls.tht.setValue(tht.toFixed(2));
-    controls.tva.setValue(tva.toFixed(2));
-    controls.timbre.setValue(timbre.toFixed(2));
-    controls.ttc.setValue(ttc.toFixed(2));
-  }
+  //   controls.tht.setValue(tht.toFixed(2));
+  //   controls.tva.setValue(tva.toFixed(2));
+  //   controls.timbre.setValue(timbre.toFixed(2));
+  //   controls.ttc.setValue(ttc.toFixed(2));
+  // }
+
+  calculatetot(){
+    const controls = this.totForm.controls 
+     const controlsso = this.soForm.controls 
+     let tht = 0
+     let tva = 0
+     let timbre = 0
+     let ttc = 0
+     for (var i = 0; i < this.dataset.length; i++) {
+       console.log("here here " ,this.dataset[i]  )
+       tht += round((this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100 ) *  this.dataset[i].sod_qty_ord),2)
+       if(controlsso.so_taxable.value == true) tva += round((this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100 ) *  this.dataset[i].sod_qty_ord) * (this.dataset[i].sod_taxc ? this.dataset[i].sod_taxc / 100 : 0),2)
+      
+    
+       
+  
+   
+    
+    
+     }
+     console.log(tht, tva)
+     this.timbreService.getTimbreValue({ code: controlsso.so_cr_terms.value, amt: round(tht + tva )}).subscribe(
+       (response: any) => {
+       //  console.log(response.data.value)
+        if(response.data != null) {
+
+         timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+         console.log("timbre",timbre)
+         if (timbre < 5) { timbre = 5}            
+        }else { timbre = 0}
+
+        ttc = round(tht + tva + timbre,2)
+ 
+         controls.tht.setValue(tht.toFixed(2));
+         controls.tva.setValue(tva.toFixed(2));
+         controls.timbre.setValue(timbre.toFixed(2));
+         controls.ttc.setValue(ttc.toFixed(2));
+        })
+
+    
+    
+   
+ 
+}
 
   printpdf(nbr) {
     const controls = this.totForm.controls;
@@ -2450,7 +2497,7 @@ export class CreatesaleorderComponent implements OnInit {
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, "png", 170, 5, 30, 30);
+    doc.addImage(img, "png", 160, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
       doc.text(this.domain.dom_name, 10, 10);
@@ -2505,7 +2552,7 @@ export class CreatesaleorderComponent implements OnInit {
       if (j % 30 == 0 && j != 0) {
         doc.addPage();
         // img.src = "./assets/media/logos/companylogo.png";
-        doc.addImage(img, "png", 170, 5, 30, 30);
+        doc.addImage(img, "png", 160, 5, 50, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);

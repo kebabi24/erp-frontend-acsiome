@@ -529,7 +529,7 @@ export class CreateVendorPaymentDetailComponent implements OnInit {
           doc.text("Role    : " + controls.role_code.value + " "+ this.rolename, 5, initialY + 10);
           doc.text("Date    : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 15);
           doc.text("Vendeur : " + controls.user_mobile_code.value + " - " + controls.username.value, 5, initialY + 20);
-      //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      //    doc.text("Valeur : " + Number(total * 1.2138).toFixed(2) + " DZD", 65, initialY + 20);
           doc.setFontSize(9);
     
      var i = 35

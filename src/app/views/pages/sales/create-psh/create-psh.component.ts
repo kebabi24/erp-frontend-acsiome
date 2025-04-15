@@ -58,6 +58,7 @@ import {
   LocationDetailService,
   CodeService,
   AccountShiperService,
+  TimbreService,
   printBL,
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
@@ -193,6 +194,7 @@ export class CreatePshComponent implements OnInit {
     private mesureService: MesureService,
     private locationService: LocationService,
     private locationDetailService: LocationDetailService,
+    private timbreService : TimbreService,
   ) {
     config.autoClose = true;
     this.initGrid();
@@ -2375,17 +2377,36 @@ calculatetot(){
   
      
 
-     console.log(tva)
-     if(controlsso.psh_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-       if (timbre > 10000) { timbre = 10000} } 
+    //  console.log(tva)
+    //  if(controlsso.psh_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
+    //    if (timbre > 10000) { timbre = 10000} } 
   
    }
- ttc = round(tht + tva + timbre,2)
-console.log(tht,tva,timbre,ttc)
-controls.tht.setValue(tht.toFixed(2));
-controls.tva.setValue(tva.toFixed(2));
-controls.timbre.setValue(timbre.toFixed(2));
-controls.ttc.setValue(ttc.toFixed(2));
+
+   this.timbreService.getTimbreValue({ code: controlsso.psh_cr_terms.value, amt: round(tht + tva )}).subscribe(
+    (response: any) => {
+    //  console.log(response.data.value)
+     if(response.data != null) {
+
+      timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+      console.log("timbre",timbre)
+      if (timbre < 5) { timbre = 5}            
+     }else { timbre = 0}
+
+     ttc = round(tht + tva + timbre,2)
+
+      controls.tht.setValue(tht.toFixed(2));
+      controls.tva.setValue(tva.toFixed(2));
+      controls.timbre.setValue(timbre.toFixed(2));
+      controls.ttc.setValue(ttc.toFixed(2));
+     })
+
+//  ttc = round(tht + tva + timbre,2)
+// console.log(tht,tva,timbre,ttc)
+// controls.tht.setValue(tht.toFixed(2));
+// controls.tva.setValue(tva.toFixed(2));
+// controls.timbre.setValue(timbre.toFixed(2));
+// controls.ttc.setValue(ttc.toFixed(2));
 
 }
 

@@ -456,6 +456,10 @@ export class ListSalesRoleComponent implements OnInit {
         enableSorting: true,
         enableCellNavigation: true,
         enableExcelCopyBuffer: true,
+        enableExcelExport:true,
+        exportOptions: {
+          sanitizeDataExport: true
+        },
         enableFiltering: true,
         autoEdit: false,
         autoHeight: false,

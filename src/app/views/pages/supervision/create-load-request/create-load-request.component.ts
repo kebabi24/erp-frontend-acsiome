@@ -508,7 +508,7 @@ reset() {
     doc.line(10, i - 5, 195, i - 5);
     doc.setFontSize(14);
     doc.text("Total cartons    : " + this.totalCartons, 130, i + 5);
-    doc.text("Valeur : " + Number(this.total * 1.2019).toFixed(2) + " DZD", 130, i + 10);
+    doc.text("Valeur : " + Number(this.total * 1.2138).toFixed(2) + " DZD", 130, i + 10);
     doc.setFontSize(10);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));

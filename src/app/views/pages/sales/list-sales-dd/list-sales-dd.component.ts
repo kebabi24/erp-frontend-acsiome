@@ -66,7 +66,8 @@ import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
 const API_URL = environment.apiUrl + "/users-mobile"
 
-
+const API_URL_codes = environment.apiUrl + "/codes"
+const API_URL_items = environment.apiUrl + "/items"
 @Component({
   selector: 'kt-list-sales-dd',
   templateUrl: './list-sales-dd.component.html',
@@ -352,6 +353,38 @@ export class ListSalesDdComponent implements OnInit {
        
       }, 
       {
+        id: "pt_part_type",
+        name: "Type",
+        field: "pt_part_type",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+       // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/parttypes`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+        filter: {
+
+         
+          // collectionAsync: this.elem,
+          collectionAsync:  this.http.get(`${API_URL_codes}/parttypes`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+         
+         
+           model: Filters.multipleSelect,
+          
+         },
+        grouping: {
+          getter: 'pt_part_type',
+          formatter: (g) => `Type Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
         id: "product_code",
         name: "Code Produit",
         field: "product_code",
@@ -359,7 +392,18 @@ export class ListSalesDdComponent implements OnInit {
         width: 50,
         filterable: true,
         type: FieldType.text,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        filter: {
+
+         
+          // collectionAsync: this.elem,
+          collectionAsync:  this.http.get(`${API_URL_items}/findpart`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+         
+         
+           model: Filters.multipleSelect,
+          
+         },
         grouping: {
           getter: 'product_code',
           formatter: (g) => `Code Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,

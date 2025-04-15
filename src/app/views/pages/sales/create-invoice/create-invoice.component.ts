@@ -58,6 +58,7 @@ import {
   CodeService,
   InvoiceOrderTempService,
   InvoiceOrderTemp,
+  TimbreService,
   printIH,
   Item,
 } from "../../../../core/erp";
@@ -207,6 +208,7 @@ export class CreateInvoiceComponent implements OnInit {
     private mesureService: MesureService,
     private locationService: LocationService,
     private locationDetailService: LocationDetailService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
       this.codeService
@@ -281,6 +283,8 @@ export class CreateInvoiceComponent implements OnInit {
       enableCellNavigation: true,
       enableRowSelection: true,
       enableAutoResize: false,
+      autoEdit:true,
+      autoCommitEdit:true,
     
       
       formatterOptions: {
@@ -541,6 +545,7 @@ export class CreateInvoiceComponent implements OnInit {
   reset() {
     this.inventoryTransaction = new InventoryTransaction();
     this.createForm();
+    this.createtotForm();
     this.dataset = [];
     this.ihdataset = [];
     this.hasFormErrors = false;
@@ -674,7 +679,7 @@ export class CreateInvoiceComponent implements OnInit {
     this.loadingSubject.next(true);
     let ih = null;
     var array = []
-    //var iharray = []
+    this.iharray = []
     const controls = this.ihForm.controls;
 
     this.invoiceOrderService
@@ -709,48 +714,94 @@ export class CreateInvoiceComponent implements OnInit {
           console.log(this.dataset);
 
 
-          array = this.ihdataset;        
-          var result = [];
-  array.reduce(function(res, value) {
-    //console.log('aaa',res[value.itdh_part])
-    if (!res[value.itdh_part]) {
-      res[value.itdh_part] = { itdh_part: value.itdh_part,  itdh_qty_inv: 0 };
-      result.push(res[value.itdh_part])                                                                                                                                            
+        //  array = this.ihdataset;  
+          for(let det of this.ihdataset) {
+            array.push({Id:det.itdh_part, qty : det.itdh_qty_inv})
+          }
+          console.log('array', array)      
+        //  var result = [];
+  // array.reduce(function(res, value) {
+  //   //console.log('aaa',res[value.itdh_part])
+  //   if (!res[value.itdh_part]) {
+  //     res[value.itdh_part] = { itdh_part: value.itdh_part,  itdh_qty_inv: 0 };
+                                                                                                                                             
       
-    }
-    res[value.itdh_part].itdh_qty_inv += value.itdh_qty_inv; 
-    return res;
-  }, {});
+  //   } else {
+  //   res[value.itdh_part].itdh_qty_inv += value.itdh_qty_inv;}
+  //   result.push(res[value.itdh_part])      
+  //   return res;
+  // }, {});
+  var result = [];
+array.reduce(function(res, value) {
+  if (!res[value.Id]) {
+    res[value.Id] = { Id: value.Id, qty: 0 };
+    result.push(res[value.Id])
+  }
+  res[value.Id].qty += value.qty;
+  return res;
+}, {});
+
+console.log(result)
   
+  // const arr = array.reduce((accumulator ,item) => {
+  //   return accumulator += item.itdh_qty_inv;
+  // }, 0)
+  console.log('aaa',array)
   console.log('bbb',result)
   var bool = false
-  for (var obj = 0; obj < result.length; obj++) {
-    const det = result[obj];
-    
-this.iharray.push(det)
-bool = false
-var j = 0
-   
-    do {
-  if (this.ihdataset[j].itdh_part = det.itdh_part ) {
-    this.iharray[obj].itdh_line = obj + 1
-    this.iharray[obj].desc =  this.ihdataset[j].desc
-    this.iharray[obj].itdh_price =  this.ihdataset[j].itdh_price
-    this.iharray[obj].itdh_taxable = this.ihdataset[j].itdh_taxable
-    this.iharray[obj].itdh_tax_code = this.ihdataset[j].itdh_tax_code
-    this.iharray[obj].itdh_taxc = this.ihdataset[j].itdh_taxc
-    this.iharray[obj].itdh_disc_pct = this.ihdataset[j].itdh_disc_pct
-    this.iharray[obj].itdh_um = this.ihdataset[j].itdh_um
-    
-    
-  bool = true   
+let ind =  1
+  for(let det of result) {
+    const index = this.ihdataset.findIndex(element =>{
+      return element.itdh_part == det.Id
+    })
+ if(index >=0) {
+    this.iharray.push({
+
+      itdh_line :ind,
+    itdh_part: det.Id,
+    itdh_qty_inv: det.qty,  
+    desc :  this.ihdataset[index].desc,
+    itdh_price :  this.ihdataset[index].itdh_price,
+    itdh_taxable : this.ihdataset[index].itdh_taxable,
+    itdh_tax_code : this.ihdataset[index].itdh_tax_code,
+    itdh_taxc : this.ihdataset[index].itdh_taxc,
+    itdh_disc_pct : this.ihdataset[index].itdh_disc_pct,
+    itdh_um : this.ihdataset[index].itdh_um,
+
+
+    })
+    ind = ind + 1
   }
-  j++
-  }while ( j < this.ihdataset.length || bool == false);
+
+
+  }
+//   for (var obj = 0; obj < result.length; obj++) {
+//     const det = result[obj];
+    
+// this.iharray.push(det)
+// bool = false
+// var j = 0
+   
+//     do {
+//   if (this.ihdataset[j].itdh_part = det.Id ) {
+//     this.iharray[obj].itdh_line = obj + 1
+//     this.iharray[obj].desc =  this.ihdataset[j].desc
+//     this.iharray[obj].itdh_price =  this.ihdataset[j].itdh_price
+//     this.iharray[obj].itdh_taxable = this.ihdataset[j].itdh_taxable
+//     this.iharray[obj].itdh_tax_code = this.ihdataset[j].itdh_tax_code
+//     this.iharray[obj].itdh_taxc = this.ihdataset[j].itdh_taxc
+//     this.iharray[obj].itdh_disc_pct = this.ihdataset[j].itdh_disc_pct
+//     this.iharray[obj].itdh_um = this.ihdataset[j].itdh_um
+    
+    
+//   bool = true   
+//   }
+//   j++
+//   }while ( j < this.ihdataset.length || bool == false);
 
 
                          
-  }
+//   }
   console.log("hnahna", this.iharray)
           if(controls.print.value == true) this.printpdf(ih) //printIH(this.customer, iharray, ih,this.curr);
           this.router.navigateByUrl("/sales/create-invoice");
@@ -1203,17 +1254,36 @@ calculatetot(){
   
      
 
-     console.log(tva)
-     if(controlsso.ith_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-       if (timbre > 10000) { timbre = 10000} } 
+    //  console.log(tva)
+    //  if(controlsso.ith_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
+    //    if (timbre > 10000) { timbre = 10000} } 
   
    }
- ttc = round(tht,2) + round(tva,2) + round(timbre,2)
-console.log(tht,tva,timbre,ttc)
-controls.tht.setValue(tht.toFixed(2));
-controls.tva.setValue(tva.toFixed(2));
-controls.timbre.setValue(timbre.toFixed(2));
-controls.ttc.setValue(ttc.toFixed(2));
+   
+   this.timbreService.getTimbreValue({ code: controlsso.ith_cr_terms.value, amt: round(tht + tva )}).subscribe(
+    (response: any) => {
+    //  console.log(response.data.value)
+     if(response.data != null) {
+
+      timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+      console.log("timbre",timbre)
+      if (timbre < 5) { timbre = 5}            
+     }else { timbre = 0}
+
+     ttc = round(tht + tva + timbre,2)
+
+      controls.tht.setValue(tht.toFixed(2));
+      controls.tva.setValue(tva.toFixed(2));
+      controls.timbre.setValue(timbre.toFixed(2));
+      controls.ttc.setValue(ttc.toFixed(2));
+     })
+
+//  ttc = round(tht,2) + round(tva,2) + round(timbre,2)
+// console.log(tht,tva,timbre,ttc)
+// controls.tht.setValue(tht.toFixed(2));
+// controls.tva.setValue(tva.toFixed(2));
+// controls.timbre.setValue(timbre.toFixed(2));
+// controls.ttc.setValue(ttc.toFixed(2));
 
 }
 
@@ -1656,12 +1726,14 @@ printpdf(nbr) {
   const controlss = this.ihForm.controls 
   console.log("pdf")
   var doc = new jsPDF();
- 
+ const dateinv =  controlss.ith_inv_date.value
+ ? `${controlss.ith_inv_date.value.year}/${controlss.ith_inv_date.value.month}/${controlss.ith_inv_date.value.day}`
+ : " ";
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
   img.src = "./assets/media/logos/company.png";
   img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, "png", 170, 5, 45, 30);
+  doc.addImage(img, "png", 160, 5, 50, 30);
   doc.setFontSize(9);
   if (this.domain.dom_name != null) {
     doc.text(this.domain.dom_name, 10, 10);
@@ -1669,11 +1741,15 @@ printpdf(nbr) {
   if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
   if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
   if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
   doc.setFontSize(12);
-  doc.text( 'Facture N°: ' + nbr  , 70, 40);
+  doc.text( 'Facture N°: ' + nbr  , 70, 45);
   doc.setFontSize(8);
-  console.log(this.customer.address.ad_misc2_id)
+  
   doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
+  doc.text('Date : ' + dateinv, 150 , 50 )
   doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
   doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
   if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
@@ -1709,7 +1785,7 @@ printpdf(nbr) {
     if ((j % 30 == 0) && (j != 0) ) {
 doc.addPage();
 img.src = "./assets/media/logos/companylogo.png";
-doc.addImage(img, "png", 170, 5, 45, 30);
+doc.addImage(img, "png", 160, 5, 50, 30);
 doc.setFontSize(9);
 if (this.domain.dom_name != null) {
   doc.text(this.domain.dom_name, 10, 10);
@@ -1717,11 +1793,15 @@ if (this.domain.dom_name != null) {
 if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
 if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
 if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.line(10, 32, 200, 32);
+    doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+    doc.line(10, 40, 200, 40);
       doc.setFontSize(12);
-      doc.text( 'N° Facture : ' + nbr  , 70, 40);
+      doc.text( 'N° Facture : ' + nbr  , 70, 45);
       doc.setFontSize(8);
-      console.log(this.customer.address.ad_misc2_id)
+     // console.log(this.customer.address.ad_misc2_id)
       doc.text('Code Client : ' + this.customer.cm_addr, 20 , 50 )
+      doc.text('Date : ' + dateinv, 150 , 50 )
       doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 55)
       doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 60)
       if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 65)}
@@ -1756,7 +1836,7 @@ if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 3
     }
 
 
-
+console.log("this.iharray[j].desc",this.iharray)
     if (this.iharray[j].desc.length > 35) {
       let desc1 = this.iharray[j].desc.substring(35)
       let ind = desc1.indexOf(' ')

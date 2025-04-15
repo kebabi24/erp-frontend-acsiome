@@ -41,9 +41,6 @@ import { BankService} from "../../../../core/erp"
 import { jsPDF } from "jspdf";
 import { isNull } from "lodash"
 
-const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
-  value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
-
 @Component({
   selector: 'kt-list-transfert-payment',
   templateUrl: './list-transfert-payment.component.html',
@@ -55,33 +52,87 @@ export class ListTransfertPaymentComponent implements OnInit {
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
+  dataView: any;
   
   angularGrid: AngularGridInstance;
 
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
-  dataviewObj: any;
+  //dataviewObj: any;
 
   tr:any
+  soForm: FormGroup;
+  hasFormErrors = false;
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  error = false;
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
+      private soFB: FormBuilder,
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private bankService: BankService,
       
   ) {
-      this.prepareGrid()
+      //this.prepareGrid()
   }
 
   ngOnInit(): void {
+    this.createForm();
+    this.prepareGrid()
+    this.solist();
   }
 
+  createForm() {
+    this.loadingSubject.next(false);
+    const date = new Date;
+    
+    this.soForm = this.soFB.group({
+     
+      calc_date: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: 1
+      }],
+      calc_date1: [{
+        year:date.getFullYear(),
+        month: date.getMonth()+1,
+        day: date.getDate()
+      }],
+    });
+  }
+  solist() {
+    this.dataset = []
+   
+    const controls = this.soForm.controls
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
+  
+    const date1 = controls.calc_date1.value
+    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
+    : null;
+   
+    let obj= {date,date1}
+    this.bankService.getBKHRCTBy(obj).subscribe(
+      (response: any) => {   
+        this.dataset = response.data
+       console.log(this.dataset)
+       this.dataView.setItems(this.dataset);
+        
+         },
+      (error) => {
+          this.dataset = []
+      },
+      () => {}
+  )
+  }
   
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataviewObj = angularGrid.dataView;
+    this.dataView = angularGrid.dataView;
   }
   prepareGrid() {
 
@@ -144,7 +195,9 @@ export class ListTransfertPaymentComponent implements OnInit {
             field: "bkh_balance",
             sortable: true,
             filterable: true,
-            type: FieldType.string,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
             
           }, 
          
@@ -154,7 +207,9 @@ export class ListTransfertPaymentComponent implements OnInit {
             field: "bkh_amt",
             sortable: true,
             filterable: true,
-            type: FieldType.string,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
           },
           {
             id: "bkh_2000",
@@ -246,6 +301,7 @@ export class ListTransfertPaymentComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.number,
+
             
           },
           {
@@ -254,7 +310,9 @@ export class ListTransfertPaymentComponent implements OnInit {
             field: "bkh_bon",
             sortable: true,
             filterable: true,
-            type: FieldType.number,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
             
           },
           {
@@ -272,7 +330,9 @@ export class ListTransfertPaymentComponent implements OnInit {
             field: "bkh_cheque",
             sortable: true,
             filterable: true,
-            type: FieldType.number,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
           },
           {
             id: "chr03",
@@ -332,21 +392,31 @@ export class ListTransfertPaymentComponent implements OnInit {
             sanitizeDataExport: true
           },
           
-
+          formatterOptions: {
+        
+            // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+            displayNegativeNumberWithParentheses: false,
+      
+            // Defaults to undefined, minimum number of decimals
+            minDecimal: 2,
+      
+            // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+            thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+          },
     
         
       }
 
       // fill the dataset with your data
-      this.dataset = []
-      this.bankService.getTransfertBy().subscribe(
-          (response: any) => (this.dataset = response.data),
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-console.log(this.dataset)
+       this.dataset = []
+//       this.bankService.getTransfertBy().subscribe(
+//           (response: any) => (this.dataset = response.data),
+//           (error) => {
+//               this.dataset = []
+//           },
+//           () => {}
+//       )
+// console.log(this.dataset)
     }
   
     printpdf() {
@@ -381,7 +451,7 @@ console.log(this.dataset)
       doc.text("Récap    : " + this.tr.chr03  , 5, initialY + 25);
       }
       // doc.text("Vendeur : " + this.tr.user_mobile_code + " - " + this.tr.username, 5, initialY + 20);
-  //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+  //    doc.text("Valeur : " + Number(total * 1.2138).toFixed(2) + " DZD", 65, initialY + 20);
       doc.setFontSize(9);
 
  var i = 40

@@ -326,6 +326,7 @@ un: any
         rqm_rmks: [this.requisition.rqm_rmks ],
       })
       const controls = this.reqForm.controls
+      console.log(this.user.usrd_code)
       this.employeService
       .getByOne({emp_userid: this.user.usrd_code})
       .subscribe((response: any) => {

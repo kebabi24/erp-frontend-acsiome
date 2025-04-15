@@ -151,4 +151,11 @@ public getLoadRequest(load_request_code: any) {
   const httpHeaders = this.httpUtils.getHTTPHeaders();
   return this.http.get(`${API_URL_2}/getLoadRequest/${load_request_code}`, { headers: httpHeaders });
 }
+public getLoad(data: any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders()
+  return this.http.post(`${API_URL}/findload`,data, { headers: httpHeaders })
+
+ // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  
+}
 }

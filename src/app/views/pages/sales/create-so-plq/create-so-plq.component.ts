@@ -14,7 +14,9 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { SaleOrderService, QuoteService, SequenceService, CustomerService, UsersService, ItemService, SaleOrder, TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, PayMethService, CostlistService,PriceListQuantityService } from "../../../../core/erp";
+import { SaleOrderService, QuoteService, SequenceService, CustomerService, UsersService, ItemService, SaleOrder, 
+  TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, 
+  ConfigService, PayMethService, CostlistService,PriceListQuantityService , TimbreService} from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import { D } from "@angular/cdk/keycodes";
@@ -153,7 +155,8 @@ export class CreateSoPlqComponent implements OnInit {
     private configService: ConfigService,
     private payMethService: PayMethService,
     private costlistService: CostlistService,
-    private priceListQuantityService: PriceListQuantityService
+    private priceListQuantityService: PriceListQuantityService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
 
@@ -2413,13 +2416,31 @@ export class CreateSoPlqComponent implements OnInit {
       tht += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord, 2);
       if (controlsso.so_taxable.value == true) tva += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord * (this.dataset[i].sod_taxc ? this.dataset[i].sod_taxc / 100 : 0), 2);
 
-      if (controlsso.so_cr_terms.value == "ES") {
-        timbre = round((tht + tva) / 100, 2);
-        if (timbre > 10000) {
-          timbre = 10000;
-        }
-      }
+      // if (controlsso.so_cr_terms.value == "ES") {
+      //   timbre = round((tht + tva) / 100, 2);
+      //   if (timbre > 10000) {
+      //     timbre = 10000;
+      //   }
+      // }
     }
+    this.timbreService.getTimbreValue({ code: controlsso.so_cr_terms.value, amt: round(tht + tva )}).subscribe(
+      (response: any) => {
+      //  console.log(response.data.value)
+       if(response.data != null) {
+
+        timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+        console.log("timbre",timbre)
+        if (timbre < 5) { timbre = 5}            
+       }else { timbre = 0}
+
+       ttc = round(tht + tva + timbre,2)
+
+        controls.tht.setValue(tht.toFixed(2));
+        controls.tva.setValue(tva.toFixed(2));
+        controls.timbre.setValue(timbre.toFixed(2));
+        controls.ttc.setValue(ttc.toFixed(2));
+       })
+
     ttc = round(tht + tva + timbre, 2);
 
     controls.tht.setValue(tht.toFixed(2));

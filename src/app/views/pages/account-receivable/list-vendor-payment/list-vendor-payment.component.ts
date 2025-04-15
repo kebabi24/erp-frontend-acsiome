@@ -39,6 +39,7 @@ import { MatDialog } from "@angular/material/dialog"
 
 import { BankService,RoleService} from "../../../../core/erp"
 import { jsPDF } from "jspdf";
+import { replaceAll } from "chartist"
 
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
@@ -73,8 +74,10 @@ export class ListVendorPaymentComponent implements OnInit {
   loading$: Observable<boolean>;
   error = false;
   user: any;
-  tr:any
-  role:any
+  domain:any;
+  tr:any;
+  role:any;
+  data: any[] = []
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -92,6 +95,8 @@ export class ListVendorPaymentComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    
+    this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.user)
     this.createForm();
     this.prepareGrid()
@@ -312,6 +317,11 @@ export class ListVendorPaymentComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.float,
+            formatter: Formatters.decimal,
+            minWidth:120,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
             
           }, 
          
@@ -322,8 +332,12 @@ export class ListVendorPaymentComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.float,
+            formatter: Formatters.decimal,
             minWidth: 100,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_2000",
@@ -343,7 +357,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-            
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           }, 
           {
             id: "bkh_0500",
@@ -353,6 +368,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           }, 
           {
             id: "bkh_0200",
@@ -362,6 +379,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p200",
@@ -371,6 +390,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p100",
@@ -380,6 +401,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p050",
@@ -389,6 +412,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p020",
@@ -398,6 +423,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p010",
@@ -407,6 +434,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p005",
@@ -416,6 +445,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_bon",
@@ -423,8 +454,12 @@ export class ListVendorPaymentComponent implements OnInit {
             field: "bkh_bon",
             sortable: true,
             filterable: true,
-            type: FieldType.number,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_rmks",
@@ -441,8 +476,12 @@ export class ListVendorPaymentComponent implements OnInit {
             field: "bkh_cheque",
             sortable: true,
             filterable: true,
-            type: FieldType.number,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "id",
@@ -494,6 +533,17 @@ export class ListVendorPaymentComponent implements OnInit {
           autoHeight:false,
           exportOptions: {
             sanitizeDataExport: true
+          },
+          formatterOptions: {
+        
+            // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+            displayNegativeNumberWithParentheses: false,
+      
+            // Defaults to undefined, minimum number of decimals
+            minDecimal: 2,
+      
+            // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+            thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
           },
           
           gridMenu: {
@@ -586,7 +636,7 @@ export class ListVendorPaymentComponent implements OnInit {
       doc.text("Date Effet    : " + String(date1.getFullYear())+"/" + String(date1.getMonth() + 1) + "/" + String(date1.getDate()) , 5, initialY + 15);
       doc.text("Date Impression  : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 20);
    //   doc.text("Vendeur : " + controls.user_mobile_code.value + " - " + controls.username.value, 5, initialY + 20);
-  //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+  //    doc.text("Valeur : " + Number(total * 1.2138).toFixed(2) + " DZD", 65, initialY + 20);
       doc.setFontSize(9);
 
  var i = 35
@@ -627,4 +677,171 @@ export class ListVendorPaymentComponent implements OnInit {
         window.open(URL.createObjectURL(blob));   
       }
 
+
+      bkhlist() {
+        this.data = []
+   
+    const controls = this.soForm.controls
+    const date = controls.calc_date.value
+    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+    : null;
+  
+    const date1 = controls.calc_date1.value
+    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
+    : null;
+   
+    let obj= {date,date1}
+    this.bankService.getBKHTrGrp(obj).subscribe(
+      (response: any) => {   
+        this.data = response.data.bkhs
+       console.log(this.data)
+      this.printpdf2()  
+         },
+      (error) => {
+          this.data = []
+      },
+      () => {}
+  )
+      }
+      printpdf2() {
+
+        
+        const controls = this.soForm.controls;
+        
+        const date = controls.calc_date.value
+      ? `${String("0" + controls.calc_date.value.day).slice(-2)}-${String("0" + controls.calc_date.value.month).slice(-2)}-${controls.calc_date.value.year}`
+      : null;
+      const date1 = controls.calc_date1.value
+      ? `${String("0" + controls.calc_date1.value.day).slice(-2)}-${String("0" + controls.calc_date1.value.month).slice(-2)}-${controls.calc_date1.value.year}`
+      : null;
+        console.log("pdf");
+        var doc = new jsPDF();
+    
+        // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+        var img = new Image();
+        img.src = "./assets/media/logos/companylogo.png";
+        doc.addImage(img, "png", 160, 5, 50, 30);
+        doc.setFontSize(9);
+        if (this.domain.dom_name != null) {
+          doc.text(this.domain.dom_name, 10, 10);
+        }
+        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(14);
+        doc.text("Transaction de Caisse   " , 70, 40);
+        doc.setFontSize(12);
+        
+        doc.text("Date Début : " + date, 20, 60);
+        doc.text("Date Fin      : " + date1, 20, 65);
+        
+        doc.setFontSize(10);
+        doc.line(30, 85, 110, 85);
+        doc.line(30, 85, 110, 85);
+        doc.line(30, 90, 110, 90);
+        doc.line(30, 85, 30, 90);
+        doc.text("LN", 32.5, 88.5);
+        doc.line(40, 85, 40, 90);
+        doc.text("Role", 42, 88.5);
+        doc.line(70, 85, 70, 90);
+        doc.text("Montant", 72, 88.5);
+        doc.line(110, 85, 110, 90);
+       
+        var i = 95;
+        doc.setFontSize(10);
+        let total = 0
+        for (let j = 0; j < this.data.length; j++) {
+          let mts =  String(  Number(this.data[j].Montant).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+          let mnt = replaceAll(mts,","," ")
+         // console.log(mnsolde)
+          if (j % 38 == 0 && j != 0) {
+            doc.addPage();
+            // img.src = "./assets/media/logos/companylogo.png";
+            doc.addImage(img, "png", 160, 5, 50, 30);
+            doc.setFontSize(10);
+            if (this.domain.dom_name != null) {
+              doc.text(this.domain.dom_name, 10, 10);
+            }
+            if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+            if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+            if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+            doc.setFontSize(14);
+            doc.text("Transaction de Caisse   " , 70, 40);
+            doc.setFontSize(12);
+            
+            doc.text("Date Début : " + date, 20, 60);
+            doc.text("Date Fin      : " + date1, 20, 65);
+            
+            doc.setFontSize(10);
+            doc.line(30, 85, 110, 85);
+            doc.line(30, 85, 110, 85);
+            doc.line(30, 90, 110, 90);
+            doc.line(30, 85, 30, 90);
+            doc.text("LN", 32.5, 88.5);
+            doc.line(40, 85, 40, 90);
+            doc.text("Role", 42, 88.5);
+            doc.line(70, 85, 70, 90);
+            doc.text("Montant", 72, 88.5);
+            doc.line(110, 85, 110, 90);
+           
+            i = 95;
+            doc.setFontSize(10);
+          }
+    
+         
+            doc.line(30, i - 5, 30, i);
+            doc.text(String("00" + j).slice(-2), 32.5, i - 1);
+            doc.line(40, i - 5, 40, i);
+            doc.text(this.data[j].chr01, 45, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(mnt, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+          //   doc.text(String(this.data[j].bkh_addr), 72, i - 1);
+          //   doc.line(95, i - 5, 95, i);
+          //  if(this.data[j].chr01 != null) { doc.text(this.data[j].chr01, 97, i - 1);} else {doc.text(this.data[j].bkh_addr, 97, i - 1)}
+          //   doc.line(120, i - 5, 120, i);
+          //   doc.text(String((this.data[j].bkh_type)), 122, i - 1 );
+          //   doc.line(130, i - 5, 130, i);
+          //   doc.text(String(this.data[j].bkh_effdate) , 153, i - 1, { align: "right" });
+          //   doc.line(155, i - 5, 155, i);
+          //   doc.text(String(Number(this.data[j].bkh_balance).toFixed(2)) , 178, i - 1,{ align: "right" });
+          //   doc.line(180, i - 5, 180, i);
+          //   doc.text(String(Number(this.data[j].bkh_amt).toFixed(2)), 203, i - 1, { align: "right" });
+          //   doc.line(205, i - 5, 205, i);
+             
+            i = i + 5;
+            total = total + Number(this.data[j].Montant)
+           }
+           doc.line(30, i-5, 110, i-5);
+           
+
+           let tt =  String(  Number(total).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+          let ttc = replaceAll(tt,","," ")
+
+           doc.line(30, i - 5, 30, i);
+           
+            doc.line(40, i - 5, 40, i);
+            doc.text("Total", 45, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(ttc, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+            doc.line(30, i, 110, i);
+            i = i + 5;
+    
+        // doc.line(10, i - 5, 200, i - 5);
+    
+        // window.open(doc.output('bloburl'), '_blank');
+        //window.open(doc.output('blobUrl'));  // will open a new tab
+        var blob = doc.output("blob");
+        window.open(URL.createObjectURL(blob));
+      }
+  
 }

@@ -295,11 +295,16 @@ export class DecompteRoleComponent implements OnInit {
   }
   solist() {
     this.mvdataset = []
+    
    
     const controls = this.soForm.controls
-  
-   
- 
+    controls.charge.setValue(0)
+    controls.payment.setValue(0)
+    controls.solde.setValue(0)
+    controls.invamt.setValue(0)
+    controls.credit.setValue(0)
+    controls.ecart.setValue(0)
+
     const date = controls.calc_date.value
     ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
     : null;
@@ -320,7 +325,11 @@ export class DecompteRoleComponent implements OnInit {
        controls.payment.setValue(String(Number(response.data.payment[0].payment).toFixed(2)))
        let solde = Number(response.data.charge[0].charge) - Number(response.data.payment[0].payment)
        controls.solde.setValue(String(Number(solde).toFixed(2)))
-        
+       controls.invamt.setValue(String(Number(response.data.invamt).toFixed(2)))
+       controls.credit.setValue(String(Number(response.data.credit[0].result).toFixed(2)))
+       let ecart = Number(solde) - Number(response.data.invamt) - Number(response.data.credit[0].result)
+       console.log(ecart)
+       controls.ecart.setValue(String(Number(ecart).toFixed(2)))
          },
       (error) => {
           this.mvdataset = []
@@ -367,9 +376,12 @@ export class DecompteRoleComponent implements OnInit {
         month: date.getMonth()+1,
         day: date.getDate()
       }],
-      charge:[null],
-      payment:[null],
-      solde:[null],
+      charge:[0],
+      payment:[0],
+      solde:[0],
+      invamt:[0],
+      credit:[0],
+      ecart:[0],
     });
 
     const controls = this.soForm.controls

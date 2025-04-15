@@ -336,6 +336,17 @@ export class CustomerListComponent implements OnInit {
         filterable: true,
         type: FieldType.string,
       },
+      {
+        id: "cm_balance",
+        name: "Solde",
+        field: "cm_balance",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+
+      },
     ];
 
     this.gridOptions = {

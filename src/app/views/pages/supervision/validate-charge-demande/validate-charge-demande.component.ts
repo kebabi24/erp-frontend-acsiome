@@ -355,7 +355,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
 
     var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
-
+let line_load = 0
     doc.addImage(img, "png", 150, 5, 50, 30);
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -407,7 +407,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
     for (let j = 0; j < this.printLines.length; j++) {
       console.log(this.printLines[j].item.loadRequestLines[0].qt_request,this.printLines[j].item.loadRequestLines[0].qt_validated)
      if(this.printLines[j].item.loadRequestLines[0].qt_request != 0 || this.printLines[j].item.loadRequestLines[0].qt_validated != 0) { 
-      if (j % 38 == 0 && j != 0) {
+      line_load = line_load + 1
+      if (line_load % 38 == 0 && line_load != 0) {
         doc.addPage();
         img.src = "./assets/media/logos/companylogo.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
@@ -469,7 +470,8 @@ export class ValidateChargeDemandeComponent implements OnInit {
         let desc2 = line.pt_desc1.substring(ind + 1);
         console.log(desc1,desc2)
         doc.line(10, i - 5, 10, i);
-        doc.text(String(this.printLines[j].line), 12.5, i - 1);
+     //   doc.text(String(this.printLines[j].line), 12.5, i - 1);
+     doc.text(String(line_load), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(line.pt_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
@@ -501,8 +503,9 @@ export class ValidateChargeDemandeComponent implements OnInit {
         doc.setFontSize(10);
         let line = this.printLines[j];
         doc.line(10, i - 5, 10, i);
-        doc.text(String(this.printLines[j].line), 12.5, i - 1);
-        doc.line(20, i - 5, 20, i);
+       // doc.text(String(this.printLines[j].line), 12.5, i - 1);
+       doc.text(String(line_load), 12.5, i - 1); 
+       doc.line(20, i - 5, 20, i);
         doc.text(this.printLines[j].item.pt_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.setFontSize(14);
@@ -526,7 +529,7 @@ export class ValidateChargeDemandeComponent implements OnInit {
     doc.line(10, i - 5, 195, i - 5);
     doc.setFontSize(14);
     doc.text("Total cartons    : " + this.totalCartons, 130, i + 5);
-    doc.text("Valeur : " + Number(this.total * 1.2019).toFixed(2) + " DZD", 130, i + 10);
+    doc.text("Valeur : " + Number(this.total * 1.2138).toFixed(2) + " DZD", 130, i + 10);
     doc.setFontSize(10);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));

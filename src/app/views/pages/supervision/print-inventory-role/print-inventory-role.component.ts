@@ -158,7 +158,7 @@ console.log(this.roles[index])
         
         this.dataview.setItems(this.dataset)
         this.dataset.map((element) => {
-          this.total = Number(this.total) + ( Number(element.amt) * Number(element.qty) * 1.2019);
+          this.total = Number(this.total) + ( Number(element.amt) * Number(element.qty) * 1.2138);
           this.totalCartons = this.totalCartons + Number(element.qty);
           
         });
@@ -554,9 +554,9 @@ console.log(this.roles[index])
     doc.text("Timbre", 140, i + 26, { align: "left" });
     doc.text("Total TC", 140, i + 33, { align: "left" });
 
-    doc.text(String((Number(controls.amt.value) / 1.2019).toFixed(2)), 198, i + 12, { align: "right" });
-    doc.text(String(((Number(controls.amt.value) / 1.2019) * 0.19).toFixed(2)), 198, i + 19, { align: "right" });
-    doc.text(String((Number(controls.amt.value) - (Number(controls.amt.value) / 1.2019) - ((Number(controls.amt.value) / 1.2019) * 0.19)).toFixed(2)), 198, i + 26, { align: "right" });
+    doc.text(String((Number(controls.amt.value) / 1.2138).toFixed(2)), 198, i + 12, { align: "right" });
+    doc.text(String(((Number(controls.amt.value) / 1.2138) * 0.19).toFixed(2)), 198, i + 19, { align: "right" });
+    doc.text(String((Number(controls.amt.value) - (Number(controls.amt.value) / 1.2138) - ((Number(controls.amt.value) / 1.2138) * 0.19)).toFixed(2)), 198, i + 26, { align: "right" });
     doc.text(String((Number(controls.amt.value)).toFixed(2)), 198, i + 33, { align: "right" });
 
     doc.setFontSize(10);
