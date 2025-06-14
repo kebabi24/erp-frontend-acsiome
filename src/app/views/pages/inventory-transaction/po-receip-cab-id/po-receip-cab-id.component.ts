@@ -1980,15 +1980,16 @@ export class PoReceipCabIdComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
+    // img.src = "./assets/media/logos/po-receip-cab-id.png";
     img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 170, 5, 30, 30);
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(12);
     let date = new Date()
     doc.text("RC N° : " + nbr, 70, 40);

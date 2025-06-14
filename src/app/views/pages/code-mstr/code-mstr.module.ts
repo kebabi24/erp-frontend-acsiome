@@ -50,7 +50,10 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import {CodeService} from '../../../core/erp'
+import {CodeService} from '../../../core/erp';
+import { CreateDocComponent } from './create-doc/create-doc.component';
+import { ListDocComponent } from './list-doc/list-doc.component';
+import { EditDocComponent } from './edit-doc/edit-doc.component'
 
 const routes: Routes = [
     {
@@ -65,6 +68,18 @@ const routes: Routes = [
         path: "codes-list",
         component: ListComponent,
     },
+    {
+        path: "create-doc",
+        component: CreateDocComponent,
+    },
+    {
+        path: "edit-doc/:id",
+        component: EditDocComponent,
+    },
+    {
+        path: "list-doc",
+        component: ListDocComponent,
+    },
 ]
 
 @NgModule({
@@ -73,6 +88,9 @@ const routes: Routes = [
         CreateComponent,
         ListComponent,
         EditComponent,
+        CreateDocComponent,
+        ListDocComponent,
+        EditDocComponent,
     ],
     imports: [
         CommonModule,

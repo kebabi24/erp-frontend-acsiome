@@ -59,6 +59,18 @@ export class MenuTrConfig {
             page: "/training/gestion-de-formation",
           },
           {
+            title: "Gestion commerciale",
+            bullet: "dot",
+            icon: "flaticon-presentation",
+            page: "/training/gestion-commerciale",
+          },
+          {
+            title: "Gestion des Moyens géneraux",
+            bullet: "dot",
+            icon: "flaticon-presentation",
+            page: "/training/gestion-moyens-generaux",
+          },
+          {
             title: "Sessions",
             bullet: "dot",
             icon: "flaticon-presentation",
@@ -520,6 +532,10 @@ export class MenuTrConfig {
                 title: "Agenda",
                 page: "/crm/agenda",
               },
+               {
+               title: "liste des évenements",
+               page: "/crm/list-events",
+             },
               {
                 title: "Ajouter un paramètre CRM",
                 page: "/crm/param-add",
@@ -621,6 +637,42 @@ export class MenuTrConfig {
             ],
           },
           {
+            title: "Comptabilité Fournisseur",
+            root: true,
+            bullet: "dot",
+            icon: "flaticon2-analytics",
+            submenu: [
+              {
+                title: "Maint des Factures",
+                page: "/account-payable/create-vh",
+              },
+              {
+                title: "Liste des factures",
+                page: "/account-payable/list-vh",
+              },
+              {
+                title: "Maint des Paiement",
+                page: "/account-payable/create-payment",
+              },
+              {
+                title: "Paiement à Rapproché",
+                page: "/account-payable/list-payment-rap",
+              },
+              {
+                title: "Liste des Paiements",
+                page: "/account-payable/list-payment",
+              },
+              {
+                title: "Maint des Notes de Débit",
+                page: "/account-payable/create-note",
+              },
+              {
+                title: "Journal Fournisseur",
+                page: "/account-payable/edit-journal-fournisseur",
+              },
+            ],
+          }, 
+          {
             title: "Comptabilité Client",
             root: true,
             bullet: "dot",
@@ -649,6 +701,34 @@ export class MenuTrConfig {
               {
                 title: "Journal Client",
                 page: "/account-receivable/edit-journal",
+              },
+            ],
+          },
+          {
+            title: "Comptabilité Générale",
+            bullet: "dot",
+            icon: "flaticon2-graphic-design",
+            root: true,
+            submenu: [
+              {
+                title: "Affectation Frais d approche",
+                page: "/general-accounting/affect-frp",
+              },
+              {
+                title: "Calcul Coût Moyen Pondéré",
+                page: "/general-accounting/calc-cmp",
+              },
+              {
+                title: "Maint Ecriture Standard",
+                page: "/general-accounting/create-gl",
+              },
+              {
+                title: "Liste des Ecritures ",
+                page: "/general-accounting/list-gl",
+              },
+              {
+                title: "Liste  ",
+                page: "/general-accounting/list",
               },
             ],
           },

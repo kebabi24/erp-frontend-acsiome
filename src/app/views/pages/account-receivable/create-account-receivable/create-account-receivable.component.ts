@@ -855,14 +855,14 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
 
       return;
     }
-    if(this.cfdataset.length == 0) {
-      this.message = "Ecriture comptable vide.";
-      this.hasFormErrors = true;
+    // if(this.cfdataset.length == 0) {
+    //   this.message = "Ecriture comptable vide.";
+    //   this.hasFormErrors = true;
 
-      return;
+    //   return;
    
 
-    }
+    // }
 
    
     

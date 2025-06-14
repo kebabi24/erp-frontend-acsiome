@@ -2079,8 +2079,9 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/company.png";
-  doc.addImage(img, 'png', 5, 5, 210, 30)
+  // img.src = "./assets/media/logos/po-receip-id.png";
+  img.src = "./assets/media/logos/companyentete.png";
+    doc.addImage(img, 'png', 5, 5, 200, 30)
   doc.setFontSize(12);
   let date = new Date()
   doc.text( 'RC N° : ' + nbr  , 70, 40);

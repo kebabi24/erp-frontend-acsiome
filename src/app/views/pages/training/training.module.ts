@@ -61,7 +61,7 @@ import {CodeService,
          SiteService, 
          SequenceService,
          LocationService,
-         
+         CustomerService,
          FinancialchargeService, 
          AccountUnplanifedService,
          ProviderService ,
@@ -71,7 +71,9 @@ import {CodeService,
          InventoryStatusService,
          TaxeService,
          JobService,
-         CustomerMobileService,
+         Quote,
+         QuoteService,
+         SaleOrder,
          UsersService,
          EmployeService,
          RequisitionService,
@@ -82,8 +84,20 @@ import {CodeService,
          InventoryTransactionService,LocationDetailService,
          QualityControlService,
          AccountShiperService,
-         PayMethService
-         
+         PayMethService,
+         LabelService,
+         DomainService,
+         PrintersService,
+         SaleOrderService,
+         PricelistService,
+         InvoiceOrder,
+         InvoiceOrderService,
+         SaleShiperService,
+         InvoiceOrderTemp,
+         InvoiceOrderTempService,
+         ConfigService,
+         AccountReceivableService,
+         CRMService
         } from '../../../core/erp';
 import { UpdateTrainingComponent } from './update-training/update-training.component';
 import { ListSectionComponent } from './list-section/list-section.component';
@@ -109,6 +123,9 @@ import { TrainingEvalListComponent } from './training-eval-list/training-eval-li
 import { EditStudentComponent } from './edit-student/edit-student.component';
 import { GestionDeFormationComponent } from './gestion-de-formation/gestion-de-formation.component';
 import { LocationFilterService } from 'src/app/core/erp/_services/location-filter.service';
+import { GestionCommercialeComponent } from './gestion-commerciale/gestion-commerciale.component';
+import { GestionMoyensGenerauxComponent } from './gestion-moyens-generaux/gestion-moyens-generaux.component';
+import { EnqueteSatisfactionComponent } from './enquete-satisfaction/enquete-satisfaction.component';
 
     const routes: Routes = [
      
@@ -137,6 +154,14 @@ import { LocationFilterService } from 'src/app/core/erp/_services/location-filte
               {
                 path: "gestion-de-formation",
                 component: GestionDeFormationComponent,
+              },
+              {
+                path: "gestion-commerciale",
+                component: GestionCommercialeComponent,
+              },
+              {
+                path: "gestion-moyens-generaux",
+                component: GestionMoyensGenerauxComponent,
               },
               {
                 path: "create-training-domain",
@@ -219,6 +244,10 @@ import { LocationFilterService } from 'src/app/core/erp/_services/location-filte
                 component: TrainingHotEvalComponent,
               },
               {
+                path: "enquete-satisfaction",
+                component: EnqueteSatisfactionComponent,
+              },
+              {
                 path: "training-cold-eval",
                 component: TrainingColdEvalComponent,
               },
@@ -231,7 +260,7 @@ import { LocationFilterService } from 'src/app/core/erp/_services/location-filte
 
 
 @NgModule({
-  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent, CreateTrainingCalanderComponent, CreatePopulationComponent, EditPopulationComponent, UpdatePopulationComponent, ListPopulationComponent, CreateTrainingSessionComponent, LaunchTrainingSessionComponent, TrainingReportComponent, TrainingHotEvalComponent, TrainingColdEvalComponent, CreateTrainingTypeComponent, TrainingSessionListComponent, TrainingReportListComponent, TrainingEvalListComponent, EditStudentComponent, GestionDeFormationComponent],
+  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent, CreateTrainingCalanderComponent, CreatePopulationComponent, EditPopulationComponent, UpdatePopulationComponent, ListPopulationComponent, CreateTrainingSessionComponent, LaunchTrainingSessionComponent, TrainingReportComponent, TrainingHotEvalComponent, TrainingColdEvalComponent, CreateTrainingTypeComponent, TrainingSessionListComponent, TrainingReportListComponent, TrainingEvalListComponent, EditStudentComponent, GestionDeFormationComponent, GestionCommercialeComponent, GestionMoyensGenerauxComponent, EnqueteSatisfactionComponent],
   
   imports: [
     CommonModule,
@@ -283,7 +312,10 @@ providers: [
     TaxeService,
     InventoryStatusService,
     CostSimulationService,
-    CustomerMobileService,
+    CustomerService,
+    LabelService,
+    PrintersService,
+    DomainService,
     ItemModelService,
     JobService,
     UsersService,
@@ -299,8 +331,18 @@ providers: [
     QualityControlService,
     AccountShiperService,
     PayMethService,
-   
-
+   QuoteService,
+   SaleOrderService,
+   PricelistService,
+   InvoiceOrder,
+   InvoiceOrderService,
+   ProductLineService,
+   SaleShiperService,
+   InvoiceOrderTemp,
+   InvoiceOrderTempService,
+   ConfigService,
+   AccountReceivableService,
+   CRMService,
 ],
 
 entryComponents: [

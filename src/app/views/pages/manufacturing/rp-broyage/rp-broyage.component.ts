@@ -611,20 +611,21 @@ printpdf(gamme,date1,date2,time1,time2) {
 
   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image();
+  // img.src = "./assets/media/logos/rp-broyage.png";
   img.src = "./assets/media/logos/companyentete.png";
-  doc.addImage(img, "png", 200, 5, 50, 30);
+    doc.addImage(img, 'png', 5, 5, 200, 30)
   doc.setFontSize(9);
-  if (this.domain.dom_name != null) {
-    doc.text(this.domain.dom_name, 10, 10);
-  }
-  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  // if (this.domain.dom_name != null) {
+  //   doc.text(this.domain.dom_name, 10, 10);
+  // }
+  // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
   doc.setFontSize(14);
   let date = new Date()
   doc.line(10, 35, 300, 35);
   doc.setFontSize(12);
-  doc.text("Etat Des Broyages" , 130, 45);
+  doc.text("Etat Des Broyages du " + String(date1) + String(time1) + "AU " + String(date2) + String(time2) , 130, 45);
   doc.text("Date: " + date.toLocaleDateString() , 250, 45);
   doc.text("Heure: " + new Date().toLocaleTimeString(), 250, 50);
   doc.text("Edité par: " + this.user.usrd_code, 250, 55);
@@ -678,20 +679,21 @@ printpdf(gamme,date1,date2,time1,time2) {
 
     if (j % 20 == 0 && j != 0) {
       doc.addPage();
+      // img.src = "./assets/media/logos/rp-broyage.png";
       img.src = "./assets/media/logos/companyentete.png";
-      doc.addImage(img, "png", 200, 5, 50, 30);
+      doc.addImage(img, 'png', 5, 5, 200, 30)
       doc.setFontSize(9);
-      if (this.domain.dom_name != null) {
-        doc.text(this.domain.dom_name, 10, 10);
-      }
-      if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-      if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-      if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+      // if (this.domain.dom_name != null) {
+      //   doc.text(this.domain.dom_name, 10, 10);
+      // }
+      // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
       doc.setFontSize(14);
       doc.line(10, 35, 300, 35);
 
       doc.setFontSize(12);
-      doc.text("Etat des Broyages " , 130, 40);
+      doc.text("Etat des Broyages " + String(date1) + String(time1) + "AU " + String(date2) + String(time2), 130, 40);
       doc.text("Date: " + date.toLocaleDateString() , 250, 40);
   doc.text("Heure: " + new Date().toLocaleTimeString(), 250, 50);
   doc.text("Edité par: " + this.user.usrd_code, 250, 55);

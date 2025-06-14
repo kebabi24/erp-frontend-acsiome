@@ -44,15 +44,10 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
   if (value=="CARTON"){
     return `<div class="text"  aria-hidden="CARTON">CARTON</div>`
   }
-  if (value=="F"){
-    return `<div class="text"  aria-hidden="F">Valide</div>`
+  if (value=="AUCUN"){
+    return `<div class="text"  aria-hidden="AUCUN">AUCUN</div>`
   }
-  if (value=="D"){
-    return `<div class="text"  aria-hidden="D">Reporté</div>`
-  }
-  if (value=="A"){
-    return `<div class="text"  aria-hidden="A">Annulé</div>`
-  }
+  
 
 
   }
@@ -284,7 +279,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
                     } else {
                       this.stat = this.location.loc_status;
                     }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: resp.data.pt_price });
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_desc: resp.data.pt_desc1,tr_batch:resp.data.pt_model, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: resp.data.pt_price });
                   });
                 });
                 this.codeService.getByOne({code_fldname:'LIMIT',code_value:resp.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
@@ -315,6 +310,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
             this.row_number = args.row;
             let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
             element.click();
+
           }
         },
       },
@@ -336,25 +332,6 @@ export class PurchaseReceiptCabComponent implements OnInit {
         filterable: false,
         editor: {
           model: Editors.text,
-        },
-      },
-      {
-        id: "emballage",
-        name: "emballage",
-        field: "emballage",
-        
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-        formatter: myCustomCheckboxFormatter,
-        editor: {
-          model: Editors.singleSelect,
-
-          enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-      
-         
         },
       },
       {
@@ -397,8 +374,28 @@ export class PurchaseReceiptCabComponent implements OnInit {
         },
       },
       {
+        id: "emballage",
+        name: "emballage",
+        field: "emballage",
+        
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+        formatter: myCustomCheckboxFormatter,
+        editor: {
+          model: Editors.singleSelect,
+
+          enableRenderHtml: true,
+          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+      
+         
+        },
+      },
+      
+      {
         id: "tr_qty_loc",
-        name: "QTE",
+        name: "Poids Net",
         field: "tr_qty_loc",
         sortable: true,
         width: 80,
@@ -783,7 +780,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
                 console.log(this.nom);
                 let lab = null;
                 (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
-                _lb.lb_rmks = controls.tr_rmks.value;
+                _lb.lb_rmks = args.dataContext.tr_batch;
                 _lb.lb_loc = args.dataContext.tr_loc;
                 _lb.lb_part = args.dataContext.tr_part;
                 _lb.lb_nbr = args.dataContext.tr_so_job; //this.trnbr
@@ -914,7 +911,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         this.domconfig = false;
       }
     );
-    this.seuil = 1200;
+    this.seuil = 999999;
     this.createForm();
     console.log(this.PathPrinter);
     
@@ -1020,6 +1017,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
       tr_ref: this.dataset[this.index].tr_ref,
       tr_status: this.dataset[this.index].tr_status,
       tr_expire: this.dataset[this.index].tr_expire,
+      tr_batch : this.dataset[this.index].tr_batch,
     };
     // this.data.push(this.dataset[this.index])
     this.data.push(obj);
@@ -1231,6 +1229,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
           tr_part: "",
           cmvid: "",
           tr_desc: "",
+          tr_batch:"",
           tr_qty_loc: 0,
           tr_um: "",
           tr_price: 0,
@@ -1269,6 +1268,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
           tr_part: this.dataset[i - 1].tr_part,
           cmvid: "",
           tr_desc: this.dataset[i - 1].tr_desc,
+          tr_batch: this.dataset[i - 1].tr_batch,
           tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
           tr_um: this.dataset[i - 1].tr_um,
           tr_um_conv: this.dataset[i - 1].tr_um_conv,
@@ -1299,6 +1299,7 @@ export class PurchaseReceiptCabComponent implements OnInit {
         tr_part: this.dataset[i - 1].tr_part,
         cmvid: "",
         tr_desc: this.dataset[i - 1].tr_desc,
+        tr_batch: this.dataset[i - 1].tr_batch,
         tr_qty_loc: this.dataset[i - 1].tr_qty_loc * -1,
         tr_um: this.dataset[i - 1].tr_um,
         tr_um_conv: this.dataset[i - 1].tr_um_conv,
@@ -1344,6 +1345,8 @@ if(loc == null){loc = item.loc}
 
             updateItem.tr_part = item.pt_part;
             updateItem.tr_desc = item.pt_desc1;
+            updateItem.tr_batch= item.pt_model;
+            updateItem.emballage = 'BIGBAG'
             updateItem.tr_um = item.pt_um;
             updateItem.tr_um_conv = 1;
             updateItem.tr_site = site;
@@ -1381,6 +1384,16 @@ if(loc == null){loc = item.loc}
         id: "pt_part",
         name: "code ",
         field: "pt_part",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "pt_model",
+        name: "réference",
+        field: "pt_model",
+        minWidth: 350,
+        maxWidth: 350,
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1845,15 +1858,16 @@ if(loc == null){loc = item.loc}
 let date = new Date()
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
+    // img.src = "./assets/media/logos/purchase-receipt-cab.png";
     img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 150, 5, 50, 30);
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
 
     doc.line(10, 35, 200, 35);
@@ -1913,15 +1927,16 @@ let date = new Date()
       ttc = ttc +  Number(this.dataset[j].tr_qty_loc) * Number(this.dataset[j].tr_price);
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
+        // img.src = "./assets/media/logos/purchase-receipt-cab.png";
         img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, "png", 150, 5, 50, 30);
+    doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
 

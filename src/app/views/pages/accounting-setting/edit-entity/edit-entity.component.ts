@@ -206,6 +206,14 @@ export class EditEntityComponent implements OnInit {
         en_next_prot: [this.entityEdit.en_next_prot],
         en_page_num: [this.entityEdit.en_page_num],
         en_addr: [this.entityEdit.en_addr],
+        dec01: [this.entityEdit.dec01],
+        chr01: [this.entityEdit.chr01],
+        chr02: [this.entityEdit.chr02],
+        chr03: [this.entityEdit.chr03],
+        chr04: [this.entityEdit.chr04],
+        chr05: [this.entityEdit.chr05],
+        en_user1: [this.entityEdit.en_user1],
+        en_user2: [this.entityEdit.en_user2],
         en_consolidation: [this.entityEdit.en_consolidation],
         en_type: [this.entityEdit.en_type],
         cfdebit: [this.fdebitEdit.acdf_acct],
@@ -285,6 +293,14 @@ prepareEntity(): Entity {
     _entity.en_adj_bs = controls.en_adj_bs.value
     _entity.en_page_num = controls.en_page_num.value
     _entity.en_addr = controls.en_addr.value
+    _entity.dec01 = controls.dec01.value
+    _entity.chr01 = controls.chr01.value
+    _entity.chr02 = controls.chr02.value
+    _entity.chr03 = controls.chr03.value
+    _entity.chr04 = controls.chr04.value
+    _entity.chr05 = controls.chr05.value
+    _entity.en_user1 = controls.en_user1.value
+    _entity.en_user2 = controls.en_user2.value
     _entity.en_consolidation = controls.en_consolidation.value
     _entity.en_type = controls.en_type.value
 

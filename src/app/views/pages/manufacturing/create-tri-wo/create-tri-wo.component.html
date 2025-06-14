@@ -1,8 +1,9 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="OF TRI" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" title="TRI BOBINE" [class]="'card-head-lg'" [viewLoading$]="loading$">
       <ng-container ktPortletTools>
         <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
         <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+        <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Enregistrer</button>
         <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button-->
       </ng-container>
     </kt-portlet-header> 
@@ -58,7 +59,7 @@
                 <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
               </div>
             </div> 
-            <div class="form-group col-2">
+            <div class="form-group col-1">
               <label class="form-group">Remplacer:</label>
               <div class="input-group input-group-sm">
                 <span class="switch switch-icon">
@@ -84,7 +85,7 @@
           
           <!-- SEARCH PRODUCT START  -->
           
-          <div class="row">
+          <!-- <div class="row">
             <div class="form-group col-2">
               <label class="form-group">Type de produit:</label>
               <select class="form-control form-control-sm form-control-solid" formControlName="product_type" id="id_prod_type">
@@ -111,12 +112,12 @@
                 <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="searchProduct()">Rechercher</button>
               </div>
             </div>
-          </div>
+          </div> -->
   
           <!-- SEARCH PRODUCT END  -->
   
           <div class="row">
-            <div class="form-group col-2">
+            <!-- <div class="form-group col-2">
               <label class="form-group">Produit:</label>
               <div class="input-group input-group-sm">
                 <input type="text" id="part" [className]="woForm.controls['wo_part'].errors && (woForm.controls['wo_part'].dirty || woForm.controls['wo_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_part" (change)="onchangePart()" aria-describedby="basic-addon2" />
@@ -126,13 +127,13 @@
   
                 <div *ngIf="woForm.controls['wo_part'].errors && (woForm.controls['wo_part'].dirty || woForm.controls['wo_part'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
               </div>
-            </div>
-            <div class="form-group col-4">
+            </div> -->
+            <!-- <div class="form-group col-4">
               <label class="form-group">Description: </label>
               <div class="input-group input-group-sm">
                 <input type="text" class="form-control form-control-sm form-control-solid" formControlName="desc" />
               </div>
-            </div>
+            </div> -->
             <div class="form-group col-2">
               <label class="form-group">choix de l'imprimante</label>
               <div class="input-group input-group-sm">
@@ -143,10 +144,10 @@
               </div>
             </div>
   
-            <div class="form-group col-3">
+            <div class="form-group col-2">
               <label class="form-group">Démarrer:</label>
               <div class="input-group input-group-sm">
-                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()">Créer OF</button>
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addWo()">Trier</button>
               </div>
             </div>
           </div>
@@ -155,11 +156,31 @@
           
           <div class="row">
             <div class="form-group col-2">
-              <label class="form-group">N° Palette :</label>
+              <label class="form-group">N° BOBINE :</label>
               <div class="input-group input-group-sm">
                 <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()" aria-describedby="basic-addon2" />
               </div>
             </div>
+            <div class="form-group col-2">
+             <label class="form-group">   </label>
+             <div class="input-group input-group-sm">
+            
+             </div>
+            </div>
+            
+            <div class="form-group col-2">
+             <label class="form-group">   </label>
+             <div class="input-group input-group-sm">
+            
+             </div>
+            </div>
+            <div class="form-group col-1">
+            <label class="form-group">Poids Squelette: </label>
+             <div class="input-group input-group-sm">
+              <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_rjct" (change)="onChangeSq()" aria-describedby="basic-addon2"/>
+             </div>
+            </div>
+
           </div>
           <!--div class="row">
                           <div class="form-group col-6">
@@ -176,9 +197,16 @@
                           <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter ID </button>
                       </div-->
           <div class="row">
-            <angular-slickgrid class="col-12" gridHeight="200" gridId="mGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
+            <angular-slickgrid class="col-6" gridHeight="300" gridId="BGrid" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset" (onAngularGridCreated)="gridReady($event)"> </angular-slickgrid>
+          
+            <angular-slickgrid class="col-6" gridHeight="300" gridId="sGrid" 
+              [columnDefinitions]="columnDefinitionssq" 
+              [gridOptions]="gridOptionssq" 
+              [dataset]="sqdataset" 
+              (onAngularGridCreated)="gridReadysq($event)"> 
+            </angular-slickgrid>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="form-group col-3">
               <label class="form-group">Quantite: </label>
               <div class="input-group input-group-sm">
@@ -197,7 +225,7 @@
                 <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2" [disabled]="globalState">Valider</button>
               </div>
             </div>
-          </div>
+          </div> -->
         </form>
       </div>
   

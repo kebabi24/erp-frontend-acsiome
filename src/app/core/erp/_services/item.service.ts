@@ -152,4 +152,8 @@ export class ItemService {
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         
     }
+    public updatepage(data: any, id:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL_2}/${id}`, data, { headers: httpHeaders })
+    }
 }

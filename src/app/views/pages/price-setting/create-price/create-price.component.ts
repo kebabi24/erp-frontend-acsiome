@@ -38,7 +38,7 @@ import { MatDialog } from "@angular/material/dialog"
 
 import { Pricelist, PricelistService, CodeService , ItemService, CustomerService,DeviseService} from "../../../../core/erp"
 
-@Component({
+@Component({  
   selector: 'kt-create-price',
   templateUrl: './create-price.component.html',
   styleUrls: ['./create-price.component.scss']
@@ -60,6 +60,19 @@ export class CreatePriceComponent implements OnInit {
   gridOptions2: GridOption = {};
   gridObj2: any;
   angularGrid2: AngularGridInstance;
+
+
+  customers: [];
+  columnDefinitionscm: Column[] = [];
+  gridOptionscm: GridOption = {};
+  gridObjcm: any;
+  angularGridcm: AngularGridInstance;
+
+  items: [];
+    columnDefinitionspart: Column[] = [];
+    gridOptionspart: GridOption = {};
+    gridObjpart: any;
+    angularGridpart: AngularGridInstance;
 
   data: [];
   columnDefinitions3: Column[] = [];
@@ -476,6 +489,13 @@ export class CreatePriceComponent implements OnInit {
     this.codeService
       .getBy({ code_fldname: this.selectedCode })
       .subscribe((response: any) => (this.data = response.data));
+    // fill the dataset with your data
+    if(this.selectedField == 'pi_cs_code' ){this.customerService
+      .getBy({})
+      .subscribe((response: any) => (this.data = response.data));  }
+    if(this.selectedField == 'pi_part_code' ){this.itemService
+        .getBy({})
+        .subscribe((response: any) => (this.data = response.data));  }  
   }
   open3(content, field) {
     this.selectedField = field;
@@ -709,5 +729,238 @@ export class CreatePriceComponent implements OnInit {
     this.prepareGrid2();
     this.modalService.open(content, { size: "lg" });
   }
+  handleSelectedRowsChangedcm(e, args) {
+    const controls = this.priceForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjcm) {
+      args.rows.map((idx) => {
+        const item = this.gridObjcm.getDataItem(idx);
+        console.log(item);
+        const date = new Date();
 
+        
+        controls.pi_cs_code.setValue(item.cm_addr || "");
+       
+       
+       
+      });
+    }
+  }
+
+  angularGridReadycm(angularGrid: AngularGridInstance) {
+    this.angularGridcm = angularGrid;
+    this.gridObjcm = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridcm() {
+    this.columnDefinitionscm = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "cm_addr",
+        name: "code",
+        field: "cm_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_name",
+        name: "Client",
+        field: "address.ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_phone",
+        name: "Numero telephone",
+        field: "address.ad_phone",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxable",
+        name: "A Taxer",
+        field: "address.ad_taxable",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxc",
+        name: "Taxe",
+        field: "address.ad_taxc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionscm = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    // fill the dataset with your data
+    const controls = this.priceForm.controls;
+    this.customerService.getByAll({ cm_hold: false}).subscribe((response: any) => (this.customers = response.data));
+  }
+  opencm(content) {
+    this.prepareGridcm();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  handleSelectedRowsChangedpart(e, args) {
+      const controls = this.priceForm.controls;
+  
+      if (Array.isArray(args.rows) && this.gridObjpart) {
+        args.rows.map((idx) => {
+          const item = this.gridObjpart.getDataItem(idx);
+          console.log(item);
+          controls.pi_part_code.setValue(item.pt_part)
+  
+          
+               });
+      }
+    }
+    dbclick4(e) {
+       this.gridObjpart.onDblClick.subscribe((e, args) => {
+       alert("On Click");
+        
+    })
+  }
+    angularGridReadypart(angularGrid: AngularGridInstance) {
+      this.angularGridpart = angularGrid;
+      this.gridObjpart = (angularGrid && angularGrid.slickGrid) || {};
+    }
+  
+    prepareGridpart() {
+      this.columnDefinitionspart = [
+        {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+        },
+        {
+          id: "pt_part",
+          name: "code ",
+          field: "pt_part",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_desc1",
+          name: "desc",
+          field: "pt_desc1",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_desc2",
+          name: "desc2",
+          field: "pt_desc2",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_um",
+          name: "UM",
+          field: "pt_um",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_ord_max",
+          name: "QTE",
+          field: "pt_ord_max",
+          sortable: true,
+          filterable: true,
+          type: FieldType.float,
+        },
+      ];
+  
+      this.gridOptionspart = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        editable: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
+      };
+  
+      // fill the dataset with your data
+      this.itemService.getBy({}).subscribe((response: any) => (this.items = response.data));
+    }
+    openpart(content) {
+      this.prepareGridpart();
+      this.modalService.open(content, { size: "lg" });
+    }
 }

@@ -90,9 +90,22 @@ export class BankService {
             headers: httpHeaders,
         });
     }
+    public addBkhPaymentDetail(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/addbkhpaymentdet`, data, {
+            headers: httpHeaders,
+        });
+    }
     public addBkhTransfertC(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders();
         return this.http.post(`${API_URL}/addbkhtransfertc`, data, {
+            headers: httpHeaders,
+        });
+    // DELETE
+    }
+    public addBkhTransfertCDet(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/addbkhtransfertcdet`, data, {
             headers: httpHeaders,
         });
     // DELETE
@@ -103,6 +116,11 @@ export class BankService {
  
     }
    
+    public getBKHTrBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbkhtr`,data, { headers: httpHeaders })
+ 
+    }
     public getTransfertBy() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/findtransfert', { headers: httpHeaders })

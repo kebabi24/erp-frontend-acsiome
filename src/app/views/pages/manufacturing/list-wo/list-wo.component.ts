@@ -117,14 +117,14 @@ export class ListWoComponent implements OnInit {
                   this.router.navigateByUrl(`/manufacturing/edit-wo/${id}`)
               },
           },
-          // {
-          //     id: "id",
-          //     name: "id",
-          //     field: "id",
-          //     sortable: true,
-          //     minWidth: 80,
-          //     maxWidth: 80,
-          // },
+          {
+              id: "id",
+              name: "id",
+              field: "id",
+              sortable: true,
+              minWidth: 80,
+              maxWidth: 80,
+          },
          
           // {
           //   id: "wo_nbr",
@@ -437,7 +437,7 @@ export class ListWoComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.workOrderService.getBy({wo_routing:'U1'}).subscribe(
+      this.workOrderService.getByextrusion({wo_routing:'U1'}).subscribe(
           (response: any) => (this.dataset = response.data),
           (error) => {
               this.dataset = []
@@ -510,14 +510,14 @@ export class ListWoComponent implements OnInit {
           sortable: true,
           width: 80,
           filterable: true,
-          formatter: Formatters.dateIso ,
+          formatter: Formatters.dateTimeIso ,
           type: FieldType.dateTimeIso,
          
         },
         {
-          id: "chr01",
-          name: "Heure Debut",
-          field: "chr01",
+          id: "chr03",
+          name: "Temps Production",
+          field: "chr03",
           sortable: true,
           width: 80,
           filterable: true,

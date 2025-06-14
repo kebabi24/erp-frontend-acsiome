@@ -37,6 +37,7 @@ import { IActionMapping, ITreeOptions, TREE_ACTIONS } from '@circlon/angular-tre
 import { CustomerMobileService   , ItemService} from "../../../../core/erp"
 import { takeUntil } from "rxjs/operators"
 import { ProductPage } from "src/app/core/erp/_models/product-page.model"
+import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 
 const actionMapping: IActionMapping = {
     mouse: {
@@ -80,15 +81,22 @@ export class ProductPageCreateComponent implements OnInit {
     selectedProductsIndexes : any[] = []
     pageIsEdited = false
 
-
+    items: [];
+    columnDefinitions4: Column[] = [];
+    gridOptions4: GridOption = {};
+    gridObj4: any;
+    angularGrid4: AngularGridInstance;
     
-   
+    row_number;
+    selectedIndexes: any[];
+    selectedIndexes2: any[];
     constructor(
         config: NgbDropdownConfig,
         private profileFB: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private router: Router,
         public dialog: MatDialog,
+        private modalService: NgbModal,
         private layoutUtilsService: LayoutUtilsService,
         private itemService : ItemService,
         private customerMobileService : CustomerMobileService
@@ -124,28 +132,30 @@ export class ProductPageCreateComponent implements OnInit {
   
     reset() {
         this.productPage = new ProductPage()
+        this.dataset=[]
         this.createForm()
+
         this.hasFormErrors = false
     }
 
-    onChangeCode() {
-        const controls = this.productPageForm.controls
-        const product_page_code = controls.product_page_code.value
-        this.itemService.getProductPageByCode({product_page_code : product_page_code}).subscribe(
-            (res: any) => {
+    // onChangeCode() {
+    //     const controls = this.productPageForm.controls
+    //     const product_page_code = controls.product_page_code.value
+    //     this.itemService.getProductPageByCode({product_page_code : product_page_code}).subscribe(
+    //         (res: any) => {
            
-              if (res.data.productPage) {
-                alert("Ce code cluster existe déjà")
-                this.isExist = true
-                document.getElementById("productPageCode").focus();
-                controls.description.disable()
-              } else {
-                controls.description.enable()
-              }
+    //           if (res.data.productPage) {
+    //             alert("Ce code Page de Produit existe déjà")
+    //             this.isExist = true
+    //             document.getElementById("productPageCode").focus();
+    //             controls.description.disable()
+    //           } else {
+    //             controls.description.enable()
+    //           }
                    
-        })
+    //     })
     
-    }
+    // }
 
     angularGridReady(angularGrid: AngularGridInstance) {
         this.angularGrid = angularGrid;
@@ -201,16 +211,16 @@ export class ProductPageCreateComponent implements OnInit {
     }
 
     prepareGrid() {
-      this.itemService.getBy({pt_salable:true}).subscribe(
-        (response: any) => {
-          this.dataset = response.data
-          this.dataView.setItems(this.dataset)
-        },
-        (error) => {
-            this.dataset = []
-        },
-        () => {}
-      )
+      // this.itemService.getBy({pt_salable:true}).subscribe(
+      //   (response: any) => {
+      //     this.dataset = response.data
+      //     this.dataView.setItems(this.dataset)
+      //   },
+      //   (error) => {
+      //       this.dataset = []
+      //   },
+      //   () => {}
+      // )
        
 
 
@@ -224,95 +234,31 @@ export class ProductPageCreateComponent implements OnInit {
                 maxWidth: 80,
             },
             {
-                id: "pt_part",
+                id: "product_code",
                 name: "Code Produit",
-                field: "pt_part",
+                field: "product_code",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
             },
             {
-                id: "pt_desc1",
-                name: "Deescription",
-                field: "pt_desc1",
+                id: "desc",
+                name: "Description",
+                field: "desc",
                 sortable: true,
                 filterable: true,
                 width: 200,
                 type: FieldType.string,
             },
             {
-                id: "pt_um",
-                name: "UM",
-                field: "pt_um",
-                sortable: true,
-                filterable: true,
-                type: FieldType.string,
-            },
-            {
-              id: "pt_prod_line",
-              name: "Ligne Prod",
-              field: "pt_prod_line",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "pt_part_type",
-              name: "Type",
-              field: "pt_part_type",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "pt_draw",
-              name: "Classe",
-              field: "pt_draw",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
+            id: "rank",
+            name: "Rang",
+            field: "rank",
+            sortable: true,
+            filterable: true,
+            type: FieldType.integer,
+        },
             
-            {
-              id: "pt_group",
-              name: "Groupe",
-              field: "pt_group",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "pt_promo",
-              name: "Grp Promo",
-              field: "pt_promo",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "pt_dsgn_grp",
-              name: "Etude",
-              field: "pt_dsgn_grp",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "pt_site",
-              name: "Site",
-              field: "pt_site",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "pt_loc",
-              name: "Emplacement",
-              field: "pt_loc",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
         ]
   
         this.gridOptions = {
@@ -393,8 +339,11 @@ export class ProductPageCreateComponent implements OnInit {
      */
     addproductPage(_productPage: ProductPage ) {
         
+      for(let data of this.dataset) {
+        delete data.id
+      }
         this.loadingSubject.next(true)
-        this.itemService.createProductPage({ productPage:_productPage},{productCodes : this.productCodes}).subscribe(
+        this.itemService.createProductPage({ productPage:_productPage},{productCodes : this.dataset}).subscribe(
             (reponse) => {
               // this.dataView.setItems(this.dataset)
               this.reset()
@@ -421,6 +370,7 @@ export class ProductPageCreateComponent implements OnInit {
                     true
                 )
                 this.loadingSubject.next(false)
+                this.reset()
                 this.router.navigateByUrl("/articles/page")
             }
         )
@@ -485,4 +435,170 @@ export class ProductPageCreateComponent implements OnInit {
       return this.dataset[index].id
     }
     
+    onChangeCode() {
+      const controls = this.productPageForm.controls;
+  
+      this.itemService.getProductPageByCode({ product_page_code: controls.product_page_code.value }).subscribe((res: any) => {
+        //console.log("aa", res.data);
+  
+        if (res.data) {
+          console.log("here",res.data)
+          const product_page_code = res.data.productPage.product_page_code
+          this.router.navigateByUrl(`/articles/edit-productpage/${product_page_code}`);
+          //console.log(res.data.id)
+        }
+      });
+    }
+
+    onChangePP() {
+      const controls = this.productPageForm.controls;
+  
+      this.itemService.getProductPageByCode({ product_page_code: controls.product_page_code.value }).subscribe((res: any) => {
+        console.log("aa", res.data);
+  
+        if (res.data.productPage) {
+          alert("Cette Page de Produit existe déja");
+          this.isExist = true;
+          document.getElementById("product_page_code").focus();
+        } else {
+          controls.description.enable();
+        
+        }
+      });
+    }
+  
+    handleSelectedRowsChanged4(e, args) {
+      this.selectedIndexes = [];
+      this.selectedIndexes = args.rows;
+    }
+    angularGridReady4(angularGrid: AngularGridInstance) {
+      this.angularGrid4 = angularGrid;
+      this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
+    }
+  
+    prepareGrid4() {
+      this.columnDefinitions4 = [
+        {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+        },
+        {
+          id: "pt_part",
+          name: "code ",
+          field: "pt_part",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_desc1",
+          name: "desc",
+          field: "pt_desc1",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_um",
+          name: "UM",
+          field: "pt_um",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_part_type",
+          name: "Type",
+          field: "pt_part_type",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "pt_draw",
+          name: "Classe",
+          field: "pt_draw",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        
+        {
+          id: "pt_group",
+          name: "Groupe",
+          field: "pt_group",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+      ];
+  
+      this.gridOptions4 = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        editable: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: true,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: false,
+        },
+        presets: {
+
+          sorters: [{ columnId: "id", direction: "ASC" }],
+        }
+      };
+  
+      // fill the dataset with your data
+      this.itemService.getBy({pt_salable:true}).subscribe((response: any) => (this.items = response.data));
+    }
+    open4(content) {
+      this.prepareGrid4();
+      this.modalService.open(content, { size: "lg" });
+    }
+    addNewItem(content4) {
+      this.prepareGrid4();
+      this.modalService.open(content4, {backdrop: 'static',  size: "lg" });
+    }
+    addpage() {
+      // this.itinerary.push({})
+      var l: any[] = [];
+      let i = 0
+      this.selectedIndexes.forEach((index) => {
+        l.push({
+          id: i,
+          product_code: this.items[index]["pt_part"],
+          desc: this.items[index]["pt_desc1"],
+          rank: i+1,
+          //trigger : this.itinerary[index]['pjd_trigger']
+        });
+        i ++
+      });
+      // console.log("lllllllll",l)
+      this.dataset = l;
+  
+      this.dataView.setItems(this.dataset);
+    }
 }

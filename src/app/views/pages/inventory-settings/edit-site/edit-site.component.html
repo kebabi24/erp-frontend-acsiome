@@ -54,22 +54,49 @@
 
                 <div class="row">
                     <div class="form-group col-2">
-                        <label class="form-group">Client :</label>
+                        <label class="form-group">Acte de propriété :</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" formControlName="si_cust"  (change)="onChangeCust()"
+                            <input type="text" class="form-control form-control-solid" formControlName="si_cust"  
                                 aria-describedby="basic-addon2">
-                            <div class="input-group-append">
+                            <!-- <div class="input-group-append">
                                 <span class="input-group-text" (click)="open2(content2)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
+                            </div> -->
                         </div>
 
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Permis de construire: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_user1'].errors && (siteForm.controls['si_user1'].dirty || siteForm.controls['si_user1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_user1">
+                    <div *ngIf="siteForm.controls['si_user1'].errors && (siteForm.controls['si_user1'].dirty || siteForm.controls['si_user1'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Conformité: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_user2'].errors && (siteForm.controls['si_user2'].dirty || siteForm.controls['si_user2'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_user2">
+                    <div *ngIf="siteForm.controls['si_user2'].errors && (siteForm.controls['si_user2'].dirty || siteForm.controls['si_user2'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
                     </div>
                 </div>    
                    
                 <div class="row">
-
+<div class="form-group col-2">
+                        <label class="form-group">Agence: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_db'].errors && (siteForm.controls['si_db'].dirty || siteForm.controls['si_db'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_db">
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">N° Compte Bancaire: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_gl_set'].errors && (siteForm.controls['si_gl_set'].dirty || siteForm.controls['si_gl_set'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_gl_set">
+                    </div>
                     <div class="form-group col-2">
 
                         <label class="form-group"> Site Principale: *</label>
@@ -87,7 +114,7 @@
                 </div>
 
 
-                <div class="row">
+                <!-- <div class="row">
 
                     <div class="form-group col-2">
                         <label class="form-group">Status par Défaut: *</label>
@@ -172,7 +199,7 @@
                             </span>
                     </div>
 
-                </div>
+                </div> -->
             </form>
         </div>
         <div>

@@ -94,7 +94,7 @@ const myCustomCheckmarkFormatter: Formatter = (
 	`;
 };
 
-@Component({
+@Component({ 
   selector: 'kt-create-mod-materiel',
   templateUrl: './create-mod-materiel.component.html',
   styleUrls: ['./create-mod-materiel.component.scss']

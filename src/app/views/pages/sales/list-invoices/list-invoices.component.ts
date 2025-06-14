@@ -45,7 +45,7 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { AccountShiper,
+import { AccountShiper,AccountReceivable,AccountReceivableService,
   AccountShiperService,LocationDetail, LocationDetailService, CodeService} from "../../../../core/erp"
 import { jsPDF } from "jspdf";
 import { HttpUtilsService } from "../../../../core/_base/crud"
@@ -57,7 +57,7 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
   const API_URL_codes = environment.apiUrl + "/codes"
 
-@Component({
+@Component({ 
   selector: 'kt-list-invoices',
   templateUrl: './list-invoices.component.html',
   styleUrls: ['./list-invoices.component.scss']
@@ -91,6 +91,7 @@ export class ListInvoicesComponent implements OnInit {
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private accountshipperService: AccountShiperService,
+      private accountreceivableService: AccountReceivableService,
       private locationDetailService: LocationDetailService,
   ) {
       this.prepareGrid()
@@ -125,96 +126,121 @@ export class ListInvoicesComponent implements OnInit {
           //   maxWidth: 50,
           // },
           {
-            id: "as_nbr",
+            id: "ar_nbr",
             name: "Document",
-            field: "as_nbr",
+            field: "ar_nbr",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
-              getter: 'as_nbr',
+              getter: 'ar_nbr',
               formatter: (g) => `Facture: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
+          // {
+          //   id: "ar_ship",
+          //   name: "Facture N°",
+          //   field: "ar_ship",
+          //   sortable: true,
+          //   filterable: true,
+          //   type: FieldType.string,
+          //   grouping: {
+          //     getter: 'ar_ship',
+          //     formatter: (g) => `Facture: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [
+          //       // (required), what aggregators (accumulator) to use and on which field to do so
+          //      // new Aggregators.Avg('ld_qty_oh'),
+          //       new Aggregators.Sum('ar_amt'),
+          //       new Aggregators.Sum('ar_applied')
+          //     ],
+          //     aggregateCollapsed: true,
+          //     collapsed: true,
+          //   }
+          // }, 
           {
-            id: "as_ship",
-            name: "Facture N°",
-            field: "as_ship",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'as_ship',
-              formatter: (g) => `Facture: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_amt')
-              ],
-              aggregateCollapsed: true,
-              collapsed: true,
-            }
-          }, 
-          {
-            id: "as_type",
+            id: "ar_type",
             name: "type",
-            field: "as_type",
+            field: "ar_type",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
-              getter: 'as_type',
+              getter: 'ar_type',
               formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
           {
-            id: "as_cust",
+            id: "ar_cust",
             name: "Client",
-            field: "as_cust",
+            field: "ar_cust",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
-              getter: 'as_cust',
+              getter: 'ar_cust',
               formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
+          },
+          {
+            id: "ar_bill",
+            name: "Facturé a",
+            field: "ar_bill",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'ar_bill',
+              formatter: (g) => `Facturé à: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
             }
           }, 
           {
-            id: "as_bank",
+            id: "ar_bank",
             name: "Banque",
-            field: "as_bank",
+            field: "ar_bank",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
             grouping: {
-              getter: 'as_bank',
+              getter: 'ar_bank',
               formatter: (g) => `Banque: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               collapsed: true,
@@ -222,20 +248,21 @@ export class ListInvoicesComponent implements OnInit {
             }
           }, 
           {
-            id: "as_curr",
+            id: "ar_curr",
             name: "devise",
-            field: "as_curr",
+            field: "ar_curr",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
             grouping: {
-              getter: 'as_curr',
+              getter: 'ar_curr',
               formatter: (g) => `Devise: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -246,9 +273,9 @@ export class ListInvoicesComponent implements OnInit {
          
           
           {
-            id: "as_amt",
+            id: "ar_amt",
             name: "Montant",
-            field: "as_amt",
+            field: "ar_amt",
             sortable: true,
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
@@ -259,9 +286,9 @@ export class ListInvoicesComponent implements OnInit {
           },
          
           {
-            id: "as_applied",
+            id: "ar_applied",
             name: "Montant payé",
-            field: "as_applied",
+            field: "ar_applied",
             sortable: true,
             filterable: true,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
@@ -274,9 +301,9 @@ export class ListInvoicesComponent implements OnInit {
            
          
           // {
-          //   id: "as_date",
+          //   id: "ar_date",
           //   name: "Date Entrée",
-          //   field: "as_date",
+          //   field: "ar_date",
           //   sortable: true,
           //   filterable: true,
           //   type: FieldType.date,
@@ -291,12 +318,12 @@ export class ListInvoicesComponent implements OnInit {
           //     //editorOptions: { minDate: 'today' } as FlatpickrOption
           //   },
           //   grouping: {
-          //     getter: 'as_date',
+          //     getter: 'ar_date',
           //     formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           //     aggregators: [
           //       // (required), what aggregators (accumulator) to use and on which field to do so
           //      // new Aggregators.Avg('ld_qty_oh'),
-          //       new Aggregators.Sum('as_applied')
+          //       new Aggregators.Sum('ar_applied')
           //     ],
           //     aggregateCollapsed: true,
           //     lazyTotalsCalculation:true,
@@ -304,9 +331,9 @@ export class ListInvoicesComponent implements OnInit {
           //   }
           // },
           {
-            id: "as_due_date",
+            id: "ar_due_date",
             name: "Date échéance",
-            field: "as_due_date",
+            field: "ar_due_date",
             sortable: true,
             filterable: true,
             type: FieldType.date,
@@ -321,12 +348,13 @@ export class ListInvoicesComponent implements OnInit {
               //editorOptions: { minDate: 'today' } as FlatpickrOption
             },
             grouping: {
-              getter: 'as_due_date',
+              getter: 'ar_due_date',
               formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -334,9 +362,9 @@ export class ListInvoicesComponent implements OnInit {
             }
           },
           {
-            id: "as_effdate",
+            id: "ar_effdate",
             name: "Date effet",
-            field: "as_effdate",
+            field: "ar_effdate",
             sortable: true,
             filterable: true,
             type: FieldType.date,
@@ -351,12 +379,13 @@ export class ListInvoicesComponent implements OnInit {
               //editorOptions: { minDate: 'today' } as FlatpickrOption
             },
             grouping: {
-              getter: 'as_effdate',
+              getter: 'ar_effdate',
               formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('as_applied')
+                new Aggregators.Sum('ar_applied'),
+                new Aggregators.Sum('ar_amt')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -417,7 +446,7 @@ export class ListInvoicesComponent implements OnInit {
       // fill the dataset with your data
       this.dataset = []
       
-        this.accountshipperService
+        this.accountreceivableService
       .getBy({ })
       .subscribe(
         
@@ -695,7 +724,7 @@ export class ListInvoicesComponent implements OnInit {
     reset() {
     
       this.dataset = []
-      this.accountshipperService.getAll().subscribe( 
+      this.accountreceivableService.getAll().subscribe( 
         
           (response: any) => {this.dataset = response.data
             console.log(this.dataset)

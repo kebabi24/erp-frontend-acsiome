@@ -122,6 +122,8 @@ prepareCode(): any {
   const controls = this.empForm.controls
   const _affectEmp = new AffectEmp()
   _affectEmp.pme_pm_code = controls.pme_pm_code.value
+  _affectEmp.pme_nbr = controls.pme_pm_code.value
+  _affectEmp.int01 = 0
   _affectEmp.pme_inst = controls.pme_inst.value
   _affectEmp.pme_task = controls.pme_task.value
   _affectEmp.pme_site = controls.pme_site.value
@@ -148,7 +150,7 @@ prepareCode(): any {
       .subscribe((response: any) => {
         // console.log(response.data)
         if (response.data.length == 0) {
-          alert("Projet n'existe pas  ");
+          alert("BT n'existe pas  ");
           controls.pme_addr.setValue(null);
           document.getElementById("pme_pm_code").focus();
         } else {
@@ -394,7 +396,7 @@ prepareCode(): any {
       },
       {
         id: "pm_code",
-        name: "Code Projet",
+        name: "Code BT",
         field: "pm_code",
         sortable: true,
         filterable: true,
@@ -410,9 +412,9 @@ prepareCode(): any {
         type: FieldType.string,
       },
       {
-        id: "pm_cust",
-        name: "Client",
-        field: "pm_cust",
+        id: "pm_win_addr",
+        name: "Equipement",
+        field: "pm_win_addr",
         sortable: true,
         width: 80,
         filterable: true,
@@ -700,34 +702,39 @@ handleSelectedRowsChangedemp(e, args) {
       args.rows.map((idx) => {
           const item = this.gridObjemp.getDataItem(idx)
           console.log( this.job, item.emp_addr ,this.level )
-
-
-          this.employeService
-          .getByJob({empj_addr: item.emp_addr, empj_job: this.job })
-          .subscribe((response: any) => {
-            console.log("hnounou",response.data)
-         if (response.data.length == 0) 
-         
-{         
-     
-     
-      alert("Métier demandé ne correspond pas a cet employé")
-      updateItem.pme_employe = null
-      this.mvgridService.updateItem(updateItem)
-    } else {   
-      if (Number(response.data[0].empj_level) < Number(this.level)){alert("niveau de maitrise demandée ne correspond pas a cet employé")
-      updateItem.pme_employe = null
-      this.mvgridService.updateItem(updateItem)}
-      else{
           updateItem.pme_employe = item.emp_addr
           updateItem.fname = item.emp_fname
           updateItem.lname = item.emp_lname
-          updateItem.job = response.data[0].empj_job
-          updateItem.level = response.data[0].empj_level
+          updateItem.job = item.emp_job
+          updateItem.level = item.emp_level
           this.mvgridService.updateItem(updateItem)
-        }
-     }
-    })
+
+//           this.employeService
+//           .getByJob({empj_addr: item.emp_addr, empj_job: this.job })
+//           .subscribe((response: any) => {
+//             console.log("hnounou",response.data)
+//          if (response.data.length == 0) 
+         
+// {         
+     
+     
+//       alert("Métier demandé ne correspond pas a cet employé")
+//       // updateItem.pme_employe = null
+//       // this.mvgridService.updateItem(updateItem)
+//     } else {   
+//       if (Number(response.data[0].empj_level) < Number(this.level)){alert("niveau de maitrise demandée ne correspond pas a cet employé")
+//       // updateItem.pme_employe = null
+//       // this.mvgridService.updateItem(updateItem)
+//     }}
+      
+//           updateItem.pme_employe = item.emp_addr
+//           updateItem.fname = item.emp_fname
+//           updateItem.lname = item.emp_lname
+//           updateItem.job = response.data[0].empj_job
+//           updateItem.level = response.data[0].empj_level
+//           this.mvgridService.updateItem(updateItem)
+       
+//     })
 
       })
     };

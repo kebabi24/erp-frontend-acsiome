@@ -198,7 +198,106 @@
             </ng-template>
             <button hidden id="openPopsGrid" class="btn btn-primary" (click)="openpop(contentpop)">Launch demo modal</button>
         </div>
-      
+       <div>
+            <ng-template #contentparam let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Choisir Paramètre</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridparam" [columnDefinitions]="columnDefinitionsparam" (onAngularGridCreated)="angularGridReadyparam($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedparam($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsparam" [dataset]="params"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+              </div>
+            </ng-template>
+            <button hidden id="openParamsGrid" class="btn btn-primary" (click)="openparam(contentparam)">Launch demo modal</button>
+        </div>
+        <div>
+            <ng-template #contenttype let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Choisir type</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridtype" [columnDefinitions]="columnDefinitionstype" (onAngularGridCreated)="angularGridReadytype($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtype($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionstype" [dataset]="types"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="getType()">Ok</button>
+              </div>
+            </ng-template>
+            <button hidden id="openTypesGrid" class="btn btn-primary" (click)="opentype(contenttype)">Launch demo modal</button>
+        </div>
+        <div>
+            <ng-template #contentactivity let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Choisir activité</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridactivity" [columnDefinitions]="columnDefinitionsactivity" (onAngularGridCreated)="angularGridReadyactivity($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedactivity($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsactivity" [dataset]="activitys"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="getActivity()">Ok</button>
+              </div>
+            </ng-template>
+            <button hidden id="openactivitysGrid" class="btn btn-primary" (click)="openactivity(contentactivity)">Launch demo modal</button>
+        </div>
+        <div>
+            <ng-template #contentmetier let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Choisir Metier</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridmetier" [columnDefinitions]="columnDefinitionsmetier" (onAngularGridCreated)="angularGridReadymetier($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedmetier($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsmetier" [dataset]="metiers"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="getMetier()">Ok</button>
+              </div>
+            </ng-template>
+            <button hidden id="openMetiersGrid" class="btn btn-primary" (click)="openmetier(contentmetier)">Launch demo modal</button>
+        </div>
+        <div>
+            <ng-template #contentwilaya let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Choisir Wilaya</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridwilaya" [columnDefinitions]="columnDefinitionswilaya" (onAngularGridCreated)="angularGridReadywilaya($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedwilaya($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionswilaya" [dataset]="wilayas"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="getWilaya()">Ok</button>
+              </div>
+            </ng-template>
+            <button hidden id="openWilayasGrid" class="btn btn-primary" (click)="openwilaya(contentwilaya)">Launch demo modal</button>
+        </div>
         <div>
             <ng-template #contentvend let-c="close" let-d="dismiss">
               <div class="modal-header">

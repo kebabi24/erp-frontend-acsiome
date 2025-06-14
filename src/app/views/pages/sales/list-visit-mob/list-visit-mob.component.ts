@@ -375,6 +375,7 @@ export class ListVisitMobComponent implements OnInit {
         }
        
       }, 
+    
       {
         id: "service_code",
         name: "Service",

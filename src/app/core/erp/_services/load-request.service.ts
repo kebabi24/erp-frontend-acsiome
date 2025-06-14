@@ -129,4 +129,18 @@ export class LoadRequestService {
 //    console.log(data);
     return this.http.post(`${API_URL}/getLoadRequestWithCode/`, data, { headers: httpHeaders });
   }
+  public getByChariot(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders()
+    return this.http.post(`${API_URL}/findchariot`,data, { headers: httpHeaders })
+
+   // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+    
+}
+public getByChariotDet(data: any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders()
+  return this.http.post(`${API_URL}/findchariotdet`,data, { headers: httpHeaders })
+
+ // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+  
+}
 }

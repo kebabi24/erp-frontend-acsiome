@@ -10,6 +10,7 @@ import { HtmlClassService } from '../html-class.service';
 import { LayoutConfig } from '../../../core/_config/layout.config';
 import { MenuConfig } from '../../../core/_config/menu.config';
 import { MenuTrConfig } from '../../../core/_config/menuTr.config';
+import { MenuDDConfig } from '../../../core/_config/menuDD.config';
 import { PageConfig } from '../../../core/_config/page.config';
 // User permissions
 import { NgxPermissionsService } from 'ngx-permissions';
@@ -28,7 +29,7 @@ var app = environment.App;
 export class BaseComponent implements OnInit, OnDestroy {
   // Public variables
   selfLayout = 'default';
-  asideSelfDisplay: true;
+  asideSelfDisplay: false;
   contentClasses = '';
   contentContainerClasses = '';
   subheaderDisplay = true;
@@ -62,8 +63,8 @@ export class BaseComponent implements OnInit, OnDestroy {
    // this.menuConfigService.loadConfigs(new MenuConfig().configs);
   
        
-    (app=="RH") ? this.menuConfigService.loadConfigs(new MenuTrConfig().configs):  this.menuConfigService.loadConfigs(new MenuConfig().configs)
-
+    (app=="RH") ? this.menuConfigService.loadConfigs(new MenuTrConfig().configs):  (app=="ERP") ?  this.menuConfigService.loadConfigs(new MenuConfig().configs) : this.menuConfigService.loadConfigs(new MenuDDConfig().configs)
+    console.log("this.menuConfigService",this.menuConfigService)
     this.pageConfigService.loadConfigs(new PageConfig().configs);
 
     // setup element classes

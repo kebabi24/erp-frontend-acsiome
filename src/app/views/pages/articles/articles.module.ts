@@ -88,6 +88,11 @@ import { CreateModPfComponent } from './create-mod-pf/create-mod-pf.component';
 import { CreatePfModComponent } from './create-pf-mod/create-pf-mod.component';
 import { CreateModDivComponent } from './create-mod-div/create-mod-div.component';
 import { CreateDivModComponent } from './create-div-mod/create-div-mod.component'
+import { ListCopieComponent } from './list-copie/list-copie.component';
+import { CopieArticleComponent } from './copie-article/copie-article.component';
+import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
+import { CreateModImmobilierComponent } from './create-mod-immobilier/create-mod-immobilier.component';
+import { CreateImmobilierModComponent } from './create-immobilier-mod/create-immobilier-mod.component'
 
 
 const routes: Routes = [
@@ -142,6 +147,10 @@ const routes: Routes = [
                 component: CreateModMaterielComponent,
             },
             {
+                path: "create-mod-immobilier",
+                component: CreateModImmobilierComponent,
+            },
+            {
                 path: "create-mod-pf",
                 component: CreateModPfComponent,
             },
@@ -179,6 +188,10 @@ const routes: Routes = [
                 component: CreateMaterielModComponent,
             },
             {
+                path: "create-immobilier-mod",
+                component: CreateImmobilierModComponent,
+            },
+            {
                 path: "create-pf-mod",
                 component: CreatePfModComponent,
             },
@@ -197,6 +210,18 @@ const routes: Routes = [
             {
                 path: "list-std-update",
                 component: ListStdUpdateComponent,
+            },
+            {
+                path: "list-copie",
+                component: ListCopieComponent,
+            },
+            {
+                path: "copie-article/:id",
+                component: CopieArticleComponent,
+            },
+            {
+                path: "edit-productpage/:product_page_code",
+                component: EditProductpageComponent,
             },
 
         ],
@@ -232,6 +257,11 @@ const routes: Routes = [
         CreatePfModComponent,
         CreateModDivComponent,
         CreateDivModComponent,
+        ListCopieComponent,
+        CopieArticleComponent,
+        EditProductpageComponent,
+        CreateModImmobilierComponent,
+        CreateImmobilierModComponent,
     ],
     imports: [
         CommonModule,

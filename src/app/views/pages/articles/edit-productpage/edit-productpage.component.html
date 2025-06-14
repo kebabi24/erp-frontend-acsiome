@@ -1,0 +1,119 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">sauvegarder et quitter</button>
+
+                </div>
+            </div>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        
+        <div class="alert alert-warning" *ngIf="confirmDelete">
+            <strong>Confirm deleting:</strong> {{alertWarning}}
+            <button   class="btn">Delete</button>
+        </div>
+
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="productPageForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="500">
+   
+                Ce code page produits existe deja - ferme <button type="warn" (click)="onChangeCode()" class="btn" >Cliquez ici</button>
+            </kt-alert>
+            <div class="row">
+                <div class="col-6">
+
+            
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="form-group">Code Page Produits: *</label>
+                    <input type="text" formControlName="product_page_code"  [(ngModel)]="pageEdit.product_page_code" (change)="onChangePP()" id="productPageCode"
+                        [className]="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                    <div *ngIf="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) "
+                        class="invalid-feedback">Ce Champs est obligatoire
+                    </div>
+                </div>  
+            </div>
+           
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="form-group">Description : *</label>
+                    <input type="text" formControlName="description"
+                        [className]="productPageForm.controls['description'].errors && (productPageForm.controls['description'].dirty || productPageForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                    <div *ngIf="productPageForm.controls['description'].errors && (productPageForm.controls['description'].dirty || productPageForm.controls['description'].touched) "
+                        class="invalid-feedback">Ce Champs est obligatoire
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+      
+     </div> 
+            </form>
+            
+            <div class="row">
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem(content4)">Ajouter Articles</button>
+              </div>
+            <br><br>
+            <div class="example-preview">
+                <!-- <br><br>
+                <span>Sélectionnez les produits que vous souhaitez ajouter à cette page : </span> -->
+                <div class="row">
+                    <angular-slickgrid class="col-12" 
+                       
+                        gridId="gridMesure" 
+                        [columnDefinitions]="columnDefinitions"
+                        [gridOptions]="gridOptions" 
+                        [dataset]="dataset"
+                        (onAngularGridCreated)="angularGridReady($event)"
+                        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    >
+                    </angular-slickgrid>
+                </div>
+                
+            </div>
+        </div>
+
+        
+        
+        
+    </kt-portlet-body>
+    <div>
+        <ng-template #content4 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir l'article</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" 
+              [columnDefinitions]="columnDefinitions4" 
+              (onAngularGridCreated)="angularGridReady4($event)"
+              (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)" 
+              [gridOptions]="gridOptions4" [dataset]="items"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-primary" (click)="addpage()" (click)="c('Close click')">Ok</button>
+        </div>
+        </ng-template>
+      
+      </div>
+</kt-portlet>
+
+

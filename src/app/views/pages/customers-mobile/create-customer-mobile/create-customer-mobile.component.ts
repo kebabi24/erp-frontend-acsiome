@@ -134,6 +134,11 @@ export class CreateCustomerMobileComponent implements OnInit {
       category_code: [this.customerMobile.category_code],
       category_type_code: [this.customerMobile.category_type_code],
       sales_channel_code: [this.customerMobile.sales_channel_code],
+
+      rc: [this.customerMobile.rc],
+      ai: [this.customerMobile.ai],
+      nif: [this.customerMobile.nif],
+      nis: [this.customerMobile.nis],
     });
   }
 
@@ -347,6 +352,10 @@ export class CreateCustomerMobileComponent implements OnInit {
     _customerMobile.category_code = controls.category_code.value;
     _customerMobile.category_type_code = controls.category_type_code.value;
     _customerMobile.sales_channel_code = controls.sales_channel_code.value;
+    _customerMobile.rc = controls.rc.value;
+    _customerMobile.ai = controls.ai.value;
+    _customerMobile.nis = controls.nis.value;
+    _customerMobile.nif = controls.nif.value;
 
     return _customerMobile;
   }

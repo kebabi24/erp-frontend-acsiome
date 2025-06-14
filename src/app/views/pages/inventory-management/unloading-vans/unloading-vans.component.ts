@@ -168,18 +168,18 @@ export class UnloadingVansComponent implements OnInit {
     this.unloadRequestService.updateUnloadRequestStatus20(this.unload_request_code, this.unloadRequestData).subscribe(
 
       (response: any) => {
-        this.inventoryTransactionService.addTr({ nlot, it, detail }).subscribe(
-          (response: any) => {},
-          (error) => {
-            // this.loadRequestData = []
-            console.log(error);
-          },
-          () => {
-            this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
-            this.loadingSubject.next(false);
-            // this.router.navigateByUrl("/customers-mobile/cluster-create")
-          }
-        );
+        // this.inventoryTransactionService.addTr({ nlot, it, detail }).subscribe(
+        //   (response: any) => {},
+        //   (error) => {
+        //     // this.loadRequestData = []
+        //     console.log(error);
+        //   },
+        //   () => {
+        //     this.layoutUtilsService.showActionNotification("Load Request Details Updated", MessageType.Create, 10000, true, true);
+        //     this.loadingSubject.next(false);
+        //     // this.router.navigateByUrl("/customers-mobile/cluster-create")
+        //   }
+        // );
         // addTr
         // this.inventoryTransactionService.addTr({nlot , it ,details}).subscribe(
 
@@ -271,17 +271,17 @@ export class UnloadingVansComponent implements OnInit {
     this.unload_request_code = unload_request_code
   }
 
-  prepareRoles(){
-    this.unloadRequestService.getRoles('administrateur').subscribe(
-        
-        (response: any) => {
-          this.roles = response.data
-        },
-        (error) => {
-          this.roles = []
-        },
-        () => {}
-    )
+  prepareRoles() {
+    this.roleService.getAllRoles().subscribe(
+      (response: any) => {
+        this.roles = response.data;
+        console.log(this.roles);
+      },
+      (error) => {
+        this.roles = [];
+      },
+      () => {}
+    );
   }
 
   prepareUnloadRequests(role_code){

@@ -89,7 +89,7 @@
                         <div class="input-group input-group-sm">
         
                             <input type="text" class="form-control form-control-solid"  formControlName="wo_lot" id="id"
-                                aria-describedby="basic-addon2" (change)="onChangeOA()">
+                                aria-describedby="basic-addon2" (change)="onChangeOA()" disabled>
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open5(content5)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
@@ -103,7 +103,7 @@
                         <div class="input-group input-group-sm">
         
                             <input type="text" class="form-control form-control-solid"  formControlName="wo_nbr"
-                                aria-describedby="basic-addon2" >
+                                aria-describedby="basic-addon2" disabled>
                             
                         </div>
         
@@ -371,12 +371,13 @@
                             </div>
 
                         </div>
+                      <!-- <div class="col-3"> </div>
                         <div class="form-group col-9">
                             <label class="form-group">Ajouter une entrée:</label>
                             <div class="input-group input-group-sm">
                                  <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter une entrée</button>
                             </div>     
-                        </div>    
+                        </div>     -->
                     
                 </div>
                 <!-- <div class="col-3">
@@ -400,7 +401,7 @@
                 </div-->
                 <div class="col-12">
                     <div class="row">
-                        <angular-slickgrid class="col-12" gridId="mGrid"
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
                             [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
                             (onAngularGridCreated)="gridReady($event)">
                         </angular-slickgrid>

@@ -19,6 +19,23 @@
                 <form [formGroup]="formX" class="form">   
                 <div class="row">
                     <div class="form-group col-2">
+                        <label class="form-group ">Famille :</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text"
+                            class="form-control form-control-solid"
+                                (change)="changePl()" formControlName="pt_prod_line"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)=openpl(contentpl)>
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                           \
+
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
                         <label class="form-group">Code Article:</label>
 
                         <input type="text" formControlName="pt_part" (change)="onChangeCode()"
@@ -160,23 +177,7 @@
                                     
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Famille :</label>
-
-                                        <div class="input-group input-group-sm">
-
-                                            <input type="text"
-                                            class="form-control form-control-solid"
-                                                (change)="changePl()" formControlName="pt_prod_line"
-                                                aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" (click)=openpl(contentpl)>
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                           \
-
-                                        </div>
-                                    </div>
+                                   
                                     <div class="form-group col-2">
                                         <label class="form-group ">Type Article:</label>
 

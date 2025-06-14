@@ -211,7 +211,7 @@ export class TrainingColdEvalComponent implements OnInit {
 
       getSpecificationDetails(){
          this.qualityControlService.findSpecificationWithDetails(
-          "EVALUATION A CHAUD"
+          "EVALUATION A FROID"
          ).subscribe((response: any) => {
             this.data = response.data.specificationDetails 
             this.defaultData = response.data.specificationDetails 

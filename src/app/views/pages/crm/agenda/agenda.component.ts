@@ -38,7 +38,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   interactionPlugin
 ]);
 
-import {CRMService,
+import {CRMService,ItemService
 } from "../../../../core/erp"
 import { config } from 'process';
 import * as moment from 'moment';
@@ -109,7 +109,7 @@ export class AgendaComponent implements OnInit {
   shop_type: any = [];
   job_type: any = [];
   
-  
+  item_desc:any;
   
 
 
@@ -121,6 +121,7 @@ export class AgendaComponent implements OnInit {
     public dialog: MatDialog,
     private modalService: NgbModal,
     private crmService : CRMService,
+    private itemservice:ItemService,
     private layoutUtilsService: LayoutUtilsService,
     private calendar: NgbCalendar,
     config: NgbDropdownConfig
@@ -172,7 +173,7 @@ export class AgendaComponent implements OnInit {
   createFrom(){
     this.eventForm = this.formBuilder.group({
       selectedAction: [ '', Validators.required],
-      selectedMethod: [ '', Validators.required],
+      selectedMethod: [ '',],
    })
   }
 
@@ -397,7 +398,7 @@ export class AgendaComponent implements OnInit {
       event.action_display = this.action_types[indexAction].code_desc
     })
   }
-
+ 
   getCategoriesDisplay(eventsData){
     eventsData.forEach(event =>{
       const indexCategory = this.categories.findIndex(category =>{
@@ -431,9 +432,21 @@ export class AgendaComponent implements OnInit {
       return event.id == eventId
     })
     this.selectedEvent = this.eventsData[eventIndex]
+    this.itemservice
+      .getBy({pt_part:this.selectedEvent.item})
+
+      .subscribe(
+        (res: any) => {
+          console.log(res);
+          this.item_desc = res.data[0].pt_desc1 
+        },
+        
+      );
+
+    
     this.selectedEvent.call_start_time = "00:00:00"
     this.selectedEvent.call_end_time = "00:00:00"
-    this.getCustomerData(this.selectedEvent.phone_to_call)
+    this.getCustomerData(this.selectedEvent.code_client)
     //this.getNewClientDataV2(this.selectedEvent.phone_to_call)    
     if(this.selectedEvent.category === "complaint"){
       this.eventIsComplaint = true
@@ -441,7 +454,8 @@ export class AgendaComponent implements OnInit {
     this.eventHeader['code_event'] = this.selectedEvent.code_event , 
     this.eventHeader['order'] = this.selectedEvent.order , 
     this.eventHeader['param_code'] = this.selectedEvent.param_code , 
-    console.log(this.clientData)
+    
+    
     document.getElementById("modalButton").click();
   }
 
@@ -458,26 +472,26 @@ export class AgendaComponent implements OnInit {
 
     // GET THE INFO OF THE SELECTED EVENT RESULT + CALCULATE DURATION
     const controls = this.executionForm.controls
-    this.event_Results.forEach((event) => {
-      if (controls[event.code_value].value) {
-        const code_value = event.code_value;
-        const recall = event.bool01
-        results.push({
-          code_value: code_value,
-          recall : recall
-        });
-      }
-    });
+    // this.event_Results.forEach((event) => {
+    //   if (controls[event.code_value].value) {
+    //     const code_value = event.code_value;
+    //     const recall = event.bool01
+    //     results.push({
+    //       code_value: code_value,
+    //       recall : recall
+    //     });
+    //   }
+    // });
     this.selectedEvent.call_end_time = this.getCurrentTime()
 
-    var state = "O";
-    if(results[0].recall === false) state = "T" 
+    // var state = "O";
+    // if(results[0].recall === false) state = "T" 
 
-    if(state !=="T" && this.selectedEvent.order == 4 && this.can_submit_line == false){
-      this.openRenewPopup()
-      this.can_submit_line = true
-      return
-    }
+    // if(state !=="T" && this.selectedEvent.order == 4 && this.can_submit_line == false){
+    //   this.openRenewPopup()
+    //   this.can_submit_line = true
+    //   return
+    // }
 
     const current = Date.now()
     const time1  = new Date(current) 
@@ -501,7 +515,7 @@ export class AgendaComponent implements OnInit {
     this.executionLine = {
       event_day:this.selectedEvent.event_day,
       phone_to_call: this.selectedEvent.phone_to_call,
-      status:state,
+      status:'O',
       duration:duration,
       action:this.selectedEvent.action,
       method:this.selectedEvent.method,
@@ -509,7 +523,7 @@ export class AgendaComponent implements OnInit {
       call_end_hour:this.selectedEvent.call_end_time,
       observation:controls.observation.value,
       event_code : this.selectedEvent.code_event,
-      event_result : results[0].code_value,
+      event_result : 'result_3',
       category : this.selectedEvent.category
     }
     this.ableToSave = true
@@ -525,6 +539,7 @@ export class AgendaComponent implements OnInit {
     if(selectedMethod !==""){     
       this.executionLine['method'] = selectedMethod
     }
+    else{this.executionLine['method']='method_6'}
     if(selectedAction !== ""){
       this.executionLine['action'] = selectedAction
     }
@@ -742,7 +757,7 @@ export class AgendaComponent implements OnInit {
           return element.code_value == this.clientDataNewEvent.commune
         })
         this.clientDataNewEvent.adressDisplay = this.wilayas_communes_data[wilayaIndex].wilaya.code_cmmt + ' - ' +this.wilayas_communes_data[wilayaIndex].communes[communeIndex].code_cmmt
-        
+         
 
         // CALCULATE BIRTHDAY 
         var ageDifMs = Date.now() -  new Date(this.clientDataNewEvent.cm_high_date).getTime();
@@ -1003,12 +1018,12 @@ export class AgendaComponent implements OnInit {
         if (response["data"] != null) {
           this.clientData = response["data"]
           
-          console.log(this.wilayas_communes_data)
+          
           // GET INDEX OF WILAYA 
           const wilayaIndex = this.wilayas_communes_data.findIndex(element =>{
             return element.wilaya.code_value == this.clientData.wilaya
           })
-
+console.log(this.clientData.wilaya)
           // console.log(wilayaIndex)
 
           const communeIndex = this.wilayas_communes_data[wilayaIndex].communes.findIndex(element =>{

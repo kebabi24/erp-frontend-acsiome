@@ -51,12 +51,17 @@ import { AngularSlickgridModule } from 'angular-slickgrid'
 import { ListPriceComponent } from './list-price/list-price.component';
 import { EditPriceComponent } from './edit-price/edit-price.component';
 import { ItemService, CodeService, 
-  CustomerService, DeviseService, PricelistService} from '../../../core/erp';
+  CustomerService, DeviseService, PricelistService,SiteService,LocationService} from '../../../core/erp';
+import { CreatePriceImmobilierComponent } from './create-price-immobilier/create-price-immobilier.component';
 
 const routes: Routes = [
   {
     path: 'create-price',
     component: CreatePriceComponent
+  },
+  {
+    path: 'create-price-immobilier',
+    component: CreatePriceImmobilierComponent
   },
   {
     path: 'list-price',
@@ -69,7 +74,7 @@ const routes: Routes = [
 ] 
 
 @NgModule({
-  declarations: [PriceSettingComponent, CreatePriceComponent, ListPriceComponent, EditPriceComponent],
+  declarations: [PriceSettingComponent, CreatePriceComponent, ListPriceComponent, EditPriceComponent, CreatePriceImmobilierComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -113,6 +118,8 @@ providers: [
   CustomerService,
   DeviseService,
   PricelistService,
+  SiteService,
+  LocationService,
 ],
 })
 

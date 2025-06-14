@@ -47,7 +47,7 @@
                             <div class="row">
             
                                 <div class="form-group col-2">
-                                    <label class="form-group">Dépot: </label>
+                                    <label class="form-group">Bloc: </label>
                                     <input type="text" (change)="onChangeCode()"
                                         [className]="locationForm.controls['chr01'].errors && (locationForm.controls['chr01'].dirty || locationForm.controls['chr01'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="chr01">
@@ -56,7 +56,7 @@
         
                                 </div>
                                 <div class="form-group col-2">
-                                    <label class="form-group">Magasin: </label>
+                                    <label class="form-group">Niveau: </label>
                                     <input type="text" (change)="onChangeCode()"
                                         [className]="locationForm.controls['loc_phy_adr'].errors && (locationForm.controls['loc_phy_adr'].dirty || locationForm.controls['loc_phy_adr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         formControlName="loc_phy_adr">
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
             
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="form-group col-2">
                                     <label class="form-group">Projet: *</label>
                                 
@@ -138,7 +138,7 @@
             
             
             
-                            </div>
+                            </div> -->
             
                             <div class="row">
             
@@ -188,10 +188,6 @@
                                             placeholder="0">
             
                                 </div>
-            
-                            </div>
-            
-                            <div class="row">
                                 <div class="form-group col-2">
                                     <label class="form-group">UM: </label>
                                     <div class="input-group input-group-sm">
@@ -204,6 +200,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+            
+                            <!-- <div class="row">
+                                
             
             
                                 <div class="form-group col-2">
@@ -218,7 +218,7 @@
                                         </span>
                                 </div>
             
-                            </div>
+                            </div> -->
                         </form>
                     </ng-template>
                 </ngb-tab>

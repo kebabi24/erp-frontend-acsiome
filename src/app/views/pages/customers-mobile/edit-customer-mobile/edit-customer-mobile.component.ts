@@ -145,6 +145,11 @@ export class EditCustomerMobileComponent implements OnInit {
       category_code: [this.customerEdit[0].category_code],
       category_type_code: [this.customerEdit[0].category_type_code],
       sales_channel_code: [this.customerEdit[0].sales_channel_code],
+
+      rc:  [this.customerEdit[0].rc],
+      ai:  [this.customerEdit[0].ai],
+      nif: [this.customerEdit[0].nif],
+      nis: [this.customerEdit[0].nis],
     });
   }
 
@@ -330,6 +335,10 @@ export class EditCustomerMobileComponent implements OnInit {
     _customerMobile.category_type_code = controls.category_type_code.value;
     _customerMobile.sales_channel_code = controls.sales_channel_code.value;
 
+    _customerMobile.rc = controls.rc.value;
+    _customerMobile.ai = controls.ai.value;
+    _customerMobile.nis = controls.nis.value;
+    _customerMobile.nif = controls.nif.value;
     return _customerMobile;
   }
 

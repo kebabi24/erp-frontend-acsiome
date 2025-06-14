@@ -158,24 +158,24 @@ export class CreateRepComponent implements OnInit {
           model: Editors.text,
         }
       },
-      {
-        id: "rep_type",
-        name: "Type",
-        field: "rep_type",
-        sortable: true,
-        width: 80,
-        filterable: true,
-        type: FieldType.string,
-        editor: {
-          model: Editors.singleSelect,
+      // {
+      //   id: "rep_type",
+      //   name: "Type",
+      //   field: "rep_type",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   editor: {
+      //     model: Editors.singleSelect,
 
-          enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/rep_type`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+      //     enableRenderHtml: true,
+      //     collectionAsync:  this.http.get(`${API_URL}/rep_type`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
       
          
-        },
-        onCellChange:(e: Event, args: OnEventArgs) => {this.adtype = args.dataContext.rep_type}
-      },
+      //   },
+      //   onCellChange:(e: Event, args: OnEventArgs) => {this.adtype = args.dataContext.rep_type}
+      // },
       {
         id: "rep_code",
         name: "Appartenance",
@@ -189,25 +189,25 @@ export class CreateRepComponent implements OnInit {
          
         },
       },
-      {
-        id: "mvid",
-        name: "addresse",
-        field: "cmvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => { 
+      // {
+      //   id: "mvid",
+      //   name: "addresse",
+      //   field: "cmvid",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => { 
          
-            this.row_number = args.row;
-            let element: HTMLElement = document.getElementById("openvdGrid") as HTMLElement;
-            element.click();
+      //       this.row_number = args.row;
+      //       let element: HTMLElement = document.getElementById("openvdGrid") as HTMLElement;
+      //       element.click();
           
-        },
-      },
+      //   },
+      // },
       {
         id: "chr01",
-        name: "Métier",
+        name: "Lien de parenté",
         field: "chr01",
         sortable: true,
         width: 80,
@@ -224,25 +224,25 @@ export class CreateRepComponent implements OnInit {
         },
         
       },
-      {
-        id: "rep_post",
-        name: "Poste",
-        field: "rep_post",
-        sortable: true,
-        width: 80,
-        filterable: true,
-        type: FieldType.string,
+      // {
+      //   id: "rep_post",
+      //   name: "Poste",
+      //   field: "rep_post",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: true,
+      //   type: FieldType.string,
        
-        editor: {
-          model: Editors.singleSelect,
+      //   editor: {
+      //     model: Editors.singleSelect,
 
-          enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/postes`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+      //     enableRenderHtml: true,
+      //     collectionAsync:  this.http.get(`${API_URL}/postes`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
       
          
-        },
+      //   },
         
-      },
+      // },
       {
         id: "rep_tel",
         name: "TEL Mobile",
@@ -453,9 +453,20 @@ export class CreateRepComponent implements OnInit {
       console.log(item);
 
       
-          updateItem.rep_code = item.ad_addr;
-          
-          this.gridService.updateItem(updateItem);
+       controls.cust.setValue(item.cm_addr)
+       this.reps = []
+   this.repertoryService.getBy({ rep_code : controls.cust.value}).subscribe(
+      (response: any) => {   
+        this.reps = response.data
+       console.log(this.reps)
+       this.dataView.setItems(this.reps);
+        
+         },
+      (error) => {
+          this.reps = []
+      },
+      () => {}
+  )
         });
         //});
       }
@@ -484,7 +495,7 @@ prepareGridcust() {
         type: FieldType.string,
       },
       {
-        id: "ad_name",
+        id: "address.ad_name",
         name: "Client",
         field: "address.ad_name",
         sortable: true,
@@ -499,22 +510,23 @@ prepareGridcust() {
         filterable: true,
         type: FieldType.string,
       },
-      {
-        id: "ad_taxable",
-        name: "A Taxer",
-        field: "address.ad_taxable",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
-        id: "ad_taxc",
-        name: "Taxe",
-        field: "address.ad_taxc",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },    ]
+      // {
+      //   id: "ad_taxable",
+      //   name: "A Taxer",
+      //   field: "address.ad_taxable",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },
+      // {
+      //   id: "ad_taxc",
+      //   name: "Taxe",
+      //   field: "address.ad_taxc",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },  
+        ]
 
     this.gridOptionscust = {
         enableSorting: true,
@@ -550,7 +562,7 @@ addNewItem() {
   const newId = this.reps.length+1;
   const controls = this.repForm.controls
   let site:any;
-  if(this.user.usrd_site=='*'){site= 'ECOLE'}
+  if(this.user.usrd_site=='*'){site= '1000'}
 else{site = this.user.usrd_site}
   const newItem = {
     id: newId,

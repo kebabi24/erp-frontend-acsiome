@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
-
+import { jsPDF } from "jspdf";
 // Angular slickgrid
 import {
   Column,
@@ -79,9 +79,9 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   } 
   return { valid: true, msg: '' };
 };
-
+ 
 @Component({
-  selector: 'kt-iss-bobine-wo',
+  selector: 'kt-iss-bobine-wo', 
   templateUrl: './iss-bobine-wo.component.html',
   styleUrls: ['./iss-bobine-wo.component.scss']
 })
@@ -258,7 +258,8 @@ export class IssBobineWoComponent implements OnInit {
   serial;
   qty;
   status;
-
+  docs: any[] = [];
+  exist:any;
   constructor(
     config: NgbDropdownConfig,
     private trFB: FormBuilder,
@@ -313,7 +314,7 @@ export class IssBobineWoComponent implements OnInit {
             const sqlqty = controls.SQL_ISS.value
             const orgqty = controls.ORG_ISS.value
             let idpal;
-            let total = paiqty + prfqty + sqlqty + sqlqty
+            let total = paiqty + prfqty + sqlqty + orgqty
             this.labelService.getBy({lb_cab: args.dataContext.tr_ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
             this.labelService.update({lb_actif : true},{id: idpal}).subscribe((res:any) =>{})
             this.itemsService.getByOne({pt_part: args.dataContext.tr_part  }).subscribe(
@@ -332,21 +333,21 @@ export class IssBobineWoComponent implements OnInit {
         },
       },
 
-      {
-        id: "add",
-        field: "add",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.icon, params: { formatterIcon: 'fa fa-plus' },
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          //  this.angularGrid.gridService.deleteItem(args.dataContext);
-         // }
-         this.addsameItem(args.dataContext.id)
+      // {
+      //   id: "add",
+      //   field: "add",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.icon, params: { formatterIcon: 'fa fa-plus' },
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+      //     //  this.angularGrid.gridService.deleteItem(args.dataContext);
+      //    // }
+      //    this.addsameItem(args.dataContext.id)
         
-        },
-      },
+      //   },
+      // },
 
       {
         id: "tr_line",
@@ -356,88 +357,88 @@ export class IssBobineWoComponent implements OnInit {
         maxWidth: 50,
         selectable: true,
       },
-      {
-        id: "wodid",
-        name: "Wod Ligne",
-        field: "wodid",
-        minWidth: 50,
-        maxWidth: 50,
-        selectable: true,
-      },
+      // {
+      //   id: "wodid",
+      //   name: "Wod Ligne",
+      //   field: "wodid",
+      //   minWidth: 50,
+      //   maxWidth: 50,
+      //   selectable: true,
+      // },
           
-      {
-        id: "tr_part",
-        name: "Article",
-        field: "tr_part",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-          required: true,
-          validator: statusValidator,
+      // {
+      //   id: "tr_part",
+      //   name: "Article",
+      //   field: "tr_part",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //     required: true,
+      //     validator: statusValidator,
 
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_part)
-          this.itemsService.getByOne({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.tr_part)
+      //     this.itemsService.getByOne({pt_part: args.dataContext.tr_part }).subscribe((resp:any)=>{
 
-            if (resp.data) {
-              console.log(resp.data)
+      //       if (resp.data) {
+      //         console.log(resp.data)
 
              
-                this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
-                  (response: any) => {
-                    this.sct = response.data
+      //           this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: 'STD-CG' }).subscribe(
+      //             (response: any) => {
+      //               this.sct = response.data
            
-                    this.locationDetailService.getByOne({ ld_site: resp.data.pt_site, ld_loc: resp.data.pt_loc, ld_part: resp.data.pt_part, ld_lot: null }).subscribe(
-                      (response: any) => {
-                        this.lddet = response.data
-                        console.log(this.lddet.ld_qty_oh)
-                        if (this.lddet != null) {
-                        this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-WO" }).subscribe((resstat:any)=>{
-                       //   console.log(resstat)
-                          const { data } = resstat;
+      //               this.locationDetailService.getByOne({ ld_site: resp.data.pt_site, ld_loc: resp.data.pt_loc, ld_part: resp.data.pt_part, ld_lot: null }).subscribe(
+      //                 (response: any) => {
+      //                   this.lddet = response.data
+      //                   console.log(this.lddet.ld_qty_oh)
+      //                   if (this.lddet != null) {
+      //                   this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "ISS-WO" }).subscribe((resstat:any)=>{
+      //                  //   console.log(resstat)
+      //                     const { data } = resstat;
   
-                          if (data) {
-                            this.stat = null
-                          } else {
-                            this.stat = this.lddet.ld_status
-                          }
-                    this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
-                      tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_mtl_tl, qty_oh: this.lddet.ld_qty_oh, tr_expire: this.lddet.ld_expire})
-                        });
-                      }
-                      else {
-                        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
-                          tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: null, tr_price: this.sct.sct_mtl_tl, qty_oh: 0, tr_expire: null})
+      //                     if (data) {
+      //                       this.stat = null
+      //                     } else {
+      //                       this.stat = this.lddet.ld_status
+      //                     }
+      //               this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
+      //                 tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_mtl_tl, qty_oh: this.lddet.ld_qty_oh, tr_expire: this.lddet.ld_expire})
+      //                   });
+      //                 }
+      //                 else {
+      //                   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , tr_site:resp.data.pt_site, tr_loc:resp.data.pt_loc,
+      //                     tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: null, tr_price: this.sct.sct_mtl_tl, qty_oh: 0, tr_expire: null})
                       
 
-                      }     
+      //                 }     
      
-                      });     
-                });  
+      //                 });     
+      //           });  
             
-          }
+      //     }
 
 
 
     
 
 
-          else {
+      //     else {
 
         
-            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
-          }
+      //       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+      //     }
           
-          });
+      //     });
 
            
          
          
-        }
-      },
+      //   }
+      // },
       {
         id: "mvid",
         field: "cmvid",
@@ -917,7 +918,13 @@ export class IssBobineWoComponent implements OnInit {
     
     this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.domain);
-
+    this.codeService
+    .getBy({ code_fldname: "manufacturing/iss-bobine-wo" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
         if (reponse.data != null) {
@@ -1094,7 +1101,7 @@ export class IssBobineWoComponent implements OnInit {
      })
   }
   onChangeOA() {
-    this.dataset = [];
+    // this.dataset = [];
   
     const controls = this.woForm.controls;
     const id = controls.wo_lot.value;
@@ -1444,7 +1451,7 @@ export class IssBobineWoComponent implements OnInit {
      }
 
     }
-
+    this.printpdf(this.trlot)
     
 
         let tr = this.prepare()
@@ -1489,7 +1496,7 @@ export class IssBobineWoComponent implements OnInit {
     return _tr;
   }
   prepare(){
-    // const controls = this.woForm.controls;
+    // const controls = this.woForm.controls; 
     const wocontrols = this.woForm.controls;
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = wocontrols.wo_nbr.value
@@ -1683,8 +1690,11 @@ export class IssBobineWoComponent implements OnInit {
 
   // add new Item to Datatable
   addNewItem() {
+    const controls = this.woForm.controls;
     this.gridService.addItem(
       {
+        tr_nbr:controls.wo_nbr.value,
+                        tr_lot:controls.wo_lot.value,
         id: this.dataset.length + 1,
         tr_line: this.dataset.length + 1,
         tr_part: "",
@@ -1701,6 +1711,7 @@ export class IssBobineWoComponent implements OnInit {
         tr_serial: null,
         tr_status: null,
         tr_expire: null,
+        tr_program:new Date().toLocaleTimeString(),
         old:false,
       },
       { position: "bottom" }
@@ -2761,10 +2772,12 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
               { this.gridService.addItem(
                       {
                         id: this.dataset.length + 1,
+                        tr_nbr:controls.wo_nbr.value,
+                        tr_lot:controls.wo_lot.value,
                         tr_line: this.dataset.length + 1,
                         tr_part: this.lddet.ld_part,
                         cmvid: "",
-                        desc: this.lddet.ld_desc,
+                        desc: this.lddet.item.pt_desc1,
                         qty_oh: this.lddet.ld_qty_oh,
                         tr_qty_loc: this.lddet.ld_qty_oh,
                         tr_site: this.lddet.ld_site,
@@ -2777,6 +2790,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                         tr_serial: this.lddet.ld_lot,
                         tr_status: this.stat,
                         tr_expire: this.lddet.ld_expire,
+                        tr_program:new Date().toLocaleTimeString(),
                         old:false,
                       },
                       { position: "bottom" }
@@ -2803,18 +2817,18 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                                                               return;
                                                           }
                                                           if(respopart.data.pt_draw == 'ORIGINAL'){if(controls.ORG_ISS.value > controls.ORG_PREV.value) {controls.ref.setValue(null)
-                                                            this.layoutUtilsService.showActionNotification("quantité Originale dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                            this.layoutUtilsService.showActionNotification("quantité Originale dépasse consommation prévue", MessageType.Create, 10000, true, false,3000,'top');}
                                                           }
                                                           if(respopart.data.pt_draw == 'SQUELETTE'){if(controls.SQL_ISS.value > controls.SQL_PREV.value) {controls.ref.setValue(null)
-                                                            this.layoutUtilsService.showActionNotification("quantité Squelette dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                            this.layoutUtilsService.showActionNotification("quantité Squelette dépasse consommation prévue", MessageType.Create, 10000, true, false,3000,'top');}
                                                           }
                                                           
                                                           if(respopart.data.pt_draw == 'PREFORME'){if(controls.PRF_ISS.value > controls.PRF_PREV.value) {controls.ref.setValue(null)
-                                                            this.layoutUtilsService.showActionNotification("quantité Préforme dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                            this.layoutUtilsService.showActionNotification("quantité Préforme dépasse consommation prévue", MessageType.Create, 10000, true, false,3000,'top');}
                                                           
                                                           }
                                                           if(respopart.data.pt_draw == 'PAYETTE'){if(controls.PAI_ISS.value > controls.PAI_PREV.value) {controls.ref.setValue(null)
-                                                            this.layoutUtilsService.showActionNotification("quantité Payette dépasse consommation prévue", MessageType.Create, 3000, false, false);}
+                                                            this.layoutUtilsService.showActionNotification("quantité Payette dépasse consommation prévue", MessageType.Create, 10000, true, false,3000,'top');}
                                                           }
                     
                                                           total = total + Number(this.lddet.ld_qty_oh)  
@@ -2837,6 +2851,8 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                                                             this.gridService.addItem(
                                                             {
                                                               id: this.dataset.length + 1,
+                                                              tr_nbr:controls.wo_nbr.value,
+                        tr_lot:controls.wo_lot.value,
                                                               tr_line: this.dataset.length + 1,
                                                               tr_part: this.lddet.ld_part,
                                                               cmvid: "",
@@ -2853,6 +2869,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                                                               tr_serial: this.lddet.ld_lot,
                                                               tr_status: this.stat,
                                                               tr_expire: this.lddet.ld_expire,
+                                                              tr_program:new Date().toLocaleTimeString(),
                                                               old:false,
                                                             },
                                                             { position: "bottom" }
@@ -2905,6 +2922,8 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                       {
                         id: this.dataset.length + 1,
                         tr_line: this.dataset.length + 1,
+                        tr_nbr:controls.wo_nbr.value,
+                        tr_lot:controls.wo_lot.value,
                         tr_part: this.lddet.ld_part,
                         cmvid: "",
                         desc: this.lddet.item.pt_desc1,
@@ -2920,6 +2939,7 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
                         tr_serial: this.lddet.ld_lot,
                         tr_status: this.stat,
                         tr_expire: this.lddet.ld_expire,
+                        tr_program:new Date().toLocaleTimeString(),
                         old:false,
                       },
                       { position: "bottom" }
@@ -3084,6 +3104,7 @@ handleSelectedRowsChangedgamme(e, args) {
       console.log(item);
       controls.wo_routing.setValue(item.ro_routing || "");
       this.gamme = item.ro_routing
+
     });
   }
 }
@@ -3418,22 +3439,44 @@ prepareGrid5() {
       maxWidth: 80,
     },
     {
-      id: "wo_nbr",
-      name: "N° OF",
-      field: "wo_nbr",
+      id: "wo_queue_eff",
+      name: "Ordre",
+      field: "wo_queue_eff",
       sortable: true,
       filterable: true,
       type: FieldType.string,
+      minWidth: 100,
+
     },
+    // {
+    //   id: "wo_nbr",
+    //   name: "N° OF",
+    //   field: "wo_nbr",
+    //   sortable: true,
+    //   filterable: true,
+    //   type: FieldType.string,
+    //   minWidth: 100,
+
+    // },
     {
-      id: "wo_ord_date",
-      name: "Date",
-      field: "wo_ord_date",
+      id: "wo_so_job",
+      name: "N° Programme",
+      field: "wo_so_job",
       sortable: true,
       filterable: true,
-      type: FieldType.date,
-      minWidth: 150,
+      type: FieldType.string,
+      minWidth: 100,
+
     },
+    // {
+    //   id: "wo_ord_date",
+    //   name: "Date",
+    //   field: "wo_ord_date",
+    //   sortable: true,
+    //   filterable: true,
+    //   type: FieldType.date,
+    //   minWidth: 150,
+    // },
     {
       id: "wo_ref",
       name: "BOBINE",
@@ -3536,7 +3579,7 @@ prepareGrid5() {
 handleSelectedRowsChanged5(e, args) {
   const controls = this.woForm.controls;
 
-  this.dataset = [];
+  // this.dataset = [];
 
   if (Array.isArray(args.rows) && this.gridObj5) {
     args.rows.map((idx) => {
@@ -4004,4 +4047,224 @@ onChangeuser() {
   if(controls.adduser2.value == true){this.adduser = false}
   else {this.adduser = true,controls.wo_user2.setValue(null); this.emps2=[]}
 }
+
+  printpdf(nbr) {
+    // const controls = this.totForm.controls
+    const controls = this.woForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF();
+    let date = new Date()
+   
+   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image()
+    // img.src = "./assets/media/logos/create-direct-wo.png";
+    img.src = "./assets/media/logos/companyentete.png";
+    doc.addImage(img, 'png', 5, 5, 275, 30)
+  doc.setFontSize(10);
+  if(this.exist == true){
+    doc.text(this.docs[0].code_value, 240, 17); 
+    doc.text(this.docs[0].code_cmmt, 70, 22);
+    doc.text(this.docs[0].code_desc, 240, 12);
+    doc.text(this.docs[0].chr01, 40, 27);
+    doc.text(this.docs[0].dec01, 240, 32);
+    doc.text(this.docs[0].date01, 240, 22);
+    doc.text(this.docs[0].date02, 240, 27);
+  }
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.setFontSize(14);
+  
+    doc.line(10, 35, 200, 35);
+    doc.setFontSize(12);
+    doc.text("Rapport de Consommation extrusion N° : " + nbr, 70, 45);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
+    doc.setFontSize(8);
+    //console.log(this.provider.ad_misc2_id)
+    // doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
+    // doc.text(" " + this.provider.ad_name, 60, 50);
+    // doc.text("Equipe            : " + this.shift, 120, 50);
+    // doc.text("Type produit      : " + controls.product_type.value, 20, 55);
+    // doc.text("Employés          : " + this.user1, 120, 55);
+    // doc.text("Couleur Produit   : " + controls.product_color.value, 20, 60);
+    // doc.text("Quantité sortie   : " + controls.total_bobine.value, 20, 65);
+    
+    doc.line(10, 85, 205, 85);
+    doc.line(10, 90, 205, 90);
+    doc.line(10, 85, 10, 90);
+    doc.text("LN", 12.5, 88.5);
+    doc.line(20, 85, 20, 90);
+    doc.text("Code Article", 25, 88.5);
+    doc.line(45, 85, 45, 90);
+    doc.text("Désignation", 67.5, 88.5);
+    doc.line(100, 85, 100, 90);
+    doc.text("QTE", 107, 88.5);
+    doc.line(120, 85, 120, 90);
+    doc.text("UM", 123, 88.5);
+    doc.line(130, 85, 130, 90);
+    doc.text("Lot/Série", 152, 88.5);
+    doc.line(170, 85, 170, 90);
+    doc.text("N PAL", 172, 88.5);
+    doc.line(185, 85, 185, 90);
+    doc.text("Heure", 192, 88.5);
+    doc.line(200, 85, 200, 90);
+    var i = 95;
+    doc.setFontSize(6);
+  //   let total = 0
+  console.log(this.dataset)
+    for (let j = 0; j < this.dataset.length  ; j++) {
+      // total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
+      
+      if ((j % 20 == 0) && (j != 0) ) {
+  doc.addPage();
+  //img.src = "./assets/media/logos/create-direct-wo.png";
+  img.src = "./assets/media/logos/companyentete.png";
+  doc.addImage(img, 'png', 5, 5, 275, 30)
+        doc.setFontSize(11);
+  if(this.exist == true){
+    doc.text(this.docs[0].code_value, 240, 17); 
+doc.text(this.docs[0].code_cmmt, 70, 22);
+doc.text(this.docs[0].code_desc, 240, 12);
+doc.text(this.docs[0].chr01, 40, 27);
+doc.text(this.docs[0].dec01, 240, 32);
+doc.text(this.docs[0].date01, 240, 22);
+doc.text(this.docs[0].date02, 240, 27);
+  }
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(14);
+        doc.line(10, 35, 200, 35);
+    doc.setFontSize(12);
+    doc.text("Rapport de Consommation extrusion N° : " + nbr, 70, 45);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
+    doc.setFontSize(8);
+    //console.log(this.provider.ad_misc2_id)
+    // doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
+    // doc.text(" " + this.provider.ad_name, 60, 50);
+    // doc.text("Equipe            : " + this.shift, 120, 50);
+    // doc.text("Type produit      : " + controls.product_type.value, 20, 55);
+    // doc.text("Employés          : " + this.user1, 120, 55);
+    // doc.text("Couleur Produit   : " + controls.product_color.value, 20, 60);
+    // doc.text("Quantité sortie   : " + controls.total_bobine.value, 20, 65);
+    
+        doc.line(10, 85, 205, 85);
+        doc.line(10, 90, 205, 90);
+        doc.line(10, 85, 10, 90);
+        doc.text("LN", 12.5, 88.5);
+        doc.line(20, 85, 20, 90);
+        doc.text("Code Article", 25, 88.5);
+        doc.line(45, 85, 45, 90);
+        doc.text("Désignation", 67.5, 88.5);
+        doc.line(100, 85, 100, 90);
+        doc.text("QTE", 107, 88.5);
+        doc.line(120, 85, 120, 90);
+        doc.text("UM", 123, 88.5);
+        doc.line(150, 85, 150, 90);
+        doc.text("Lot/Série", 152, 88.5);
+        doc.line(170, 85, 170, 90);
+        doc.text("N° pal", 172, 88.5);
+        doc.line(185, 85, 185, 90);
+        doc.text("Heure", 192, 88.5);
+        doc.line(200, 85, 200, 90);
+        i = 95;
+        doc.setFontSize(6);
+      }
+  
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
+        let ind = desc1.indexOf(" ");
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].tr_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].tr_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].tr_serial), 168, i - 1, );
+        doc.line(170, i - 5, 170, i);
+        doc.text(String(this.dataset[j].tr_ref), 183, i - 1, );
+        doc.line(185, i - 5, 185, i);
+        doc.text(String(this.dataset[j].tr_program), 203, i - 1, );
+        doc.line(205, i - 5, 205, i);
+        // doc.line(10, i, 200, i );
+  
+        i = i + 5;
+  
+        doc.text(desc2, 47, i - 1);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(130, i - 5, 130, i);
+        doc.line(170, i - 5, 170, i);
+        doc.line(185, i - 5, 185, i);
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 200, i);
+  
+        i = i + 5;
+      } else {
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].tr_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(this.dataset[j].desc, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].tr_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
+        doc.line(170, i - 5, 170, i);
+        doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
+        doc.line(185, i - 5, 185, i);
+        doc.text(String(this.dataset[j].tr_program), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
+        i = i + 5;
+      }
+    }
+  
+    
+  
+    doc.line(130, i + 7, 205, i + 7);
+    doc.line(130, i + 14, 205, i + 14);
+    doc.line(130, i + 7, 130, i + 14);
+    doc.line(160, i + 7, 160, i + 14);
+    doc.line(205, i + 7, 205, i + 14);
+    doc.setFontSize(10);
+    doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
+   
+    doc.setFontSize(8);
+    doc.save('RX-' + nbr + '.pdf')
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+  } 
 }

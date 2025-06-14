@@ -558,7 +558,7 @@ export class AssetReceiveCabComponent implements OnInit {
         
       }
     );
-    this.seuil = 1200;
+    this.seuil = 999999;
     this.createForm();
     console.log(this.PathPrinter);
     
@@ -1483,15 +1483,16 @@ if(loc == null){loc = item.loc}
 let date = new Date()
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 150, 5, 50, 30);
+    // img.src = "./assets/media/logos/asset-receive-cab.png";
+    img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
 
     doc.line(10, 35, 200, 35);
@@ -1551,15 +1552,16 @@ let date = new Date()
       ttc = ttc +  Number(this.dataset[j].tr_qty_loc) * Number(this.dataset[j].tr_price);
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, "png", 150, 5, 50, 30);
+        // img.src = "./assets/media/logos/asset-receive-cab.png";
+        img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
 
@@ -1695,7 +1697,7 @@ let date = new Date()
     // doc.line(205, i + 7, 205, i + 14);
     doc.setFontSize(10);
 
-    doc.text("NOMBRE DE BIG BAG     " + String(this.dataset.length) + "    ,Total POIDS:   " + String(Number(total)), 40, i + 12, { align: "left" });
+    doc.text("NOMBRE ARTICLE     " + String(this.dataset.length) + "    ,Total QTE:   " + String(Number(total)), 40, i + 12, { align: "left" });
     doc.text("Validé par: " , 20, i + 22);
     doc.text("Note: " , 20, i + 32);
     //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });

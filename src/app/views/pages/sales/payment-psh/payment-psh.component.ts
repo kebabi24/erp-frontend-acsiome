@@ -348,7 +348,7 @@ export class PaymentPshComponent implements OnInit {
           controls.as_cust.setValue(data.as_cust || "");
           controls.as_app_owner.setValue(data.as_app_owner || "");
           controls.as_curr.setValue(data.as_curr || "");
-          controls.amt.setValue(data.as_amt || "");
+          controls.amt.setValue(data.as_sales_amt || "");
           controls.rest.setValue(Number(data.as_amt) - Number(data.as_applied) || "");
         
       // controls.as_pay_method.setValue(data.as_pay_method || "");
@@ -356,9 +356,8 @@ export class PaymentPshComponent implements OnInit {
       this.customerService.getBy({cm_addr: data.as_cust}).subscribe((response: any)=>{
                     
                     
-      
         controls.name.setValue(response.data.address.ad_name || "");
-        controls.as_bank.setValue(response.data.cm_bank || "");
+        // controls.as_bank.setValue(response.data.cm_bank || "");
         // controls.as_pay_method.setValue(response.data.cm_pay_method|| "");
          
        
@@ -462,7 +461,7 @@ handleSelectedRowsChangedbl(e, args) {
       controls.as_cust.setValue(item.as_cust || "");
       controls.as_app_owner.setValue(item.as_app_owner || "");
       controls.as_curr.setValue(item.as_curr || "");
-      controls.amt.setValue(item.as_amt || "");
+      controls.amt.setValue(item.as_sales_amt || "");
       controls.rest.setValue(Number(item.as_amt) - Number(item.as_applied) || 0);
       // controls.as_pay_method.setValue(item.cm_cr_terms || "");
      
@@ -506,13 +505,14 @@ prepareGridbl() {
       type: FieldType.string,
     },
     {
-      id: "as_app_owner",
+      id: "as_cust",
       name: "Client",
-      field: "as_app_owner",
+      field: "as_cust",
       sortable: true,
       filterable: true,
       type: FieldType.string,
     },
+    
     {
       id: "as_effdate",
       name: "Date",
@@ -523,8 +523,16 @@ prepareGridbl() {
     },
     {
       id: "as_amt",
-      name: "Montant",
+      name: "Montant OV",
       field: "as_amt",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "as_sales_amt",
+      name: "Montant Facture",
+      field: "as_sales_amt",
       sortable: true,
       filterable: true,
       type: FieldType.string,
@@ -564,7 +572,7 @@ prepareGridbl() {
   // fill the dataset with your data
   if (this.user.usrd_site != '*')
   {this.accountShiperService
-    .getBy({as_entity:this.user.usrd_site,as_type: "I", as_open: true})
+    .getBy({created_by:this.user.usrd_code,as_type: "I", as_open: true})
     .subscribe((response: any) => (this.bls = response.data));}
     else{this.accountShiperService
       .getBy({as_type: "I", as_open: true})
@@ -676,7 +684,7 @@ prepareGridbank() {
   };
   // fill the dataset with your data
   this.bankService
-    .getByAll({bk_userid: this.user.usrd_code})
+    .getByAll({})
     .subscribe((response: any) => {this.banks = response.data
     console.log(this.banks)});
 }

@@ -92,6 +92,7 @@ import { EditPoComponent } from './edit-po/edit-po.component';
 import { CreateOaEmComponent } from './create-oa-em/create-oa-em.component';
 import { ListApprovalComponent } from './list-approval/list-approval.component';
 import { PaymentAuComponent } from './payment-au/payment-au.component';
+import { ListAuComponent } from './list-au/list-au.component';
 
 const routes: Routes = [
   {
@@ -196,6 +197,10 @@ const routes: Routes = [
         path: "payment-au",
         component: PaymentAuComponent,
       },
+      {
+        path: "list-au",
+        component: ListAuComponent,
+      },
     ],
   },
 ];
@@ -226,7 +231,8 @@ const routes: Routes = [
     EditPoComponent,
     CreateOaEmComponent,
     ListApprovalComponent,
-    PaymentAuComponent
+    PaymentAuComponent,
+    ListAuComponent
   ],
   imports: [
     CommonModule,

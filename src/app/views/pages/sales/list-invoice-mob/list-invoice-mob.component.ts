@@ -353,6 +353,16 @@ export class ListInvoiceMobComponent implements OnInit {
        
       }, 
       {
+        id: "sdelivery_note_code",
+        name: "Nom Client",
+        field: "sdelivery_note_code",
+        sortable: true,
+        width: 150,
+        filterable: true,
+        type: FieldType.text,
+       
+      }, 
+      {
         id: "service_code",
         name: "Service",
         field: "service_code",
@@ -646,34 +656,20 @@ export class ListInvoiceMobComponent implements OnInit {
           onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       
       },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
 
     }
     this.mvdataset = [];
     
-    console.log(this.user)
-    const controls = this.soForm.controls
-    const date = controls.calc_date.value
-    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
-    : null;
-  
-    const date1 = controls.calc_date1.value
-    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
-    : null;
-    console.log(date,controls.calc_date.value,date1)
-    const site = controls.site.value
-    let obj= {date,date1,site}
-    this.mobileSettingsService.getAllInvoices(obj).subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-       console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
-        
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+   
   }
   solist() {
     this.mvdataset = []
@@ -692,7 +688,7 @@ export class ListInvoiceMobComponent implements OnInit {
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
-     //  this.mvdataView.setItems(this.mvdataset);
+       this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {

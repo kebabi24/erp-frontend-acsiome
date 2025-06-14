@@ -569,9 +569,9 @@ export class CreateOpComponent implements OnInit {
       
     },
     {
-      id: "debut_cause",
+      id: "chr01",
       name: "Debut",
-      field: "debut_cause",
+      field: "chr01",
       sortable: true,
       minWidth: 120,
       maxWidth: 120,
@@ -621,7 +621,7 @@ if(time !=null )
         this.hasFormErrors = true;
         return
       }
-      if(time < args.dataContext.debut_cause)
+      if(time < args.dataContext.chr01)
         {
           this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: new Date() })
           this.message = "Fin d'arret ne peut pas dépasser date debut d'arret"

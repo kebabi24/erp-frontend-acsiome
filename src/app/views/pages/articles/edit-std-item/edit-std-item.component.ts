@@ -436,13 +436,10 @@ export class EditStdItemComponent implements OnInit {
         pt_part_type: [this.itemEdit.pt_part_type],
         pt_draw: [this.itemEdit.pt_draw],
         pt_status: [this.itemEdit.pt_status],
-        // pt_dsgn_grp: [this.itemEdit.pt_dsgn_grp],
+       
         pt_group: [this.itemEdit.pt_group],
         pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
-        // pt_drwg_size: [this.itemEdit.pt_drwg_size],
-        // pt_promo: [this.itemEdit.pt_promo],
-        // pt_break_cat: [this.itemEdit.pt_break_cat],
-        // pt_rev: [this.itemEdit.pt_rev],
+        
         pt_abc: [this.itemEdit.pt_abc,Validators.required],
         pt_avg_int: [this.itemEdit.pt_avg_int],
         pt_lot_ser: [this.itemEdit.pt_lot_ser],
@@ -527,7 +524,7 @@ export class EditStdItemComponent implements OnInit {
         pt_height: [this.itemEdit.pt_height],
         pt_width: [this.itemEdit.pt_width],
         pt_origin: [this.itemEdit.pt_origin],
-        pt_drwg_loc: [this.itemEdit.pt_drwg_loc],
+        
         pt_model: [this.itemEdit.pt_model],
         pt_break_cat: [this.itemEdit.pt_break_cat],
         int01: [this.itemEdit.int01 ],
@@ -665,7 +662,7 @@ prepareItem(): Item {
   const controls1 = this.form1.controls;
   const controls2 = this.form2.controls;
   const controls3 = this.form3.controls;
-  const controls4 = this.form4.controls;
+  const controls4 = this.form4.controls; 
   const controls5 = this.form5.controls;
   const controls6 = this.form6.controls;
 
@@ -678,13 +675,13 @@ prepareItem(): Item {
   _item.pt_part_type = controls1.pt_part_type.value;
   _item.pt_draw = controls1.pt_draw.value;
   _item.pt_status = controls1.pt_status.value;
-  _item.pt_rev = controls1.pt_rev.value;
-  _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
+  _item.pt_rev = controls5.pt_rev.value;
+  _item.pt_dsgn_grp = controls5.pt_dsgn_grp.value;
   _item.pt_group = controls1.pt_group.value;
   _item.pt_drwg_loc = controls1.pt_drwg_loc.value;
-  _item.pt_drwg_size = controls1.pt_drwg_size.value;
-  _item.pt_promo = controls1.pt_promo.value;
-  _item.pt_break_cat = controls1.pt_break_cat.value;
+  
+  _item.pt_promo = controls5.pt_promo.value;
+  
   _item.pt_abc = controls1.pt_abc.value;
   _item.pt_avg_int = controls1.pt_avg_int.value;
   _item.pt_lot_ser = controls1.pt_lot_ser.value;
@@ -705,11 +702,11 @@ prepareItem(): Item {
 
   _item.pt_ship_wt = controls2.pt_ship_wt.value;
   _item.pt_ship_wt_um = controls2.pt_ship_wt_um.value;
-  _item.pt_net_wt = controls2.pt_net_wt.value;
-  _item.pt_net_wt_um = controls2.pt_net_wt_um.value;
-  _item.pt_fr_class = controls2.pt_fr_class.value;
-  _item.pt_size = controls2.pt_size.value;
-  _item.pt_size_um = controls2.pt_size_um.value;
+  _item.pt_net_wt = controls5.pt_net_wt.value;
+  _item.pt_net_wt_um = controls5.pt_net_wt_um.value;
+  // _item.pt_fr_class = controls2.pt_fr_class.value;
+  _item.pt_size = controls5.pt_size.value;
+  _item.pt_size_um = controls5.pt_size_um.value;
 
   _item.pt_ms = controls3.pt_ms.value;
   _item.pt_buyer = controls3.pt_buyer.value;
@@ -757,7 +754,7 @@ prepareItem(): Item {
   _item.pt_height    = controls5.pt_height.value;
   _item.pt_width     = controls5.pt_width.value;
   _item.pt_origin    = controls5.pt_origin.value;
-  _item.pt_drwg_size = controls5.pt_drwg_size.value; 
+  // _item.pt_drwg_size = controls5.pt_drwg_size.value; 
   _item.pt_model     = controls5.pt_model.value;
   _item.pt_break_cat = controls5.pt_break_cat.value;
   _item.int01        = controls5.int01.value;
@@ -937,7 +934,7 @@ changePl() {
 }
 changeCode(field) {
   const controls = this.form1.controls; // chof le champs hada wesh men form rah
-
+  const controls5 = this.form5.controls; // chof le champs hada wesh men form rah
   let obj = {};
   if (field == "pt_status") {
     this.msg = " Status ";
@@ -949,7 +946,7 @@ changeCode(field) {
   }
   if (field == "pt_dsgn_grp") {
     this.msg = " Groupe Etude ";
-    const code_value = controls.pt_dsgn_grp.value;
+    const code_value = controls5.pt_dsgn_grp.value;
     obj = {
       code_value,
       code_fldname: field,
@@ -1061,7 +1058,7 @@ handleSelectedRowsChanged3(e, args) {
   const controls2 = this.form2.controls;
   const controls3 = this.form3.controls;
   const controls4 = this.form4.controls;
-
+  const controls5 = this.form5.controls;
   if (Array.isArray(args.rows) && this.gridObj3) {
     args.rows.map((idx) => {
       const item = this.gridObj3.getDataItem(idx);
@@ -1072,7 +1069,7 @@ handleSelectedRowsChanged3(e, args) {
           break;
         }
         case "pt_dsgn_grp": {
-          controls1.pt_dsgn_grp.setValue(item.code_value || "");
+          controls5.pt_dsgn_grp.setValue(item.code_value || "");
           break;
         }
         case "pt_um": {

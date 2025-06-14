@@ -1,0 +1,390 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Liste des Evenements'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            
+                <button type="button"  (click)="reset()"class="btn btn-secondary btn-sm ml-2">Raffraichir </button>
+                <button type="button"  (click)="newEvent()"class="btn btn-success btn-sm ml-2">Ajouter évenement </button>
+                
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+<div>
+      <ng-template #contentsamepart let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">rapport</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form" [formGroup]="nbrForm">
+            <div class=""row>
+                <div class="form-group col-2">
+                        <label class="form-group ">Communiquer Via:</label>
+                        
+                        <select 
+                        [className]="nbrForm.controls['method'].errors && (nbrForm.controls['method'].dirty || nbrForm.controls['method'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                           
+                            formControlName="method" id="exampleSelects8">
+                            
+                            <option *ngFor="let elem of methods" [value]="elem.code_value">
+                                {{elem.code_desc}} </option>
+
+                        </select>
+                        
+                    </div> 
+            </div>
+            <div class="row">
+                <div class="form-group col-2">
+                        <label class="form-group ">résultat:</label>
+                        
+                        <select 
+                        [className]="nbrForm.controls['result'].errors && (nbrForm.controls['result'].dirty || nbrForm.controls['result'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                           
+                            formControlName="result" id="exampleSelects8" (change)="onChangeResult()">
+                            
+                            <option *ngFor="let elem of results" [value]="elem.code_value">
+                                {{elem.code_desc}} </option>
+
+                        </select>
+                        
+                    </div> 
+              
+               <div class="form-group col-2">
+                        <label class="form-group ">Statut évenement:</label>
+                        
+                        <select 
+                        [className]="nbrForm.controls['status'].errors && (nbrForm.controls['status'].dirty || nbrForm.controls['status'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                           
+                            formControlName="status" id="exampleSelects7" (change)="onChangeStatus()">
+                            
+                            <option *ngFor="let elem of statuses" [value]="elem.code_value">
+                                {{elem.code_cmmt}} </option>
+
+                        </select>
+                        
+                    </div>
+                     <div class="form-group col-2">
+                        <label class="form-group">Nombre :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid" formControlName="nbrligne"   id="nbrligne"
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Prix :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid" formControlName="price"   id="price"
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+              </div>
+            <div class="row">      
+              <div class="form-group col-6">
+                        <label class="form-group">Observation:</label>
+                        <textarea class="form-control form-control-sm form-control-solid" formControlName="comment"
+                            rows="2"></textarea>
+              </div>
+            </div>
+            <div class="row">
+               <div class="form-group col-2">
+                        <label class="form-group">Nouvel évenement:</label>
+                        <div class="input-group input-group-sm">
+
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="new_event"  />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+
+                    </div>
+              <div class="form-group col-2">
+                        <label class="form-group">Date :</label>
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid"  formControlName="effdate" 
+                                 placeholder="jj-mm-aaaa" name="effdate" ngbDatepicker f
+                                #effdate="ngbDatepicker" >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="effdate.toggle()"  type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Heure :</label>
+                        <div class="input-group-sm">
+                            <input class="form-control" id="kt_timepicker_1"  placeholder="Select time" type="time" formControlName="start_time">
+                            
+                        </div>
+                    </div>
+              
+            </div>
+          </form>    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveNewResult()">Ok</button>
+        </div>
+      </ng-template>
+      <button hidden id="openNbrLigne" class="btn btn-primary" (click)="opennbrligne(contentsamepart)">Launch demo modal</button>
+    </div>
+    <div>
+      <ng-template #contentEvent let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Nouvel évenement</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form" [formGroup]="nbrForm">
+            <div class="row">
+                <div class="form-group col-2">
+                        <label class="form-group ">Communiquer Via:</label>
+                        
+                        <select 
+                        [className]="nbrForm.controls['method'].errors && (nbrForm.controls['method'].dirty || nbrForm.controls['method'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                           
+                            formControlName="method" id="exampleSelects8">
+                            
+                            <option *ngFor="let elem of methods" [value]="elem.code_value">
+                                {{elem.code_desc}} </option>
+
+                        </select>
+                        
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-2">
+                    <label class="form-group">Client :</label>
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control form-control-solid" formControlName="so_cust" (change)="onChangeCust()" aria-describedby="basic-addon2" />
+                        <div class="input-group-append">
+                        <span class="input-group-text" (click)="open2(content2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-2">
+                        <label class="form-group">Nom: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid"  formControlName="name" 
+                            aria-describedby="basic-addon2">
+                        </div>
+                </div>
+                <div class="form-group col-2">
+                        <label class="form-group">Addresse: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid"  formControlName="addresse" 
+                            aria-describedby="basic-addon2">
+                        </div>
+                </div>
+                <div class="form-group col-2">
+                        <label class="form-group">Tel: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid"  formControlName="phone" 
+                            aria-describedby="basic-addon2">
+                        </div>
+                </div>
+                <div class="form-group col-2">
+                        <label class="form-group">Email: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid"  formControlName="mail" 
+                            aria-describedby="basic-addon2">
+                        </div>
+                </div>
+                <!-- <div class="form-group col-2">
+                    <label class="form-group">Ajouter client:</label>
+                    <div class="input-group input-group-sm">
+                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addclient()" >Créer</button>
+                    </div>
+                </div> -->
+                   
+            </div>
+            <div class="row">
+                 <div class="form-group col-2">
+                       
+                        <label class="form-group">Article: *</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" formControlName="tr_part"
+                            [className]="nbrForm.controls['tr_part'].errors && (nbrForm.controls['tr_part'].dirty || nbrForm.controls['tr_part'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                            aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open4(content4)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                            <div *ngIf="nbrForm.controls['tr_part'].errors && (nbrForm.controls['tr_part'].dirty || nbrForm.controls['tr_part'].touched)"
+                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                
+                    </div> 
+                <div class="form-group col-2">
+                        <label class="form-group">Désignation: *</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-solid"  formControlName="desc" 
+                            aria-describedby="basic-addon2">
+                        </div>
+                </div>
+                
+                   
+            </div>
+            <div class="row">
+                <div class="form-group col-2">
+                        <label class="form-group ">résultat:</label>
+                        
+                        <select 
+                        [className]="nbrForm.controls['result'].errors && (nbrForm.controls['result'].dirty || nbrForm.controls['result'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                           
+                            formControlName="result" id="exampleSelects8" (change)="onChangeResult()">
+                            
+                            <option *ngFor="let elem of results" [value]="elem.code_value">
+                                {{elem.code_desc}} </option>
+
+                        </select>
+                        
+                    </div> 
+              
+               <div class="form-group col-2">
+                        <label class="form-group ">Statut évenement:</label>
+                        
+                        <select 
+                        [className]="nbrForm.controls['status'].errors && (nbrForm.controls['status'].dirty || nbrForm.controls['status'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                           
+                            formControlName="status" id="exampleSelects9" (change)="onChangeStatus()">
+                            
+                            <option *ngFor="let elem of statuses" [value]="elem.code_value">
+                                {{elem.code_cmmt}} </option>
+
+                        </select>
+                        
+                    </div>
+                     <div class="form-group col-2">
+                        <label class="form-group">Nombre :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid" formControlName="nbrligne"   id="nbrligne"
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Prix :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid" formControlName="price"   id="price"
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+              </div>
+            <div class="row">      
+              <div class="form-group col-6">
+                        <label class="form-group">Observation:</label>
+                        <textarea class="form-control form-control-sm form-control-solid" formControlName="comment"
+                            rows="2"></textarea>
+              </div>
+            </div>
+            <div class="row">
+               
+              <div class="form-group col-2">
+                        <label class="form-group">Date :</label>
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-sm form-control-solid"  formControlName="effdate" 
+                                 placeholder="jj-mm-aaaa" name="effdate" ngbDatepicker f
+                                #effdate="ngbDatepicker" >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="effdate.toggle()"  type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+                            
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Heure :</label>
+                        <div class="input-group-sm">
+                            <input class="form-control" id="kt_timepicker_1"  placeholder="Select time" type="time" formControlName="start_time">
+                            
+                        </div>
+                    </div>
+               
+            </div>
+          </form>    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveNewEvent()">Ok</button>
+        </div>
+      </ng-template>
+      <button hidden id="openEvent" class="btn btn-primary" (click)="openEvent(contentEvent)">Launch demo modal</button>
+    </div>
+    <div>
+        <ng-template #content4 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choisir l'article</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                        [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions4" [dataset]="items">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+        <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+            modal</button>
+
+    </div>
+    <div>
+        <ng-template #content2 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir le Client</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions2" [dataset]="customers"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+      </div>
+    </kt-portlet-body>
+</kt-portlet>

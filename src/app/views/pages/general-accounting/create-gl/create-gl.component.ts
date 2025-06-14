@@ -464,7 +464,7 @@ export class CreateGlComponent implements OnInit {
             alert("Compte N'existe pas")
             this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , glt_acct: null })
           } else {
-            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , glt_desc: resp.data.ac_desc })
+            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , glt_desc: resp.data.ac_desc,glt_src_desc:resp.data.ac_type })
           }
           
           });
@@ -746,6 +746,42 @@ export class CreateGlComponent implements OnInit {
         },
       },
       {
+        id: "dec01",
+        name: "Débit",
+        field: "dec01",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        editor: {
+            model: Editors.float,
+            params: { decimalPlaces: 2 }
+          },
+          onCellChange: (e: Event, args: OnEventArgs) => {
+            
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , glt_amt:args.dataContext.dec01 - args.dataContext.dec02  })
+            
+            
+          }
+      },
+      {
+        id: "dec02",
+        name: "Crédit",
+        field: "dec02",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        editor: {
+            model: Editors.float,
+            params: { decimalPlaces: 2 }
+          },
+          onCellChange: (e: Event, args: OnEventArgs) => {
+            
+            this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , glt_amt:args.dataContext.dec01 - args.dataContext.dec02  })
+          
+          
+        }
+      },
+      {
         id: "glt_amt",
         name: "Montant",
         field: "glt_amt",
@@ -763,6 +799,7 @@ export class CreateGlComponent implements OnInit {
     this.gridOptions = {
       asyncEditorLoading: false,
       editable: true,
+      autoCommitEdit:true,
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
@@ -797,6 +834,9 @@ addNewItem() {
         glt_project: "",
         glt_entity : this.entity,
         glt_amt    : 0 ,
+        dec01:0,
+        dec02:0,
+        glt_src_desc:"",
         
       },
       { position: "bottom" }
@@ -1086,6 +1126,8 @@ addNewItem() {
 
          updateItem.glt_acct = item.ac_code;
          updateItem.glt_desc = item.ac_desc;
+         updateItem.glt_src_desc = item.ac_type;
+         
         this.gridService.updateItem(updateItem);
         
         })
@@ -1121,6 +1163,14 @@ prepareGrid3() {
             maxWidth: 80,
         },
         {
+          id: "ac_stat_acc",
+          name: "Compte Statique",
+          field: "ac_stat_acc",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
             id: "ac_code",
             name: "Compte",
             field: "ac_code",
@@ -1152,14 +1202,7 @@ prepareGrid3() {
           filterable: true,
           type: FieldType.string,
         },
-        {
-          id: "ac_stat_acc",
-          name: "Compte Statique",
-          field: "ac_stat_acc",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-        },
+        
 
     ]
 

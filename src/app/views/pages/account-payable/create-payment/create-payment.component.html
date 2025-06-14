@@ -192,8 +192,8 @@
                             [className]="apForm.controls['ap_cr_terms'].errors && (apForm.controls['ap_cr_terms'].dirty || apForm.controls['ap_cr_terms'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                             formControlName="ap_cr_terms" id="exampleSelects2"   (change)="onChangePM()">
                             <option value=""></option>
-                            <option *ngFor="let elem of ap_cr_terms" [value]="elem.bkd_pay_method">
-                                 {{elem.bkd_pay_method}}</option>
+                            <option *ngFor="let elem of ap_cr_termss" [value]="elem.code_value">
+                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                         </select>
                         <div *ngIf="apForm.controls['ap_cr_terms'].errors && (apForm.controls['ap_cr_terms'].dirty || apForm.controls['ap_cr_terms'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>

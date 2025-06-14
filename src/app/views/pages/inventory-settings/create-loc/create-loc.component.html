@@ -15,7 +15,7 @@
              <ngb-tab>
                 <ng-template ngbTabTitle>
                     <div style="width: 50px;"></div>
-                    Ajouter site
+                    Ajouter Emplacement
                     <div style="width: 50px;"></div>
                     <!-- <a *ngIf="hasFormErrors5"
                         class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
@@ -54,8 +54,8 @@
                     <div class="row">
 
                         <div class="form-group col-2">
-                            <label class="form-group">Dépot: </label>
-                            <input type="text" (change)="onChangeCode()"
+                            <label class="form-group">Bloc: </label>
+                            <input type="text" 
                                 [className]="locationForm.controls['chr01'].errors && (locationForm.controls['chr01'].dirty || locationForm.controls['chr01'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 formControlName="chr01">
                                     <!-- <div *ngIf="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched)"
@@ -63,7 +63,7 @@
 
                         </div>
                         <div class="form-group col-2">
-                            <label class="form-group">Magasin: </label>
+                            <label class="form-group">Niveau: </label>
                             <input type="text" (change)="onChangeCode()"
                                 [className]="locationForm.controls['loc_phy_adr'].errors && (locationForm.controls['loc_phy_adr'].dirty || locationForm.controls['loc_phy_adr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 formControlName="loc_phy_adr">
@@ -72,8 +72,8 @@
 
                         </div>
                         <div class="form-group col-2">
-                            <label class="form-group">Emplacement: *</label>
-                            <input type="text" (change)="onChangeCode()"
+                            <label class="form-group">Code Emplacement: *</label>
+                            <input type="text" (change)="onChangeCode1()"
                                 [className]="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 formControlName="loc_loc">
                                     <div *ngIf="locationForm.controls['loc_loc'].errors && (locationForm.controls['loc_loc'].dirty || locationForm.controls['loc_loc'].touched)"
@@ -94,10 +94,6 @@
 
 
                         </div>
-                    </div>
-
-
-                    <div class="row">
                         <div class="form-group col-2">
                             <label class="form-group">Status: *</label>
                             <div class="input-group input-group-sm">
@@ -115,7 +111,10 @@
                         </div>
                     </div>
 
-                    <div class="row">
+
+                   
+
+                    <!-- <div class="row">
                         <div class="form-group col-2">
                             <label class="form-group">Projet: *</label>
                         
@@ -145,7 +144,7 @@
 
 
 
-                    </div>
+                    </div> -->
 
                     <div class="row">
 
@@ -196,10 +195,6 @@
                                     placeholder="0">
 
                         </div>
-
-                    </div>
-
-                    <div class="row">
                         <div class="form-group col-2">
                             <label class="form-group">UM: </label>
                             <div class="input-group input-group-sm">
@@ -213,8 +208,13 @@
                             </div>
                         </div>
 
+                    </div>
 
-                        <div class="form-group col-2">
+                    <div class="row">
+                        
+
+
+                        <!-- <div class="form-group col-2">
 
                             <label class="form-group"> Transfert de Propriété: </label>
                                 <span class="switch switch-icon ">
@@ -224,7 +224,7 @@
                                         <span></span>
                                     </label>
                                 </span>
-                        </div>
+                        </div> -->
 
                     </div>
                 </form>

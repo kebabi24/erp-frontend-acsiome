@@ -48,7 +48,7 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import { ItineraryService, MobileServiceService, RoleService, UsersMobileService, MobileSettingsService, LoadRequestService, UnloadRequestService, MessageService, CustomerMobileService, CodeMobileService } from "../../../core/erp";
+import { ItineraryService, MobileServiceService, RoleService, UsersMobileService,LocationDetailService, MobileSettingsService, LoadRequestService, UnloadRequestService, MessageService, CustomerMobileService, CodeMobileService, DecompteService, SiteService, LocationService } from "../../../core/erp";
 import { ValidateDeChargeDemandeComponent } from "./validate-decharge-demande/validate-decharge-demande.component";
 import { CreateLoadRequestComponent } from "./create-load-request/create-load-request.component";
 import { ListDiffLoadrequestComponent } from "./list-diff-loadrequest/list-diff-loadrequest.component";
@@ -57,6 +57,13 @@ import { DashboardServiceComponent } from "./dashboard-service/dashboard-service
 import { MatRadioModule } from "@angular/material/radio";
 import { ValidateLrSupComponent } from './validate-lr-sup/validate-lr-sup.component';
 import { CreateLrSupComponent } from './create-lr-sup/create-lr-sup.component';
+import { DecompteRoleComponent } from './decompte-role/decompte-role.component';
+import { ListInventoryRoleComponent } from './list-inventory-role/list-inventory-role.component';
+import { ListInvoiceRoleComponent } from './list-invoice-role/list-invoice-role.component';
+import { ListPaymentRoleComponent } from './list-payment-role/list-payment-role.component';
+import { ListVisiteRoleComponent } from './list-visite-role/list-visite-role.component';
+import { ListSalesRoleComponent } from './list-sales-role/list-sales-role.component';
+import { PrintInventoryRoleComponent } from './print-inventory-role/print-inventory-role.component';
 
 const routes: Routes = [
   {
@@ -96,9 +103,37 @@ const routes: Routes = [
     path: "validate-lr-sup",
     component: ValidateLrSupComponent,
   },
+  {
+    path: "decompte-role",
+    component: DecompteRoleComponent,
+  },
+  {
+    path: "list-inventory-role",
+    component: ListInventoryRoleComponent,
+  },
+  {
+    path: "list-invoice-role",
+    component: ListInvoiceRoleComponent,
+  },
+  {
+    path: "list-payment-role",
+    component: ListPaymentRoleComponent,
+  },
+  {
+    path: "list-visite-role",
+    component: ListVisiteRoleComponent,
+  },
+  {
+    path: "list-sales-role",
+    component: ListSalesRoleComponent,
+  },
+  {
+    path: "print-inventory-role",
+    component: PrintInventoryRoleComponent,
+  },
 ];
 @NgModule({
-  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent],
+  declarations: [CreateLoadRequestComponent, ValidateChargeDemandeComponent, TransferChargeDemandeToDeliveryComponent, ValidateDeChargeDemandeComponent, ListDiffLoadrequestComponent, CreateMessageComponent, DashboardServiceComponent, ValidateLrSupComponent, CreateLrSupComponent, DecompteRoleComponent, ListInventoryRoleComponent, ListInvoiceRoleComponent, ListPaymentRoleComponent, ListVisiteRoleComponent, ListSalesRoleComponent, PrintInventoryRoleComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -147,7 +182,11 @@ const routes: Routes = [
     LayoutUtilsService,
     LoadRequestService,
     UnloadRequestService,
+    LocationDetailService,
     MessageService,
+    DecompteService,
+    SiteService,
+    LocationService,
   ],
 })
 export class SupervisionModule {}

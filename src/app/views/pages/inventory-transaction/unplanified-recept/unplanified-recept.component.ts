@@ -93,7 +93,11 @@ export class UnplanifiedReceptComponent implements OnInit {
   gridOptions2: GridOption = {};
   gridObj2: any;
   angularGrid2: AngularGridInstance;
-
+  vends: [];
+  columnDefinitionsvend: Column[] = [];
+  gridOptionsvend: GridOption = {};
+  gridObjvend: any;
+  angularGridvend: AngularGridInstance;
   user: any;
   trlot: string;
   row_number;
@@ -119,6 +123,7 @@ export class UnplanifiedReceptComponent implements OnInit {
   pdl : any;
   exec : Boolean = true
   currentDialog = null;
+  nom:any;
   constructor(config: NgbDropdownConfig, 
                 private trFB: FormBuilder,
                 private nbrFB: FormBuilder, 
@@ -208,25 +213,26 @@ export class UnplanifiedReceptComponent implements OnInit {
           model: Editors.text,
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          const controls=this.trForm.controls;
           console.log(args.dataContext.tr_part);
           this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
             if (resp.data) {
-              this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
+              this.locationService.getByOne({ loc_site: controls.tr_site.value }).subscribe((response: any) => {
                 this.location = response.data;
 
-                this.sctService.getByOne({ sct_site: resp.data.pt_site, sct_part: resp.data.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
+                this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: resp.data.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
                   this.sct = response.data;
 
-                  this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+                  this.inventoryStatusService.getAllDetails({ isd_status: 'CONFORME', isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
                     console.log(resstat);
                     const { data } = resstat;
 
                     if (data) {
-                      this.stat = null;
+                      this.stat = '';
                     } else {
                       this.stat = this.location.loc_status;
                     }
-                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: this.sct.sct_mtl_tl });
+                    this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: controls.tr_site.value, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: this.sct.sct_mtl_tl });
                   });
                 });
               });
@@ -260,12 +266,31 @@ export class UnplanifiedReceptComponent implements OnInit {
       },
       {
         id: "tr_batch",
-        name: "Code",
+        name: "N°",
         field: "tr_batch",
         sortable: true,
         width: 180,
         filterable: false,
         editor:{model:Editors.text}
+      },
+      {
+        id: "tr_serial",
+        name: "Lot",
+        field: "tr_serial",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        editor: {
+          model: Editors.text,
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
+            console.log(response.data);
+            if (response.data.length != 0) {
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
+            }
+          });
+        },
       },
       {
         id: "tr_qty_loc",
@@ -426,7 +451,7 @@ export class UnplanifiedReceptComponent implements OnInit {
                 const { data } = resstat;
 
                 if (data) {
-                  this.stat = null;
+                  this.stat = '';
                 } else {
                   this.stat = this.location.loc_status;
                 }
@@ -453,33 +478,15 @@ export class UnplanifiedReceptComponent implements OnInit {
         },
       },
  
-      {
-        id: "tr_serial",
-        name: "Lot",
-        field: "tr_serial",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
-            console.log(response.data);
-            if (response.data.length != 0) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: response.data[0].ld_status, tr_expire: response.data[0].ld_expire });
-            }
-          });
-        },
-      },
+     
       {
         id: "tr_grade",
-        name: "etat d'avancement",
+        name: "Notaire",
         field: "tr_grade",
         sortable: true,
         width: 180,
         filterable: false,
-        editor:{model:Editors.integer}
+        editor:{model:Editors.text}
       },
       // {
       //   id: "tr_ref",
@@ -711,7 +718,7 @@ export class UnplanifiedReceptComponent implements OnInit {
         },
       ],
       tr_so_job: [this.inventoryTransaction.tr_so_job],
-
+      tr_addr:[this.inventoryTransaction.tr_addr],
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       tr_site: [this.inventoryTransaction.tr_site],
       printer :  [this.user.usrd_dft_printer],
@@ -901,7 +908,7 @@ export class UnplanifiedReceptComponent implements OnInit {
 
     _tr.tr_effdate = controls.tr_effdate.value ? `${controls.tr_effdate.value.year}/${controls.tr_effdate.value.month}/${controls.tr_effdate.value.day}` : null;
     _tr.tr_so_job = controls.tr_so_job.value;
-    _tr.tr_addr = 'INV';
+    _tr.tr_addr = controls.tr_addr.value;
     _tr.tr_rmks = controls.tr_rmks.value;
     _tr.tr_site = controls.tr_site.value;
 
@@ -981,7 +988,7 @@ export class UnplanifiedReceptComponent implements OnInit {
         tr_part: "",
         cmvid: "",
         desc: "",
-        tr_qty_loc: 0,
+        tr_qty_loc: 1,
         tr_um: "",
         tr_price: 0,
         tr_site: controls.tr_site.value,
@@ -1022,7 +1029,7 @@ export class UnplanifiedReceptComponent implements OnInit {
         tr_price: this.dataset[i - 1].tr_price,
         tr_site: this.dataset[i - 1].tr_site,
         tr_loc: this.dataset[i - 1].tr_loc,
-        tr_serial: this.dataset[i - 1].tr_serial,
+        tr_grade: this.dataset[i - 1].tr_grad,
         tr_ref: null,
         tr_status: this.dataset[i - 1].tr_status,
         tr_expire: this.dataset[i - 1].tr_expire,
@@ -1041,20 +1048,20 @@ export class UnplanifiedReceptComponent implements OnInit {
         const item = this.gridObj4.getDataItem(idx);
         console.log(item);
 
-        this.locationService.getByOne({ loc_loc: item.pt_loc, loc_site: controls.tr_site.value }).subscribe((response: any) => {
+        this.siteService.getByOne({ si_site: controls.tr_site.value }).subscribe((response: any) => {
           this.location = response.data;
 
-          this.sctService.getByOne({ sct_site: item.pt_site, sct_part: item.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
+          this.sctService.getByOne({ sct_site: controls.tr_site.value, sct_part: item.pt_part, sct_sim: "STD-CG" }).subscribe((response: any) => {
             this.sct = response.data;
 
-            this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+            this.inventoryStatusService.getAllDetails({ isd_status: 'CONFORME', isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
               console.log(resstat);
               const { data } = resstat;
 
               if (data) {
-                this.stat = null;
+                this.stat = '';
               } else {
-                this.stat = this.location.loc_status;
+                this.stat = 'CONFORME';
               }
 
               updateItem.tr_part = item.pt_part;
@@ -1638,7 +1645,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObj2.getDataItem(idx);
 
-        this.provider = item;
+       
         controls.tr_site.setValue(item.si_site || "");
       });
     }
@@ -1761,15 +1768,16 @@ export class UnplanifiedReceptComponent implements OnInit {
     let date = new Date()
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
+    // img.src = "./assets/media/logos/unplanified-recept.png";
     img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, 'png', 150, 5, 50, 30)
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
 
     doc.line(10, 35, 200, 35);
@@ -1781,7 +1789,7 @@ export class UnplanifiedReceptComponent implements OnInit {
       
      
     doc.setFontSize(8);
-    //console.log(this.provider.ad_misc2_id)
+    console.log(this.provider)
     doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
     doc.text("Nom             : " + this.provider.ad_name, 20, 55);
     doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
@@ -1827,15 +1835,16 @@ export class UnplanifiedReceptComponent implements OnInit {
       
       if ((j % 20 == 0) && (j != 0) ) {
   doc.addPage();
-        img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, 'png', 150, 5, 50, 30)
+  // img.src = "./assets/media/logos/unplanified-recept.png";
+  img.src = "./assets/media/logos/companyentete.png";
+  doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
 
@@ -2114,5 +2123,122 @@ export class UnplanifiedReceptComponent implements OnInit {
     const url = `/purchasing/payment-au`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   
+  }
+  handleSelectedRowsChangedvend(e, args) {
+    const controls = this.trForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjvend) {
+      args.rows.map((idx) => {
+        const item = this.gridObjvend.getDataItem(idx);
+
+        this.provider = item;
+        controls.tr_addr.setValue(item.ad_addr || "");
+        this.nom = item.ad_name;
+      });
+    }
+  }
+
+  angularGridReadyvend(angularGrid: AngularGridInstance) {
+    this.angularGridvend = angularGrid;
+    this.gridObjvend = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridvend() {
+    this.columnDefinitionsvend = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ad_addr",
+        name: "code",
+        field: "ad_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_name",
+        name: "Nom",
+        field: "ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_phone",
+        name: "Numero telephone",
+        field: "ad_phone",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxable",
+        name: "A Taxer",
+        field: "ad_taxable",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxc",
+        name: "Taxe",
+        field: "ad_taxc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsvend = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.addressService.getBy({ad_type:'vendor'}).subscribe((response: any) => (this.vends = response.data));
+  }
+  openvend(content) {
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
+      (reponse: any) => {
+        if (reponse.data == null || reponse.data.code_value != ' ') {
+          this.prepareGridvend();
+          this.modalService.open(content, { size: "lg" });
+        }
+        console.log(reponse.data);
+      },
+      (error) => {
+        this.prepareGridvend();
+        this.modalService.open(content, { size: "lg" });
+      }
+    );
   }
 }

@@ -56,9 +56,18 @@ export class MobileSettingsService {
         return this.http.post(`${API_URL}/getAllInvoicesdet/`,data,{ headers: httpHeaders })
         //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
     }
+    public   getAllInvoicesDetRole(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoicesdetrole/`,data,{ headers: httpHeaders })
+        //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
+    }
     public   getAllPayment(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllPayment/`, data,{ headers: httpHeaders })
+    }   
+    public   getAllPaymentByRole(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllPaymentByRole/`, data,{ headers: httpHeaders })
     }   
     public   getAllPaymentService(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -69,7 +78,10 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllVisit/`, data,{ headers: httpHeaders })
     }   
-    
+    public   getAllVisitesRole(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllVisitrole/`, data,{ headers: httpHeaders })
+    }
     public createCancelationReasons(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/createCancelReasons/`, {data},{ headers: httpHeaders })
@@ -92,5 +104,12 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders();
         return this.http.get(`${API_URL_2}/getPriceList`, { headers: httpHeaders });
     }
-    
+    public   getAllInvoicesRole(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoicesRole/`, data,{ headers: httpHeaders })
+    }
+    public   getAllCA(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findallca/`, data,{ headers: httpHeaders })
+    }
 }

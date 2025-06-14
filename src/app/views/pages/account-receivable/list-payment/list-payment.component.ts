@@ -248,7 +248,7 @@ export class ListPaymentComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.accountReceivableService.getByWithAdress({ar_type : "P"}).subscribe(
+      this.accountReceivableService.getBy({ar_type : "P"}).subscribe(
           (response: any) => (this.dataset = response.data),
           (error) => {
               this.dataset = []

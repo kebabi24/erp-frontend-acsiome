@@ -39,6 +39,13 @@ export class GeneralLedgerService {
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         
     }
+    public get50(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/find50`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
     public getNewId(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findid`,data, { headers: httpHeaders })

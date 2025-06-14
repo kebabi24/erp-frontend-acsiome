@@ -237,6 +237,52 @@ export class MenuConfig {
             },
           ],
         },
+        /**/
+        {
+          title: "Gestion des Fournisseurs STD",
+          bullet: "dot",
+          icon: "flaticon-customer",
+          root: true,
+          submenu: [
+            {
+              title: "La liste des Fournisseurs STD",
+              page: "/providers/list",
+            },
+            {
+              title: "Ajouter Fournisseur STD",
+              page: "/providers/create-std-provider",
+            }
+          ],
+        },
+        /**/
+
+
+        /**/
+        {
+          title: "Gestion des Clients STD",
+          bullet: "dot",
+          icon: "flaticon-customer",
+          root: true,
+          submenu: [
+            {
+              title: "La liste des Clients",
+              page: "/customers/customer-list",
+            },
+            {
+              title: "Ajouter Clients STD",
+              page: "/customers/create-std-customer",
+            },
+            {
+              title: "Ajouter Clients immobilier",
+              page: "/customers/create-customer-immobilier",
+            },
+            {
+              title: "Répertoire Clients",
+              page: "/customers/create-rep",
+            },
+          ],
+        },
+        /**/
         {
           title: "Gestion des Clients",
           bullet: "dot",
@@ -291,6 +337,7 @@ export class MenuConfig {
               title: "Ajouter Clients",
               page: "/customers-mobile/create-customer-mobile",
             },
+            
             {
               title: "Ajouter Cluster",
               page: "/customers-mobile/cluster-create",
@@ -314,7 +361,7 @@ export class MenuConfig {
           ],
         },
         {
-          title: "Supervision",
+          title: "Préparation Sortie Camion",
           bullet: "dot",
           icon: "flaticon-user-settings",
           root: true,
@@ -327,26 +374,93 @@ export class MenuConfig {
               title: "Validation des demandes de chargement",
               page: "/supervision/validate-charge-demande",
             },
+            
+           
             {
-              title: "Validation des demandes de chargement Sup",
-              page: "/supervision/validate-lr-sup",
+              title: "Transfert à la livraison",
+              page: "/supervision/transfer-charge-demande-delivery",
+            },
+            {
+              title: "Service roadmap",
+              page: "/supervision/dashboard-service",
+            },
+            {
+              title: "Décompte Role",
+              page: "/supervision/decompte-role",
+            },
+            {
+              title: "Créer un nouveau service",
+              page: "/services/create-new-service",
+            },
+            {
+              title: "Consultation des Services",
+              page: "/services/list-service",
             },
             {
               title: "Validation des demandes de dechargement",
               page: "/supervision/validate-decharge-demande",
             },
             {
-              title: "Transfert demandes de chargement à la livraison",
-              page: "/supervision/transfer-charge-demande-delivery",
+              title: "Impression Facture Camion",
+              page: "/supervision/print-inventory-role",
             },
+    
+          ],
+        },
+        {
+          title: "Supervision",
+          bullet: "dot",
+          icon: "flaticon-user-settings",
+          root: true,
+          submenu: [
+            {
+              title: "Crée Demande Chargement",
+              page: "/supervision/create-lr-sup",
+            },
+            {
+              title: "Validation des Demandes de Chargement Sup",
+              page: "/supervision/validate-lr-sup",
+            },
+            // {
+            //   title: "Validation des demandes de dechargement",
+            //   page: "/supervision/validate-decharge-demande",
+            // },
+            // {
+            //   title: "Transfert demandes de chargement à la livraison",
+            //   page: "/supervision/transfer-charge-demande-delivery",
+            // },
             {
               title: "Liste des Chargement non Respectés",
               page: "/supervision/list-diff-loadrequest",
             },
             {
-              title: "Service roadmap",
-              page: "/supervision/dashboard-service",
+              title: "Liste des Factures Par Role",
+              page: "/supervision/list-invoice-role",
             },
+            {
+              title: "Liste des Payments Par Role ",
+              page: "/supervision/list-payment-role",
+            },
+            {
+              title: "Liste des Visites Par Role ",
+              page: "/supervision/list-visite-role",
+            },
+            {
+              title: "Liste des Ventes Par Role ",
+              page: "/supervision/list-sales-role",
+            },
+            {
+              title: "Stock Camion Valorisé",
+              page: "/supervision/list-inventory-role",
+            },
+            // {
+            //   title: "Service roadmap",
+            //   page: "/supervision/dashboard-service",
+            // },
+            // {
+            //   title: "Décompte Role",
+            //   page: "/supervision/decompte-role",
+            // },
           ],
         },
         {
@@ -405,11 +519,11 @@ export class MenuConfig {
           root: true,
           submenu: [
             {
-              title: "Créer un nouveau service",
+              title: "Création service",
               page: "/services/create-new-service",
             },
             {
-              title: "Consultation des Services",
+              title: "Consultation  Services",
               page: "/services/list-service",
             },
           ],
@@ -450,6 +564,10 @@ export class MenuConfig {
               page: "/articles/list-update",
             },
             {
+              title: "Copie des Articles",
+              page: "/articles/list-copie",
+            },
+            {
               title: "Génération Article",
               page: "/articles/create-spec",
             },
@@ -458,7 +576,7 @@ export class MenuConfig {
               page: "/articles/add",
             },
             {
-              title: "Génerer Bien via Modèle",
+              title: "Génerer Matière via Modèle",
               page: "/articles/create-mp-mod",
             },
             {
@@ -472,6 +590,10 @@ export class MenuConfig {
             {
               title: "Génerer Materiel par Modèle",
               page: "/articles/create-materiel-mod",
+            },
+            {
+              title: "Génerer appartement par Modèle",
+              page: "/articles/create-immobilier-mod",
             },
             {
               title: "Génerer PF par Modèle",
@@ -505,6 +627,10 @@ export class MenuConfig {
                 {
                   title: "Ajouter Un Modèle Materiel",
                   page: "/articles/create-mod-materiel",
+                },
+                {
+                  title: "Ajouter Un Modèle d'appartement",
+                  page: "/articles/create-mod-immobilier",
                 },
                 {
                   title: "Ajouter Un Modèle PF",
@@ -598,6 +724,14 @@ export class MenuConfig {
               page: "/inventory-transaction/purchase-receipt-cab",
             },
             {
+              title: "Réception Colorants",
+              page: "/inventory-transaction/purchase-receipt-colorant",
+            },
+            {
+              title: "Réception Echantillon",
+              page: "/inventory-transaction/echantillon-receipt-cab",
+            },
+            {
               title: "Réception Biens Etiquetage",
               page: "/inventory-transaction/asset-receive-cab",
             },
@@ -607,7 +741,7 @@ export class MenuConfig {
             },
             {
               title: "Imprimer Réceptions Achat",
-              page: "/inventory-transaction/rct-po-globalprint",
+              page: "/inventory-transaction/rct-po-print",
             },
             {
               title: "liste des Réceptions non planifiées",
@@ -615,7 +749,7 @@ export class MenuConfig {
             },
             {
               title: "Liste des réceptions achats",
-              page: "/inventory-transaction/rct-po-print",
+              page: "/inventory-transaction/rct-po-globalprint",
             },
             {
               title: "Réception Bobines",
@@ -650,6 +784,10 @@ export class MenuConfig {
             {
               title: "Consultation Stocks ",
               page: "/inventory-transaction/inventory-list",
+            },
+            {
+              title: "Suivi des stocks",
+              page: "/inventory-transaction/inventory-detail",
             },
             {
               title: "Consultation Stocks Bobine ",
@@ -789,6 +927,10 @@ export class MenuConfig {
               page: "/purchasing/purchase-list",
             },
             {
+              title: "Liste des Récéptions",
+              page: "/purchasing/list-au",
+            },
+            {
               title: "Paiement des Récéption",
               page: "/purchasing/payment-au",
             },
@@ -818,6 +960,10 @@ export class MenuConfig {
               page: "/sales/create-so",
             },
             {
+              title: "Fiche de Voeu",
+              page: "/sales/create-so-immobilier",
+            },
+            {
               title: "Modification des Commandes",
               page: "/sales/list-so-edit",
             },
@@ -834,6 +980,10 @@ export class MenuConfig {
               page: "/sales/so-list",
             },
             {
+              title: "Liste des Livraisons",
+              page: "/sales/psh-list",
+            },
+            {
               title: "Commande Clients Céramic",
               page: "/sales/create-ceram-so",
             },
@@ -843,22 +993,55 @@ export class MenuConfig {
               page: "/sales/create-psh",
             },
             {
+              title: "ajouter Commande Client",
+              page: "/sales/create-direct-invoice",
+            },
+            {
               title: "Versement Client",
               page: "/sales/create-payment-cust",
             },
             
             {
-              title: "Paiement des BL",
+              title: "régler ordre de versement",
               page: "/sales/payment-psh",
+            },
+            {
+              title: "Decision d'affectation",
+              page: "/sales/decision-affectation",
+            },
+            {
+              title: "cloture solde",
+              page: "/sales/cloture-solde",
+            },
+            {
+              title: "attestation de reservation",
+              page: "/sales/attestation-reservation",
+            },
+            {
+              title: "PV de réception",
+              page: "/sales/create-pv-reception",
+            },
+            {
+              title: "Enquete de satisfaction",
+              page: "/training/enquete-satisfacation",
+            },
+            {
+              title: "Remise des clés",
+              page: "/sales/remise-des-cles",
+            },
+            {
+              title: "Controle actes",
+              page: "/sales/controle-acte",
+            },
+            {
+              title: "Paiement des Commande",
+              page: "/sales/payment-so",
             },
             {
               title: "Facturation ",
               page: "/sales/create-invoice",
             },
-            {
-              title: "Facture en Attente ",
-              page: "/sales/create-direct-invoice",
-            },
+            
             {
               title: "Facture Projet ",
               page: "/sales/create-project-invoice",
@@ -876,14 +1059,21 @@ export class MenuConfig {
               page: "/sales/input-invoice",
             },
             {
-              title: "Liste des Factures",
+              title: "Liste des Factures ventes",
+              page: "/sales/list-invoices-detail",
+            },
+            {
+              title: "Liste des paiements Factures ",
               page: "/sales/list-invoices",
             },
             {
               title: "Ajouter Facture DD",
               page: "/sales/create-inv-mob",
             },
-            
+            {
+              title: "Chiffre d'affaire Par Client",
+              page: "/sales/list-ca-dd",
+            },
             {
               title: "Liste des Factures DD",
               page: "/sales/list-invoice-mob",
@@ -913,12 +1103,33 @@ export class MenuConfig {
               page: "/account-receivable/create-vendor-payment",
             },
             {
+              title: "Recette Vendeur Détaillée",
+              page: "/account-receivable/create-vendor-payment-detail",
+            },
+            {
+              title: "Recette Role Détaillée",
+              page: "/account-receivable/create-role-payment-detail",
+            },
+            {
               title: "Liste des Recettes vendeurs",
               page: "/account-receivable/list-vendor-payment",
             },
             {
+              title: "Situation Caisse Détaillée",
+              page: "/account-receivable/list-bank-detail",
+            },
+            {
+              title: "Situation des Caisses",
+              page: "/account-receivable/list-caisse",
+            },
+            {
               title: "Transfert Entre Caisse",
               page: "/account-receivable/transfert-ar",
+            },
+
+            {
+              title: "Transfert Entre Caisses Détaillé",
+              page: "/account-receivable/transfert-caisse-det",
             },
             {
               title: "Liste des Transferts Recettes ",
@@ -930,6 +1141,28 @@ export class MenuConfig {
             },
           ],
         },
+        {
+          title: "Gestion des Dépenses",
+          root: true,
+          bullet: "dot",
+          icon: "flaticon2-rocket",
+          submenu: [
+            {
+              title: "Maint Charge",
+              page: "/financialcharge/create-fc",
+            },
+
+            {
+              title: "Liste des charges",
+              page: "/financialcharge/list-forcast",
+            },
+            {
+              title: "Modification des charges",
+              page: "/financialcharge/update-forcast",
+            },
+          ],
+        },
+
         {
           title: "Gestion des Prévisions",
           root: true,
@@ -1027,6 +1260,10 @@ export class MenuConfig {
               page: "/manufacturing/create-order",
             },
             {
+              title: "Création programme Thermoformage",
+              page: "/manufacturing/create-order-pf",
+            },
+            {
               title: "Création des OFs à partir des Commandes",
               page: "/manufacturing/create-wo-so",
             },
@@ -1035,8 +1272,16 @@ export class MenuConfig {
               page: "/manufacturing/create-wo-sf",
             },
             {
-              title: "List des OFs",
+              title: "List des OFs Broyage",
+              page: "/manufacturing/list-wo-br",
+            },
+            {
+              title: "List des OFs Extrusion",
               page: "/manufacturing/list-wo",
+            },
+            {
+              title: "List des OFs Thermoformage",
+              page: "/manufacturing/list-wo-pf",
             },
             {
               title: "Lancement OF avec Liste",
@@ -1292,7 +1537,7 @@ export class MenuConfig {
         {
           title: "Gestion Des Formations",
           bullet: "dot",
-          icon: "flaticon-event-calendar-symbol",
+          icon: "flaticon-presentation-1",
           root: true,
           submenu: [
             {
@@ -1307,30 +1552,40 @@ export class MenuConfig {
               title: "Liste Des Formations",
               page: "/training/list-training",
             },
+            
             {
-              title: "Demande de Formation compétence",
-              page: "/training/create-training-request",
+              title: "Création session de Formation",
+              page: "/training/create-training-session",
             },
             {
-              title: "Demande de Formation Par Service",
-              page: "/training/create-request-group",
+              title: "Liste session de Formation",
+              page: "/training/training-session-list",
             },
             {
-              title: "Demande de Formation",
-              page: "/training/create-req-training",
+              title: "Lancement session de Formation",
+              page: "/training/launch-training-session",
             },
             {
-              title: "Approuver Demande de Formation",
-              page: "/training/approval-req",
+              title: "Rapport de Formation",
+              page: "/training/training-report",
             },
             {
-              title: "Demande de Formation Par Employée",
-              page: "/training/create-request-group",
+              title: "Liste Rapport de Formation",
+              page: "/training/training-report-list",
             },
             {
-              title: "Création Calendrier de Formation",
-              page: "/training/create-training-calander",
+              title: "évaluation à chaud Formation",
+              page: "/training/training-hot-eval",
             },
+            {
+              title: "évaluation à froid Formation",
+              page: "/training/training-cold-eval",
+            },
+            {
+              title: "Liste des évaluations Formation",
+              page: "/training/training-eval-list",
+            },
+            
           ],
         },
 
@@ -1565,8 +1820,8 @@ export class MenuConfig {
               page: "/general-accounting/list-gl",
             },
             {
-              title: "Liste  ",
-              page: "/general-accounting/list",
+              title: "G50",
+              page: "/general-accounting/list-g50",
             },
           ],
         },
@@ -1800,6 +2055,10 @@ export class MenuConfig {
                   page: "/price-setting/create-price",
                 },
                 {
+                  title: "Ajouter Liste Prix immobilier",
+                  page: "/price-setting/create-price-immobilier",
+                },
+                {
                   title: "Liste des liste de Prix",
                   page: "/price-setting/list-price",
                 },
@@ -1819,6 +2078,14 @@ export class MenuConfig {
                 {
                   title: "Liste des codes",
                   page: "/code-mstr/codes-list",
+                },
+                {
+                  title: "créer entete document",
+                  page: "/code-mstr/create-doc",
+                },
+                {
+                  title: "Liste des documents",
+                  page: "/code-mstr/list-doc",
                 },
                 {
                   title: "Maint des sequence",

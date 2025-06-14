@@ -880,13 +880,19 @@ export function printBc(provider, details, po,curr) {
   console.log(tva);
   let popupWin;
   if (po.po_cr_terms == "ES") {
-    timbre = (total + tva) / 100;
+    if((total + tva) <= 30000){timbre = round((total + tva) / 100, 2)}
+    else{
+      if((total + tva) > 30000 && (total + tva) <= 100000){timbre = round((total + tva) * 1.5 / 100 , 2)}
+      else{timbre = round((total + tva) * 2 / 100 , 2)}
+    };
+    
+    if (timbre < 5) {
+      timbre = 5;
+    }
   } else {
     timbre = 0;
   }
-  if (timbre > 10000) {
-    timbre = 10000;
-  }
+  
  
   const date = new Date();
   console.log(NumberToLetter(Number((total + tva + timbre).toFixed(2))))
@@ -8209,9 +8215,14 @@ export function printSO(customer, details, so) {
   }
   console.log(tva);
   if (so.so_cr_terms == "ES") {
-    timbre = (total + tva) / 100;
-    if (timbre > 10000) {
-      timbre = 10000;
+    if((total + tva) <= 30000){timbre = round((total + tva) / 100, 2)}
+    else{
+      if((total + tva) > 30000 && (total + tva) <= 100000){timbre = round((total + tva) * 1.5 / 100 , 2)}
+      else{timbre = round((total + tva) * 2 / 100 , 2)}
+    };
+    
+    if (timbre < 5) {
+      timbre = 5;
     }
   }
   let popupWin;
@@ -9476,13 +9487,19 @@ export function printOc(customer, details, qo) {
   }
   console.log(tva);
   if (qo.qo_cr_terms == "ES") {
-    timbre = (total + tva) / 100;
+    if((total + tva) <= 30000){timbre = round((total + tva) / 100, 2)}
+    else{
+      if((total + tva) > 30000 && (total + tva) <= 100000){timbre = round((total + tva) * 1.5 / 100 , 2)}
+      else{timbre = round((total + tva) * 2 / 100 , 2)}
+    };
+    
+    if (timbre < 5) {
+      timbre = 5;
+    }
   } else {
     timbre = 0;
   }
-  if (timbre > 10000) {
-    timbre = 10000;
-  }
+ 
   let popupWin;
   const date = new Date();
 
@@ -10745,9 +10762,14 @@ export function printBL(customer, details, pshnbr,cr_terms) {
       }
       console.log(tva);
       if (cr_terms == "ES") {
-        timbre = (total + tva) / 100;
-        if (timbre > 10000) {
-          timbre = 10000;
+        if((total + tva) <= 30000){timbre = round((total + tva) / 100, 2)}
+        else{
+          if((total + tva) > 30000 && (total + tva) <= 100000){timbre = round((total + tva) * 1.5 / 100 , 2)}
+          else{timbre = round((total + tva) * 2 / 100 , 2)}
+        };
+        
+        if (timbre < 5) {
+          timbre = 5;
         }
       }
       let popupWin;
@@ -12013,9 +12035,7 @@ export function printIH(customer, details, ih, curr) {
   } else {
     timbre = 0;
   }
-  if (timbre > 10000) {
-    timbre = 10000;
-  }
+ 
   let popupWin;
   const date = new Date();
   let totalstring = replace(

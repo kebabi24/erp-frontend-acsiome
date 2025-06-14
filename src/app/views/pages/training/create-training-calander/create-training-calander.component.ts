@@ -22,7 +22,7 @@ import {
 } from "angular-slickgrid";
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms"
-import { TrainingcalenderService, Trainingcalender, CodeService , SiteService,ProviderService, ItemService,PopulationemployeService,} from "../../../../core/erp";
+import { TrainingcalenderService, Trainingcalender, CodeService , SiteService,ProviderService, ItemService,CRMService,} from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -105,6 +105,42 @@ export class CreateTrainingCalanderComponent implements OnInit {
   gridServicepop: GridService;
   angularGridpop: AngularGridInstance;
 
+  params: [];
+  columnDefinitionsparam: Column[] = [];
+  gridOptionsparam: GridOption = {};
+  gridObjparam: any;
+  gridServiceparam: GridService;
+  angularGridparam: AngularGridInstance;
+  
+  selectedTypes:any;
+  types: [];
+  columnDefinitionstype: Column[] = [];
+  gridOptionstype: GridOption = {};
+  gridObjtype: any;
+  gridServicetype: GridService;
+  angularGridtype: AngularGridInstance;
+
+  activitys: [];
+  columnDefinitionsactivity: Column[] = [];
+  gridOptionsactivity: GridOption = {};
+  gridObjactivity: any;
+  gridServiceactivity: GridService;
+  angularGridactivity: AngularGridInstance;
+
+  metiers: [];
+  columnDefinitionsmetier: Column[] = [];
+  gridOptionsmetier: GridOption = {};
+  gridObjmetier: any;
+  gridServicemetier: GridService;
+  angularGridmetier: AngularGridInstance;
+
+  wilayas: [];
+  columnDefinitionswilaya: Column[] = [];
+  gridOptionswilaya: GridOption = {};
+  gridObjwilaya: any;
+  gridServicewilaya: GridService;
+  angularGridwilaya: AngularGridInstance;
+
   vends: [];
   columnDefinitionsvend: Column[] = [];
   gridOptionsvend: GridOption = {};
@@ -112,6 +148,14 @@ export class CreateTrainingCalanderComponent implements OnInit {
   gridServicevend: GridService;
   angularGridvend: AngularGridInstance;
   year:any[] = [];
+  selectedT:  any[] = [];
+  selectedA:  any[] = [];
+  selectedM:  any[] = [];
+  selectedW:  any[] = [];
+  selectedActivitys:any;
+  selectedMetiers:any;
+  selectedWilayas:any;
+  
   constructor(
     config: NgbDropdownConfig,
     private trainingFB: FormBuilder,
@@ -125,7 +169,7 @@ export class CreateTrainingCalanderComponent implements OnInit {
     private siteService: SiteService,
     private providerService: ProviderService,
     private itemsService: ItemService,
-    private populationemployeService: PopulationemployeService,
+    private crmService: CRMService,
   ) {
     config.autoClose = true;
     var y : Number
@@ -417,10 +461,37 @@ export class CreateTrainingCalanderComponent implements OnInit {
       
       },
 
+      // {
+      //   id: "tc_pop",
+      //   name: "Population",
+      //   field: "tc_pop",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   type: FieldType.string,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      // },
+      // {
+      //   id: "mvidl",
+      //   field: "cmvidl",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //       this.row_number = args.row;
+      //       let element: HTMLElement = document.getElementById(
+      //       "openPopsGrid"
+      //       ) as HTMLElement;
+      //       element.click();
+      //   },
+      // },
       {
-        id: "tc_pop",
-        name: "Population",
-        field: "tc_pop",
+        id: "chr02",
+        name: "Type",
+        field: "chr02",
         sortable: true,
         width: 50,
         filterable: false,
@@ -430,8 +501,8 @@ export class CreateTrainingCalanderComponent implements OnInit {
         },
       },
       {
-        id: "mvidl",
-        field: "cmvidl",
+        id: "mvidl3",
+        field: "cmvidl3",
         excludeFromHeaderMenu: true,
         formatter: Formatters.infoIcon,
         minWidth: 30,
@@ -439,7 +510,88 @@ export class CreateTrainingCalanderComponent implements OnInit {
         onCellClick: (e: Event, args: OnEventArgs) => {
             this.row_number = args.row;
             let element: HTMLElement = document.getElementById(
-            "openPopsGrid"
+            "openTypesGrid"
+            ) as HTMLElement;
+            element.click();
+        },
+      }, 
+      {
+        id: "chr03",
+        name: "Activité",
+        field: "chr03",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "mvidl4",
+        field: "cmvidl4",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById(
+            "openactivitysGrid"
+            ) as HTMLElement;
+            element.click();
+        },
+      },
+      {
+        id: "chr04",
+        name: "Metier",
+        field: "chr04",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "mvidl5",
+        field: "cmvidl5",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById(
+            "openMetiersGrid"
+            ) as HTMLElement;
+            element.click();
+        },
+      },
+      {
+        id: "chr05",
+        name: "Wilaya",
+        field: "chr05",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "mvidl6",
+        field: "cmvidl6",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+            this.row_number = args.row;
+            let element: HTMLElement = document.getElementById(
+            "openWilayasGrid"
             ) as HTMLElement;
             element.click();
         },
@@ -868,7 +1020,7 @@ export class CreateTrainingCalanderComponent implements OnInit {
         console.log(item);
 
        
-          updateItem.tc_pop = item.pop_code;
+          updateItem.tc_pop = item.population_code;
         
           this.mvgridService.updateItem(updateItem);
        
@@ -892,9 +1044,9 @@ export class CreateTrainingCalanderComponent implements OnInit {
         sortable:true,
     },
     {
-        id: "pop_code",
+        id: "population_code",
         name: "Code Population",
-        field: "pop_code",
+        field: "population_code",
         sortable: true,
         minWidth: 70,
         resizeExtraWidthPadding: 20,
@@ -903,9 +1055,9 @@ export class CreateTrainingCalanderComponent implements OnInit {
         
     },
     {
-        id: "pop_desc",
+        id: "population_desc",
         name: "Désignation",
-        field: "pop_desc",
+        field: "population_desc",
         sortable: true,
         minWidth: 100,
         filterable: true,
@@ -944,13 +1096,451 @@ export class CreateTrainingCalanderComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.populationemployeService.getAll().subscribe((response: any) => (this.pops = response.data));
+     this.crmService.getPopulations().subscribe((response: any) => (this.pops = response["data"]));
   }
   openpop(content) {
     this.prepareGridpop();
     this.modalService.open(content, { size: "lg" });
   }
+handleSelectedRowsChangedparam(e, args) {
+    const controls = this.trainingForm.controls;
+    let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObjparam) {
+      args.rows.map((idx) => {
+        const item = this.gridObjparam.getDataItem(idx);
+        console.log(item);
 
+       
+          updateItem.chr01 = item.param_code;
+        
+          this.mvgridService.updateItem(updateItem);
+       
+      });
+    }
+  }
+  angularGridReadyparam(angularGrid: AngularGridInstance) {
+    this.angularGridparam = angularGrid;
+    this.gridObjparam = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridparam() {
+    this.columnDefinitionsparam = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        minWidth: 40,
+        maxWidth: 50,
+        sortable:true,
+    },
+    {
+        id: "param_code",
+        name: "Code Paramètre",
+        field: "param_code",
+        sortable: true,
+        minWidth: 70,
+        resizeExtraWidthPadding: 20,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
+    {
+        id: "description",
+        name: "Désignation",
+        field: "description",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.string,
+    },
+     
+    ];
+
+    this.gridOptionsparam = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+     this.crmService.getParams().subscribe((response: any) => (this.params = response["data"]));
+  }
+  openparam(content) {
+    this.prepareGridparam();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedtype(e, args) {
+    this.selectedT = [];
+     this.selectedT = args.rows;
+  }
+  angularGridReadytype(angularGrid: AngularGridInstance) {
+    this.angularGridtype = angularGrid;
+    this.gridObjtype = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridtype() {
+    this.columnDefinitionstype = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        minWidth: 40,
+        maxWidth: 50,
+        sortable:true,
+    },
+    {
+        id: "code_value",
+        name: "type",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        resizeExtraWidthPadding: 20,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.string,
+    },
+     
+    ];
+
+    this.gridOptionstype = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedT, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+
+    // fill the dataset with your data
+     this.codeService.getBy({code_fldname:'cm_type'}).subscribe((response: any) => (this.types = response["data"]));
+  }
+  opentype(content) {
+    this.prepareGridtype();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedactivity(e, args) {
+    this.selectedA = [];
+     this.selectedA = args.rows;
+  }
+  angularGridReadyactivity(angularGrid: AngularGridInstance) {
+    this.angularGridactivity = angularGrid;
+    this.gridObjactivity = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridactivity() {
+       this.columnDefinitionsactivity = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        minWidth: 40,
+        maxWidth: 50,
+        sortable:true,
+    },
+    {
+        id: "code_value",
+        name: "type",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        resizeExtraWidthPadding: 20,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.string,
+    },
+     
+    ];
+
+    this.gridOptionsactivity = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedA, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+
+    // fill the dataset with your data
+     this.codeService.getBy({code_fldname:'cm_class'}).subscribe((response: any) => (this.activitys = response["data"]));
+  }
+  openactivity(content) {
+    this.prepareGridactivity();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedmetier(e, args) {
+    this.selectedM = [];
+     this.selectedM = args.rows;
+  }
+  angularGridReadymetier(angularGrid: AngularGridInstance) {
+    this.angularGridmetier = angularGrid;
+    this.gridObjmetier = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridmetier() {
+      this.columnDefinitionsmetier = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        minWidth: 40,
+        maxWidth: 50,
+        sortable:true,
+    },
+    {
+        id: "code_value",
+        name: "metier",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        resizeExtraWidthPadding: 20,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.string,
+    },
+     
+    ];
+
+    this.gridOptionsmetier = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedM, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+
+    // fill the dataset with your data
+     this.codeService.getBy({code_fldname:'rep_job'}).subscribe((response: any) => (this.metiers = response["data"]));
+  }
+  openmetier(content) {
+    this.prepareGridmetier();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedwilaya(e, args) {
+     this.selectedW = [];
+     this.selectedW = args.rows;
+  }
+  angularGridReadywilaya(angularGrid: AngularGridInstance) {
+    this.angularGridwilaya = angularGrid;
+    this.gridObjwilaya = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridwilaya() {
+      this.columnDefinitionswilaya = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        minWidth: 40,
+        maxWidth: 50,
+        sortable:true,
+    },
+    {
+        id: "code_value",
+        name: "type",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        resizeExtraWidthPadding: 20,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        filterable: true,
+        type: FieldType.string,
+    },
+     
+    ];
+
+    this.gridOptionswilaya = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedW, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+
+    // fill the dataset with your data
+     this.codeService.getBy({code_fldname:'ad_state'}).subscribe((response: any) => (this.wilayas = response["data"]));
+  }
+  openwilaya(content) {
+    this.prepareGridwilaya();
+    this.modalService.open(content, { size: "lg" });
+  }
 
   handleSelectedRowsChangedvend(e, args) {
     const controls = this.trainingForm.controls;
@@ -1130,9 +1720,78 @@ export class CreateTrainingCalanderComponent implements OnInit {
   this.hasFormErrors = false
 }
 
+getType(){
+  let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+  var l: String;
+  l = "";
+  console.log(l.length);
+    
+  this.selectedT.forEach((index) => {
+    console.log(l)
+    if(l==""){l = this.types[index]["code_value"]}
+    else{l = l + ',' + this.types[index]["code_value"]}
+      
+    });
 
+  updateItem.chr02 = l;
+  this.mvgridService.updateItem(updateItem);  
+  this.modalService.dismissAll()
+  // let element: HTMLElement = document.getElementById('openTrsGrid') as HTMLElement;
+  // element.click();
+}
 
+getActivity(){
+ let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+  var l: String;
+  l = "";
+  console.log(l.length);
+    
+  this.selectedA.forEach((index) => {
+    if(l==""){l = this.activitys[index]["code_value"]}
+    else{l = l + ',' + this.activitys[index]["code_value"]}
+      
+    });
 
+  updateItem.chr03 = l;
+  this.mvgridService.updateItem(updateItem);  
+  this.modalService.dismissAll()
+  
+}
 
+getMetier(){
+   let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+  var l: String;
+  l = "";
+  console.log(l.length);
+    
+  this.selectedM.forEach((index) => {
+    if(l==""){l = this.metiers[index]["code_value"]}
+    else{l = l + ',' + this.metiers[index]["code_value"]}
+      
+    });
+
+  updateItem.chr04 = l;
+  this.mvgridService.updateItem(updateItem);  
+  this.modalService.dismissAll()
+  
+}
+
+getWilaya(){
+  let updateItem = this.mvgridService.getDataItemByRowIndex(this.row_number);
+  var l: String;
+  l = "";
+  console.log(l.length);
+    
+  this.selectedW.forEach((index) => {
+    if(l==""){l = this.wilayas[index]["code_value"]}
+    else{l = l + ',' + this.wilayas[index]["code_value"]}
+      
+    });
+
+  updateItem.chr05 = l;
+  this.mvgridService.updateItem(updateItem);  
+  this.modalService.dismissAll()
+  
+}
 
 }

@@ -1019,7 +1019,7 @@ onChangePM(){
   const bkd_pay_method  = controls.ap_cr_terms.value ;      
   this.bankService
   .getAllDetails({bkd_bank: controls.ap_bank.value,
-                  bkd_module: "AR",
+                  bkd_module: "AP",
                   bkd_pay_method: controls.ap_cr_terms.value,   
                  }).subscribe((res:any)=>{
    

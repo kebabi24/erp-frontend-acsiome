@@ -52,10 +52,11 @@ import { environment } from "../../../../environments/environment"
 import { AgendaComponent } from './agenda/agenda.component';
 import { CRMComponent } from './crm.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
-import { AddresseMobileService, CustomerMobileService , PosCategoryService,CRMService } from '../../../core/erp';
+import { AddresseMobileService, CustomerMobileService ,CustomerService, PosCategoryService,CRMService,CodeService,ItemService,LocationDetailService } from '../../../core/erp';
 import { FullCalendarModule,CalendarOptions } from '@fullcalendar/angular';
 import { CategoryAddComponent } from './param-add/param-add.component';
 import { PopulationAddComponent } from './population-add/population-add.component';
+import { ListEventsComponent } from './list-events/list-events.component';
 
 
 const routes: Routes = [
@@ -71,7 +72,10 @@ const routes: Routes = [
           path: "population-add",
           component: PopulationAddComponent,
         },
-
+ {
+          path: "list-events",
+          component: ListEventsComponent,
+        },
         
           
 ]
@@ -81,6 +85,7 @@ const routes: Routes = [
         AgendaComponent,
         CategoryAddComponent,
         PopulationAddComponent,
+        ListEventsComponent,
   ],
   imports: [
         CommonModule,
@@ -120,7 +125,11 @@ const routes: Routes = [
     CustomerMobileService,
     AddresseMobileService,
     PosCategoryService,
-    CRMService
+    CRMService,
+    CodeService,
+    ItemService,
+    LocationDetailService,
+    CustomerService,
   ],
   entryComponents: [
         ActionNotificationComponent,

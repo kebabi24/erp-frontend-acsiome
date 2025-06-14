@@ -147,6 +147,18 @@ createForm() {
       en_next_prot: [{ value: this.entity.en_next_prot, disabled: !this.isExist }],
       en_page_num: [{ value: this.entity.en_page_num, disabled: !this.isExist }],
       en_addr: [{ value: this.entity.en_addr, disabled: !this.isExist }],
+      dec01: [{ value: this.entity.dec01, disabled: !this.isExist }],
+      chr01: [{ value: this.entity.chr01, disabled: !this.isExist }],
+      chr02: [{ value: this.entity.chr02, disabled: !this.isExist }],
+      chr03: [{ value: this.entity.chr03, disabled: !this.isExist }],
+      chr04: [{ value: this.entity.chr04, disabled: !this.isExist }],
+      chr05: [{ value: this.entity.chr05, disabled: !this.isExist }],
+      en_user1: [{ value: this.entity.en_user1, disabled: !this.isExist }],
+      en_user2: [{ value: this.entity.en_user2, disabled: !this.isExist }],
+
+
+
+
       en_consolidation: [{ value: this.entity.en_consolidation, disabled: !this.isExist }],
       en_type: [{ value: this.entity.en_type, disabled: !this.isExist }],
       cfdebit: [{ value: this.cfdebit, disabled: !this.isExist }],
@@ -199,6 +211,14 @@ onChangeCode() {
               controls.en_adj_bs.enable()
               controls.en_page_num.enable()
               controls.en_addr.enable()
+              controls.dec01.enable()
+              controls.chr01.enable()
+              controls.chr02.enable()
+              controls.chr03.enable()
+              controls.chr04.enable()
+              controls.chr05.enable()
+              controls.en_user1.enable()
+              controls.en_user2.enable()
               controls.en_consolidation.enable()
               controls.en_type.enable()
               controls.cfdebit.enable()
@@ -273,6 +293,14 @@ onSubmit() {
       _entity.en_adj_bs = controls.en_adj_bs.value
       _entity.en_page_num = controls.en_page_num.value
       _entity.en_addr = controls.en_addr.value
+      _entity.dec01 = controls.dec01.value
+      _entity.chr01 = controls.chr01.value
+      _entity.chr02 = controls.chr02.value
+      _entity.chr03 = controls.chr03.value
+      _entity.chr04 = controls.chr04.value
+      _entity.chr05 = controls.chr05.value
+      _entity.en_user1 = controls.en_user1.value
+      _entity.en_user2 = controls.en_user2.value
       _entity.en_consolidation = controls.en_consolidation.value
       _entity.en_type = controls.en_type.value
 

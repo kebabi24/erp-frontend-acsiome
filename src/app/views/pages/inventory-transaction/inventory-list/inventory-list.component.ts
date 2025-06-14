@@ -132,7 +132,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               collapsed: true,
@@ -151,7 +152,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               collapsed: true,
@@ -171,7 +173,30 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+              lazyTotalsCalculation:true,
+            }
+          }, 
+          {
+            id: "item.pt_desc1",
+            name: "Description",
+            field: "item.pt_desc1",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            grouping: {
+              getter: 'item.pt_desc1',
+              formatter: (g) => `Description: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               collapsed: true,
@@ -192,7 +217,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -214,7 +240,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -238,7 +265,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -248,7 +276,7 @@ export class InventoryListComponent implements OnInit {
           }, 
           {
             id: "chr02",
-            name: "Couleur",
+            name: "groupe",
             field: "chr02",
             sortable: true,
             filterable: true,
@@ -262,7 +290,8 @@ export class InventoryListComponent implements OnInit {
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
                 
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -284,7 +313,32 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          },
+          {
+            id: "int03",
+            name: "Surface",
+            field: "int03",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
+            grouping: {
+              getter: 'int03',
+              formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               lazyTotalsCalculation:true,
@@ -305,7 +359,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               collapsed: true,
@@ -336,7 +391,8 @@ export class InventoryListComponent implements OnInit {
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh')
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
               ],
               aggregateCollapsed: true,
               collapsed: true,
@@ -350,10 +406,17 @@ export class InventoryListComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
             grouping: {
-              getter: 'ld_ref',
-              formatter: (g) => `Reference: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              getter: 'int03',
+              formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
+              ],
               aggregateCollapsed: true,
-              collapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
             }
           },
           {
@@ -528,15 +591,16 @@ export class InventoryListComponent implements OnInit {
       let date = new Date()
      // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
       var img = new Image()
-      img.src = "./assets/media/logos/companyentete.png";
-      doc.addImage(img, 'png', 150, 5, 50, 30)
+      // img.src = "./assets/media/logos/inventory-list.png";
+      img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
       doc.setFontSize(9);
-      if (this.domain.dom_name != null) {
-        doc.text(this.domain.dom_name, 10, 10);
-      }
-      if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-      if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-      if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+      // if (this.domain.dom_name != null) {
+      //   doc.text(this.domain.dom_name, 10, 10);
+      // }
+      // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
       doc.setFontSize(14);
     
       doc.line(10, 35, 300, 35);
@@ -583,15 +647,16 @@ export class InventoryListComponent implements OnInit {
         
         if ((j % 20 == 0) && (j != 0) ) {
           doc.addPage();
-          img.src = "./assets/media/logos/companyentete.png";
-          doc.addImage(img, 'png', 150, 5, 50, 30)
+          // img.src = "./assets/media/logos/inventory-list.png";
+          img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
           doc.setFontSize(9);
-          if (this.domain.dom_name != null) {
-            doc.text(this.domain.dom_name, 10, 10);
-          }
-          if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-          if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-          if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+          // if (this.domain.dom_name != null) {
+          //   doc.text(this.domain.dom_name, 10, 10);
+          // }
+          // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+          // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+          // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
           doc.setFontSize(14);
           doc.line(10, 35, 300, 35);
     

@@ -44,6 +44,9 @@ export class CreateLrSupComponent implements OnInit {
   gridOptionsld: GridOption = {};
   gridObjld: any;
   angularGridld: AngularGridInstance;
+  total: number = 0;
+  totalCartons: number = 0;
+
   constructor(config: NgbDropdownConfig, private profileFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, private modalService: NgbModal, public dialog: MatDialog, private loadRequestService: LoadRequestService, private layoutUtilsService: LayoutUtilsService, private userMobileService: UsersMobileService, private sanitizer: DomSanitizer) {
     config.autoClose = true;
   }
@@ -220,6 +223,7 @@ export class CreateLrSupComponent implements OnInit {
         product.qt_validated = 0;
       }
     }
+    this.printLines = [];
   }
 
   // GET ROLES OF THE SUPERVISOR
@@ -301,6 +305,16 @@ export class CreateLrSupComponent implements OnInit {
     var doc = new jsPDF();
     let initialY = 65;
     let valueToAddToX = 5;
+    const date = new Date();
+    this.total = 0,
+    this.totalCartons= 0,
+    console.log(this.printLines)
+    this.printLines.map((element) => {
+      if(element.product_code != null) {
+      this.total = Number(this.total) + Number(element.pt_price) * Number(element.qt_validated);
+      this.totalCartons = this.totalCartons + Number(element.qt_validated);
+      }
+    });
 
     var img = new Image();
     img.src = "./assets/media/logos/companyentete.png";
@@ -331,10 +345,12 @@ export class CreateLrSupComponent implements OnInit {
     doc.setFontSize(12);
     doc.text("Demande de chargement : " + this.saved_data.load_request_code, 70, initialY + 5);
 
-    doc.setFontSize(10);
-    doc.text("Role    : " + this.saved_data.role_code, 20, initialY + 10);
-    doc.text("Date    : " + this.saved_data.date_creation.split("T")[0], 20, initialY + 15);
+     doc.setFontSize(10);
+    doc.text("Date     : " + + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 20, initialY + 10);
+    doc.text("Role    : " + this.role_code, 20, initialY + 15);
+    // doc.text("Date    : " + this.load_request_header.date_creation, 20, initialY + 15);
     doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, initialY + 20);
+    doc.setFontSize(9);
     doc.setFontSize(9);
 
     doc.line(10, initialY + 25, 195, initialY + 25); // 85
@@ -345,10 +361,10 @@ export class CreateLrSupComponent implements OnInit {
     doc.text("Code Article", 25, initialY + 28.5); // 88.5
     doc.line(45, initialY + 25, 45, initialY + 30); // 90
     doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-    doc.line(100, initialY + 25, 100, initialY + 30); // 90
-    doc.text("Prix", 107, initialY + 28.5); // 88.5
-    doc.line(120, initialY + 25, 120, initialY + 30); // 90
-    doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
+    // doc.line(100, initialY + 25, 100, initialY + 30); // 90
+    // doc.text("Prix", 107, initialY + 28.5); // 88.5
+    // doc.line(120, initialY + 25, 120, initialY + 30); // 90
+    // doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
     doc.line(145, initialY + 25, 145, initialY + 30); // 90
     doc.text("QTE Validée", 148, initialY + 28.5); // 88.5
     doc.line(170, initialY + 25, 170, initialY + 30); // 90
@@ -358,11 +374,12 @@ export class CreateLrSupComponent implements OnInit {
     doc.setFontSize(10);
 
     for (let j = 0; j < this.printLines.length; j++) {
-      if (j % 20 == 0 && j != 0) {
+      if (j % 38 == 0 && j != 0) {
         doc.addPage();
         img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
+    
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);
         }
@@ -370,21 +387,31 @@ export class CreateLrSupComponent implements OnInit {
         if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
         if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
+    
         doc.line(10, 35, 200, 35);
-
         doc.setFontSize(12);
-        doc.text(this.saved_data.load_request_code, 70, 40);
-        doc.setFontSize(8);
-
+    
+        doc.barcode(this.saved_data.load_request_code, {
+          fontSize: 70,
+          textColor: "#000000",
+          x: 100,
+          y: 60,
+          textOptions: { align: "center" }, // optional text options
+        });
+    
+        doc.setFont("Times-Roman");
+    
         doc.setFontSize(12);
-        doc.text("Demande de chargement : " + this.saved_data.load_request_code, 70, 60);
-        doc.setFontSize(8);
-
-        doc.setFontSize(8);
-        doc.text("Role    : " + this.saved_data.role_code, 20, 70);
-        doc.text("Date    : " + this.saved_data.date_creation.split("T")[0], 20, 75);
-        doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, 80);
-
+        doc.text("Demande de chargement : " + this.saved_data.load_request_code, 70, initialY + 5);
+    
+        doc.setFontSize(10);
+        doc.text("Date     : " + + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 20, initialY + 10);
+        doc.text("Role    : " + this.role_code, 20, initialY + 15);
+        // doc.text("Date    : " + this.load_request_header.date_creation, 20, initialY + 15);
+        doc.text("Vendeur : " + this.user_mobile.user_mobile_code + " - " + this.user_mobile.username, 20, initialY + 20);
+        doc.setFontSize(9);
+        doc.setFontSize(9);
+    
         doc.line(10, initialY + 25, 195, initialY + 25); // 85
         doc.line(10, initialY + 30, 195, initialY + 30); // 90
         doc.line(10, initialY + 25, 10, initialY + 30); // 90
@@ -393,20 +420,21 @@ export class CreateLrSupComponent implements OnInit {
         doc.text("Code Article", 25, initialY + 28.5); // 88.5
         doc.line(45, initialY + 25, 45, initialY + 30); // 90
         doc.text("Désignation", 67.5, initialY + 28.5); // 88.5
-        doc.line(100, initialY + 25, 100, initialY + 30); // 90
-        doc.text("Prix", 107, initialY + 28.5); // 88.5
-        doc.line(120, initialY + 25, 120, initialY + 30); // 90
-        doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
+        // doc.line(100, initialY + 25, 100, initialY + 30); // 90
+        // doc.text("Prix", 107, initialY + 28.5); // 88.5
+        // doc.line(120, initialY + 25, 120, initialY + 30); // 90
+        // doc.text("QTE Demandée", 123, initialY + 28.5); // 88.5
         doc.line(145, initialY + 25, 145, initialY + 30); // 90
         doc.text("QTE Validée", 148, initialY + 28.5); // 88.5
         doc.line(170, initialY + 25, 170, initialY + 30); // 90
         doc.text("QTE Chargée", 173, initialY + 28.5); // 88.5
         doc.line(195, initialY + 25, 195, initialY + 30); // 90
         var i = 95 + valueToAddToX;
+        doc.setFontSize(10);
       }
 
-      if (this.printLines[j].product_name.length > 35) {
-        doc.setFontSize(8);
+      if (this.printLines[j].product_name.length > 50) {
+        doc.setFontSize(10);
 
         let line = this.printLines[j];
 
@@ -420,11 +448,13 @@ export class CreateLrSupComponent implements OnInit {
         doc.line(20, i - 5, 20, i);
         doc.text(line.product_code, 25, i - 1);
         doc.line(45, i - 5, 45, i);
+        doc.setFontSize(14);
         doc.text(desc1, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
+        doc.setFontSize(10);
+        // doc.line(100, i - 5, 100, i);
+        // doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
+        // doc.line(120, i - 5, 120, i);
+        // doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
         doc.text(String(line.qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
@@ -432,21 +462,21 @@ export class CreateLrSupComponent implements OnInit {
         doc.line(195, i - 5, 195, i);
 
         i = i + 5;
-
+        doc.setFontSize(14);
         doc.text(desc2, 47, i - 1);
-
+        doc.setFontSize(10);
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
         doc.line(45, i - 5, 45, i);
-        doc.line(100, i - 5, 100, i);
-        doc.line(120, i - 5, 120, i);
+        // doc.line(100, i - 5, 100, i);
+        // doc.line(120, i - 5, 120, i);
         doc.line(145, i - 5, 145, i);
         doc.line(170, i - 5, 170, i);
         doc.line(195, i - 5, 195, i);
 
         i = i + 5;
       } else {
-        doc.setFontSize(8);
+        doc.setFontSize(10);
         let line = this.printLines[j];
         doc.line(10, i - 5, 10, i);
         doc.text(String(line.line), 12.5, i - 1);
@@ -454,10 +484,10 @@ export class CreateLrSupComponent implements OnInit {
         doc.text(line.product_code, 25, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(line.product_name, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
+        // doc.line(100, i - 5, 100, i);
+        // doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
+        // doc.line(120, i - 5, 120, i);
+        // doc.text(String(line.qt_request), 143, i - 1, { align: "right" });
         doc.line(145, i - 5, 145, i);
         doc.text(String(line.qt_validated), 168, i - 1, { align: "right" });
         doc.line(170, i - 5, 170, i);
@@ -469,7 +499,10 @@ export class CreateLrSupComponent implements OnInit {
     }
 
     doc.line(10, i - 5, 195, i - 5);
-
+    doc.setFontSize(14);
+    doc.text("Total cartons    : " + this.totalCartons, 130, i + 5);
+    doc.text("Valeur : " + Number(this.total * 1.2019).toFixed(2) + " DZD", 130, i + 10);
+    doc.setFontSize(10);
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }

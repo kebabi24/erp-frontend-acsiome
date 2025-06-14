@@ -80,7 +80,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 declare var ElectronPrinter3: any;
 declare var Edelweiss: any;
 @Component({
-  selector: 'kt-return-cab',
+  selector: 'kt-return-cab', 
   templateUrl: './return-cab.component.html',
   styleUrls: ['./return-cab.component.scss']
 })
@@ -181,6 +181,8 @@ export class ReturnCabComponent implements OnInit {
   prodligne : any;
   dsgn_grp  : any;
   domain    : any;  
+  docs: any[] = [];
+  exist:any;
   constructor(
     config: NgbDropdownConfig,
     private trFB: FormBuilder,
@@ -913,6 +915,13 @@ export class ReturnCabComponent implements OnInit {
     this.loadingSubject.next(false);
     this.user = JSON.parse(localStorage.getItem("user"));
     this.domain = JSON.parse(localStorage.getItem("domain"));
+    this.codeService
+    .getBy({ code_fldname: "manufacturing/return-cab" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
     this.currentPrinter = this.user.usrd_dft_printer;
       this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
         (reponse: any) => ((this.PathPrinter = reponse.data.printer_path)),
@@ -1013,6 +1022,7 @@ export class ReturnCabComponent implements OnInit {
   }
   // save data
   onSubmit() {
+    
     this.hasFormErrors = false;
     const controls = this.trForm.controls;
     const ref = controls.tr_ref.value
@@ -1070,11 +1080,13 @@ export class ReturnCabComponent implements OnInit {
         let tr = this.prepare();
         this.sequenceService.getByOne({ seq_type: "RT", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
           this.seq = response.data;
-    
+    console.log(this.seq)
           if (this.seq) {
-            
+            console.log(this.trlot)
             if(this.trlot == null)
             { this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+            console.log(this.trlot)
+              this.addIt(this.data, tr, this.trlot);
               this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
               (reponse) => console.log("seq"),
               (error) => {
@@ -1082,8 +1094,10 @@ export class ReturnCabComponent implements OnInit {
                 this.hasFormErrors = true;
                 return;
               });
-              this.addIt(this.data, tr, this.trlot);
+              
             }
+            else
+            {this.addIt(this.data, tr, this.trlot);}
           } else {
             this.message = "Parametrage Manquant pour la sequence";
             this.hasFormErrors = true;
@@ -2278,33 +2292,41 @@ this.trtype = null;
                       this.itemsService.getByOne({pt_part: this.lddet.tr_part  }).subscribe(
                       (respopart: any) => {   this.sctService.getByOne({ sct_site: this.lddet.tr_site, sct_part: this.lddet.tr_part, sct_sim: 'STD-CG' }).subscribe(
                                       (respo: any) => {
+                                        let qty = controls.tr_qty_loc.value
                                             this.sct = respo.data        
                                             controls.tr_addr.setValue(this.lddet.tr_addr);
                                             controls.tr_nbr.setValue(this.lddet.tr_nbr);
-                                            controls.tr_qty_loc.setValue(this.lddet.tr_qty_loc * -1);
-                                            this.gridService.addItem(
-                                              { 
-                                                id: this.dataset.length + 1,
-                                                tr_line: this.dataset.length + 1,
-                                                tr_part: this.lddet.tr_part,
-                                                cmvid: "",
-                                                desc: respopart.data.pt_desc1,
-                                                tr_qty_loc: this.lddet.tr_qty_loc * -1,
-                                                qty_oh: this.lddet.tr_loc_begin,
-                                                tr_site:  this.lddet.tr_site,
-                                                tr_loc: this.lddet.tr_loc,
-                                                tr_ref: this.lddet.tr_ref,
-                                                tr_um: respopart.data.pt_um,
-                                                tr_um_conv:1,
-                                                tr_price: this.sct.sct_mtl_tl,
-                                                cmvids: "",
-                                                tr_serial: this.lddet.tr_serial,
-                                                tr_status: this.stat,
-                                                tr_expire: this.lddet.tr_expire,
-                                                tr_lot:this.lddet.tr_lot,
-                                              },
-                                              { position: "bottom" }
-                                            );
+                                            controls.tr_qty_loc.setValue(qty - this.lddet.tr_qty_loc);
+                                            if (this.dataset.length == 0)
+                                            {
+                                              this.gridService.addItem(
+                                                { 
+                                                  id: this.dataset.length + 1,
+                                                  tr_line: this.dataset.length + 1,
+                                                  tr_part: this.lddet.tr_part,
+                                                  cmvid: "",
+                                                  desc: respopart.data.pt_desc1,
+                                                  tr_qty_loc: this.lddet.tr_qty_loc * -1,
+                                                  qty_oh: this.lddet.tr_loc_begin,
+                                                  tr_site:  this.lddet.tr_site,
+                                                  tr_loc: this.lddet.tr_loc,
+                                                  tr_ref: this.lddet.tr_ref,
+                                                  tr_um: respopart.data.pt_um,
+                                                  tr_um_conv:1,
+                                                  tr_price: this.sct.sct_mtl_tl,
+                                                  cmvids: "",
+                                                  tr_serial: this.lddet.tr_serial,
+                                                  tr_status: this.stat,
+                                                  tr_expire: this.lddet.tr_expire,
+                                                  tr_lot:this.lddet.tr_lot,
+                                                },
+                                                { position: "bottom" }
+                                              );
+                                            }  
+                                            else{this.dataset[0].tr_qty_loc = this.dataset[0].tr_qty_loc - this.lddet.tr_qty_loc 
+                                              this.dataset[0].qtyoh_ = this.dataset[0].qty_oh + this.lddet.tr_loc_egin 
+                                            }
+                                           
                                           
                                     });
   
@@ -2354,15 +2376,25 @@ var doc = new jsPDF();
 let date = new Date()
 // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
 var img = new Image()
+// img.src = "./assets/media/logos/return-cab.png";
 img.src = "./assets/media/logos/companyentete.png";
-doc.addImage(img, 'png', 150, 5, 50, 30)
-doc.setFontSize(9);
-if (this.domain.dom_name != null) {
-  doc.text(this.domain.dom_name, 10, 10);
-}
-if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.addImage(img, 'png', 5, 5, 275, 30)
+  doc.setFontSize(10);
+  if(this.exist == true){
+    doc.text(this.docs[0].code_value, 240, 17); 
+    doc.text(this.docs[0].code_cmmt, 70, 22);
+    doc.text(this.docs[0].code_desc, 240, 12);
+    doc.text(this.docs[0].chr01, 40, 27);
+    doc.text(this.docs[0].dec01, 240, 32);
+    doc.text(this.docs[0].date01, 240, 22);
+    doc.text(this.docs[0].date02, 240, 27);
+  }
+// if (this.domain.dom_name != null) {
+//   doc.text(this.domain.dom_name, 10, 10);
+// }
+// if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+// if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+// if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
 doc.setFontSize(14);
 
 doc.line(10, 35, 200, 35);
@@ -2420,15 +2452,26 @@ for (let j = 0; j < this.dataset.length  ; j++) {
   
   if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-    img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, 'png', 150, 5, 50, 30)
-    doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+// img.src = "./assets/media/logos/return-cab.png";
+img.src = "./assets/media/logos/companyentete.png";
+doc.addImage(img, 'png', 5, 5, 275, 30)
+      doc.setFontSize(11);
+if(this.exist == true){
+  doc.text(this.docs[0].code_value, 240, 17); 
+doc.text(this.docs[0].code_cmmt, 70, 22);
+doc.text(this.docs[0].code_desc, 240, 12);
+doc.text(this.docs[0].chr01, 40, 27);
+doc.text(this.docs[0].dec01, 240, 32);
+doc.text(this.docs[0].date01, 240, 22);
+doc.text(this.docs[0].date02, 240, 27);
+}
+
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
     doc.line(10, 35, 200, 35);
 

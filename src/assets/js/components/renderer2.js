@@ -8,12 +8,14 @@ const path = require("path");
 var ElectronPrinter2 = (function () {
   console.log("herrereeeeeeeeee");
   return {
-    print2: function (dataset, load_request_code, role_code, loadRequestInfo, userInfo, username, printLines, userPrinter, total, totalCartons) {
+    print2: function (dataset, load_request_code, role_code, loadRequestInfo, userInfo, username, printLines, userPrinter, total, totalCartons,nchariot) {
      // console.log(userPrinter);
       const options = {
         printer: userPrinter,
         paperSize: "4x6",
+        oriontation:"180",
         scale:"fit",
+        copies: 1, // Number of copies to print
       };
       // // Get the current directory of the script
       // const currentDirectory = __dirname;
@@ -64,17 +66,18 @@ var ElectronPrinter2 = (function () {
       // );
 
       doc.setFont("Times-Roman");
-
+      const date = new Date()
       //console.log("initialy",initialY)
       doc.setFontSize(14);
       doc.text("Demande de chargement : " + load_request_code, 13, initialY + 5);
+      doc.text("Chariot : " + nchariot, 13, initialY + 10);
 
       doc.setFontSize(9);
-      doc.text("Role    : " + role_code, 5, initialY + 10);
-      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
+      doc.text("Date    : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 15);
+     // doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
       doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 20);
-      doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
-      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      // doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
+      // doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
       doc.setFontSize(9);
 
       doc.line(2, initialY + 25, 98, initialY + 25); // 85
@@ -93,7 +96,7 @@ var ElectronPrinter2 = (function () {
 
       var i = 40 + valueToAddToX;
       doc.setFontSize(8);
-
+console.log(printLines)
       for (let j = 0; j < printLines.length; j++) {
         if (j % 22 == 0 && j != 0) {
           doc.addPage();
@@ -104,7 +107,8 @@ var ElectronPrinter2 = (function () {
         }
         doc.setFontSize(8);
         let line = printLines[j];
-       // console.log("kamelkamel",line);
+        console.log("kamelkamel",line,j);
+        if(line.product_code != null) {
         doc.line(2, i - 5, 2, i);
         doc.text(String(line.line), 4, i - 2 );
         doc.line(10, i - 5, 10, i);
@@ -121,9 +125,11 @@ var ElectronPrinter2 = (function () {
 
         doc.line(2, i  , 98, i  );
         i = i + 5;
-
+        }
       }
 
+      doc.text("Total cartons    : " + totalCartons, 65, i+ 5);
+      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, i+10);
       doc.setFontSize(9);
       //doc.line(2, i - 14, 98, i - 14);
       doc.save(load_request_code + ".pdf");
@@ -179,14 +185,16 @@ var ElectronPrinter3 = (function () {
       console.log(userPrinter);
       const options = {
         printer: userPrinter,
-        paperSize: "4x6",
+        paperSize: "4x10",
+        oriontation:"180",
         scale:"fit",
+        copies: 1, // Number of copies to print
       };
      
       var doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
-        format: [100,150]
+        format: [100,250]
         })
         let initialY = 5;
         let valueToAddToX = 5;
@@ -244,15 +252,17 @@ var ElectronPrinter3 = (function () {
       // );
 
       doc.setFont("Times-Roman");
+const date= new Date()
+      doc.text("VALIDATION : " , 13, initialY + 5);
 
-      doc.text("Demande de chargement : " + load_request_code, 13, initialY + 5);
+      doc.text("Demande de chargement : " + load_request_code, 13, initialY + 10);
 
       doc.setFontSize(9);
-      doc.text("Role    : " + role_code, 5, initialY + 10);
-      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 15);
-      doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 20);
-      doc.text("Total cartons    : " + totalCartons, 65, initialY + 15);
-      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      doc.text("Date    : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 15);
+    
+      doc.text("Date    : " + loadRequestInfo.date_creation, 5, initialY + 20);
+      doc.text("Vendeur : " + userInfo.user_mobile_code + " - " + username, 5, initialY + 25);
+     
       doc.setFontSize(9);
 
 //      doc.setFontSize(22);
@@ -364,7 +374,8 @@ var ElectronPrinter3 = (function () {
         i = i + 5;
 
       }
-
+      doc.text("Total cartons    : " + totalCartons, 65, i + 5);
+      doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, i + 10);
      
       //doc.line(2, i - 14, 210, i - 14);
       doc.save(load_request_code + ".pdf");
@@ -413,7 +424,7 @@ var Edelweiss = (function () {
     
   return {
       print3: function (lb, userPrinter) {
-        console.log(edelweiss)
+        console.log('edelweiss')
           const options = {
               printer: userPrinter,
 
@@ -532,28 +543,22 @@ var Edelweiss2 = (function () {
               .text('PRODUIT :' + lb.lb_desc, 20, 58)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('MIC/LAI :' + lb.lb_type, 20, 78)
-              .font('Helvetica-Bold')
-              .fontSize(12)
-              .text('COULEUR :' + lb.lb_ray, 20, 98)
-              .font('Helvetica-Bold')
-              .fontSize(12)
-              .text('SILICONE :' + lb.lb_rmks, 20, 118)
-              .font('Helvetica-Bold')
-              .fontSize(12)
 
               .text('QTE :' + lb.lb_qty + 'KG', 20, 138)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('N° Lot:' + lb.lb_lot, 20, 158)
+              .text('Client:' + lb.lb__chr02, 20, 88)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('QUALITE:', 20, 178);
+              .text('QUALITE:', 20, 108)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('PALETTE:' + lb.lb_lot, 20, 158);
 
           // Define the third rectangle and its text lines
           doc
 
-              .text('BIGBAG N°:' + lb.lb__dec01, 20, 198)
+              .text('Programme:' + lb.lb_nbr, 20, 198)
               .font('Helvetica-Bold')
               .fontSize(12)
 
@@ -609,6 +614,97 @@ var Edelweiss2 = (function () {
   }
 
 }(Edelweiss2 || {}))
+var Edelweiss3 = (function () {
+    
+  return {
+      print3: function (lb, userPrinter) {
+        console.log('print3')
+          const options = {
+              printer: userPrinter,
+
+          };
+          const pageWidth = 284; // Width of the page in points
+          const pageHeight = 284; // Height of the page in points
+          const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
+          doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
+          const time = lb.lb__chr01;
+          
+          doc.text('MACHINE : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('DATE: ' + lb.lb_date, 20, 38);
+
+          doc
+
+              .text('PRODUIT :' + lb.lb_desc, 20, 58)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+
+              .text('QTE :' + lb.lb_qty + 'KG', 20, 138)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('REF BOBINE:' + lb.lb_lot, 20, 88)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              
+
+          // Define the third rectangle and its text lines
+          doc
+
+              .fontSize(12)
+
+              .text('HEURE:' + time, 180, 38);
+
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
+
+          doc.pipe(fs.createWriteStream(filenamepdf));
+
+
+          // bwipjs.toBuffer(
+          //     {
+          //         bcid: 'code128', // Barcode type (replace with the desired barcode format)
+          //         text: lb.lb_ref, // Barcode data
+          //         scale: 3, // Scaling factor for the barcode image
+          //         includetext: true, // Include the barcode text
+          //         height: 10,
+          //         width: 60,
+          //     },
+          //     function (err, png) {
+          //         if (err) {
+          //             console.log(err);
+          //             return;
+          //         }
+
+          //         // Load the barcode image from the generated PNG buffer
+          //         const image = doc.openImage(png);
+
+          //         // Draw the barcode image on the PDF document
+          //         doc.image(image, 50, 223, {
+          //             fit: [5400, 40], // Adjust the size of the barcode image as needed
+          //         });
+          //         // Save the PDF document
+          //         doc.end();
+          //     },
+          // );
+
+          setTimeout(() => {
+              fs.readFile(filenamepdf, (err, data) => {
+                if (err) {
+                  console.error(err);
+                 
+                }
+                print(filenamepdf, options).then(console.log);
+                
+              });
+            }, 2000);
+          
+          console.log("all right")
+          
+      },
+
+  }
+
+}(Edelweiss3 || {}))
 
 var asset = (function () {
     

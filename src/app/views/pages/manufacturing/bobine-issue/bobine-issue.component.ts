@@ -522,31 +522,31 @@ export class BobineIssueComponent implements OnInit {
             width: 80,
             filterable: false,
             type: FieldType.float,
-            editor: {
-                model: Editors.float,
-                params: { decimalPlaces: 2 },
-                required: true,
+          //   editor: {
+          //       model: Editors.float,
+          //       params: { decimalPlaces: 2 },
+          //       required: true,
                 
                 
-            },
+          //   },
         
-          onCellChange: (e: Event, args: OnEventArgs) => {
-                console.log(args.dataContext.tr_qty_loc)
-                console.log(args.dataContext.tr_um_conv)
+          // onCellChange: (e: Event, args: OnEventArgs) => {
+          //       console.log(args.dataContext.tr_qty_loc)
+          //       console.log(args.dataContext.tr_um_conv)
                 
-                if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
-                    console.log('here')
-                    this.message = "Quantité manquante";
-                    this.hasFormErrors = true;
-                    return;
-                 this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
+          //       if (args.dataContext.tr_qty_loc * args.dataContext.tr_um_conv   > args.dataContext.qty_oh) {
+          //           console.log('here')
+          //           this.message = "Quantité manquante";
+          //           this.hasFormErrors = true;
+          //           return;
+          //        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_qty_loc: null })
               
              
                
-            }
+          //   }
         
-             // meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
-            }
+          //    // meta.cssClasses = (meta.cssClasses || '') + ' ' + newCssClass;
+          //   }
             
         },
         
@@ -2267,15 +2267,16 @@ printpdf(nbr) {
   let date = new Date()
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
+  // img.src = "./assets/media/logos/bobine-issue.png";
   img.src = "./assets/media/logos/companyentete.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
+  doc.addImage(img, 'png', 5, 5, 200, 30)
   doc.setFontSize(9);
-  if (this.domain.dom_name != null) {
-    doc.text(this.domain.dom_name, 10, 10);
-  }
-  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  // if (this.domain.dom_name != null) {
+  //   doc.text(this.domain.dom_name, 10, 10);
+  // }
+  // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
   doc.setFontSize(14);
 
   doc.line(10, 35, 200, 35);
@@ -2334,15 +2335,16 @@ printpdf(nbr) {
     
     if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      img.src = "./assets/media/logos/companyentete.png";
-      doc.addImage(img, 'png', 150, 5, 50, 30)
+// img.src = "./assets/media/logos/bobine-issue.png";
+img.src = "./assets/media/logos/companyentete.png";
+doc.addImage(img, 'png', 5, 5, 200, 30)
       doc.setFontSize(9);
-      if (this.domain.dom_name != null) {
-        doc.text(this.domain.dom_name, 10, 10);
-      }
-      if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-      if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-      if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+      // if (this.domain.dom_name != null) {
+      //   doc.text(this.domain.dom_name, 10, 10);
+      // }
+      // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
       doc.setFontSize(14);
       doc.line(10, 35, 200, 35);
 

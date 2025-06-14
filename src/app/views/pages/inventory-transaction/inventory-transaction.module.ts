@@ -78,6 +78,9 @@ import { RctTrGlobalprintComponent } from './rct-tr-globalprint/rct-tr-globalpri
 import { RctPoGlobalprintComponent } from './rct-po-globalprint/rct-po-globalprint.component';
 import { IssUnpGlobalprintComponent } from './iss-unp-globalprint/iss-unp-globalprint.component';
 import { AssetReceiveCabComponent } from './asset-receive-cab/asset-receive-cab.component';
+import { EchantillonReceiptCabComponent } from './echantillon-receipt-cab/echantillon-receipt-cab.component';
+import { InventoryDetailComponent } from './inventory-detail/inventory-detail.component';
+import { PurchaseReceiptColorantComponent } from './purchase-receipt-colorant/purchase-receipt-colorant.component';
 
 // import { CreateComponent } from "../articles/create/create.component";
 
@@ -139,6 +142,14 @@ const routes: Routes = [
     component: PurchaseReceiptCabComponent,
   },
   {
+    path: "purchase-receipt-colorant",
+    component: PurchaseReceiptColorantComponent,
+  },
+  {
+    path: "echantillon-receipt-cab",
+    component: EchantillonReceiptCabComponent,
+  },
+  {
     path: "asset-receive-cab",
     component: AssetReceiveCabComponent,
   },
@@ -149,6 +160,10 @@ const routes: Routes = [
   {
     path: "inventory-list",
     component: InventoryListComponent,
+  },
+  {
+    path: "inventory-detail",
+    component: InventoryDetailComponent,
   },
   {
     path: "transaction-list",
@@ -237,7 +252,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent, EchantillonReceiptCabComponent, InventoryDetailComponent, PurchaseReceiptColorantComponent],
   imports: [
     CommonModule,
     HttpClientModule,

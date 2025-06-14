@@ -208,6 +208,22 @@ export class ListComponent implements OnInit {
         }
       },
       {
+        id: "pt_size",
+        name: "Surface",
+        field: "pt_size",
+        sortable: true,
+        filterable: true,
+        minWidth: 80,
+        grouping: {
+          getter: 'pt_size',
+          formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+        // type: FieldType.text,
+        // resizeAlwaysRecalculateWidth:true
+      },
+      {
         id: "pt_break_cat",
         name: "Couleur",
         field: "pt_break_cat",

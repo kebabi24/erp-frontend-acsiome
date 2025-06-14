@@ -53,7 +53,8 @@ import { LabelService,QuoteService, UsersService, ItemService, CodeService, Taxe
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
          ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService,
-         CostlistService, CustomerMobileService,ItineraryService} from '../../../core/erp';
+         CostlistService, CustomerMobileService,ItineraryService,UsersMobileService, AccountOrderService,EntityService,
+         AccountReceivableService} from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -84,6 +85,18 @@ import { ListSalesDdComponent } from './list-sales-dd/list-sales-dd.component';
 import { CreateInvMobComponent } from './create-inv-mob/create-inv-mob.component';
 import { ReqListComponent } from './req-list/req-list.component';
 import { PaymentPshEmployeComponent } from './payment-psh-employe/payment-psh-employe.component';
+import { ListCaDdComponent } from './list-ca-dd/list-ca-dd.component';
+import { PaymentSoComponent } from './payment-so/payment-so.component';
+import { ListInvoicesDetailComponent } from './list-invoices-detail/list-invoices-detail.component';
+import { PshListComponent } from './psh-list/psh-list.component';
+import { CreateSoImmobilierComponent } from './create-so-immobilier/create-so-immobilier.component';
+import { CreatePvReceptionComponent } from './create-pv-reception/create-pv-reception.component';
+import { CreateSatisfactionComponent } from './create-satisfaction/create-satisfaction.component';
+import { RemiseDesClesComponent } from './remise-des-cles/remise-des-cles.component';
+import { ControleActeComponent } from './controle-acte/controle-acte.component';
+import { DecisionAffectationComponent } from './decision-affectation/decision-affectation.component';
+import { ClotureSoldeComponent } from './cloture-solde/cloture-solde.component';
+import { AttestationReservationComponent } from './attestation-reservation/attestation-reservation.component';
 
 
 const routes: Routes = [
@@ -107,9 +120,45 @@ const routes: Routes = [
               component: CreatesaleorderComponent,
           },
           {
+            path: "create-so-immobilier",
+          component: CreateSoImmobilierComponent,
+      },
+      {
+        path: "create-pv-reception",
+      component: CreatePvReceptionComponent,
+  },
+  {
+    path: "create-satisfaction",
+  component: CreateSatisfactionComponent,
+},
+{
+  path: "remise-des-cles",
+component: RemiseDesClesComponent,
+},
+{
+  path: "controle-acte",
+component: ControleActeComponent,
+},
+{
+  path: "decision-affectation",
+component: DecisionAffectationComponent,
+},
+{
+  path: "cloture-solde",
+component: ClotureSoldeComponent,
+},
+{
+  path: "attestation-reservation",
+component: AttestationReservationComponent,
+},
+          {
               path: "so-list",
             component: SoListComponent,
           },
+          {
+            path: "psh-list",
+          component: PshListComponent,
+        },
           {
             path: "list-so-edit",
           component: ListSoEditComponent,
@@ -183,6 +232,10 @@ const routes: Routes = [
             component: ListInvoicesComponent,
           },
           {
+            path: "list-invoices-detail",
+            component: ListInvoicesDetailComponent,
+          },
+          {
             path: "req-list",
             component: ReqListComponent,
           },
@@ -214,13 +267,22 @@ const routes: Routes = [
             path: "create-inv-mob",
             component: CreateInvMobComponent,
           },
+          {
+            path: "list-ca-dd",
+            component: ListCaDdComponent,
+          },
+          {
+            path: "payment-so",
+          component: PaymentSoComponent,
+        },
           
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ReqListComponent, PaymentPshEmployeComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ReqListComponent, PaymentPshEmployeComponent
+     ,ListCaDdComponent, PaymentSoComponent, ListInvoicesDetailComponent, PshListComponent, CreateSoImmobilierComponent, CreatePvReceptionComponent, CreateSatisfactionComponent, RemiseDesClesComponent, ControleActeComponent, DecisionAffectationComponent, ClotureSoldeComponent, AttestationReservationComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -287,6 +349,12 @@ const routes: Routes = [
         MobileSettingsService,
         CustomerMobileService,
         ItineraryService,
+        UsersMobileService,
+        AccountOrderService,
+        AccountReceivableService,
+        EntityService,
+
+
     ],
 
     entryComponents: [

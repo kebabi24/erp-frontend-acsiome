@@ -41,7 +41,7 @@ import { LocationService,Location,Site, SiteService, ProjectService,QualityContr
 import jsPDF from "jspdf"
 import { head } from "lodash"
 import * as _ from "lodash"
-import html2canvas from "html2canvas"
+import html2canvas from "html2canvas" 
 import { preserveWhitespacesDefault } from "@angular/compiler"
 
 @Component({

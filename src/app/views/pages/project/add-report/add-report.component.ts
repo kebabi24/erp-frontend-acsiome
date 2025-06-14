@@ -46,7 +46,7 @@ export class AddReportComponent implements OnInit {
   endDate: Date;
   allDates: Date[] = [];
   pm_code: string;
-  pm_cust: string;
+  pm_win_addr: string;
   emps: [];
   columnDefinitionsemp: Column[] = [];
   gridOptionsemp: GridOption = {};
@@ -198,7 +198,7 @@ export class AddReportComponent implements OnInit {
       .subscribe((response: any) => {
         // console.log(response.data)
         if (response.data.length == 0) {
-          alert("Projet n'existe pas  ");
+          alert("BT n'existe pas  ");
           controls.pmr_addr.setValue(null);
           document.getElementById("pmr_pm_code").focus();
         } else {
@@ -454,176 +454,176 @@ export class AddReportComponent implements OnInit {
         filterable: false,
         type: FieldType.integer,
       },
-      {
-        id: "pmr_mobilisation",
-        name: "Mobilisation",
-        field: "pmr_mobilisation",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.checkbox,
-        },
-        formatter: Formatters.checkbox,
-        cannotTriggerInsert: false,
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          let item = args.dataView.getItem(args.row);
+      // {
+      //   id: "pmr_mobilisation",
+      //   name: "Mobilisation",
+      //   field: "pmr_mobilisation",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.checkbox,
+      //   },
+      //   formatter: Formatters.checkbox,
+      //   cannotTriggerInsert: false,
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     let item = args.dataView.getItem(args.row);
 
-          const daysBetweenDates = this.getNumberOfDaysBetweenDates(item.pmr_start_date, item.pmr_end_date);
-          // console.log("Number of days between the two dates:", daysBetweenDates);
-          // console.log(item.pmr_start_date);
-          const start = item.pmr_start_date.substring(8);
-          // console.log("start", start);
-          const end = item.pmr_end_date.substring(8);
-          // console.log("end", end);
-          let newItem = {
-            ...item,
-            pmr_demobilisation: false,
-            pmr_mobilisation: item.pmr_mobilisation,
-            pmr_stndby: false,
-            //  pmr_separe: false,
-          };
-          // if (newItem.pmr_mobilisation === true) {
-          //   for (let index = Number(start); index <= Number(end); index++) {
-          //     newItem[`a${index}`] = "M";
-          //   }
-          // } else {
-          //   for (let index = Number(start); index <= Number(end); index++) {
-          //     newItem[`a${index}`] = "";
-          //   }
-          // }
+      //     const daysBetweenDates = this.getNumberOfDaysBetweenDates(item.pmr_start_date, item.pmr_end_date);
+      //     // console.log("Number of days between the two dates:", daysBetweenDates);
+      //     // console.log(item.pmr_start_date);
+      //     const start = item.pmr_start_date.substring(8);
+      //     // console.log("start", start);
+      //     const end = item.pmr_end_date.substring(8);
+      //     // console.log("end", end);
+      //     let newItem = {
+      //       ...item,
+      //       pmr_demobilisation: false,
+      //       pmr_mobilisation: item.pmr_mobilisation,
+      //       pmr_stndby: false,
+      //       //  pmr_separe: false,
+      //     };
+      //     // if (newItem.pmr_mobilisation === true) {
+      //     //   for (let index = Number(start); index <= Number(end); index++) {
+      //     //     newItem[`a${index}`] = "M";
+      //     //   }
+      //     // } else {
+      //     //   for (let index = Number(start); index <= Number(end); index++) {
+      //     //     newItem[`a${index}`] = "";
+      //     //   }
+      //     // }
 
-          this.mvgridService.updateItemById(args.dataContext.id, newItem);
-          this.changemvfiledataset(newItem, "M");
-        },
-      },
-      {
-        id: "pmr_demobilisation",
-        name: "Démobilisation",
-        field: "pmr_demobilisation",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.checkbox,
-        },
-        formatter: Formatters.checkbox,
-        cannotTriggerInsert: false,
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          let item = args.dataView.getItem(args.row);
-          // console.log("demo", item);
-          // console.log(item.pmr_demobilisation);
-          // console.log(item.pmr_start_date);
-          const start = item.pmr_start_date.substring(8);
-          // console.log("start", start);
-          const end = item.pmr_end_date.substring(8);
-          // console.log("end", end);
-          let newItem = {
-            ...item,
-            pmr_demobilisation: item.pmr_demobilisation,
-            pmr_mobilisation: false,
-            pmr_stndby: false,
-            // pmr_separe: false,
-          };
-          // if (newItem.pmr_demobilisation === true) {
-          //   for (let index = Number(start); index <= Number(end); index++) {
-          //     newItem[`a${index}`] = "D";
-          //   }
-          // } else {
-          //   for (let index = Number(start); index <= Number(end); index++) {
-          //     newItem[`a${index}`] = "";
-          //   }
-          // }
+      //     this.mvgridService.updateItemById(args.dataContext.id, newItem);
+      //     this.changemvfiledataset(newItem, "M");
+      //   },
+      // },
+      // {
+      //   id: "pmr_demobilisation",
+      //   name: "Démobilisation",
+      //   field: "pmr_demobilisation",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.checkbox,
+      //   },
+      //   formatter: Formatters.checkbox,
+      //   cannotTriggerInsert: false,
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     let item = args.dataView.getItem(args.row);
+      //     // console.log("demo", item);
+      //     // console.log(item.pmr_demobilisation);
+      //     // console.log(item.pmr_start_date);
+      //     const start = item.pmr_start_date.substring(8);
+      //     // console.log("start", start);
+      //     const end = item.pmr_end_date.substring(8);
+      //     // console.log("end", end);
+      //     let newItem = {
+      //       ...item,
+      //       pmr_demobilisation: item.pmr_demobilisation,
+      //       pmr_mobilisation: false,
+      //       pmr_stndby: false,
+      //       // pmr_separe: false,
+      //     };
+      //     // if (newItem.pmr_demobilisation === true) {
+      //     //   for (let index = Number(start); index <= Number(end); index++) {
+      //     //     newItem[`a${index}`] = "D";
+      //     //   }
+      //     // } else {
+      //     //   for (let index = Number(start); index <= Number(end); index++) {
+      //     //     newItem[`a${index}`] = "";
+      //     //   }
+      //     // }
 
-          this.mvgridService.updateItemById(args.dataContext.id, newItem);
-          this.changemvfiledataset(newItem, "D");
-        },
-      },
-      {
-        id: "pmr_stndby",
-        name: "Standby",
-        field: "pmr_stndby",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.checkbox,
-        },
-        formatter: Formatters.checkbox,
-        cannotTriggerInsert: false,
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          let item = args.dataView.getItem(args.row);
-          // console.log(item.pmr_start_date);
-          const start = item.pmr_start_date.substring(8);
-          // console.log("start", start);
-          const end = item.pmr_end_date.substring(8);
-          // console.log("end", end);
-          let newItem = {
-            ...item,
-            pmr_demobilisation: false,
-            pmr_mobilisation: false,
-            pmr_stndby: item.pmr_stndby,
-            // pmr_separe: false,
-          };
-          // if (newItem.pmr_stndby === true) {
-          //   for (let index = Number(start); index <= Number(end); index++) {
-          //     newItem[`a${index}`] = "S";
-          //   }
-          // } else {
-          //   for (let index = Number(start); index <= Number(end); index++) {
-          //     newItem[`a${index}`] = "";
-          //   }
-          // }
+      //     this.mvgridService.updateItemById(args.dataContext.id, newItem);
+      //     this.changemvfiledataset(newItem, "D");
+      //   },
+      // },
+      // {
+      //   id: "pmr_stndby",
+      //   name: "Standby",
+      //   field: "pmr_stndby",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.checkbox,
+      //   },
+      //   formatter: Formatters.checkbox,
+      //   cannotTriggerInsert: false,
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     let item = args.dataView.getItem(args.row);
+      //     // console.log(item.pmr_start_date);
+      //     const start = item.pmr_start_date.substring(8);
+      //     // console.log("start", start);
+      //     const end = item.pmr_end_date.substring(8);
+      //     // console.log("end", end);
+      //     let newItem = {
+      //       ...item,
+      //       pmr_demobilisation: false,
+      //       pmr_mobilisation: false,
+      //       pmr_stndby: item.pmr_stndby,
+      //       // pmr_separe: false,
+      //     };
+      //     // if (newItem.pmr_stndby === true) {
+      //     //   for (let index = Number(start); index <= Number(end); index++) {
+      //     //     newItem[`a${index}`] = "S";
+      //     //   }
+      //     // } else {
+      //     //   for (let index = Number(start); index <= Number(end); index++) {
+      //     //     newItem[`a${index}`] = "";
+      //     //   }
+      //     // }
 
-          this.mvgridService.updateItemById(args.dataContext.id, newItem);
-          this.changemvfiledataset(newItem, "S");
-        },
-      },
-      {
-        id: "pmr_separe",
-        name: "Séparer",
-        field: "pmr_separe",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.checkbox,
-        },
-        formatter: Formatters.checkbox,
-        cannotTriggerInsert: false,
-        // onCellClick: (e: Event, args: OnEventArgs) => {
-        //   this.handlecheckbox();
-        // },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          let item = args.dataView.getItem(args.row);
-          let newItem = {
-            ...item,
-            // pmr_demobilisation: false,
-            // pmr_mobilisation: false,
-            // pmr_stndby: false,
-            pmr_separe: item.pmr_separe,
-          };
-          this.mvgridService.updateItemById(args.dataContext.id, newItem);
-          this.changemvfiledataset(newItem, "SE");
-          // if (newItem.pmr_separe === true) {
-          //   let copyItem = {
-          //     ...newItem,
-          //     id: this.mvdataset.length + 1,
-          //   };
-          //   this.mvdataset.push(copyItem);
-          // } else {
-          //   console.log("item", item.id);
-          //   this.mvdataset = this.mvdataset.map((one) => {
-          //     if (one.pmr_employe === newItem.pmr_employe) {
-          //       // Create a new object with the changed property
-          //       return { ...one, pmr_separe: item.pmr_separe };
-          //     }
-          //     return item; // Return unchanged item for other elements
-          //   });
-          //   this.mvdataset = this.mvdataset.filter((ielem) => ielem.id !== newItem.id);
-          // }
-        },
-      },
+      //     this.mvgridService.updateItemById(args.dataContext.id, newItem);
+      //     this.changemvfiledataset(newItem, "S");
+      //   },
+      // },
+      // {
+      //   id: "pmr_separe",
+      //   name: "Séparer",
+      //   field: "pmr_separe",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.checkbox,
+      //   },
+      //   formatter: Formatters.checkbox,
+      //   cannotTriggerInsert: false,
+      //   // onCellClick: (e: Event, args: OnEventArgs) => {
+      //   //   this.handlecheckbox();
+      //   // },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     let item = args.dataView.getItem(args.row);
+      //     let newItem = {
+      //       ...item,
+      //       // pmr_demobilisation: false,
+      //       // pmr_mobilisation: false,
+      //       // pmr_stndby: false,
+      //       pmr_separe: item.pmr_separe,
+      //     };
+      //     this.mvgridService.updateItemById(args.dataContext.id, newItem);
+      //     this.changemvfiledataset(newItem, "SE");
+      //     // if (newItem.pmr_separe === true) {
+      //     //   let copyItem = {
+      //     //     ...newItem,
+      //     //     id: this.mvdataset.length + 1,
+      //     //   };
+      //     //   this.mvdataset.push(copyItem);
+      //     // } else {
+      //     //   console.log("item", item.id);
+      //     //   this.mvdataset = this.mvdataset.map((one) => {
+      //     //     if (one.pmr_employe === newItem.pmr_employe) {
+      //     //       // Create a new object with the changed property
+      //     //       return { ...one, pmr_separe: item.pmr_separe };
+      //     //     }
+      //     //     return item; // Return unchanged item for other elements
+      //     //   });
+      //     //   this.mvdataset = this.mvdataset.filter((ielem) => ielem.id !== newItem.id);
+      //     // }
+      //   },
+      // },
       {
         id: "pmr_duration",
         name: "Durée",
@@ -675,7 +675,7 @@ export class AddReportComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.angularGrid.gridService.deleteItem(args.dataContext);
+            this.angularGridcns.gridService.deleteItem(args.dataContext);
           }
         },
       },
@@ -925,9 +925,16 @@ export class AddReportComponent implements OnInit {
     this.gridOptionscns = {
       asyncEditorLoading: false,
       editable: true,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      autoCommitEdit: true,
+      autoEdit: true,
+      
+      
       //enableColumnPicker: true,
       //enableCellNavigation: true,
-      enableRowSelection: true,
+      
       autoHeight: true,
       enableAutoResize: true,
       formatterOptions: {
@@ -1178,24 +1185,24 @@ export class AddReportComponent implements OnInit {
         const item = this.gridObj.getDataItem(idx);
         console.log(item);
         this.pm_code = item.pm_code;
-        this.pm_cust = item.pm_cust;
+        this.pm_win_addr = item.pm_win_addr;
         controls.pmr_pm_code.setValue(item.pm_code || "");
         controls.pmdesc.setValue(item.pm_desc || "");
-        this.siteService.getByOne({ si_cust: item.pm_cust }).subscribe((res: any) => {
+        this.siteService.getByOne({ si_cust: item.pm_win_addr }).subscribe((res: any) => {
           this.site = res.data.si_site;
 
-          this.locationService.getByOne({ loc_site: this.site, loc_project: item.pm_code }).subscribe((resp: any) => {
-            if (resp.data == null) {
-              alert("projet n'est pas affecté à un emplacement ");
+          // this.locationService.getByOne({ loc_site: this.site, loc_project: item.pm_code }).subscribe((resp: any) => {
+          //   if (resp.data == null) {
+          //     alert("BT n'est pas affecté à un emplacement ");
 
-              controls.pmr_pm_code.setValue(null);
-              controls.pmdesc.setValue(null);
-            } else {
-              console.log(resp.data);
-              this.loc = resp.data.loc_loc;
-              console.log(this.site, this.loc);
-            }
-          });
+          //     controls.pmr_pm_code.setValue(null);
+          //     controls.pmdesc.setValue(null);
+          //   } else {
+          //     console.log(resp.data);
+          //     this.loc = resp.data.loc_loc;
+          //     console.log(this.site, this.loc);
+          //   }
+          // });
         });
       });
     }
@@ -1217,7 +1224,7 @@ export class AddReportComponent implements OnInit {
       },
       {
         id: "pm_code",
-        name: "Code Projet",
+        name: "Code BT",
         field: "pm_code",
         sortable: true,
         filterable: true,
@@ -1233,9 +1240,9 @@ export class AddReportComponent implements OnInit {
         type: FieldType.string,
       },
       {
-        id: "pm_cust",
-        name: "Client",
-        field: "pm_cust",
+        id: "pm_win_addr",
+        name: "Equipement",
+        field: "pm_win_addr",
         sortable: true,
         width: 80,
         filterable: true,
@@ -1582,31 +1589,47 @@ export class AddReportComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObjemp.getDataItem(idx);
         console.log(item);
-        this.employeService
-          .getByJob({empj_addr: item.emp_addr, empj_job: this.job })
-          .subscribe((response: any) => {
-            if (response.data.length == 0) 
+        updateItem.pmr_employe = item.emp_addr
+        updateItem.fname = item.emp_fname
+        updateItem.lname = item.emp_lname
+        updateItem.job = item.emp_job
+        updateItem.level = item.emp_level
+        this.mvgridService.updateItem(updateItem)
+        // this.employeService
+        //   .getByJob({empj_addr: item.emp_addr, empj_job: this.job })
+        //   .subscribe((response: any) => {
+        //     if (response.data.length == 0) 
          
-            {         
-                 
-                 
-                  alert("Métier demandé ne correspond pas a cet employé")
-                  updateItem.pmr_employe = null
-                  this.mvgridService.updateItem(updateItem)
-                } else {   
-                  if (Number(response.data[0].empj_level) < Number(this.level)){alert("niveau de maitrise demandée ne correspond pas a cet employé")
-                  updateItem.pmr_employe = null
-                  this.mvgridService.updateItem(updateItem)}
-                  else{
-                      updateItem.pmr_employe = item.emp_addr
-                      updateItem.fname = item.emp_fname
-                      updateItem.lname = item.emp_lname
-                      updateItem.job = response.data[0].empj_job
-                      updateItem.level = response.data[0].empj_level
-                      this.mvgridService.updateItem(updateItem)
-                    }
-                 }
-        })
+        //     {   alert("Métier demandé ne correspond pas a cet employé")
+        //           // updateItem.pmr_employe = null
+        //           // this.mvgridService.updateItem(updateItem)
+        //           updateItem.pmr_employe = item.emp_addr
+        //           updateItem.fname = item.emp_fname
+        //           updateItem.lname = item.emp_lname
+        //           updateItem.job = response.data[0].empj_job
+        //           updateItem.level = response.data[0].empj_level
+        //           this.mvgridService.updateItem(updateItem)
+        //         } else {   
+        //           if (Number(response.data[0].empj_level) < Number(this.level)){alert("niveau de maitrise demandée ne correspond pas a cet employé")
+        //           // updateItem.pmr_employe = null
+        //           // this.mvgridService.updateItem(updateItem)
+        //           updateItem.pmr_employe = item.emp_addr
+        //           updateItem.fname = item.emp_fname
+        //           updateItem.lname = item.emp_lname
+        //           updateItem.job = response.data[0].empj_job
+        //           updateItem.level = response.data[0].empj_level
+        //           this.mvgridService.updateItem(updateItem)
+        //         }
+        //           else{
+        //               updateItem.pmr_employe = item.emp_addr
+        //               updateItem.fname = item.emp_fname
+        //               updateItem.lname = item.emp_lname
+        //               updateItem.job = response.data[0].empj_job
+        //               updateItem.level = response.data[0].empj_level
+        //               this.mvgridService.updateItem(updateItem)
+        //             }
+        //          }
+        // })
       });
     }
   }
@@ -1970,7 +1993,8 @@ export class AddReportComponent implements OnInit {
             updateItem.tr_status = item.ld_status;
             updateItem.tr_expire = item.ld_expire;
             updateItem.qty_oh = item.ld_qty_oh;
-
+            updateItem.tr_site = item.ld_site;
+            updateItem.tr_loc = item.ld_loc;
             this.gridServicecns.updateItem(updateItem);
           }
         });

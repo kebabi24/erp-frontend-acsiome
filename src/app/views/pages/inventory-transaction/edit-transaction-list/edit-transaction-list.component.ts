@@ -969,7 +969,7 @@ export class EditTransactionListComponent implements OnInit {
                 _lb.lb_nbr = cabs.lb_nbr, //this.trnbr
                 _lb.lb_lot = args.dataContext.tr_serial,
                 _lb.lb_date = cabs.lb_date, 
-                _lb.lb_qty = cabs.lb_qty,
+                _lb.lb_qty = args.dataContext.tr_qty_loc,
                 _lb.lb_um = cabs.lb_um,
                 _lb.lb_ld_status = cabs.lb_ld_status,
                 _lb.lb_desc = args.dataContext.desc,
@@ -1660,8 +1660,8 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
             updateItem.desc = item.pt_desc1;
             updateItem.tr_um = item.pt_um;
             updateItem.tr_um_conv = 1;
-            updateItem.tr_site = item.pt_site;
-            updateItem.tr_loc = item.pt_loc;
+            // updateItem.tr_site = item.pt_site;
+            // updateItem.tr_loc = item.pt_loc;
             updateItem.tr_price = 0; //this.sct.sct_mtl_tl;
             updateItem.tr_desc = item.pt_desc1
             updateItem.tr__chr01 = item.pt_draw

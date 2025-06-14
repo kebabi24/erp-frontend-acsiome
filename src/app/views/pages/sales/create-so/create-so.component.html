@@ -34,12 +34,28 @@
             </div>
           </div>
           <div class="form-group col-2">
-            <label class="form-group">Numero d' Offre:</label>
+            <label class="form-group">Lieu de Livraison :</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="so_ship" (change)="onChangeCust()" aria-describedby="basic-addon2" />
+              <div class="input-group-append">
+                <span class="input-group-text" (click)="open2(content2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Numero Bon de commande:</label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-solid" formControlName="so_po" aria-describedby="basic-addon2" (change)="onChangeOC()" />
               <div class="input-group-append">
                 <span class="input-group-text" (click)="open5(content5)"> <i class="text-dark-50 flaticon2-search"></i> </span>
               </div>
+            </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Numero Contrat:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-solid" formControlName="so_quote" aria-describedby="basic-addon2"  />
+              
             </div>
           </div>
           <div class="form-group col-3">
@@ -102,7 +118,7 @@
             </select>
             <div *ngIf="soForm.controls['so_cr_terms'].errors && (soForm.controls['so_cr_terms'].dirty || soForm.controls['so_cr_terms'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
           </div>
-          <div class="form-group col-2">
+          <!-- <div class="form-group col-2">
             <label class="form-group">Liste Frais Transport:</label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-solid" id="so_channel" formControlName="so_channel" (change)="changeChannel()" aria-describedby="basic-addon2" />
@@ -110,7 +126,8 @@
                 <span class="input-group-text" (click)="openchannel(contentchannel)"> <i class="text-dark-50 flaticon2-search"></i> </span>
               </div>
             </div>
-          </div>
+            
+          </div> -->
           <div class="form-group col-1">
             <label class="form-group">Taxable:</label>
             <div class="input-group input-group-sm">
@@ -121,6 +138,27 @@
                 </label>
               </span>
             </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Entité: *</label>
+                <div class="input-group input-group-sm">
+
+                    <input type="text" class="form-control form-control-solid" formControlName="so_source" (change)="changeEntity('so_source')"
+                        aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <span class="input-group-text" (click)="openentity(contententity,'so_source')">
+                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                    </div>
+                </div>
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Remise: </label>
+                <div class="input-group input-group-sm">
+
+                    <input type="numer" class="form-control form-control-solid" formControlName="so_disc_pct" (change)="calculatetot()"
+                        aria-describedby="basic-addon2">
+                    
+                </div>
           </div>
         </div>
         <div class="row">
@@ -383,5 +421,29 @@
         </div>
       </ng-template>
     </div>
+    <div>
+      <ng-template #contententity let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Choissir une Entite</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridentity"
+                      [columnDefinitions]="columnDefinitionsentity"
+                      (onAngularGridCreated)="angularGridReadyentity($event)"
+                      (sgOnSelectedRowsChanged)="handleSelectedRowsChangedentity($event.detail.eventData, $event.detail.args)"
+                      [gridOptions]="gridOptionsentity" [dataset]="dataentity">
+                  </angular-slickgrid>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+              <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+      </ng-template>
+  </div>
   </kt-portlet-body>
 </kt-portlet>

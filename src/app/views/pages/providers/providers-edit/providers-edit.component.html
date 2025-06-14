@@ -38,7 +38,7 @@
                                         <div *ngIf="addressForm.controls['ad_addr'].errors && (addressForm.controls['ad_addr'].dirty || addressForm.controls['ad_addr'].touched)"
                                             class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Temporaire:</label>
                                         <span class="switch switch-icon">
                                             <label>
@@ -48,7 +48,7 @@
                                                 <span></span>
                                             </label>
                                         </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-4">
@@ -140,7 +140,7 @@
                                         
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Pst:</label>
+                                        <label class="form-group ">Email:</label>
                                     
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_ext">
@@ -169,7 +169,7 @@
                                         
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Pst:</label>
+                                        <label class="form-group ">Email 2:</label>
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_ext2">
                                     </div>
@@ -224,7 +224,7 @@
                 
                                     </div>
                                     <div class="form-group col-4">
-                                        <label class="form-group">Nom Tri:</label>
+                                        <label class="form-group">Activité:</label>
                                         
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_sort">
@@ -353,7 +353,7 @@
                                 </div>
                                 <div class="row">    
                                     <div class="form-group col-2">
-                                        <label class="form-group "> Check Form:</label>
+                                        <label class="form-group "> Mode paiement:</label>
                                         
                                             <div class="input-group input-group-sm">
 
@@ -416,7 +416,7 @@
                                             </div>
                                         
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Crediteur divers:</label>
                                         
                                         <span class="switch switch-icon">
@@ -427,7 +427,7 @@
                                                 <span></span>
                                             </label>
                                         </span>
-                                    </div>
+                                    </div> -->
                                     
                                 </div>
                                 <div class="row">
@@ -458,7 +458,7 @@
                                             </select>
                                       
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Fournisseur kanban:</label>
                                         
                                             <span class="switch switch-icon">
@@ -470,7 +470,7 @@
                                                 </label>
                                             </span>
                                         
-                                    </div>
+                                    </div> -->
                                 </div>
                             </form>
                         </ng-template>
@@ -507,7 +507,7 @@
                                                 </label>
                                             </span>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group ">Zone taxe:</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             id="exampleSelects2" formControlName="ad_tax_zone">
@@ -516,7 +516,7 @@
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
 
                                         </select>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group col-2">
                                         <label class="form-group ">Taux tax:</label>
                                         <div class="input-group input-group-sm">
@@ -539,7 +539,7 @@
 
                                         </select>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Tax comprise:</label>
                                         <span class="switch switch-icon">
                                             <label>
@@ -549,7 +549,7 @@
                                                 <span></span>
                                             </label>
                                         </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     
@@ -634,14 +634,14 @@
                                     </div>
                                     
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Numero dibiteur:</label>
+                                    <label class="form-group ">IBAN:</label>
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_debtor">
                                     </div>
 
                                 </div>
                                 <div class="row">
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">OK partiel:</label>
                                             <span class="switch switch-icon">
                                                 <label>
@@ -651,12 +651,12 @@
                                                     <span></span>
                                                 </label>
                                             </span>
-                                    </div>
+                                    </div> -->
                                     
                                 </div>
                                 <div class="row">    
                                     <div class="form-group col-2">
-                                        <label class="form-group">Blocage:</label>
+                                        <label class="form-group">Inactif:</label>
                                             <span class="switch switch-icon">
                                                 <label>
                                                     <input type="checkbox"
@@ -666,7 +666,7 @@
                                                 </label>
                                             </span>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group">Specification paiement:</label>
                                             <span class="switch switch-icon">
                                                 <label>
@@ -676,11 +676,11 @@
                                                     <span></span>
                                                 </label>
                                             </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-4">
-                                        <label class="form-group ">N base:</label>
+                                        <label class="form-group ">RIB:</label>
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_db">
                                     </div>

@@ -402,6 +402,28 @@ export class TransactionListComponent implements OnInit {
             
           }, 
           {
+            id: "int03",
+            name: "Surface",
+            field: "int03",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
+            grouping: {
+              getter: 'int03',
+              formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          }, 
+          {
             id: "tr_serial",
             name: "Lot",
             field: "tr_serial",

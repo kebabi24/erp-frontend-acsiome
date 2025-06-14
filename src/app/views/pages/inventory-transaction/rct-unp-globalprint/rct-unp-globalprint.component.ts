@@ -1446,7 +1446,7 @@ export class RctUnpGlobalprintComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.addressService.getBy({ad_type:'vendor'}).subscribe((response: any) => (this.adresses = response.data));
+    this.addressService.getBy({ad_type:'Machine'}).subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
@@ -1477,15 +1477,16 @@ export class RctUnpGlobalprintComponent implements OnInit {
 let date = new Date()
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
+    // img.src = "./assets/media/logos/rct-unp-globalprint.png";
     img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 150, 5, 50, 30);
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
 
     doc.line(10, 35, 200, 35);
@@ -1501,7 +1502,7 @@ let date = new Date()
     doc.setFontSize(8);
   
     this.addressService.getBy({ad_addr:addr}).subscribe((response: any) => (this.provider = response.data[0]));
-    doc.text("Fournisseur : " + addr, 20, 50);
+    doc.text("Machine : " + addr, 20, 50);
     doc.text("Nom             : " + name, 20, 55);
     doc.text("Adresse       : " + addresse, 20, 60);
     
@@ -1535,15 +1536,16 @@ let date = new Date()
 
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
+        // img.src = "./assets/media/logos/rct-unp-globalprint.png";
         img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, "png", 150, 5, 50, 30);
+        doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
 
@@ -1558,7 +1560,7 @@ let date = new Date()
       
         doc.setFontSize(8);
         
-        doc.text("Fournisseur : " + code, 20, 50);
+        doc.text("Machine : " + code, 20, 50);
         doc.text("Nom             : " + name, 20, 55);
         doc.text("Adresse       : " + addresse, 20, 60);
         

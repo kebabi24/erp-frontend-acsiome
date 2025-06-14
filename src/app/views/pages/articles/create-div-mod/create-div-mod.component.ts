@@ -525,7 +525,7 @@ onChangecolor() {
             let code_silicone:any;
             let vitesse:any;
             this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls1.pt_group.value }).subscribe((coderesponse: any) => 
-              { code_couleur = coderesponse.data[0].code_desc, vitesse=Number(coderesponse.data[0].dec01)
+              { code_couleur = coderesponse.data[0].code_value, vitesse=Number(coderesponse.data[0].dec01)
                 controls1.pt_um.setValue(modeleresponse.data.mod_um)
                 controls1.pt_prod_line.setValue(modeleresponse.data.mod_prod_line)
                 controls1.pt_part_type.setValue(modeleresponse.data.mod_part_type)

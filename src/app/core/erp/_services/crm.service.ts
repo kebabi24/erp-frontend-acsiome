@@ -83,7 +83,14 @@ export class CRMService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/getEventsByDay`, {headers: httpHeaders});
   }
-
+  public getEvents() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/getEvents`, {headers: httpHeaders});
+  }
+public getEventsBy(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL}/getEventsBy`,data, {headers: httpHeaders});
+  }
   public getCustomers(query : any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL}/getCustomers`,query, {headers: httpHeaders});
@@ -98,7 +105,10 @@ export class CRMService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/getPopulations`, {headers: httpHeaders});
   }
-
+public getParams() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(`${API_URL}/getParams`, {headers: httpHeaders});
+  }
   public getPopulation(code: String) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(`${API_URL}/getPopulation/${code}`, {

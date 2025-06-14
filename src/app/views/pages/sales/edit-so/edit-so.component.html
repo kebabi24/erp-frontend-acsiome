@@ -105,7 +105,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Taux de change:</label>
                         <div class="input-group input-group-sm">
 
@@ -116,9 +116,9 @@
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Taux de change:</label>
                         <div class="input-group input-group-sm">
 
@@ -130,7 +130,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
                     <div class="form-group col-2">
                         <label class="form-group">Condition de règlement :</label>
                         <select
@@ -157,6 +157,25 @@
                         </div>
 
                     </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Banque:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="so_bank" 
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Montant OV:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid"  formControlName="so_prepaid" 
+                                aria-describedby="basic-addon2">
+                        </div>
+
+                    </div>
                   
 
                 </div>
@@ -173,6 +192,19 @@
                             <span class="switch switch-icon">
                                 <label>
                                     <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print"/>
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Aide CNL:</label>
+                        <div class="input-group input-group-sm">
+
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="aide"/>
                                     <span></span>
                                 </label>
                             </span>

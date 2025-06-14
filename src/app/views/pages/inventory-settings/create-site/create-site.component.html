@@ -38,9 +38,68 @@
                     <div *ngIf="siteForm.controls['si_desc'].errors && (siteForm.controls['si_desc'].dirty || siteForm.controls['si_desc'].touched)"
                         class="invalid-feedback">Ce Champs est obligatoire</div>
                     </div>
+                    <div class="form-group col-1">
+                        <label class="form-group"> Nombre de Blocs: *</label>
+                        <input type="number"
+                        [className]="siteForm.controls['int01'].errors && (siteForm.controls['int01'].dirty || siteForm.controls['int01'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="int01">
+                    <div *ngIf="siteForm.controls['int01'].errors && (siteForm.controls['int01'].dirty || siteForm.controls['int01'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-1">
+                        <label class="form-group"> Nombre de Niveaux: *</label>
+                        <input type="number"
+                        [className]="siteForm.controls['int02'].errors && (siteForm.controls['int02'].dirty || siteForm.controls['int02'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="int02">
+                    <div *ngIf="siteForm.controls['int02'].errors && (siteForm.controls['int02'].dirty || siteForm.controls['int02'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                
+                    <div class="form-group col-2">
+                        <label class="form-group">Acte de propriété/session: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_cust'].errors && (siteForm.controls['si_cust'].dirty || siteForm.controls['si_cust'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_cust">
+                    <div *ngIf="siteForm.controls['si_cust'].errors && (siteForm.controls['si_cust'].dirty || siteForm.controls['si_cust'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Permis de construire: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_user1'].errors && (siteForm.controls['si_user1'].dirty || siteForm.controls['si_user1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_user1">
+                    <div *ngIf="siteForm.controls['si_user1'].errors && (siteForm.controls['si_user1'].dirty || siteForm.controls['si_user1'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Conformité: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_user2'].errors && (siteForm.controls['si_user2'].dirty || siteForm.controls['si_user2'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_user2">
+                    <div *ngIf="siteForm.controls['si_user2'].errors && (siteForm.controls['si_user2'].dirty || siteForm.controls['si_user2'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                </div>
+                <div class="row">
+                
+                    <div class="form-group col-2">
+                        <label class="form-group">Agence: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_db'].errors && (siteForm.controls['si_db'].dirty || siteForm.controls['si_db'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_db">
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="form-group">N° Compte Bancaire: *</label>
+                        <input type="text"
+                        [className]="siteForm.controls['si_gl_set'].errors && (siteForm.controls['si_gl_set'].dirty || siteForm.controls['si_gl_set'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                        formControlName="si_gl_set">
+                    </div>
+                    
                 </div>
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="form-group col-2">
                         <label class="form-group">Entité: *</label>
                             <div class="input-group input-group-sm">
@@ -53,8 +112,8 @@
                                 </div>
                             </div>
                     </div>
-                </div>
-                <div class="row">
+                </div> -->
+                <!-- <div class="row">
                     <div class="form-group col-2">
                         <label class="form-group">Client :</label>
                         <div class="input-group input-group-sm">
@@ -68,7 +127,7 @@
                         </div>
 
                     </div>
-                </div>    
+                </div>     -->
                 <div class="row">
 
                     <div class="form-group col-2">
@@ -88,7 +147,7 @@
                 </div>
 
                    
-                <div class="row">
+                <!-- <div class="row">
 
                     <div class="form-group col-2">
                         <label class="form-group">Status par Défaut: *</label>
@@ -118,9 +177,9 @@
 
 
 
-                </div>
+                </div> -->
 
-                <div class="row">
+                <!-- <div class="row">
 
                     <div class="form-group col-2">
                         <label class="form-group">Compte Ecart Transfert: </label>
@@ -160,8 +219,8 @@
                         </div>
                         
                     </div>
-                </div>
-                <div class="row">    
+                </div> -->
+                <!-- <div class="row">    
                     <div class="form-group col-2">
                             <label class="form-group"> Transfert De Propriété: *</label>
                             <span class="switch switch-icon ">
@@ -173,7 +232,7 @@
                             </span>
                     </div>
 
-                </div>
+                </div> -->
             </form>
         </div>
 

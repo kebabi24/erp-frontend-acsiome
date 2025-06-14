@@ -125,7 +125,10 @@ export class EditSiteComponent implements OnInit {
       si_xfer_acct: [this.siteEdit.si_xfer_acct],
       si_auto_loc: [this.siteEdit.si_auto_loc],
       si_xfer_ownership: [this.siteEdit.si_xfer_ownership],
-
+      si_user1:[this.siteEdit.si_user1],
+      si_user2:[this.siteEdit.si_user2],
+      si_db:[this.siteEdit.si_db],
+      si_gl_set:[this.siteEdit.si_gl_set],
     })
   }
     
@@ -166,6 +169,10 @@ prepareSite(): Site {
         _site.si_entity= controls.si_entity.value
         _site.si_default= controls.si_default.value
         _site.si_cust= controls.si_cust.value
+        _site.si_user1= controls.si_user1.value
+        _site.si_user2= controls.si_user2.value
+        _site.si_db= controls.si_db.value
+        _site.si_gl_set= controls.si_gl_set.value
         _site.si_status= controls.si_status.value
         _site.si_xfer_cc= controls.si_xfer_cc.value
         _site.si_xfer_sub= controls.si_xfer_sub.value

@@ -16,9 +16,10 @@ import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, SaleOrderService,Label, EmployeService, PrintersService } from "../../../../core/erp";
 import date from 'src/assets/plugins/formvalidation/src/js/validators/date';
+declare var Edelweiss3: any;
 declare var Edelweiss2: any;
 declare var Edelweiss: any;
-@Component({
+@Component({  
   selector: 'kt-create-bobine-wo',
   templateUrl: './create-bobine-wo.component.html',
   styleUrls: ['./create-bobine-wo.component.scss']
@@ -30,7 +31,8 @@ export class CreateBobineWoComponent implements OnInit {
   printbuttonState: boolean = false;
   workOrder: WorkOrder;
   woForm: FormGroup;
-   
+  MANDRINS: any[] = [];
+  MANDRIN :any;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -58,7 +60,8 @@ export class CreateBobineWoComponent implements OnInit {
   gridOptionssite: GridOption = {};
   gridObjsite: any;
   angularGridsite: AngularGridInstance;
-
+  program:any;
+  ordre:any;
   part: any;
   gamme: any;
   gammes: [];
@@ -172,7 +175,8 @@ autorisation:boolean;
   adduser: boolean = true;
 
  
-
+  docs: any[] = [];
+  exist:any;
 
 
 
@@ -219,8 +223,10 @@ autorisation:boolean;
           else {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             const controls = this.woForm.controls;
-            let new_total = controls.total_bobine.value - args.dataContext.tr_qty_loc
+            let new_total = controls.total_bobine.value - args.dataContext.tr_qty_loc 
+            let new_rest  = controls.rest_bobine.value + args.dataContext.tr_qty_loc
             controls.total_bobine.setValue(new_total)
+            controls.rest_bobine.setValue(new_rest)
             this.angularGrid.gridService.deleteItem(args.dataContext);
           }}
         },
@@ -234,14 +240,14 @@ autorisation:boolean;
         maxWidth: 50,
         selectable: true,
       },
-      {
-        id: "tr_part",
-        name: "Article",
-        field: "tr_part",
-        sortable: true,
-        width: 50,
-        filterable: false,
-      },
+      // {
+      //   id: "tr_part",
+      //   name: "Article",
+      //   field: "tr_part",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      // },
 
       {
         id: "tr_desc",
@@ -258,8 +264,14 @@ autorisation:boolean;
         name: "Lot/Serie",
         field: "tr_serial",
         sortable: true,
-        width: 80,
+        minWidth: 80,
         filterable: false,
+        editor: {
+                  model: Editors.text,
+                  required: true,
+                 
+        
+                },
       },
 
      
@@ -268,56 +280,13 @@ autorisation:boolean;
         name: "QTE",
         field: "tr_qty_loc",
         sortable: true,
-        width: 80,
+        minWidth: 80,
         filterable: false,
         type: FieldType.float,
       },
       {
-        id: "tr_effdate",
-        name: "date",
-        field: "tr_effdate",
-        sortable: true,
-        width: 80,
-        filterable: false,
-      },
-
-     
-
-      
-
-
-      {
-        id: "tr_ref",
-        name: "BIG BAG",
-        field: "tr_ref",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        //type: FieldType.float,
-      },
-      {
-        id: "printed",
-        name: "imprimé",
-        field: "printed",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-      },
-
-    
-      {
-        id: "tr_program",
-        name: "Heure",
-        field: "tr_program",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-      },
-      {
-        id: "id",
-        field: "id",
+        id: "printid",
+        field: "printid",
         excludeFromHeaderMenu: true,
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
@@ -337,7 +306,7 @@ autorisation:boolean;
           // }
           if(this.printable == true && args.dataContext.printed != true){
           this.itemsService.getByOne({pt_part:args.dataContext.tr_part }).subscribe( 
-            (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type
+            (reponse: any) => {this.produit = reponse.data.pt_draw + ' ' + reponse.data.pt_part_type + ' QUALITE ' + reponse.data.pt_rev
                               this.miclaise = reponse.data.pt_article
                               this.color = reponse.data.pt_break_cat
                               if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
@@ -349,7 +318,7 @@ autorisation:boolean;
                                 // _lb.lb_rmks = controls.tr_rmks.value;
                                 _lb.lb_loc = args.dataContext.tr_loc;
                                 _lb.lb_part = args.dataContext.tr_part;
-                                _lb.lb_nbr = args.dataContext.tr_so_job; //this.trnbr
+                                _lb.lb_nbr = this.program + '-' + this.ordre; //this.trnbr
                                 _lb.lb_lot = args.dataContext.tr_serial;
                                 _lb.lb_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
                                 _lb.lb_qty = args.dataContext.tr_qty_loc;
@@ -357,14 +326,14 @@ autorisation:boolean;
                                 _lb.lb_ld_status = args.dataContext.tr_status;
                                 _lb.lb_desc = this.produit;
                                 _lb.lb_type = this.miclaise;
-                                _lb.lb_ray = this.color;
+                                _lb.lb_ray = this.color; 
                                 _lb.lb_rmks = controls.product_Cyl.value;
                                 _lb.lb_printer = this.PathPrinter;
                                 _lb.lb_grp = controls.emp_shift.value;
                                 _lb.lb_cust = controls.wo_routing.value;
                                 _lb.lb_addr = controls.wo_user1.value;
-                                _lb.lb__chr01 = String(new Date().toLocaleTimeString())
-                                
+                                _lb.lb__chr01 = String(new Date().toLocaleTimeString());
+                                _lb.lb__chr02 = controls.wo_vend.value;
                                 let lab = null;
                                 console.log(_lb);
                                 // console.log(10 * 100.02)
@@ -381,6 +350,7 @@ autorisation:boolean;
                                     const controls = this.woForm.controls;
                                     const _tr = new InventoryTransaction();
                                     _tr.tr_nbr = controls.wo_nbr.value;
+                                    _tr.tr_for = controls.wo_vend.value;
                                     _tr.tr_lot = controls.wo_lot.value;
                                     _tr.tr_part = args.dataContext.tr_part;
                                     _tr.tr_addr = controls.wo_routing.value;
@@ -423,6 +393,7 @@ autorisation:boolean;
                                       tr_expire: null,
                                       tr_ref: lab.lb_ref,
                                       tr_user1: controls.wo_user1.value,
+                                      
                                     });
                                     console.log(this.trdataset);
                                     this.addTR(this.trdataset, _tr);
@@ -451,6 +422,45 @@ autorisation:boolean;
           return;}
       }
       },
+      // {
+      //   id: "tr_effdate",
+      //   name: "date",
+      //   field: "tr_effdate",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      // },
+
+      {
+        id: "tr_ref",
+        name: "Ref",
+        field: "tr_ref",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        //type: FieldType.float,
+      },
+      // {
+      //   id: "printed",
+      //   name: "imprimé",
+      //   field: "printed",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.string,
+      // },
+
+    
+      {
+        id: "tr_program",
+        name: "Heure",
+        field: "tr_program",
+        sortable: true,
+        minWidth: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
+     
     ];
 
     this.gridOptions = {
@@ -493,6 +503,7 @@ autorisation:boolean;
           else {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
             const controls = this.woForm.controls;
+            controls.total_squelette.setValue(controls.total_squelette.value - args.dataContext.tr_qty_loc)
             this.angularGridsq.gridService.deleteItem(args.dataContext);
           }}
            
@@ -508,50 +519,50 @@ autorisation:boolean;
         maxWidth: 50,
         selectable: true,
       },
-      {
-        id: "tr_part",
-        name: "Article",
-        field: "tr_part",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
+      // {
+      //   id: "tr_part",
+      //   name: "Article",
+      //   field: "tr_part",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
           
-          if (args.dataContext.tr_ref != null) {
-            this.message = "modification interdite";
-                  this.hasFormErrors = true;
-                  return;
-          } else {
-            console.log(args.dataContext.tr_part);
-            this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
-              if (resp.data) {
-                this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
-                  this.location = response.data;
+      //     if (args.dataContext.tr_ref != null) {
+      //       this.message = "modification interdite";
+      //             this.hasFormErrors = true;
+      //             return;
+      //     } else {
+      //       console.log(args.dataContext.tr_part);
+      //       this.itemsService.getByOne({ pt_part: args.dataContext.tr_part }).subscribe((resp: any) => {
+      //         if (resp.data) {
+      //           this.locationService.getByOne({ loc_loc: resp.data.pt_loc, loc_site: resp.data.pt_site }).subscribe((response: any) => {
+      //             this.location = response.data;
 
-                  this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-                    console.log(resstat);
-                    const { data } = resstat;
+      //             this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
+      //               console.log(resstat);
+      //               const { data } = resstat;
 
-                    if (data) {
-                      this.stat = null;
-                    } else {
-                      this.stat = this.location.loc_status;
-                    }
-                    this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
-                  });
-                });
-                this.codeService.getBy({code_fldname:'LIMIT',code_value:resp.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
-              } else {
+      //               if (data) {
+      //                 this.stat = null;
+      //               } else {
+      //                 this.stat = this.location.loc_status;
+      //               }
+      //               this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, tr_site: resp.data.pt_site, tr_loc: resp.data.pt_loc, tr_um: resp.data.pt_um, tr_um_conv: 1, tr_status: this.stat, tr_price: 0 });
+      //             });
+      //           });
+      //           this.codeService.getBy({code_fldname:'LIMIT',code_value:resp.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
+      //         } else {
                 
-                this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
-              }
-            });
-          }
-        },
-      },
+      //           this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_part: null });
+      //         }
+      //       });
+      //     }
+      //   },
+      // },
       {
         id: "mvid",
         field: "cmvid",
@@ -566,7 +577,7 @@ autorisation:boolean;
                   return;
           } 
           else {
-            if( this.autorisation == false)
+            if( this.autorisation != true)
               {
                 this.message = "modification interdite";
                       this.hasFormErrors = true;
@@ -585,7 +596,7 @@ autorisation:boolean;
         name: "Description",
         field: "tr_desc",
         sortable: true,
-        minWidth: 150,
+        minWidth: 200,
         filterable: false,
       },
 
@@ -594,8 +605,14 @@ autorisation:boolean;
         name: "Lot/Serie",
         field: "tr_serial",
         sortable: true,
-        width: 80,
+        minWidth: 80,
         filterable: false,
+        editor: {
+          model: Editors.text,
+          required: true,
+         
+
+        },
       },
 
       
@@ -605,46 +622,9 @@ autorisation:boolean;
         name: "QTE",
         field: "tr_qty_loc",
         sortable: true,
-        width: 80,
+        minWidth: 80,
         filterable: false,
         type: FieldType.float,
-      },
-      {
-        id: "tr_effdate",
-        name: "Date",
-        field: "tr_effdate",
-        sortable: true,
-        width: 80,
-        filterable: false,
-      },
-
-      {
-        id: "tr_ref",
-        name: "BIG BAG",
-        field: "tr_ref",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        //type: FieldType.float,
-      },
-      {
-        id: "sqprinted",
-        name: "imprimé",
-        field: "sqprinted",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-      },
-      
-      {
-        id: "tr_program",
-        name: "Heure",
-        field: "tr_program",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
       },
       {
         id: "sqid",
@@ -779,6 +759,44 @@ autorisation:boolean;
         }
       }
       },
+      // {
+      //   id: "tr_effdate",
+      //   name: "Date",
+      //   field: "tr_effdate",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      // },
+
+      {
+        id: "tr_ref",
+        name: "Ref",
+        field: "tr_ref",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        //type: FieldType.float,
+      },
+      // {
+      //   id: "sqprinted",
+      //   name: "imprimé",
+      //   field: "sqprinted",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
+      //   type: FieldType.string,
+      // },
+      
+      {
+        id: "tr_program",
+        name: "Heure",
+        field: "tr_program",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
+     
     ];
 
     this.gridOptionssq = {
@@ -819,6 +837,23 @@ autorisation:boolean;
                   return;
       }
     );
+    this.codeService
+    .getBy({
+      code_fldname: "EMBALLAGE",code_desc:'MANDRIN'
+    })
+    .subscribe((response: any) => {
+      const { data } = response;
+      this.MANDRINS = data;
+      if (!data) {
+       
+        // controls.wo_site.setValue("");
+      }
+    
+    });
+
+
+
+
     this.getProductColors();
     this.getProductTypes();
     this.getProductquality();
@@ -842,6 +877,13 @@ autorisation:boolean;
     );
     this.seuil = 1200;
     this.createForm();
+    this.codeService
+    .getBy({ code_fldname: "manufacturing/create-bobine-wo" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
   }
 
   //create form
@@ -864,23 +906,27 @@ autorisation:boolean;
       adduser2:[false],
       wo_lot:[this.workOrder.wo_lot,],
       wo_nbr:[this.workOrder.wo_nbr,],
+      wo_vend:[this.workOrder.wo_vend,],
       wo_part: [{ value: this.workOrder.wo_part, disabled: true }],
       desc: [{ value: null, disabled: true }],
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
       ref: [{ value: null, disabled: true }],
       wo_qty_ord: [{ value: 0 },this.workOrder.wo_qty_ord],
-      total_bobine:  [{disabled: true}],
-      total_squelette:  [{disabled: true}],
+      total_bobine:  [{value: 0,disabled: true}],
+      rest_bobine:  [{value: 0,disabled: true}],
+      total_squelette:  [{ value: 0 ,disabled: true}],
       wo_qty_comp: [{ value: 0 },this.workOrder.wo_qty_comp],
-
+wo_bo_chg:[this.workOrder.wo_bo_chg],
       wo_qty_rjct: [{ value: 0 },this.workOrder.wo_qty_rjct],
-      autorisation:[null],
+      autorisation:[false],
       emp_shift: [this.shift],
-      wo_serial: [this.workOrder.wo_serial],
+      wo_serial: [{value:this.workOrder.wo_serial,disabled: true}],
+      wo_serial_next: [""],
       printer: [{ value: this.user.usrd_dft_printer, disabled: true }],
       product_type: ["", Validators.required],
       product_color: ["", Validators.required],
+      MANDRIN:[""],
       product_quality: ["", Validators.required],
       product_Cyl: ["", Validators.required],
     });
@@ -902,6 +948,8 @@ autorisation:boolean;
       },
       (error) => {}
     );
+    controls.wo_serial.setValue('1')
+    controls.wo_serial_next.setValue('1')
   }
   authorised(){
     const controls = this.woForm.controls
@@ -917,8 +965,8 @@ autorisation:boolean;
   })
   }
   onChangeOA() {
-    this.dataset = [];
-    this.sqdataset = [];
+    // this.dataset = [];
+    // this.sqdataset = [];
     const controls = this.woForm.controls;
     const id = controls.wo_lot.value;
 
@@ -928,9 +976,12 @@ autorisation:boolean;
         
         controls.wo_lot.setValue(this.woServer.id);
         controls.wo_nbr.setValue(this.woServer.wo_nbr);
+        controls.wo_vend.setValue(this.woServer.wo_vend);
         controls.wo_part.setValue(this.woServer.wo_part);
         controls.wo_qty_ord.setValue(this.woServer.wo_qty_ord);
+        controls.wo_bo_chg.setValue(this.woServer.wo_bo_chg);
         controls.total_bobine.setValue(this.woServer.wo_qty_comp);
+        controls.rest_bobine.setValue(this.woServer.wo_qty_ord - this.woServer.wo_qty_comp);
         controls.total_squelette.setValue(this.woServer.wo_qty_rjct);
         controls.desc.setValue(this.woServer.item.pt_desc1);
         controls.product_type.setValue(this.woServer.item.pt_article);
@@ -1277,6 +1328,7 @@ autorisation:boolean;
     const controls = this.woForm.controls;
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = controls.wo_nbr.value;
+    _tr.tr_for = controls.wo_vend.value;
     _tr.tr_lot = controls.wo_lot.value;
     _tr.tr_part = controls.wo_part.value;
     _tr.tr_addr = controls.wo_routing.value;
@@ -1490,6 +1542,7 @@ autorisation:boolean;
     const controls = this.woForm.controls;
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = this.nof;
+    _tr.tr_for = controls.wo_vend.value;
     _tr.tr_lot = this.wolot;
     _tr.tr_user1 = this.user1;
     _tr.tr_user2 = this.user2;
@@ -1776,26 +1829,10 @@ autorisation:boolean;
     if (Array.isArray(args.rows) && this.gridObj4) {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
-
-        controls.wo_part.setValue(item.pt_part);
-        controls.desc.setValue(item.pt_desc1);
-        this.desc2 = item.pt_desc2;
-        controls.wo_serial.setValue(item.pt_part_type + item.pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
-        this.codeService.getBy({code_fldname:'LIMIT',code_value:item.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data[0].code_cmmt)})
-        this.um = item.pt_um;
-        this.loc = item.pt_loc;
-        if (item.pt_rctwo_active) {
-          this.rctwostat = item.pt_rctwo_status;
-        } else {
-          this.locationService
-            .getByOne({
-              loc_loc: this.loc,
-            })
-            .subscribe((resp: any) => {
-              console.log(resp.data, resp.data.length);
-              this.rctwostat = resp.data.loc_status;
-            });
-        }
+        let updateItem = this.gridServicesq.getDataItemByRowIndex(this.row_number);
+        updateItem.tr_part = item.pt_part;
+        updateItem.tr_desc = item.pt_desc1;
+        this.gridServicesq.updateItem(updateItem);
       });
     
   }}
@@ -1868,10 +1905,10 @@ autorisation:boolean;
         selectActiveRow: true,
       },
     };
-
+ 
     // fill the dataset with your data
 
-    this.itemsService.getProd({}).subscribe((response: any) => (this.items = response.data));
+    this.itemsService.getBy({pt_draw:'SQUELETTE',pt_dsgn_grp: 'N/BROY'}).subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {
     this.prepareGrid4();
@@ -2224,23 +2261,92 @@ autorisation:boolean;
       }
     });
   }
+onpal(){
+  const controls = this.woForm.controls
+  var newpal:any;
+  newpal = String(Number(controls.wo_serial.value) + 1)
+  controls.wo_serial.setValue(newpal)
+  controls.wo_serial_next.setValue(newpal)
+}
+printpal(){
+  const controls = this.woForm.controls
+ var qty = 0;
+ var refs='';
+ for (let data of this.dataset)
+  {
+    if(data.tr_serial == controls.wo_serial_next.value){
+      qty = qty + data.tr_qty_loc
+      refs = refs + data.tr_ref + '/'
+    }
+
+  }
+    const _lb = new Label();
+    (_lb.lb_site = controls.wo_site.value);
+    // _lb.lb_rmks = controls.tr_rmks.value;
+    _lb.lb_loc  = "";
+    _lb.lb_part = controls.wo_part.value;
+    _lb.lb_nbr  = controls.wo_nbr.value; //this.trnbr
+    _lb.lb_lot  = refs;
+    _lb.lb_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
+    _lb.lb_qty  = qty;
+    _lb.lb_um   = "KG";
+    _lb.lb_ld_status = "";
+    _lb.lb_desc = controls.desc.value;
+    _lb.lb_printer = this.PathPrinter;
+    _lb.lb_grp = controls.emp_shift.value;
+    _lb.lb_cust = 'FICHE PALETTE';
+    _lb.lb_addr = controls.wo_user1.value;
+    _lb.lb__chr01 = String(new Date().toLocaleTimeString())
+    let lab = null;
+    console.log(_lb);
+    // console.log(10 * 100.02)
+    this.labelService.add(_lb).subscribe(
+      (reponse: any) => {
+        lab = reponse.data;
+        
+       
+       
+       
+       
+
+        this.labelService.addblob(_lb).subscribe((blob) => {
+          Edelweiss3.print3(lab);
+        });
+      },
+      (error) => {
+     
+      },
+      () => {
+        
+      }
+    );
+ 
+}
 
   onChangePal() {
     /*kamel palette*/
     const controls = this.woForm.controls;
     let qty= Number(controls.wo_qty_comp.value)
-    this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
+    if (controls.MANDRIN.value == null){controls.MANDRIN.setValue('MANDRIN')}
+    this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:controls.MANDRIN.value}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
       qty = qty - poids
     })
     const timedate = new Date().toLocaleTimeString();
     console.log(timedate);
     var bol = false;
     this.printable = true;
+    if (qty > controls.wo_bo_chg.value)
+    {this.layoutUtilsService.showActionNotification("Poids bobine dépasse poids Maximum", MessageType.Create, 10000, true, true);
+    }
     if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
       this.message = "veuillez sélectionner les employés";
     this.hasFormErrors = true;
     return;}
-    if(controls.wo_qty_comp.value > this.seuil || controls.wo_qty_comp.value < 0){
+    if(controls.wo_user1.value == null || controls.wo_user1.value == ''){
+      this.message = "veuillez sélectionner les employés";
+    this.hasFormErrors = true;
+    return;}
+    if(qty > this.seuil || qty < 0){
       this.message = "la quantité que vous avez saisi est erroné";
     this.hasFormErrors = true;
     return;}
@@ -2252,13 +2358,6 @@ autorisation:boolean;
       return;}
     else {
       
-      if (Number(controls.total_bobine.value) > Number(controls.wo_qty_ord.value) )
-      {
-        console.log(controls.total_bobine.value , '>', controls.wo_qty_ord.value)
-        this.message = "vous avez atteint la quantité prevue";
-      this.hasFormErrors = true;
-      return;}
-      else{
       this.itemsService.getByOne({pt_part: controls.wo_part.value  }).subscribe(
       (respopart: any) => {
         console.log(respopart)
@@ -2280,7 +2379,7 @@ autorisation:boolean;
             tr_price: 0,
             cmvids: "",
             tr_ref: null,
-            tr_serial: "",
+            tr_serial: controls.wo_serial.value,
             tr_program: timedate,
             // tr_status: this.stat,
             
@@ -2288,8 +2387,11 @@ autorisation:boolean;
           { position: "bottom" },
           
         );
-        const TOTAL = Number(controls.total_bobine.value) + Number(controls.wo_qty_comp.value)
+        const TOTAL = Number(controls.total_bobine.value) + Number(qty)
+        const REST = Number(controls.rest_bobine.value) - Number(qty)
         controls.total_bobine.setValue(TOTAL)
+        controls.rest_bobine.setValue(REST)
+
         controls.wo_qty_comp.setValue(0);
     //  this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: controls.wo_part.value, sct_sim: 'STD-CG' }).subscribe(
     //   (respo: any) => {
@@ -2300,15 +2402,17 @@ autorisation:boolean;
     
     
     //  });
-    }); }
+    }); 
   }})
     
  
   }
+
   onChangeSq() {
     /*kamel palette*/
     const controls = this.woForm.controls;
     let  sqqty= Number(controls.wo_qty_rjct.value)
+    controls.total_squelette.setValue(controls.total_squelette.value + sqqty)
     this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
       sqqty = sqqty - poids
     })
@@ -2379,7 +2483,7 @@ autorisation:boolean;
         // TODO : HERE itterate on selected field and change the value of the selected field
         controls.printer.setValue(item.printer_code || "");
         this.currentPrinter = item.printer_code;
-        this.PathPrinter = item.printer_path;
+        this.PathPrinter    = item.printer_path;
       });
     }
   }
@@ -2581,14 +2685,14 @@ autorisation:boolean;
 
   prepareGrid5() {
     this.columnDefinitions5 = [
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        sortable: true,
-        minWidth: 80,
-        maxWidth: 80,
-      },
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 80,
+      //   maxWidth: 80,
+      // },
       {
         id: "wo_so_job",
         name: "Programme",
@@ -2596,24 +2700,26 @@ autorisation:boolean;
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        minWidth: 80,
       },
       {
-        id: "wo_nbr",
+        id: "wo_queue_eff",
         name: "N° OF",
-        field: "wo_nbr",
+        field: "wo_queue_eff",
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        minWidth: 50,
       },
-      {
-        id: "wo_ord_date",
-        name: "Date",
-        field: "wo_ord_date",
-        sortable: true,
-        filterable: true,
-        type: FieldType.date,
-        minWidth: 150,
-      },
+      // {
+      //   id: "wo_rel_date",
+      //   name: "Date",
+      //   field: "wo_rel_date",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.date,
+      //   minWidth: 150,
+      // },
       {
         id: "wo_ref",
         name: "BOBINE",
@@ -2621,8 +2727,9 @@ autorisation:boolean;
         sortable: true,
         filterable: true,
         type: FieldType.string,
-        minWidth: 150,
+        minWidth: 100,
       },
+
       {
         id: "wo_batch",
         name: "COULEUR",
@@ -2650,21 +2757,30 @@ autorisation:boolean;
         minWidth: 150,
       },
       {
-        id: "wo_status",
-        name: "status",
-        field: "wo_status",
+        id: "wo_vend",
+        name: "Client",
+        field: "wo_vend",
         sortable: true,
         filterable: true,
         type: FieldType.string,
+        minWidth: 150,
       },
-      {
-        id: "wo_routing",
-        name: "status",
-        field: "wo_routing",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
+      // {
+      //   id: "wo_status",
+      //   name: "status",
+      //   field: "wo_status",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },
+      // {
+      //   id: "wo_routing",
+      //   name: "status",
+      //   field: "wo_routing",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },
     ];
 
     this.gridOptions5 = {
@@ -2715,14 +2831,16 @@ autorisation:boolean;
   handleSelectedRowsChanged5(e, args) {
     const controls = this.woForm.controls;
 
-    this.dataset = [];
+    // this.dataset = [];
 
     if (Array.isArray(args.rows) && this.gridObj5) {
       args.rows.map((idx) => {
         const item = this.gridObj5.getDataItem(idx);
         controls.wo_lot.setValue(item.id || "");
-
+this.program = item.wo_so_job;
+this.ordre = "OF-" + item.wo_queue_eff;
         controls.wo_nbr.setValue(item.wo_nbr);
+        controls.wo_vend.setValue(item.wo_vend)
         controls.wo_part.setValue(item.wo_part);
         // controls.tr_so_job.setValue(item.wo_so_job);
         controls.desc.setValue(item.item.pt_desc1);
@@ -2730,70 +2848,73 @@ autorisation:boolean;
         controls.product_color.setValue(item.item.pt_break_cat);
         controls.product_quality.setValue(item.item.pt_rev);
         controls.total_bobine.setValue(item.wo_qty_comp);
+        
+        controls.rest_bobine.setValue(item.wo_qty_ord - item.wo_qty_comp);
         controls.wo_qty_ord.setValue(item.wo_qty_ord)
+        controls.wo_bo_chg.setValue(item.wo_bo_chg)
         controls.product_Cyl.setValue(item.item.pt_group)
         
         //remplir les grids
         controls.wo_nbr.value
         console.log('remplir grid' ,controls.wo_nbr.value)
-        this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
-          (res: any) => {        
-          this.dataset  = res.data;
-          for (let item of this.dataset){
-          this.gridService.addItem(
-            {
-              id: this.dataset.length + 1,
-              tr_line: this.dataset.length + 1,
-              tr_part: item.tr_part,
-              cmvid: "",
-              tr_desc: item.tr_desc,
-              tr__chr02:item.tr__chr02,
-              tr_qty_loc: item.tr_qty_loc,
-              tr_loc: item.tr_loc,
-              tr_effdate: item.tr_effdate,
-              tr_um:item.tr_um,
-              tr_um_conv: 1,
-              tr_price: item.tr_price,
-              cmvids: "",
-              tr_ref: item.tr_ref,
-              tr_serial: item.tr_serial,
-              tr_status: item.tr_status,
-              tr_expire: item.tr_expire,
-              tr_program: item.tr_program,
-            },
-            { position: "bottom" }
+        // this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        //   (res: any) => {        
+        //   this.dataset  = res.data;
+        //   for (let item of this.dataset){
+        //   this.gridService.addItem(
+        //     {
+        //       id: this.dataset.length + 1,
+        //       tr_line: this.dataset.length + 1,
+        //       tr_part: item.tr_part,
+        //       cmvid: "",
+        //       tr_desc: item.tr_desc,
+        //       tr__chr02:item.tr__chr02,
+        //       tr_qty_loc: item.tr_qty_loc,
+        //       tr_loc: item.tr_loc,
+        //       tr_effdate: item.tr_effdate,
+        //       tr_um:item.tr_um,
+        //       tr_um_conv: 1,
+        //       tr_price: item.tr_price,
+        //       cmvids: "",
+        //       tr_ref: item.tr_ref,
+        //       tr_serial: item.tr_serial,
+        //       tr_status: item.tr_status,
+        //       tr_expire: item.tr_expire,
+        //       tr_program: item.tr_program,
+        //     },
+        //     { position: "bottom" }
             
-          )}})
-          console.log('remplir grid' ,controls.wo_nbr.value)
-        this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
-          (res: any) => {        
-          this.sqdataset  = res.data;
-          for (let itemsq of this.sqdataset){
-          this.gridServicesq.addItem(
-            {
-              id: this.dataset.length + 1,
-              tr_line: this.dataset.length + 1,
-              tr_part: itemsq.tr_part,
-              cmvid: "",
-              tr_desc: itemsq.tr_desc,
-              tr__chr02:itemsq.tr__chr02,
-              tr_qty_loc: itemsq.tr_qty_loc,
-              tr_loc: itemsq.tr_loc,
-              tr_effdate: itemsq.tr_effdate,
-              tr_um:itemsq.tr_um,
-              tr_um_conv: 1,
-              tr_price: itemsq.tr_price,
-              cmvids: "",
-              tr_ref: itemsq.tr_ref,
-              tr_serial: itemsq.tr_serial,
-              tr_status: itemsq.tr_status,
-              tr_expire: itemsq.tr_expire,
-              tr_program: itemsq.tr_program,
-            },
-            { position: "bottom" }
+        //   )}})
+        //   console.log('remplir grid' ,controls.wo_nbr.value)
+        // this.inventoryTransactionService.getByRef({tr_domain: this.domain,tr_type:'RJCT-WO',tr_nbr:controls.wo_nbr.value}).subscribe(
+        //   (res: any) => {        
+        //   this.sqdataset  = res.data;
+        //   for (let itemsq of this.sqdataset){
+        //   this.gridServicesq.addItem(
+        //     {
+        //       id: this.dataset.length + 1,
+        //       tr_line: this.dataset.length + 1,
+        //       tr_part: itemsq.tr_part,
+        //       cmvid: "",
+        //       tr_desc: itemsq.tr_desc,
+        //       tr__chr02:itemsq.tr__chr02,
+        //       tr_qty_loc: itemsq.tr_qty_loc,
+        //       tr_loc: itemsq.tr_loc,
+        //       tr_effdate: itemsq.tr_effdate,
+        //       tr_um:itemsq.tr_um,
+        //       tr_um_conv: 1,
+        //       tr_price: itemsq.tr_price,
+        //       cmvids: "",
+        //       tr_ref: itemsq.tr_ref,
+        //       tr_serial: itemsq.tr_serial,
+        //       tr_status: itemsq.tr_status,
+        //       tr_expire: itemsq.tr_expire,
+        //       tr_program: itemsq.tr_program,
+        //     },
+        //     { position: "bottom" }
             
-          )}
-          })
+        //   )}
+        //   })
         
         this.product = item.item;
         this.umd = item.item.pt_um;
@@ -3022,211 +3143,487 @@ autorisation:boolean;
   onPrint() {
     const controls = this.woForm.controls;
 
-    this.printpdf(); 
+    this.printpdf(controls.wo_nbr.value); 
   }
-  printpdf() {
-    // const controls = this.totForm.controls
-    const controls = this.woForm.controls;
-    console.log("pdf");
-    var doc = new jsPDF("l");
-
-    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-    var img = new Image();
+  printpdf(nbr) {
+      // const controls = this.totForm.controls
+      const controls = this.woForm.controls;
+      console.log("pdf");
+      var doc = new jsPDF('l');
+      let date = new Date()
+     
+     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+      var img = new Image()
+      // img.src = "./assets/media/logos/create-direct-wo.png";
+      img.src = "./assets/media/logos/companyentete.png";
+      doc.addImage(img, 'png', 5, 5, 275, 30)
+      doc.setFontSize(10);
+  if(this.exist == true){
+    doc.text(this.docs[0].code_value, 240, 17); 
+    doc.text(this.docs[0].code_cmmt, 70, 22);
+    doc.text(this.docs[0].code_desc, 240, 12);
+    doc.text(this.docs[0].chr01, 40, 22);
+    doc.text(this.docs[0].dec01, 240, 32);
+    doc.text(this.docs[0].date01, 240, 22);
+    doc.text(this.docs[0].date02, 240, 27);
+  }
+  // doc.setFontSize(14);
+    
+      doc.line(10, 35, 200, 35);
+      doc.setFontSize(12);
+      doc.text("Rapport de Production extrusion N° : " + nbr, 70, 45);
+      doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+        doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+        // doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+        if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+        if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+        
+      doc.setFontSize(8);
+      //console.log(this.provider.ad_misc2_id)
+      // doc.text("Machine           : " + this.gamme, 20, 50);
+      //doc.text(" " + this.provider.ad_name, 60, 50);
+      // doc.text("Equipe            : " + this.shift, 120, 50);
+      // doc.text("Type produit      : " + controls.product_type.value, 20, 55);
+      // doc.text("Employés          : " + this.user1, 120, 55);
+      // doc.text("Couleur Produit   : " + controls.product_color.value, 20, 60);
+      doc.text("Quantité sortie   : " + controls.total_bobine.value, 20, 65);
+      doc.text("Squelette sortie   : " + controls.total_squelette.value, 20, 60);
+  doc.setFontSize(8);   
+      doc.line(10, 85, 280, 85);
+      doc.line(10, 90, 280, 90);
+      doc.line(10, 85, 10, 90);
+      doc.text("LN", 12.5, 88.5);
+      doc.line(20, 85, 20, 90);
+      doc.text("Désignation", 21, 88.5);
+      doc.line(95, 85, 95, 90);
+      doc.text("QTE", 96, 88.5);
+      doc.line(105, 85, 105, 90);
+      doc.text("MAX", 106, 88.5);
+      doc.line(125, 85, 125, 90);
+      doc.text("Lot/Série", 126, 88.5);
+      doc.line(145, 85, 145, 90);
+      doc.text("PL", 146, 88.5);
+      doc.line(155, 85, 155, 90);
+      doc.text("Heure", 156, 88.5);
+      doc.line(170, 85, 170, 90);
+      doc.text("SQUELETTE", 171, 88.5);
+      doc.line(215, 85, 215, 90);
+      doc.text("QTE", 216, 88.5);
+      doc.line(235, 85, 235, 90);
+      doc.text("Lot/Série", 236, 88.5);
+      doc.line(255, 85, 255, 90);
+      doc.text("PL", 256, 88.5);
+      doc.line(265, 85, 265, 90);
+      doc.text("Heure", 266, 88.5);
+      doc.line(280, 85, 280, 90);
+      var i = 95;
+      doc.setFontSize(6);
+    //   let total = 0
+    let iter = 0
+    if (this.dataset.length < this.sqdataset.length){iter = this.sqdataset.length}else{iter = this.dataset.length}
+    console.log(this.dataset)
+      for (let j = 0; j < iter  ; j++) {
+        // total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
+        
+        if ((j % 12 == 0) && (j != 0) ) {
+    doc.addPage();
+    //img.src = "./assets/media/logos/create-direct-wo.png";
     img.src = "./assets/media/logos/companyentete.png";
-    //ENTETE DOCUMENT
-    doc.addImage(img, "png", 20, 11, 20, 20);
+    doc.addImage(img, 'png', 5, 5, 275, 30)
+    doc.setFontSize(10);
+    if(this.exist == true){
+      doc.text(this.docs[0].code_value, 240, 17); 
+      doc.text(this.docs[0].code_cmmt, 70, 22);
+      doc.text(this.docs[0].code_desc, 240, 12);
+      doc.text(this.docs[0].chr01, 40, 27);
+      doc.text(this.docs[0].dec01, 240, 32);
+      doc.text(this.docs[0].date01, 240, 22);
+      doc.text(this.docs[0].date02, 240, 27);
+    }
+    // doc.setFontSize(14);
+    doc.line(10, 35, 200, 35);
     doc.setFontSize(12);
-    doc.line(10, 10, 288, 10);
-    doc.line(10, 10, 10, 35);
-    doc.text("SUIVI DE LA PRODUCTION ET CONTROLE QUALITE DES BOBINES   " , 40, 25);
-    doc.line(10, 30, 82, 30);
-    doc.line(82, 10, 82, 35);
-    doc.line(216, 10, 216, 35);
-    doc.setFontSize(8);
-    doc.text("Code: FO-PR-002/02  " , 225, 15);
-    doc.line(216, 20, 288, 20);
-    doc.text("Date: 2024/09/02  " , 225, 25);
-    doc.line(216, 30, 288, 30);
-    doc.text("PAGE  " , 225, 33);
+      doc.text("Rapport de Production extrusion N° : " + nbr, 70, 45);
+      doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+        doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+        // doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+        if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+        if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+        
+      doc.setFontSize(8);
+      //console.log(this.provider.ad_misc2_id)
+      // doc.text("Machine           : " + this.gamme, 20, 50);
+      // doc.text(" " + this.provider.ad_name, 60, 50);
+      // doc.text("Equipe            : " + this.shift, 120, 50);
+      // doc.text("Type produit      : " + controls.product_type.value, 20, 55);
+      // doc.text("Employés          : " + this.user1, 120, 55);
+      // doc.text("Couleur Produit   : " + controls.product_color.value, 20, 60);
+      doc.text("Quantité sortie   : " + controls.total_bobine.value, 20, 65);
+      doc.text("Squelette sortie   : " + controls.total_squelette.value, 20, 60);
+    doc.setFontSize(8);   
+    doc.line(10, 85, 280, 85);
+    doc.line(10, 90, 280, 90);
+    doc.line(10, 85, 10, 90);
+    doc.text("LN", 12.5, 88.5);
+    doc.line(20, 85, 20, 90);
+    doc.text("Désignation", 21, 88.5);
+    doc.line(95, 85, 95, 90);
+    doc.text("QTE", 96, 88.5);
+      doc.line(105, 85, 105, 90);
+    doc.text("MAX", 106, 88.5);
+    doc.line(125, 85, 125, 90);
+    doc.text("Lot/Série", 126, 88.5);
+    doc.line(145, 85, 145, 90);
+    doc.text("PL", 146, 88.5);
+    doc.line(155, 85, 155, 90);
+    doc.text("Heure", 156, 88.5);
+    doc.line(170, 85, 170, 90);
+    doc.text("SQUELETTE", 171, 88.5);
+    doc.line(215, 85, 215, 90);
+    doc.text("QTE", 216, 88.5);
+    doc.line(235, 85, 235, 90);
+    doc.text("Lot/Série", 236, 88.5);
+    doc.line(255, 85, 255, 90);
+    doc.text("PL", 256, 88.5);
+    doc.line(265, 85, 265, 90);
+    doc.text("Heure", 266, 88.5);
+    doc.line(280, 85, 280, 90);
+          i = 95;
+          doc.setFontSize(6);
+        }
+        let squelette = ""
+        if (j < this.sqdataset.length){squelette = this.sqdataset[j].tr_desc.substring(24)}
+        if (j < this.dataset.length){
+          if (this.dataset[j].tr_desc.length > 45) {
+            let desc1 = this.dataset[j].tr_desc.substring(45);
+            let ind = desc1.indexOf(" ");
+            desc1 = this.dataset[j].tr_desc.substring(0, 45 + ind);
+            let desc2 = this.dataset[j].tr_desc.substring(45 + ind);
+            
+            doc.line(10, i - 5, 10, i);
+            doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+            doc.line(20, i - 5, 20, i);
+            doc.text(desc1, 21, i - 1);
+            doc.line(105, i - 5, 105, i);
+            doc.text(String(Number(this.dataset[j].tr_qty_loc)), 104, i - 1, { align: "right" });
+            doc.line(105, i - 5, 105, i);
+            doc.text(String(Number(controls.wo_bo_chg.value)), 124, i - 1, { align: "right" });
+            doc.line(125, i - 5, 125, i);
+            doc.text(String(this.dataset[j].tr_serial), 126, i - 1, );
+            doc.line(145, i - 5, 145, i);
+            doc.text(String(this.dataset[j].tr_ref), 146, i - 1, );
+            doc.line(155, i - 5, 155, i);
+            doc.text(String(this.dataset[j].tr_program), 156, i - 1, );
+            doc.line(170, i - 5, 170, i);
+            doc.text(squelette, 171, i - 1);
+            doc.line(215, i - 5, 215, i);
+            if (j < this.sqdataset.length){doc.text(String(Number(this.sqdataset[j].tr_qty_loc)), 234, i - 1, { align: "right" });}
+            doc.line(235, i - 5, 235, i);
+            if (j < this.sqdataset.length){doc.text(String(this.sqdataset[j].tr_serial), 236, i - 1, );}
+            doc.line(255, i - 5, 255, i);
+            if (j < this.sqdataset.length){doc.text(String(this.sqdataset[j].tr_ref), 256, i - 1, );}
+            doc.line(265, i - 5, 265, i);
+            if (j < this.sqdataset.length){doc.text(String(this.sqdataset[j].tr_program), 266, i - 1, );}
+            doc.line(280, i - 5, 280, i);
+            // doc.line(10, i, 200, i );
+      
+            i = i + 5;
+      
+            doc.text(desc2, 21, i - 1);
+      
+            doc.line(10, i - 5, 10, i);
+            doc.line(20, i - 5, 20, i);
+            doc.line(105, i - 5, 105, i);
+            doc.line(125, i - 5, 125, i);
+            doc.line(145, i - 5, 145, i);
+            doc.line(155, i - 5, 155, i);
+            doc.line(170, i - 5, 170, i);
+            doc.line(215, i - 5, 215, i);
+            doc.line(235, i - 5, 235, i);
+            doc.line(255, i - 5, 255, i);
+            doc.line(265, i - 5, 265, i);
+            doc.line(280, i - 5, 280, i);
+            doc.line(10, i, 280, i );
+            i = i + 5;
+          } else {
+            doc.line(10, i - 5, 10, i);
+            doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+            doc.line(20, i - 5, 20, i);
+            doc.text(this.dataset[j].tr_desc, 21, i - 1);
+            doc.line(105, i - 5, 105, i);
+            doc.text(String(Number(this.dataset[j].tr_qty_loc)), 106, i - 1, { align: "right" });
+            doc.line(125, i - 5, 125, i);
+            doc.text(String(this.dataset[j].tr_serial), 126, i - 1, );
+            doc.line(145, i - 5, 145, i);
+            doc.text(String(this.dataset[j].tr_ref), 146, i - 1, );
+            doc.line(155, i - 5, 155, i);
+            doc.text(String(this.dataset[j].tr_program), 156, i - 1, );
+            doc.line(170, i - 5, 170, i);
+            doc.text(squelette, 171, i - 1);
+            doc.line(215, i - 5, 215, i);
+            doc.text(String(Number(this.sqdataset[j].tr_qty_loc)), 234, i - 1, { align: "right" });
+            doc.line(235, i - 5, 235, i);
+            doc.text(String(this.sqdataset[j].tr_serial), 236, i - 1, );
+            doc.line(255, i - 5, 255, i);
+            doc.text(String(this.sqdataset[j].tr_ref), 256, i - 1, );
+            doc.line(265, i - 5, 265, i);
+            doc.text(String(this.sqdataset[j].tr_program), 266, i - 1, );
+            doc.line(280, i - 5, 280, i);
+            doc.line(10, i, 280, i );
+            i = i + 5;
+            
+          }
+        }
+        else{
+          doc.line(10, i - 5, 10, i);
+            doc.text(String("000" + this.sqdataset[j].tr_line).slice(-3), 12.5, i - 1);
+            doc.line(20, i - 5, 20, i);
+            // doc.text(this.dataset[j].tr_desc, 21, i - 1);
+            doc.line(105, i - 5, 105, i);
+            // doc.text(String(Number(this.dataset[j].tr_qty_loc)), 106, i - 1, { align: "right" });
+            doc.line(125, i - 5, 125, i);
+            // doc.text(String(this.dataset[j].tr_serial), 126, i - 1, );
+            doc.line(145, i - 5, 145, i);
+            // doc.text(String(this.dataset[j].tr_ref), 146, i - 1, );
+            doc.line(155, i - 5, 155, i);
+            // doc.text(String(this.dataset[j].tr_program), 156, i - 1, );
+            doc.line(170, i - 5, 170, i);
+            doc.text(squelette, 171, i - 1);
+            doc.line(215, i - 5, 215, i);
+            doc.text(String(Number(this.sqdataset[j].tr_qty_loc)), 234, i - 1, { align: "right" });
+            doc.line(235, i - 5, 235, i);
+            doc.text(String(this.sqdataset[j].tr_serial), 236, i - 1, );
+            doc.line(255, i - 5, 255, i);
+            doc.text(String(this.sqdataset[j].tr_ref), 256, i - 1, );
+            doc.line(265, i - 5, 265, i);
+            doc.text(String(this.sqdataset[j].tr_program), 266, i - 1, );
+            doc.line(280, i - 5, 280, i);
+            doc.line(10, i, 280, i );
+            i = i + 5;
+        }
+      }
     
-    doc.text("type : Formulaire" , 11, 33);
-    doc.line(10, 35, 288, 35);
-    doc.line(288, 10, 288, 35);
-    doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
-    doc.setFontSize(8);
+      
+    
+      // doc.line(130, i + 7, 205, i + 7);
+      // doc.line(130, i + 14, 205, i + 14);
+      // doc.line(130, i + 7, 130, i + 14);
+      // doc.line(160, i + 7, 160, i + 14);
+      // doc.line(205, i + 7, 205, i + 14);
+      // doc.setFontSize(10);
+      // doc.text("Validé par: " , 20, i + 22);
+      // doc.text("Note: " , 20, i + 32);
+     
+      doc.setFontSize(8);
+      doc.save('EB-' + nbr + '.pdf')
+      var blob = doc.output("blob");
+      window.open(URL.createObjectURL(blob));
+    } 
+  // printpdf() {
+  //   // const controls = this.totForm.controls
+  //   const controls = this.woForm.controls;
+  //   console.log("pdf");
+  //   var doc = new jsPDF("l");
+  //   var nbr1 = new Date().toLocaleDateString()
+  //   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+  //   var img = new Image();
+  //   // img.src = "./assets/media/logos/create-bobine-wo.png";
+  //   img.src = "./assets/media/logos/companyentete.png";
+  //   doc.addImage(img, 'png', 5, 5, 200, 30)
+  //   //ENTETE DOCUMENT
+  //   // doc.addImage(img, "png", 20, 11, 20, 20);
+  //   // doc.setFontSize(12);
+  //   // doc.line(10, 10, 288, 10);
+  //   // doc.line(10, 10, 10, 35);
+  //   // doc.text("SUIVI DE LA PRODUCTION ET CONTROLE QUALITE DES BOBINES   "  + nbr1, 40, 25);
+  //   // doc.line(10, 30, 82, 30);
+  //   // doc.line(82, 10, 82, 35);
+  //   // doc.line(216, 10, 216, 35);
+  //   // doc.setFontSize(8);
+  //   // doc.text("Code: FO-PR-002/02  " , 225, 15);
+  //   // doc.line(216, 20, 288, 20);
+  //   // doc.text("Date: 2024/09/02  " , 225, 25);
+  //   // doc.line(216, 30, 288, 30);
+  //   // doc.text("PAGE  " , 225, 33);
+    
+  //   // doc.text("type : Formulaire" , 11, 33);
+  //   // doc.line(10, 35, 288, 35);
+  //   // doc.line(288, 10, 288, 35);
+  //   // doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
+  //   doc.setFontSize(8);
     
     
-    // TABLEAU 2 
-    doc.line(0, 45, 300, 45);
-    doc.line(0, 50, 300, 50);
-    doc.line(0, 45, 0, 50);
-    doc.text("DIMENSION", 1, 48.5);
-    doc.line(14, 45, 14, 50);
-    doc.text("COULEUR", 20, 48.5);
-    doc.line(41, 45, 41, 50);
-    doc.text("HEURE", 42, 48.5);
-    doc.line(49, 45, 49, 50);
-    doc.text("NUM BOB", 50, 48.5);
-    doc.line(63, 45, 63, 50);
-    doc.text("REF BOBINE", 64, 48.5);
-    doc.line(77, 45, 77, 50);
-    doc.text("KG", 45, 48.5);
-    doc.line(91, 45, 91, 50);
-    doc.text("C/NC", 95, 48.5);
-    doc.line(118, 45, 118, 50);
-    doc.text("N° PALETTE", 119, 48.5);
-    doc.line(126, 45, 126, 50);
-    doc.text("KG PALETTE", 129, 48.5);
-    doc.line(142, 45, 142, 50);
-    doc.text("REF SQUELETTE", 143, 48.5);
-    doc.line(154, 45, 154, 50);
-    doc.text("KG SQUELETTE", 157, 48.5);
-    doc.line(166, 45, 166, 50);
-    doc.text("HEURE", 170, 48.5);
-    doc.line(189, 45, 189, 50);
-    doc.text("BARRE FILTRE", 190, 48.5);
-    doc.line(197, 45, 197, 50);
-    doc.text("BARRE CONSOMMATION", 198, 48.5);
-    doc.line(209, 45, 209, 50);
-    doc.text("COUCHE", 210, 48.5);
-    doc.line(221, 45, 221, 50);
-    doc.text("QTE FILTRE", 222, 48.5);
-    doc.line(235, 45, 235, 50);
-    doc.text("COUCHE SIL", 241, 48.5);
-    doc.line(267, 45, 267, 50);
-    doc.text("DEBIT COLORANT", 268, 48.5);
-    doc.line(275, 45, 275, 50);
-    doc.line(0, 50, 300, 50);
+  //   // TABLEAU 2 
+  //   doc.line(0, 45, 300, 45);
+  //   doc.line(0, 50, 300, 50);
+  //   doc.line(0, 45, 0, 50);
+  //   doc.text("DIMENSION", 1, 48.5);
+  //   doc.line(14, 45, 14, 50);
+  //   doc.text("COULEUR", 20, 48.5);
+  //   doc.line(41, 45, 41, 50);
+  //   doc.text("HEURE", 42, 48.5);
+  //   doc.line(49, 45, 49, 50);
+  //   doc.text("NUM BOB", 50, 48.5);
+  //   doc.line(63, 45, 63, 50);
+  //   doc.text("REF BOBINE", 64, 48.5);
+  //   doc.line(77, 45, 77, 50);
+  //   doc.text("KG", 45, 48.5);
+  //   doc.line(91, 45, 91, 50);
+  //   doc.text("C/NC", 95, 48.5);
+  //   doc.line(118, 45, 118, 50);
+  //   doc.text("N° PALETTE", 119, 48.5);
+  //   doc.line(126, 45, 126, 50);
+  //   doc.text("KG PALETTE", 129, 48.5);
+  //   doc.line(142, 45, 142, 50);
+  //   doc.text("REF SQUELETTE", 143, 48.5);
+  //   doc.line(154, 45, 154, 50);
+  //   doc.text("KG SQUELETTE", 157, 48.5);
+  //   doc.line(166, 45, 166, 50);
+  //   doc.text("HEURE", 170, 48.5);
+  //   doc.line(189, 45, 189, 50);
+  //   doc.text("BARRE FILTRE", 190, 48.5);
+  //   doc.line(197, 45, 197, 50);
+  //   doc.text("BARRE CONSOMMATION", 198, 48.5);
+  //   doc.line(209, 45, 209, 50);
+  //   doc.text("COUCHE", 210, 48.5);
+  //   doc.line(221, 45, 221, 50);
+  //   doc.text("QTE FILTRE", 222, 48.5);
+  //   doc.line(235, 45, 235, 50);
+  //   doc.text("COUCHE SIL", 241, 48.5);
+  //   doc.line(267, 45, 267, 50);
+  //   doc.text("DEBIT COLORANT", 268, 48.5);
+  //   doc.line(275, 45, 275, 50);
+  //   doc.line(0, 50, 300, 50);
     
 
-    var i = 95;
+  //   var i = 95;
     
-    doc.setFontSize(6);
+  //   doc.setFontSize(6);
     
-    for (let j = 0; j < this.dataset.length; j++) {
-      if (i > 170){
-        doc.addPage();
-        //ENTETE DOCUMENT
-        doc.addImage(img, "png", 20, 11, 20, 20);
-        doc.setFontSize(12);
-        doc.line(10, 10, 288, 10);
-        doc.line(10, 10, 10, 35);
-        doc.text("SUIVI DE LA PRODUCTION ET CONTROLE QUALITE DES BOBINES   " , 40, 25);
-        doc.line(10, 30, 82, 30);
-        doc.line(82, 10, 82, 35);
-        doc.line(216, 10, 216, 35);
-        doc.setFontSize(8);
-        doc.text("Code: FO-PR-002/02  " , 225, 15);
-        doc.line(216, 20, 288, 20);
-        doc.text("Date: 2024/09/02  " , 225, 25);
-        doc.line(216, 30, 288, 30);
-        doc.text("PAGE  " , 225, 33);
+  //   for (let j = 0; j < this.dataset.length; j++) {
+  //     if (i > 170){
+  //       doc.addPage();
+  //       //ENTETE DOCUMENT
+  //       doc.addImage(img, "png", 20, 11, 20, 20);
+  //       doc.setFontSize(12);
+  //       doc.line(10, 10, 288, 10);
+  //       doc.line(10, 10, 10, 35);
+  //       doc.text("SUIVI DE LA PRODUCTION ET CONTROLE QUALITE DES BOBINES   " + nbr1 , 40, 25);
+  //       doc.line(10, 30, 82, 30);
+  //       doc.line(82, 10, 82, 35);
+  //       doc.line(216, 10, 216, 35);
+  //       doc.setFontSize(8);
+  //       doc.text("Code: FO-PR-002/02  " , 225, 15);
+  //       doc.line(216, 20, 288, 20);
+  //       doc.text("Date: 2024/09/02  " , 225, 25);
+  //       doc.line(216, 30, 288, 30);
+  //       doc.text("PAGE  " , 225, 33);
         
-        doc.text("type : Formulaire" , 11, 33);
-        doc.line(10, 35, 288, 35);
-        doc.line(288, 10, 288, 35);
-        doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
-        doc.setFontSize(8);
+  //       doc.text("type : Formulaire" , 11, 33);
+  //       doc.line(10, 35, 288, 35);
+  //       doc.line(288, 10, 288, 35);
+  //       doc.text("Date : " + String(new Date().getFullYear()) + "/" + String(Number(new Date().getMonth()) + 1) + "/" + new Date().getDate() , 11, 38);
+  //       doc.setFontSize(8);
         
         
-        // TABLEAU 2 
-        doc.line(0, 45, 300, 45);
-        doc.line(0, 50, 300, 50);
-        doc.line(0, 45, 0, 50);
-        doc.text("DIMENSION", 1, 48.5);
-        doc.line(14, 45, 14, 50);
-        doc.text("COULEUR", 20, 48.5);
-        doc.line(41, 45, 41, 50);
-        doc.text("HEURE", 42, 48.5);
-        doc.line(49, 45, 49, 50);
-        doc.text("NUM BOB", 50, 48.5);
-        doc.line(63, 45, 63, 50);
-        doc.text("REF BOBINE", 64, 48.5);
-        doc.line(77, 45, 77, 50);
-        doc.text("KG", 45, 48.5);
-        doc.line(91, 45, 91, 50);
-        doc.text("C/NC", 95, 48.5);
-        doc.line(118, 45, 118, 50);
-        doc.text("N° PALETTE", 119, 48.5);
-        doc.line(126, 45, 126, 50);
-        doc.text("KG PALETTE", 129, 48.5);
-        doc.line(142, 45, 142, 50);
-        doc.text("REF SQUELETTE", 143, 48.5);
-        doc.line(154, 45, 154, 50);
-        doc.text("KG SQUELETTE", 157, 48.5);
-        doc.line(166, 45, 166, 50);
-        doc.text("HEURE", 170, 48.5);
-        doc.line(189, 45, 189, 50);
-        doc.text("BARRE FILTRE", 190, 48.5);
-        doc.line(197, 45, 197, 50);
-        doc.text("BARRE CONSOMMATION", 198, 48.5);
-        doc.line(209, 45, 209, 50);
-        doc.text("COUCHE", 210, 48.5);
-        doc.line(221, 45, 221, 50);
-        doc.text("QTE FILTRE", 222, 48.5);
-        doc.line(235, 45, 235, 50);
-        doc.text("COUCHE SIL", 241, 48.5);
-        doc.line(267, 45, 267, 50);
-        doc.text("DEBIT COLORANT", 268, 48.5);
-        doc.line(275, 45, 275, 50);
-        doc.line(0, 50, 300, 50);
+  //       // TABLEAU 2 
+  //       doc.line(0, 45, 300, 45);
+  //       doc.line(0, 50, 300, 50);
+  //       doc.line(0, 45, 0, 50);
+  //       doc.text("DIMENSION", 1, 48.5);
+  //       doc.line(14, 45, 14, 50);
+  //       doc.text("COULEUR", 20, 48.5);
+  //       doc.line(41, 45, 41, 50);
+  //       doc.text("HEURE", 42, 48.5);
+  //       doc.line(49, 45, 49, 50);
+  //       doc.text("NUM BOB", 50, 48.5);
+  //       doc.line(63, 45, 63, 50);
+  //       doc.text("REF BOBINE", 64, 48.5);
+  //       doc.line(77, 45, 77, 50);
+  //       doc.text("KG", 45, 48.5);
+  //       doc.line(91, 45, 91, 50);
+  //       doc.text("C/NC", 95, 48.5);
+  //       doc.line(118, 45, 118, 50);
+  //       doc.text("N° PALETTE", 119, 48.5);
+  //       doc.line(126, 45, 126, 50);
+  //       doc.text("KG PALETTE", 129, 48.5);
+  //       doc.line(142, 45, 142, 50);
+  //       doc.text("REF SQUELETTE", 143, 48.5);
+  //       doc.line(154, 45, 154, 50);
+  //       doc.text("KG SQUELETTE", 157, 48.5);
+  //       doc.line(166, 45, 166, 50);
+  //       doc.text("HEURE", 170, 48.5);
+  //       doc.line(189, 45, 189, 50);
+  //       doc.text("BARRE FILTRE", 190, 48.5);
+  //       doc.line(197, 45, 197, 50);
+  //       doc.text("BARRE CONSOMMATION", 198, 48.5);
+  //       doc.line(209, 45, 209, 50);
+  //       doc.text("COUCHE", 210, 48.5);
+  //       doc.line(221, 45, 221, 50);
+  //       doc.text("QTE FILTRE", 222, 48.5);
+  //       doc.line(235, 45, 235, 50);
+  //       doc.text("COUCHE SIL", 241, 48.5);
+  //       doc.line(267, 45, 267, 50);
+  //       doc.text("DEBIT COLORANT", 268, 48.5);
+  //       doc.line(275, 45, 275, 50);
+  //       doc.line(0, 50, 300, 50);
 
-        i = 95;
+  //       i = 95;
     
-      }  
-        doc.text(this.dataset[j].PAYREF, 1, i - 1);
-        doc.line(14, i - 5, 14, i);
-        doc.text(this.dataset[j].PAYCOLOR, 15, i - 1);
-        doc.line(41, i - 5, 41, i);
-        doc.text(String((this.dataset[j].PAYQTY)), 42, i - 1);
-        doc.line(49, i - 5, 49, i);
-        doc.text(this.dataset[j].PAYTIME, 50, i - 1);
-        doc.line(63, i - 5, 63, i);
-        doc.text(this.dataset[j].PAYDEBIT, 64, i - 1);
-        doc.line(77, i - 5, 77, i);
-        doc.text(String(this.dataset[j].SQLREF), 78, i - 1);
-        doc.line(91, i - 5, 91, i);
-        doc.text(String(this.dataset[j].SQLCOLOR), 92, i - 1);
-        doc.line(118, i - 5, 118, i);
-        doc.text(String((this.dataset[j].SQLQTY)), 119, i - 1);
-        doc.line(126, i - 5, 126, i);
-        doc.text(this.dataset[j].SQLTIME, 127, i - 1);
-        doc.line(142, i - 5, 142, i);
-        doc.text(this.dataset[j].SQLDEBIT, 143, i - 1);
-        doc.line(154, i - 5, 154, i);
-        doc.text(String(this.dataset[j].PREREF), 155, i - 1);
-        doc.line(166, i - 5, 166, i);
-        doc.text(String(this.dataset[j].PRECOLOR), 167, i - 1);
-        doc.line(189, i - 5, 189, i);
-        doc.text(String((this.dataset[j].PREQTY)), 190, i - 1);
-        doc.line(197, i - 5, 197, i);
-        doc.text(this.dataset[j].PRETIME, 198, i - 1);
-        doc.line(209, i - 5, 209, i);
-        doc.text(this.dataset[j].PREDEBIT, 210, i - 1);
-        doc.line(221, i - 5, 221, i);
-        doc.text(String(this.dataset[j].ORGREF), 222, i - 1);
-        doc.line(235, i - 5, 235, i);
-        doc.text(String(this.dataset[j].ORGCOLOR), 236, i - 1);
-        doc.line(267, i - 5, 267, i);
-        doc.text(String((this.dataset[j].ORGQTY)), 268, i - 1);
-        doc.line(275, i - 5, 275, i);
-        doc.text(this.dataset[j].ORGTIME, 278, i - 1);
-        doc.line(289, i - 5, 289, i);
-        doc.text(this.dataset[j].ORGDEBIT, 265, i - 1);
-        doc.line(0, i , 300, i);
-        // doc.line(288, i - 5, 288, i);
-        i = i + 5;
+  //     }  
+  //       doc.text(this.dataset[j].PAYREF, 1, i - 1);
+  //       doc.line(14, i - 5, 14, i);
+  //       doc.text(this.dataset[j].PAYCOLOR, 15, i - 1);
+  //       doc.line(41, i - 5, 41, i);
+  //       doc.text(String((this.dataset[j].PAYQTY)), 42, i - 1);
+  //       doc.line(49, i - 5, 49, i);
+  //       doc.text(this.dataset[j].PAYTIME, 50, i - 1);
+  //       doc.line(63, i - 5, 63, i);
+  //       doc.text(this.dataset[j].PAYDEBIT, 64, i - 1);
+  //       doc.line(77, i - 5, 77, i);
+  //       doc.text(String(this.dataset[j].SQLREF), 78, i - 1);
+  //       doc.line(91, i - 5, 91, i);
+  //       doc.text(String(this.dataset[j].SQLCOLOR), 92, i - 1);
+  //       doc.line(118, i - 5, 118, i);
+  //       doc.text(String((this.dataset[j].SQLQTY)), 119, i - 1);
+  //       doc.line(126, i - 5, 126, i);
+  //       doc.text(this.dataset[j].SQLTIME, 127, i - 1);
+  //       doc.line(142, i - 5, 142, i);
+  //       doc.text(this.dataset[j].SQLDEBIT, 143, i - 1);
+  //       doc.line(154, i - 5, 154, i);
+  //       doc.text(String(this.dataset[j].PREREF), 155, i - 1);
+  //       doc.line(166, i - 5, 166, i);
+  //       doc.text(String(this.dataset[j].PRECOLOR), 167, i - 1);
+  //       doc.line(189, i - 5, 189, i);
+  //       doc.text(String((this.dataset[j].PREQTY)), 190, i - 1);
+  //       doc.line(197, i - 5, 197, i);
+  //       doc.text(this.dataset[j].PRETIME, 198, i - 1);
+  //       doc.line(209, i - 5, 209, i);
+  //       doc.text(this.dataset[j].PREDEBIT, 210, i - 1);
+  //       doc.line(221, i - 5, 221, i);
+  //       doc.text(String(this.dataset[j].ORGREF), 222, i - 1);
+  //       doc.line(235, i - 5, 235, i);
+  //       doc.text(String(this.dataset[j].ORGCOLOR), 236, i - 1);
+  //       doc.line(267, i - 5, 267, i);
+  //       doc.text(String((this.dataset[j].ORGQTY)), 268, i - 1);
+  //       doc.line(275, i - 5, 275, i);
+  //       doc.text(this.dataset[j].ORGTIME, 278, i - 1);
+  //       doc.line(289, i - 5, 289, i);
+  //       doc.text(this.dataset[j].ORGDEBIT, 265, i - 1);
+  //       doc.line(0, i , 300, i);
+  //       // doc.line(288, i - 5, 288, i);
+  //       i = i + 5;
 
       
-    }
+  //   }
    
     
     
     
-    let nbr = String(new Date().getFullYear()+"/" + Number(new Date().getMonth() + 1) + "/" + Number(new Date().getDate()))
-    doc.save('RX-' + nbr + '.pdf')
-    var blob = doc.output("blob");
-    window.open(URL.createObjectURL(blob));
+  //   let nbr = String(new Date().getFullYear()+"-" + Number(new Date().getMonth() + 1) + "-" + Number(new Date().getDate()))
+  //   doc.save('RX-' + nbr + '.pdf')
+  //   var blob = doc.output("blob");
+  //   window.open(URL.createObjectURL(blob));
     
-  } 
+  // } 
 }

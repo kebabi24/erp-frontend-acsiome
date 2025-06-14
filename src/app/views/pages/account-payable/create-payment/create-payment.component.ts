@@ -149,7 +149,7 @@ export class CreatePaymentComponent implements OnInit {
   message = "";
   details: any;
   datasetPrint = [];
-  ap_cr_terms: any[] = [];
+  ap_cr_termss: any[] = [];
   detail = [];
   invoice: any[];
   user;
@@ -188,7 +188,17 @@ export class CreatePaymentComponent implements OnInit {
     config.autoClose = true;
       this.codeService
         .getBy({ code_fldname: "check_form" })
-        .subscribe((response: any) => (this.ap_cr_terms = response.data));
+        .subscribe((response: any) => {
+          const { data } = response;
+          this.ap_cr_termss = data;
+          if (!data) {
+            this.message = "veuillez verifier votre connexion";
+            this.hasFormErrors = true;
+            return;
+            // controls.wo_site.setValue("");
+          }
+        });
+        console.log(this.ap_cr_termss)
       this.configService.getOne( 1 ).subscribe(
         (resp: any) => {
           console.log(resp.data)
@@ -563,6 +573,20 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
     this.createForm();
+    this.codeService
+    .getBy({ code_fldname: "check_form" })
+    .subscribe((response: any) => {
+      const { data } = response;
+      this.ap_cr_termss = data;
+      if (!data) {
+        this.message = "veuillez verifier votre connexion";
+        this.hasFormErrors = true;
+        return;
+        // controls.wo_site.setValue("");
+      }
+    });
+    console.log(this.ap_cr_termss)
+ 
   }
 
   
@@ -591,7 +615,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
         }],
         
         ap_curr:  [{value: this.accountPayable.ap_curr ,disabled: !this.isExistc }, Validators.required],
-        ap_cr_terms: [{value: this.accountPayable.ap_cr_terms ,disabled: !this.isExistc }, Validators.required],
+        ap_cr_terms: [{value: this.accountPayable.ap_cr_terms ,disabled: !this.isExistc }],
        // ap_type:  [{value: this.accountPayable.ap_type ,disabled: !this.isExistc }, Validators.required],
         ap_batch:  [{value: 0 , disabled: !this.isExistc }],
         ap_amt:  [{value: 0 , disabled: !this.isExistc }],
@@ -713,7 +737,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
                     //console.log("jjjjjj",res.data)
                     controls.bank_name.setValue(res.data.bank.bk_desc || "")
                     controls.ap_entity.setValue(res.data.bank.bk_entity || "")
-                    this.ap_cr_terms = res.data.details
+                    this.ap_cr_termss = res.data.details
          
                   })
                   this.bankService
@@ -1095,7 +1119,7 @@ onChangeBank(){
           controls.ap_dy_code.setValue(res.data.details[0].bkd_dy_code || "")
           controls.ap_cr_terms.setValue(res.data.details[0].bkd_pay_method || "")
                    
-          this.ap_cr_terms = res.data.details
+          this.ap_cr_termss = res.data.details
           } else {
             this.layoutUtilsService.showActionNotification(
         
@@ -1119,7 +1143,8 @@ onChangeBank(){
 }
 onChangePM(){
   const controls = this.apForm.controls // chof le champs hada wesh men form rah
-  const bkd_pay_method  = controls.ap_cr_terms.value ;      
+ const terms = controls.ap_cr_terms.value
+  console.log(terms)  
   this.bankService
   .getAllDetails({bkd_bank: controls.ap_bank.value,
                   bkd_module: "AP",
@@ -1275,7 +1300,7 @@ handleSelectedRowsChangedbill(e, args) {
                    
                     controls.bank_name.setValue(res.data.bank.bk_desc || "")
                     controls.ap_entity.setValue(res.data.bank.bk_entity || "")
-                    this.ap_cr_terms = res.data.details
+                    this.ap_cr_termss = res.data.details
          
                   })
                   this.bankService
@@ -1686,8 +1711,8 @@ oncreateGL() {
           glt_sub: this.provider.vd_act_sub,
           glt_cc: this.provider.vd_act_cc,
           glt_dy_code: controls.ap_dy_code.value ,
-          glt_curr_amt: - controls.ap_amt.value * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value) ,
-          glt_amt:   - controls.ap_amt.value,
+          glt_curr_amt:  controls.ap_amt.value * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value) ,
+          glt_amt:    controls.ap_amt.value,
           
 
         } ,
@@ -1706,7 +1731,14 @@ oncreateGL() {
     
   //  console.log(resp.data.bank)
    
-    if (Number( controls.ap_amt.value) * 1 / 100 > 10000  ) { this.timbre = 10000} else { this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
+    if (Number( controls.ap_amt.value) > 100000  ) { this.timbre =  Number( controls.ap_amt.value) * 2 / 100 }
+    else{
+      if (Number( controls.ap_amt.value) > 30000  ) { this.timbre =  Number( controls.ap_amt.value) * 1.5 / 100 }
+      else{this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
+    
+      
+    }
+    if(Number(this.timbre) < 5){this.timbre = 5}
     this.gridServicecf.addItem(
             {
                 id: i + 1,
@@ -1716,8 +1748,8 @@ oncreateGL() {
                 glt_desc: resp.data[0].code_value,
                 glt_acct: resp.data[0].chr01,
                 glt_dy_code: controls.ap_dy_code.value ,
-                glt_curr_amt:  Number(this.timbre) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value) ,
-                glt_amt:    this.timbre,
+                glt_curr_amt:  - Number(this.timbre) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value) ,
+                glt_amt:   - this.timbre,
                 
       
               } ,
@@ -1750,8 +1782,8 @@ this.gridServicecf.addItem(
             glt_sub: this.bank.bk_pip_sub,
             glt_cc: this.bank.bk_pip_cc,
             glt_dy_code: controls.ap_dy_code.value ,
-            glt_curr_amt:  (this.timbre + controls.ap_amt.value) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-            glt_amt:   this.timbre + controls.ap_amt.value,
+            glt_curr_amt: -  ((this.timbre + controls.ap_amt.value) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value)),
+            glt_amt: -  (this.timbre + controls.ap_amt.value),
             
   
           } ,
@@ -1779,8 +1811,8 @@ this.gridServicecf.addItem(
                 glt_sub: this.provider.vd_ap_sub,
                 glt_cc: this.provider.vd_ap_cc,
                 glt_dy_code: controls.ap_dy_code.value ,
-                glt_curr_amt: - (Number(controls.ap_amt.value) - this.rest) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-                glt_amt:   - (Number(controls.ap_amt.value) - this.rest),
+                glt_curr_amt:  (Number(controls.ap_amt.value) - this.rest) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
+                glt_amt:    (Number(controls.ap_amt.value) - this.rest),
                 
       
               } ,
@@ -1798,8 +1830,8 @@ this.gridServicecf.addItem(
                   glt_sub: this.provider.vd_act_sub,
                   glt_cc: this.provider.vd_act_cc,
                   glt_dy_code: controls.ap_dy_code.value ,
-                  glt_curr_amt: - this.rest * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-                  glt_amt:   - this.rest,
+                  glt_curr_amt:  this.rest * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
+                  glt_amt:    this.rest,
           
                 } ,
              
@@ -1816,8 +1848,8 @@ this.gridServicecf.addItem(
                       glt_sub: this.provider.vd_act_sub,
                       glt_cc: this.provider.vd_act_cc,
                       glt_dy_code: controls.ap_dy_code.value ,
-                      glt_curr_amt: - this.rest * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-                      glt_amt:   - this.rest,
+                      glt_curr_amt:  this.rest * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
+                      glt_amt:    this.rest,
               
                     } ,
                  
@@ -1836,8 +1868,16 @@ this.gridServicecf.addItem(
             
           //  console.log(resp.data.bank)
            
-            if (Number( controls.ap_amt.value) * 1 / 100 > 10000  ) { this.timbre = 10000} else { this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
-            this.gridServicecf.addItem(
+            
+    if (Number( controls.ap_amt.value) > 100000  ) { this.timbre =  Number( controls.ap_amt.value) * 2 / 100 }
+    else{
+      if (Number( controls.ap_amt.value) > 30000  ) { this.timbre =  Number( controls.ap_amt.value) * 1.5 / 100 }
+      else{this.timbre =  Number( controls.ap_amt.value) * 1 / 100 }
+    
+      
+    }
+    if(Number(this.timbre) < 5){this.timbre = 5}
+    this.gridServicecf.addItem(
                     {
                         id: i + 1,
                         glt_line: i + 1,
@@ -1846,8 +1886,8 @@ this.gridServicecf.addItem(
                         glt_desc: resp.data[0].code_value,
                         glt_acct: resp.data[0].chr01,
                         glt_dy_code: controls.ap_dy_code.value ,
-                        glt_curr_amt:  Number(this.timbre) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value) ,
-                        glt_amt:   this.timbre,
+                        glt_curr_amt: - Number(this.timbre) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value) ,
+                        glt_amt:  - this.timbre,
                         
               
                       } ,
@@ -1881,8 +1921,8 @@ this.gridServicecf.addItem(
                   glt_sub: this.bank.bk_pip_sub,
                   glt_cc: this.bank.bk_pip_cc,
                   glt_dy_code: controls.ap_dy_code.value ,
-                  glt_curr_amt:   (this.timbre + controls.ap_amt.value) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-                  glt_amt:    this.timbre + controls.ap_amt.value,
+                  glt_curr_amt:   -((this.timbre + controls.ap_amt.value) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value)),
+                  glt_amt:    -(this.timbre + controls.ap_amt.value),
                   
         
                 } ,
@@ -1901,8 +1941,8 @@ this.gridServicecf.addItem(
                   glt_sub: this.provider.vd_ap_sub,
                   glt_cc: this.provider.vd_ap_cc,
                   glt_dy_code: controls.ap_dy_code.value ,
-                  glt_curr_amt: - (Number(controls.ap_amt.value) - this.rest) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-                  glt_amt:   - (Number(controls.ap_amt.value) - this.rest),
+                  glt_curr_amt:  (Number(controls.ap_amt.value) - this.rest) * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
+                  glt_amt:    (Number(controls.ap_amt.value) - this.rest),
                   
         
                 } ,
@@ -1929,8 +1969,8 @@ this.gridServicecf.addItem(
                   glt_sub: this.bank.bk_pip_sub,
                   glt_cc: this.bank.bk_pip_cc,
                   glt_dy_code: controls.ap_dy_code.value ,
-                  glt_curr_amt:   controls.ap_amt.value * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value),
-                  glt_amt:    controls.ap_amt.value,
+                  glt_curr_amt:  -( controls.ap_amt.value * (controls.ap_ex_rate2.value / controls.ap_ex_rate.value)),
+                  glt_amt:  -  controls.ap_amt.value,
                   
         
                 } ,
@@ -1964,7 +2004,7 @@ this.gridServicecf.addItem(
                   controls.ap_dy_code.setValue(res.data.details[0].bkd_dy_code || "")
                   controls.ap_cr_terms.setValue(res.data.details[0].bkd_pay_method || "")
                            
-                  this.ap_cr_terms = res.data.details
+                  this.ap_cr_termss = res.data.details
 
                 });        
           });
@@ -1995,9 +2035,9 @@ this.gridServicecf.addItem(
             type: FieldType.string,
           },
           {
-            id: "address.ad_name",
+            id: "ad_name",
             name: "Designation",
-            field: "address.ad_name",
+            field: "ad_name",
             sortable: true,
             filterable: true,
             type: FieldType.string,

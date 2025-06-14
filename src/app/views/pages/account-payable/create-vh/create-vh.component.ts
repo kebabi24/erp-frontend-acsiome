@@ -901,8 +901,8 @@ var prod = args.dataContext.product;
 
     let amtcf = 0
     for (var i = 0; i < this.cfdataset.length; i++) {
-      amtcf = amtcf + this.cfdataset[i].apd_amt
-     
+      amtcf = amtcf + Number(this.cfdataset[i].apd_amt)
+     console.log(amtcf)
     
     }
     if (amtcf != 0) {
@@ -2183,8 +2183,8 @@ this.cfdataset.push(
     apd_acct: this.provider.vd_ap_acct,
     apd_sub: this.provider.vd_ap_sub,
     apd_cc: this.provider.vd_ap_cc,
-    apd_cur_amt: Number(this.total.toFixed(2)),
-    apd_amt:  (Number(this.total)  * ((controls.vh_ex_rate2.value) / (controls.vh_ex_rate.value))).toFixed(2),
+    apd_cur_amt: - Number(this.total.toFixed(2)),
+    apd_amt:  - (Number(this.total)  * ((controls.vh_ex_rate2.value) / (controls.vh_ex_rate.value))).toFixed(2),
     
 
   } ,
@@ -2234,8 +2234,8 @@ this.cfdataset.push(
           apd_acct: res.data.pl_pur_acct,
           apd_sub: res.data.pl_pur_sub,
           apd_cc: res.data.pl_pur_cc,
-          apd_cur_amt: - det.total_line.toFixed(2),
-          apd_amt:  (- det.total_line * ((controls.vh_ex_rate2.value) / (controls.vh_ex_rate.value))).toFixed(2),
+          apd_cur_amt:  det.total_line.toFixed(2),
+          apd_amt:  ( det.total_line * ((controls.vh_ex_rate2.value) / (controls.vh_ex_rate.value))).toFixed(2),
           
     
         } ,
@@ -2281,8 +2281,8 @@ this.cfdataset.push(
           apd_acct: res.data.tx2_ar_acct,
           apd_sub: res.data.tx2_ar_sub,
           apd_cc: res.data.tx2_ar_cc,
-          apd_cur_amt: - det.tax_line.toFixed(2),
-          apd_amt:  (- det.tax_line * ((controls.vh_ex_rate2.value) / (controls.vh_ex_rate.value))).toFixed(2),
+          apd_cur_amt:  det.tax_line.toFixed(2),
+          apd_amt:  ( det.tax_line * ((controls.vh_ex_rate2.value) / (controls.vh_ex_rate.value))).toFixed(2),
           
     
         } ,

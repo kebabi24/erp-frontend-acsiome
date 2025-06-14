@@ -93,10 +93,17 @@
                     </div>
                   
                     <div class="row">
-                        <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter ID </button>
+                        <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter ID </button>
+                        <div class="form-group col-2">
+                            <label class="form-group">   </label>
+                            <div class="input-group input-group-sm">
+                             
+                            </div>
+                           </div>
+                        <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="launchall()">Tout Lancer </button>
                     </div>
                     <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
+                        <angular-slickgrid class="col-12" gridHeight="500" gridId="mGrid"
                             [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
                             (onAngularGridCreated)="gridReady($event)">
                         </angular-slickgrid>

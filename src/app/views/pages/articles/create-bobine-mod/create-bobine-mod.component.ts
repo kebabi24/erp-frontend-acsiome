@@ -385,13 +385,13 @@ export class CreateBobineModComponent implements OnInit {
       pt_draw: [{ value: 'BOBINE', disabled: !this.isExist },Validators.required],
       pt_bom_code: [{ value: this.item.pt_bom_code, disabled: !this.isExist }],
       pt_origin: [{ value: this.item.pt_origin, disabled: !this.isExist }],
-      
+      pt_vend: [{ value: this.item.pt_vend, disabled: !this.isExist }],
       pt_dsgn_grp: [{ value: this.item.pt_dsgn_grp, disabled: !this.isExist }],
       pt_status: [{ value: this.item.pt_status, disabled: !this.isExist },Validators.required],
       int01: [{ value: this.item.int01, disabled: !this.isExist }],
       int02: [{ value: this.item.int02, disabled: !this.isExist }],
       int03: [{ value: this.item.int03, disabled: !this.isExist }],
-      
+      dec01:[{ value: this.item.dec01, disabled: !this.isExist }],
       
      
          
@@ -529,6 +529,7 @@ onChangesilicone() {
             let code_couleur:any;
             let code_silicone:any;
             let vitesse:any;
+           
             this.codeService.getBy({ code_fldname: 'pt_break_cat',code_value: controls1.pt_break_cat.value }).subscribe((coderesponse: any) => 
               { code_couleur = coderesponse.data[0].code_desc, vitesse=Number(coderesponse.data[0].dec01)
                 this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls1.pt_group.value }).subscribe((coderesponse: any) => {code_silicone = coderesponse.data[0].chr01
@@ -539,6 +540,7 @@ onChangesilicone() {
             controls1.pt_price.setValue(0)
             controls1.pt_draw.setValue('BOBINE')
             controls1.pt_origin.setValue('EXTRUSION')
+
             controls1.pt_bom_code.setValue('F' + controls1.pt_rev.value)
             controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
             controls1.pt_status.setValue('SF-ACTIF')
@@ -546,7 +548,8 @@ onChangesilicone() {
             controls1.int02.setValue(modeleresponse.data.int02)
             if(Number(modeleresponse.data.int01) == 110 || Number(modeleresponse.data.int01) == 152){vitesse = 380}
             controls1.int03.setValue(vitesse)
-            controls1.pt_part.setValue(controls1.pt_article.value + '-Q' + controls1.pt_rev.value + "-" + code_couleur + "-" + code_silicone)
+            controls1.dec01.setValue(700)
+            controls1.pt_part.setValue(controls1.pt_article.value + '-F' + controls1.pt_rev.value + "-" + code_couleur + "-" + code_silicone)
             controls1.pt_desc1.setValue(modeleresponse.data.mod_desc + " QUALITE " + controls1.pt_rev.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
             controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_article.value + " " + controls1.pt_break_cat.value + " " + controls1.pt_group.value)
             controls1.pt_part.enable()
@@ -651,10 +654,12 @@ onAlertClose($event) {
     _item.pt_article = controls1.pt_article.value;
     _item.pt_price = controls1.pt_price.value;
     _item.pt_origin = controls1.pt_origin.value;
+    _item.pt_vend = controls1.pt_vend.value;
     _item.pt_bom_code = controls1.pt_bom_code.value;
     _item.int01 = controls1.int01.value;
     _item.int02 = controls1.int02.value;
     _item.int03 = controls1.int03.value;
+    _item.dec01 = controls1.dec01.value;
     _item.pt_iss_pol = true;
     _item.pt_taxable = true;
     _item.pt_taxc = '19A';
@@ -901,6 +906,7 @@ onAlertClose($event) {
             controls.int01.setValue(null)
             controls.int02.setValue(null)
            controls.int03.setValue(0)
+           controls.dec01.setValue(0)
             controls.pt_part.setValue(null)
             controls.pt_desc1.setValue(null)
             controls.pt_desc2.setValue(null)
@@ -1576,6 +1582,7 @@ handleSelectedRowsChangedmod(e, args) {
             controls1.int01.setValue(null)
             controls1.int02.setValue(null)
            controls1.int03.setValue(0)
+           controls1.dec01.setValue(0)
             controls1.pt_part.setValue(null)
             controls1.pt_desc1.setValue(null)
             controls1.pt_desc2.setValue(null)

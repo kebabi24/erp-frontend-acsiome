@@ -26,7 +26,7 @@
                 <div class="row"> 
 
                     <div class="form-group col-6">
-                        <label class="form-group">Description: *</label>
+                        <label class="form-group">Désignation: *</label>
                         <input type="text" formControlName="en_name" 
                             [className]="entityForm.controls['en_name'].errors && (entityForm.controls['en_name'].dirty || entityForm.controls['en_name'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
                         <div *ngIf="entityForm.controls['en_name'].errors && (entityForm.controls['en_name'].dirty || entityForm.controls['en_name'].touched) "
@@ -83,18 +83,58 @@
 
                 <div class="row"> 
     
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Numéro PG état Vérif Compta:  </label>
                             <input type="entier" class="form-control form-control-sm"   formControlName="en_page_num">
                             
-                    </div>
+                    </div> -->
                     <div class="form-group col-2">
                         <label class="form-group">Adresse De La Société:  </label>
                             <input type="text" class="form-control form-control-sm"   formControlName="en_addr">
                             
                     </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Capital:  </label>
+                            <input type="Number" class="form-control form-control-sm"   formControlName="dec01">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Registre de commerce:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="chr01">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">NIF:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="chr02">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">AI:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="chr03">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">NIS:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="chr04">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Contact Mail:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="chr05">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Téléphone:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="en_user1">
+                            
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">RIB Banque:  </label>
+                            <input type="text" class="form-control form-control-sm"   formControlName="en_user2">
+                            
+                    </div>
                 </div>
-                <div class="row"> 
+                <!-- <div class="row"> 
 
                     <div class="form-group col-2">
                         <label class="form-group"> Entitée de Consolidation: </label>
@@ -112,8 +152,8 @@
                                 
                             </select>    
                     </div>   
-                </div>
-                <div class="row"> 
+                </div> -->
+                <!-- <div class="row"> 
 
                     <div class="form-group col-2">
                         <label class="form-group">Sous Compte par Defaut: </label>
@@ -137,8 +177,8 @@
                             </label>
                         </span>
                     </div>
-                </div>
-                <div class="row"> 
+                </div> -->
+                <!-- <div class="row"> 
                     <div class="form-group col-2">
                         <label class="form-group">Centre de Coût par Defaut: </label>
                         <div class="input-group input-group-sm">
@@ -161,9 +201,9 @@
                             </label>
                         </span>
                     </div>
-                </div>
+                </div> -->
                    
-                <div class="row"> 
+                <!-- <div class="row"> 
 
                     <div class="form-group col-3">
                         <label class="form-group">Comptabilité Fournisseur (Débit): </label>
@@ -203,11 +243,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
  <!--compte-->
 
                 
-                <div class="row">    
+                <!-- <div class="row">    
                     <div class="form-group col-3">
                         <label class="form-group">Comptabilité Fournisseur (Crédit): </label>
                         <div class="input-group input-group-sm">
@@ -245,9 +285,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
-                <div class="row">    
+                <!-- <div class="row">    
                     <div class="form-group col-3">
                         <label class="form-group">Comptabilité Client (Débit) : </label>
                         <div class="input-group input-group-sm">
@@ -285,8 +325,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
+                </div> -->
+                <!-- <div class="row">
                     <div class="form-group col-3">
                         <label class="form-group">Comptabilité Client (Crédit): </label>
                         <div class="input-group input-group-sm">
@@ -324,9 +364,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                
-                <div class="row">
+                <!-- <div class="row">
 
                     <div class="form-group col-3">
                         <label class="form-group">Immobilisation (Débit): </label>
@@ -365,8 +405,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
+                </div> -->
+                <!-- <div class="row">
 
                     <div class="form-group col-3">
                         <label class="form-group">Immobilisation (Crédit): </label>
@@ -405,10 +445,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
 
-                <div class="row">    
+                <!-- <div class="row">    
                     <div class="form-group col-3">
                         <label class="form-group">Gestion des Stock (Débit): </label>
                         <div class="input-group input-group-sm">
@@ -446,8 +486,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
+                </div> -->
+                <!-- <div class="row">
                     <div class="form-group col-3">
                         <label class="form-group">Gestion des Stock (Crédit): </label>
                         <div class="input-group input-group-sm">
@@ -485,7 +525,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </form>
         </div>
 

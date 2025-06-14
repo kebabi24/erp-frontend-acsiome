@@ -553,7 +553,7 @@ export class CreateDirectWoComponent implements OnInit {
 
   onSubmit() {
     
-    
+    this.validate = true;
     const controls = this.woForm.controls;
     let tr = this.prepareTr();
     this.trdataset = [];
@@ -667,6 +667,7 @@ export class CreateDirectWoComponent implements OnInit {
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
     _tr.tr_addr = controls.emp_shift.value;
+    _tr.tr_site = controls.wo_site.value;
     _tr.created_ip_adr = this.ipAddress;
     // _tr.tr_so_job = controls.tr_so_job.value
 
@@ -699,7 +700,7 @@ export class CreateDirectWoComponent implements OnInit {
                   return;
         
       },
-      () => {this.printpdf(this.nof),this.globalState = false; this.validate = true;
+      () => {this.printpdf(this.nof),this.globalState = false; 
         this.dataset = []
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
@@ -773,7 +774,7 @@ export class CreateDirectWoComponent implements OnInit {
       }
     );
   }
-
+onChangeCust(){}
   addWo() {
     const controls = this.woForm.controls;
     this.hasFormErrors = false;
@@ -866,6 +867,8 @@ export class CreateDirectWoComponent implements OnInit {
         {
           id: this.dataset.length + 1,
           tr_line: this.dataset.length + 1,
+          tr_nbr:this.nof,
+                                      tr_lot:this.wolot,
           tr_part: null,
           cmvid: "",
           desc: null,
@@ -1528,7 +1531,7 @@ export class CreateDirectWoComponent implements OnInit {
                       this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
                         
                         this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
-                          if (respopart.data.pt_draw != this.type && respopal.data.label.lb__log01 != true && respopart.data.pt_draw != 'PERTE' ) {
+                          if (respopart.data.pt_draw != this.type && respopal.data.label.lb__log01 != true ) {
                             this.codeService.getBy({code_fldname:this.type,code_value:respopart.data.pt_draw}).subscribe((coderesp:any) => {if(coderesp.data!=null){this.ok_types = true}})
                             if(this.ok_types == false){
                             this.message = "type ne correspond pas au produit broyé";
@@ -1539,13 +1542,15 @@ export class CreateDirectWoComponent implements OnInit {
                               this.sct = respo.data;
                               console.log(this.sct);
 
-                              this.codeService.getBy({ code_fldname: this.color, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
+                              this.codeService.getBy({ code_fldname: this.color, code_value: respopart.data.pt_break_cat,code_desc:'TOUS' }).subscribe((rescode: any) => {
                                 console.log(rescode);
-                                if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true || respopart.data.pt_draw == 'PERTE') {
+                                if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true ) {
                                   this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
                                   this.gridService.addItem(
                                     {
                                       id: this.dataset.length + 1,
+                                      tr_nbr:this.nof,
+                                      tr_lot:this.wolot,
                                       tr_line: this.dataset.length + 1,
                                       tr_part: this.lddet.ld_part,
                                       break: respopart.data.pt_break_cat,
@@ -1572,6 +1577,8 @@ export class CreateDirectWoComponent implements OnInit {
                                     {
                                       id: this.dataset.length + 1,
                                       tr_line: this.dataset.length + 1,
+                                      tr_nbr:this.nof,
+                                      tr_lot:this.wolot,
                                       tr_part: this.lddet.ld_part,
                                       break: respopart.data.pt_break_cat,
                                       cmvid: "",
@@ -1880,15 +1887,16 @@ export class CreateDirectWoComponent implements OnInit {
    
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image()
+    // img.src = "./assets/media/logos/create-direct-wo.png";
     img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, 'png', 150, 5, 50, 30)
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
   
     doc.line(10, 35, 200, 35);
@@ -1940,15 +1948,16 @@ export class CreateDirectWoComponent implements OnInit {
       
       if ((j % 20 == 0) && (j != 0) ) {
   doc.addPage();
-        img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, 'png', 150, 5, 50, 30)
-        doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  //img.src = "./assets/media/logos/create-direct-wo.png";
+  img.src = "./assets/media/logos/companyentete.png";
+  doc.addImage(img, 'png', 5, 5, 200, 30)
+   doc.setFontSize(9);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
     doc.setFontSize(12);

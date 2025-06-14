@@ -861,7 +861,7 @@ export class SuiviAlimentationExtrusionComponent implements OnInit {
     const controls = this.woForm.controls;
     console.log("pdf");
     var doc = new jsPDF("l");
-
+var nbr1 = new Date().toLocaleDateString() 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
     img.src = "./assets/media/logos/companyentete.png";
@@ -870,7 +870,7 @@ export class SuiviAlimentationExtrusionComponent implements OnInit {
     doc.setFontSize(12);
     doc.line(10, 10, 288, 10);
     doc.line(10, 10, 10, 35);
-    doc.text("SUIVI ALIMENTATION EXTRUSION  " , 110, 25);
+    doc.text("SUIVI ALIMENTATION EXTRUSION  " + nbr1, 110, 25);
     doc.line(10, 30, 82, 30);
     doc.line(82, 10, 82, 35);
     doc.line(216, 10, 216, 35);
@@ -1068,7 +1068,7 @@ export class SuiviAlimentationExtrusionComponent implements OnInit {
         doc.setFontSize(12);
         doc.line(10, 10, 288, 10);
         doc.line(10, 10, 10, 35);
-        doc.text("SUIVI ALIMENTATION EXTRUSION  " , 110, 25);
+        doc.text("SUIVI ALIMENTATION EXTRUSION  " + nbr1 , 110, 25);
         doc.line(10, 30, 82, 30);
         doc.line(82, 10, 82, 35);
         doc.line(216, 10, 216, 35);

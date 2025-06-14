@@ -1134,7 +1134,7 @@ prepareItem(): Item {
   _item.pt_um= "UN"
   _item.pt_buyer = controls.pt_draw.value;
   _item.pt_site = site; 
-  
+  _item.pt_prod_line = 'FORMATION'; 
 
   return _item;
 }
@@ -6339,7 +6339,7 @@ if (Array.isArray(args.rows) && this.gridObjsO8) {
         const newId = this.mvdatasetO8.length+1;
         this.employeService.getByOne({emp_addr:items.pme_employe}).subscribe((emp: any) =>{let employeO8 = emp.data
           console.log(employeO8)
-          this.mvgridService.addItem(
+          this.mvgridServiceO8.addItem(
             {id:newId,
               
               pme_employe:items.pme_employe,

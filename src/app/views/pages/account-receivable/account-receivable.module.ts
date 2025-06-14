@@ -61,6 +61,12 @@ import { CreateVendorPaymentComponent } from './create-vendor-payment/create-ven
 import { TransfertArComponent } from './transfert-ar/transfert-ar.component';
 import { ListVendorPaymentComponent } from './list-vendor-payment/list-vendor-payment.component';
 import { ListTransfertPaymentComponent } from './list-transfert-payment/list-transfert-payment.component';
+import { CreateVendorPaymentDetailComponent } from './create-vendor-payment-detail/create-vendor-payment-detail.component';
+import { CreateRolePaymentDetailComponent } from './create-role-payment-detail/create-role-payment-detail.component';
+import { ListBankDetailComponent } from './list-bank-detail/list-bank-detail.component';
+import { ListCaisseComponent } from './list-caisse/list-caisse.component';
+import { TransfertCaisseComponent } from './transfert-caisse/transfert-caisse.component';
+import { TransfertCaisseDetComponent } from './transfert-caisse-det/transfert-caisse-det.component';
 
   const routes: Routes = [
     {
@@ -77,7 +83,7 @@ import { ListTransfertPaymentComponent } from './list-transfert-payment/list-tra
             {
               path: "create-project-payment",
               component: CreateProjectPaymentComponent,
-          },
+            },
             {
                 path: "create-note",
                 component: CreateNoteComponent,
@@ -99,6 +105,14 @@ import { ListTransfertPaymentComponent } from './list-transfert-payment/list-tra
                 component: CreateVendorPaymentComponent,
               },
               {
+                path: "create-vendor-payment-detail",
+                component: CreateVendorPaymentDetailComponent,
+              },
+              {
+                path: "create-role-payment-detail",
+                component: CreateRolePaymentDetailComponent,
+              },
+              {
                 path: "transfert-ar",
                 component: TransfertArComponent,
               },
@@ -110,13 +124,29 @@ import { ListTransfertPaymentComponent } from './list-transfert-payment/list-tra
                 path: "list-transfert-payment",
                 component: ListTransfertPaymentComponent,
               },
+              {
+                path: "list-bank-detail",
+                component: ListBankDetailComponent,
+              },
+              {
+                path: "list-caisse",
+                component: ListCaisseComponent,
+              },
+              {
+                path: "transfert-caisse",
+                component: TransfertCaisseComponent,
+              },
+              {
+                path: "transfert-caisse-det",
+                component: TransfertCaisseDetComponent,
+              },
           
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent],
   imports: [
     CommonModule,
     HttpClientModule,

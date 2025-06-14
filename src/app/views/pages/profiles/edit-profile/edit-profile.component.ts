@@ -14,7 +14,7 @@ import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MenuConfig } from '../../../../core/_config/menu.config'
 import { MenuTrConfig } from '../../../../core/_config/menuTr.config'
-import { MenuMobileConfig } from '../../../../core/_config/menuMobile.config'
+import { MenuDDConfig } from '../../../../core/_config/menuDD.config'
 // Layout
 import {
   SubheaderService,
@@ -84,7 +84,7 @@ export class EditProfileComponent implements OnInit {
         const controls = this.profileForm.controls;
         var app = environment.App
        
-        const menus = (app=="RH") ? new MenuTrConfig().defaults : (app=="ERP") ? new MenuConfig().defaults : new MenuMobileConfig().defaults
+        const menus = (app=="RH") ? new MenuTrConfig().defaults : (app=="ERP") ? new MenuConfig().defaults : new MenuDDConfig().defaults
 console.log("menu", menus)
         menus.aside.items.map(obj=>{
           if(obj.title){

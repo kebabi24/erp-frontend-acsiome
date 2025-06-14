@@ -124,7 +124,7 @@ export class ListModComponent implements OnInit {
       },
       {
         id: "mod_prod_line",
-        name: "Famille",
+        name: "Catégorie",
         field: "mod_prod_line",
         sortable: true,
         filterable: true,
@@ -154,7 +154,7 @@ export class ListModComponent implements OnInit {
       },
       {
         id: "mod_draw",
-        name: "Catégorie",
+        name: "Plan",
         field: "mod_draw",
         sortable: true,
         filterable: true,
@@ -170,7 +170,7 @@ export class ListModComponent implements OnInit {
 
       {
         id: "mod_group",
-        name: "Groupe",
+        name: "Configuration",
         field: "mod_group",
         sortable: true,
         filterable: true,
@@ -186,7 +186,7 @@ export class ListModComponent implements OnInit {
       
       {
         id: "mod_dsgn_grp",
-        name: "Forme Géometrique",
+        name: "Forme",
         field: "mod_dsgn_grp",
         sortable: true,
         filterable: true,

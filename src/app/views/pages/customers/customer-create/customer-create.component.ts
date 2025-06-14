@@ -272,7 +272,7 @@ fldname;
         const controls1 = this.customerForm.controls
       
         this.addressService
-            .getAll().subscribe((response: any) => {
+            .getBy({ad_type:'customer'}).subscribe((response: any) => {
                 
                 if (response.data.length != 0) {
                   this.nbr = response.data.length + 1
@@ -783,7 +783,9 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
         const controls = this.customerForm.controls
         const _customer = new Customer()
         _customer.cm_addr = this.address.ad_addr
-        _customer.cm_sort = controls.cm_sort.value
+        if(controls.cm_sort.value == null){_customer.cm_sort = this.address.ad_name}
+        else{_customer.cm_sort = controls.cm_sort.value}
+        
         _customer.cm_type = controls.cm_type.value
         _customer.cm_seq = controls.cm_seq.value
     
@@ -1680,9 +1682,9 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
     }
     handleSelectedRowsChanged5(e, args) {
       const controls = this.customerForm.controls;
-      if (Array.isArray(args.rows) && this.gridObj2) {
+      if (Array.isArray(args.rows) && this.gridObj5) {
         args.rows.map((idx) => {
-          const item = this.gridObj2.getDataItem(idx);
+          const item = this.gridObj5.getDataItem(idx);
           console.log(item)
           const date = new Date()
   
@@ -1704,7 +1706,7 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
     }
   
     prepareGrid5() {
-      this.columnDefinitions2 = [
+      this.columnDefinitions5 = [
         {
           id: "id",
           name: "id",

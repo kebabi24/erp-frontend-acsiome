@@ -101,9 +101,9 @@ const myCustomCheckmarkFormatter: Formatter = (
     </div>
 	`;
 };
-
+ 
 @Component({
-  selector: 'kt-create-mp-mod',
+  selector: 'kt-create-mp-mod', 
   templateUrl: './create-mp-mod.component.html',
   styleUrls: ['./create-mp-mod.component.scss']
 })
@@ -379,7 +379,8 @@ export class CreateMpModComponent implements OnInit {
 
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price }],
-      
+      pt_model: [this.item.pt_model ],
+      pt_vend: [this.item.pt_vend ],
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
       pt_draw: [{ value: this.item.pt_draw, disabled: !this.isExist },Validators.required],
@@ -433,10 +434,10 @@ export class CreateMpModComponent implements OnInit {
 
   onChangeCode() {
     const controls1 = this.form1.controls
-    
-    
-    
-    let index = this.pt_break_cat.findIndex(x => x.code_value == controls1.pt_break_cat.value); 
+    console.log(controls1.pt_vend.value)
+    if (controls1.pt_vend.value == null || controls1.pt_vend.value == '')
+    {
+      let index = this.pt_break_cat.findIndex(x => x.code_value == controls1.pt_break_cat.value); 
     console.log(controls1.pt_article.value)
     this.codedesc = this.pt_break_cat[index].code_desc
     const codecmmt = this.pt_break_cat[index].code_cmmt
@@ -459,6 +460,34 @@ export class CreateMpModComponent implements OnInit {
 
             }
         })
+    }
+    else{
+      let index = this.pt_break_cat.findIndex(x => x.code_value == controls1.pt_break_cat.value); 
+    console.log(controls1.pt_article.value)
+    this.codedesc = this.pt_break_cat[index].code_desc
+    const codecmmt = this.pt_break_cat[index].code_cmmt
+    this.itemService
+        .getByOne({
+            pt_article: controls1.pt_article.value,
+            pt_break_cat: controls1.pt_break_cat.value,
+           pt_vend:controls1.pt_vend.value 
+        })
+        .subscribe((response: any) => {
+        console.log(response.data)
+            if (response.data != null) {
+                this.isExist = true
+                
+            } else {
+             
+              controls1.pt_break_cat.enable()
+              controls1.pt_article.disable()
+              
+
+            }
+        })
+    }
+    
+    
 }
 // onChangequality() {
 //   const controls1 = this.form1.controls
@@ -498,7 +527,8 @@ onChangecolor() {
   const controls1 = this.form1.controls
   
  controls1.pt_article.disable()
-  
+ if(controls1.pt_vend.value == null ||controls1.pt_vend.value == '')
+  { 
   this.itemService
       .getByOne({
         pt_article: controls1.pt_article.value,
@@ -563,6 +593,66 @@ onChangecolor() {
 
           }
       })
+  }
+  else{
+    this.itemService
+      .getByOne({
+        pt_article: controls1.pt_article.value,
+        pt_break_cat: controls1.pt_break_cat.value,
+        pt_vend:controls1.pt_vend.value
+      })
+      .subscribe((itemresponse: any) => {
+      console.log(itemresponse.data)
+          if (itemresponse.data != null) {
+              this.isExist = true
+              console.log('article existe')
+              controls1.pt_break_cat.setValue(null)
+              controls1.pt_break_cat.enable()
+          } else {
+            this.itemModelService
+        .getByOne({
+              mod_code:  controls1.pt_article.value
+        })
+        .subscribe((modeleresponse: any) => {
+         console.log(modeleresponse.data)
+          if (modeleresponse.data) {
+            console.log(modeleresponse.data.mod_part_type)
+            let code_couleur:any;
+            let code_silicone:any;
+            let vitesse:any;
+            this.codeService.getBy({ code_fldname: 'pt_break_cat',code_value: controls1.pt_break_cat.value }).subscribe((coderesponse: any) => 
+              { code_couleur = coderesponse.data[0].code_desc, vitesse=Number(coderesponse.data[0].dec01)
+                controls1.pt_um.setValue(modeleresponse.data.mod_um)
+                controls1.pt_group.setValue(modeleresponse.data.mod_group)
+                controls1.pt_prod_line.setValue(modeleresponse.data.mod_prod_line)
+                controls1.pt_part_type.setValue(modeleresponse.data.mod_part_type)
+                controls1.pt_price.setValue(0)
+                controls1.pt_draw.setValue(modeleresponse.data.mod_draw)
+                controls1.pt_origin.setValue(modeleresponse.data.mod_origin)
+                controls1.pt_bom_code.setValue('BOBINE')
+                controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
+                controls1.pt_status.setValue(modeleresponse.data.mod_status)
+           
+                controls1.pt_part.setValue(controls1.pt_article.value + code_couleur + controls1.pt_vend.value )
+                controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
+                controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
+                this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls1.pt_group.value }).subscribe((coderesponse: any) => {code_silicone = coderesponse.data[0].chr01
+                });
+          });
+            
+  
+          } else {
+
+            console.log ('code modele existe pas')
+          }
+      
+     })
+        
+
+          }
+      })
+
+  }
 }
 onAlertClose($event) {
   this.hasFormErrors1 = false;
@@ -639,12 +729,14 @@ onAlertClose($event) {
     _item.pt_loc = 'EMPL PLAST2';
     _item.pt_article = controls1.pt_article.value;
     _item.pt_price = controls1.pt_price.value;
+    _item.pt_model = controls1.pt_model.value;
+    _item.pt_vend = controls1.pt_vend.value;
     _item.pt_origin = controls1.pt_origin.value;
     _item.pt_bom_code = controls1.pt_bom_code.value;
     _item.pt_iss_pol = true;
     _item.pt_taxable = true;
     _item.pt_taxc = '19A';
-    _item.pt_pm_code = 'M';
+    _item.pt_pm_code = 'P';
     _item.pt_ord_qty = 1;
     _item.pt_drwg_loc = 'INTERNE'
     _item.pt_added = new Date()
@@ -1767,5 +1859,108 @@ openmod(content) {
   this.prepareGridmod()
   this.modalService.open(content, { size: "lg" })
 }
+handleSelectedRowsChangedprov(e, args) {
+  const controls1 = this.form1.controls;
+  if (Array.isArray(args.rows) && this.gridObjprov) {
+    args.rows.map((idx) => {
+      const item = this.gridObjprov.getDataItem(idx);
+      controls1.pt_vend.setValue(item.vd_addr)
+      controls1.pt_model.setValue(null)
+    });
+  }
+}
 
+
+angularGridReadyprov(angularGrid: AngularGridInstance) {
+  this.angularGridprov = angularGrid
+  this.gridObjprov = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridprov() {
+  this.columnDefinitionsprov = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 30,
+    },
+    {
+      id: "vd_addr",
+      name: "Code Fournisseur",
+      field: "vd_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+   
+    {
+      id: "address.ad_name",
+      name: "Nom",
+      field: "address.ad_name",
+      sortable: true,
+      filterable: true,
+      minWidth: 250,
+      type: FieldType.string,
+    },
+    {
+      id: "vd_sort",
+      name: "Activité",
+      field: "vd_sort",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 80,
+    },
+    {
+      id: "address.ad_line1",
+      name: "Addresse",
+      field: "address.ad_line1",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      minWidth: 100,
+    },
+    
+  ]
+
+  this.gridOptionsprov = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  this.providerService
+      .getAll()
+      .subscribe((response: any) => (this.providers = response.data))
+}
+openprov(content) {
+  this.prepareGridprov()
+  this.modalService.open(content, { size: "lg" })
+}
 }

@@ -124,16 +124,16 @@
                       
                         <!-- PHONE -->
                         <div class="col-3 align-middle mt-2">
-                          <label class="align-middle">Numéro de téléphone:</label>
+                          <label class="align-middle">Client:</label>
                         </div>
-                        <div class="col-3 mt-2" >{{selectedEvent.phone_to_call}}</div>
+                        <div class="col-3 mt-2" >{{clientData.cm_sort}}</div>
                         <!-- PHONE END  -->
                         
                         <!-- CATEGORY -->
                         <div class="col-3 align-middle mt-2">
-                          <label class="align-middle">Catégorie:</label>
+                          <label class="align-middle">Formation:</label>
                         </div>
-                        <div class="col-3 mt-2">{{selectedEvent.category_display}}</div>
+                        <div class="col-3 mt-2">{{item_desc}}</div>
                         <!-- CATEGORY END -->
                     
                     </div>
@@ -163,28 +163,18 @@
                     <!-- CLIENT DATA -->
                     <div class="row align-middle form-group-bg">
                       
-                      <div class="row mt-2">
                         <!-- NAME -->
                         <div class="col-3 align-middle mt-2">
-                          <label class="align-middle">Nom du client:</label>
+                          <label class="align-middle">Numéro Tél:</label>
                         </div>
-                        <div class="col-3 mt-2" >{{clientData.cm_sort}}</div>
+                        <div class="col-3 mt-2" >{{selectedEvent.phone_to_call}}</div>
                         <!-- NAME END  -->
                         
-                        <!-- AGE -->
-                        <div class="col-3 align-middle mt-2">
-                          <label class="align-middle">Age:</label>
-                        </div>
-                        <div class="col-3 mt-2">{{clientData.ageDisplay}} ans  ({{clientData.cm_high_date}})</div>
-                        <!-- AGE END -->
-                    </div>
-
-                    <div class="row mt-2">
                       <!-- ADR -->
                       <div class="col-3 align-middle mt-2">
                         <label class="align-middle">Adresse du client:</label>
                       </div>
-                      <div class="col-3 mt-2" >{{clientData.adressDisplay}}</div>
+                      <div class="col-3 mt-2" >{{clientData.wilaya}}</div>
                       <!-- ADR END  -->
                       
                       <!-- EMAIL -->
@@ -193,8 +183,6 @@
                       </div>
                       <div class="col-3 mt-2 text-wrap">{{clientData.email}}</div>
                       <!-- AGE END -->
-                  </div>
-
                     </div>
                     <!-- CLIENT DATA END  -->
                     
@@ -235,7 +223,7 @@
                         <!-- Method END -->
 
                         <!-- METHOD 0 -->
-                        <div class="col-3 align-middle">
+                        <!-- <div class="col-3 align-middle">
                           <label class="align-middle mt-2 ">Méthode exécutée:</label>
                         </div>
                         <div class="col-3">
@@ -245,7 +233,7 @@
                           >
                             <option *ngFor="let method of methods" [value]="method.code_value" class="mt-1">{{method.code_desc}}</option>
                           </select>
-                        </div>
+                        </div> -->
                         <!-- METHOD 0 -->
 
                       </div>
@@ -343,16 +331,16 @@
                   
                     <!-- PHONE -->
                     <div class="col-3 align-middle mt-2">
-                      <label class="align-middle">Numéro de téléphone:</label>
+                      <label class="align-middle">Client:</label>
                     </div>
-                    <div class="col-3 mt-2" >{{selectedEvent.phone_to_call}}</div>
+                    <div class="col-3 mt-2" >{{clientData.cm_sort}}</div>
                     <!-- PHONE END  -->
                     
                     <!-- CATEGORY -->
                     <div class="col-3 align-middle mt-2">
-                      <label class="align-middle">Catégorie:</label>
+                      <label class="align-middle">Formation:</label>
                     </div>
-                    <div class="col-3 mt-2">{{selectedEvent.category_display}}</div>
+                    <div class="col-3 mt-2">{{item_desc}}</div>
                   
                     <!-- CATEGORY END -->
                  
@@ -381,13 +369,13 @@
                 <!-- TIMES -->
                 
                 <!-- EXECUTION RESULTS  -->
-                <div class="row align-middle form-group-bg">
+                <!-- <div class="row align-middle form-group-bg">
                   <div
                   class="col-12"
                   
                 >
                   <div class="row mt-5">
-                    <!-- SELECT -->
+                   
                     <fieldset class="col-6"  >
                       <div *ngFor="let cause of event_Results; let i = index">
                         <input
@@ -403,8 +391,7 @@
                       </div>
                      
                     </fieldset>
-                    <!-- SELECT END -->
-                    <!-- TEXT AREA -->
+                   
                     <div class="col-6"> 
                       <textarea
                         rows="2"
@@ -414,13 +401,13 @@
                       >
                       </textarea>
                     </div>
-                    <!-- TEXT AREA END -->
+                  
 
                   </div>
                 </div>
 
                  
-                </div>
+                </div> -->
                 <!-- EXECUTION RESULTS  -->
     
                   
@@ -766,9 +753,9 @@
                     <div class="row mt-2">
                       <!-- NAME -->
                       <div class="col-3 align-middle mt-2">
-                        <label class="align-middle">Nom du client:</label>
+                        <label class="align-middle">Numéro Tél:</label>
                       </div>
-                      <div class="col-3 mt-2" >{{clientDataNewEvent.cm_sort}}</div>
+                      <div class="col-3 mt-2" >{{selectedEvent.phone_to_call}}</div>
                       <!-- NAME END  -->
                       
                       <!-- AGE -->

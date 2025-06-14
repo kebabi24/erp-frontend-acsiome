@@ -64,6 +64,18 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })   
     }
+    public getBybroyage(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbroyage`,data, { headers: httpHeaders })   
+    }
+    public getByextrusion(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findextrusion`,data, { headers: httpHeaders })   
+    }
+    public getBythermo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findthermoformage`,data, { headers: httpHeaders })   
+    }
     public getPrograms(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findprogram`,data, { headers: httpHeaders })   

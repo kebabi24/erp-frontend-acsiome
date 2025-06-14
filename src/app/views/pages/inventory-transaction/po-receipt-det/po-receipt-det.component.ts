@@ -2047,8 +2047,9 @@ printpdf(nbr) {
 let date = new Date()
   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image();
+  // img.src = "./assets/media/logos/po-receip-det.png";
   img.src = "./assets/media/logos/companyentete.png";
-  doc.addImage(img, "png", 150, 5, 50, 30);
+  doc.addImage(img, 'png', 5, 5, 200, 30)
   doc.setFontSize(9);
   if (this.domain.dom_name != null) {
     doc.text(this.domain.dom_name, 10, 10);

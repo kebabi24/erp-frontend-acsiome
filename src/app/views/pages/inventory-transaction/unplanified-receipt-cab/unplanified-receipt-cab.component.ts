@@ -334,25 +334,6 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
       },
       {
-        id: "emballage",
-        name: "emballage",
-        field: "emballage",
-        
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-        formatter: myCustomCheckboxFormatter,
-        editor: {
-          model: Editors.singleSelect,
-
-          enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-      
-         
-        },
-      },
-      {
         id: "tr_qty_chg",
         name: "QTE",
         field: "tr_qty_chg",
@@ -392,8 +373,28 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
       },
       {
+        id: "emballage",
+        name: "emballage",
+        field: "emballage",
+        
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+        formatter: myCustomCheckboxFormatter,
+        editor: {
+          model: Editors.singleSelect,
+
+          enableRenderHtml: true,
+          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+      
+         
+        },
+      },
+     
+      {
         id: "tr_qty_loc",
-        name: "QTE",
+        name: "Poids net",
         field: "tr_qty_loc",
         sortable: true,
         width: 80,
@@ -1325,6 +1326,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 
             updateItem.tr_part = item.pt_part;
             updateItem.tr_desc = item.pt_desc1;
+            updateItem.emballage = 'BIGBAG'
             updateItem.tr_um = item.pt_um;
             updateItem.tr_um_conv = 1;
             updateItem.tr_site = item.pt_site;
@@ -2045,15 +2047,16 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
 let date = new Date()
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
+    // img.src = "./assets/media/logos/unplanified-receipt-cab.png";
     img.src = "./assets/media/logos/companyentete.png";
-    doc.addImage(img, "png", 150, 5, 50, 30);
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
 
     doc.line(10, 35, 200, 35);
@@ -2113,15 +2116,16 @@ let date = new Date()
       ttc = ttc +  Number(this.dataset[j].tr_qty_loc) * Number(this.dataset[j].tr_price);
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
+        // img.src = "./assets/media/logos/unplanified-receipt-cab.png";
         img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, "png", 150, 5, 50, 30);
+        doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
 

@@ -110,7 +110,7 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Taux de change:</label>
                         <div class="input-group input-group-sm">
 
@@ -121,9 +121,9 @@
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Taux de change:</label>
                         <div class="input-group input-group-sm">
 
@@ -135,12 +135,12 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
                     <div class="form-group col-2">
-                        <label class="form-group">Numero d' Offre:</label>
+                        <label class="form-group">Numero fiche de voeu:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid"  formControlName="so_po"
+                            <input type="text" class="form-control form-control-solid"  formControlName="so_quote"
                                 aria-describedby="basic-addon2" (change)="onChangeOC()">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open5(content5)">
@@ -165,7 +165,7 @@
 
 
                     </div>
-                    <div class="form-group col-2">
+                    <!-- <div class="form-group col-2">
                         <label class="form-group">Date échéance:</label>
                         <div class="input-group input-group-sm">
                             <input class="form-control form-control-sm form-control-solid" formControlName="so_due_date"
@@ -179,6 +179,26 @@
 
                         </div>
                     
+
+                    </div> -->
+                    <div class="form-group col-2">
+                        <label class="form-group">Banque:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"  formControlName="so_bank"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Montant Versement:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid"  formControlName="so_prepaid"
+                                aria-describedby="basic-addon2" >
+                            
+                        </div>
 
                     </div>
                     
@@ -216,6 +236,19 @@
                             <span class="switch switch-icon">
                                 <label>
                                     <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print"/>
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Aide CNL:</label>
+                        <div class="input-group input-group-sm">
+
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="aide"/>
                                     <span></span>
                                 </label>
                             </span>
