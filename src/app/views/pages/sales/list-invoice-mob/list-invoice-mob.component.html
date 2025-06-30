@@ -26,7 +26,7 @@
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div>
                         </div>
-                        <div class="form-group col-3">
+                        <div class="form-group col-2">
                             <label class="form-group">Date: *</label>
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" 
@@ -41,7 +41,7 @@
                             </div>
     
                         </div>
-                        <div class="form-group col-3">
+                        <div class="form-group col-2">
                             <label class="form-group">A: *</label>
                             <div class="input-group input-group-sm">
                                 <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date1" 
@@ -64,7 +64,13 @@
     
                             <button type="button"  (click)="solist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
                             </div>
-                        </div>    
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Imprimer Récap: *</label>
+                            <div class="input-group input-group-sm">
+                               <button type="button"  class="btn btn-outline-primary mr-3" (click)="printpdf()"><i class="flaticon2-print"></i> Imprimer </button>
+                            </div>
+                        </div>       
                     </div> 
                 <div class="row">
                     <angular-slickgrid class="col-12"  gridId="plagemvGrid"  

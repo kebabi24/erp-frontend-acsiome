@@ -33,7 +33,7 @@ export class CustomerMobile extends BaseModel {
     category_code : String 
     category_type_code : String 
     sales_channel_code : String 
- 
+    payment_method_code : String
     rc: String
     ai: String
     nif: String

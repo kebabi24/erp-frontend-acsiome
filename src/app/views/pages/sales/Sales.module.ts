@@ -54,7 +54,7 @@ import { QuoteService, UsersService, ItemService, CodeService, TaxeService, Sale
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
          ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService,
          CostlistService, CustomerMobileService,ItineraryService,UsersMobileService, AccountOrderService,
-         PriceListQuantityService,BarecodeinfosService, TimbreService ,  AddressService, AccountService,
+         PriceListQuantityService,BarecodeinfosService, TimbreService ,  AddressService, AccountService,LoadRequestService
         } from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
@@ -94,6 +94,11 @@ import { CreateSoBcComponent } from './create-so-bc/create-so-bc.component';
 import { ListPshComponent } from './list-psh/list-psh.component';
 import { ReprintInvoiceComponent } from './reprint-invoice/reprint-invoice.component';
 import { ListRolesSalesComponent } from './list-roles-sales/list-roles-sales.component';
+import { CreateAccountingInvComponent } from './create-accounting-inv/create-accounting-inv.component';
+import { ListInvoiceAccComponent } from './list-invoice-acc/list-invoice-acc.component';
+import { ListSalesAccComponent } from './list-sales-acc/list-sales-acc.component';
+import { ListCreditRoleComponent } from './list-credit-role/list-credit-role.component';
+import { ListCreditDdComponent } from './list-credit-dd/list-credit-dd.component';
 
 
 const routes: Routes = [
@@ -260,12 +265,32 @@ const routes: Routes = [
             path: "list-roles-sales",
             component: ListRolesSalesComponent,
           },
+          {
+            path: "create-accounting-inv",
+            component: CreateAccountingInvComponent,
+          },
+          {
+            path: "list-invoice-acc",
+            component: ListInvoiceAccComponent,
+          },
+          {
+            path: "list-sales-acc",
+            component: ListSalesAccComponent,
+          },
+          {
+            path: "list-credit-role",
+            component: ListCreditRoleComponent,
+          },
+          {
+            path: "list-credit-dd",
+            component: ListCreditDdComponent,
+          },
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent],
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent, CreateAccountingInvComponent, ListInvoiceAccComponent, ListSalesAccComponent, ListCreditRoleComponent, ListCreditDdComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -336,9 +361,7 @@ const routes: Routes = [
         PriceListQuantityService,
         BarecodeinfosService,
         TimbreService,
-
-
-        
+        LoadRequestService,        
         AddressService,
        
         AccountService,

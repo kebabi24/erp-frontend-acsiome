@@ -1,17 +1,35 @@
 import { Component, OnInit } from "@angular/core";
 // Angular slickgrid
 import {
-  Column,
-  GridOption,
   Formatter,
-  Formatters,
   Editor,
   Editors,
-  AngularGridInstance,
-  GridService,
-  FieldType,
   OnEventArgs,
-} from "angular-slickgrid";
+  AngularGridInstance,
+  Aggregators,
+  Column,
+  DelimiterType,
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  FlatpickrOption,
+  GridService,
+  GridOption,
+  Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  MultipleSelectOption,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+} from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -64,6 +82,7 @@ export class PurchaseOrderListComponent implements OnInit {
   poForm: FormGroup;
   poedit: any;
   address: any;
+  ponbr : any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -103,9 +122,22 @@ export class PurchaseOrderListComponent implements OnInit {
     })
 }
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe((params) => {
+      const id = params.id;
+
+      if (id) {
+        this.ponbr = id
     this.user =  JSON.parse(localStorage.getItem('user'))
    if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
    this.prepareGrid();
+      }
+      else {
+        this.ponbr=''
+        this.user =  JSON.parse(localStorage.getItem('user'))
+        if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
+        this.prepareGrid();
+      }
+    })
   }
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -168,6 +200,7 @@ export class PurchaseOrderListComponent implements OnInit {
         minWidth: 80,
         maxWidth: 100,
         selectable: true,
+        filterable: true,
       },
       {
         id: "po_vend",
@@ -175,7 +208,8 @@ export class PurchaseOrderListComponent implements OnInit {
         field: "po.po_vend",
         sortable: true,
         width: 50,
-        filterable: false,
+        filterable: true,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
       },
 
       {
@@ -184,7 +218,7 @@ export class PurchaseOrderListComponent implements OnInit {
         field: "po.po_ord_date",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
         type: FieldType.dateIso,
       },
       {
@@ -202,7 +236,7 @@ export class PurchaseOrderListComponent implements OnInit {
         field: "po.po_site",
         sortable: true,
         width: 80,
-        filterable: false,
+        filterable: true,
         type: FieldType.string,
       },
 
@@ -365,6 +399,10 @@ export class PurchaseOrderListComponent implements OnInit {
         sorters: [
           { columnId: 'po_ord_date', direction: 'DESC' },
          ],
+         filters: [
+          { columnId: 'po_nbr', searchTerms: [this.ponbr] },
+          
+        ],
       },
     };
 
@@ -407,7 +445,7 @@ export class PurchaseOrderListComponent implements OnInit {
   openchange(contentvend) {
    // this.prepareGridvend();
    this.createForm();
-    this.modalService.open(contentvend, { size: "lg" });
+    this.modalService.open(contentvend, { size: "xl" });
   }
 
 

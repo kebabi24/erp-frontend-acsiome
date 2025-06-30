@@ -9,7 +9,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 
-import { CodeService, CustomerMobile, CustomerMobileService, AddresseMobileService, AddresseMobile } from "../../../../core/erp";
+import { CodeService, CustomerMobile, CustomerMobileService, MobileSettingsService, AddresseMobile } from "../../../../core/erp";
 import { config } from "process";
 export type ControlPosition = keyof typeof google.maps.ControlPosition;
 @Component({
@@ -66,7 +66,7 @@ export class CreateCustomerMobileComponent implements OnInit {
   categories: any = [];
   categories_types: any = [];
   sales_channels: any = [];
-
+  payment_method : any = []
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -78,6 +78,7 @@ export class CreateCustomerMobileComponent implements OnInit {
     private layoutConfigService: LayoutConfigService,
     private modalService: NgbModal,
     private customerMobileService: CustomerMobileService,
+    private mobileSettingsService : MobileSettingsService,
     // private adresseMobileService: AddresseMobileService,
     private codeService: CodeService,
     private cdr: ChangeDetectorRef,
@@ -88,6 +89,9 @@ export class CreateCustomerMobileComponent implements OnInit {
     this.codeService.getBy({ code_fldname: "ad_city" }).subscribe((response: any) => (this.ad_city = response.data));
     this.codeService.getBy({ code_fldname: "ad_state" }).subscribe((response: any) => (this.ad_state = response.data));
     this.codeService.getBy({ code_fldname: "geoarea_code" }).subscribe((response: any) => (this.ad_geoarea = response.data));
+    this.codeService.getBy({ code_fldname: "ad_country" }).subscribe((response: any) => (this.ad_country = response.data));
+    this.mobileSettingsService.getAllPaymentMethods().subscribe((response: any) => (this.payment_method = response.paymenetMethods))
+
   }
 
   ngOnInit(): void {
@@ -128,7 +132,7 @@ export class CreateCustomerMobileComponent implements OnInit {
       customer_fax: [{ value: this.customerMobile.customer_fax, disabled: !this.isExist }],
       customer_web_adr: [{ value: this.customerMobile.customer_web_adr, disabled: !this.isExist }],
       customer_barcode: [{ value: this.customerMobile.customer_barcode, disabled: !this.isExist }],
-
+      payment_method_code: [this.customerMobile.payment_method_code],
       cluster_code: [this.customerMobile.cluster_code],
       sub_cluster_code: [this.customerMobile.sub_cluster_code],
       category_code: [this.customerMobile.category_code],
@@ -352,6 +356,7 @@ export class CreateCustomerMobileComponent implements OnInit {
     _customerMobile.category_code = controls.category_code.value;
     _customerMobile.category_type_code = controls.category_type_code.value;
     _customerMobile.sales_channel_code = controls.sales_channel_code.value;
+    _customerMobile.payment_method_code = controls.payment_method_code.value;
     _customerMobile.rc = controls.rc.value;
     _customerMobile.ai = controls.ai.value;
     _customerMobile.nis = controls.nis.value;

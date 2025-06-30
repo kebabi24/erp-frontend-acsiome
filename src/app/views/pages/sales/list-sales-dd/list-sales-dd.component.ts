@@ -439,6 +439,26 @@ export class ListSalesDdComponent implements OnInit {
        
       },
       {
+        id: "lot",
+        name: "Lot",
+        field: "lot",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'lot',
+          formatter: (g) => `lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+      },
+      {
         id: "invoice_code",
         name: "Facture",
         field: "invoice_code",

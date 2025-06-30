@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Consultation des Ventes" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Consultation CA Client DD" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
        
     </kt-portlet-header>
@@ -53,7 +53,7 @@
                 <div class="row">
                     <angular-slickgrid class="col-12"  gridId="plagemvGrid"  
                           [columnDefinitions]="mvcolumnDefinitions"
-                          (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                          
                           [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
                           (onAngularGridCreated)="mvGridReady($event)">
                     </angular-slickgrid>

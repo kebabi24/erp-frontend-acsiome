@@ -10,7 +10,8 @@ export const environment = {
       apiUrl: "http://localhost:3001/api/v1",
       //  apiUrl: "http://10.10.3.6:4141/api/v1",
   Instance: "Prod",
-  App: "DD", // RH or ERP or DD
+  App: "ERP", // RH or ERP or DD
+  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
 };
 
 /*

@@ -49,6 +49,10 @@ export class ItineraryService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_ITINERARY_ROLE}/find`, data, { headers: httpHeaders });
   }
+  public getItineraryCustomer(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_ITINERARY}/findcust`, data, { headers: httpHeaders });
+  }
 
   public getItinerarydetByRole(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();

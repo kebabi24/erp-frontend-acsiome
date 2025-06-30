@@ -154,8 +154,13 @@ public getLoadRequest(load_request_code: any) {
 public getLoad(data: any) {
   const httpHeaders = this.httpUtils.getHTTPHeaders()
   return this.http.post(`${API_URL}/findload`,data, { headers: httpHeaders })
-
+}
  // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
-  
+ public getBy(data: any) {
+  const httpHeaders = this.httpUtils.getHTTPHeaders();
+  return this.http.post(`${API_URL}/find`, data, { headers: httpHeaders });
+
+  // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
 }
 }
+

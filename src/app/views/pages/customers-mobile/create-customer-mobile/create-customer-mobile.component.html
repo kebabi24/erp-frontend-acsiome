@@ -244,7 +244,17 @@
                     </div>
                   </div>
                 </div>
-
+                <div class="row">
+                  <div class="form-group col-2">
+                    <label class="form-group">Méthode de Paiement:</label>
+                    <select class="form-control form-control-sm form-control-solid" id="payment" formControlName="payment_method_code">
+                      <option value=""></option>
+                      <option *ngFor="let elem of payment_method" [value]="elem.payment_method_code">
+                        {{ elem.description }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="form-group col-4">
                     <label class="form-group">RC N°:</label>

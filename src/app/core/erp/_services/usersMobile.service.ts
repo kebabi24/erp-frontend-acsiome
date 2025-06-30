@@ -88,5 +88,8 @@ export class UsersMobileService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_PROFILE}/findmenu`,data, { headers: httpHeaders })   
     }
-    
+    public addDinv(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_USER}/adddinv`,data, { headers: httpHeaders })   
+    }
 }

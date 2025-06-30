@@ -90,6 +90,8 @@ export class ListCaDdComponent implements OnInit {
   selectedGroupingFieldsp: Array<string | GroupingGetterFunction> = ['', '', ''];
   // grid options
 
+  
+
   mvangularGrid: AngularGridInstance;
   mvgrid: any;
   mvgridService: GridService;
@@ -99,14 +101,7 @@ export class ListCaDdComponent implements OnInit {
   mvdataset: any[];
 
   
-  angularGrid: AngularGridInstance;
-  grid: any;
-  gridService: GridService;
-  dataView: any;
-  columnDefinitions: Column[];
-  gridOptions: GridOption;
-  dataset: any[];
-
+ 
   
   seq;
   user;
@@ -146,13 +141,9 @@ export class ListCaDdComponent implements OnInit {
     this.mvgrid = angularGrid.slickGrid;
     this.mvgridService = angularGrid.gridService;
   }
-  GridReady(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
-    this.dataView = angularGrid.dataView;
-    this.grid = angularGrid.slickGrid;
-    this.gridService = angularGrid.gridService;
-  }
+
   ngOnInit(): void {
+
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
@@ -253,95 +244,65 @@ export class ListCaDdComponent implements OnInit {
        
         filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
       },
-
+      {
+        id: "credit",
+        name: "Crédit",
+        field: "credit",
+        sortable: true,
+        filterable: true,
+        
+        type: FieldType.number,
+        formatter:Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2, exportWithFormatter: true }, 
+       
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
+      },
     ];
 
     this.mvgridOptions = {
-     
+  
         enableFiltering: true,
         enableAutoResize: true,
-        enableAutoResizeColumnsByCellContent:true,
         enableSorting: true,
+        enableExcelExport:true,
+        enableExcelCopyBuffer: true,
         exportOptions: {
           sanitizeDataExport: true
         },
        
+        
+       
+        excelExportOptions: {
+          filename: 'list-ca-dd',
+          sanitizeDataExport: true,
+         
+          columnHeaderStyle: {
+            font: { color: 'FFFFFFFF' },
+            fill: { type: 'pattern', patternType: 'solid', fgColor: 'FF4a6c91' }
+          }
+        },
+        
         //enableRowSelection: true,
-      //   enableCellNavigation: true,
-      //   enableCheckboxSelector: true,
-      //   checkboxSelector: {
-      //     // optionally change the column index position of the icon (defaults to 0)
-      //     // columnIndexPosition: 1,
-  
-      //     // remove the unnecessary "Select All" checkbox in header when in single selection mode
-      //     hideSelectAllCheckbox: true,
-  
-      //     // you can override the logic for showing (or not) the expand icon
-      //     // for example, display the expand icon only on every 2nd row
-      //     // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
-      //   },
-      //  // multiSelect: false,
-      //   rowSelectionOptions: {
-      //     // True (Single Selection), False (Multiple Selections)
-      //     selectActiveRow: true,
-      //   },
+        enableCellNavigation: true,
+      
+       // multiSelect: false,
        
         formatterOptions: {
         
           // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-          displayNegativeNumberWithParentheses: false,
+          displayNegativeNumberWithParentheses: true,
     
           // Defaults to undefined, minimum number of decimals
           minDecimal: 2,
-          maxDecimal:2,
     
           // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
           thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
         },
-        gridMenu: {
-          onCommand: (e, args) => {
-            if (args.command === 'toggle-preheader') {
-              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-              this.clearGrouping();
-            }
-          },
-        },
-        draggableGrouping: {
-          dropPlaceHolderText: 'Drop a column header here to group by the column',
-          // groupIconCssClass: 'fa fa-outdent',
-          deleteIconCssClass: 'fa fa-times',
-          onGroupChanged: (e, args) => this.onGroupChanged(args),
-          onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
       
-      },
-
     }
     this.mvdataset = [];
     
-    console.log(this.user)
-    const controls = this.soForm.controls
-    const date = controls.calc_date.value
-    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
-    : null;
-  
-    const date1 = controls.calc_date1.value
-    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
-    : null;
-    console.log(date,controls.calc_date.value,date1)
-    
-    let obj= {date,date1}
-    this.mobileSettingsService.getAllCA(obj).subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-       console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
-        
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+   
   }
   solist() {
     this.mvdataset = []
@@ -360,7 +321,7 @@ export class ListCaDdComponent implements OnInit {
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
-     //  this.mvdataView.setItems(this.mvdataset);
+       this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {
@@ -402,67 +363,5 @@ export class ListCaDdComponent implements OnInit {
 
   }
   //reste form
-  onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
-    // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
-    const caller = change && change.caller || [];
-    const groups = change && change.groupColumns || [];
-
-    if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
-      // update all Group By select dropdown
-      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
-    } else if (groups.length === 0 && caller === 'remove-group') {
-      this.clearGroupingSelects();
-    }
-  }
-  clearGroupingSelects() {
-    this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
-  }
   
-  collapseAllGroups() {
-    this.mvdataView.collapseAllGroups();
-  }
-
-  expandAllGroups() {
-    this.mvdataView.expandAllGroups();
-  }
-  clearGrouping() {
-    if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
-      this.draggableGroupingPlugin.clearDroppedGroups();
-    }
-    this.mvgrid.invalidate(); // invalidate all rows and re-render
-  }
-  handleSelectedRowsChanged(e, args) {
-    const controls = this.soForm.controls;
-      if (Array.isArray(args.rows) && this.mvgrid) {
-      args.rows.map((idx) => {
-        const item = this.mvgrid.getDataItem(idx);
-        console.log(item);
-        
-       const invoicecode = item.invoice_code 
-       
-    let obj= {invoicecode}
-this.dataset= []
-       
-       this.mobileSettingsService.getAllInvoicesDet(obj).subscribe(
-        (respo: any) => {   
-          this.dataset = respo.data
-         console.log(this.dataset)
-         this.dataView.setItems(this.dataset);
-          
-           },
-        (error) => {
-            this.dataset = []
-        },
-        () => {}
-    )
-     
-  });
-
-    }
-  }
-   
-
-
-  
- 
 }

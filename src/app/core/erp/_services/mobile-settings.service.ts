@@ -45,15 +45,33 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllInvoices/`, data,{ headers: httpHeaders })
     }
-
+    public   getAllInvoicesAcc(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoicesAcc/`, data,{ headers: httpHeaders })
+    }
     public   getAllInvoicesLine(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getInvoiceLines/`, data,{ headers: httpHeaders })
     }
-    
+
+    public   getAllInvoicesLineAcc(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getInvoiceLinesAcc/`, data,{ headers: httpHeaders })
+    }
+
     public   getAllInvoicesDet(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllInvoicesdet/`,data,{ headers: httpHeaders })
+        //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
+    }
+    public   getAllInvoicesDetAcc(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoicesdetAcc/`,data,{ headers: httpHeaders })
+        //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
+    }
+    public   getAllInvoicesDetInv(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllInvoicesdetInv/`,data,{ headers: httpHeaders })
         //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
     }
     public   getAllInvoicesDetRole(data:any) {
@@ -107,6 +125,14 @@ export class MobileSettingsService {
     public   getAllInvoicesRole(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/getAllInvoicesRole/`, data,{ headers: httpHeaders })
+    }
+    public   getAllCreditsRole(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllCreditsRole/`, data,{ headers: httpHeaders })
+    }
+    public   getAllCredits(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getAllCredits/`, data,{ headers: httpHeaders })
     }
     public   getAllCA(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

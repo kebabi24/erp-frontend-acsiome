@@ -1,0 +1,40 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un nouveau itinéraire'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+      <ng-container ktPortletTools>
+        <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+        <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+        <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder</button>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <div class="example-preview">
+        <div class="row">
+       
+            <div class="col-3">
+              <form [formGroup]="itineraryForm" class="form">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)"> Ce Code existe deja </kt-alert>
+                <div class="row">
+                  <div class="form-group col-6">
+                    <label class="form-group" id="code">Code de l'itinérarie :</label>
+                    <input type="text" [className]="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="itinerary_code" (change)="onChangeCode()" />
+                    <div *ngIf="itineraryForm.controls['itinerary_code'].errors && (itineraryForm.controls['itinerary_code'].dirty || itineraryForm.controls['itinerary_code'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+                  </div>
+                  <div class="form-group col-12">
+                    <label class="form-group" id="code">Nom de l'itinéraire :</label>
+                    <input type="text" class="form-control form-control-sm form-control-solid" formControlName="itinerary_name"  disabled/>
+                       </div>
+                </div>
+                <div id="qr_code"></div>
+               
+              </form>
+              <br />
+              <br />
+              
+            </div>
+           <div class="col-12">
+            <angular-slickgrid gridId="grid4" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
+          </div>
+        </div>
+      </div> </kt-portlet-body
+  ></kt-portlet>
+  

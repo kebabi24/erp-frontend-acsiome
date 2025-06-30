@@ -116,11 +116,12 @@ export class PoReceipCabIdComponent implements OnInit {
   dataprinter: [];
 
   columnDefinitionsprinter: Column[] = [];
-
+  nligne: any;
+  nbrForm: FormGroup;
   gridOptionsprinter: GridOption = {};
   gridObjprinter: any;
   angularGridprinter: AngularGridInstance;
-  constructor(config: NgbDropdownConfig, private prhFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private providersService: ProviderService, private purchaseReceiveService: PurchaseReceiveService, private inventoryTransactionService: InventoryTransactionService, private purchaseOrderService: PurchaseOrderService, private poService: PurchaseOrderService, private addressService: AddressService, private itemsService: ItemService, private codeService: CodeService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService, private deviseService: DeviseService, private taxService: TaxeService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private locationService: LocationService, private labelService: LabelService, private printerService: PrintersService,private employeService: EmployeService) {
+  constructor(config: NgbDropdownConfig, private prhFB: FormBuilder,private nbrFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private providersService: ProviderService, private purchaseReceiveService: PurchaseReceiveService, private inventoryTransactionService: InventoryTransactionService, private purchaseOrderService: PurchaseOrderService, private poService: PurchaseOrderService, private addressService: AddressService, private itemsService: ItemService, private codeService: CodeService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService, private deviseService: DeviseService, private taxService: TaxeService, private sequenceService: SequenceService, private inventoryStatusService: InventoryStatusService, private locationService: LocationService, private labelService: LabelService, private printerService: PrintersService,private employeService: EmployeService) {
     config.autoClose = true;
     this.initGrid();
   }
@@ -154,11 +155,17 @@ export class PoReceipCabIdComponent implements OnInit {
         params: { formatterIcon: "fa fa-plus" },
         minWidth: 30,
         maxWidth: 30,
+        // onCellClick: (e: Event, args: OnEventArgs) => {
+        //   //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+        //   //  this.angularGrid.gridService.deleteItem(args.dataContext);
+        //   // }
+        //   this.addsameItem(args.dataContext.id);
+        // },
         onCellClick: (e: Event, args: OnEventArgs) => {
-          //if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          //  this.angularGrid.gridService.deleteItem(args.dataContext);
-          // }
-          this.addsameItem(args.dataContext.id);
+          this.row_number = args.row;
+          this.nligne = args.dataContext.id;
+          let element: HTMLElement = document.getElementById("openNbrLigne") as HTMLElement;
+          element.click();
         },
       },
 
@@ -533,6 +540,9 @@ export class PoReceipCabIdComponent implements OnInit {
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
+          const controls = this.prhForm.controls
+          console.log("printer",controls.printer.value)
+          if(controls.printer.value != null && controls.printer.value != "") {
           if (args.dataContext.prh_part != null && args.dataContext.prh_rcvd != null && args.dataContext.prh_loc != null) {
             const controls = this.prhForm.controls;
             const _lb = new Label();
@@ -566,6 +576,10 @@ export class PoReceipCabIdComponent implements OnInit {
           } else {
             alert("Veuillez verifier les informations");
           }
+        } else {
+
+          alert("Veuillez choisir une imprimante")
+        }
         },
       },
     ];
@@ -681,6 +695,18 @@ export class PoReceipCabIdComponent implements OnInit {
     // this.createForm();
   }
 
+  changeprinter(){
+    const controls = this.prhForm.controls;
+    const printer = controls.printer.value;
+    this.printerService.getBy({ printer_code :  printer}).subscribe((res: any) => {
+      console.log(res.data)
+      if (res.data.length == 0) {
+        alert("Imprimante n'existe pas  ");
+        controls.printer.setValue(null);
+        document.getElementById("printer").focus();
+      }
+    });
+  }
   //create form
   createForm() {
     this.loadingSubject.next(false);
@@ -708,6 +734,7 @@ export class PoReceipCabIdComponent implements OnInit {
 
       prh_rmks: [this.poEdit.po_rmks],
       print: [true],
+      printer: [this.currentPrinter]
     });
     const controls = this.prhForm.controls;
     this.addressService.getBy({ ad_addr: this.poEdit.po_vend }).subscribe((resp: any) => {
@@ -1024,36 +1051,77 @@ export class PoReceipCabIdComponent implements OnInit {
       { position: "bottom" }
     );
   }
-  addsameItem(i) {
-    console.log(i);
-    console.log(this.dataset);
-    this.gridService.addItem(
-      {
-        id: this.dataset.length + 1,
-        prh_line: this.dataset.length + 1,
-        prh_part: this.dataset[i - 1].prh_part,
-        cmvid: "",
-        desc: this.dataset[i - 1].desc,
-        qty_received: this.dataset[i - 1].qty_received,
-        prh_rcvd: 0,
-        prh_taxable: this.dataset[i - 1].pod_taxable,
-        prh_taxc: this.dataset[i - 1].pod_taxc,
-        prh_tax_code: this.dataset[i - 1].pod_tax_code,
+  // addsameItem(i) {
+  //   console.log(i);
+  //   console.log(this.dataset);
+  //   this.gridService.addItem(
+  //     {
+  //       id: this.dataset.length + 1,
+  //       prh_line: this.dataset.length + 1,
+  //       prh_part: this.dataset[i - 1].prh_part,
+  //       cmvid: "",
+  //       desc: this.dataset[i - 1].desc,
+  //       qty_received: this.dataset[i - 1].qty_received,
+  //       prh_rcvd: 0,
+  //       prh_taxable: this.dataset[i - 1].pod_taxable,
+  //       prh_taxc: this.dataset[i - 1].pod_taxc,
+  //       prh_tax_code: this.dataset[i - 1].pod_tax_code,
 
-        prh_um: this.dataset[i - 1].prh_um,
-        prh_um_conv: this.dataset[i - 1].prh_um_conv,
-        prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
-        // prh_site: this.dataset[i - 1].prh_site,
-        prh_loc: this.dataset[i - 1].prh_loc,
-        prh_serial: this.dataset[i - 1].prh_serial,
-        tr_status: this.dataset[i - 1].tr_status,
-        prh_vend_lot: null,
-        tr_expire: null,
-      },
-      { position: "bottom" }
-    );
+  //       prh_um: this.dataset[i - 1].prh_um,
+  //       prh_um_conv: this.dataset[i - 1].prh_um_conv,
+  //       prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
+  //       // prh_site: this.dataset[i - 1].prh_site,
+  //       prh_loc: this.dataset[i - 1].prh_loc,
+  //       prh_serial: this.dataset[i - 1].prh_serial,
+  //       tr_status: this.dataset[i - 1].tr_status,
+  //       prh_vend_lot: null,
+  //       tr_expire: null,
+  //     },
+  //     { position: "bottom" }
+  //   );
+  // }
+
+  addsameItem() {
+    const control = this.nbrForm.controls;
+    const limit = Number(control.nbrligne.value);
+    var i = this.nligne;
+
+    const maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1);
+    var iddd = maxObj.id + 1;
+
+    for (var j = 0; j < limit; j++) {
+      this.gridService.addItem(
+        {
+          id: iddd,
+          prh_line: iddd,
+          prh_part: this.dataset[i - 1].prh_part,
+          cmvid: "",
+          desc: this.dataset[i - 1].desc,
+          qty_received: this.dataset[i - 1].qty_received,
+          prh_rcvd: this.dataset[i - 1].prh_rcvd,
+          prh_taxable: this.dataset[i - 1].pod_taxable,
+          prh_taxc: this.dataset[i - 1].pod_taxc,
+          prh_tax_code: this.dataset[i - 1].pod_tax_code,
+  
+          prh_um: this.dataset[i - 1].prh_um,
+          prh_um_conv: this.dataset[i - 1].prh_um_conv,
+          prh_pur_cost: this.dataset[i - 1].prh_pur_cost,
+          // prh_site: this.dataset[i - 1].prh_site,
+          prh_loc: this.dataset[i - 1].prh_loc,
+          prh_serial: this.dataset[i - 1].prh_serial,
+          tr_status: this.dataset[i - 1].tr_status,
+          prh_vend_lot: this.dataset[i - 1].prh_vend_lot,
+          tr_expire: null,
+        },
+        { position: "bottom" }
+      );
+      iddd++;
+    }
+    this.modalService.dismissAll();
   }
-
   handleSelectedRowsChanged4(e, args) {
     const controls = this.prhForm.controls;
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
@@ -1971,7 +2039,17 @@ export class PoReceipCabIdComponent implements OnInit {
     this.prepareGridum();
     this.modalService.open(content, { size: "lg" });
   }
+  opennbrligne(content) {
+    this.createnbrForm();
+    this.modalService.open(content, { size: "lg" });
+  }
+  createnbrForm() {
+    this.loadingSubject.next(false);
 
+    this.nbrForm = this.nbrFB.group({
+      nbrligne: [1],
+    });
+  }
   printpdf(nbr) {
     //const controls = this.totForm.controls
     const controls = this.prhForm.controls;
@@ -1981,7 +2059,7 @@ export class PoReceipCabIdComponent implements OnInit {
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
     img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, "png", 170, 5, 30, 30);
+    
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
       doc.text(this.domain.dom_name, 10, 10);
@@ -1989,6 +2067,9 @@ export class PoReceipCabIdComponent implements OnInit {
     if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
     if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+
+    doc.addImage(img, "png", 160, 5, 50, 30);
+
     doc.setFontSize(12);
     doc.text("RC N° : " + nbr, 70, 40);
     doc.setFontSize(8);
@@ -2016,16 +2097,16 @@ export class PoReceipCabIdComponent implements OnInit {
     doc.text("LN", 12.5, 88.5);
     doc.line(20, 85, 20, 90);
     doc.text("Code Article", 25, 88.5);
-    doc.line(45, 85, 45, 90);
+    doc.line(60, 85, 60, 90);
     doc.text("Désignation", 67.5, 88.5);
-    doc.line(100, 85, 100, 90);
-    doc.text("QTE", 107, 88.5);
-    doc.line(120, 85, 120, 90);
-    doc.text("UM", 123, 88.5);
-    doc.line(130, 85, 130, 90);
-    doc.text("Prix", 132, 88.5);
-    doc.line(140, 85, 140, 90);
-    doc.text("Empl", 142, 88.5);
+    doc.line(110, 85, 110, 90);
+    doc.text("QTE", 115, 88.5);
+    doc.line(125, 85, 125, 90);
+    doc.text("UM", 127, 88.5);
+    doc.line(135, 85, 135, 90);
+    doc.text("Prix", 137, 88.5);
+    // doc.line(140, 85, 140, 90);
+    // doc.text("Empl", 142, 88.5);
     doc.line(153, 85, 153, 90);
     doc.text("Lot/Serie", 158, 88.5);
     doc.line(180, 85, 180, 90);
@@ -2037,7 +2118,7 @@ export class PoReceipCabIdComponent implements OnInit {
       if (j % 35 == 0 && j != 0) {
         doc.addPage();
 
-        doc.addImage(img, "png", 170, 5, 30, 30);
+        // doc.addImage(img, "png", 170, 5, 30, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);
@@ -2045,6 +2126,7 @@ export class PoReceipCabIdComponent implements OnInit {
         if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
         if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
         if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.addImage(img, "png", 160, 5, 50, 30);
         doc.setFontSize(12);
         doc.text("RC N° : " + nbr, 70, 40);
         doc.setFontSize(8);
@@ -2072,16 +2154,16 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.text("LN", 12.5, 88.5);
         doc.line(20, 85, 20, 90);
         doc.text("Code Article", 25, 88.5);
-        doc.line(45, 85, 45, 90);
+        doc.line(60, 85, 60, 90);
         doc.text("Désignation", 67.5, 88.5);
-        doc.line(100, 85, 100, 90);
-        doc.text("QTE", 107, 88.5);
-        doc.line(120, 85, 120, 90);
-        doc.text("UM", 123, 88.5);
-        doc.line(130, 85, 130, 90);
-        doc.text("Prix", 132, 88.5);
-        doc.line(140, 85, 140, 90);
-        doc.text("Empl", 142, 88.5);
+        doc.line(110, 85, 110, 90);
+        doc.text("QTE", 115, 88.5);
+        doc.line(125, 85, 125, 90);
+        doc.text("UM", 127, 88.5);
+        doc.line(135, 85, 135, 90);
+        doc.text("Prix", 137, 88.5);
+        // doc.line(140, 85, 140, 90);
+        // doc.text("Empl", 142, 88.5);
         doc.line(153, 85, 153, 90);
         doc.text("Lot/Série", 152, 88.5);
         doc.line(180, 85, 180, 90);
@@ -2100,17 +2182,17 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].prh_part, 25, i - 1);
-        doc.line(45, i - 5, 45, i);
-        doc.text(desc1, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].prh_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
-        doc.line(140, i - 5, 140, i);
-        doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+        doc.text(this.dataset[j].prh_part, 22, i - 1);
+        doc.line(60, i - 5, 60, i);
+        doc.text(desc1, 62, i - 1);
+        doc.line(110, i - 5, 110, i);
+        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 123, i - 1, { align: "right" });
+        doc.line(125, i - 5, 125, i);
+        doc.text(this.dataset[j].prh_um, 127, i - 1);
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(Number(this.dataset[j].prh_pur_cost).toFixed(2)), 151, i - 1, { align: "right" });
+        // doc.line(140, i - 5, 140, i);
+        // doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
         doc.line(153, i - 5, 153, i);
         if (this.dataset[j].prh_serial != null) {
           doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
@@ -2124,15 +2206,15 @@ export class PoReceipCabIdComponent implements OnInit {
 
         i = i + 5;
 
-        doc.text(desc2, 47, i - 1);
+        doc.text(desc2, 62, i - 1);
 
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
-        doc.line(45, i - 5, 45, i);
-        doc.line(100, i - 5, 100, i);
-        doc.line(120, i - 5, 120, i);
-        doc.line(130, i - 5, 130, i);
-        doc.line(140, i - 5, 140, i);
+        doc.line(60, i - 5, 60, i);
+        doc.line(110, i - 5, 110, i);
+        doc.line(125, i - 5, 125, i);
+        doc.line(135, i - 5, 135, i);
+        // doc.line(140, i - 5, 140, i);
         doc.line(153, i - 5, 153, i);
         doc.line(180, i - 5, 180, i);
         doc.line(200, i - 5, 200, i);
@@ -2143,17 +2225,17 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].prh_part, 25, i - 1);
-        doc.line(45, i - 5, 45, i);
-        doc.text(this.dataset[j].desc, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].prh_part, 22, i - 1);
+        doc.line(60, i - 5, 60, i);
+        doc.text(this.dataset[j].desc, 62, i - 1);
+        doc.line(110, i - 5, 110, i);
+        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 123, i - 1, { align: "right" });
+        doc.line(125, i - 5, 125, i);
         doc.text(this.dataset[j].prh_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
-        doc.line(140, i - 5, 140, i);
-        doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(Number(this.dataset[j].prh_pur_cost).toFixed(2)), 1518, i - 1, { align: "right" });
+        // doc.line(140, i - 5, 140, i);
+        // doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
         doc.line(153, i - 5, 153, i);
         if (this.dataset[j].prh_serial != null) {
           doc.text(String(this.dataset[j].prh_serial), 156, i - 1);

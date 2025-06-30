@@ -166,6 +166,17 @@ export class ListComponent implements OnInit {
         minWidth: 80,
       },
       {
+        id: "pt_price",
+        name: "Prix",
+        field: "pt_price",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+        formatter:Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+        minWidth: 80,
+      },
+      {
         id: "pt_site",
         name: "Site",
         field: "pt_site",
@@ -362,7 +373,18 @@ export class ListComponent implements OnInit {
       // autosizeColumnsByCellContentOnFirstLoad: true,
       enableAutoSizeColumns: true,
       syncColumnCellResize: true,
-
+      formatterOptions: {
+        
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: false,
+  
+        // Defaults to undefined, minimum number of decimals
+        minDecimal:2,
+        maxDecimal:2,
+  
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+      },
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
       },

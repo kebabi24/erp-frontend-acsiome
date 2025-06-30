@@ -15,7 +15,26 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import {
+  NgbModal,
+  NgbActiveModal,
+  ModalDismissReasons,
+  NgbModalOptions,
+} from "@ng-bootstrap/ng-bootstrap";
 
+// Angular slickgrid
+import {
+  Column,
+  GridOption,
+  Formatter,
+  Editor,
+  Editors,
+  AngularGridInstance,
+  GridService,
+  FieldType,
+  Formatters,
+  OnEventArgs,
+} from "angular-slickgrid";
 
 /* Chart code */
 // Themes begin
@@ -78,6 +97,13 @@ export class SalesDashboardComponent implements OnInit {
 
  recovery_rate_data : any = []
 
+ data: [];
+ columnDefinitions3: Column[] = [];
+ gridOptions3: GridOption = {};
+ gridObj3: any;
+ angularGrid3: AngularGridInstance;
+ dataView3: any;
+ gridService3: GridService;
 
 ca_dist : any
 ca_dd : any
@@ -87,7 +113,10 @@ rv_dd : any
 ddqty_type_data : any = []
 ddamt_type_data : any = []
 ca_role : any = []
-
+credit_role : any = []
+credit_Cust : any = []
+credit_dd : any
+credit_gros : any
  //private chart: am4charts.XYChart;
 
 
@@ -97,6 +126,7 @@ ca_role : any = []
    private layoutConfigService: LayoutConfigService,
    private dashboardComService : DashboardCommercialService,
    private layoutUtilsService: LayoutUtilsService,
+   private modalService: NgbModal,
  ) {
  }
 
@@ -104,6 +134,7 @@ ca_role : any = []
   this.loading$ = this.loadingSubject.asObservable();
   this.loadingSubject.next(false);
   this.createForm()
+  this.prepareGrid3();
 
   let date = new Date();
   let startDate = date.getFullYear() +'-'+(date.getMonth()+1).toString().padStart(2, '0')+'-'+"01"
@@ -166,6 +197,10 @@ updateData(){
         this.ca_zone_data = res.ca_zone_data
         this.ca_cust = res.ca_bill
         this.ca_role = res.ca_role
+        this.credit_role = res.credit_role
+        this.credit_Cust = res.credit_Cust
+        this.data =  res.credit_Cust
+        this.dataView3.setItems(this.data)
         let cadd =  String(  Number(res.ca_dd).toLocaleString("en-US", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -195,6 +230,22 @@ updateData(){
         let rvdists = replaceAll(rvdist,","," ")
         this.rv_dist = rvdists
 
+        
+        let cred_dd =  String(  Number(res.credit_dd).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        
+        let cred_dds = replaceAll(cred_dd,","," ")
+      
+        this.credit_dd = cred_dds
+        let cred_gros =  String(  Number(res.credit_gros).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        let cred_gross = replaceAll(cred_gros,","," ")
+        this.credit_gros = cred_gross
+        
         this.createQtyTypeChart()
         this.createCATypeChart()
 
@@ -204,6 +255,8 @@ updateData(){
         this.createCaCustChart()
         this.createCAZonechartPie()
         this.createCaRoleChart()
+        this.createCreditRoleChart()
+        this.createCreditCustChart()
      
       },
       (err) =>
@@ -235,6 +288,10 @@ getSalesDashboarData(startDate: any , endDate:any){
         this.ca_zone_data = res.ca_zone_data
         this.ca_cust = res.ca_bill
         this.ca_role = res.ca_role
+        this.credit_role = res.credit_role
+        this.credit_Cust = res.credit_Cust
+        this.data =  res.credit_Cust
+        this.dataView3.setItems(this.data)
         let cadd =  String(  Number(res.ca_dd).toLocaleString("en-US", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -266,6 +323,24 @@ getSalesDashboarData(startDate: any , endDate:any){
         let rvdists = replaceAll(rvdist,","," ")
         this.rv_dist = rvdists
 
+
+
+
+        let cred_dd =  String(  Number(res.credit_dd).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        
+        let cred_dds = replaceAll(cred_dd,","," ")
+      
+        this.credit_dd = cred_dds
+        let cred_gros =  String(  Number(res.credit_gros).toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }))
+        let cred_gross = replaceAll(cred_gros,","," ")
+        this.credit_gros = cred_gross
+     
         this.createQtyTypeChart()
         this.createCATypeChart()
         this.createDDQtyTypeChart()
@@ -274,6 +349,8 @@ getSalesDashboarData(startDate: any , endDate:any){
         this.createCaCustChart()
         this.createCAZonechartPie()
         this.createCaRoleChart()
+        this.createCreditRoleChart()
+        this.createCreditCustChart()
       },
       (err) =>
         this.layoutUtilsService.showActionNotification(
@@ -544,5 +621,173 @@ series.columns.template.adapter.add("fill", function(fill, target) {
 
 // Cursor
 chart.cursor = new am4charts.XYCursor();
+}
+
+createCreditRoleChart(){
+  let chart = am4core.create("chartdivN8", am4charts.XYChart);
+chart.scrollbarX = new am4core.Scrollbar();
+
+// Add data
+chart.data = this.credit_role
+
+// Create axes
+let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "role_code";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 30;
+categoryAxis.renderer.labels.template.horizontalCenter = "right";
+categoryAxis.renderer.labels.template.verticalCenter = "middle";
+categoryAxis.renderer.labels.template.rotation = 270;
+categoryAxis.tooltip.disabled = true;
+categoryAxis.renderer.minHeight = 110;
+
+let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.renderer.minWidth = 50;
+
+// Create series
+let series = chart.series.push(new am4charts.ColumnSeries());
+series.sequencedInterpolation = true;
+series.dataFields.valueY = "credit";
+series.dataFields.categoryX = "role_code";
+series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+series.columns.template.strokeWidth = 0;
+
+series.tooltip.pointerOrientation = "vertical";
+
+series.columns.template.column.cornerRadiusTopLeft = 10;
+series.columns.template.column.cornerRadiusTopRight = 10;
+series.columns.template.column.fillOpacity = 0.8;
+
+// on hover, make corner radiuses bigger
+let hoverState = series.columns.template.column.states.create("hover");
+hoverState.properties.cornerRadiusTopLeft = 0;
+hoverState.properties.cornerRadiusTopRight = 0;
+hoverState.properties.fillOpacity = 1;
+
+series.columns.template.adapter.add("fill", function(fill, target) {
+  return chart.colors.getIndex(target.dataItem.index);
+});
+
+// Cursor
+chart.cursor = new am4charts.XYCursor();
+}
+createCreditCustChart(){
+  let chart = am4core.create("chartdivN9", am4charts.XYChart);
+chart.scrollbarX = new am4core.Scrollbar();
+
+// Add data
+chart.data = this.credit_Cust
+
+// Create axes
+let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "cm_sort";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 30;
+categoryAxis.renderer.labels.template.horizontalCenter = "right";
+categoryAxis.renderer.labels.template.verticalCenter = "middle";
+categoryAxis.renderer.labels.template.rotation = 270;
+categoryAxis.tooltip.disabled = true;
+categoryAxis.renderer.minHeight = 110;
+
+let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.renderer.minWidth = 50;
+
+// Create series
+let series = chart.series.push(new am4charts.ColumnSeries());
+series.sequencedInterpolation = true;
+series.dataFields.valueY = "cm_balance";
+series.dataFields.categoryX = "cm_sort";
+series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+series.columns.template.strokeWidth = 0;
+
+series.tooltip.pointerOrientation = "vertical";
+
+series.columns.template.column.cornerRadiusTopLeft = 10;
+series.columns.template.column.cornerRadiusTopRight = 10;
+series.columns.template.column.fillOpacity = 0.8;
+
+// on hover, make corner radiuses bigger
+let hoverState = series.columns.template.column.states.create("hover");
+hoverState.properties.cornerRadiusTopLeft = 0;
+hoverState.properties.cornerRadiusTopRight = 0;
+hoverState.properties.fillOpacity = 1;
+
+series.columns.template.adapter.add("fill", function(fill, target) {
+  return chart.colors.getIndex(target.dataItem.index);
+});
+
+// Cursor
+chart.cursor = new am4charts.XYCursor();
+}
+
+angularGridReady3(angularGrid: AngularGridInstance) {
+  this.angularGrid3 = angularGrid;
+  this.gridObj3 = (angularGrid && angularGrid.slickGrid) || {};
+  this.dataView3 = angularGrid.dataView;
+  this.gridService3 = angularGrid.gridService;
+}
+
+prepareGrid3() {
+  this.columnDefinitions3 = [
+       
+    {
+      id: "cm_addr",
+      name: "Code Client ",
+      field: "cm_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "cm_sort",
+      name: "Nom",
+      field: "cm_sort",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "cm_balance",
+      name: "Solde",
+      field: "cm_balance",
+      sortable: true,
+      filterable: true,
+      formatter : Formatters.decimal,
+      type: FieldType.float,
+    },
+  ];
+
+  this.gridOptions3 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    formatterOptions: {
+        
+      // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+      displayNegativeNumberWithParentheses: false,
+
+      // Defaults to undefined, minimum number of decimals
+      minDecimal: 2,
+
+      // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+      thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+    },
+    presets: {
+      sorters: [
+        { columnId: 'cm_balance', direction: 'DESC' }
+      ],
+    },
+  };
+
+  // fill the dataset with your data
+ 
+}
+open3(content) {
+  
+  this.prepareGrid3();
+  this.modalService.open(content, { size: "lg" });
 }
 }

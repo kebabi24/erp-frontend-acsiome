@@ -28,6 +28,7 @@ import { ItineraryService, RoleService } from "src/app/core/erp";
 import { CustomerMobileService } from "src/app/core/erp";
 import { CodeMobileService } from "src/app/core/erp";
 import { EditItineraryComponent } from "./edit-itinerary/edit-itinerary.component";
+import { PrintQrcodeComponent } from './print-qrcode/print-qrcode.component';
 
 const routes: Routes = [
   {
@@ -42,10 +43,14 @@ const routes: Routes = [
     path: "edit-itinerary/:id",
     component: EditItineraryComponent,
   },
+  {
+    path: "print-qrcode",
+    component: PrintQrcodeComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [CreateNewItineraryComponent, ListItineraryComponent, EditItineraryComponent],
+  declarations: [CreateNewItineraryComponent, ListItineraryComponent, EditItineraryComponent, PrintQrcodeComponent],
   imports: [
     CommonModule,
     HttpClientModule,

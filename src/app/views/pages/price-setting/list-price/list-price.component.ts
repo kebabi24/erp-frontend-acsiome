@@ -134,7 +134,14 @@ export class ListPriceComponent implements OnInit {
            filterable: true,
            type: FieldType.string,
          },
-         
+         {
+            id: "chr01",
+            name: "Désignation",
+            field: "chr01",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
          {
            id: "pi_um",
            name: "UM",

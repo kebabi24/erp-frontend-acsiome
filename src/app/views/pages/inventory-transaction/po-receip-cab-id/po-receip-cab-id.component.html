@@ -54,11 +54,15 @@
           <div class="form-group col-2">
             <label class="form-group">Site:</label>
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" id="prh_site" formControlName="prh_site" (change)="onChangesite()" aria-describedby="basic-addon2" />
+              <input type="text" 
+              [className]="prhForm.controls['prh_site'].errors && (prhForm.controls['prh_site'].dirty || prhForm.controls['prh_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+              id="prh_site" formControlName="prh_site" (change)="onChangesite()" aria-describedby="basic-addon2" />
               <div class="input-group-append">
                 <span class="input-group-text" (click)="opensite(contentsite)"> <i class="text-dark-50 flaticon2-search"></i> </span>
               </div>
             </div>
+            <div *ngIf="prhForm.controls['prh_site'].errors && (prhForm.controls['prh_site'].dirty || prhForm.controls['prh_site'].touched)"
+            class="invalid-feedback">Ce Champs est obligatoire</div>
           </div>
           <div class="form-group col-2">
             <label class="form-group">N° BL/Facture:</label>
@@ -66,7 +70,7 @@
               <input type="text" class="form-control form-control-solid" formControlName="prh_xinvoice" aria-describedby="basic-addon2" />
             </div>
           </div>
-          <div class="form-group col-3">
+          <div class="form-group col-2">
             <label class="form-group">Devise:</label>
             <div class="input-group input-group-sm">
               <input type="text" class="form-control form-control-solid" formControlName="prh_curr" aria-describedby="basic-addon2" />
@@ -75,7 +79,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group col-2">
+          <div class="form-group col-1">
             <label class="form-group">Taux Change:</label>
             <div class="input-group input-group-sm">
               <input type="number" class="form-control form-control-solid" formControlName="prh_ex_rate" aria-describedby="basic-addon2" />
@@ -90,14 +94,14 @@
         </div>
 
         <div class="row">
-          <div class="form-group col-9">
+          <div class="form-group col-6">
             <label class="form-group">Observation:</label>
             <textarea class="form-control form-control-sm form-control-solid" formControlName="prh_rmks" rows="2"></textarea>
           </div>
-          <div class="form-group col-2">
+          <div class="form-group col-3">
             <label class="form-group">choix de l'imprimante</label>
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-solid" formControlName="printer" placeholder="" aria-describedby="basic-addon2" />
+              <input type="text" class="form-control form-control-solid" formControlName="printer" id="printer" placeholder="" aria-describedby="basic-addon2"  (change)="changeprinter()"/>
               <div class="input-group-append">
                 <span class="input-group-text" (click)="openprinter(contentprinter)"> <i class="text-dark-50 flaticon2-search"></i> </span>
               </div>
@@ -283,6 +287,32 @@
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
+    </div>
+    <div>
+      <ng-template #contentsamepart let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Choissir Nombre ligne</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="form" [formGroup]="nbrForm">
+            <div class="row">
+              <div class="form-group col-4">
+                <label class="form-group">Nombre de Ligne:</label>
+                <div class="input-group input-group-sm">
+                  <input type="number" class="form-control form-control-solid" formControlName="nbrligne" aria-describedby="basic-addon2" />
+                </div>
+              </div>
+            </div>
+          </form>    
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="addsameItem()">Ok</button>
+        </div>
+      </ng-template>
+      <button hidden id="openNbrLigne" class="btn btn-primary" (click)="opennbrligne(contentsamepart)">Launch demo modal</button>
     </div>
   </kt-portlet-body>
 </kt-portlet>

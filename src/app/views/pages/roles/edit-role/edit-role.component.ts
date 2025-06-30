@@ -89,6 +89,20 @@ export class EditRoleComponent implements OnInit {
   dataViewpl: any;
   gridServicepl: GridService;
   pls: [];
+
+  gridObjit: any;
+  angularGridit: AngularGridInstance;
+  dataViewit: any;
+  gridServiceit: GridService;
+  columnDefinitionsit: Column[] = [];
+  gridOptionsit: GridOption = {};
+  selectedIndexes: any[];
+  selectedIndexes2: any[];
+  d: Array<number> = [];
+
+
+  its: any[];
+
   constructor(config: NgbDropdownConfig, private roleF: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private modalService: NgbModal, private roleService: RoleService, private itineraryService: ItineraryService, private locationService: LocationService, private tokenSerieService: TokenSerieService, private usersService: UsersService, private mobileSettingsService : MobileSettingsService) {
     config.autoClose = true;
     this.activatedRoute.params.subscribe((params) => {
@@ -96,9 +110,10 @@ export class EditRoleComponent implements OnInit {
       this.param = id;
     });
     this.itineraryService.getBySomething({ role_code: this.param }).subscribe((res: any) => {
-      this.selectedItineray = res.data.map((item) => {
-        return item;
-      });
+      // this.selectedItineray = res.data.map((item) => {
+      //   return item;
+      // });
+      this.itinerary = res.data
     });
     console.log("constructor", this.selectedItineray);
     // // this.createForm();
@@ -122,7 +137,7 @@ export class EditRoleComponent implements OnInit {
     this.getLocations();
     this.getSites();
     this.getUsersd();
-
+    this.getits()
 
 
 
@@ -240,7 +255,7 @@ export class EditRoleComponent implements OnInit {
 
     let role = this.prepareRole();
     console.log(role);
-    this.addRole(role, this.selectedItinerary);
+    this.addRole(role, this.itinerary);
   }
 
   prepareRole(): Role {
@@ -303,9 +318,9 @@ export class EditRoleComponent implements OnInit {
         type: FieldType.string,
       },
       {
-        id: "itinerary_name",
+        id: "itinerary.itinerary_name",
         name: "Nom de l'itinéraire",
-        field: "itinerary_name",
+        field: "itinerary.itinerary_name",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -333,6 +348,15 @@ export class EditRoleComponent implements OnInit {
       // frozenColumn: 0,
       // frozenBottom: true,
       enableRowSelection: true,
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: false,
@@ -352,9 +376,9 @@ export class EditRoleComponent implements OnInit {
       },
       multiSelect: true,
     };
-
+console.log(this.its)
     // fill the dataset with your data
-    this.itineraryService.getAllItinerary().subscribe((response: any) => (this.itinerary = response.data));
+    // this.itineraryService.getAllItinerary().subscribe((response: any) => (this.itinerary = response.data));
   }
 
   prepareGrid() {
@@ -1171,4 +1195,147 @@ export class EditRoleComponent implements OnInit {
     }
   }
 
+  angularGridReadyit(angularGrid: AngularGridInstance) {
+    this.angularGridit = angularGrid;
+    this.gridObjit = (angularGrid && angularGrid.slickGrid) || {};
+
+    this.gridServiceit = angularGrid.gridService;
+    this.dataViewit = angularGrid.dataView;
+      let items: any[] = [];
+      let selectedRowss;
+      console.log(this.its)
+         this.its.forEach((element) => {
+        this.selectedIndexes2.forEach((element2) => {
+          if (element.itinerary_code === element2) {
+            items.push(this.dataViewit.getIdxById(element.id));
+          }
+        });
+      });
+  console.log(items)
+      this.gridObjit.setSelectedRows(items);
+    }
+  
+
+  // GRID IN
+  prepareGridit() {
+    this.columnDefinitionsit = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "itinerary_code",
+        name: "Code de l'itinéraire",
+        field: "itinerary_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "itinerary_name",
+        name: "Nom de l'itinéraire",
+        field: "itinerary_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "itinerary_type",
+        name: "Type de l'itinéraire",
+        field: "itinerary_type",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsit = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        // rowSelection: {
+        //   // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+        //   gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+        //   //dataContextIds
+        // },
+      },
+    };
+
+    // fill the dataset with your data
+    // this.itineraryService.getAllItinerary().subscribe((response: any) => (this.its = response.data));
+  }
+
+  handleSelectedRowsChangedit(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+getits(){
+  this.itineraryService.getAllItinerary().subscribe((response: any) => (this.its = response.data));
+}
+  addit() {
+    // this.itinerary.push({})
+    var l: any[] = [];
+    console.log(this.selectedIndexes)
+    this.selectedIndexes.forEach((index) => {
+      l.push({
+        id: index,
+        itinerary_code: this.its[index]["itinerary_code"],
+        itinerary_name: this.its[index]["itinerary_name"],
+        itinerary_type: this.its[index]["itinerary_type"],
+        //trigger : this.itinerary[index]['pjd_trigger']
+      });
+    });
+    // console.log("lllllllll",l)
+    this.itinerary = l;
+
+    this.dataViewit.setItems(this.itinerary);
+  }
+  addNewItem(content) {
+    this.openit(content);
+  }
+  openit(content) {
+    let dd = [];
+    for (let it of this.itinerary) {
+      //console.log(it)
+      //this.selectedIndexes2.push(1)
+      var i = it.itinerary_code;
+      dd.push(i);
+      // console.log("i",i)
+    }
+    // console.log(this.selectedIndexes2)
+    // console.log(dd)
+    this.selectedIndexes2 = dd;
+    console.log(this.selectedIndexes2)
+    this.prepareGridit();
+    this.modalService.open(content, { size: "lg" });
+  }
 }

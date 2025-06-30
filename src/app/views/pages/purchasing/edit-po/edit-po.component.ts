@@ -103,8 +103,7 @@ export class EditPoComponent implements OnInit {
       private itemsService: ItemService
   ) {
       config.autoClose = true
-      this.initGrid()
-      this.user = JSON.parse(localStorage.getItem('user'))
+    
   }
   gridReady(angularGrid: AngularGridInstance) {
       this.angularGrid = angularGrid
@@ -263,6 +262,8 @@ export class EditPoComponent implements OnInit {
                 
         
          this.createForm()
+         this.initGrid()
+         this.user = JSON.parse(localStorage.getItem('user'))
          const controls = this.poForm.controls
      
          controls.po_nbr.setValue(this.poEdit.po_nbr)

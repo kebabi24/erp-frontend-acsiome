@@ -438,6 +438,10 @@ export class MenuConfig {
               page: "/supervision/list-invoice-role",
             },
             {
+              title: "Liste des Crédits Par Role",
+              page: "/sales/list-credit-role",
+            },
+            {
               title: "Liste des Payments Par Role ",
               page: "/supervision/list-payment-role",
             },
@@ -480,6 +484,10 @@ export class MenuConfig {
             {
               title: "Ajouter un itinéraire",
               page: "/itinerary/create-new-itinerary",
+            },
+            {
+              title: "Impression Code a Bare Client",
+              page: "/itinerary/print-qrcode",
             },
           ],
         },
@@ -950,6 +958,10 @@ export class MenuConfig {
               page: "/sales/list-invoice-mob",
             },
             {
+              title: "Liste des Crédits",
+              page: "/sales/list-credit-dd",
+            },
+            {
               title: "Liste des Ventes DD",
               page: "/sales/list-sales-dd",
             },
@@ -977,6 +989,22 @@ export class MenuConfig {
               title: "Quantitée Vendue Par Role",
               page: "/sales/list-sales-role",
             },
+            {
+              title: "Liste Ventes Role/Type ",
+              page: "/sales/list-roles-sales",
+            },
+            {
+              title: "Imputation Facture DD  ",
+              page: "/sales/create-accounting-inv",
+            },
+            {
+              title: "Liste Factures DD Imputées ",
+              page: "/sales/list-invoice-acc",
+            },
+            {
+              title: "Liste des Ventes DD Imputées",
+              page: "/sales/list-sales-acc",
+            },
           ],
         },
         {
@@ -1000,6 +1028,10 @@ export class MenuConfig {
             {
               title: "Liste des Recettes vendeurs",
               page: "/account-receivable/list-vendor-payment",
+            },
+            {
+              title: "Liste des Recettes Par Caisse",
+              page: "/account-receivable/list-global-vendor-payment",
             },
             {
               title: "Situation Caisse Détaillée",

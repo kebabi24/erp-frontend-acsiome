@@ -40,8 +40,8 @@ import frLocale from '@fullcalendar/core/locales/fr';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import {  NgbCalendar, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import {  EventInput } from '@fullcalendar/core';
-
-
+import { environment } from "../../../../../environments/environment"
+const key = environment.key
 
 @Component({
     selector: "kt-rdv-pick",
@@ -171,7 +171,7 @@ export class RdvPickComponent implements OnInit, OnDestroy {
             password: controls.password.value,
         }
         this.auth
-            .login(authData.userName, authData.password)
+            .login(authData.userName, authData.password,key)
 
             .subscribe(
                 (res: any) => {

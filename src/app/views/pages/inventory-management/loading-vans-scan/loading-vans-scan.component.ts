@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbModal, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 
 // Angular slickgrid
-import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator, EditorArgs, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
+import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, EditorValidator,   OperatorType,EditorArgs,Filters, GridService, Formatters, FieldType, OnEventArgs } from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators, ControlContainer } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of, Observer } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -113,6 +113,15 @@ export class LoadingVansScanComponent implements OnInit {
   angularGridchardet: AngularGridInstance;
   gridchardet: any;
   row_number;
+  
+  angularGridlr: AngularGridInstance;
+  gridlr: any;
+
+  gridServicelr: GridService;
+  dataViewlr: any;
+  columnDefinitionslr: Column[];
+  gridOptionslr: GridOption;
+  datalr: any[];
   constructor(config: NgbDropdownConfig, private tagFB: FormBuilder, private unloadFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private inventoryManagementService: InventoryManagementService, private inventoryTransactionService: InventoryTransactionService, private loadRequestService: LoadRequestService, private barecodeinfosService: BarecodeinfosService, private itemService: ItemService, private modalService: NgbModal) {
     config.autoClose = true;
 
@@ -126,6 +135,7 @@ export class LoadingVansScanComponent implements OnInit {
       this.serie_length = response.data[2].length;
     });
     this.prepareGrid();
+  
   }
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
@@ -1492,5 +1502,192 @@ console.log("this.printline",this.printLines2)
     });
     ElectronPrinter4.print4(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines2, this.userPrinter, this.total, this.totalCartons,this.nchariot)
     // saveAs(blob, this.load_request_code + ".pdf");
+  }
+
+
+
+  onSelectedRowsChangedlr(e, args) {
+    const controls = this.chargeForm.controls
+   
+  if (Array.isArray(args.rows) && this.gridlr) {
+      args.rows.map((idx) => {
+          const item = this.gridlr.getDataItem(idx)
+          controls.load_request_code.setValue(item.load_request_code || "")
+      })
+    }
+  
+  }
+  angularGridReadylr(angularGrid: AngularGridInstance) {
+    this.angularGridlr = angularGrid;
+    this.dataViewlr = angularGrid.dataView;
+    this.gridlr = angularGrid.slickGrid;
+
+    // if you want to change background color of Duration over 50 right after page load,
+    // you would put the code here, also make sure to re-render the grid for the styling to be applied right away
+    this.dataViewlr.getItemMetadata = this.updateItemMetadata(this.dataViewlr.getItemMetadata);
+    this.gridlr.invalidate();
+    this.gridlr.render();
+  }
+  prepareGridlr() {
+    this.columnDefinitionslr = [
+              {
+                  id: "load_request_code",
+                  name: "Code demande",
+                  field: "load_request_code",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.string,
+                  filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            
+                  
+  
+              },
+  
+              {
+                  id: "date_creation",
+                  name: "Date creation",
+                  field: "date_creation",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.date, 
+                  filter: {
+                    model: Filters.dateRange
+                  }
+                  
+              },
+              {
+                id: "date_charge",
+                name: "Date charge",
+                field: "date_charge",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.date, 
+                filter: {
+                  model: Filters.dateRange
+                }
+              },
+  
+              
+              {
+                  id: "status",
+                  name: "Status",
+                  field: "status",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.string, 
+                  filter: {
+                    collection: [{value:"0",label:"0 Créée"},{value:"10",label:"10 Validée"},{value:"20",label:"20 Chargée"},{value:"40",label:"40 Transferet"},{value:"50",label:"50 Acceptée"}],
+                     model: Filters.multipleSelect,
+                    
+                   },
+              },
+              {
+                id: "role_code",
+                name: "Code role",
+                field: "role_code",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.string, 
+               },
+  
+  
+              // 
+              {
+                  id: "user_mobile_code",
+                  name: "Vendeur",
+                  field: "user_mobile_code",
+                  sortable: true,
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.string, 
+                  filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+              },
+              {
+                id: "chg",
+                name: "Encour",
+                field: "chg",
+                sortable: true,
+                minWidth: 100,
+                maxWidth: 300,
+                filterable: true,
+                type: FieldType.boolean,
+                formatter: Formatters.checkmark, 
+                filter: {
+                   collection: [  { value: true, label: 'true' }, { value: false, label: 'false' } ],
+                   model: Filters.multipleSelect,
+               placeholder: 'choose an option'
+               }
+              },
+  
+              
+              
+        ]
+  
+        this.gridOptionslr = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          enableFiltering: true,
+          enableRowSelection: true,
+          autoEdit: false,
+          autoHeight: false,
+          enableAutoResize: true,
+     
+     };
+        this.loadRequestService.getBy({status:10}).subscribe((response: any) => {
+  //        console.log(response.data)
+this.datalr = response.data 
+//this.dataViewlr.setItems(this.datalr)
+        })
+  }
+  openload(content) {
+    this.datalr = []
+    this.prepareGridlr()
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedlr(e, args) {
+    if (Array.isArray(args.rows) && this.gridlr) {
+      args.rows.map((idx) => {
+        const item = this.gridlr.getDataItem(idx);
+        // this.itinerary = this.services[idx].role_itineraries
+      
+        // console.log(this.itinerary);
+      });
+    }
+   
+  }
+  updateItemMetadata(previousItemMetadata: any) {
+    const newCssClass = "highlight-bg";
+    // console.log(this.dataView);
+    return (rowNumber: number) => {
+      const item = this.dataViewlr.getItem(rowNumber);
+      let meta = {
+        cssClasses: "",
+      };
+      if (typeof previousItemMetadata === "object") {
+        meta = previousItemMetadata(rowNumber);
+      }
+      console.log("state",item.chg)
+      if (meta && item && item.chg) {
+        const state = item.chg;
+       
+        if (state == true) {
+          meta.cssClasses = (meta.cssClasses || "") + " " + newCssClass;
+        }
+      }
+
+      return meta;
+    };
   }
 }

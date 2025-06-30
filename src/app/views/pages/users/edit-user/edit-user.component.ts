@@ -37,7 +37,8 @@ import {
     NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap"
 import { AuthService } from "../../../../core/auth"
-
+import { environment } from "../../../../../environments/environment"
+const key = environment.key
 @Component({
   selector: 'kt-edit-user',
   templateUrl: './edit-user.component.html',
@@ -129,7 +130,7 @@ export class EditUserComponent implements OnInit {
                     }
                     console.log(authData.userName)
                 this.auth
-                  .login(authData.userName, authData.password)
+                  .login(authData.userName, authData.password,key)
 
                   .subscribe(
                       (resuser: any) => {

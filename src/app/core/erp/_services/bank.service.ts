@@ -121,6 +121,11 @@ export class BankService {
         return this.http.post(`${API_URL}/findbkhtr`,data, { headers: httpHeaders })
  
     } 
+    public getBKHGrpTrBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbkhgrptr`,data, { headers: httpHeaders })
+ 
+    } 
     public getBKHTrGrp(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findbkhtrgrp`,data, { headers: httpHeaders })

@@ -30,7 +30,7 @@ export class TransferChargeDemandeToDeliveryComponent implements OnInit {
   loadRequests: any[] = []
   load_request_code : any
   loadRequestData: any[] = []
-  selectedLoadRequests :any[] = []
+  selectedLoadRequests :any
   selectedLoadRequest :any
   loadRequestDetails: any[] = []
 
@@ -58,16 +58,17 @@ export class TransferChargeDemandeToDeliveryComponent implements OnInit {
         private modalService: NgbModal
   ) { 
         config.autoClose = true   
-        this.prepareGrid()
-        this.prepareGridTwo()
+     
   }
  
 
   ngOnInit(): void {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
-        this.prepareRoles()
-        this.createForm()
+        // this.prepareRoles()
+        // this.createForm()
+        this.prepareGrid()
+        this.prepareGridTwo()
         
   }
 
@@ -89,7 +90,8 @@ export class TransferChargeDemandeToDeliveryComponent implements OnInit {
   }
 
   onSubmit() {
-
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+    input?.setAttribute('disabled', '');
     this.loadRequestService.updateLoadRequestsStatus40(this.selectedLoadRequests).subscribe(
 
       (response: any) => {
@@ -109,14 +111,29 @@ export class TransferChargeDemandeToDeliveryComponent implements OnInit {
         )
         this.loadingSubject.next(false)
         this.reset()
-        // this.router.navigateByUrl("/customers-mobile/cluster-create")
+        this.router.navigateByUrl("/")
     }
     )
 
   }
 reset(){
   this.loadRequests=[]
-  this.dataView.setItems(this.loadRequests)
+  const input = document.getElementById('submit') as HTMLInputElement | null;
+  
+  input.removeAttribute("disabled");
+  this.loadRequestService.getLoadRequests20().subscribe(
+      
+    (response: any) => {
+      console.log(Object.keys(response.data))
+      this.loadRequests = response.data
+      this.dataView.setItems(this.loadRequests)
+    },
+    (error) => {
+        this.loadRequests = []
+    },
+    () => {}
+  )
+  // this.dataView.setItems(this.loadRequests)
 }
   goBack() {
     this.loadingSubject.next(false)
@@ -199,6 +216,7 @@ angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
+    
     this.gridService = angularGrid.gridService;
     this.dataView.getItemMetadata = this.updateItemMetadata(this.dataView.getItemMetadata);
     this.grid.invalidate();
@@ -320,9 +338,22 @@ prepareGrid() {
         enableCellNavigation: true,
         enableRowSelection: true,
         enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+    
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+    
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
         rowSelectionOptions: {
-          selectActiveRow: false
-        }
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
       };
 
       this.loadRequestService.getLoadRequests20().subscribe(
@@ -417,13 +448,23 @@ prepareGridTwo() {
 
 onSelectedRowsChanged(e, args) {
   // console.log('indexs', args.rows);
-  const indexes = args.rows;
-  this.selectedLoadRequests = []
-  indexes.forEach(index => {
-    const load_request_code = this.gridService.getDataItemByRowIndex(index).load_request_code
-    this.selectedLoadRequests.push(load_request_code)
-  });
-  console.log(this.selectedLoadRequests)
+  // const indexes = args.rows;
+  // this.selectedLoadRequests = null
+  // indexes.forEach(index => {
+  //   const load_request_code = this.gridService.getDataItemByRowIndex(index).load_request_code
+  //   this.selectedLoadRequests.push(load_request_code)
+  // });
+  // console.log(this.selectedLoadRequests)
+  
+       if (Array.isArray(args.rows) && this.grid) {
+      args.rows.map((idx) => {
+        const item = this.grid.getDataItem(idx);
+        console.log(item)
+        // TODO : HERE itterate on selected field and change the value of the selected field
+        this.selectedLoadRequests = item.load_request_code
+      });
+       }
+       
 }
 
 }

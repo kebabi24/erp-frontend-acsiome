@@ -25,13 +25,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <form class="form row" [formGroup]="poForm">
+                    <!--div class="row"-->
+                        <form class="form" [formGroup]="poForm">
                             <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
                                 (close)="onAlertClose($event)">
                                 {{message}}
                             </kt-alert>
-                            <div class="col-12">
+                            
                                 <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group">Numero BC:</label>
@@ -48,7 +48,7 @@
             
             
                                     </div>
-                                    <div class="form-group col-2">
+                                    <div class="form-group col-3">
                                         <label class="form-group">FOURNISSEUR :</label>
                                         <div class="input-group input-group-sm">
             
@@ -118,12 +118,12 @@
             
                                 </div>
                                 
-                            </div>
+                           
                             
                         </form>
 
 
-                    </div>
+                    <!--/div-->
                 </div>
                 <div class="modal-footer">
                     

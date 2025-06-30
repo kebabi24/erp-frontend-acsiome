@@ -78,6 +78,8 @@ export class ListVendorPaymentComponent implements OnInit {
   tr:any;
   role:any;
   data: any[] = []
+  MntCheque : Number
+  MntDep : Number
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -694,7 +696,9 @@ export class ListVendorPaymentComponent implements OnInit {
     this.bankService.getBKHTrGrp(obj).subscribe(
       (response: any) => {   
         this.data = response.data.bkhs
-       console.log(this.data)
+        this.MntCheque = Number(response.data.cheque)
+        this.MntDep = Number(response.data.depence)
+       console.log(this.MntCheque,this.MntDep)
       this.printpdf2()  
          },
       (error) => {
@@ -705,7 +709,7 @@ export class ListVendorPaymentComponent implements OnInit {
       }
       printpdf2() {
 
-        
+        console.log(this.MntCheque,this.MntDep)
         const controls = this.soForm.controls;
         
         const date = controls.calc_date.value
@@ -817,26 +821,125 @@ export class ListVendorPaymentComponent implements OnInit {
             total = total + Number(this.data[j].Montant)
            }
            doc.line(30, i-5, 110, i-5);
-           
 
-           let tt =  String(  Number(total).toLocaleString("en-US", {
+           let ttecq =  String(  Number(total).toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           }))
        //   console.log(mts)
-          let ttc = replaceAll(tt,","," ")
+
+
+
+          let ttec = replaceAll(ttecq,","," ")
+
+           
+let tes =  Number(total)  - Number(this.MntCheque)
+           let ttes =  String(  Number(tes).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+
+
+
+          let ttespece = replaceAll(ttes,","," ")
+
+          console.log("this.MntCheque",this.MntCheque)
+          let ttch =  String(  Number(this.MntCheque).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+
+
+
+          let ttcheque = replaceAll(ttch,","," ")
+
+
+          let ttdep =  String(  Number(this.MntDep).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+
+
+
+          let ttdepence = replaceAll(ttdep,","," ")
+
+          let ttg = Number(total) - Number(this.MntDep)
+          let ttge =  String(  Number(ttg).toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       //   console.log(mts)
+
+
+
+          let ttgen = replaceAll(ttge,","," ")
+
+          //      let tt =  String(  Number(total).toLocaleString("en-US", {
+      //       minimumFractionDigits: 2,
+      //       maximumFractionDigits: 2,
+      //     }))
+      //  //   console.log(mts)
+
+
+
+      //     let ttc = replaceAll(tt,","," ")
 
            doc.line(30, i - 5, 30, i);
            
-            doc.line(40, i - 5, 40, i);
-            doc.text("Total", 45, i - 1);
+            // doc.line(40, i - 5, 40, i);
+            doc.text("Recette Espece", 35, i - 1);
             doc.line(70, i - 5, 70, i);
-            doc.text(ttc, 108, i - 1,{ align: "right" });
+            doc.text(ttespece, 108, i - 1,{ align: "right" });
             doc.line(110, i - 5, 110, i);
             doc.line(30, i, 110, i);
             i = i + 5;
     
-        // doc.line(10, i - 5, 200, i - 5);
+
+            doc.line(30, i - 5, 30, i);
+           
+            //doc.line(40, i - 5, 40, i);
+            doc.text("Recette Cheque", 35, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(ttcheque, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+            doc.line(30, i, 110, i);
+            i = i + 5;
+
+            doc.line(30, i - 5, 30, i);
+           
+           // doc.line(40, i - 5, 40, i);
+            doc.text("Total Espece/ cheque", 35, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(ttecq, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+            doc.line(30, i, 110, i);
+            i = i + 5;
+
+            doc.line(30, i - 5, 30, i);
+           
+            //doc.line(40, i - 5, 40, i);
+            doc.text("Total Depence", 35, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(ttdepence, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+            doc.line(30, i, 110, i);
+            i = i + 5;
+
+            doc.line(30, i - 5, 30, i);
+           
+            //doc.line(40, i - 5, 40, i);
+            doc.text("Total Caisse", 35, i - 1);
+            doc.line(70, i - 5, 70, i);
+            doc.text(ttgen, 108, i - 1,{ align: "right" });
+            doc.line(110, i - 5, 110, i);
+            doc.line(30, i, 110, i);
+            i = i + 5;
+
+
+            // doc.line(10, i - 5, 200, i - 5);
     
         // window.open(doc.output('bloburl'), '_blank');
         //window.open(doc.output('blobUrl'));  // will open a new tab
