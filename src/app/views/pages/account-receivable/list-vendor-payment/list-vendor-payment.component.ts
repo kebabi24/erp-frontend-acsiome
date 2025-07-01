@@ -37,8 +37,9 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { BankService} from "../../../../core/erp"
-
+import { BankService,RoleService} from "../../../../core/erp"
+import { jsPDF } from "jspdf";
+import { replaceAll } from "chartist"
 
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
@@ -73,6 +74,10 @@ export class ListVendorPaymentComponent implements OnInit {
   loading$: Observable<boolean>;
   error = false;
   user: any;
+  domain:any;
+  tr:any;
+  role:any;
+  data: any[] = []
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -80,6 +85,7 @@ export class ListVendorPaymentComponent implements OnInit {
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
       private bankService: BankService,
+      private roleService : RoleService,
       
   ) {
      // this.prepareGrid()
@@ -89,6 +95,8 @@ export class ListVendorPaymentComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    
+    this.domain = JSON.parse(localStorage.getItem("domain"));
     console.log(this.user)
     this.createForm();
     this.prepareGrid()
@@ -309,6 +317,11 @@ export class ListVendorPaymentComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.float,
+            formatter: Formatters.decimal,
+            minWidth:120,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
             
           }, 
          
@@ -319,8 +332,12 @@ export class ListVendorPaymentComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.float,
+            formatter: Formatters.decimal,
             minWidth: 100,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_2000",
@@ -340,7 +357,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-            
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           }, 
           {
             id: "bkh_0500",
@@ -350,6 +368,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           }, 
           {
             id: "bkh_0200",
@@ -359,6 +379,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p200",
@@ -368,6 +390,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p100",
@@ -377,6 +401,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p050",
@@ -386,6 +412,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p020",
@@ -395,6 +423,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p010",
@@ -404,6 +434,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_p005",
@@ -413,6 +445,8 @@ export class ListVendorPaymentComponent implements OnInit {
             filterable: true,
             type: FieldType.number,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_bon",
@@ -420,8 +454,12 @@ export class ListVendorPaymentComponent implements OnInit {
             field: "bkh_bon",
             sortable: true,
             filterable: true,
-            type: FieldType.number,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
           },
           {
             id: "bkh_rmks",
@@ -438,8 +476,47 @@ export class ListVendorPaymentComponent implements OnInit {
             field: "bkh_cheque",
             sortable: true,
             filterable: true,
-            type: FieldType.number,
+            type: FieldType.float,
+            formatter: Formatters.decimal,
             groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            params: { minDecimal: 2, maxDecimal: 2 }, 
+            headerCssClass: 'text-right',
+            cssClass: 'text-right'
+          },
+          {
+            id: "id",
+            field: "id",
+            excludeFromHeaderMenu: true,
+            formatter: (row, cell, value, columnDef, dataContext) => {
+              // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+              return `
+                <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
+                     <i class="flaticon2-printer"></i>
+                     
+                 </a>
+                 `;
+            },
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              const index = args.dataContext.bkh_code;
+              console.log(index)
+              this.bankService.getBKHBy({bkh_code:index,bkh_type : "P"}).subscribe(
+                          (response: any) => (this.tr = response.data[0],
+                            this.roleService.getByOne({ role_code: this.tr.chr01 }).subscribe((res: any) => {
+                              this.role = res.data
+                            
+                            // this.printpdf()
+                             })
+                            ),
+                          (error) => {
+                             this.tr=null
+                          },
+                          () => {}
+                      )
+             
+                
+            }
           },
 
       ]
@@ -456,6 +533,17 @@ export class ListVendorPaymentComponent implements OnInit {
           autoHeight:false,
           exportOptions: {
             sanitizeDataExport: true
+          },
+          formatterOptions: {
+        
+            // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+            displayNegativeNumberWithParentheses: false,
+      
+            // Defaults to undefined, minimum number of decimals
+            minDecimal: 2,
+      
+            // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+            thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
           },
           
           gridMenu: {

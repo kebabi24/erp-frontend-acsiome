@@ -54,7 +54,10 @@ import { LabelService,QuoteService, UsersService, ItemService, CodeService, Taxe
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
          ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService,
          CostlistService, CustomerMobileService,ItineraryService,UsersMobileService, AccountOrderService,EntityService,
-         AccountReceivableService} from '../../../core/erp';
+         AccountReceivableService,
+         
+         PriceListQuantityService,BarecodeinfosService, TimbreService ,  AddressService, AccountService,
+        } from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
 import { CreatePshComponent } from './create-psh/create-psh.component';
@@ -85,8 +88,6 @@ import { ListSalesDdComponent } from './list-sales-dd/list-sales-dd.component';
 import { CreateInvMobComponent } from './create-inv-mob/create-inv-mob.component';
 import { ReqListComponent } from './req-list/req-list.component';
 import { PaymentPshEmployeComponent } from './payment-psh-employe/payment-psh-employe.component';
-import { ListCaDdComponent } from './list-ca-dd/list-ca-dd.component';
-import { PaymentSoComponent } from './payment-so/payment-so.component';
 import { ListInvoicesDetailComponent } from './list-invoices-detail/list-invoices-detail.component';
 import { PshListComponent } from './psh-list/psh-list.component';
 import { CreateSoImmobilierComponent } from './create-so-immobilier/create-so-immobilier.component';
@@ -97,6 +98,16 @@ import { ControleActeComponent } from './controle-acte/controle-acte.component';
 import { DecisionAffectationComponent } from './decision-affectation/decision-affectation.component';
 import { ClotureSoldeComponent } from './cloture-solde/cloture-solde.component';
 import { AttestationReservationComponent } from './attestation-reservation/attestation-reservation.component';
+import { ListCaDdComponent } from './list-ca-dd/list-ca-dd.component';
+import { PaymentSoComponent } from './payment-so/payment-so.component';
+import { ListSalesRoleComponent } from './list-sales-role/list-sales-role.component';
+import { ListSalesTypeComponent } from './list-sales-type/list-sales-type.component';
+import { CreateSoPlqComponent } from './create-so-plq/create-so-plq.component';
+import { CreatePshPlqComponent } from './create-psh-plq/create-psh-plq.component';
+import { CreateSoBcComponent } from './create-so-bc/create-so-bc.component';
+import { ListPshComponent } from './list-psh/list-psh.component';
+import { ReprintInvoiceComponent } from './reprint-invoice/reprint-invoice.component';
+import { ListRolesSalesComponent } from './list-roles-sales/list-roles-sales.component';
 
 
 const routes: Routes = [
@@ -276,13 +287,48 @@ component: AttestationReservationComponent,
           component: PaymentSoComponent,
         },
           
+          
+          {
+            path: "list-sales-role",
+            component: ListSalesRoleComponent,
+          },
+          {
+            path: "list-sales-type",
+            component: ListSalesTypeComponent,
+          },
+          {
+            path: "create-so-plq",
+            component: CreateSoPlqComponent,
+          },
+          {
+            path: "create-psh-plq",
+            component: CreatePshPlqComponent,
+          },
+          {
+            path: "create-so-bc",
+            component: CreateSoBcComponent,
+          },
+          {
+            path: "list-psh",
+            component: ListPshComponent,
+          },
+          {
+            path: "reprint-invoice",
+            component: ReprintInvoiceComponent,
+          },
+          {
+            path: "list-roles-sales",
+            component: ListRolesSalesComponent,
+          },
         ],
     },
 ]
 
 @NgModule({
-    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ReqListComponent, PaymentPshEmployeComponent
+    declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent,
+       CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ReqListComponent, PaymentPshEmployeComponent
      ,ListCaDdComponent, PaymentSoComponent, ListInvoicesDetailComponent, PshListComponent, CreateSoImmobilierComponent, CreatePvReceptionComponent, CreateSatisfactionComponent, RemiseDesClesComponent, ControleActeComponent, DecisionAffectationComponent, ClotureSoldeComponent, AttestationReservationComponent],
+
     imports: [
         CommonModule,
         HttpClientModule,
@@ -354,6 +400,18 @@ component: AttestationReservationComponent,
         AccountReceivableService,
         EntityService,
 
+
+        PriceListQuantityService,
+        BarecodeinfosService,
+        TimbreService,
+
+
+        
+        AddressService,
+       
+        AccountService,
+       
+        
 
     ],
 

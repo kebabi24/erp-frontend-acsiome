@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Consultation des Ventes" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Décompte Role" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
        
     </kt-portlet-header>
@@ -85,6 +85,27 @@
                             <label class="form-group">Solde: *</label>
                             
                             <input type="number" formControlName="solde"   
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Valeur Stock: *</label>
+                            
+                            <input type="number" formControlName="invamt"   
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Crédit: *</label>
+                            
+                            <input type="number" formControlName="credit"   
+                            class="form-control form-control-sm form-control-solid" disabled>
+                           
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Ecart: *</label>
+                            
+                            <input type="number" formControlName="ecart"   
                             class="form-control form-control-sm form-control-solid" disabled>
                            
                         </div>

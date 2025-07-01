@@ -1,8 +1,9 @@
 <kt-portlet>
   <kt-portlet-header [sticky]="true" [title]="'Chargement Des Vans (Scan) '" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button type="button" (click)="onSubmit(content10,content11)" class="btn btn-success btn-sm mr-2">enregistrer</button>
-      <button type="button" (click)="onSaveCharge(content4, content5, content6)" class="btn btn-danger btn-sm mr-2">Ferme Chargement</button>
+      <button type="button"  id="submit" (click)="onSubmit(content10,content11)" class="btn btn-success btn-sm mr-2">Sauvegarder</button>
+      
+      <button type="button" (click)="onSaveCharge(content4, content5, content6)" class="btn btn-danger btn-sm mr-2">Fermer Chargement</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -283,7 +284,7 @@
 
         </div>
       <div class="modal-footer">
-         <button type="button" class="btn btn-primary"  (click)="onUnload()">enregistrer</button>
+         <button type="button" class="btn btn-primary"  (click)="onUnload()">sauvegarder</button>
       </div>
     </ng-template>
   </div>

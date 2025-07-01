@@ -1,0 +1,23 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="false" [title]="'La liste des Clients'" [class]="'card-head-lg'">
+    </kt-portlet-header>
+   
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row" style="display: flex; justify-content: right">
+                <div class="form-group row" style="display: flex; justify-content:center">
+                 
+                       <button type="button"  class="btn btn-outline-primary mr-3" justify-content:center (click)="printpdf()"><i class="flaticon2-print"></i> Imprimer </button>
+                 </div>
+            </div>
+            <div class="row">
+                <angular-slickgrid class="col-12" gridId="grid2"
+                    [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions"
+                    [dataset]="dataset"
+                    (onAngularGridCreated)="angularGridReady($event)">
+                </angular-slickgrid>
+            </div>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

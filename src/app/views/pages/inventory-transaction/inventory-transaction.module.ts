@@ -81,6 +81,11 @@ import { AssetReceiveCabComponent } from './asset-receive-cab/asset-receive-cab.
 import { EchantillonReceiptCabComponent } from './echantillon-receipt-cab/echantillon-receipt-cab.component';
 import { InventoryDetailComponent } from './inventory-detail/inventory-detail.component';
 import { PurchaseReceiptColorantComponent } from './purchase-receipt-colorant/purchase-receipt-colorant.component';
+import { EpiInventoryTransactionComponent } from './epi-inventory-transaction/epi-inventory-transaction.component';
+import { EpiIssueComponent } from './epi-issue/epi-issue.component';
+import { EpiReceiptComponent } from './epi-receipt/epi-receipt.component';
+import { EpiMonthlyDistributionComponent } from './epi-monthly-distribution/epi-monthly-distribution.component';
+import { EpiInventoryReportComponent } from './epi-inventory-report/epi-inventory-report.component';
 
 // import { CreateComponent } from "../articles/create/create.component";
 
@@ -94,8 +99,16 @@ const routes: Routes = [
     component: UnplanifiedIssueComponent,
   },
   {
+    path: "epi-issue",
+    component: EpiIssueComponent,
+  },
+  {
     path: "unplanified-recept",
     component: UnplanifiedReceptComponent,
+  },
+  {
+    path: "epi-receipt",
+    component: EpiReceiptComponent,
   },
   {
     path: "rct-tr-print",
@@ -160,6 +173,18 @@ const routes: Routes = [
   {
     path: "inventory-list",
     component: InventoryListComponent,
+  },
+  {
+    path: "epi-inventory-transaction",
+    component: EpiInventoryTransactionComponent,
+  },
+  {
+    path: "epi-inventory-report",
+    component: EpiInventoryReportComponent,
+  },
+  {
+    path: "epi-monthly-distribution",
+    component: EpiMonthlyDistributionComponent,
   },
   {
     path: "inventory-detail",
@@ -252,7 +277,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent, EchantillonReceiptCabComponent, InventoryDetailComponent, PurchaseReceiptColorantComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent, EchantillonReceiptCabComponent, InventoryDetailComponent, PurchaseReceiptColorantComponent, EpiInventoryTransactionComponent, EpiIssueComponent, EpiReceiptComponent, EpiMonthlyDistributionComponent, EpiInventoryReportComponent],
   imports: [
     CommonModule,
     HttpClientModule,

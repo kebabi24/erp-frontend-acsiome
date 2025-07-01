@@ -93,6 +93,7 @@ import { CreateOaEmComponent } from './create-oa-em/create-oa-em.component';
 import { ListApprovalComponent } from './list-approval/list-approval.component';
 import { PaymentAuComponent } from './payment-au/payment-au.component';
 import { ListAuComponent } from './list-au/list-au.component';
+import { EpiCreateOaComponent } from './epi-create-oa/epi-create-oa.component';
 
 const routes: Routes = [
   {
@@ -160,6 +161,10 @@ const routes: Routes = [
       {
         path: "create-oa",
         component: CreateOaComponent,
+      },
+      {
+        path: "epi-create-oa",
+        component: EpiCreateOaComponent,
       },
       {
         path: "create-oa-em",
@@ -232,7 +237,8 @@ const routes: Routes = [
     CreateOaEmComponent,
     ListApprovalComponent,
     PaymentAuComponent,
-    ListAuComponent
+    ListAuComponent,
+    EpiCreateOaComponent
   ],
   imports: [
     CommonModule,

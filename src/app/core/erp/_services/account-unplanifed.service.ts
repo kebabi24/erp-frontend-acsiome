@@ -28,6 +28,10 @@ export class AccountUnplanifedService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+`/FC`, data, { headers: httpHeaders })
     }
+    public addFCD(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+`/FCD`, data, { headers: httpHeaders })
+    }
     public addP(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/P', data, { headers: httpHeaders })

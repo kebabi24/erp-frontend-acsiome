@@ -90,6 +90,15 @@ export class ProductPageCreateComponent implements OnInit {
     row_number;
     selectedIndexes: any[];
     selectedIndexes2: any[];
+    datapage: [];
+    columnDefinitionspage: Column[] = [];
+    gridOptionspage: GridOption = {};
+    gridObjpage: any;
+    gridServicepage: GridService;
+    angularGridpage: AngularGridInstance;
+    
+    
+    
     constructor(
         config: NgbDropdownConfig,
         private profileFB: FormBuilder,
@@ -601,4 +610,88 @@ export class ProductPageCreateComponent implements OnInit {
   
       this.dataView.setItems(this.dataset);
     }
+    handleSelectedRowsChangedpage(e, args) {
+      const controls = this.productPageForm.controls;
+      if (Array.isArray(args.rows) && this.gridObjpage) {
+        args.rows.map((idx) => {
+          const item = this.gridObjpage.getDataItem(idx);
+          controls.product_page_code.setValue(item.product_page_code || "");
+        this.onChangePP()
+        this.modalService.dismissAll()
+        });
+      }
+    }
+    angularGridReadypage(angularGrid: AngularGridInstance) {
+      this.angularGridpage = angularGrid;
+      this.gridObjpage = (angularGrid && angularGrid.slickGrid) || {};
+    }
+  
+    prepareGridpage() {
+      this.columnDefinitionspage = [
+        {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+        },
+        {
+          id: "product_page_code",
+          name: "code ",
+          field: "product_page_code",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "description",
+          name: "Designation",
+          field: "description",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+      ];
+  
+      this.gridOptionspage = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+          // optionally change the column index position of the icon (defaults to 0)
+          // columnIndexPosition: 1,
+  
+          // remove the unnecessary "Select All" checkbox in header when in single selection mode
+          hideSelectAllCheckbox: true,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+          // True (Single Selection), False (Multiple Selections)
+          selectActiveRow: true,
+        },
+      };
+  
+      // fill the dataset with your data
+      this.itemService
+        .getAllProductPages()
+        .subscribe((response: any) => (this.datapage = response.data));
+    }
+    openpage(contentpage) {
+      this.prepareGridpage();
+      this.modalService.open(contentpage, { size: "lg" });
+    }
+  
+  
 }

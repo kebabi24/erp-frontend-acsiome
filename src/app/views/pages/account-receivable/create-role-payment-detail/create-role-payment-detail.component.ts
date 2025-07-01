@@ -208,22 +208,27 @@ export class CreateRolePaymentDetailComponent implements OnInit {
     )
     console.log("services",this.services)
   }
-  onSelectRole(role_code){
-    this.prepareService()
-    this.role_code = role_code
+  onSelectRole(){
+   // this.prepareService()
+   // this.role_code = role_code
     const controls = this.rvForm.controls
 
   
-     let index = this.roles.findIndex((role)=>{return role.role_code === role_code})
-    this.rolename = this.roles[index].role_name
+    //  let index = this.roles.findIndex((role)=>{return role.role_code === role_code})
+    // this.rolename = this.roles[index].role_name
     
-    controls.user_mobile_code.setValue(this.roles[index].user_mobile_code) 
-    this.solde= this.roles[index].solde
+    // controls.user_mobile_code.setValue(this.roles[index].user_mobile_code) 
+    // this.solde= this.roles[index].solde
   
-  
-  this.usersMobileService.getByOne({user_mobile_code: controls.user_mobile_code.value}).subscribe(
+    this.roleService.getByOne({role_code: controls.role_code.value}).subscribe(
+      (respon: any) => {   
+       console.log("yuser",respon.data)
+       this.rolename =respon.data.role_name
+       this.solde= respon.data.solde
+       this.usersMobileService.getByOne({user_mobile_code: respon.data.user_mobile_code.value}).subscribe(
         (respo: any) => {   
          console.log("yuser",respo.data)
+         controls.user_mobile_code.setValue(respon.data.user_mobile_code) 
          controls.username.setValue(respo.data.username)
      //    this.solde = respo.data.solde
          },
@@ -232,6 +237,14 @@ export class CreateRolePaymentDetailComponent implements OnInit {
       },
        
   )
+   //    this.solde = respo.data.solde
+       },
+    (error) => {
+    
+    },
+     
+)
+ 
     // this.mobileServiceService.getByOne({user_mobile_code :this.roles[index].user_mobile_code }).subscribe(
   
     //   (response: any) => {
@@ -388,13 +401,18 @@ export class CreateRolePaymentDetailComponent implements OnInit {
       controls.montant_tr.setValue(total)            
   }     
   reset() {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+    input.removeAttribute("disabled");
     this.createForm();
-    
     this.services = []
     this.hasFormErrors = false;
   }
 
   onSubmit() {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+
+
+    input?.setAttribute('disabled', '');
     this.hasFormErrors = false
     const controls_ = this.rvForm.controls
     if (this.rvForm.invalid) {
@@ -437,6 +455,8 @@ export class CreateRolePaymentDetailComponent implements OnInit {
         bkh_p010: Number(controls.bkh_p010.value),
         bkh_p005: Number(controls.bkh_p005.value),
         bkh_bon:  Number(controls.bkh_bon.value),
+        bkh_terms: controls.bkh_terms.value,
+        bkh_cheque: Number(controls.bkh_cheque.value),
         bkh_rmks: controls.bkh_rmks.value
 
       })
@@ -609,7 +629,7 @@ export class CreateRolePaymentDetailComponent implements OnInit {
           doc.text("Role    : " + controls.role_code.value + " "+ this.rolename, 5, initialY + 10);
           doc.text("Date    : " + String(date.getFullYear())+"/" + String(date.getMonth() + 1) + "/" + String(date.getDate()) + " " +  date.toLocaleTimeString(), 5, initialY + 15);
           doc.text("Vendeur : " + controls.user_mobile_code.value + " - " + controls.username.value, 5, initialY + 20);
-      //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      //    doc.text("Valeur : " + Number(total * 1.2138).toFixed(2) + " DZD", 65, initialY + 20);
           doc.setFontSize(9);
     
      var i = 35

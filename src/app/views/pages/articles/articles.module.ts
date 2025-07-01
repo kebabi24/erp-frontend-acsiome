@@ -88,11 +88,12 @@ import { CreateModPfComponent } from './create-mod-pf/create-mod-pf.component';
 import { CreatePfModComponent } from './create-pf-mod/create-pf-mod.component';
 import { CreateModDivComponent } from './create-mod-div/create-mod-div.component';
 import { CreateDivModComponent } from './create-div-mod/create-div-mod.component'
+import { CreateModImmobilierComponent } from './create-mod-immobilier/create-mod-immobilier.component';
+import { CreateImmobilierModComponent } from './create-immobilier-mod/create-immobilier-mod.component'
 import { ListCopieComponent } from './list-copie/list-copie.component';
 import { CopieArticleComponent } from './copie-article/copie-article.component';
 import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
-import { CreateModImmobilierComponent } from './create-mod-immobilier/create-mod-immobilier.component';
-import { CreateImmobilierModComponent } from './create-immobilier-mod/create-immobilier-mod.component'
+import { UpdatePriceDdComponent } from './update-price-dd/update-price-dd.component'
 
 
 const routes: Routes = [
@@ -223,6 +224,10 @@ const routes: Routes = [
                 path: "edit-productpage/:product_page_code",
                 component: EditProductpageComponent,
             },
+            {
+                path: "update-price-dd",
+                component: UpdatePriceDdComponent,
+            },
 
         ],
     },
@@ -262,6 +267,10 @@ const routes: Routes = [
         EditProductpageComponent,
         CreateModImmobilierComponent,
         CreateImmobilierModComponent,
+        ListCopieComponent,
+        CopieArticleComponent,
+        EditProductpageComponent,
+        UpdatePriceDdComponent,
     ],
     imports: [
         CommonModule,

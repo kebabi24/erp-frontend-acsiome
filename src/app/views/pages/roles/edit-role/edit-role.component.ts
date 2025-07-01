@@ -118,7 +118,7 @@ export class EditRoleComponent implements OnInit {
   ngOnInit(): void {
     this.getRoles();
     this.getTokens();
-    this.prepareGrid();
+   // this.prepareGrid();
     this.getLocations();
     this.getSites();
     this.getUsersd();
@@ -143,7 +143,7 @@ export class EditRoleComponent implements OnInit {
       this.initCode()
       this.loadingSubject.next(false)
     })
-    // this.prepareGrid2();
+   //this.prepareGrid2();
     // setTimeout(() => {
     //   this.createForm();
     // }, 500);
@@ -321,15 +321,17 @@ export class EditRoleComponent implements OnInit {
     ];
 
     this.gridOptions2 = {
+      asyncEditorLoading: false,
       enableSorting: true,
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
       enableFiltering: true,
       autoEdit: false,
       autoHeight: false,
-      enableAutoResize:true,
-      frozenColumn: 0,
-      frozenBottom: true,
+      
+     
+      // frozenColumn: 0,
+      // frozenBottom: true,
       enableRowSelection: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
@@ -557,7 +559,7 @@ export class EditRoleComponent implements OnInit {
     // fill the dataset with your data
     this.roleService.getAllRoles().subscribe((response: any) => {
       this.roles = response.data;
-      this.dataView3.setItems(response.data);
+     // this.dataView3.setItems(response.data);
     });
 
     //  this.usersService
@@ -779,7 +781,7 @@ export class EditRoleComponent implements OnInit {
     this.tokenSerieService.getAllTokens().subscribe(
       (response: any) => {
         this.tokens = response.data;
-        this.dataView4.setItems(this.tokens);
+     //   this.dataView4.setItems(this.tokens);
       },
       (error) => {
         this.tokens = [];
@@ -872,7 +874,7 @@ export class EditRoleComponent implements OnInit {
     this.roleService.getAllLocations().subscribe(
       (response: any) => {
         this.locs = response.data;
-        this.dataView5.setItems(this.locs);
+      //  this.dataView5.setItems(this.locs);
       },
       (error) => {
         this.locs = [];
@@ -885,7 +887,7 @@ export class EditRoleComponent implements OnInit {
     this.roleService.getAllSites().subscribe(
       (response: any) => {
         this.sites = response.data;
-        this.dataView6.setItems(this.sites);
+      //  this.dataView6.setItems(this.sites);
       },
       (error) => {
         this.sites = [];
@@ -1088,7 +1090,7 @@ export class EditRoleComponent implements OnInit {
     this.usersService.getAllUsers().subscribe(
       (response: any) => {
         this.usrds = response.data;
-        this.dataView7.setItems(this.usrds);
+      //  this.dataView7.setItems(this.usrds);
       },
       (error) => {
         this.users = [];

@@ -47,6 +47,7 @@ import {
   BankService,
   CodeService,
   AccountUnplanifedService,
+  UsersMobileService,
 
  
 
@@ -130,6 +131,7 @@ export class CreateChargePaymentComponent implements OnInit {
     private deviseService:  DeviseService,
     private codeService: CodeService,
     private accountUnplanifedService: AccountUnplanifedService,
+    private usersMobileService : UsersMobileService,
 
    
   ) {
@@ -547,8 +549,8 @@ handleSelectedRowsChangedvend(e, args) {
     //  console.log(item)
       
       
-      controls.au_vend.setValue(item.vd_addr || "");
-        controls.name.setValue(item.address.ad_name || "");
+      controls.au_vend.setValue(item.user_mobile_code || "");
+        controls.name.setValue(item.username || "");
       
      
      
@@ -572,70 +574,23 @@ prepareGridvend() {
       maxWidth: 80,
     },
     {
-      id: "vd_addr",
+      id: "user_mobile_code",
       name: "code",
-      field: "vd_addr",
+      field: "user_mobile_code",
       sortable: true,
       filterable: true,
       type: FieldType.string,
     },
     {
-      id: "ad_name",
-      name: "Client",
-      field: "address.ad_name",
+      id: "username",
+      name: "Nom",
+      field: "username",
       sortable: true,
       filterable: true,
       type: FieldType.string,
     },
-    {
-      id: "vd_class",
-      name: "Classe",
-      field: "vd_class",
-      sortable: true,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "vd_type",
-      name: "Type",
-      field: "vd_type",
-      sortable: true,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "vd_curr",
-      name: "Devise",
-      field: "vd_curr",
-      sortable: true,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "ad_phone",
-      name: "Numero telephone",
-      field: "address.ad_phone",
-      sortable: true,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "ad_taxable",
-      name: "A Taxer",
-      field: "address.ad_taxable",
-      sortable: true,
-      filterable: true,
-      type: FieldType.string,
-    },
-    {
-      id: "ad_taxc",
-      name: "Taxe",
-      field: "address.ad_taxc",
-      sortable: true,
-      filterable: true,
-      type: FieldType.string,
-    },
-  ];
+    
+      ];
 
   this.gridOptionsvend = {
     enableSorting: true,
@@ -664,21 +619,13 @@ prepareGridvend() {
       // True (Single Selection), False (Multiple Selections)
       selectActiveRow: true,
     },
-    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
-      var val = undefined;
-      try {
-        val = eval("item." + column.field);
-      } catch (e) {
-        // ignore
-      }
-      return val;
-    },
+   
   };
 
   // fill the dataset with your data
-  this.providerService
-    .getAll()
-    .subscribe((response: any) => (this.vends = response.data));
+  this.usersMobileService
+    .getAllUsers()
+    .subscribe((response: any) => (console.log(response.data),this.vends = response.data));
 }
 openVend(content) {
   this.prepareGridvend();

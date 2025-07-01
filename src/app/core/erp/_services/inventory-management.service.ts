@@ -129,4 +129,8 @@ export class InventoryManagementService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_2}/createLoadRequestDetailsScan/`, { load_request_details: details, load_request_lines: lines,chariotdetail:dataligne }, { headers: httpHeaders });
   }
+  public createUnLoadRequestDetailsScan(details: any, lines: any, dataligne:any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_2}/createUnLoadRequestDetailsScan/`, { load_request_details: details, load_request_lines: lines,chariotdetail:dataligne }, { headers: httpHeaders });
+  }
 }

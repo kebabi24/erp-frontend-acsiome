@@ -190,7 +190,7 @@ export class CustomerListComponent implements OnInit {
       },
       {
         id: "ad_format",
-        name: "Age",
+        name: "Format",
         field: "address.ad_format",
         sortable: true,
         filterable: true,
@@ -198,7 +198,7 @@ export class CustomerListComponent implements OnInit {
         grouping: {
           getter: "ad_format",
           formatter: (g) =>
-            `Age: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+            `Format: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
           aggregateCollapsed: false,
           collapsed: false,
         },
@@ -338,6 +338,17 @@ export class CustomerListComponent implements OnInit {
         sortable: true,
         filterable: true,
         type: FieldType.string,
+      },
+      {
+        id: "cm_balance",
+        name: "Solde",
+        field: "cm_balance",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
+
       },
     ];
 

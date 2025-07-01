@@ -466,7 +466,7 @@ export class UnplanifiedIssueComponent implements OnInit {
         //         ) as HTMLElement;
         //         element.click();
         //     },
-        // },       
+        // },        
         {
           id: "tr_serial",
           name: "Lot/Serie",

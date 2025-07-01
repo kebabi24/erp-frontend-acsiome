@@ -67,6 +67,8 @@ import { ListBankDetailComponent } from './list-bank-detail/list-bank-detail.com
 import { ListCaisseComponent } from './list-caisse/list-caisse.component';
 import { TransfertCaisseComponent } from './transfert-caisse/transfert-caisse.component';
 import { TransfertCaisseDetComponent } from './transfert-caisse-det/transfert-caisse-det.component';
+import { EditJournalComponent } from './edit-journal/edit-journal.component';
+import { BankJournalComponent } from './bank-journal/bank-journal.component';
 
   const routes: Routes = [
     {
@@ -140,13 +142,20 @@ import { TransfertCaisseDetComponent } from './transfert-caisse-det/transfert-ca
                 path: "transfert-caisse-det",
                 component: TransfertCaisseDetComponent,
               },
-          
+              {
+                path: "edit-journal",
+                component: EditJournalComponent,
+              },
+              {
+                path: "bank-journal",
+                component: BankJournalComponent,
+              },
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent],
   imports: [
     CommonModule,
     HttpClientModule,

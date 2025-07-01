@@ -17,7 +17,7 @@ export const environment = {
   //  apiUrl: "http://192.168.100.100:3001/api/v1", 
   // apiUrl: "http://192.168.1.20:3001/api/v1",
   // apiUrl: "http://25.7.193.22:3001/api/v1",
-    // apiUrl: "http://edelweiss.whitebay.limited/:3001/api/v1",
+    // apiUrl: "https://edelweiss.whitebay.limited/api/v1",
   Instance: "Prod",
   App: "ERP", // RH or ERP
 };

@@ -32,7 +32,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   }
   return { valid: true, msg: "" };
 };
-
+ 
 @Component({
   selector: "kt-unplanified-recept", 
   templateUrl: "./unplanified-recept.component.html",

@@ -228,11 +228,11 @@
                     </div>
                     <div class="form-group col-2">
                         <label class="form-group">Chéque :</label>
-                        <input type="text"
-                            [className]="arForm.controls['ar_check'].errors && (arForm.controls['ar_check'].dirty || arForm.controls['ar_check'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                            formControlName="ar_check"  id="ar_check"  (change)="onChangeCheck()" >
-                        <div *ngIf="arForm.controls['ar_check'].errors && (arForm.controls['ar_check'].dirty || arForm.controls['ar_check'].touched)"
-                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="ar_check"  id="ar_check"  (change)="onChangeCheck()"
+                                aria-describedby="basic-addon2">
+                        </div>                      
                     </div>
                     <div class="form-group col-2">
                         <label class="form-group">Contrôle :</label>
@@ -257,7 +257,7 @@
                 </div>
                 
                 <div class="row">
-
+                    <div class="col-6">
                     <div class="form-group col-1">
                         <label class="form-group">Imputation Auto:</label>
                         <div class="input-group input-group-sm">
@@ -269,7 +269,22 @@
                                 </label>
                             </span>
                         </div>
+                    </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group col-1">
+                            <label class="form-group">Imprimer:</label>
+                            <div class="input-group input-group-sm">
 
+                                <span class="switch switch-icon">
+                                    <label>
+                                        <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print"/>
+                                        <span></span>
+                                    </label>
+                                </span>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 

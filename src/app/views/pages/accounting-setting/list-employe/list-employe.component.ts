@@ -225,23 +225,23 @@ export class ListEmployeComponent implements OnInit {
         this.dataset = []
         this.user = JSON.parse(localStorage.getItem("user"));
         console.log(this.user)
-      //   if(this.user.usrd_site == '*')
-      //   {this.employeService.getAll().subscribe(
-      //       (response: any) => {this.dataset = response.data
-      //         this.dataView.setItems(this.dataset)},
-      //       (error) => {
-      //           this.dataset = []
-      //       },
-      //       () => {}
-      //   )}
-      //   else{this.employeService.getBy({emp_site:this.user.usrd_site}).subscribe(
-      //     (response: any) => {this.dataset = response.data
-      //       this.dataView.setItems(this.dataset)},
-      //     (error) => {
-      //         this.dataset = []
-      //     },
-      //     () => {}
-      // )}
+        if(this.user.usrd_site == '*')
+        {this.employeService.getAll().subscribe(
+            (response: any) => {this.dataset = response.data
+              this.dataView.setItems(this.dataset)},
+            (error) => {
+                this.dataset = []
+            },
+            () => {}
+        )}
+        else{this.employeService.getBy({emp_site:this.user.usrd_site}).subscribe(
+          (response: any) => {this.dataset = response.data
+            this.dataView.setItems(this.dataset)},
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )}
     }
     createemp() {
       this.loadingSubject.next(false)

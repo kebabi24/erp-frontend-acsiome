@@ -87,6 +87,7 @@ export class CreateUserMobileComponent implements OnInit {
         // controls.email.enable()
         controls.password.enable();
         controls.new_password.enable();
+        controls.user_phone.enable();
         controls.profile_code.enable();
       }
     });

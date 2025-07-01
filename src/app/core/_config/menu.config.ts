@@ -35,7 +35,7 @@ export class MenuConfig {
             },
             {
               title: "Dashboard Commercial",
-              page: "/dashboard/commercial-dashboard",
+              page: "/dashboard/sales-dashboard",
             },
             {
               title: "Dashboard CRM",
@@ -321,6 +321,10 @@ export class MenuConfig {
               title: "Chiffre d'affaires par clients",
               page: "/customers/Customer-calist",
             },
+            {
+              title: "Liste Soldes clients",
+              page: "/customers/customers-solde",
+            },
           ],
         },
         {
@@ -404,6 +408,10 @@ export class MenuConfig {
               title: "Impression Facture Camion",
               page: "/supervision/print-inventory-role",
             },
+            {
+              title: "Export Demande Chargement",
+              page: "/supervision/export-lr",
+            },
     
           ],
         },
@@ -452,6 +460,10 @@ export class MenuConfig {
             {
               title: "Stock Camion Valorisé",
               page: "/supervision/list-inventory-role",
+            },
+            {
+              title: "Export Demande Chargement",
+              page: "/supervision/export-lr",
             },
             // {
             //   title: "Service roadmap",
@@ -607,6 +619,10 @@ export class MenuConfig {
               title: "Créer une page de produits",
               page: "/articles/page",
             },
+            {
+              title: "Modification Prix Pour DD",
+              page: "/articles/update-price-dd",
+            },
 
             {
               title: "Gestion des Modèles",
@@ -671,6 +687,14 @@ export class MenuConfig {
               page: "/inventory-management/unloading-vans",
             },
             {
+              title: "Chargement Des BLs",
+              page: "/sales/create-psh-plq",
+            },
+            {
+              title: "Liste des Chargements ",
+              page: "/supervision/list-chargement",
+            },
+            {
               title: "Consultation demandes de chargement",
               page: "/inventory-management/load-request-list",
             },
@@ -703,6 +727,10 @@ export class MenuConfig {
               page: "/inventory-transaction/unplanified-issue",
             },
             {
+              title: "Décharge EPI",
+              page: "/inventory-transaction/epi-issue",
+            },
+            {
               title: "Impirmer Bon de Sortie non Planifiée ",
               page: "/inventory-transaction/iss-unp-print",
             },
@@ -714,6 +742,10 @@ export class MenuConfig {
             {
               title: "déclaration réalisation  ",
               page: "/inventory-transaction/unplanified-recept",
+            },
+            {
+              title: "Réstitution EPI",
+              page: "/inventory-transaction/epi-receipt",
             },
             {
               title: "Réception non Planifiée Etiquetage",
@@ -784,6 +816,18 @@ export class MenuConfig {
             {
               title: "Consultation Stocks ",
               page: "/inventory-transaction/inventory-list",
+            },
+            {
+              title: "Consultation Stocks EPI",
+              page: "/inventory-transaction/epi-inventory-transaction",
+            },
+            {
+              title: "rapport Mouvement EPI",
+              page: "/inventory-transaction/epi-inventory-report",
+            },
+            {
+              title: "rapport distribution EPI",
+              page: "/inventory-transaction/epi-monthly-distribution",
             },
             {
               title: "Suivi des stocks",
@@ -903,6 +947,10 @@ export class MenuConfig {
               page: "/purchasing/create-po",
             },
             {
+              title: "Besoin EPI",
+              page: "/purchasing/epi-create-oa",
+            },
+            {
               title: "Simulateur des commandes",
               page: "/purchasing/create-oa",
             },
@@ -962,6 +1010,10 @@ export class MenuConfig {
             {
               title: "Fiche de Voeu",
               page: "/sales/create-so-immobilier",
+            },
+            {
+              title: "Commande Clients Bare Code",
+              page: "/sales/create-so-bc",
             },
             {
               title: "Modification des Commandes",
@@ -1090,6 +1142,22 @@ export class MenuConfig {
               title: "Liste des Visites",
               page: "/sales/list-visit-mob",
             },
+            {
+              title: "Chiffre d'affaire Par Client",
+              page: "/sales/list-ca-dd",
+            },
+            {
+              title: "Chiffre d'affaire Par Type Produit",
+              page: "/sales/list-sales-type",
+            },
+            {
+              title: "Chiffre d'affaire Par Client",
+              page: "/sales/list-ca-dd",
+            },
+            {
+              title: "Quantitée Vendue Par Role",
+              page: "/sales/list-sales-role",
+            },
           ],
         },
         {
@@ -1136,8 +1204,16 @@ export class MenuConfig {
               page: "/account-receivable/list-transfert-payment",
             },
             {
+              title: "Paiement Dépense Détaillé",
+              page: "/account-payable/create-charge-payable-detail",
+            },
+            {
               title: "Paiement Dépense",
               page: "/account-payable/create-charge-payment",
+            },
+            {
+              title: "Journal De Caisse",
+              page: "/account-receivable/bank-journal",
             },
           ],
         },
@@ -1486,6 +1562,30 @@ export class MenuConfig {
             {
               title: "Liste des Employés",
               page: "/accounting-setting/list-employe",
+            },
+            {
+              title: "Recap Mvt Epi par Employés",
+              page: "/accounting-setting/epi-byemploye-list",
+            },
+            {
+              title: "Recap Mvt Epi par article",
+              page: "/accounting-setting/epi-bypart-list",
+            },
+            {
+              title: "Détail des Mvts EPI par Employés",
+              page: "/accounting-setting/epi-byemployedetail-list",
+            },
+            {
+              title: "Détail des Mvts EPI par Articles",
+              page: "/accounting-setting/epi-bypartdetail-list",
+            },
+            {
+              title: "Liste des Nouveaux employés en attente d'EPI",
+              page: "/accounting-setting/epi-newemploye-list",
+            },
+            {
+              title: "Liste des employés en attente d'EPI",
+              page: "/accounting-setting/epi-cycleemploye-list",
             },
             {
               title: "Maint Congés des Employés",
@@ -2086,6 +2186,14 @@ export class MenuConfig {
                 {
                   title: "Liste des documents",
                   page: "/code-mstr/list-doc",
+                },
+                {
+                  title: "créer classification",
+                  page: "/code-mstr/epi-create-classification",
+                },
+                {
+                  title: "Liste des classification",
+                  page: "/code-mstr/epi-list-classification",
                 },
                 {
                   title: "Maint des sequence",

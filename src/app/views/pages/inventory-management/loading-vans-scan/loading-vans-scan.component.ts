@@ -19,6 +19,7 @@ import { toJSDate } from "@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar";
 import { saveAs } from "file-saver";
 declare var ElectronPrinter2: any;
 declare var ElectronPrinter3: any;
+declare var ElectronPrinter4: any;
 @Component({
   selector: "kt-loading-vans",
   templateUrl: "./loading-vans-scan.component.html",
@@ -176,6 +177,10 @@ export class LoadingVansScanComponent implements OnInit {
   }
   // save data
   onSubmit(content10,content11) {
+    const input = document.getElementById('submit') as HTMLInputElement | null;
+
+
+input?.setAttribute('disabled', '');
     const controls = this.chargeForm.controls
     console.log(controls.load_request_code.value,this.dataset.length)
     if(controls.load_request_code.value != null && this.dataset.length > 0) {
@@ -293,7 +298,10 @@ export class LoadingVansScanComponent implements OnInit {
      this.modalService.dismissAll()
      controls.load_request_code.setValue(null)
      document.getElementById("load_request_code").focus();
-     
+     const input = document.getElementById('submit') as HTMLInputElement | null;
+
+    input.removeAttribute("disabled");
+
     
   }
   exitprint2(){
@@ -455,11 +463,11 @@ export class LoadingVansScanComponent implements OnInit {
       delete dat.id
       dat.quantity = - dat.quantity
     }
-    this.inventoryManagementService.createLoadRequestDetailsScan(details, lines,this.datasetun).subscribe(
+    this.inventoryManagementService.createUnLoadRequestDetailsScan(details, lines,this.datasetun).subscribe(
       (response: any) => {
         const controls = this.chargeForm.controls;
         if (controls.print.value == true) {
-           this.printpdf();
+           this.printUnpdf();
         }
 
         this.loadRequestData = [];
@@ -1439,5 +1447,50 @@ console.log("this.printline",this.printLines2)
     this.gridServicechardet = angularGrid.gridService;
     this.gridchar.invalidate();
     this.gridchar.render();
+  }
+
+
+
+  printUnpdf() {
+    let filteredData = [];
+    const data = _.mapValues(_.groupBy(this.printLines, "prodlot"));
+    //console.log("data",data)
+    for (const [key, value] of Object.entries(data)) {
+  //    console.log("key",key)
+      filteredData.push({
+        prod: key,
+        occurences: value,
+      });
+    }
+   // this.printLines = [];
+   console.log("aaa",this.printLines)
+    this.printLines2 = [];
+    let k = 1;
+    filteredData.forEach((prod) => {
+      //console.log(prod);
+      this.printLines2.push({
+        line: k,
+        product_code: prod.occurences[0].code_prod,
+        product_name: prod.occurences[0].desc_prod,
+        pt_price: prod.occurences[0].price,
+        qt_request: prod.occurences.length,
+        lot: prod.occurences[0].lot,
+        // qt_validated: prod.occurences.length,
+        // qt_effected: prod.occurences.length,
+      });
+      k++;
+    });
+console.log("this.printline",this.printLines2)
+
+    this.total = 0,
+    this.totalCartons= 0,
+    this.printLines2.map((item) => {
+      if(item.product_code != null) {
+      this.total = Number(this.total) + Number(item.pt_price) * Number(item.qt_request);
+      this.totalCartons = this.totalCartons + item.qt_request;
+      }
+    });
+    ElectronPrinter4.print4(this.dataset, this.load_request_code, this.role_code, this.loadRequestInfo, this.userInfo, this.username, this.printLines2, this.userPrinter, this.total, this.totalCartons,this.nchariot)
+    // saveAs(blob, this.load_request_code + ".pdf");
   }
 }

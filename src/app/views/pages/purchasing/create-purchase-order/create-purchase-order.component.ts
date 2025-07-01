@@ -298,7 +298,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
           }], 
           
           
-          rqm_rqby_userid: [this.requisition.rqm_rqby_userid],
+          rqm_rqby_userid: [this.requisition.rqm_rqby_userid, Validators.required],
           rqm_reason: [this.requisition.rqm_reason ],
           rqm_status: [this.requisition.rqm_status ],
           rqm_rmks: [this.requisition.rqm_rmks ],
@@ -438,6 +438,7 @@ console.log(this.nbr)
             rqd_um: "",
             rqd_cc: "",
             rqd_desc: "",
+            rqd_vpart:""
         },{position:"bottom"})
     }
 
@@ -833,7 +834,7 @@ console.log(this.nbr)
         // fill the dataset with your data
         
         this.itemsService
-            .getBy ({ })
+            .getBy ({pt_buyer:controls.rqm_category.value })
             .subscribe((response: any) => (this.items = response.data))
          
     }
@@ -941,7 +942,7 @@ console.log(this.nbr)
        // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
         var img = new Image()
         img.src = "./assets/media/logos/companyentete.png";
-        doc.addImage(img, 'png', 150, 5, 50, 30)
+        doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);
@@ -979,7 +980,7 @@ console.log(this.nbr)
         doc.line(120, 85, 120, 90);
         doc.text("UM", 123, 88.5);
         doc.line(130, 85, 130, 90);
-        doc.text("OBSERVATION", 152, 88.5);
+        doc.text("OBSERVATION", 132, 88.5);
         doc.line(185, 85, 185, 90);
         var i = 95;
         doc.setFontSize(6);
@@ -990,7 +991,7 @@ console.log(this.nbr)
           if ((j % 20 == 0) && (j != 0) ) {
             doc.addPage();
             img.src = "./assets/media/logos/companyentete.png";
-            doc.addImage(img, 'png', 150, 5, 50, 30)
+            doc.addImage(img, 'png', 5, 5, 200, 30)
             doc.setFontSize(9);
             if (this.domain.dom_name != null) {
               doc.text(this.domain.dom_name, 10, 10);
@@ -1026,7 +1027,7 @@ console.log(this.nbr)
             doc.line(120, 85, 120, 90);
             doc.text("UM", 123, 88.5);
             doc.line(130, 85, 130, 90);
-            doc.text("OBSERVATION", 152, 88.5);
+            doc.text("OBSERVATION", 132, 88.5);
             doc.line(185, 85, 185, 90);
             i = 95;
             doc.setFontSize(6);
@@ -1049,7 +1050,7 @@ console.log(this.nbr)
             doc.line(120, i - 5, 120, i);
             doc.text(this.dataset[j].rqd_um, 123, i - 1);
             doc.line(130, i - 5, 130, i);
-            doc.text(String(this.dataset[j].rqd_vpart), 168, i - 1, { align: "right" });
+            doc.text(String(this.dataset[j].rqd_vpart), 132, i - 1);
             doc.line(185, i - 5, 185, i);
             // doc.line(10, i, 200, i );
     
@@ -1082,7 +1083,7 @@ console.log(this.nbr)
             doc.line(120, i - 5, 120, i);
             doc.text(this.dataset[j].rqd_um, 123, i - 1);
             doc.line(130, i - 5, 130, i);
-            doc.text(String(this.dataset[j].rqd_vpart), 168, i - 1, { align: "right" });
+            doc.text(String(this.dataset[j].rqd_vpart), 132, i - 1,);
             doc.line(185, i - 5, 185, i);
             doc.line(10, i, 205, i);
             i = i + 5;

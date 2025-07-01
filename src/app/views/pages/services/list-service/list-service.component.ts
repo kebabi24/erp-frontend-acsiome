@@ -391,12 +391,13 @@ export class ListServiceComponent implements OnInit {
       },
       {
         id: "successrate",
-        name: "Taux Reussite",
+        name: "Taux Réussite",
         field: "successrate",
         sortable: true,
        // width: 50,
         type: FieldType.float,
-        formatter:Formatters.percentComplete ,
+        formatter:Formatters.progressBar ,
+       
        
       },
     ];

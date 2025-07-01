@@ -67,7 +67,8 @@ import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
 const API_URL = environment.apiUrl + "/users-mobile"
 
-
+const API_URL_codes = environment.apiUrl + "/codes"
+const API_URL_items = environment.apiUrl + "/items"
 @Component({
   selector: 'kt-list-sales-role',
   templateUrl: './list-sales-role.component.html',
@@ -366,6 +367,38 @@ export class ListSalesRoleComponent implements OnInit {
        
       }, 
       {
+        id: "pt_part_type",
+        name: "Type",
+        field: "pt_part_type",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+       // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/parttypes`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+        filter: {
+
+         
+          // collectionAsync: this.elem,
+          collectionAsync:  this.http.get(`${API_URL_codes}/parttypes`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+         
+         
+           model: Filters.multipleSelect,
+          
+         },
+        grouping: {
+          getter: 'pt_part_type',
+          formatter: (g) => `Type Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('quantity'),  
+            new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
         id: "product_code",
         name: "Code Produit",
         field: "product_code",
@@ -373,7 +406,19 @@ export class ListSalesRoleComponent implements OnInit {
         width: 50,
         filterable: true,
         type: FieldType.text,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        filter: {
+
+         
+          // collectionAsync: this.elem,
+          collectionAsync:  this.http.get(`${API_URL_items}/findpart`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+       
+         
+         
+           model: Filters.multipleSelect,
+          
+          
+         },
         grouping: {
           getter: 'product_code',
           formatter: (g) => `Code Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
@@ -463,19 +508,38 @@ export class ListSalesRoleComponent implements OnInit {
 
     this.mvgridOptions = {
       enableDraggableGrouping: true,
-        createPreHeaderPanel: true,
-        showPreHeaderPanel: true,
-        preHeaderPanelHeight: 40,
-        enableFiltering: true,
-        enableAutoResize: true,
-        enableAutoResizeColumnsByCellContent:true,
-        enableSorting: true,
-        exportOptions: {
-          sanitizeDataExport: true
-        },
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: true,
+      preHeaderPanelHeight: 40,
+      enableFiltering: true,
+      enableAutoResize: true,
+      enableSorting: true,
+      enableExcelExport:true,
+      enableExcelCopyBuffer: true,
+      exportOptions: {
+        sanitizeDataExport: true
+      },
        
         //enableRowSelection: true,
-        
+      //   enableCellNavigation: true,
+      //   enableCheckboxSelector: true,
+      //   checkboxSelector: {
+      //     // optionally change the column index position of the icon (defaults to 0)
+      //     // columnIndexPosition: 1,
+  
+      //     // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      //     hideSelectAllCheckbox: true,
+  
+      //     // you can override the logic for showing (or not) the expand icon
+      //     // for example, display the expand icon only on every 2nd row
+      //     // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      //   },
+      //  // multiSelect: false,
+      //   rowSelectionOptions: {
+      //     // True (Single Selection), False (Multiple Selections)
+      //     selectActiveRow: true,
+      //   },
+       
         formatterOptions: {
         
           // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
@@ -483,6 +547,7 @@ export class ListSalesRoleComponent implements OnInit {
     
           // Defaults to undefined, minimum number of decimals
           minDecimal: 2,
+          maxDecimal:2,
     
           // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
           thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
@@ -561,7 +626,7 @@ export class ListSalesRoleComponent implements OnInit {
       (response: any) => {   
         this.mvdataset = response.data
        console.log(this.mvdataset)
-     //  this.mvdataView.setItems(this.mvdataset);
+       this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {

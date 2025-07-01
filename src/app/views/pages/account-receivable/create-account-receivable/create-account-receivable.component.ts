@@ -53,8 +53,10 @@ import {
 
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
+import { jsPDF } from "jspdf";
+import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
-
+import { replaceAll } from "chartist";
 @Component({
   selector: 'kt-create-account-receivable',
   templateUrl: './create-account-receivable.component.html',
@@ -146,6 +148,8 @@ export class CreateAccountReceivableComponent implements OnInit {
   date: String;
   compta: Boolean = false
   declared: Boolean = false
+  arr : any
+  domain: any;
   constructor(
     config: NgbDropdownConfig,
     private apFB: FormBuilder,
@@ -532,6 +536,8 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.user =  JSON.parse(localStorage.getItem('user'))
+    
+    this.domain = JSON.parse(localStorage.getItem("domain")); 
     this.createForm();
   }
 
@@ -570,7 +576,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
         bank_name: [{value: "", disabled: true}],
         ar_disc_acct:  [{value: this.accountReceivable.ar_disc_acct ,disabled: !this.isExistc }],
         ar_dy_code:  [{value: this.accountReceivable.ar_dy_code ,disabled: !this.isExistc }],
-        ar_check:  [{value: this.accountReceivable.ar_check ,disabled: !this.isExistc }, Validators.required],
+        ar_check:  [{value: this.accountReceivable.ar_check ,disabled: !this.isExistc }],
         ar_po:  [{value: this.accountReceivable.ar_po ,disabled: !this.isExistc }],
         
         ar_ex_rate: [{value: this.accountReceivable.ar_ex_rate, disabled: !this.isExistc }],
@@ -578,7 +584,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
         
         imput:  [{value: false ,disabled: !this.isExistc }],
        
-
+        print:[true]
 
       });
   
@@ -855,15 +861,16 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
 
       return;
     }
-    // if(this.cfdataset.length == 0) {
-    //   this.message = "Ecriture comptable vide.";
-    //   this.hasFormErrors = true;
+    if(this.compta) {
+    if(this.cfdataset.length == 0) {
+      this.message = "Ecriture comptable vide.";
+      this.hasFormErrors = true;
 
     //   return;
    
 
-    // }
-
+    }
+  }
    
     
     let ap = this.prepareAP()
@@ -876,7 +883,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
     const controls = this.arForm.controls;
    
     const _ar = new AccountReceivable();
-   console.log(controls.ar_check.value) 
+   //console.log(controls.ar_check.value) 
     _ar.ar_bill = controls.ar_bill.value;
     _ar.ar_check = controls.ar_check.value;
     
@@ -930,7 +937,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
     this.accountReceivableService
       .add({ accountReceivable: _ar, accountReceivableDetail: detail, gldetail: cfdetail })
       .subscribe(
-        (reponse: any) => (ar = reponse.data),
+        (reponse: any) => (ar = reponse.data, this.arr= reponse.data),
         (error) => {
           this.layoutUtilsService.showActionNotification(
             "Erreur verifier les informations",
@@ -950,9 +957,10 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
             true
           );
           this.loadingSubject.next(false);
+          if(controls.print.value == true) this.printpdf(ar.ar_nbr) //printIH(this.customer, iharray, ih,this.curr);
           console.log(this.dataset);
-          
-          this.router.navigateByUrl("/account-Receivable/create-account-Receivable");
+          this.reset()
+          this.router.navigateByUrl("/account-receivable/create-account-receivable");
           this.reset()
         }
       );
@@ -1934,4 +1942,77 @@ this.gridServicecf.addItem(
         this.modalService.open(content, { size: "lg" });
       }
       
+
+
+      printpdf(nbr) {
+        const controls = this.arForm.controls 
+        console.log("pdf")
+        var doc = new jsPDF();
+       
+       // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+        var img = new Image()
+        img.src = "./assets/media/logos/company.png";
+        img.src = "./assets/media/logos/companylogo.png";
+        doc.addImage(img, "png", 170, 2, 45, 30);
+        doc.setFontSize(9);
+        if (this.domain.dom_name != null) {
+          doc.text(this.domain.dom_name, 10, 10);
+        }
+        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.line(10, 32, 200, 32);
+        doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+        doc.line(10, 40, 200, 40);
+        doc.setFontSize(12);
+        doc.text( 'Paiement N°: ' + nbr  , 70, 50);
+       // doc.setFontSize(8);
+       // console.log(this.customer.address.ad_misc2_id)
+        doc.text('Code Client : ' + this.customer.cm_addr, 20 , 60 )
+        doc.text('Nom             : ' + this.customer.address.ad_name, 20 , 65)
+      if(this.customer.address.ad_line1 != null) { doc.text('Adresse       : ' + this.customer.address.ad_line1, 20 , 70)}
+        if (this.customer.address.ad_misc2_id != null) {doc.text('MF          : ' + this.customer.address.ad_misc2_id, 20 , 75)}
+            if (this.customer.address.ad_gst_id != null) {doc.text('RC          : ' + this.customer.address.ad_gst_id, 20 , 80)}
+            if (this.customer.address.ad_pst_id) {doc.text('AI            : ' + this.customer.address.ad_pst_id, 20 , 85)}
+            if (this.customer.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.customer.address.ad_misc1_id, 20 , 90)}
+          
+        
+            doc.text('Date         : ' + this.arr.ar_effdate, 20 , 95)
+            let nbm = - Number(this.arr.ar_base_amt)
+
+            let mts =  String(  Number(nbm).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }))
+            console.log(mts)
+            let mnsolde = replaceAll(mts,","," ")
+            console.log(mnsolde)
+            doc.text('Montant      : ' + (mnsolde), 20 , 100)
+          if(this.arr.ar_po != null) { doc.text('Observation         : ' + this.arr.ar_po, 20 , 105)}
+
+          let mt = NumberToLetters(
+            Number(- Number(this.arr.ar_base_amt)).toFixed(2),this.curr.cu_desc)
+      
+            if (mt.length > 85) {
+              let mt1 = mt.substring(80)
+              let ind = mt1.indexOf(' ')
+             
+              mt1 = mt.substring(0, 80  + ind)
+              let mt2 = mt.substring(80+ind)
+         
+              doc.text( "Montant du Paiement" + mt1  , 20, 110)
+              doc.text(  mt2  , 20, 115)
+            } else {
+              doc.text( "Montant du Paiement :" + mt  , 20, 110)
+      
+            }
+          
+            // window.open(doc.output('bloburl'), '_blank');
+          //window.open(doc.output('blobUrl'));  // will open a new tab
+          var blob = doc.output("blob");
+          window.open(URL.createObjectURL(blob));
+      
+        }
+        
     }
+    

@@ -248,7 +248,7 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
           tab.push(itineraries);
           // console.log(tab)
           const itn = itineraries.filter((item_itinerary) => item.service != null && item_itinerary.itinerary.itinerary_code === item.service.itinerary_code);
-          // console.log(itn);
+          console.log(itn);
           // console.log(itineraries)
           if (item.service == null) {
             const node: any = {
@@ -280,7 +280,7 @@ console.log("heeeeeeeeeeeeeeeeee"),this.itinerary
               etat_service: "Oui",
               service_period_activate_date: item.service.service_period_activate_date,
               itinerary_code: item.service.itinerary_code,
-              itinerary_name: itn[0].itinerary.itinerary_name,
+              itinerary_name: (itn.length != 0) ? itn[0].itinerary.itinerary_name : null,
               role_site: item.role_site
             };
             return node;

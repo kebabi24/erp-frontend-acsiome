@@ -21,6 +21,7 @@
                                 name="profile_code"
                                 id="profile_code"
                                 formControlName="profile_code"
+                                (change)="onSelectProfile()"
                                 class="form-control form-control-sm form-control-solid">
                                 <option value=""></option>
                                 <option *ngFor="let elem of profiles" [value]="elem.profile_code">
@@ -32,18 +33,22 @@
                     </form>
                 </div>
             </div>
-            <br><br><br>
-            <h5>Sélectionnez les pages produits que vous souhaitez ajouter à ce profile</h5>
+            <br><br>
+            
+            <div class="row">
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem(content4)">Ajouter Articles</button>
+              </div>
+            <br><br>
+            
             <br><br>
             <div class="row">
                 <angular-slickgrid class="col-12" 
-                    gridHeight="1000"
+                  
                     gridId="gridProfil" 
                     [columnDefinitions]="columnDefinitions"
                     [gridOptions]="gridOptions" 
                     [dataset]="dataset"
                     (onAngularGridCreated)="angularGridReady($event)"
-                    (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
                     >
                 </angular-slickgrid>
             </div>
@@ -51,4 +56,28 @@
         </div>
 
     </kt-portlet-body>
+    <div>
+        <ng-template #content4 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir l'article</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" 
+              [columnDefinitions]="columnDefinitions4" 
+              (onAngularGridCreated)="angularGridReady4($event)"
+              (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)" 
+              [gridOptions]="gridOptions4" [dataset]="items"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-primary" (click)="addpage()" (click)="c('Close click')">Ok</button>
+        </div>
+        </ng-template>
+      
+      </div>
 </kt-portlet>

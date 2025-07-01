@@ -605,6 +605,8 @@ export class ListInvoiceMobComponent implements OnInit {
         enableFiltering: true,
         enableAutoResize: true,
         enableSorting: true,
+        enableExcelExport:true,
+        enableExcelCopyBuffer: true,
         exportOptions: {
           sanitizeDataExport: true
         },
@@ -871,6 +873,7 @@ this.dataset= []
     this.gridOptionssite = {
         enableSorting: true,
         enableCellNavigation: true,
+        enableExcelExport:true,
         enableExcelCopyBuffer: true,
         enableFiltering: true,
         autoEdit: false,

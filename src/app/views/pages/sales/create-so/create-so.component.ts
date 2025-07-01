@@ -14,7 +14,7 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { SaleOrderService, QuoteService, SequenceService, CustomerService, UsersService, ItemService, SaleOrder, TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, PayMethService, CostlistService,EntityService } from "../../../../core/erp";
+import { SaleOrderService, QuoteService, SequenceService, CustomerService, UsersService, ItemService, SaleOrder, TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, PayMethService, CostlistService,EntityService,TimbreService } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 
@@ -167,7 +167,8 @@ export class CreatesaleorderComponent implements OnInit {
     private pricelistService: PricelistService,
     private configService: ConfigService,
     private payMethService: PayMethService,
-    private costlistService: CostlistService
+    private costlistService: CostlistService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
 
@@ -1284,7 +1285,7 @@ export class CreatesaleorderComponent implements OnInit {
 
     // fill the dataset with your data
     const controls = this.soForm.controls;
-    this.customersService.getByAll({ cm_hold: false, cm_seq: controls.so_category.value }).subscribe((response: any) => (this.customers = response.data));
+    this.customersService.getByAll({ cm_hold: false }).subscribe((response: any) => (this.customers = response.data));
   }
   open2(content) {
     this.prepareGrid2();

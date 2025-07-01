@@ -100,6 +100,7 @@ export { Financialcharge } from "./_models/financialcharge.model";
 export { Populationemploye } from "./_models/populationemploye.model";
 export { Trainingcalender } from "./_models/trainingcalender.model";
 export { AccountOrder } from "./_models/account-order.model";
+export { PriceListQuantity } from "./_models/price-list-quantity.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -207,4 +208,6 @@ export { PopulationemployeService } from "./_services/populationemploye.service"
 export { TrainingcalenderService } from "./_services/trainingcalender.service";
 export { DecompteService } from "./_services/decompte.service";
 export { AccountOrderService } from "./_services/account-order.service";
+export { PriceListQuantityService } from "./_services/price-list-quantity.service";
+export { TimbreService } from "./_services/timbre.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

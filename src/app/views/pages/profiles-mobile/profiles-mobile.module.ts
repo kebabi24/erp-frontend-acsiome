@@ -50,7 +50,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { UsersMobileService } from "../../../core/erp"
+import { MobileSettingsService, UsersMobileService } from "../../../core/erp"
 import { TreeModule } from "@circlon/angular-tree-component";
 import { EditProfileMobileComponent } from './edit-profile-mobile/edit-profile-mobile.component';
 import { MobileMenuService,ItemService } from 'src/app/core/erp';
@@ -120,6 +120,7 @@ const routes: Routes = [
         UsersMobileService,
         MobileMenuService,
         ItemService,
+        MobileSettingsService,
         TypesUtilsService,
         LayoutUtilsService,
     ],

@@ -365,7 +365,26 @@ export class ListPaiementMobComponent implements OnInit {
         }
        
       },
-      
+      {
+        id: "payment_code",
+        name: "N° Paiement",
+        field: "payment_code",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'payment_code',
+          formatter: (g) => `Paiement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+          new Aggregators.Sum('amount'),
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
       {
         id: "payment_term_code",
         name: "Type Paiement",

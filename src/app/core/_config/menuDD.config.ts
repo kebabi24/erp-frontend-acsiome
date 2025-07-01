@@ -29,13 +29,14 @@ export class MenuDDConfig {
             icon: "flaticon-dashboard",
             root: true,
             submenu: [
+             
               {
                 title: "Dashboard",
                 page: "/dashboard/manager-dashboard",
               },
               {
                 title: "Dashboard Commercial",
-                page: "/dashboard/commercial-dashboard",
+                page: "/dashboard/sales-dashboard",
               },
               {
                 title: "Dashboard CRM",
@@ -98,7 +99,7 @@ export class MenuDDConfig {
                 page: "/customers/create-rep",
               },
               {
-                title: "Liste Répertoire Fournisseurs",
+                title: "Liste Répertoire Clients",
                 page: "/customers/list-rep",
               },
               {
@@ -116,6 +117,10 @@ export class MenuDDConfig {
               {
                 title: "Chiffre d'affaires par clients",
                 page: "/customers/Customer-calist",
+              },
+              {
+                title: "Liste Soldes clients",
+                page: "/customers/customers-solde",
               },
             ],
           },
@@ -201,6 +206,10 @@ export class MenuDDConfig {
                 title: "Impression Facture Camion",
                 page: "/supervision/print-inventory-role",
               },
+              {
+                title: "Export Demande Chargement",
+                page: "/supervision/export-lr",
+              },
       
             ],
           },
@@ -253,6 +262,10 @@ export class MenuDDConfig {
               {
                 title: "Décompte Role",
                 page: "/supervision/decompte-role",
+              },
+              {
+                title: "Export Demande Chargement",
+                page: "/supervision/export-lr",
               },
               // {
               //   title: "Service roadmap",
@@ -367,6 +380,10 @@ export class MenuDDConfig {
                 title: "Créer une page de produits",
                 page: "/articles/page",
               },
+              {
+                title: "Modification Prix Pour DD",
+                page: "/articles/update-price-dd",
+              },
   
                       ],
           },
@@ -391,6 +408,14 @@ export class MenuDDConfig {
               {
                 title: "Dechargement Des Vans",
                 page: "/inventory-management/unloading-vans",
+              },
+              {
+                title: "Chargement Des BLs",
+                page: "/sales/create-psh-plq",
+              },
+              {
+                title: "Liste des Chargements ",
+                page: "/supervision/list-chargement",
               },
               {
                 title: "Consultation demandes de chargement",
@@ -474,6 +499,31 @@ export class MenuDDConfig {
             icon: "flaticon2-delivery-package",
             submenu: [
               {
+                title: "Commande Clients",
+                page: "/sales/create-so-bc",
+              },
+              {
+                title: "Liste des Commandes",
+                page: "/sales/so-list",
+              },
+              {
+                title: "Liste des BLS",
+                page: "/sales/list-psh",
+              },
+              {
+                title: "Facturation ",
+                page: "/sales/create-invoice",
+              },
+              {
+                title: "Réimpression Facture ",
+                page: "/sales/reprint-invoice",
+              },
+              {
+                title: "Liste des Factures",
+                page: "/sales/list-invoices",
+              },
+              
+              {
                 title: "Ajouter Facture DD",
                 page: "/sales/create-inv-mob",
               },
@@ -498,8 +548,45 @@ export class MenuDDConfig {
                 title: "Chiffre d'affaire Par Client",
                 page: "/sales/list-ca-dd",
               },
+              {
+                title: "Chiffre d'affaire Par Type Produit",
+                page: "/sales/list-sales-type",
+              },
+              {
+                title: "Quantitée Vendue Par Role",
+                page: "/sales/list-sales-role",
+              },
             ],
           },
+          // {
+          //   title: "Comptabilité Client",
+          //   root: true,
+          //   bullet: "dot",
+          //   icon: "flaticon2-analytics-1",
+          //   submenu: [
+          //     {
+          //       title: "Maint des Paiement",
+          //       page: "/account-receivable/create-account-receivable",
+          //     },
+              
+          //     {
+          //       title: "Liste des Paiement",
+          //       page: "/account-receivable/list-payment",
+          //     },
+          //     {
+          //       title: "Paiement à Rapproché",
+          //       page: "/account-receivable/list-payment-rap",
+          //     },
+          //     {
+          //       title: "Maint des Notes de Débit",
+          //       page: "/account-receivable/create-note",
+          //     },
+          //     {
+          //       title: "Journal Client",
+          //       page: "/account-receivable/edit-journal",
+          //     },
+          //   ],
+          // },
           {
             title: "Gestion des Caisses",
             root: true,
@@ -544,8 +631,37 @@ export class MenuDDConfig {
                 page: "/account-receivable/list-transfert-payment",
               },
               {
+                title: "Paiement Dépense Détaillé",
+                page: "/account-payable/create-charge-payable-detail",
+              },
+              {
                 title: "Paiement Dépense",
                 page: "/account-payable/create-charge-payment",
+              },
+              {
+                title: "Maint des Paiement",
+                page: "/account-receivable/create-account-receivable",
+              },
+              
+              {
+                title: "Liste des Paiement",
+                page: "/account-receivable/list-payment",
+              },
+              {
+                title: "Paiement à Rapproché",
+                page: "/account-receivable/list-payment-rap",
+              },
+              {
+                title: "Maint des Notes de Débit",
+                page: "/account-receivable/create-note",
+              },
+              {
+                title: "Journal Client",
+                page: "/account-receivable/edit-journal",
+              },
+              {
+                title: "Journal De Caisse",
+                page: "/account-receivable/bank-journal",
               },
             ],
           },

@@ -59,5 +59,9 @@ export class SaleShiperService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
+    public getAllBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findallby', data, { headers: httpHeaders })
+    }
     // DELETE
 }

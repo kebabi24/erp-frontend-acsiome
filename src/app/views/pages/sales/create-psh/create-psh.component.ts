@@ -58,6 +58,7 @@ import {
   LocationDetailService,
   CodeService,
   AccountShiperService,
+  TimbreService,
   printBL,
   LabelService,
   Label,EntityService

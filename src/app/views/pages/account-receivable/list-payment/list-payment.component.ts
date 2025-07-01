@@ -111,9 +111,9 @@ export class ListPaymentComponent implements OnInit {
             type: FieldType.string,
           },
           {
-            id: "ad_name",
+            id: "cm_sort",
             name: "Nom",
-            field: "address.ad_name",
+            field: "customer.cm_sort",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -217,16 +217,13 @@ export class ListPaymentComponent implements OnInit {
       ]
 
       this.gridOptions = {
-          autoResize: {
-            containerId: 'demo-container',
-            sidePadding: 10
-          },
-         
+          
           createPreHeaderPanel: true,
           showPreHeaderPanel: true,
           preHeaderPanelHeight: 40,
           enableFiltering: true,
           enableSorting: true,
+          enableAutoResize:true,
           exportOptions: {
             sanitizeDataExport: true
           },

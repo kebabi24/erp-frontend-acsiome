@@ -112,4 +112,22 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findallca/`, data,{ headers: httpHeaders })
     }
+    public getSalesRole(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getsalesrole/`,data,{ headers: httpHeaders })
+        //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
+    }
+    public   getSalesType(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findsalestype/`, data,{ headers: httpHeaders })
+    }
+    public GetProfileProductPage(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_2}/findppprofile/`, data,{ headers: httpHeaders })
+    }
+    public getRolesSales(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findallsalesrole/`,data,{ headers: httpHeaders })
+        //return this.http.post(API_URL+'/getAllInvoicesdet', { headers: httpHeaders })
+    }
 }

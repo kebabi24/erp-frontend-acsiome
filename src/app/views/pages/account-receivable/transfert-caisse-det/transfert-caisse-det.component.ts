@@ -176,14 +176,31 @@ bkh_cheque: number
 
     });
     const controls = this.rvForm.controls
-    this.bankService
-    .getBy({bk_user1:this.user.usrd_code})
+    // this.bankService
+    // .getBy({bk_user1:this.user.usrd_code})
+    // .subscribe((response: any) => {
+    //   console.log(response.data.bank)
+    //   controls.bank_code_dest.setValue(response.data.bank.bk_code)
+    //   controls.bank_dest_name.setValue(response.data.bank.address.ad_name)
+
+    // });
+
+    this.codeService
+    .getByOne({code_fldname:"bank_dest"})
+    .subscribe((respsrc: any) => {
+      console.log(respsrc.data.code_value)
+      controls.bank_code_dest.setValue(respsrc.data.code_value)
+      this.bankService
+    .getBy({bk_code:respsrc.data.code_value})
     .subscribe((response: any) => {
       console.log(response.data.bank)
-      controls.bank_code_dest.setValue(response.data.bank.bk_code)
+   //   controls.bank_code_dest.setValue(response.data.bank.bk_code)
       controls.bank_dest_name.setValue(response.data.bank.address.ad_name)
 
     });
+
+    });
+   
   }
   next2000(){
     const controls = this.rvForm.controls
@@ -695,7 +712,7 @@ bkh_cheque: number
           doc.text("Récap    : " + controls.chr03.value, 5, initialY + 25);
          
           // doc.text("Vendeur : " + controls.user_mobile_code.value + " - " + controls.username.value, 5, initialY + 20);
-      //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
+      //    doc.text("Valeur : " + Number(total * 1.2138).toFixed(2) + " DZD", 65, initialY + 20);
           doc.setFontSize(9);
     
      var i = 40
@@ -724,9 +741,10 @@ bkh_cheque: number
 
              doc.text("Cheque"  , 4, i+85 ) ; doc.text( String(Number(controls.bkh_cheque.value)),40,i+ 85); 
              
+             doc.text("Total Espece "  , 4, i+90 ); doc.text( String(Number(controls.bkh_2000.value)* 2000 + Number(controls.bkh_1000.value)* 1000+ Number(controls.bkh_0500.value)* 500 + Number(controls.bkh_0200.value)* 200 + Number(controls.bkh_p200.value)* 200 + Number(controls.bkh_p100.value)* 100 + Number(controls.bkh_p050.value)* 50 + Number(controls.bkh_p020.value)* 20 + Number(controls.bkh_p010.value)* 10 + Number(controls.bkh_p005.value)* 5 ),40,i+ 90); 
              doc.setFontSize(14);
              doc.setFont("Times-Roman-bold");
-             doc.text("Total Transfert"  , 4, i+95 ) ; doc.text( String(Number(controls.montant_tr.value).toFixed(2)),45,i+ 95); 
+             doc.text("Total Transfert"  , 4, i+100) ; doc.text( String(Number(controls.montant_tr.value).toFixed(2)),45,i+ 100); 
              
             //  doc.text("Nouveau Solde Caisse"  , 4, i+80 ) ; doc.text( String(Number((Number(this.solde) - Number(controls.montant_tr.value))).toFixed(2)),45,i+ 80); 
              

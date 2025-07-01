@@ -120,9 +120,25 @@ export class BankService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findbkhtr`,data, { headers: httpHeaders })
  
+    } 
+    public getBKHTrGrp(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbkhtrgrp`,data, { headers: httpHeaders })
+ 
+    } 
+    public getBKTr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findtrbk`,data, { headers: httpHeaders })
+ 
     }
     public getTransfertBy() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/findtransfert', { headers: httpHeaders })
     }
+    public getBKHRCTBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbkhrct`,data, { headers: httpHeaders })
+ 
+    }
+    
 }
