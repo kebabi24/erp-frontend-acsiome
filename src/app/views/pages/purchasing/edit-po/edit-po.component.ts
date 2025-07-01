@@ -109,6 +109,46 @@ export class EditPoComponent implements OnInit {
   po_cr_terms: any[] = [];
   domain : any;
   totForm: FormGroup;
+
+  ums: [];
+  columnDefinitionsum: Column[] = [];
+  gridOptionsum: GridOption = {};
+  gridObjum: any;
+  angularGridum: AngularGridInstance;
+
+  error = false;
+  datatax: [];
+  columnDefinitionstax: Column[] = [];
+  gridOptionstax: GridOption = {};
+  gridObjtax: any;
+  angularGridtax: AngularGridInstance;
+
+
+  devises: [];
+  columnDefinitionscurr: Column[] = [];
+  gridOptionscurr: GridOption = {};
+  gridObjcurr: any;
+  angularGridcurr: AngularGridInstance;
+
+  datasite: [];
+  columnDefinitionssite: Column[] = [];
+  gridOptionssite: GridOption = {};
+  gridObjsite: any;
+  angularGridsite: AngularGridInstance;
+  dataloc: [];
+  columnDefinitionsloc: Column[] = [];
+  gridOptionsloc: GridOption = {};
+  gridObjloc: any;
+  angularGridloc: AngularGridInstance;
+  seq;
+  requistionServer;
+  vpServer;
+  curr
+  users: [];
+  columnDefinitions3: Column[] = [];
+  gridOptions3: GridOption = {};
+  gridObj3: any;
+  angularGrid3: AngularGridInstance;
   constructor(
       config: NgbDropdownConfig,
       private poFB: FormBuilder,
@@ -730,6 +770,7 @@ export class EditPoComponent implements OnInit {
          // })
   }
 
+
   addPo(_po: any, detail: any) {
     for (let data of detail) {
       delete data.id;
@@ -805,6 +846,128 @@ export class EditPoComponent implements OnInit {
     return _po;
   
   }
+  onChangeTAX() {
+    const controls = this.poForm.controls;
+    const tax = controls.po_taxable.value;
+  
+      for (var i = 0; i < this.dataset.length; i++) {
+        let updateItem = this.gridService.getDataItemByRowIndex(i);
+      //  console.log(this.dataset[i].qty_oh)
+            updateItem.pod_taxable = tax ;
+        
+            this.gridService.updateItem(updateItem);
+         
+      };
+    
+    
+   
+    this.calculatetot();
+  }
+  
+  changeTax(){
+    const controls = this.poForm.controls // chof le champs hada wesh men form rah
+    const tx2_tax_code  = controls.po_taxc.value
+    this.taxService.getBy({tx2_tax_code}).subscribe((res:any)=>{
+        const {data} = res
+        console.log(res)
+        if (!data){ this.layoutUtilsService.showActionNotification(
+            "cette Taxe n'existe pas!",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+    this.error = true}
+        else {
+            this.error = false
+        }
+  
+  
+    },error=>console.log(error))
+  }
+  handleSelectedRowsChanged3(e, args) {
+    const controls = this.poForm.controls;
+    if (Array.isArray(args.rows) && this.gridObj3) {
+      args.rows.map((idx) => {
+        const item = this.gridObj3.getDataItem(idx);
+        console.log(item);
+        controls.po_buyer.setValue(item.usrd_code || "");
+      });
+    }
+  }
+
+  angularGridReady3(angularGrid: AngularGridInstance) {
+    this.angularGrid3 = angularGrid;
+    this.gridObj3 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGrid3() {
+    this.columnDefinitions3 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "usrd_code",
+        name: "code user",
+        field: "usrd_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "usrd_name",
+        name: "nom",
+        field: "usrd_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions3 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.userService
+      .getAllUsers()
+      .subscribe((response: any) => (this.users = response.data));
+  }
+  open3(content) {
+    this.prepareGrid3();
+    this.modalService.open(content, { size: "lg" });
+  }
+
   onAlertClose($event) {
       this.hasFormErrors = false
   }
@@ -1195,4 +1358,679 @@ export class EditPoComponent implements OnInit {
   controls.ttc.setValue(ttc.toFixed(2));
   
   }
+  handleSelectedRowsChangedtax(e, args) {
+    const controls = this.poForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjtax) {
+      args.rows.map((idx) => {
+        const item = this.gridObjtax.getDataItem(idx);
+        controls.po_taxc.setValue(item.tx2_tax_code || "");
+      });
+    }
+  }
+
+  angularGridReadytax(angularGrid: AngularGridInstance) {
+    this.angularGridtax = angularGrid;
+    this.gridObjtax = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridtax() {
+    this.columnDefinitionstax = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "tx2_tax_code",
+        name: "code ",
+        field: "tx2_tax_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "tx2_tax_pct",
+        name: "Taux Taxe ",
+        field: "tx2_tax_pct",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+      },
+      {
+        id: "tx2_desc",
+        name: "Designation",
+        field: "tx2_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "tx2_tax_type",
+        name: "Type Taxe",
+        field: "tx2_tax_type",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionstax = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.taxService
+      .getAll()
+      .subscribe((response: any) => (this.datatax = response.data));
+  }
+  opentax(contenttax) {
+    this.prepareGridtax();
+    this.modalService.open(contenttax, { size: "lg" });
+  }
+
+  changeCurr(){
+    const controls = this.poForm.controls // chof le champs hada wesh men form rah
+    const cu_curr  = controls.po_curr.value
+
+    const date = new Date()
+
+    this.date = controls.po_ord_date.value
+      ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
+      : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+
+     
+    this.deviseService.getBy({cu_curr}).subscribe((res:any)=>{
+        const {data} = res
+        console.log(res)
+        if (!data){ this.layoutUtilsService.showActionNotification(
+            "cette devise n'existe pas!",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+    this.error = true}
+        else {
+          this.curr = res.data
+            this.error = false;
+     
+            if (cu_curr == 'DA'){
+              controls.po_ex_rate.setValue(1)
+              controls.po_ex_rate2.setValue(1)
+
+            } else {
+
+            this.deviseService.getExRate({exr_curr1:cu_curr, exr_curr2:'DA', date: this.date /* `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`*/ }).subscribe((res:any)=>{
+               controls.po_ex_rate.setValue(res.data.exr_rate)
+               controls.po_ex_rate2.setValue(res.data.exr_rate2)
+              })
+     
+              }
+             
+     
+        }
+
+
+    },error=>console.log(error))
+}
+changeRateCurr(){
+  const controls = this.poForm.controls // chof le champs hada wesh men form rah
+  const cu_curr  = controls.po_curr.value
+
+  const date = new Date()
+
+  this.date = controls.po_ord_date.value
+    ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
+    : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+
+    if (cu_curr == 'DA'){
+      controls.po_ex_rate.setValue(1)
+      controls.po_ex_rate2.setValue(1)
+
+    } else {
+          this.deviseService.getExRate({exr_curr1:cu_curr, exr_curr2:'DA', date: this.date /* `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`*/ }).subscribe((res:any)=>{
+            
+
+             controls.po_ex_rate.setValue(res.data.exr_rate)
+             controls.po_ex_rate2.setValue(res.data.exr_rate2)
+            })
+   
+    }
+           
+          
+  
+}
+handleSelectedRowsChangedloc(e, args) {
+  let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  if (Array.isArray(args.rows) && this.gridObjloc) {
+    args.rows.map((idx) => {
+      const item = this.gridObjloc.getDataItem(idx);
+          
+      updateItem.pod_loc = item.loc_loc;
+      
+      this.gridService.updateItem(updateItem);
+   
+});
+
+  }
+}
+angularGridReadyloc(angularGrid: AngularGridInstance) {
+  this.angularGridloc = angularGrid;
+  this.gridObjloc = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridloc() {
+  this.columnDefinitionsloc = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromColumnPicker: true,
+      excludeFromGridMenu: true,
+      excludeFromHeaderMenu: true,
+
+      minWidth: 50,
+      maxWidth: 50,
+    },
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "loc_site",
+      name: "Site",
+      field: "loc_site",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "loc_loc",
+      name: "Emplacement",
+      field: "loc_loc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "loc_desc",
+      name: "Designation",
+      field: "loc_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "loc_status",
+      name: "Status",
+      field: "loc_status",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "loc_perm",
+      name: "Permanent",
+      field: "loc_perm",
+      sortable: true,
+      filterable: true,
+      type: FieldType.boolean,
+      formatter: Formatters.yesNo,
+    },
+  ];
+
+  this.gridOptionsloc = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  
+  // fill the dataset with your data
+  this.locationService
+    .getBy({ loc_site:  updateItem.pod_site })
+    .subscribe((response: any) => (this.dataloc = response.data));
+}
+openloc(contentloc) {
+  this.prepareGridloc();
+  this.modalService.open(contentloc, { size: "lg" });
+}
+  handleSelectedRowsChangedcurr(e, args) {
+    const controls = this.poForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjcurr) {
+      args.rows.map((idx) => {
+        const item = this.gridObjcurr.getDataItem(idx);
+        controls.po_curr.setValue(item.cu_curr || "");
+        if(item.cu_curr == 'DA'){
+            controls.po_ex_rate.setValue(1)
+            controls.po_ex_rate2.setValue(1)
+
+          } else {
+            const date = new Date()
+            this.date = controls.po_ord_date.value
+            ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
+            : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+          
+            this.deviseService.getExRate({exr_curr1:item.cu_curr,exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{
+            
+             controls.po_ex_rate.setValue(res.data.exr_rate)
+             controls.po_ex_rate2.setValue(res.data.exr_rate2)
+            
+          })
+        
+        }
+      });
+    }
+  }
+
+  angularGridReadycurr(angularGrid: AngularGridInstance) {
+    this.angularGridcurr = angularGrid;
+    this.gridObjcurr = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridcurr() {
+    this.columnDefinitionscurr = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "cu_curr",
+        name: "code",
+        field: "cu_curr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "cu_desc",
+        name: "Designation",
+        field: "cu_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "cu_rnd_mthd",
+        name: "Methode Arrondi",
+        field: "cu_rnd_mthd",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "cu_active",
+        name: "Actif",
+        field: "cu_active",
+        sortable: true,
+        filterable: true,
+        type: FieldType.boolean,
+      },
+      {
+        id: "cu_iso_curr",
+        name: "Devise Iso",
+        field: "cu_iso_curr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionscurr = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.deviseService
+      .getAll()
+      .subscribe((response: any) => (this.devises = response.data));
+  }
+  opencurr(content) {
+    this.prepareGridcurr();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+
+
+  handleSelectedRowsChangedum(e, args) {
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObjum) {
+      args.rows.map((idx) => {
+        const item = this.gridObjum.getDataItem(idx);
+        updateItem.pod_um = item.code_value;
+     
+        this.gridService.updateItem(updateItem);
+
+/*********/
+console.log(updateItem.pod_part)
+
+      this.itemsService.getBy({pt_part: updateItem.pod_part }).subscribe((resp:any)=>{
+                      
+        if   (updateItem.pod_um == resp.data.pt_um )  {
+          
+          updateItem.pod_um_conv = 1
+          updateItem.pod_price = resp.data.pt_pur_price
+          this.calculatetot();
+        } else { 
+          //console.log(resp.data.pt_um)
+
+
+
+            this.mesureService.getBy({um_um: updateItem.pod_um, um_alt_um: resp.data.pt_um, um_part: updateItem.pod_part  }).subscribe((res:any)=>{
+            console.log(res)
+            const { data } = res;
+
+          if (data) {
+            //alert ("Mouvement Interdit Pour ce Status")
+            updateItem.pod_um_conv = res.data.um_conv 
+            updateItem.pod_price = updateItem.pod_price * res.data.um_conv
+            this.calculatetot();
+            this.angularGrid.gridService.highlightRow(1, 1500);
+          } else {
+            this.mesureService.getBy({um_um: resp.data.pt_um, um_alt_um: updateItem.pod_um, um_part: updateItem.pod_part  }).subscribe((res:any)=>{
+              console.log(res)
+              const { data } = res;
+              if (data) {
+                //alert ("Mouvement Interdit Pour ce Status")
+                updateItem.pod_um_conv = res.data.um_conv
+                updateItem.pod_price = updateItem.pod_price / res.data.um_conv
+                this.calculatetot();
+              } else {
+                updateItem.pod_um_conv = 1
+                updateItem.pod_um = null
+        
+                alert("UM conversion manquante")
+                
+              }  
+            })
+
+          }
+            })
+
+          }
+          })
+
+
+
+      });
+    } 
+  
+  }
+  // handleSelectedRowsChangedum(e, args) {
+  //   let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  //   if (Array.isArray(args.rows) && this.gridObjum) {
+  //     args.rows.map((idx) => {
+  //       const item = this.gridObjum.getDataItem(idx);
+  //       updateItem.pod_um = item.code_value;
+     
+  //       this.gridService.updateItem(updateItem);
+  //     });
+  //   }}
+angularGridReadyum(angularGrid: AngularGridInstance) {
+    this.angularGridum = angularGrid
+    this.gridObjum = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridum() {
+    this.columnDefinitionsum = [
+        {
+            id: "id",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
+
+            minWidth: 50,
+            maxWidth: 50,
+        },
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+        {
+            id: "code_fldname",
+            name: "Champs",
+            field: "code_fldname",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "code_value",
+            name: "Code",
+            field: "code_value",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "code_cmmt",
+            name: "Description",
+            field: "code_cmmt",
+            sortable: true,
+            width: 200,
+            filterable: true,
+            type: FieldType.string,
+        },
+    ]
+
+    this.gridOptionsum = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+    this.codeService
+        .getBy({ code_fldname: "pt_um" })
+        .subscribe((response: any) => (this.ums = response.data))
+}
+openum(content) {
+    this.prepareGridum()
+    this.modalService.open(content, { size: "lg" })
+}
+handleSelectedRowsChangedsite(e, args) {
+  let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  if (Array.isArray(args.rows) && this.gridObjsite) {
+    args.rows.map((idx) => {
+      const item = this.gridObjsite.getDataItem(idx);
+      console.log(item);
+
+          
+      updateItem.pod_site = item.si_site;
+      
+      this.gridService.updateItem(updateItem);
+   
+});
+
+  }
+}
+angularGridReadysite(angularGrid: AngularGridInstance) {
+  this.angularGridsite = angularGrid;
+  this.gridObjsite = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridsite() {
+  this.columnDefinitionssite = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromColumnPicker: true,
+      excludeFromGridMenu: true,
+      excludeFromHeaderMenu: true,
+
+      minWidth: 50,
+      maxWidth: 50,
+    },
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "si_site",
+      name: "Site",
+      field: "si_site",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "si_desc",
+      name: "Designation",
+      field: "si_desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionssite = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+  // fill the dataset with your data
+ if(this.site == null) {
+      this.siteService
+        .getAll()
+        .subscribe((response: any) => (this.datasite = response.data));
+    }else {
+      this.siteService
+        .getBy({si_site: this.site})
+        .subscribe((response: any) => (this.datasite = response.data));
+      
+   }
+  }
+
+opensite(contentsite) {
+  this.prepareGridsite();
+  this.modalService.open(contentsite, { size: "lg" });
+}
 }

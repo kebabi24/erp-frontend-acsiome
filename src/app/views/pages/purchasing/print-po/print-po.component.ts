@@ -95,6 +95,7 @@ export class PrintPoComponent implements OnInit {
   user;
   prhnbr: String;
   prov;
+  domain : any;
   constructor(
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
@@ -252,6 +253,8 @@ export class PrintPoComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    
     this.user =  JSON.parse(localStorage.getItem('user'))
     this.reset();
     this.createForm();
@@ -723,106 +726,113 @@ export class PrintPoComponent implements OnInit {
     var doc = new jsPDF();
     var site = ( this.prhServer.po_site != null) ?  this.prhServer.po_site : ""
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
-    var img = new Image()
-    img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, 'png', 150, 5, 50, 30)
-    doc.setFontSize(9);
-    doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
-    doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
-    doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
-    doc.text('Alger. Algérie', 10 , 25 );
-    doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
-    doc.setFontSize(14);
-    doc.text('ABRACADABRA', 135 , 30 );
-    doc.line(10, 35, 200, 35);
-
+   var img = new Image()
+  img.src = "./assets/media/logos/company.png";
+  img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.setFontSize(12);
     doc.setFontSize(12);
-    doc.text( 'Bon Commande N° : ' + nbr  , 70, 40);
+    doc.text( 'Bon Commande N° : ' + nbr  , 70, 50);
     doc.setFontSize(8);
     
-    doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 50 )
-    doc.text('Nom             : ' + this.provider.ad_name, 20 , 55)
-    doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 60)
-    if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 65)}
-        if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
-        if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
-        if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
+    doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 60 )
+    doc.text('Nom             : ' + this.provider.ad_name, 20 , 65)
+    doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 70)
+    if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 75)}
+        if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 80)}
+        if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 85)}
+        if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 90)}
     
-    doc.text('Site       : ' + site, 120 , 50)
+    // doc.text('Site       : ' + site, 120 , 60)
         
-    doc.line(10, 85, 200, 85);
-    doc.line(10, 90, 200, 90);
-    doc.line(10, 85, 10, 90);
-    doc.text('LN', 12.5 , 88.5);
-    doc.line(20, 85, 20, 90);
-    doc.text('Code Article', 25 , 88.5);
-    doc.line(45, 85, 45, 90);
-    doc.text('Désignation', 67.5 , 88.5);
-    doc.line(100, 85, 100, 90);
-    doc.text('QTE', 107 , 88.5);
-    doc.line(120, 85, 120, 90);
-    doc.text('UM', 123 , 88.5);
-    doc.line(130, 85, 130, 90);
-    doc.text('PU', 138 , 88.5);
-    doc.line(150, 85, 150, 90);
-    doc.text('TVA', 152 , 88.5);
-    doc.line(160, 85, 160, 90);
-    doc.text('REM', 162 , 88.5);
-    doc.line(170, 85, 170, 90);
-    doc.text('THT', 181 , 88.5);
-    doc.line(200, 85, 200, 90);
-    var i = 95;
+    doc.line(10, 95, 200, 95);
+    doc.line(10, 100, 200, 100);
+    doc.line(10, 95, 10, 100);
+    doc.text('LN', 12.5 , 98.5);
+    doc.line(20, 95, 20, 100);
+    doc.text('Code Article', 22 , 98.5);
+    doc.line(60, 95, 60, 100);
+    doc.text('Désignation', 67.5 , 98.5);
+    doc.line(110, 95, 110, 100);
+    doc.text('QTE', 117 , 98.5);
+    doc.line(125, 95, 125, 100);
+    doc.text('UM', 128 , 98.5);
+    doc.line(135, 95, 135, 100);
+    doc.text('PU', 138 , 98.5);
+    doc.line(150, 95, 150, 100);
+    doc.text('TVA', 152 , 98.5);
+    doc.line(160, 95, 160, 100);
+    doc.text('REM', 162 , 98.5);
+    doc.line(170, 95, 170, 100);
+    doc.text('THT', 181 , 98.5);
+    doc.line(200, 95, 200, 100);
+    var i = 105;
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length  ; j++) {
       
       if ((j % 30 == 0) && (j != 0) ) {
   doc.addPage();
+  var img = new Image()
+  img.src = "./assets/media/logos/company.png";
   img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
+  doc.addImage(img, "png", 160, 5, 50, 30);
   doc.setFontSize(9);
-  doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
-  doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
-  doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
-  doc.text('Alger. Algérie', 10 , 25 );
-  doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
-  doc.setFontSize(14);
-  doc.text('ABRACADABRA', 135 , 30 );
-  doc.line(10, 35, 200, 35);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.setFontSize(12);
     doc.setFontSize(12);
-        doc.text( 'Commande N° : ' + nbr  , 70, 40);
-        doc.setFontSize(8);
-        console.log(this.provider.ad_misc2_id)
-        doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 50 )
-        doc.text('Nom             : ' + this.provider.ad_name, 20 , 55)
-        doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 60)
-        if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 65)}
-        if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 70)}
-        if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 75)}
-        if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 80)}
-        doc.text('Site       : ' + site, 120 , 50)
-      
-        doc.line(10, 85, 200, 85);
-        doc.line(10, 90, 200, 90);
-        doc.line(10, 85, 10, 90);
-        doc.text('LN', 12.5 , 88.5);
-        doc.line(20, 85, 20, 90);
-        doc.text('Code Article', 25 , 88.5);
-        doc.line(45, 85, 45, 90);
-        doc.text('Désignation', 67.5 , 88.5);
-        doc.line(100, 85, 100, 90);
-        doc.text('QTE', 107 , 88.5);
-        doc.line(120, 85, 120, 90);
-        doc.text('UM', 123 , 88.5);
-        doc.line(130, 85, 130, 90);
-        doc.text('PU', 138 , 88.5);
-        doc.line(150, 85, 150, 90);
-        doc.text('TVA', 152 , 88.5);
-        doc.line(160, 85, 160, 90);
-        doc.text('REM', 162 , 88.5);
-        doc.line(170, 85, 170, 90);
-        doc.text('THT', 181 , 88.5);
-        doc.line(200, 85, 200, 90);
-        i = 95;
+    doc.text( 'Bon Commande N° : ' + nbr  , 70, 50);
+    doc.setFontSize(8);
+    
+    doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 60 )
+    doc.text('Nom             : ' + this.provider.ad_name, 20 , 65)
+    doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 70)
+    if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 75)}
+        if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 80)}
+        if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 85)}
+        if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 90)}
+    
+    // doc.text('Site       : ' + site, 120 , 60)
+        
+    doc.line(10, 95, 200, 95);
+    doc.line(10, 100, 200, 100);
+    doc.line(10, 95, 10, 100);
+    doc.text('LN', 12.5 , 98.5);
+    doc.line(20, 95, 20, 100);
+    doc.text('Code Article', 22 , 98.5);
+    doc.line(60, 95, 60, 100);
+    doc.text('Désignation', 67.5 , 98.5);
+    doc.line(110, 95, 110, 100);
+    doc.text('QTE', 117 , 98.5);
+    doc.line(125, 95, 125, 100);
+    doc.text('UM', 128 , 98.5);
+    doc.line(135, 95, 135, 100);
+    doc.text('PU', 138 , 98.5);
+    doc.line(150, 95, 150, 100);
+    doc.text('TVA', 152 , 98.5);
+    doc.line(160, 95, 160, 100);
+    doc.text('REM', 162 , 98.5);
+    doc.line(170, 95, 170, 100);
+    doc.text('THT', 181 , 98.5);
+    doc.line(200, 95, 200, 100);
+   i = 105;
         doc.setFontSize(6);
   
       }
@@ -838,14 +848,14 @@ export class PrintPoComponent implements OnInit {
         doc.line(10, i - 5, 10, i );
         doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].pod_part, 25 , i  - 1);
-        doc.line(45, i - 5 , 45, i );
-        doc.text(desc1, 47 , i  - 1);
-        doc.line(100, i - 5, 100, i );
-        doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 118 , i  - 1 , { align: 'right' });
-        doc.line(120, i - 5 , 120, i );
-        doc.text(this.dataset[j].pod_um, 123 , i  - 1);
-        doc.line(130, i - 5, 130, i );
+        doc.text(this.dataset[j].pod_part, 22 , i  - 1);
+        doc.line(60, i - 5 , 60, i );
+        doc.text(desc1, 62 , i  - 1);
+        doc.line(110, i - 5, 110, i );
+        doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 123 , i  - 1 , { align: 'right' });
+        doc.line(125, i - 5 , 125, i );
+        doc.text(this.dataset[j].pod_um, 127 , i  - 1);
+        doc.line(135, i - 5, 135, i );
         doc.text( String(Number(this.dataset[j].pod_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
         doc.line(150, i - 5, 150, i );
         doc.text(String(this.dataset[j].pod_taxc) + "%" , 153 , i  - 1);
@@ -860,14 +870,14 @@ export class PrintPoComponent implements OnInit {
   
         i = i + 5;
   
-        doc.text(desc2, 47 , i  - 1);
+        doc.text(desc2, 62 , i  - 1);
         
         doc.line(10, i - 5, 10, i );
         doc.line(20, i - 5, 20, i);
-        doc.line(45, i - 5 , 45, i );
-        doc.line(100, i - 5, 100, i );
-        doc.line(120, i - 5 , 120, i );
-        doc.line(130, i - 5, 130, i );
+        doc.line(60, i - 5 , 60, i );
+        doc.line(110, i - 5, 110, i );
+        doc.line(125, i - 5 , 125, i );
+        doc.line(135, i - 5, 135, i );
         doc.line(150, i - 5, 150, i );
         doc.line(160, i - 5 , 160, i );
         doc.line(170, i - 5 , 170, i );
@@ -883,14 +893,14 @@ export class PrintPoComponent implements OnInit {
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
       doc.line(20, i - 5, 20, i);
-      doc.text(this.dataset[j].pod_part, 25 , i  - 1);
-      doc.line(45, i - 5 , 45, i );
-      doc.text(this.dataset[j].desc, 47 , i  - 1);
-      doc.line(100, i - 5, 100, i );
-      doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 118 , i  - 1 , { align: 'right' });
-      doc.line(120, i - 5 , 120, i );
-      doc.text(this.dataset[j].pod_um, 123 , i  - 1);
-      doc.line(130, i - 5, 130, i );
+      doc.text(this.dataset[j].pod_part, 22 , i  - 1);
+      doc.line(60, i - 5 , 60, i );
+      doc.text(this.dataset[j].desc, 62 , i  - 1);
+      doc.line(110, i - 5, 110, i );
+      doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 123 , i  - 1 , { align: 'right' });
+      doc.line(125, i - 5 , 125, i );
+      doc.text(this.dataset[j].pod_um, 127 , i  - 1);
+      doc.line(135, i - 5, 135, i );
       doc.text( String(Number(this.dataset[j].pod_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
       doc.line(150, i - 5, 150, i );
       doc.text(String(this.dataset[j].pod_taxc) + "%" , 153 , i  - 1);
@@ -940,10 +950,10 @@ export class PrintPoComponent implements OnInit {
           mt1 = mt.substring(0, 90  + ind)
           let mt2 = mt.substring(90+ind)
      
-          doc.text( "Arretée la présente Commande a la somme de :" + mt1  , 20, i + 53)
+          doc.text( "Arretée la présente Commande a la somme de : " + mt1  , 20, i + 53)
           doc.text(  mt2  , 20, i + 60)
         } else {
-          doc.text( "Arretée la présente Commande a la somme de :" + mt  , 20, i + 53)
+          doc.text( "Arretée la présente Commande a la somme de : " + mt  , 20, i + 53)
   
         }
       // window.open(doc.output('bloburl'), '_blank');
