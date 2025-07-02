@@ -22,6 +22,7 @@ export const environment = {
   
   App: "ERP", // RH or ERP or DD
   key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
+      // "$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ"
 };
 
 /*

@@ -62,9 +62,9 @@ export class RequisitionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
-    public updatedet(data: any, ids:any) {
+    public updatedet(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.put(API_URL +`/${ids}`, data, { headers: httpHeaders }) 
+        return this.http.put(`${API_URL}/URQD/${id}`, data, { headers: httpHeaders }) 
     }
     public updaterqd(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

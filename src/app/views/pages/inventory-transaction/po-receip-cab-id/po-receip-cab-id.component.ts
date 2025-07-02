@@ -2071,12 +2071,12 @@ export class PoReceipCabIdComponent implements OnInit {
     // img.src = "./assets/media/logos/companylogo.png";
     
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
 
     // doc.addImage(img, "png", 160, 5, 50, 30);
 
@@ -2136,12 +2136,12 @@ export class PoReceipCabIdComponent implements OnInit {
 
         // doc.addImage(img, "png", 170, 5, 30, 30);
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.addImage(img, "png", 160, 5, 50, 30);
         doc.setFontSize(12);
         doc.text("RC N° : " + nbr, 70, 40);
@@ -2194,11 +2194,11 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 45) {
-        let desc1 = this.dataset[j].desc.substring(45);
+      if (this.dataset[j].desc.length > 35) {
+        let desc1 = this.dataset[j].desc.substring(35);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
-        let desc2 = this.dataset[j].desc.substring(45 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
+        let desc2 = this.dataset[j].desc.substring(35 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);

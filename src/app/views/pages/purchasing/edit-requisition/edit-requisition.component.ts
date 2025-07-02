@@ -172,7 +172,7 @@ reqEdit: any;
         
                       } else {
         
-                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data[0].pt_desc1 , rqd_um:resp.data[0].pt_um})
+                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , rqd_desc: resp.data[0].pt_desc1 , rqd_um:resp.data[0].pt_um})
         
                       }
               
@@ -203,9 +203,9 @@ reqEdit: any;
                 }
           },
           {
-              id: "desc",
+              id: "rqd_desc",
               name: "Description",
-              field: "desc",
+              field: "rqd_desc",
               sortable: true,
               width: 80,
               filterable: false,
@@ -246,9 +246,9 @@ reqEdit: any;
               
           },
           {
-              id: "rqd_desc",
+              id: "rqd_vpart",
               name: "Observation",
-              field: "rqd_desc",
+              field: "rqd_vpart",
               sortable: true,
               width: 80,
               filterable: false,
@@ -277,21 +277,23 @@ reqEdit: any;
       this.activatedRoute.params.subscribe((params) => {
         const id = params.id
         this.requisitionService.getOne(id).subscribe((response: any)=>{
+            console.log(response.data)
           this.reqEdit = response.data.requisition
           this.dataset = response.data.details
           this.reqdate = new Date(this.reqEdit.rqm_req_date)
           this.needdate = new Date(this.reqEdit.rqm_need_date)
           this.reqdate.setDate(this.reqdate.getDate() )
           this.needdate.setDate(this.needdate.getDate() )
-          console.log(this.reqdate)
+          console.log(this.reqEdit)
          this.createForm()
    
-         for(var i=0; i< this.dataset.length; i++) {
+        //  for(var i=0; i< this.dataset.length; i++) {
 
-          this.dataset[i].desc = this.dataset[i].item.pt_desc1
-         }
+        //   this.dataset[i].rqd_desc = this.dataset[i].item.pt_desc1
+        //  }
           this.loadingSubject.next(false)
          this.title = this.title + this.reqEdit.rqm_nbr
+         console.log(this.title)
         })
     })
     this.initGrid()
@@ -377,7 +379,7 @@ reqEdit: any;
       for(let data of this.dataset){
         delete data.id
         delete data.cmvid
-        delete data.desc
+        // delete data.desc
       }
       this.addReq(req, this.dataset)
   }
@@ -452,11 +454,11 @@ reqEdit: any;
           rqd_line: this.dataset.length + 1,
           rqd_part: "",
           cmvid: "",
-          desc: "",
+          rqd_desc: "",
           rqd_req_qty: 0,
           rqd_um: "",
           rqd_cc: "",
-          rqd_desc: "",
+          rqd_vpart: "",
       },{position:"bottom"})
   }
 
@@ -757,7 +759,7 @@ reqEdit: any;
               const item = this.gridObj4.getDataItem(idx)
               console.log(item)
               updateItem.rqd_part = item.pt_part
-              updateItem.desc = item.pt_desc1
+              updateItem.rqd_desc = item.pt_desc1
               updateItem.rqd_um = item.pt_um
               this.gridService.updateItem(updateItem);
 
@@ -799,7 +801,7 @@ reqEdit: any;
           },
           {
               id: "pt_um",
-              name: "desc",
+              name: "UM",
               field: "pt_um",
               sortable: true,
               filterable: true,

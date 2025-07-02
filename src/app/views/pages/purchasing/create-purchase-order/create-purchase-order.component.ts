@@ -944,15 +944,15 @@ console.log(this.nbr)
         img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
     
-        doc.line(10, 35, 200, 35);
+        // doc.line(10, 35, 200, 35);
         doc.setFontSize(12);
         doc.text("DEMANDE D'APPROVISIONNEMENT N° : " + nbr, 40, 45);
         doc.text("Date: " + date.toLocaleDateString() , 160, 45);
@@ -967,20 +967,20 @@ console.log(this.nbr)
           
        
     
-        doc.line(10, 85, 205, 85);
-        doc.line(10, 90, 205, 90);
+        doc.line(10, 85, 185, 85);
+        doc.line(10, 90, 185, 90);
         doc.line(10, 85, 10, 90);
         doc.text("LN", 12.5, 88.5);
         doc.line(20, 85, 20, 90);
-        doc.text("Code Article", 25, 88.5);
-        doc.line(45, 85, 45, 90);
+        doc.text("Code Article", 22, 88.5);
+        doc.line(60, 85, 60, 90);
         doc.text("Désignation", 67.5, 88.5);
-        doc.line(100, 85, 100, 90);
-        doc.text("QTE", 107, 88.5);
-        doc.line(120, 85, 120, 90);
-        doc.text("UM", 123, 88.5);
-        doc.line(130, 85, 130, 90);
-        doc.text("OBSERVATION", 132, 88.5);
+        doc.line(110, 85, 110, 90);
+        doc.text("QTE", 117, 88.5);
+        doc.line(125, 85, 125, 90);
+        doc.text("UM", 127, 88.5);
+        doc.line(135, 85, 135, 90);
+        doc.text("OBSERVATION", 137, 88.5);
         doc.line(185, 85, 185, 90);
         var i = 95;
         doc.setFontSize(6);
@@ -993,14 +993,14 @@ console.log(this.nbr)
             img.src = "./assets/media/logos/companyentete.png";
             doc.addImage(img, 'png', 5, 5, 200, 30)
             doc.setFontSize(9);
-            if (this.domain.dom_name != null) {
-              doc.text(this.domain.dom_name, 10, 10);
-            }
-            if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-            if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-            if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+            // if (this.domain.dom_name != null) {
+            //   doc.text(this.domain.dom_name, 10, 10);
+            // }
+            // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+            // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+            // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
             doc.setFontSize(14);
-            doc.line(10, 35, 200, 35);
+            // doc.line(10, 35, 200, 35);
     
             doc.setFontSize(12);
             doc.text("DEMANDE D'APPROVISIONNEMENT N° : " + nbr, 40, 45);
@@ -1014,82 +1014,80 @@ console.log(this.nbr)
             //console.log(this.provider.ad_misc2_id)
             doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value, 20, 55);
             
-            doc.line(10, 85, 205, 85);
-            doc.line(10, 90, 205, 90);
-            doc.line(10, 85, 10, 90);
-            doc.text("LN", 12.5, 88.5);
-            doc.line(20, 85, 20, 90);
-            doc.text("Code Article", 25, 88.5);
-            doc.line(45, 85, 45, 90);
-            doc.text("Désignation", 67.5, 88.5);
-            doc.line(100, 85, 100, 90);
-            doc.text("QTE", 107, 88.5);
-            doc.line(120, 85, 120, 90);
-            doc.text("UM", 123, 88.5);
-            doc.line(130, 85, 130, 90);
-            doc.text("OBSERVATION", 132, 88.5);
-            doc.line(185, 85, 185, 90);
+        doc.line(10, 85, 185, 85);
+        doc.line(10, 90, 185, 90);
+        doc.line(10, 85, 10, 90);
+        doc.text("LN", 12.5, 88.5);
+        doc.line(20, 85, 20, 90);
+        doc.text("Code Article", 22, 88.5);
+        doc.line(60, 85, 60, 90);
+        doc.text("Désignation", 67.5, 88.5);
+        doc.line(110, 85, 110, 90);
+        doc.text("QTE", 117, 88.5);
+        doc.line(125, 85, 125, 90);
+        doc.text("UM", 127, 88.5);
+        doc.line(135, 85, 135, 90);
+        doc.text("OBSERVATION", 137, 88.5);
+        doc.line(185, 85, 185, 90);
             i = 95;
-            doc.setFontSize(6);
+            doc.setFontSize(8);
           }
     
-          if (this.dataset[j].rqd_desc.length > 45) {
-            let desc1 = this.dataset[j].rqd_desc.substring(45);
+          if (this.dataset[j].rqd_desc.length > 35) {
+            let desc1 = this.dataset[j].rqd_desc.substring(35);
             let ind = desc1.indexOf(" ");
-            desc1 = this.dataset[j].rqd_desc.substring(0, 45 + ind);
-            let desc2 = this.dataset[j].rqd_desc.substring(45 + ind);
+            desc1 = this.dataset[j].rqd_desc.substring(0, 35 + ind);
+            let desc2 = this.dataset[j].rqd_desc.substring(35 + ind);
     
             doc.line(10, i - 5, 10, i);
             doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
             doc.line(20, i - 5, 20, i);
-            doc.text(this.dataset[j].rqd_part, 25, i - 1);
-            doc.line(45, i - 5, 45, i);
-            doc.text(desc1, 47, i - 1);
-            doc.line(100, i - 5, 100, i);
-            doc.text(String(Number(this.dataset[j].rqd_req_qty)), 118, i - 1, { align: "right" });
-            doc.line(120, i - 5, 120, i);
-            doc.text(this.dataset[j].rqd_um, 123, i - 1);
-            doc.line(130, i - 5, 130, i);
-            doc.text(String(this.dataset[j].rqd_vpart), 132, i - 1);
+            doc.text(this.dataset[j].rqd_part, 22, i - 1);
+            doc.line(60, i - 5, 60, i);
+            doc.text(desc1, 62, i - 1);
+            doc.line(110, i - 5, 110, i);
+            doc.text(String(Number(this.dataset[j].rqd_req_qty)), 123, i - 1, { align: "right" });
+            doc.line(125, i - 5, 125, i);
+            doc.text(this.dataset[j].rqd_um, 127, i - 1);
+            doc.line(135, i - 5, 135, i);
+            doc.text(String(this.dataset[j].rqd_vpart), 137, i - 1);
             doc.line(185, i - 5, 185, i);
             // doc.line(10, i, 200, i );
     
             i = i + 5;
     
-            doc.text(desc2, 47, i - 1);
+            doc.text(desc2, 62, i - 1);
     
             doc.line(10, i - 5, 10, i);
             doc.line(20, i - 5, 20, i);
-            doc.line(45, i - 5, 45, i);
-            doc.line(100, i - 5, 100, i);
-            doc.line(120, i - 5, 120, i);
-            doc.line(130, i - 5, 130, i);
-            doc.line(150, i - 5, 150, i);
-            doc.line(170, i - 5, 170, i);
+            doc.line(60, i - 5, 60, i);
+            doc.line(110, i - 5, 110, i);
+            doc.line(125, i - 5, 125, i);
+            doc.line(135, i - 5, 135, i);
             doc.line(185, i - 5, 185, i);
-            doc.line(205, i - 5, 205, i);
-            doc.line(10, i, 200, i);
+            doc.line(10, i, 185, i);
     
             i = i + 5;
           } else {
             doc.line(10, i - 5, 10, i);
             doc.text(String("000" + Number(j + 1)).slice(-3), 12.5, i - 1);
             doc.line(20, i - 5, 20, i);
-            doc.text(this.dataset[j].rqd_part, 25, i - 1);
-            doc.line(45, i - 5, 45, i);
-            doc.text(this.dataset[j].rqd_desc, 47, i - 1);
-            doc.line(100, i - 5, 100, i);
-            doc.text(String(Number(this.dataset[j].rqd_req_qty)), 118, i - 1, { align: "right" });
-            doc.line(120, i - 5, 120, i);
-            doc.text(this.dataset[j].rqd_um, 123, i - 1);
-            doc.line(130, i - 5, 130, i);
-            doc.text(String(this.dataset[j].rqd_vpart), 132, i - 1,);
+            doc.text(this.dataset[j].rqd_part, 22, i - 1);
+            doc.line(60, i - 5, 60, i);
+            doc.text(this.dataset[j].rqd_desc, 62, i - 1);
+            doc.line(110, i - 5, 110, i);
+            doc.text(String(Number(this.dataset[j].rqd_req_qty)), 123, i - 1, { align: "right" });
+            doc.line(125, i - 5, 125, i);
+            doc.text(this.dataset[j].rqd_um, 127, i - 1);
+            doc.line(135, i - 5, 135, i);
+            doc.text(String(this.dataset[j].rqd_vpart), 137, i - 1,);
             doc.line(185, i - 5, 185, i);
-            doc.line(10, i, 205, i);
+            doc.line(10, i, 185, i);
             i = i + 5;
           }
         }
         // doc.text("NOMBRE DE BIG BAG    " + String(this.dataset.length) + "    ,TOTAL POIDS:   " + String(Number(total)), 40, i + 12, { align: "left" });
+        doc.setFontSize(12);
         doc.text("Validé par: " , 20, i + 22);
         doc.text("Note: " , 20, i + 32);
         // doc.line(10, i - 5, 200, i - 5);
