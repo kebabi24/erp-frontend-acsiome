@@ -379,6 +379,8 @@ export class CreateMpModComponent implements OnInit {
 
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price }],
+      pt_plan_ord: [{ value: this.item.pt_plan_ord , disabled: !this.isExist}],
+      pt_dea: [{ value: this.item.pt_dea , disabled: !this.isExist}],
       pt_model: [this.item.pt_model ],
       pt_vend: [this.item.pt_vend ],
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
@@ -561,12 +563,14 @@ onChangecolor() {
                 controls1.pt_prod_line.setValue(modeleresponse.data.mod_prod_line)
                 controls1.pt_part_type.setValue(modeleresponse.data.mod_part_type)
                 controls1.pt_price.setValue(0)
+                
                 controls1.pt_draw.setValue(modeleresponse.data.mod_draw)
                 controls1.pt_origin.setValue(modeleresponse.data.mod_origin)
                 controls1.pt_bom_code.setValue('BOBINE')
                 controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
                 controls1.pt_status.setValue(modeleresponse.data.mod_status)
-           
+                controls1.pt_plan_ord.enable()
+                controls1.pt_dea.enable()
                 controls1.pt_part.setValue(controls1.pt_article.value + code_couleur )
                 controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
                 controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
@@ -729,6 +733,8 @@ onAlertClose($event) {
     _item.pt_loc = 'EMPL PLAST2';
     _item.pt_article = controls1.pt_article.value;
     _item.pt_price = controls1.pt_price.value;
+    _item.pt_plan_ord = controls1.pt_plan_ord.value;
+    _item.pt_dea = controls1.pt_dea.value;
     _item.pt_model = controls1.pt_model.value;
     _item.pt_vend = controls1.pt_vend.value;
     _item.pt_origin = controls1.pt_origin.value;
@@ -982,6 +988,7 @@ onAlertClose($event) {
             controls.pt_part.disable()
             controls.pt_desc1.disable()
             controls.pt_desc2.disable()
+          
         }
       },
       (error) => console.log(error)

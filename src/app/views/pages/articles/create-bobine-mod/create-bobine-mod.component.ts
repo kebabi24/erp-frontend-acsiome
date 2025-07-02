@@ -379,6 +379,8 @@ export class CreateBobineModComponent implements OnInit {
 
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price }],
+      pt_plan_ord: [{ value: this.item.pt_plan_ord, disabled: !this.isExist }],
+      pt_dea: [{ value: this.item.pt_dea, disabled: !this.isExist }],
       
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
@@ -555,6 +557,10 @@ onChangesilicone() {
             controls1.pt_part.enable()
             controls1.pt_desc1.enable()
             controls1.pt_desc2.enable()
+            controls1.pt_plan_ord.enable()
+            controls1.pt_dea.enable()
+            
+            
                 });
               });
             
@@ -653,6 +659,8 @@ onAlertClose($event) {
     _item.pt_loc = 'EMPL PLAST2';
     _item.pt_article = controls1.pt_article.value;
     _item.pt_price = controls1.pt_price.value;
+    _item.pt_plan_ord = controls1.pt_plan_ord.value;
+    _item.pt_dea = controls1.pt_dea.value;
     _item.pt_origin = controls1.pt_origin.value;
     _item.pt_vend = controls1.pt_vend.value;
     _item.pt_bom_code = controls1.pt_bom_code.value;

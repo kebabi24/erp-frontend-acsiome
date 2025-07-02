@@ -846,11 +846,11 @@ export class PrintPoComponent implements OnInit {
   
   
   
-      if (this.dataset[j].desc.length > 45) {
-        let desc1 = this.dataset[j].desc.substring(45)
+      if (this.dataset[j].desc.length > 35) {
+        let desc1 = this.dataset[j].desc.substring(35)
         let ind = desc1.indexOf(' ')
-        desc1 = this.dataset[j].desc.substring(0, 45  + ind)
-        let desc2 = this.dataset[j].desc.substring(45+ind)
+        desc1 = this.dataset[j].desc.substring(0, 35  + ind)
+        let desc2 = this.dataset[j].desc.substring(35+ind)
   
         doc.line(10, i - 5, 10, i );
         doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);

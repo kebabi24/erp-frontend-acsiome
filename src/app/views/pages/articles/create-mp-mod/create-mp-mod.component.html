@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'créer un bien'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'Créer Matiere Premiere'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
@@ -139,6 +139,28 @@
                                                 >
                                             
                                         </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">DA Oblig:</label>
+                                        <span class="switch switch-icon">
+                                            <label>
+                                                <input type="checkbox"
+                                                    class="form-control form-control-sm form-control-solid"
+                                                    formControlName="pt_plan_ord" name="select" />
+                                                <span></span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Achat:</label>
+                                        <span class="switch switch-icon">
+                                            <label>
+                                                <input type="checkbox"
+                                                    class="form-control form-control-sm form-control-solid"
+                                                    formControlName="pt_dea" name="select" />
+                                                <span></span>
+                                            </label>
+                                        </span>
                                     </div>
                                     
                                 </div>

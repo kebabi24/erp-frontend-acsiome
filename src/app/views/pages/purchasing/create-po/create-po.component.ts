@@ -1601,8 +1601,9 @@ changeTax(){
     };
 
     // fill the dataset with your data
+    // let obj = {pt_dea:true,pt_pm_code:'P'}
     this.itemsService
-      .getAll()
+      .getByPurchase()
       .subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {

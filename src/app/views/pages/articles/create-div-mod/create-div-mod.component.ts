@@ -379,7 +379,8 @@ export class CreateDivModComponent implements OnInit {
 
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price }],
-      
+      pt_plan_ord: [{ value: this.item.pt_plan_ord, disabled: !this.isExist }],
+      pt_dea: [{ value: this.item.pt_dea, disabled: !this.isExist }],
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
       pt_draw: [{ value: this.item.pt_draw, disabled: !this.isExist },Validators.required],
@@ -539,6 +540,8 @@ onChangecolor() {
                 controls1.pt_part.setValue(controls1.pt_article.value + code_couleur )
                 controls1.pt_desc1.setValue(controls1.pt_draw.value + " "  + controls1.pt_group.value )
                 controls1.pt_desc2.setValue(controls1.pt_draw.value +  " " + controls1.pt_group.value )
+                controls1.pt_plan_ord.enable()
+                controls1.pt_dea.enable()
                 
           });
             
@@ -630,6 +633,8 @@ onAlertClose($event) {
     _item.pt_status = controls1.pt_status.value;
     
     _item.pt_dsgn_grp = controls1.pt_dsgn_grp.value;
+    _item.pt_plan_ord = controls1.pt_plan_ord.value;
+    _item.pt_dea = controls1.pt_dea.value;
     _item.pt_group = controls1.pt_group.value;
    
     _item.pt_abc = 'C';
@@ -877,6 +882,7 @@ onAlertClose($event) {
           controls.pt_prod_line.setValue(null)
           controls.pt_part_type.setValue(null)
           controls.pt_price.setValue(0)
+         
           controls.pt_draw.setValue(null)
             controls.pt_origin.setValue(null)
             controls.pt_bom_code.setValue(null)

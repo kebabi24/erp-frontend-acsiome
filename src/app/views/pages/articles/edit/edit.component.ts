@@ -483,6 +483,7 @@ export class EditComponent implements OnInit {
       pt_buyer: [this.itemEdit.pt_buyer],
       pt_phantom: [this.itemEdit.pt_phantom],
       pt_plan_ord: [this.itemEdit.pt_plan_ord],
+      pt_dea: [this.itemEdit.pt_dea],
       pt_vend: [this.itemEdit.pt_vend],
 
       pt_ord_min: [this.itemEdit.pt_ord_min],
