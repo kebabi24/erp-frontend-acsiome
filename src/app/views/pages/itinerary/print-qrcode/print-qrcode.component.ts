@@ -13,7 +13,7 @@ import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../
 import { Itinerary, ItineraryService, CustomerMobileService, CodeMobileService, RoleService, RoleItinerary } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import "jspdf-barcode";
-import QRCode from 'qrcodejs2';
+// import QRCode from 'qrcodejs2';
 import { config } from "process";
 @Component({
   selector: 'kt-print-qrcode',

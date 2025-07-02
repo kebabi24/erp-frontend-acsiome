@@ -1,9 +1,0 @@
-1- OV 1 OK
-2- OV suivant OK
-3- decision affectation (revoir pdf)
-4- attestation réservation (revoir pdf)
-5- pv de réception (revoir pdf)
-6- remise des clés (revoir pdf)  
-7- impression facture (revoir pdf)
-8- attestation de paiement 
-9- etat commerciale 
