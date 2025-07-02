@@ -412,6 +412,22 @@ export class ProvidersCreateComponent implements OnInit {
     init() {
         this.createAddressForm()
         this.createProviderForm()
+        const controls = this.providerForm.controls;
+        const controlsa = this.addressForm.controls;
+    
+        this.deviseService.getBy({ cu_active:  true }).subscribe(
+          (response: any) => {
+        controls.vd_curr.setValue(response.data.cu_curr)
+          })
+          this.taxService.getBy({ tx2_default: true}).subscribe(
+            (respo: any) => {
+            // this.site = res.data.si_site
+            
+            controlsa.ad_taxc.setValue(respo.data.tx2_tax_code );
+            controlsa.ad_taxable.setValue(true );
+          //  controls.tr_ref_site.setValue(this.site );
+        
+          })
         this.loadingSubject.next(false)
         // if (!this.product.id) {
         //     this.subheaderService.setBreadcrumbs([
@@ -459,7 +475,7 @@ export class ProvidersCreateComponent implements OnInit {
             ad_attn2: [{ value: this.address.ad_attn2, disabled: !this.isExist }],
             ad_taxable: [{ value: this.address.ad_taxable, disabled: !this.isExist }],
             ad_tax_zone: [{ value: this.address.ad_tax_zone, disabled: !this.isExist }],
-            ad_taxc: [{ value: this.address.ad_taxc, disabled: !this.isExist }],
+            ad_taxc: [{ value: this.address.ad_taxc, disabled: !this.isExist },Validators.required],
             ad_tax_usage: [{ value: this.address.ad_tax_usage, disabled: !this.isExist }],
             ad_tax_in: [{ value: this.address.ad_tax_in, disabled: !this.isExist }],
             ad_gst_id: [{ value: this.address.ad_gst_id, disabled: !this.isExist }],
@@ -483,7 +499,7 @@ export class ProvidersCreateComponent implements OnInit {
             vd_shipvia: [{ value: this.provider.vd_shipvia, disabled: !this.isExist }],
             vd_bank: [{ value: this.provider.vd_bank, disabled: !this.isExist }],
             vd_ckfrm: [{ value: this.provider.vd_ckfrm, disabled: !this.isExist }],
-            vd_curr: [{ value: this.provider.vd_curr, disabled: !this.isExist }],
+            vd_curr: [{ value: this.provider.vd_curr, disabled: !this.isExist },Validators.required],
             vd_lang: [{ value: this.provider.vd_lang, disabled: !this.isExist }],
             vd_pur_cntct: [{ value: this.provider.vd_pur_cntct, disabled: !this.isExist }],
             vd_ap_cntct: [{ value: this.provider.vd_ap_cntct, disabled: !this.isExist }],

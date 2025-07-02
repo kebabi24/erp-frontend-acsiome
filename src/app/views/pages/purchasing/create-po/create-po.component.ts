@@ -751,7 +751,7 @@ console.log(this.vpServer)
       po_ex_rate: [this.purchaseOrder.po_ex_rate],
       po_ex_rate2: [this.purchaseOrder.po_ex_rate2],
       po_cr_terms: [this.purchaseOrder.po_cr_terms],
-      print:[true]
+      print:[false]
     });
 
     const controls = this.poForm.controls

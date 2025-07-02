@@ -20,6 +20,7 @@ export class FooterComponent implements OnInit {
   footerContainerClasses = '';
   user$: Observable<User>;
   userd:any;
+  domain : any;
   /**
    * Component constructor
    *
@@ -48,6 +49,7 @@ export class FooterComponent implements OnInit {
     this.footerContainerClasses = this.uiClasses.getClasses('footer_container', true).toString();
     this.user$ = JSON.parse(localStorage.getItem('user'))
     this.userd = JSON.parse(localStorage.getItem('user'))
-	//	console.log(this.user$,"gggg")
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+		// console.log(this.domain,"gggg")
   }
 }
