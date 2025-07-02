@@ -10,4 +10,5 @@ export const environment = {
   Instance: "Prod",
   App: "ERP", /* RH,DD,ERP*/
   key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
+ //edelweiss key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$zHjTc5y+XDtK0x6zun1KfIkkfhpDa+rYV4lBLLZX4Bc"
 };

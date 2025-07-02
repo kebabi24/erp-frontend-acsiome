@@ -396,6 +396,7 @@ export class PurchaseOrderListComponent implements OnInit {
 
         // Optionally pass your Parent Component reference to your Child Component (row detail component)
         parent: this,
+        // columnIndexPosition: 1,
       },
       presets: {
         sorters: [
@@ -407,6 +408,7 @@ export class PurchaseOrderListComponent implements OnInit {
         ],
        
       },
+     
     };
 
     // fill the dataset with your data
