@@ -29,6 +29,7 @@ import {
   OperatorType,
   OperatorString,
   SearchTerm,
+  
 } from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
@@ -144,6 +145,7 @@ export class PurchaseOrderListComponent implements OnInit {
     this.dataView = angularGrid.dataView;
     this.grid = angularGrid.slickGrid;
     this.gridService = angularGrid.gridService;
+   
   }
 
   createCode() {
@@ -403,6 +405,7 @@ export class PurchaseOrderListComponent implements OnInit {
           { columnId: 'po_nbr', searchTerms: [this.ponbr] },
           
         ],
+       
       },
     };
 
@@ -411,7 +414,8 @@ export class PurchaseOrderListComponent implements OnInit {
     if (this.site== null) {
     this.poService.getAll().subscribe(
       (response: any) => {this.dataset = response.data
-        this.dataView.setItems(this.dataset) },
+        this.dataView.setItems(this.dataset) 
+        },
       (error) => {
         this.dataset = [];
       },
@@ -423,6 +427,7 @@ export class PurchaseOrderListComponent implements OnInit {
       this.poService.getBySite({site}).subscribe(
         (response: any) => {this.dataset = response.data
           this.dataView.setItems(this.dataset) 
+          
         },
         (error) => {
           this.dataset = [];

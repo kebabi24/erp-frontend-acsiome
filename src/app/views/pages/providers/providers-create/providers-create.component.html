@@ -373,12 +373,18 @@
                                         
                                             <div class="input-group input-group-sm">
 
-                                                <input type="text" class="form-control form-control-solid"
+                                                <input type="text" 
+                                                [className]="providerForm.controls['vd_curr'].errors && (providerForm.controls['vd_curr'].dirty || providerForm.controls['vd_curr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                              
                                                     aria-describedby="basic-addon2" formControlName="vd_curr">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" (click)="open2(content2)">
                                                         <i class="text-dark-50 flaticon2-search"></i> </span>
+
                                                 </div>
+                                                
+                                            <div *ngIf="providerForm.controls['vd_curr'].errors && (providerForm.controls['vd_curr'].dirty || providerForm.controls['vd_curr'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
                                             </div>
                                     </div>
                                     <div class="form-group col-2">
@@ -521,15 +527,19 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Taux tax:</label>
+                                        <label class="form-group ">Taux Tax:</label>
                                         <div class="input-group input-group-sm">
 
-                                            <input type="text" class="form-control form-control-solid"
+                                            <input type="text"
+                                            [className]="addressForm.controls['ad_taxc'].errors && (addressForm.controls['ad_taxc'].dirty || addressForm.controls['ad_taxc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                                        
                                                 aria-describedby="basic-addon2" formControlName="ad_taxc">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)=opentax(contenttax)>
                                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                                             </div>
+                                            <div *ngIf="addressForm.controls['ad_taxc'].errors && (addressForm.controls['ad_taxc'].dirty || addressForm.controls['ad_taxc'].touched)"
+                                            class="invalid-feedback">Ce Champs est obligatoire</div>
                                         </div>
                                     </div>
                                     <div class="form-group col-2">
