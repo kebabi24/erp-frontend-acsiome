@@ -102,14 +102,20 @@
                         <label class="form-group">Demandeur:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" formControlName="rqm_rqby_userid"
+                            <input type="text" 
+                            [className]="reqForm.controls['rqm_rqby_userid'].errors && (reqForm.controls['rqm_rqby_userid'].dirty || reqForm.controls['rqm_rqby_userid'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                          
+                            formControlName="rqm_rqby_userid"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open3(content3)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
-                        </div>
+                            <div *ngIf="reqForm.controls['rqm_rqby_userid'].errors && (reqForm.controls['rqm_rqby_userid'].dirty || reqForm.controls['rqm_rqby_userid'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
 
+                        </div>
+                       
                     </div>
                 </div>
                 <div class="row">
