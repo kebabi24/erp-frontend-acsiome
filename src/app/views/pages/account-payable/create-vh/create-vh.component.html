@@ -21,12 +21,17 @@
                         <label class="form-group">N° Facture :</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" formControlName="vh_po" id="vh_po"  
+                            <input type="text" 
+                            [className]="ihForm.controls['vh_po'].errors && (ihForm.controls['vh_po'].dirty || ihForm.controls['vh_po'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+          
+                             formControlName="vh_po" id="vh_po"  
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" >
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
+                            <div *ngIf="ihForm.controls['vh_po'].errors && (ihForm.controls['vh_po'].dirty || ihForm.controls['vh_po'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
 
                     </div>
@@ -219,7 +224,7 @@
                     </div>
                 </div>        
                 <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="250" gridId="mGrid1"
+                    <angular-slickgrid class="col-12" gridHeight="220" gridId="mGrid1"
                         [columnDefinitions]="columnDefinitionsih" [gridOptions]="gridOptionsih" [dataset]="ihdataset"
                         (onAngularGridCreated)="gridReadyih($event)">
                     </angular-slickgrid>

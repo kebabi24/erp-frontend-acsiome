@@ -628,18 +628,39 @@ console.log(resp.data)
             console.log("aa", res.data);
             const { vendorProposal, details } = res.data;
             this.vpServer = vendorProposal;
-
+console.log(this.vpServer)
             controls.po_vend.setValue(this.vpServer.vp_vend);
             controls.po_req_id.setValue(this.vpServer.vp_rqm_nbr);
             controls.po_curr.setValue(this.vpServer.vp_curr);
+           
             this.providersService
                   .getBy({ vd_addr: this.vpServer.vp_vend })
-                  .subscribe((res: any) => (this.provider = res.data[0]));
-
+                  .subscribe((res: any) => {this.provider = res.data
+                    controls.po_taxable.setValue(this.provider.address.ad_taxable)
+                    controls.po_taxc.setValue(this.provider.address.ad_taxc)
+                    controls.po_cr_terms.setValue(this.provider.vd_cr_terms || "");
                   this.deviseService.getBy({cu_curr:this.provider.vd_curr}).subscribe((resc:any)=>{  
                     this.curr = resc.data
+
+                    if (this.provider.vd_curr == 'DA'){
+                      controls.po_ex_rate.setValue(1)
+                      controls.po_ex_rate2.setValue(1)
+            
+                    } else {
+                      const date = new Date()
+                      this.date = controls.po_ord_date.value
+                      ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
+                      : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+                
+                      this.deviseService.getExRate({exr_curr1:this.provider.vd_curr, exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{  
+                       controls.po_ex_rate.setValue(res.data.exr_rate)
+                       controls.po_ex_rate2.setValue(res.data.exr_rate2)
+                      
+                      })
+                    }
+            
                  })
-          
+                
             for (const object in details) {
               const detail = details[object];
               this.gridService.addItem(
@@ -686,7 +707,10 @@ console.log(resp.data)
                 taxe: detail.item.taxe.tx2_tax_pct,
               });
             }
-          },
+            this.calculatetot() 
+          })
+        
+        },
           (error) => {
             this.message = ` ce numero ${id} n'existe pas`;
             this.hasFormErrors = true;
@@ -872,7 +896,7 @@ console.log(resp.data)
           this.loadingSubject.next(false);
           console.log(this.provider, po, this.dataset);
           if(controls.print.value == true) this.printpdf(po.po_nbr) //printBc(this.provider, this.dataset, po, this.curr);
-         // this.router.navigateByUrl("/pusrchasing/create-po");
+          this.router.navigateByUrl(`purchasing/po-list/${po.po_nbr}`)
           this.reset()
         }
       );
@@ -1691,6 +1715,7 @@ changeTax(){
                         
                       });
                     }
+                    this.calculatetot()
                   } else {
                     const date = new Date()
 
@@ -1772,6 +1797,7 @@ changeTax(){
                         
                       });
                     }
+                    this.calculatetot()
                   }
                 },
                 (error) => {
@@ -2644,7 +2670,7 @@ doc.addPage();
       doc.line(45, i - 5 , 45, i );
       doc.text(desc1, 47 , i  - 1);
       doc.line(100, i - 5, 100, i );
-      doc.text( String(this.dataset[j].pod_qty_ord.toFixed(2)), 118 , i  - 1 , { align: 'right' });
+      doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 118 , i  - 1 , { align: 'right' });
       doc.line(120, i - 5 , 120, i );
       doc.text(this.dataset[j].pod_um, 123 , i  - 1);
       doc.line(130, i - 5, 130, i );
@@ -2689,7 +2715,7 @@ doc.addPage();
     doc.line(45, i - 5 , 45, i );
     doc.text(this.dataset[j].desc, 47 , i  - 1);
     doc.line(100, i - 5, 100, i );
-    doc.text( String(this.dataset[j].pod_qty_ord.toFixed(2)), 118 , i  - 1 , { align: 'right' });
+    doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 118 , i  - 1 , { align: 'right' });
     doc.line(120, i - 5 , 120, i );
     doc.text(this.dataset[j].pod_um, 123 , i  - 1);
     doc.line(130, i - 5, 130, i );
@@ -2699,9 +2725,9 @@ doc.addPage();
     doc.line(160, i - 5 , 160, i );
     doc.text(String(this.dataset[j].pod_disc_pct) + "%" , 163 , i  - 1);
     doc.line(170, i - 5 , 170, i );
-    doc.text(String((this.dataset[j].pod_price *
-      ((100 - this.dataset[j].pod_disc_pct) / 100) *
-      this.dataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
+    doc.text(String((Number(this.dataset[j].pod_price) *
+      ((100 - Number(this.dataset[j].pod_disc_pct)) / 100) *
+      Number(this.dataset[j].pod_qty_ord)).toFixed(2)), 198 , i  - 1,{ align: 'right' });
     doc.line(200, i-5 , 200, i );
     doc.line(10, i, 200, i );
     i = i + 5;
@@ -2742,10 +2768,10 @@ doc.addPage();
         mt1 = mt.substring(0, 90  + ind)
         let mt2 = mt.substring(90+ind)
    
-        doc.text( "Arretée la présente Commande a la somme de :" + mt1  , 20, i + 53)
+        doc.text( "Arretée la présente Commande a la somme de : " + mt1  , 20, i + 53)
         doc.text(  mt2  , 20, i + 60)
       } else {
-        doc.text( "Arretée la présente Commande a la somme de :" + mt  , 20, i + 53)
+        doc.text( "Arretée la présente Commande a la somme de : " + mt  , 20, i + 53)
 
       }
     // window.open(doc.output('bloburl'), '_blank');

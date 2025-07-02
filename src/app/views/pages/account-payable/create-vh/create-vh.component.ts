@@ -315,7 +315,7 @@ entity;
       enableCellNavigation: true,
       enableRowSelection: true,
       enableAutoResize: false,
-    
+      autoCommitEdit:true,
       
       formatterOptions: {
         
@@ -1842,6 +1842,7 @@ handleSelectedRowsChanged2(e, args) {
     this.voucherOrderService.getByOne({ vh_po : controls.vh_po.value, vh_vend: item.vd_addr}).subscribe(
       (response: any) => {
     const { data } = response
+    console.log(data)
     if (!data) { 
     
       this.provider = item;
@@ -1904,7 +1905,7 @@ handleSelectedRowsChanged2(e, args) {
         //console.log(distinct)
         this.purchaseReceiveService.getAllDistinct( data,liste, distinct ).subscribe(
           (res: any) => {
-//            console.log(res.data)
+            console.log(res.data)
             this.detail  = res.data;
            
           

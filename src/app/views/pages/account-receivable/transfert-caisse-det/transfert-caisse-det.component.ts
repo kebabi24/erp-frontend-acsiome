@@ -363,6 +363,11 @@ bkh_cheque: number
     this.hasFormErrors = true
     return
 }
+if (Number(controls_.montant_tr.value) > Number(controls_.montant_rl.value) ) {
+   
+  this.hasFormErrors = true
+  return
+}
     this.loadingSubject.next(true);
 
     const controls = this.rvForm.controls;

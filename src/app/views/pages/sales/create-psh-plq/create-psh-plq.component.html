@@ -154,7 +154,7 @@
                     <div class="form-group col-4">
                       <label class="form-group">Palette:</label>
                       <div class="input-group input-group-sm">
-                        <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal(content2,content8)" aria-describedby="basic-addon2" />
+                        <input type="text" class="cab" id="pal" formControlName="pal" (change)="onScanPal(content2,content8,contentQty)" aria-describedby="basic-addon2" />
                       </div>
                     </div>
                 </div>    
@@ -450,6 +450,83 @@
             </ng-template>
           </div>
         
+          <div>
+            <ng-template #contentQty let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Saisir Quantité</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+              
+                <form class="form" [formGroup]="qtyForm">
+                    <kt-alert *ngIf="hasFormErrorsQty" type="warn" [showCloseButton]="true" [duration]="1000"
+                        (close)="onAlertClose($event)">
+                        {{messageQty}}
+                    </kt-alert>
+                    <div class="row" style="display: flex; justify-content: center">
+                        
+                        <div class="form-group col-4">
+                            <label class="form-group">QTE:</label>
+                            <div class="input-group input-group-sm">
+    
+                                <input type="number"  id="qty" class="qty" formControlName="qty" 
+                                    aria-describedby="basic-addon2"  >
+                                <!--div class="input-group-append">
+                                    <span class="input-group-text" (click)="open5(content5)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div-->
+                            </div>
+    
+                        </div>
+                    </div>
+                </form>        
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="onChangeQty(contentprix)">Ok</button>
+              </div>
+            </ng-template>
+          </div>
+
+          <div>
+            <ng-template #contentPrix let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">une erreur s'est produite</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <span>Prix N'est Pas Paramètré</span>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+              </div>
+            </ng-template>
+          </div>
+
+          <div>
+            <ng-template #contentdelete let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Alert</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <span>Voulez vous supprimez cette ligne</span>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="delete()">Ok</button>
+              </div>
+            </ng-template>
+            <button hidden id="openAlertGrid" class="btn btn-primary" (click)="opendelete(contentdelete)">Launch demo modal</button>
+          </div>
     </kt-portlet-body>
 </kt-portlet>
 

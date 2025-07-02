@@ -432,6 +432,28 @@ as: any
        
       },
       {
+        id: "psh_serial",
+        name: "Lot",
+        field: "psh_serial",
+        sortable: true,
+        width: 50,
+        filterable: true,
+        type: FieldType.text,
+        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        grouping: {
+          getter: 'psh_serial',
+          formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          aggregators: [
+            new Aggregators.Sum('psh_qty_ship'),  
+            new Aggregators.Sum('psh_price'),
+          
+        ],
+          aggregateCollapsed: false,
+          collapsed: false,
+        }
+       
+      },
+      {
         id: "psh_invoiced",
         name: "Facturé",
         field: "psh_invoiced",

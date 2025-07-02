@@ -151,18 +151,15 @@ export class ListRolesSalesComponent implements OnInit {
     
   }
 
-  mvGridReady(angularGrid: AngularGridInstance) {
-    this.mvangularGrid = angularGrid;
-    this.mvdataView = angularGrid.dataView;
-    this.mvgrid = angularGrid.slickGrid;
-    this.mvgridService = angularGrid.gridService;
+  mvGridReady(mvangularGrid: AngularGridInstance) {
+    this.mvangularGrid = mvangularGrid;
+    this.mvdataView = mvangularGrid.dataView;
+    this.mvgrid = mvangularGrid.slickGrid;
+    this.mvgridService = mvangularGrid.gridService;
+    // const filtered = this.mvangularGrid.dataView.getFilteredItems();
+    // console.log(filtered)
   }
-  GridReady(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
-    this.dataView = angularGrid.dataView;
-    this.grid = angularGrid.slickGrid;
-    this.gridService = angularGrid.gridService;
-  }
+  
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
@@ -243,6 +240,7 @@ export class ListRolesSalesComponent implements OnInit {
         width: 100,
         filterable: true,
         type: FieldType.text,
+        
               
       }, 
       {
@@ -333,6 +331,8 @@ export class ListRolesSalesComponent implements OnInit {
         exportOptions: {
           sanitizeDataExport: true
         },
+        
+        
         
         //enableRowSelection: true,
       //   enableCellNavigation: true,
@@ -447,11 +447,16 @@ export class ListRolesSalesComponent implements OnInit {
   
   }
 
-
+  onFilterChanged() {
+    const filtered = this.mvdataView.getFilteredItems();
+    console.log(filtered)
+return filtered
+  }
 
   printpdf() {
+   
+this.onFilterChanged() 
 
-        
     const controls = this.soForm.controls;
     
     const date = controls.calc_date.value
@@ -460,7 +465,7 @@ export class ListRolesSalesComponent implements OnInit {
   const date1 = controls.calc_date1.value
   ? `${String("0" + controls.calc_date1.value.day).slice(-2)}-${String("0" + controls.calc_date1.value.month).slice(-2)}-${controls.calc_date1.value.year}`
   : null;
-    console.log("pdf");
+    console.log("pdf",this.mvdataset);
     var doc = new jsPDF();
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);

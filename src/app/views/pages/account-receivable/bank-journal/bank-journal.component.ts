@@ -761,6 +761,8 @@ export class BankJournalComponent implements OnInit {
       doc.line(205, 85, 205, 90);
       var i = 95;
       doc.setFontSize(8);
+      let totcheque = 0
+      let totamt = 0
       for (let j = 0; j < this.dataset.length; j++) {
 
 
@@ -780,6 +782,8 @@ export class BankJournalComponent implements OnInit {
         
         let cheque = replaceAll(ccchek,","," ")
 
+        totcheque = totcheque + chek
+        totamt = totamt + amt
         if (j % 38 == 0 && j != 0) {
           doc.addPage();
           // img.src = "./assets/media/logos/companylogo.png";
@@ -849,6 +853,46 @@ export class BankJournalComponent implements OnInit {
           doc.line(10, i, 205, i);
           i = i + 5;
          }
+
+
+         let nbm =   Number(totcheque)
+         console.log(nbm)
+         doc.line(45, i - 5, 45, i);
+          doc.text("Totaux", 52, i - 1);
+          doc.line(155, i - 5, 155, i);
+          // doc.text(String(Number(totalqty).toFixed(2)), 148, i - 1,{ align: "right" });
+          doc.line(205, i - 5, 205, i);
+          let nb =  String(nbm.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+       let tnb = replaceAll(nb,","," ")
+          doc.text(tnb, 178, i - 1,{ align: "right" });
+          doc.line(180, i - 5, 180, i);
+          let nbc =   Number(totamt)
+         console.log(nbm)
+          // doc.text("Totaux", 52, i - 1);
+          // doc.line(110, i - 5, 110, i);
+          // doc.text(String(Number(totalqty).toFixed(2)), 148, i - 1,{ align: "right" });
+         
+          let nbcr =  String(nbc.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }))
+          let tnbcr = replaceAll(nbcr,","," ")
+          doc.text(tnbcr, 203, i - 1, { align: "right" });
+          
+          doc.line(205, i - 5, 205, i);
+          // doc.line(260, i - 5, 260, i);
+          // let soli =  String(  Number(this.mvdataset[this.mvdataset.length - 1].solde).toLocaleString("en-US", {
+          //   minimumFractionDigits: 2,
+          //   maximumFractionDigits: 2,
+          // }))
+          
+          // let mnsoli = replaceAll(soli,","," ")
+          // doc.text(mnsoli, 288, i - 1,{ align: "right" });
+          doc.line(45, i, 205, i);
+          // doc.line(205, i - 5, 205, i);
   
       // doc.line(10, i - 5, 200, i - 5);
   

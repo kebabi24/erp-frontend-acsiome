@@ -66,7 +66,7 @@ import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { HttpClient } from "@angular/common/http"
 const API_URL = environment.apiUrl + "/users-mobile"
-
+import { replaceAll } from "chartist"
 
 @Component({
   selector: 'kt-list-invoice-role',
@@ -1180,5 +1180,227 @@ this.dataset= []
    this.initGrid()
      this.modalService.open(contentdet, { size: "lg" });
    }
- 
+   printpdf() {
+
+    console.log(this.mvdataset)
+    console.log(this.mvdataView.getFilteredItems())
+    const data = this.mvdataView.getFilteredItems()
+    const controls = this.soForm.controls;
+    
+    const date = controls.calc_date.value
+      ? `${String("0" + controls.calc_date.value.day).slice(-2)}-${String("0" + controls.calc_date.value.month).slice(-2)}-${controls.calc_date.value.year}`
+      : null;
+     const date1 = controls.calc_date1.value
+      ? `${String("0" + controls.calc_date1.value.day).slice(-2)}-${String("0" + controls.calc_date1.value.month).slice(-2)}-${controls.calc_date1.value.year}`
+      : null;
+    console.log("pdf");
+    var doc = new jsPDF({orientation:'l'});
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image();
+    img.src = "./assets/media/logos/companylogo.png";
+    doc.addImage(img, "png", 250, 5, 50, 30);
+    doc.setFontSize(9);
+    if (this.domain.dom_name != null) {
+      doc.text(this.domain.dom_name, 10, 10);
+    }
+    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.setFontSize(14);
+    doc.text("Liste des Factures    " , 120, 40);
+    doc.setFontSize(12);
+    
+    doc.text("Date Début : " + date, 70, 50);
+    doc.text("Date Fin      : " + date1, 190, 50);
+
+    doc.setFontSize(10);
+    doc.line(5, 55, 295, 55);
+    doc.line(5, 55, 295, 55);
+    doc.line(5, 55, 295, 55);
+    doc.line(5, 60, 295, 60);
+    doc.line(5, 55, 5, 60);
+    doc.text("Role", 7.5, 58.5);
+    doc.line(20, 55, 20, 60);
+    doc.text("Vendeur", 22, 58.5);
+    doc.line(37, 55, 37, 60);
+    doc.text("N° Facture", 40, 58.5);
+    doc.line(60, 55, 60, 60);
+    doc.text("Code Client", 62, 58.5);
+    doc.line(85, 55, 85, 60);
+    doc.text("Nom", 87, 58.5);
+    doc.line(150, 55, 150, 60);
+    doc.text("Date", 152, 58.5);
+    doc.line(172, 55, 172, 60);
+    doc.text("Annulée", 174, 58.5);
+    doc.line(188, 55, 188, 60);
+    doc.text("Montant", 202, 58.5);
+    doc.line(230, 55, 230, 60);
+    doc.text("Encaissé", 242, 58.5);
+    doc.line(270, 55, 270, 60);
+    doc.text("Crédit", 279, 58.5);
+    doc.line(295, 55, 295, 60);
+       
+   
+    var i = 65;
+    doc.setFontSize(10);
+    let total = 0
+    let encaisse = 0
+    let credits = 0
+    let canceled= ""
+    for (let j = 0; j < data.length; j++) {
+      if (data[j].canceled == true) { canceled = "OUI"} else {canceled = 'NON'}
+      let mts =  String(  Number(data[j].amount).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+   //   console.log(mts)
+      let mnt = replaceAll(mts,","," ")
+      let due =  String(  Number(data[j].due_amount).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+   //   console.log(mts)
+      let due_amt = replaceAll(due,","," ")
+      let crd =  String(  Number(data[j].Credit).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+   //   console.log(mts)
+      let credit = replaceAll(crd,","," ")
+   
+
+     // console.log(mnsolde)
+      if (j % 27 == 0 && j != 0) {
+        doc.addPage();
+        // img.src = "./assets/media/logos/companylogo.png";
+        doc.addImage(img, "png", 250, 5, 50, 30);
+        doc.setFontSize(10);
+        if (this.domain.dom_name != null) {
+          doc.text(this.domain.dom_name, 10, 10);
+        }
+        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(14);
+        doc.text("Liste des Factures    " , 120, 40);
+        doc.setFontSize(12);
+        
+        doc.text("Date Début : " + date, 70, 50);
+        doc.text("Date Fin      : " + date1, 190, 50);
+      
+        
+        doc.setFontSize(10);
+        doc.line(5, 55, 295, 55);
+        doc.line(5, 55, 295, 55);
+        doc.line(5, 55, 295, 55);
+        doc.line(5, 60, 295, 60);
+        doc.line(5, 55, 5, 60);
+        doc.text("Role", 7.5, 58.5);
+        doc.line(20, 55, 20, 60);
+        doc.text("Vendeur", 22, 58.5);
+        doc.line(37, 55, 37, 60);
+        doc.text("N° Facture", 40, 58.5);
+        doc.line(60, 55, 60, 60);
+        doc.text("Code Client", 62, 58.5);
+        doc.line(85, 55, 85, 60);
+        doc.text("Nom", 87, 58.5);
+        doc.line(150, 55, 150, 60);
+        doc.text("Date", 152, 58.5);
+        doc.line(172, 55, 172, 60);
+        doc.text("Annulée", 174, 58.5);
+        doc.line(188, 55, 188, 60);
+
+        doc.text("Montant", 202, 58.5);
+        doc.line(230, 55, 230, 60);
+        doc.text("Encaissé", 242, 58.5);
+        doc.line(270, 55, 270, 60);
+        doc.text("Crédit", 279, 58.5);
+        doc.line(295, 55, 295, 60);           
+               
+        i = 65;
+        doc.setFontSize(10);
+      }
+
+     
+        doc.line(5, i - 5, 5, i);
+        doc.text(data[j].role_code, 7, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(data[j].user_code, 22, i - 1);
+        doc.line(37, i - 5, 37, i);
+        doc.text(data[j].invoice_code, 40, i - 1);
+        doc.line(60, i - 5, 60, i);
+        doc.text(data[j].customer_code, 62, i - 1);
+        doc.line(85, i - 5, 85, i);
+        doc.text(data[j].sdelivery_note_code, 87, i - 1);
+        doc.line(150, i - 5, 150, i);
+        doc.text(data[j].period_active_date, 152, i - 1);
+        doc.line(172, i - 5, 172, i);
+        doc.text(canceled, 174, i - 1);
+        doc.line(188, i - 5, 188, i);
+        doc.text(mnt, 228, i - 1,{ align: "right" });
+        doc.line(230, i - 5, 230, i);
+        doc.text(due_amt, 268, i - 1,{ align: "right" });
+        doc.line(270, i - 5, 270, i);
+        doc.text(credit, 293, i - 1,{ align: "right" });
+        doc.line(295, i - 5, 295, i);
+      //   doc.text(String(this.data[j].bkh_addr), 72, i - 1);
+      //   doc.line(95, i - 5, 95, i);
+      //  if(this.data[j].chr01 != null) { doc.text(this.data[j].chr01, 97, i - 1);} else {doc.text(this.data[j].bkh_addr, 97, i - 1)}
+      //   doc.line(120, i - 5, 120, i);
+      //   doc.text(String((this.data[j].bkh_type)), 122, i - 1 );
+      //   doc.line(130, i - 5, 130, i);
+      //   doc.text(String(this.data[j].bkh_effdate) , 153, i - 1, { align: "right" });
+      //   doc.line(155, i - 5, 155, i);
+      //   doc.text(String(Number(this.data[j].bkh_balance).toFixed(2)) , 178, i - 1,{ align: "right" });
+      //   doc.line(180, i - 5, 180, i);
+      //   doc.text(String(Number(this.data[j].bkh_amt).toFixed(2)), 203, i - 1, { align: "right" });
+      //   doc.line(205, i - 5, 205, i);
+         
+        i = i + 5;
+        total = total + Number(data[j].amount)
+        encaisse = encaisse + Number(data[j].due_amount)
+        credits = credits + Number(data[j].Credit)
+       }
+               doc.line(5, i - 5, 295, i - 5);
+
+      //  doc.line(30, i-5, 110, i-5);
+
+       let tt =  String(  Number(total).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+      let ttc = replaceAll(tt,","," ")
+
+       
+       let tdue =  String(  Number(encaisse).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+      let ttdue = replaceAll(tdue,","," ")
+
+      let tcredit =  String(  Number(credits).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }))
+
+      let ttcredit = replaceAll(tcredit,","," ")
+       doc.line(172, i - 5, 172, i);
+       
+        // doc.line(40, i - 5, 40, i);
+        doc.text("Totaux", 186, i - 1,{ align: "right" });
+        doc.line(188, i - 5, 188, i);
+        doc.text(ttc, 228, i - 1,{ align: "right" });
+        doc.line(230, i - 5, 230, i);
+        doc.text(ttdue, 268, i - 1,{ align: "right" });
+        doc.line(270, i - 5, 270, i);
+        doc.text(ttcredit, 293, i - 1,{ align: "right" });
+        doc.line(295, i - 5, 295, i);
+        doc.line(172, i, 295, i);
+        i = i + 5;
+
+
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+  }
 }

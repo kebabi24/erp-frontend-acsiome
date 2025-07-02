@@ -805,12 +805,12 @@ console.log("date",date1)
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }))
-      //   let ttsolde = replaceAll(nb,","," ")
-        doc.text(nb, 228, i - 1,{ align: "right" });
+     let tnb = replaceAll(nb,","," ")
+        doc.text(tnb, 228, i - 1,{ align: "right" });
         doc.line(230, i - 5, 230, i);
         let nbc =   Number(totalcredit)
        console.log(nbm)
-        doc.text("Totaux", 52, i - 1);
+        // doc.text("Totaux", 52, i - 1);
         // doc.line(110, i - 5, 110, i);
         // doc.text(String(Number(totalqty).toFixed(2)), 148, i - 1,{ align: "right" });
         doc.line(200, i - 5, 200, i);
@@ -818,8 +818,8 @@ console.log("date",date1)
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }))
-      //   let ttsolde = replaceAll(nb,","," ")
-        doc.text(nbcr, 258, i - 1,{ align: "right" });
+        let tnbcr = replaceAll(nbcr,","," ")
+        doc.text(tnbcr, 258, i - 1,{ align: "right" });
 
         doc.line(260, i - 5, 260, i);
         let soli =  String(  Number(this.mvdataset[this.mvdataset.length - 1].solde).toLocaleString("en-US", {

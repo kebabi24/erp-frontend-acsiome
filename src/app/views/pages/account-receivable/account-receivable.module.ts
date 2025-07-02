@@ -69,6 +69,7 @@ import { TransfertCaisseComponent } from './transfert-caisse/transfert-caisse.co
 import { TransfertCaisseDetComponent } from './transfert-caisse-det/transfert-caisse-det.component';
 import { EditJournalComponent } from './edit-journal/edit-journal.component';
 import { BankJournalComponent } from './bank-journal/bank-journal.component';
+import { ListGlobalVendorPaymentComponent } from './list-global-vendor-payment/list-global-vendor-payment.component';
 
   const routes: Routes = [
     {
@@ -150,12 +151,16 @@ import { BankJournalComponent } from './bank-journal/bank-journal.component';
                 path: "bank-journal",
                 component: BankJournalComponent,
               },
+              {
+                path: "list-global-vendor-payment",
+                component: ListGlobalVendorPaymentComponent,
+              },
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent, ListGlobalVendorPaymentComponent],
   imports: [
     CommonModule,
     HttpClientModule,

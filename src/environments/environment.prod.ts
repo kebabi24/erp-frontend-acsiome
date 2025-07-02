@@ -15,6 +15,14 @@ export const environment = {
   // apiUrl: "http://192.168.1.20:3001/api/v1",
   // apiUrl: "http://25.7.193.22:3001/api/v1",
   // apiUrl: "https://edelweiss.whitebay.limited/api/v1",
+  //Palmary  apiUrl: "http://10.10.15.90:3001/api/v1",
+  
+  //  apiUrl: "http://192.168.1.252:3001/api/v1",
+  //  apiUrl: "http://10.10.130.9:3001/api/v1",
+  //  apiUrl: "http://10.10.3.6:4141/api/v1",
   Instance: "Prod",
   App: "ERP",
+   
+
+  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
 };

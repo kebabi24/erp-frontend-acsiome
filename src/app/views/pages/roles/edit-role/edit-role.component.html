@@ -156,6 +156,9 @@
         <br /><br /><br />
       </div>
     </div>
+    <div class="row col-lg-12">
+      <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem(contentit)">Ajouter des itineraires</button>
+    </div>
     <div class="row">
       <angular-slickgrid class="col-12"  gridId="grid2" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions2" [dataset]="itinerary"> </angular-slickgrid>
     </div>
@@ -178,6 +181,30 @@
         </div>
       </ng-template>
     </div>
+    <div>
+      <ng-template #contentit let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">Choissir la Tournée</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridit"
+                      [columnDefinitions]="columnDefinitionsit" (onAngularGridCreated)="angularGridReadyit($event)"
+                      (sgOnSelectedRowsChanged)="handleSelectedRowsChangedit($event.detail.eventData, $event.detail.args)"
+                     
+                      [gridOptions]="gridOptionsit" [dataset]="its">
+                  </angular-slickgrid>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+              <button type="button" class="btn btn-primary" (click)="addit()" (click)="c('Close click')">Ok</button>
+          </div>
+      </ng-template>
+  </div>
 
     <!-- MODAL ROLE GRID -->
     <div>

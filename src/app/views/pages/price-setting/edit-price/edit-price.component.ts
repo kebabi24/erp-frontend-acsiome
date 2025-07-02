@@ -194,6 +194,7 @@ onSubmit() {
 preparePricelist(): Pricelist {
   const controls = this.priceForm.controls
   const _pricelist = new Pricelist()
+  _pricelist.id = this.pricelistEdit.id
   _pricelist.pi_list = controls.pi_list.value
   _pricelist.pi_desc= controls.pi_desc.value
  

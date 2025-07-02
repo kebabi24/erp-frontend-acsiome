@@ -27,6 +27,7 @@ const DEMO_PARAMS = {
     PASSWORD: "demo",
 }
 const instance = "Instance : " + environment.Instance 
+const key = environment.key
 @Component({
     selector: "kt-login",
     templateUrl: "./login.component.html",
@@ -146,7 +147,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             password: controls.password.value,
         }
         this.auth
-            .login(authData.userName, authData.password)
+            .login(authData.userName, authData.password,key)
 
             .subscribe(
                 (res: any) => {
@@ -159,17 +160,20 @@ export class LoginComponent implements OnInit, OnDestroy {
                     localStorage.setItem("domain", JSON.stringify(domain))
                     this.router.navigateByUrl(this.returnUrl) // Main page
                 },
-                (err) =>
+                (err) =>{
+                console.log("hhhhh",err.error.message)
                     this.authNoticeService.setNotice(
                         this.translate.instant(
-                            "Erreur dans l'authentification"
+                            err.error.message
                         ),
                         "danger"
                     ),
+                        
                 () => {
                     this.loading = false
                     this.cdr.markForCheck()
                 }
+                 }
             )
 
         // .pipe(

@@ -46,7 +46,7 @@ import { ListCustomerMobileComponent } from './list-customer-mobile/list-custome
 import { CreateCustomerMobileComponent } from './create-customer-mobile/create-customer-mobile.component';
 import { CustomersMobileComponent } from './customers-mobile.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
-import { AddresseMobileService, CustomerMobileService } from '../../../core/erp';
+import { AddresseMobileService, CustomerMobileService , MobileSettingsService,} from '../../../core/erp';
 import { EditCustomerMobileComponent } from './edit-customer-mobile/edit-customer-mobile.component';
 import { ClusterCreateComponent } from './cluster-create/cluster-create.component';
 import { CategoryCreateComponent } from './category-create/category-create.component';
@@ -99,6 +99,7 @@ const routes: Routes = [
         SubClusterCreateComponent,
         CategoryTypeCreateComponent,
         SalesChannelCreateComponent,
+        
   ],
   imports: [
         CommonModule,
@@ -130,7 +131,8 @@ const routes: Routes = [
         multi: true,
     },
     CustomerMobileService,
-    AddresseMobileService
+    AddresseMobileService,
+    MobileSettingsService,
   ],
   entryComponents: [
         ActionNotificationComponent,

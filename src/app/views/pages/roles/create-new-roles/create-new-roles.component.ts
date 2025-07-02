@@ -529,10 +529,10 @@ export class CreateNewRolesComponent implements OnInit {
         // for example, display the expand icon only on every 2nd row
         // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
-      multiSelect: false,
+      multiSelect: true,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: true,
+        selectActiveRow: false,
       },
       presets: {
         sorters: [{ columnId: "id", direction: "ASC" }],
@@ -856,7 +856,7 @@ export class CreateNewRolesComponent implements OnInit {
     this.tokenSerieService.getAllTokens().subscribe(
       (response: any) => {
         this.tokens = response.data;
-        this.dataView4.setItems(this.tokens);
+        // this.dataView4.setItems(this.tokens);
       },
       (error) => {
         this.tokens = [];

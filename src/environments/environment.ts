@@ -19,7 +19,9 @@ export const environment = {
   // apiUrl: "http://25.7.193.22:3001/api/v1",
     // apiUrl: "https://edelweiss.whitebay.limited/api/v1",
   Instance: "Prod",
-  App: "ERP", // RH or ERP
+  
+  App: "ERP", // RH or ERP or DD
+  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
 };
 
 /*

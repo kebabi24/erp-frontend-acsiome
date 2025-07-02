@@ -67,6 +67,7 @@ import { DecimalPipe } from "@angular/common";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import "jspdf-barcode";
+import { ControlResultsEntryComponent } from "../../quality-assurance/control-results-entry/control-results-entry.component";
 
 const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   // you can get the Editor Args which can be helpful, e.g. we can get the Translate Service from it
@@ -95,8 +96,10 @@ export class CreatePshPlqComponent implements OnInit {
   accountShiper: AccountShiper;
   inventoryTransaction: InventoryTransaction;
   pshForm: FormGroup;
+  qtyForm: FormGroup;
   totForm: FormGroup;
   hasFormErrors = false;
+  hasFormErrorsQty = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
   error = false;
@@ -161,6 +164,7 @@ export class CreatePshPlqComponent implements OnInit {
   lddet: any;
   row_number;
   message = "";
+  messageQty = "";
   pshServer;
   location: any;
   datasetPrint = [];
@@ -185,9 +189,14 @@ export class CreatePshPlqComponent implements OnInit {
   item:any;
   pshshipdate : any
   so_taxable: boolean
+  prod: any
+  lot : any
+  qtyl: any
+  args
   constructor(
     config: NgbDropdownConfig,
     private prhFB: FormBuilder,
+    private qtyFB: FormBuilder,
     private totFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -241,10 +250,16 @@ export class CreatePshPlqComponent implements OnInit {
         formatter: Formatters.deleteIcon,
         minWidth: 30,
         maxWidth: 30,
+        // onCellClick: (e: Event, args: OnEventArgs) => {
+        //   if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+        //     this.angularGrid.gridService.deleteItem(args.dataContext);
+        //   }
+        // },
         onCellClick: (e: Event, args: OnEventArgs) => {
-          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-            this.angularGrid.gridService.deleteItem(args.dataContext);
-          }
+          this.row_number = args.row;
+          this.args = args
+          let element: HTMLElement = document.getElementById("openAlertGrid") as HTMLElement;
+          element.click();
         },
       },
       
@@ -542,6 +557,20 @@ export class CreatePshPlqComponent implements OnInit {
     
       pal: [],
     });
+  }
+
+  createFormQty() {
+    this.qtyForm = this.qtyFB.group({
+    
+      qty:null
+    }) 
+    console.log("hhhhhhere")
+    // const input = document.getElementById('qty');
+    // // Focus on the input
+    // input.focus();
+    // Set the cursor to the end
+    //input.setSelectionRange(length, length);
+
   }
   //reste form
   reset() {
@@ -2430,7 +2459,7 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
 
   }
 
-  onScanPal(content2,content8) {
+  onScanPal(content2,content8,contentQty) {
     const controls = this.pshForm.controls;
     if (controls.psh_nbr.value === "") {
       this.modalService.open(content2, { size: "lg" });
@@ -2462,42 +2491,27 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
         let ind = this.dataset.findIndex((item) => {
           return (item.psh_part === prod && item.psh_serial === lot);
         });
-         console.log(ind)
-        if(ind == -1) {
-      this.angularGrid.gridService.addItem(
-        {
-                      id: this.dataset.length + 1, //this.dataset.length + 1,
-                      psh_line: this.dataset.length + 1,   //this.dataset.length + 1,
-                      psh_part: prod,
-                      cmvid: "",
-                      desc: this.item.pt_desc1,
-                     // psh_qty_toship: detail.sod_qty_ord - detail.sod_qty_ship,
-                      psh_qty_ship: 0, //detail.sod_qty_ord - detail.sod_qty_ship,
-                      psh_um: this.item.pt_um,
-                      psh_um_conv: 1,
-                      psh_type: (this.item.pt_phantom) ? "M" : null,
-                      psh_price: 0,
-                      psh_disc_pct: 0,
-                      psh_so_taxable: this.item.pt_taxable,
-                      psh_tax_code: this.item.pt_taxc,
-                      psh_taxc: this.item.taxe.tx2_tax_pct,
-                      psh_site: this.item.pt_site,
-                      psh_loc: this.item.pt_loc,
-                      psh_serial: lot,
-                      qty_oh: 0,
-                      psh_status: null,
-                      psh_expire: null,
-        },
-        { position: "bottom" }
-       
-      );
-      this.calculatetot()
+         console.log(ind,lot,serie)
+        if(ind == -1 && lot != '' && serie != '') {
+         
+          this.prod = prod
+          this.lot = lot
+          this.createFormQty()       
+          this.modalService.open(contentQty, { backdrop: 'static', size: "lg" });
+  
+          const input = document.getElementById('qty');
+          // // Focus on the input
+         input.focus(); 
+          // document.getElementById("qtyl").focus();
+          
+ 
      } else {
-      let updateItem = this.gridService.getDataItemByRowIndex(ind);
-      updateItem.psh_qty_ship =  this.dataset[ind].psh_qty_ship + 1 ;
+      // let updateItem = this.gridService.getDataItemByRowIndex(ind);
+      // updateItem.psh_qty_ship =  this.dataset[ind].psh_qty_ship + 1 ;
         
-      this.gridService.updateItem(updateItem);
-          alert("Lot Produit Déja Exist")
+      // this.gridService.updateItem(updateItem);
+      this.modalService.open(content8)
+          // alert("Lot Produit Déja Exist ou bien lot erronée")
         }
       
       
@@ -2507,9 +2521,9 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
     //   this.playAudio()
     //   this.modalService.open(content8, { size: "lg" });
     // }
-   console.log(this.dataset)
-    controls.pal.setValue(null);
-    document.getElementById("pal").focus();
+  //  console.log(this.dataset)
+  //   controls.pal.setValue(null);
+  //   document.getElementById("pal").focus();
   
       }
      else {
@@ -2526,4 +2540,170 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
     audio.play();
   }
 
+  openQty(content) {
+    this.modalService.open(content, { size: "lg" });
+  }
+  onChangeQty(content){
+    
+    const controls = this.pshForm.controls;
+    const controlsQ = this.qtyForm.controls;
+    this.qtyl = controlsQ.qty.value;
+    const qty = controlsQ.qty.value;
+    // let pricebefore = args.dataContext.sod_price;
+    // console.log(pricebefore);
+    this.price = 0;
+    this.disc = 0;
+    this.itemsService.getByOne({ pt_part: this.prod }).subscribe((resp: any) => {
+      if (resp.data) {
+        console.log(resp.data);
+console.log("controlsQ.qty.value:",controlsQ.qty.value)
+        const date1 = new Date();
+        let obj: {};
+        const part = resp.data.pt_part;
+        const promo = resp.data.pt_promo;
+        const cust = this.customer.cm_addr;
+        const classe = this.customer.cm_class;
+        //const qty = controlsQ.qty.value;
+        this.qtyl = controlsQ.qty.value;
+        const um = this.item.pt_um;
+        const curr = this.curr.cu_curr; //controls.psh_curr.value;
+        const type = "PT";
+        const date = `${controls.psh_ship_date.value.year}-${controls.psh_ship_date.value.month}-${controls.psh_ship_date.value.day}`;
+
+        obj = { part, promo, cust, classe, date, qty, um, curr, type };
+        this.pricelistService.getPrice(obj).subscribe((res: any) => {
+          console.log("price", res);
+          this.price = res.data;
+
+          let objr: {};
+        const typer = "PR";
+
+        objr = { part, promo, cust, classe, date, qty, um, curr, typer };
+
+        console.log(obj);
+
+        this.pricelistService.getDiscPct(objr).subscribe((resdisc: any) => {
+          console.log(resdisc);
+          this.disc = resdisc.data;
+
+          /* add line */
+
+console.log(this.prod,this.lot,this.price,this.qtyl,)
+if (this.price != null && Number(this.qtyl) != 0) {
+this.angularGrid.gridService.addItem(
+  {
+                id: this.dataset.length + 1, //this.dataset.length + 1,
+                psh_line: this.dataset.length + 1,   //this.dataset.length + 1,
+                psh_part: this.prod,
+                cmvid: "",
+                desc: this.item.pt_desc1,
+               // psh_qty_toship: detail.sod_qty_ord - detail.sod_qty_ship,
+                psh_qty_ship: this.qtyl, //detail.sod_qty_ord - detail.sod_qty_ship,
+                psh_um: this.item.pt_um,
+                psh_um_conv: 1,
+                psh_type: (this.item.pt_phantom) ? "M" : null,
+                psh_price: this.price,
+                psh_disc_pct: this.disc,
+                psh_so_taxable: this.item.pt_taxable,
+                psh_tax_code: this.item.pt_taxc,
+                psh_taxc: this.item.taxe.tx2_tax_pct,
+                psh_site: this.item.pt_site,
+                psh_loc: this.item.pt_loc,
+                psh_serial: this.lot,
+                qty_oh: 0,
+                psh_status: null,
+                psh_expire: null,
+  },
+  { position: "bottom" }
+ 
+);
+this.calculatetot()
+const controls = this.pshForm.controls
+controls.pal.setValue(null);
+document.getElementById("pal").focus();
+this.modalService.dismissAll()
+}else {
+this.playAudio()
+console.log("this.qtyl, this.price",this.qtyl, this.price)
+this.modalService.open(content, { size: "lg" });
+document.getElementById("pal").focus();
+
+}     
+
+/* add line */
+
+
+        });
+
+          // if (this.price != 0 && this.price != null) {
+          //   this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, psh_price: this.price });
+          // }
+          //    this.dataset[this.row_number].sod_price = this.price
+          //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+        });
+
+        
+      
+      }
+     
+    });
+
+    //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+    
+
+  }
+
+  addite(content){
+   
+         console.log(this.prod,this.lot,this.price,this.qtyl,)
+         if (this.price != null && Number(this.qtyl) != 0) {
+         this.angularGrid.gridService.addItem(
+           {
+                         id: this.dataset.length + 1, //this.dataset.length + 1,
+                         psh_line: this.dataset.length + 1,   //this.dataset.length + 1,
+                         psh_part: this.prod,
+                         cmvid: "",
+                         desc: this.item.pt_desc1,
+                        // psh_qty_toship: detail.sod_qty_ord - detail.sod_qty_ship,
+                         psh_qty_ship: this.qtyl, //detail.sod_qty_ord - detail.sod_qty_ship,
+                         psh_um: this.item.pt_um,
+                         psh_um_conv: 1,
+                         psh_type: (this.item.pt_phantom) ? "M" : null,
+                         psh_price: this.price,
+                         psh_disc_pct: this.disc,
+                         psh_so_taxable: this.item.pt_taxable,
+                         psh_tax_code: this.item.pt_taxc,
+                         psh_taxc: this.item.taxe.tx2_tax_pct,
+                         psh_site: this.item.pt_site,
+                         psh_loc: this.item.pt_loc,
+                         psh_serial: this.lot,
+                         qty_oh: 0,
+                         psh_status: null,
+                         psh_expire: null,
+           },
+           { position: "bottom" }
+          
+         );
+         this.calculatetot()
+     const controls = this.pshForm.controls
+         controls.pal.setValue(null);
+         document.getElementById("pal").focus();
+     this.modalService.dismissAll()
+     }else {
+       this.playAudio()
+       console.log("this.qtyl, this.price",this.qtyl, this.price)
+       this.modalService.open(content, { size: "lg" });
+       document.getElementById("pal").focus();
+        
+     }     
+   
+  }
+  delete(){
+    this.angularGrid.gridService.deleteItem(this.args.dataContext);
+    this.calculatetot()
+    this.modalService.dismissAll()
+  }
+  opendelete(content) {
+    this.modalService.open(content, { backdrop: 'static', size: "lg" });
+  }
 }

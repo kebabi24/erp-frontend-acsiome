@@ -179,6 +179,10 @@ const routes: Routes = [
         component: CreatePoComponent,
       },
       {
+        path: "po-list/:id",
+        component: PurchaseOrderListComponent,
+      },
+      {
         path: "edit-status-po",
         component: EditStatusPoComponent,
       },
