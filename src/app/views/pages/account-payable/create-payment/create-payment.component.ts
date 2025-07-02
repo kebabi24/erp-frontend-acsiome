@@ -910,14 +910,14 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
 
       return;
     }
-    if(this.cfdataset.length == 0) {
-      this.message = "Ecriture comptable vide.";
-      this.hasFormErrors = true;
+    // if(this.cfdataset.length == 0) {
+    //   this.message = "Ecriture comptable vide.";
+    //   this.hasFormErrors = true;
 
-      return;
+    //   return;
    
 
-    }
+    // }
 
    
     
@@ -1118,7 +1118,7 @@ onChangeBank(){
           controls.ap_entity.setValue(res.data.bank.bk_entity || "")
           controls.ap_dy_code.setValue(res.data.details[0].bkd_dy_code || "")
           controls.ap_cr_terms.setValue(res.data.details[0].bkd_pay_method || "")
-                   
+                 
           this.ap_cr_termss = res.data.details
           } else {
             this.layoutUtilsService.showActionNotification(
@@ -2000,7 +2000,7 @@ this.gridServicecf.addItem(
 
 
             this.bankService.getAP({bk_code: item.bk_code}).subscribe((res:any)=>{
-             // console.log(res.data)
+             console.log(res.data)
                   controls.ap_dy_code.setValue(res.data.details[0].bkd_dy_code || "")
                   controls.ap_cr_terms.setValue(res.data.details[0].bkd_pay_method || "")
                            

@@ -2068,7 +2068,7 @@ export class PoReceipCabIdComponent implements OnInit {
     // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
     // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    img.src = "./assets/media/logos/companylogo.png";
+    // img.src = "./assets/media/logos/companylogo.png";
     
     doc.setFontSize(9);
     if (this.domain.dom_name != null) {
@@ -2078,7 +2078,7 @@ export class PoReceipCabIdComponent implements OnInit {
     if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
 
-    doc.addImage(img, "png", 160, 5, 50, 30);
+    // doc.addImage(img, "png", 160, 5, 50, 30);
 
     doc.setFontSize(12);
     let date = new Date()
@@ -2105,7 +2105,7 @@ export class PoReceipCabIdComponent implements OnInit {
     if (this.provider.ad_misc1_id != null) {
       doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
     }
-    doc.text("Site        : " + controls.prh_site.value, 180, 50);
+    // doc.text("Site        : " + controls.prh_site.value, 180, 50);
 
     doc.line(10, 85, 200, 85);
     doc.line(10, 90, 200, 90);
@@ -2252,9 +2252,9 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.line(110, i - 5, 110, i);
         doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 123, i - 1, { align: "right" });
         doc.line(125, i - 5, 125, i);
-        doc.text(this.dataset[j].prh_um, 123, i - 1);
+        doc.text(this.dataset[j].prh_um, 127, i - 1);
         doc.line(135, i - 5, 135, i);
-        doc.text(String(Number(this.dataset[j].prh_pur_cost).toFixed(2)), 1518, i - 1, { align: "right" });
+        doc.text(String(Number(this.dataset[j].prh_pur_cost).toFixed(2)), 151, i - 1, { align: "right" });
         // doc.line(140, i - 5, 140, i);
         // doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
         doc.line(153, i - 5, 153, i);
