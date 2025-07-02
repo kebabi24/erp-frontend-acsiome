@@ -158,7 +158,7 @@ export class EditTrainingComponent implements OnInit {
   title: String = 'Modifier Formation - '
   itemEdit: any
   ad_country: any[] = []
-  pt_meter_um: any[] = []
+  pt_bom_code: any[] = []
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -204,9 +204,12 @@ export class EditTrainingComponent implements OnInit {
        this.codeService
          .getBy({ code_fldname: "pt_draw" })
          .subscribe((response: any) => (this.pt_draw = response.data));
+         this.codeService
+         .getBy({ code_fldname: "pt_group" })
+         .subscribe((response: any) => (this.pt_group = response.data));
        this.codeService
-         .getBy({ code_fldname: "pt_meter_um" })
-         .subscribe((response: any) => (this.pt_meter_um = response.data));  
+         .getBy({ code_fldname: "pt_bom_code" })
+         .subscribe((response: any) => (this.pt_bom_code = response.data));  
       
         this.initCode()
         this.loadingSubject.next(false)
@@ -228,12 +231,20 @@ export class EditTrainingComponent implements OnInit {
       pt_part: [{value:this.itemEdit.pt_part,disabled:true },Validators.required],
       pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
       pt_draw: [this.itemEdit.pt_draw, Validators.required],
-      pt_group: [this.itemEdit.pt_group,Validators.required],
-      pt_formula: [this.itemEdit.pt_formula],
-      pt_ms: [this.itemEdit.pt_ms],
+      pt_group: [this.itemEdit.pt_group],
+      pt_iss_pol: [this.itemEdit.pt_iss_pol],
+      pt_critical: [this.itemEdit.pt_critical],
       pt_rollup: [this.itemEdit.pt_rollup],
+      pt_phantom: [this.itemEdit.pt_phantom],
+      pt_insp_rqd: [this.itemEdit.pt_insp_rqd],
+      
       pt_origin: [this.itemEdit.pt_origin],
-      pt_meter_um: [this.itemEdit.pt_meter_um],
+      pt_bom_code: [this.itemEdit.pt_bom_code],
+      pt_shelflife: [this.itemEdit.pt_shelflife],
+      pt_price: [this.itemEdit.pt_price],
+      
+     
+      
     })
   
   }
@@ -285,12 +296,21 @@ export class EditTrainingComponent implements OnInit {
     _item.pt_desc1 = controls.pt_desc1.value;
     _item.pt_draw = controls.pt_draw.value;
     _item.pt_group = controls.pt_group.value;
-    _item.pt_formula = controls.pt_formula.value;
-    _item.pt_ms = controls.pt_ms.value;
+    _item.pt_iss_pol = controls.pt_iss_pol.value;
+    _item.pt_critical = controls.pt_critical.value;
+    _item.pt_phantom = controls.pt_phantom.value;
+    _item.pt_insp_rqd = controls.pt_insp_rqd.value;
     _item.pt_rollup = controls.pt_rollup.value;
     _item.pt_origin = controls.pt_origin.value;
-    _item.pt_meter_um = controls.pt_meter_um.value;
-    _item.pt_part_type = "FORMATION"
+    _item.pt_bom_code = controls.pt_bom_code.value;
+    _item.pt_shelflife = controls.pt_shelflife.value;
+    _item.pt_price = controls.pt_price.value;
+    _item.pt_taxable = true;
+    _item.pt_taxc = '19A';
+    _item.pt_part_type = "FORMATION";
+    _item.pt_um= "UN"
+    _item.pt_buyer = controls.pt_draw.value;
+    
     
 
     return _item;
@@ -338,7 +358,7 @@ export class EditTrainingComponent implements OnInit {
           
             this.reset();
             this.loadingSubject.next(true);
-            this.router.navigateByUrl("/training/update-training");
+            this.router.navigateByUrl("/training/gestion-de-formation");
             
      //       this.dataset = [];
           }
@@ -352,7 +372,7 @@ export class EditTrainingComponent implements OnInit {
    */
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/articles/list`;
+    const url = `/training/gestion-de-formation`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
   onchangedesc() {
@@ -520,7 +540,7 @@ export class EditTrainingComponent implements OnInit {
       },
       {
         id: "jb_code",
-        name: "code Métier",
+        name: "code Compétence",
         field: "jb_code",
         sortable: true,
         filterable: true,

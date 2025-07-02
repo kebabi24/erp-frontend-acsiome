@@ -48,7 +48,7 @@ declare var Edelweiss: any;
 })
 export class PoReceipCabComponent implements OnInit {
   // declare printJS: any;
-
+  printable: any;
   currentPrinter: string;
   PathPrinter: string;
   purchaseReceive: PurchaseReceive;
@@ -256,6 +256,26 @@ export class PoReceipCabComponent implements OnInit {
           model: Editors.float,
           params: { decimalPlaces: 2 },
         },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_rcvd: args.dataContext.qty });
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
+            
+          } else {
+            if(args.dataContext.prh_rcvd < 2000 && args.dataContext.prh_rcvd > 0){
+            this.printable = true
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.prh_rcvd });
+            }  
+            else {
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_rcvd: args.dataContext.qty });
+            this.message = "la quantité ne doit pas dépasser 2000";
+            this.hasFormErrors = true;
+            return;
+            }      
+          }
+        },
       },
       // {
       //   id: "prh_um",
@@ -280,7 +300,7 @@ export class PoReceipCabComponent implements OnInit {
       //           const { data } = res;
 
       //           if (data) {
-      //             //alert ("Mouvement Interdit Pour ce Status")
+      //             
       //             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: res.data.um_conv });
       //             this.angularGrid.gridService.highlightRow(1, 1500);
       //           } else {
@@ -288,12 +308,12 @@ export class PoReceipCabComponent implements OnInit {
       //               console.log(res);
       //               const { data } = res;
       //               if (data) {
-      //                 //alert ("Mouvement Interdit Pour ce Status")
+      //                 
       //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: res.data.um_conv });
       //               } else {
       //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_um_conv: "1", prh_um: null });
 
-      //                 alert("UM conversion manquante");
+      //                
       //               }
       //             });
       //           }
@@ -369,7 +389,7 @@ export class PoReceipCabComponent implements OnInit {
                       this.gridService.updateItemById(args.dataContext.id,{...args.dataContext  , prh_site: null});
     
                      // this.gridService.onItemUpdated;
-                      alert("Site N'existe pas")
+                     
                 }
           });     
       }
@@ -428,8 +448,12 @@ export class PoReceipCabComponent implements OnInit {
                 });
               });
             } else {
-              alert("Emplacement Nexiste pas");
+              
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_loc: null, qty_oh: 0, prh_status: null });
+              this.message = "emplacement incorrect";
+              this.hasFormErrors = true;
+              return;
+            
             }
           });
         },
@@ -554,10 +578,7 @@ export class PoReceipCabComponent implements OnInit {
         minWidth: 30,
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
-          // printJS("/assets/output12.pdf");
-          // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
-          //   this.angularGrid.gridService.deleteItem(args.dataContext);
-          // }
+          if(this.printable == true){this.printable = false
           if (args.dataContext.prh_part != null && args.dataContext.prh_rcvd != null && args.dataContext.prh_loc != null) {
             const controls = this.prhForm.controls;
             const _lb = new Label();
@@ -572,43 +593,45 @@ export class PoReceipCabComponent implements OnInit {
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
             _lb.lb_printer = this.PathPrinter;
-            _lb.lb_cust = controls.name.value;
-
+            _lb.lb_cust = controls.prh_vend.value;
+            _lb.lb__chr01 = String(new Date().toLocaleTimeString())
             // _lb.lb_addr = this.provider.ad_line1;
             // _lb.lb_tel = this.provider.ad_phone;
 
             let lab = null;
-            // this.labelService.getPdf({}).subscribe((blob) => {
-            //   const url = window.URL.createObjectURL(blob);
-            //   window.open(url);
-            //   // saveAs(blob, "ticket.pdf");
-            // });
+           
 
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
                 console.log(lab);
                 this.labelService.addblob(_lb).subscribe((blob) => {
-                  // console.log(blob);
-                  // const url = window.URL.createObjectURL(blob);
-                  // // window.open(url);
-                  // saveAs(blob, lab.lb_ref + ".pdf");
-
+                
                   Edelweiss.print3(lab, this.currentPrinter);
                 });
               },
               (error) => {
-                alert("Erreur Impression Etiquette");
+                this.message = "Erreur impression etiquette";
+            this.hasFormErrors = true;
+            return;
               },
               () => {
-                // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
+                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref });
               }
             );
             // printJS("/assets/ticket.pdf");
           } else {
-            alert("Veuillez verifier les informations");
+            this.message = "Erreur, vérifier les informations";
+            this.hasFormErrors = true;
+            return;
           }
-        },
+        }
+        else {
+          this.message = "etiquette déjà imprimée";
+          this.hasFormErrors = true;
+          return;
+        }
+      }
       },
     ];
 
@@ -641,7 +664,9 @@ export class PoReceipCabComponent implements OnInit {
     this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
       (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
       (error) => {
-        alert("Erreur de récupération path");
+        this.message = "Erreur, vérifier les informations";
+            this.hasFormErrors = true;
+            return;
       }
     );
     if (this.user.usrd_site == "*") {
@@ -649,7 +674,7 @@ export class PoReceipCabComponent implements OnInit {
     } else {
       this.site = this.user.usrd_site;
     }
-
+    this.printable = true;
     this.createForm();
   }
   // printJsS() {
@@ -687,37 +712,7 @@ export class PoReceipCabComponent implements OnInit {
     });
 
     const controls = this.prhForm.controls;
-    this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-      this.seq = response.data;
-      console.log(this.seq);
-      if (this.seq) {
-        this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-        console.log(this.seq.seq_prefix);
-        console.log(this.seq.seq_curr_val);
-
-        console.log(this.prhnbr);
-        const id = Number(this.seq.id);
-        let obj = {};
-        obj = {
-          seq_curr_val: Number(this.seq.seq_curr_val) + 1,
-        };
-        this.sequenceService.update(id, obj).subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.message = "Erreur modification Sequence";
-            this.hasFormErrors = true;
-            return;
-          }
-        );
-        controls.prh_receiver.setValue(this.prhnbr);
-      } else {
-        this.message = "Parametrage Manquant pour la sequence";
-        this.hasFormErrors = true;
-        return;
-      }
-
-      // tslint:disable-next-line:prefer-const
-    });
+    
   }
   //reste form
   reset() {
@@ -745,40 +740,40 @@ export class PoReceipCabComponent implements OnInit {
       return;
     }
 
-    // this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe(
-    //   (response: any) => {
-    // this.seq = response.data
-    // console.log(this.seq)
-    //     if (this.seq) {
-    //      this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
-    //      console.log(this.seq.seq_prefix)
-    //      console.log(this.seq.seq_curr_val)
-
-    //     console.log(this.prhnbr)
-    //      const id = Number(this.seq.id)
-    //   let obj = { }
-    //   obj = {
-    //     seq_curr_val: Number(this.seq.seq_curr_val )+1
-    //   }
-    //   this.sequenceService.update(id , obj ).subscribe(
-    //     (reponse) => console.log("response", Response),
-    //     (error) => {
-    //       this.message = "Erreur modification Sequence";
-    //       this.hasFormErrors = true;
-    //       return;
-
-    //     },
-    //     )
-    //   }else {
-    //     this.message = "Parametrage Manquant pour la sequence";
-    //     this.hasFormErrors = true;
-    //     return;
-
-    //    }
-
-    // tslint:disable-next-line:prefer-const
+    
     let pr = this.prepare();
-    this.addIt(this.dataset, pr, this.prhnbr);
+    this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
+      this.seq = response.data;
+    
+      if (this.seq) {
+        const id = Number(this.seq.id);
+        let obj = {};
+        obj = {
+          seq_curr_val: Number(this.seq.seq_curr_val) + 1,
+        };
+        if(this.prhnbr == null)
+        { this.prhnbr = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
+          this.sequenceService.update(id, obj).subscribe(
+          (reponse) => console.log("response", Response),
+          (error) => {
+            this.message = "Erreur modification Sequence";
+            this.hasFormErrors = true;
+            return;
+          }
+          );
+          
+        }
+        this.addIt(this.dataset, pr, this.prhnbr);
+        controls.prh_receiver.setValue(this.prhnbr);
+      } else {
+        this.message = "Parametrage Manquant pour la sequence";
+        this.hasFormErrors = true;
+        return;
+      }
+
+      // tslint:disable-next-line:prefer-const
+    });
+    
     //  })
 
     // tslint:disable-next-line:prefer-const
@@ -805,6 +800,7 @@ export class PoReceipCabComponent implements OnInit {
     _pr.prh_ex_rate = controls.prh_ex_rate.value;
     _pr.prh_ex_rate2 = controls.prh_ex_rate2.value;
     _pr.prh_rmks = controls.prh_rmks.value;
+    
     return _pr;
   }
   /**
@@ -828,8 +824,12 @@ export class PoReceipCabComponent implements OnInit {
     this.purchaseReceiveService.addCab({ detail, pr, prhnbr }).subscribe(
       (reponse: any) => (poNbr = reponse.data),
       (error) => {
-        alert("Erreur, vérifier les informations");
         this.loadingSubject.next(false);
+        this.message = "Erreur, vérifier les informations";
+            this.hasFormErrors = true;
+            return;
+        
+        
       },
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
@@ -846,14 +846,20 @@ export class PoReceipCabComponent implements OnInit {
 
     this.siteService.getByOne({ si_site }).subscribe((res: any) => {
       if (!res.data) {
-        alert("Site n'existe pas  ");
+        
         controls.prh_site.setValue(null);
         document.getElementById("prh_site").focus();
+        this.message = "site inexistant";
+            this.hasFormErrors = true;
+            return;
       } else {
         if (this.user.usrd_site != "*" && si_site != this.user.usrd_site) {
-          alert("Site n'est pas autorisé pour cet utilisateur ");
+          
           controls.prh_site.setValue(null);
           document.getElementById("prh_site").focus();
+          this.message = "vous ne pouvez pas choisir ce site";
+            this.hasFormErrors = true;
+            return;
         }
       }
     });
@@ -876,7 +882,7 @@ export class PoReceipCabComponent implements OnInit {
       const ad_addr = this.prhServer.po_vend;
       console.log(ad_addr);
       this.addressService.getBy({ ad_addr: ad_addr }).subscribe((response: any) => {
-        this.provider = response.data;
+        this.provider = response.data[0];
 
         controls.name.setValue(this.provider.ad_name);
 
@@ -1188,7 +1194,7 @@ export class PoReceipCabComponent implements OnInit {
           const ad_addr = this.prhServer.po_vend;
           console.log(ad_addr);
           this.addressService.getBy({ ad_addr: ad_addr }).subscribe((response: any) => {
-            this.provider = response.data;
+            this.provider = response.data[0];
 
             controls.name.setValue(this.provider.ad_name);
 
@@ -1584,8 +1590,11 @@ export class PoReceipCabComponent implements OnInit {
               updateItem.prh_status = this.stat;
             });
           } else {
-            alert("Emplacement Nexiste pas");
+            
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_loc: null, tr_status: null });
+            this.message = "emplacement incorrect";
+            this.hasFormErrors = true;
+            return;
           }
         });
       });
@@ -1710,12 +1719,15 @@ export class PoReceipCabComponent implements OnInit {
           const { data } = res;
 
           if (data) {
-            alert("Mouvement Interdit Pour ce Status");
+            
             updateItem.prh_serial = null;
             updateItem.tr_status = null;
 
             updateItem.tr_expire = null;
             updateItem.qty_oh = 0;
+            this.message = "mouvement interdit pour ce statut";
+            this.hasFormErrors = true;
+            return;
           } else {
             updateItem.prh_serial = item.ld_lot;
             updateItem.tr_status = item.ld_status;
@@ -1875,7 +1887,7 @@ export class PoReceipCabComponent implements OnInit {
               const { data } = res;
 
               if (data) {
-                //alert ("Mouvement Interdit Pour ce Status")
+                
                 updateItem.prh_um_conv = res.data.um_conv;
                 this.angularGrid.gridService.highlightRow(1, 1500);
               } else {
@@ -1883,13 +1895,15 @@ export class PoReceipCabComponent implements OnInit {
                   console.log(res);
                   const { data } = res;
                   if (data) {
-                    //alert ("Mouvement Interdit Pour ce Status")
+                   
                     updateItem.prh_um_conv = res.data.um_conv;
                   } else {
                     updateItem.prh_um_conv = 1;
                     updateItem.prh_um = null;
 
-                    alert("UM conversion manquante");
+                    this.message = "conversion UM manquant";
+            this.hasFormErrors = true;
+            return;
                   }
                 });
               }
@@ -1987,17 +2001,24 @@ export class PoReceipCabComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, "png", 150, 5, 50, 30);
+    // img.src = "./assets/media/logos/po-receip-cab.png";
+    img.src = "./assets/media/logos/companyentete.png";
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    let date = new Date()
     doc.setFontSize(12);
     doc.text("RC N° : " + nbr, 70, 40);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
     doc.setFontSize(8);
 
     doc.text("Code Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -2041,7 +2062,7 @@ export class PoReceipCabComponent implements OnInit {
     var i = 95;
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length; j++) {
-      if (j % 35 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
@@ -2053,6 +2074,11 @@ export class PoReceipCabComponent implements OnInit {
         if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(12);
         doc.text("RC N° : " + nbr, 70, 40);
+        doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
         doc.setFontSize(8);
 
         doc.text("Code Fournisseur : " + this.provider.vd_addr, 20, 50);
@@ -2097,11 +2123,11 @@ export class PoReceipCabComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
@@ -2175,11 +2201,13 @@ export class PoReceipCabComponent implements OnInit {
     }
 
     // doc.line(10, i - 5, 200, i - 5);
-
+    doc.text("Validé par: " , 20, 235);
+    doc.text("Note: " , 20, 250);
     doc.setFontSize(10);
 
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('RC-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }

@@ -133,6 +133,7 @@ export class ReleaseWoComponent implements OnInit {
   ld: any;
   bom: any;
   domain: any;
+  ld_qty:any;
   constructor(
     config: NgbDropdownConfig,
     private wodFB: FormBuilder,
@@ -205,6 +206,16 @@ export class ReleaseWoComponent implements OnInit {
         id: "wod_qty_req",
         name: "QTE Requise",
         field: "wod_qty_req",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.float,
+        
+      },
+      {
+        id: "qty_oh",
+        name: "QTE en stock",
+        field: "qty_oh",
         sortable: true,
         width: 80,
         filterable: false,
@@ -500,6 +511,11 @@ export class ReleaseWoComponent implements OnInit {
       // console.log(this.details[object]);
         // const detail = this.details[object];
         for (let object of this.details) {  
+          this.ld_qty = 0;
+          this.locationDetailService.getByFifo({ld_part: object.ps_comp}).subscribe(
+            (reponse: any) => { this.ld_qty = this.ld_qty + reponse.ld_qty_oh
+          
+})
         var qty = Number(object.ps_qty_per) * Number (qte) / Number(controls.batch.value) ;
             this.gridService.addItem(
               {
@@ -511,6 +527,7 @@ export class ReleaseWoComponent implements OnInit {
                 desc: object.item.pt_desc1,
                 wod_um: object.item.pt_um,
                 wod_qty_req: qty,
+                qty_oh: this.ld_qty,
                 wod_site: controls.site.value,
                 wod_loc: object.item.pt_loc,
                 

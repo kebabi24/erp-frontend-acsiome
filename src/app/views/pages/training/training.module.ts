@@ -56,10 +56,14 @@ import { AngularSlickgridModule } from 'angular-slickgrid';
 
 import {CodeService,
          ItemService,
+         PsService,
          ItemModelService,
          SiteService, 
          SequenceService,
-         LocationService, 
+         LocationService,
+         CustomerService,
+         FinancialchargeService, 
+         AccountUnplanifedService,
          ProviderService ,
          ProductLineService, 
          MesureService, 
@@ -67,13 +71,33 @@ import {CodeService,
          InventoryStatusService,
          TaxeService,
          JobService,
-         CustomerMobileService,
+         Quote,
+         QuoteService,
+         SaleOrder,
          UsersService,
          EmployeService,
          RequisitionService,
          ReasonService,
          PopulationemployeService,
          TrainingcalenderService,
+         ProjectService,AddReportService,AddReport, AffectEmp,AffectEmpService,
+         InventoryTransactionService,LocationDetailService,
+         QualityControlService,
+         AccountShiperService,
+         PayMethService,
+         LabelService,
+         DomainService,
+         PrintersService,
+         SaleOrderService,
+         PricelistService,
+         InvoiceOrder,
+         InvoiceOrderService,
+         SaleShiperService,
+         InvoiceOrderTemp,
+         InvoiceOrderTempService,
+         ConfigService,
+         AccountReceivableService,
+         CRMService
         } from '../../../core/erp';
 import { UpdateTrainingComponent } from './update-training/update-training.component';
 import { ListSectionComponent } from './list-section/list-section.component';
@@ -87,6 +111,21 @@ import { CreatePopulationComponent } from './create-population/create-population
 import { EditPopulationComponent } from './edit-population/edit-population.component';
 import { UpdatePopulationComponent } from './update-population/update-population.component';
 import { ListPopulationComponent } from './list-population/list-population.component';
+import { CreateTrainingSessionComponent } from './create-training-session/create-training-session.component';
+import { LaunchTrainingSessionComponent } from './launch-training-session/launch-training-session.component';
+import { TrainingReportComponent } from './training-report/training-report.component';
+import { TrainingHotEvalComponent } from './training-hot-eval/training-hot-eval.component';
+import { TrainingColdEvalComponent } from './training-cold-eval/training-cold-eval.component';
+import { CreateTrainingTypeComponent } from './create-training-type/create-training-type.component';
+import { TrainingSessionListComponent } from './training-session-list/training-session-list.component';
+import { TrainingReportListComponent } from './training-report-list/training-report-list.component';
+import { TrainingEvalListComponent } from './training-eval-list/training-eval-list.component';
+import { EditStudentComponent } from './edit-student/edit-student.component';
+import { GestionDeFormationComponent } from './gestion-de-formation/gestion-de-formation.component';
+import { LocationFilterService } from 'src/app/core/erp/_services/location-filter.service';
+import { GestionCommercialeComponent } from './gestion-commerciale/gestion-commerciale.component';
+import { GestionMoyensGenerauxComponent } from './gestion-moyens-generaux/gestion-moyens-generaux.component';
+import { EnqueteSatisfactionComponent } from './enquete-satisfaction/enquete-satisfaction.component';
 
     const routes: Routes = [
      
@@ -103,6 +142,26 @@ import { ListPopulationComponent } from './list-population/list-population.compo
               {
                   path: "edit-training/:id",
                   component: EditTrainingComponent,
+              },
+              {
+                path: "edit-student/:id",
+                component: EditStudentComponent,
+            },
+              {
+                path: "create-training-type",
+                component: CreateTrainingTypeComponent,
+              },
+              {
+                path: "gestion-de-formation",
+                component: GestionDeFormationComponent,
+              },
+              {
+                path: "gestion-commerciale",
+                component: GestionCommercialeComponent,
+              },
+              {
+                path: "gestion-moyens-generaux",
+                component: GestionMoyensGenerauxComponent,
               },
               {
                 path: "create-training-domain",
@@ -159,13 +218,49 @@ import { ListPopulationComponent } from './list-population/list-population.compo
               {
                 path: "create-training-calander",
                 component: CreateTrainingCalanderComponent,
-            },
+              },
+              {
+                path: "create-training-session",
+                component: CreateTrainingSessionComponent,
+              },
+              {
+                path: "training-session-list",
+                component: TrainingSessionListComponent,
+              },
+              {
+                path: "launch-training-session",
+                component: LaunchTrainingSessionComponent,
+              },
+              {
+                path: "training-report",
+                component: TrainingReportComponent,
+              },
+              {
+                path: "training-report-list",
+                component: TrainingReportListComponent,
+              },
+              {
+                path: "training-hot-eval",
+                component: TrainingHotEvalComponent,
+              },
+              {
+                path: "enquete-satisfaction",
+                component: EnqueteSatisfactionComponent,
+              },
+              {
+                path: "training-cold-eval",
+                component: TrainingColdEvalComponent,
+              },
+              {
+                path: "training-eval-list",
+                component: TrainingEvalListComponent,
+              },
   ]
   
 
 
 @NgModule({
-  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent, CreateTrainingCalanderComponent, CreatePopulationComponent, EditPopulationComponent, UpdatePopulationComponent, ListPopulationComponent],
+  declarations: [TrainingComponent, CreateTrainingComponent, ListTrainingComponent, EditTrainingComponent, CreateTrainingDomainComponent, CreateTrainingSectionComponent, UpdateTrainingComponent, ListSectionComponent, ListDomainComponent, CreateTrainingRequestComponent, CreateRequestGroupComponent, CreateReqTrainingComponent, ApprovalReqComponent, CreateTrainingCalanderComponent, CreatePopulationComponent, EditPopulationComponent, UpdatePopulationComponent, ListPopulationComponent, CreateTrainingSessionComponent, LaunchTrainingSessionComponent, TrainingReportComponent, TrainingHotEvalComponent, TrainingColdEvalComponent, CreateTrainingTypeComponent, TrainingSessionListComponent, TrainingReportListComponent, TrainingEvalListComponent, EditStudentComponent, GestionDeFormationComponent, GestionCommercialeComponent, GestionMoyensGenerauxComponent, EnqueteSatisfactionComponent],
   
   imports: [
     CommonModule,
@@ -205,15 +300,22 @@ providers: [
     CodeService,
     SiteService,
     LocationService,
+    LocationFilterService,
+    FinancialchargeService,
+    AccountUnplanifedService,
     ProductLineService,
     SequenceService,
     ProviderService,
     ItemService,
+    PsService,
     MesureService,
     TaxeService,
     InventoryStatusService,
     CostSimulationService,
-    CustomerMobileService,
+    CustomerService,
+    LabelService,
+    PrintersService,
+    DomainService,
     ItemModelService,
     JobService,
     UsersService,
@@ -222,8 +324,25 @@ providers: [
     ReasonService,
     PopulationemployeService,
     TrainingcalenderService,
-   
-
+    AddReportService,
+    AffectEmpService,
+    ProjectService,
+    InventoryTransactionService,LocationDetailService,
+    QualityControlService,
+    AccountShiperService,
+    PayMethService,
+   QuoteService,
+   SaleOrderService,
+   PricelistService,
+   InvoiceOrder,
+   InvoiceOrderService,
+   ProductLineService,
+   SaleShiperService,
+   InvoiceOrderTemp,
+   InvoiceOrderTempService,
+   ConfigService,
+   AccountReceivableService,
+   CRMService,
 ],
 
 entryComponents: [

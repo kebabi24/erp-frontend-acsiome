@@ -1,7 +1,7 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter une page de produits'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
 
@@ -28,7 +28,7 @@
         <div class="example-preview">
 
             <form class="form" [formGroup]="productPageForm">
-                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="500">
+            <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="500">
    
                 Ce code page produits existe deja - ferme <button type="warn" (click)="onChangeCode()" class="btn" >Cliquez ici</button>
             </kt-alert>
@@ -36,44 +36,41 @@
                 <div class="col-6">
 
             
-            <div class="row">
-                <div class="form-group col-4">
-                    <label class="form-group">Code Page Produits: *</label>
-
-                <div class="input-group input-group-sm">
-                   
-                    <input type="text" formControlName="product_page_code" (change)="onChangePP()" id="productPageCode"
-                        [className]="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                        <div class="input-group-append">
-                            <span class="input-group-text" (click)="openpage(contentpage)">
-                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                    <div class="row">
+                        <div class="form-group col-4">
+                            <label class="form-group">Code Page Produits: *</label>
+                            <input type="text" formControlName="product_page_code" (change)="onChangePP()" id="productPageCode"
+                                [className]="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                                <!-- <div class="input-group-append">
+                                    <span class="input-group-text" (click)="openpage(contentpage)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div> -->
+                        <div *ngIf="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) "
+                                class="invalid-feedback">Ce Champs est obligatoire
                         </div>
-                   <div *ngIf="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) "
-                        class="invalid-feedback">Ce Champs est obligatoire
-                    </div>
-                </div>  
-                </div>
-            </div>
-           
-            <div class="row">
-                <div class="form-group col-4">
-                    <label class="form-group">Description : *</label>
-                    <input type="text" formControlName="description"
-                        [className]="productPageForm.controls['description'].errors && (productPageForm.controls['description'].dirty || productPageForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
-                    <div *ngIf="productPageForm.controls['description'].errors && (productPageForm.controls['description'].dirty || productPageForm.controls['description'].touched) "
-                        class="invalid-feedback">Ce Champs est obligatoire
+                        </div>  
                     </div>
                 </div>
-            </div>
            
-        </div>
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label class="form-group">Description : *</label>
+                        <input type="text" formControlName="description"
+                            [className]="productPageForm.controls['description'].errors && (productPageForm.controls['description'].dirty || productPageForm.controls['description'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="productPageForm.controls['description'].errors && (productPageForm.controls['description'].dirty || productPageForm.controls['description'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire
+                        </div>
+                    </div>
+                </div>
+           
+            </div>
       
-     </div> 
+      
             </form>
             
             <div class="row">
                 <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem(content4)">Ajouter Articles</button>
-              </div>
+            </div>
             <br><br>
             <div class="example-preview">
                 <!-- <br><br>
@@ -118,34 +115,10 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
             <button type="button" class="btn btn-primary" (click)="addpage()" (click)="c('Close click')">Ok</button>
-        </div>
+          </div>
         </ng-template>
       
-      </div>
-      <div>
-        <ng-template #contentpage let-c="close" let-d="dismiss">
-            <div class="modal-header">
-                <h4 class="modal-title">Choissir Page </h4>
-                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
-                        [columnDefinitions]="columnDefinitionspage" (onAngularGridCreated)="angularGridReadypage($event)"
-                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedpage($event.detail.eventData, $event.detail.args)"
-                        [gridOptions]="gridOptionspage" [dataset]="datapage">
-                    </angular-slickgrid>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
-                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
-            </div>
-        </ng-template>
     </div>
-
 </kt-portlet>
 
 

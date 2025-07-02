@@ -56,6 +56,7 @@ import { CreateGlComponent } from './create-gl/create-gl.component';
 import { EditGlComponent } from './edit-gl/edit-gl.component';
 import { ListGlComponent } from './list-gl/list-gl.component';
 import { CalcCmpComponent } from './calc-cmp/calc-cmp.component';
+import { ListG50Component } from './list-g50/list-g50.component';
 
 const routes: Routes = [
   {
@@ -71,6 +72,10 @@ const routes: Routes = [
     component: ListGlComponent
   },
   {
+    path: 'list-g50',
+    component: ListG50Component
+  },
+  {
     path: 'edit-gl/:id',
     component: EditGlComponent
   },
@@ -83,7 +88,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [GeneralAccountingComponent, AffectFrpComponent, CreateGlComponent, EditGlComponent, ListGlComponent, CalcCmpComponent],
+  declarations: [GeneralAccountingComponent, AffectFrpComponent, CreateGlComponent, EditGlComponent, ListGlComponent, CalcCmpComponent, ListG50Component],
   imports: [
     CommonModule,
     HttpClientModule,

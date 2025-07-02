@@ -1,9 +1,9 @@
 <kt-portlet>
   <kt-portlet-header [sticky]="true" [title]="'Création Rapport'" [class]="'card-head-lg'" [viewLoading$]="loading$">
     <ng-container ktPortletTools>
-      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+      <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
       <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder</button>
+      <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer</button>
     </ng-container>
   </kt-portlet-header>
   <kt-portlet-body>
@@ -15,7 +15,7 @@
 
         <div class="row">
           <div class="form-group col-2">
-            <label class="form-group">Code Projet:</label>
+            <label class="form-group">Code BT:</label>
             <div class="input-group input-group-sm">
               <input type="text" id="pmr_pm_code" [className]="empForm.controls['pmr_pm_code'].errors && (empForm.controls['pmr_pm_code'].dirty || empForm.controls['pmr_pm_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="pmr_pm_code" (change)="onChangeCode()" aria-describedby="basic-addon2" />
               <div class="input-group-append">
@@ -85,7 +85,7 @@
         <div class="row col-lg-12">
           <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Affecter un Employé</button>
         </div>
-        <br />
+        <!-- <br /> -->
         <div class="row">
           <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions" [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)"> </angular-slickgrid>
         </div>
@@ -94,7 +94,7 @@
           <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="addNewcnsItem()">Ajouter un Article</button>
         </div>
         <div class="row">
-          <angular-slickgrid class="col-12" gridId="mGrid" [columnDefinitions]="columnDefinitionscns" [gridOptions]="gridOptionscns" [dataset]="cnsdataset" (onAngularGridCreated)="gridReadycns($event)"> </angular-slickgrid>
+          <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitionscns" [gridOptions]="gridOptionscns" [dataset]="cnsdataset" (onAngularGridCreated)="gridReadycns($event)"> </angular-slickgrid>
         </div>
       </form>
     </div>
@@ -102,7 +102,7 @@
     <div>
       <ng-template #content let-c="close" let-d="dismiss">
         <div class="modal-header">
-          <h4 class="modal-title">Choissir Projet</h4>
+          <h4 class="modal-title">Choissir BT</h4>
           <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -113,7 +113,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -133,7 +133,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -152,7 +152,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -172,7 +172,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -193,7 +193,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -213,7 +213,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -233,7 +233,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
@@ -253,13 +253,13 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+          <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
           <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
         </div>
       </ng-template>
       <button hidden id="openUmsGrid" class="btn btn-primary" (click)="openum(contentum)">Launch demo modal</button>
     </div>
-    <div id="file">
+    <!-- <div id="file">
       <table cellspacing="0" border="0">
         <colgroup width="321"></colgroup>
         <colgroup span="31" width="19"></colgroup>
@@ -280,7 +280,7 @@
           </td>
           <td style="border-top: 2px solid #000000" align="left"><br /></td>
           <td style="border-top: 2px solid #000000; border-bottom: 1px solid #000000" colspan="16" align="left">
-            <font size="4"> {{ pm_cust }}<br /></font>
+            <font size="4"> {{ pm_win_addr }}<br /></font>
           </td>
           <td style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 2px solid #000000" colspan="2" align="center">
             <b><font size="4">ATTACHEMENT</font></b>
@@ -691,7 +691,6 @@
           <br />
         </div>
       </div>
-      <!-- ************************************************************************** -->
-    </div>
+    </div> -->
   </kt-portlet-body>
 </kt-portlet>

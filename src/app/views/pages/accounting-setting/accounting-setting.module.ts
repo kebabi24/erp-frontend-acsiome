@@ -7,6 +7,7 @@ import { CostCenterComponent } from "./cost-center/cost-center.component"
 import { CreateAccountComponent } from "./create-account/create-account.component"
 import { CreateDepartComponent } from "./create-depart/create-depart.component"
 import { CreateEmployeeComponent } from "./create-employee/create-employee.component"
+
 import { CreateEntityComponent } from "./create-entity/create-entity.component"
 import { CreateTaxComponent } from "./create-tax/create-tax.component"
 import { JournalComponent } from "./journal/journal.component"
@@ -90,7 +91,14 @@ import { ListCcComponent } from './list-cc/list-cc.component';
 import { EditCcComponent } from './edit-cc/edit-cc.component';
 import { EmployeSalaryComponent } from './employe-salary/employe-salary.component';
 import { CreateStdBankComponent } from './create-std-bank/create-std-bank.component';
+import { CreateStudentComponent } from './create-student/create-student.component';
 import { CreateTaxpayementSettingsComponent } from './create-taxpayement-settings/create-taxpayement-settings.component';
+import { EpiByemployeListComponent } from './epi-byemploye-list/epi-byemploye-list.component';
+import { EpiBypartListComponent } from './epi-bypart-list/epi-bypart-list.component';
+import { EpiBypartdetailListComponent } from './epi-bypartdetail-list/epi-bypartdetail-list.component';
+import { EpiByemployedetailListComponent } from './epi-byemployedetail-list/epi-byemployedetail-list.component';
+import { EpiNewemployeListComponent } from './epi-newemploye-list/epi-newemploye-list.component';
+import { EpiCycleemployeListComponent } from './epi-cycleemploye-list/epi-cycleemploye-list.component';
 const routes: Routes = [
     {
         path: "create-account",
@@ -182,6 +190,10 @@ const routes: Routes = [
         component: CreateEmployeeComponent,
     },
     {
+        path: "create-student",
+        component: CreateStudentComponent,
+    },
+    {
         path: "create-emp-avail",
         component: CreateEmpAvailComponent,
     },
@@ -200,6 +212,30 @@ const routes: Routes = [
     {
         path: "list-employe",
         component: ListEmployeComponent,
+    },
+    {
+        path: "epi-byemploye-list",
+        component: EpiByemployeListComponent,
+    },
+    {
+        path: "epi-byemployedetail-list",
+        component: EpiByemployedetailListComponent,
+    },
+    {
+        path: "epi-bypart-list",
+        component: EpiBypartListComponent,
+    },
+    {
+        path: "epi-bypartdetail-list",
+        component: EpiBypartdetailListComponent,
+    },
+    {
+        path: "epi-cycleemploye-list",
+        component: EpiCycleemployeListComponent,
+    },
+    {
+        path: "epi-newemploye-list",
+        component: EpiNewemployeListComponent,
     },
     {
         path: "edit-employe/:id",
@@ -264,7 +300,14 @@ const routes: Routes = [
         EditCcComponent,
         EmployeSalaryComponent,
         CreateStdBankComponent,
+        CreateStudentComponent,
         CreateTaxpayementSettingsComponent,
+        EpiByemployeListComponent,
+        EpiBypartListComponent,
+        EpiBypartdetailListComponent,
+        EpiByemployedetailListComponent,
+        EpiNewemployeListComponent,
+        EpiCycleemployeListComponent,
        
     ],
     imports: [

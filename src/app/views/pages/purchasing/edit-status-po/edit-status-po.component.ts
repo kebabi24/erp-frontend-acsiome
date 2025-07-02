@@ -45,7 +45,7 @@ import {
 } from "../../../../core/erp"
 
 @Component({
-  selector: 'kt-edit-status-po',
+  selector: 'kt-edit-status-po', 
   templateUrl: './edit-status-po.component.html',
   styleUrls: ['./edit-status-po.component.scss']
 })
@@ -228,6 +228,7 @@ export class EditStatusPoComponent implements OnInit {
           po_stat: [
               { value: this.purchaseOrder.po_stat },
           ],
+          attach: [""],
           po_rmks: [{ value: this.purchaseOrder.po_rmks, disabled: true }],
           
       })
@@ -260,8 +261,15 @@ export class EditStatusPoComponent implements OnInit {
 
           return
       }
+      const formData = new FormData();
+      const _po = new PurchaseOrder()
+      _po.po_stat = controls.po_stat.value;
+      
+      formData.append("file", this.poForm.get("attach").value);
+      formData.append("data", JSON.stringify('test'));
+      
       this.purchaseOrderService
-          .update({ po_stat: controls.po_stat.value }, this.poServer.id)
+          .update({ po_stat:controls.po_stat.value,po_app_owner: formData}, this.poServer.id)
           .subscribe( //(res) => {
 
             (reponse) => console.log("response", Response),
@@ -325,7 +333,7 @@ export class EditStatusPoComponent implements OnInit {
               this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                           
                           
-                    this.provider = response.data
+                    this.provider = response.data[0]
           
                     controls.name.setValue(this.provider.ad_name);
                 
@@ -377,7 +385,7 @@ export class EditStatusPoComponent implements OnInit {
                       this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                                   
                                   
-                            this.provider = response.data
+                            this.provider = response.data[0]
                   
                             controls.name.setValue(this.provider.ad_name);
                       
@@ -529,7 +537,7 @@ export class EditStatusPoComponent implements OnInit {
 
     // fill the dataset with your data
     this.purchaseOrderService
-      .getByStat({po_stat: "p"})
+      .getByStat({})
       .subscribe((response: any) => {
         console.log(response.data)
         this.pos = response.data });
@@ -544,5 +552,10 @@ export class EditStatusPoComponent implements OnInit {
   
   
 
-
+  uploadFile(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.poForm.get("attach").setValue(file);
+    }
+  }
 }

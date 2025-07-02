@@ -1,64 +1,27 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="false" [title]="'Consultations des Factures'" [class]="'card-head-lg'">
-        
+    <kt-portlet-header [sticky]="true" [title]="'Liste des Factures'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            
+                <button type="button" (click)="goback()" class="btn btn-secondary btn-sm mr-2">Retour</button>
+                <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Raffrichir</button>
+                <button type="button" (click)="oncreate()" class="btn btn-secondary btn-sm mr-2"> Créer Facture</button>
+                <button type="button" (click)="onprint()" class="btn btn-secondary btn-sm mr-2"> Imprimer Facture</button>
+                <button type="button" (click)="onimput()" class="btn btn-secondary btn-sm mr-2"> Valider Facture</button>
+                <button type="button" (click)="onSubmit()" class="btn btn-secondary btn-sm mr-2">Réglement </button>
+                
+        </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview">
-                <form class="form" [formGroup]="soForm">
-                
-              
-                    <div class="row">
-                       
-                        <div class="form-group col-3">
-                            <label class="form-group">Date: *</label>
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date" 
-                                     placeholder="jj-mm-aaaa" name="calc_date" ngbDatepicker f
-                                    #calc_date="ngbDatepicker"   >
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" (click)="calc_date.toggle()"  type="button">
-                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                    </button>
-                                </div>
-                                
-                            </div>
-    
-                        </div>
-                        <div class="form-group col-3">
-                            <label class="form-group">A: *</label>
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-sm form-control-solid"  formControlName="calc_date1" 
-                                     placeholder="jj-mm-aaaa" name="calc_date1" ngbDatepicker f
-                                    #calc_date1="ngbDatepicker"   >
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" (click)="calc_date1.toggle()"  type="button">
-                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                    </button>
-                                </div>
-                                
-                            </div>
-    
-                        </div>
-                   
-                        
-                        <div class="form-group col-4">
-                            <label class="form-group">Valider: *</label>
-                            <div class="input-group input-group-sm">
-    
-                            <button type="button"  (click)="solist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
-                            </div>
-                        </div> 
-                </div>
-                <div class="row">    
-                    <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
-                        [gridOptions]="gridOptions" [dataset]="dataset">
-                    </angular-slickgrid>
-                </div>
-            </form>
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
             
         </div>
 
     </kt-portlet-body>
 </kt-portlet>
-
 

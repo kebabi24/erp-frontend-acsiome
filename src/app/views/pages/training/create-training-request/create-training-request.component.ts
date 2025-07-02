@@ -326,12 +326,14 @@ export class CreateTrainingRequestComponent implements OnInit {
               alert("Vous n'etes pas affecter à un employé")
             }
         })
+        
         this.sequencesService
         .getByOne({ seq_type: 'RQ', seq_profile: this.user.usrd_profile})
         .subscribe((response: any) => {
             console.log(response)
             if (response.data == null) {
                 alert("Sequence nexiste pas")
+                console.log(this.user.usrd_profile)
                 
             } else {
               this.seq = response.data.seq_seq
@@ -469,6 +471,7 @@ export class CreateTrainingRequestComponent implements OnInit {
             rqd_um: "",
             rqd_cc: "",
             rqd_desc: "",
+            rqd_aprv_stat: 0,
         },{position:"bottom"})
     }
 
@@ -1036,7 +1039,7 @@ export class CreateTrainingRequestComponent implements OnInit {
             // for example, display the expand icon only on every 2nd row
             // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
           },
-          multiSelect: true,
+          multiSelect: false,
           rowSelectionOptions: {
             // True (Single Selection), False (Multiple Selections)
             selectActiveRow: false,
@@ -1076,6 +1079,7 @@ export class CreateTrainingRequestComponent implements OnInit {
               rqd_desc : data.pt_desc1,
               rqd_req_qty : 1,
               rqd_um: data.pt_um,
+              rqd_aprv_stat: 0,
             };
               this.datatr.push(obj)
             idd++;
@@ -1093,6 +1097,17 @@ export class CreateTrainingRequestComponent implements OnInit {
         if (Array.isArray(args.rows) && this.gridObjtr) {
           this.selectedJob = args.rows.map((idx: number) => {
             const item = this.gridObjtr.getDataItem(idx);
+            this.datatr = []
+            let obj =  {
+                id: this.datatr.length + 1,
+                rqd_line: this.datatr.length + 1,
+                rqd_part: item.rqd_part,
+                rqd_desc : item.rqd_desc,
+                rqd_req_qty : 1,
+                rqd_um: item.pt_um,
+                rqd_aprv_stat: 0,
+              };
+            this.datatr.push(obj)
             return item.jb_code;
           });
         }
@@ -1196,7 +1211,7 @@ export class CreateTrainingRequestComponent implements OnInit {
               // for example, display the expand icon only on every 2nd row
               // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
             },
-            multiSelect: true,
+            multiSelect: false,
             rowSelectionOptions: {
               // True (Single Selection), False (Multiple Selections)
               selectActiveRow: false,
@@ -1230,7 +1245,8 @@ export class CreateTrainingRequestComponent implements OnInit {
                 rqd_part: data.rqd_part,
                 rqd_desc : data.rqd_desc,
                 rqd_req_qty : 1,
-                rqd_um: data.rqd_um
+                rqd_um: data.rqd_um,
+                rqd_aprv_stat: 0,
               };
                 this.dataset.push(obj)
               idd++;

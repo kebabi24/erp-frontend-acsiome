@@ -2,11 +2,11 @@
 <kt-portlet class="main-container">
     <kt-portlet-header [sticky]="true" [title]="'Ajouter une population'" [class]="'card-head-lg main-container'" [viewLoading$]="loading$" >
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">annuler</button>
             <!-- <button type="button" (click)="direct()" class="btn btn-secondary btn-lg mr-2">Ajouter une catégorie</button> -->
             <button type="button" (click)="onSubmit()" class="btn btn-lg mr-2 btn-success">sauvegarder</button>
         </ng-container>
-    </kt-portlet-header>
+    </kt-portlet-header> 
     <kt-portlet-body class="main-container">
         <div class="example-preview">
             <div>
@@ -23,7 +23,7 @@
                     
                     <div class="row">
                       <!-- CODE POPULATION -->
-                      <div class="form-group col-2">
+                        <div class="form-group col-2">
                         <!-- <span >Code paramètre:</span> -->
                             <label class="form-group " id="pop_code" >Code population:</label>
                             <input 
@@ -37,27 +37,144 @@
                             <div *ngIf="populationForm.controls['pop_code'].errors && (populationForm.controls['pop_code'].dirty || populationForm.controls['pop_code'].touched)"
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
-                      </div>
+                        </div>
                       <!-- CODE POPULATION END  -->
 
-                        <div class=" form-group col-6">
-                            <label class="form-group " id="pop_desc" >Déscription:</label>
-                            
-
-                            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="pop_desc"
-                           >
-                            
-                           
-
-                      </div>
+                        <div class=" form-group col-4">
+                            <label class="form-group " id="pop_desc" >Description:</label>
+                        
+                            <input type="text" class="form-control form-control-lg form-control-solid" formControlName="pop_desc">
+                        </div>
 
                        
+                    </div>
+                    <div class="row">
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Age minimum :</label>
+    
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_age1">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Age Maximum :</label>
+    
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_age2">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Genre :</label>
+    
+                            <input type="text" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_gender">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Service :</label>
+    
+                            <input type="text" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_job">
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Poste :</label>
+    
+                            <input type="text" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_level">
+                        </div>
+  
+                         
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group">Fidélité:</label>
+                            <div class="col-6">
+                                <span class="switch switch-lg switch-icon">
+                                    <label>
+                                        <input type="checkbox"
+                                           
+                                            formControlName="pop_fidelity" id="pop_fidelity" />
+                                        <span></span>
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Habilitation:</label>
+                            <div class="col-6">
+                                <span class="switch switch-lg switch-icon">
+                                    <label>
+                                        <input type="checkbox"
+                                           
+                                            formControlName="pop_habilitation" id="pop_habilitation" />
+                                        <span></span>
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">fin de contrat :</label>
+    
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_last_date">
+                        </div>
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">confirmation :</label>
+    
+                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                formControlName="pop_conf_date">
+                        </div>
+  
+                         
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label class="form-group ">Pays:</label>
+                            <select class="form-control form-control-lg form-control-solid"
+                            id="exampleSelects1" formControlName="pop_country">
+                            <option value=""></option>
+                            <option *ngFor="let elem of pop_country" [value]="elem.code_value">
+                                {{elem.code_cmmt}}</option>
+                               
+
+                        </select>
+                        </div>
+                   
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Wilaya:</label>
+                                <select class="form-control form-control-lg form-control-solid"
+                                    id="exampleSelects2" formControlName="pop_state" (change)="onChangeState()">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of pop_state" [value]="elem.code_value">
+                                        {{elem.code_cmmt}}</option>
+
+                                </select>
+                            
+                        </div>
+                        
+                        <div class="form-group col-2">
+                            <label class="form-group ">Commune:</label>
+                                <select class="form-control form-control-lg form-control-solid"
+                                    id="exampleSelects1" formControlName="pop_city">
+                                    <option value=""></option>
+                                    <option *ngFor="let elem of pop_city" [value]="elem.code_value">
+                                        {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                </select>
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group ">Daera:</label>
+                            
+                                <input type="text" class="form-control form-control-lg form-control-solid"
+                                    formControlName="pop_county">
+                        </div>
                     </div>
                 </form> 
                 
                 <!-- DETAILS TITLE  -->
                 <div class="row mt-7 mb-7">
-                    <h4>Liste de clients</h4>
+                    <h4>Liste de employés</h4>
                 </div>
                 <!-- DETAILS TITLE END -->
 

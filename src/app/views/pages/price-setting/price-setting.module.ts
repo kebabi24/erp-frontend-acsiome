@@ -50,8 +50,10 @@ import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from 'angular-slickgrid'
 import { ListPriceComponent } from './list-price/list-price.component';
 import { EditPriceComponent } from './edit-price/edit-price.component';
-import { ItemService, CodeService, 
-  CustomerService, DeviseService, PricelistService,PriceListQuantityService} from '../../../core/erp';
+import { ItemService, CodeService, PriceListQuantityService,
+  CustomerService, DeviseService, PricelistService,SiteService,LocationService} from '../../../core/erp';
+import { CreatePriceImmobilierComponent } from './create-price-immobilier/create-price-immobilier.component';
+  
 import { CreatePriceQuantityComponent } from './create-price-quantity/create-price-quantity.component';
 import { ListPriceQuantityComponent } from './list-price-quantity/list-price-quantity.component';
 import { EditPriceQuantityComponent } from './edit-price-quantity/edit-price-quantity.component';
@@ -60,6 +62,10 @@ const routes: Routes = [
   {
     path: 'create-price',
     component: CreatePriceComponent
+  },
+  {
+    path: 'create-price-immobilier',
+    component: CreatePriceImmobilierComponent
   },
   {
     path: 'list-price',
@@ -84,7 +90,8 @@ const routes: Routes = [
 ] 
 
 @NgModule({
-  declarations: [PriceSettingComponent, CreatePriceComponent, ListPriceComponent, EditPriceComponent, CreatePriceQuantityComponent, ListPriceQuantityComponent, EditPriceQuantityComponent],
+  declarations: [PriceSettingComponent, CreatePriceComponent, ListPriceComponent, EditPriceComponent, CreatePriceImmobilierComponent, CreatePriceQuantityComponent, ListPriceQuantityComponent, EditPriceQuantityComponent],
+  
   imports: [
     CommonModule,
     HttpClientModule,
@@ -128,6 +135,8 @@ providers: [
   CustomerService,
   DeviseService,
   PricelistService,
+  SiteService,
+  LocationService,
   PriceListQuantityService,
 ],
 })

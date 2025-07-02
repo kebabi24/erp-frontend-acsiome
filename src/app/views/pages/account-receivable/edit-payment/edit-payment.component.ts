@@ -1138,7 +1138,7 @@ handleSelectedRowsChangedbill(e, args) {
                   this.bankService
                   .getAllDetails({
                         bkd_bank: this.provider.vd_bank,
-                        bkd_module: "AP",
+                        bkd_module: "AR",
                         bkd_pay_method:  this.provider.vd_ckfrm,
                         
                   })

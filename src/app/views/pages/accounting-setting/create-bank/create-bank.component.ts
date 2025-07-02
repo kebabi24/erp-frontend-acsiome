@@ -662,7 +662,7 @@ export class CreateBankComponent implements OnInit {
           })
           .subscribe((response: any) => {
               
-              if (response.data) {
+              if (response.data.length != 0) {
                   this.isExist = true
                   console.log(response.data)
                   

@@ -353,38 +353,6 @@ export class ListSalesDdComponent implements OnInit {
        
       }, 
       {
-        id: "pt_part_type",
-        name: "Type",
-        field: "pt_part_type",
-        sortable: true,
-        width: 50,
-        filterable: true,
-        type: FieldType.text,
-       // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/parttypes`),model: Filters.multipleSelect , operator: OperatorType.inContains },
-        filter: {
-
-         
-          // collectionAsync: this.elem,
-          collectionAsync:  this.http.get(`${API_URL_codes}/parttypes`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
-       
-         
-         
-           model: Filters.multipleSelect,
-          
-         },
-        grouping: {
-          getter: 'pt_part_type',
-          formatter: (g) => `Type Produit: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregators: [
-            new Aggregators.Sum('quantity'),  
-            new Aggregators.Sum('amount'),
-        ],
-          aggregateCollapsed: false,
-          collapsed: false,
-        }
-       
-      },
-      {
         id: "product_code",
         name: "Code Produit",
         field: "product_code",
@@ -514,17 +482,16 @@ export class ListSalesDdComponent implements OnInit {
 
     this.mvgridOptions = {
       enableDraggableGrouping: true,
-      createPreHeaderPanel: true,
-      showPreHeaderPanel: true,
-      preHeaderPanelHeight: 40,
-      enableFiltering: true,
-      enableAutoResize: true,
-      enableSorting: true,
-      enableExcelExport:true,
-      enableExcelCopyBuffer: true,
-      exportOptions: {
-        sanitizeDataExport: true
-      },
+        createPreHeaderPanel: true,
+        showPreHeaderPanel: true,
+        preHeaderPanelHeight: 40,
+        enableFiltering: true,
+        enableAutoResize: true,
+        enableAutoResizeColumnsByCellContent:true,
+        enableSorting: true,
+        exportOptions: {
+          sanitizeDataExport: true
+        },
        
         //enableRowSelection: true,
       //   enableCellNavigation: true,

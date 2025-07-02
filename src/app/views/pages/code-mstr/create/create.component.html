@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter un code'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
 
 
@@ -11,7 +11,7 @@
                 <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
                         class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <button class="dropdown-item">sauvegarder et quitter</button>
+                    <button class="dropdown-item">enregistrer et quitter</button>
 
                 </div>
             </div> -->
@@ -58,13 +58,13 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-6">
-                        <label class="form-group">Description: *</label>
+                        <label class="form-group">usage: *</label>
                         <input type="text" formControlName="code_desc" class='form-control form-control-sm form-control-solid'>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-3">
-                        <label class="form-group">champ text: </label>
+                        <label class="form-group">code dans article: </label>
                         <input type="text" formControlName="chr01" class='form-control form-control-sm form-control-solid' >
                     </div>
                     <div class="form-group col-3">

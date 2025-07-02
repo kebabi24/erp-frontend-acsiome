@@ -15,13 +15,15 @@ import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
 import { ItemService, SiteService, BomService, BomPartService, WorkOrder, WorkOrderService, SequenceService, ProviderService, WorkRoutingService, AddressService, InventoryTransaction, InventoryTransactionService, LocationService, RequisitionService, CostSimulationService, LocationDetailService, InventoryStatusService, CodeService, printBc, MesureService, LabelService, Label, EmployeService, PrintersService } from "../../../../core/erp";
 declare var Edelweiss: any;
-
+import { jsPDF } from "jspdf";
+import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 @Component({
-  selector: "kt-create-direct-wo",
+  selector: "kt-create-direct-wo", 
   templateUrl: "./create-direct-wo.component.html",
   styleUrls: ["./create-direct-wo.component.scss"],
 })
 export class CreateDirectWoComponent implements OnInit {
+  seuil:any;
   currentPrinter: string;
   PathPrinter: string;
   ipAddress:any;
@@ -65,7 +67,7 @@ export class CreateDirectWoComponent implements OnInit {
   gridOptionsbom: GridOption = {};
   gridObjbom: any;
   angularGridbom: AngularGridInstance;
-
+  provider:any;
   vends: [];
   columnDefinitionsvend: Column[] = [];
   gridOptionsvend: GridOption = {};
@@ -79,9 +81,18 @@ export class CreateDirectWoComponent implements OnInit {
   angularGridemp: AngularGridInstance;
   dataViewemp: any;
   gridServiceemp: GridService;
+
+  emps2: [];
+  columnDefinitionsemp2: Column[] = [];
+  gridOptionsemp2: GridOption = {};
+  gridObjemp2: any;
+  angularGridemp2: AngularGridInstance;
+  dataViewemp2: any;
+  gridServiceemp2: GridService;
+
   selectedIndexes: any[];
   selectedIndexes2: any[];
-
+  
   seq: any;
   nof: any;
   nbpal: any;
@@ -110,9 +121,14 @@ export class CreateDirectWoComponent implements OnInit {
   ro_rollup: any[] = [];
   emp_shift: any[] = [];
   globalState: boolean = false;
+  validate:boolean = true;
   product_colors: any[] = [];
   product_types: any[] = [];
-
+  ok_types:boolean = false;
+  prodqty:any;
+  prodlot:any;
+  color:any;
+  type:any;
   shift: any;
   desc2: any;
   dataprinter: [];
@@ -125,7 +141,9 @@ export class CreateDirectWoComponent implements OnInit {
   domain: any;
   domconfig: any;
   user1: any;
-  constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService, private printerService: PrintersService, private http: HttpClient) {
+  user2: any;
+  adduser: boolean = true;
+  constructor(config: NgbDropdownConfig, private woFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private modalService: NgbModal, private layoutUtilsService: LayoutUtilsService, private siteService: SiteService, private providersService: ProviderService, private itemsService: ItemService, private sequenceService: SequenceService, private workOrderService: WorkOrderService, private workRoutingService: WorkRoutingService, private bomService: BomService, private bomPartService: BomPartService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private locationService: LocationService, private inventoryStatusService: InventoryStatusService, private mesureService: MesureService, private codeService: CodeService, private requisitionService: RequisitionService, private locationDetailService: LocationDetailService, private labelService: LabelService, private employeService: EmployeService,private addressService: AddressService, private printerService: PrintersService, private http: HttpClient) {
     config.autoClose = true;
     
     this.workRoutingService.getBy({ ro_rollup: true }).subscribe((response: any) => {
@@ -258,6 +276,15 @@ export class CreateDirectWoComponent implements OnInit {
       //     formatter: Formatters.decimal,
 
       // },
+      {
+        id: "tr_serial",
+        name: "N° serie",
+        field: "tr_serial",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        //type: FieldType.float,
+      },
 
       {
         id: "tr_ref",
@@ -345,7 +372,7 @@ export class CreateDirectWoComponent implements OnInit {
         this.domconfig = false;
       }
     );
-
+    this.seuil = 1200;
     this.createForm();
   }
 
@@ -365,12 +392,14 @@ export class CreateDirectWoComponent implements OnInit {
       ],
       wo_site: [this.workOrder.wo_site, Validators.required],
       wo_user1: [this.workOrder.wo_user1, Validators.required],
+      wo_user2: [this.workOrder.wo_user2],
+      adduser2:[false],
       wo_part: [{ value: this.workOrder.wo_part, disabled: true }, Validators.required],
       desc: [{ value: null, disabled: true }],
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
       ref: [{ value: null, disabled: true }],
-
+      wo_qty_chg:[this.workOrder.wo_qty_chg],
       wo_qty_comp: [this.workOrder.wo_qty_comp],
       emp_shift: [this.shift],
       wo_serial: [this.workOrder.wo_serial],
@@ -391,6 +420,13 @@ export class CreateDirectWoComponent implements OnInit {
       (reponse: any) => {
         if (reponse.data != null) {
           controls.wo_routing.setValue(reponse.data.code_value), controls.wo_routing.disable();
+          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+            //   const { data } = response;
+               console.log("aaaaaaaaaaa",response.data);
+               if (response.data != null) {
+                 this.provider = response.data[0];
+               }
+             });
         }
       },
       (error) => {}
@@ -398,10 +434,14 @@ export class CreateDirectWoComponent implements OnInit {
   }
   //reste form
   reset() {
+    this.globalState = false
+    this.validate = false
     this.workOrder = new WorkOrder();
     this.createForm();
-    this.dataset = [];
-    this.trdataset = [];
+    this.getProductColors();
+    this.getProductTypes();
+    // this.dataset = [];
+    // this.trdataset = [];
 
     this.hasFormErrors = false;
   }
@@ -425,7 +465,8 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   getProductColors() {
-    this.codeService
+    
+      this.codeService
       .getBy({
         code_fldname: "pt_break_cat",
       })
@@ -459,12 +500,16 @@ export class CreateDirectWoComponent implements OnInit {
   }
 
   searchProduct() {
+    this.validate = true;
     this.globalState = false;
     const controls = this.woForm.controls;
     const date = new Date();
     controls.product_type.value;
     controls.product_color.value;
-
+    this.color = controls.product_color.value;
+    this.type = controls.product_type.value;
+    this.product_types = [];
+    this.product_colors = [];
     this.itemsService
       .getBy({
         pt_draw: controls.product_type.value,
@@ -481,6 +526,7 @@ export class CreateDirectWoComponent implements OnInit {
             return;
             
           } else {
+            this.codeService.getBy({code_fldname:'LIMIT',code_value:data[0].pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
             console.log(data);
             controls.wo_part.setValue(data[0].pt_part);
             controls.desc.setValue(response.data[0].pt_desc1);
@@ -507,32 +553,33 @@ export class CreateDirectWoComponent implements OnInit {
 
   onSubmit() {
     
-    this.globalState = true;
+    this.validate = true;
     const controls = this.woForm.controls;
     let tr = this.prepareTr();
     this.trdataset = [];
-
-    if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value <= 0) {
+    this.prodqty = controls.wo_qty_comp.value
+    this.prodlot = controls.wo_serial.value
+    if (controls.wo_qty_comp.value == null || controls.wo_qty_comp.value <= 0 || controls.wo_qty_comp.value > this.seuil) {
       this.hasFormErrors = true;
-      this.message = "la quantité ne peut pas être inferieure à 0";
-   
-      this.globalState = false;
-      return;
+      this.message = "la quantité est erronée";
+      
+      this.globalState = false;return;
     }
     if (this.dataset.length == 0) {
       this.hasFormErrors = true;
       this.message = "Verifier la liste des consomation";
-      this.globalState = false;
+      
       return;
     }
-    let date = new Date();
-    
+    let date = new Date(); 
+     
     let tr_addr = controls.wo_routing.value
     let obj ={date,tr_addr}
     this.inventoryTransactionService.getByDateAddr(obj).subscribe(
       (res: any) => {
         
     console.log('nb pal', res.data.length + 1)
+    this.nbpal = res.data.length + 1
     const _lb = new Label();
     _lb.lb__dec01 = res.data.length + 1
     _lb.lb_site = controls.wo_site.value;
@@ -543,7 +590,7 @@ export class CreateDirectWoComponent implements OnInit {
     _lb.lb_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _lb.lb_qty = controls.wo_qty_comp.value;
     _lb.lb_ld_status = this.rctwostat;
-    _lb.lb_desc = this.desc2;
+    _lb.lb_desc = controls.desc.value;
     _lb.lb_grp = controls.emp_shift.value;
     _lb.lb_cust = controls.wo_routing.value;
     _lb.lb_addr = controls.wo_user1.value;
@@ -551,7 +598,7 @@ export class CreateDirectWoComponent implements OnInit {
     // _lb.lb_tel  = this.address.ad_phone
     // _lb.int01   = this.product.int01
     // _lb.int02   = this.product.int02
-
+    _lb.lb__chr01 = String(new Date().toLocaleTimeString())
     _lb.lb_printer = this.currentPrinter;
 
     let lab = null;
@@ -559,9 +606,7 @@ export class CreateDirectWoComponent implements OnInit {
     this.labelService.add(_lb).subscribe(
       (reponse: any) => {
         lab = reponse.data;
-        this.labelService.addblob(_lb).subscribe((blob) => {
-          Edelweiss.print3(lab, this.currentPrinter);
-        });
+       
       },
       (error) => {
         
@@ -588,10 +633,14 @@ export class CreateDirectWoComponent implements OnInit {
           tr_user1: controls.wo_user1.value,
           tr_program: timedate,
           
+          tr_user2: controls.wo_user2.value,
         });
         console.log(this.trdataset);
         this.addTR(this.trdataset, tr);
-
+        this.labelService.addblob(_lb).subscribe((blob) => {
+          Edelweiss.print3(lab, this.currentPrinter);
+        });
+        
         //   this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_ref: lab.lb_ref})
       }
     );
@@ -612,11 +661,13 @@ export class CreateDirectWoComponent implements OnInit {
     _tr.tr_nbr = this.nof;
     _tr.tr_lot = this.wolot;
     _tr.tr_part = controls.wo_part.value;
-
+    _tr.tr_user1 = controls.wo_user1.value,
+    _tr.tr_user2 = controls.wo_user2.value,
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _tr.tr_qty_loc = controls.wo_qty_comp.value;
     _tr.tr_serial = controls.wo_serial.value;
     _tr.tr_addr = controls.emp_shift.value;
+    _tr.tr_site = controls.wo_site.value;
     _tr.created_ip_adr = this.ipAddress;
     // _tr.tr_so_job = controls.tr_so_job.value
 
@@ -642,14 +693,15 @@ export class CreateDirectWoComponent implements OnInit {
     this.loadingSubject.next(true);
 
     this.inventoryTransactionService.addRCTWO({ detail, it }).subscribe(
-      (reponse: any) => console.log(reponse),
-      (error) => {
+      (reponse: any) => console.log(reponse), 
+      (error) => {this.loadingSubject.next(false);
         this.message = "la transaction n'a pas ete enregistré, veuillez verifier votre connexion";
                   this.hasFormErrors = true;
                   return;
-        this.loadingSubject.next(false);
+        
       },
-      () => {
+      () => {this.printpdf(this.nof),this.globalState = false; 
+        this.dataset = []
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         //    console.log(this.provider, po, this.dataset);
@@ -665,126 +717,27 @@ export class CreateDirectWoComponent implements OnInit {
     const _wo = new WorkOrder();
     _wo.wo_site = controls.wo_site.value;
     _wo.wo_user1 = this.user1;
+    _wo.wo_user2 = this.user2;
     _wo.wo_part = controls.wo_part.value;
     _wo.wo_routing = controls.wo_routing.value;
+    _wo.wo_qty_ord = 1;
     _wo.wo_ord_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_rel_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo_due_date = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
     _wo.wo__chr01 = controls.emp_shift.value;
+    _wo.wo_type = 'BR';
     return _wo;
   }
-  // save data
-  //   onSubmit() {
-  //     this.hasFormErrors = false;
-  //     const controls = this.woForm.controls;
-  //     /** check form */
-  //     if (this.woForm.invalid) {
-  //       Object.keys(controls).forEach((controlName) =>
-  //         controls[controlName].markAsTouched()
-  //       );
-  //       this.message = "Modifiez quelques éléments et réessayez de soumettre.";
-  //       this.hasFormErrors = true;
-
-  //       return;
-  //     }
-
-  //     if (!this.dataset.length) {
-  //       this.message = "La liste des article ne peut pas etre vide";
-  //       this.hasFormErrors = true;
-
-  //       return;
-  //     }
-  //     for (var i = 0; i < this.dataset.length; i++) {
-
-  //      if (this.dataset[i].wo_part == "" || this.dataset[i].wo_part == null  ) {
-  //       this.message = "L' article ne peut pas etre vide";
-  //       this.hasFormErrors = true;
-  //       return;
-
-  //      }
-  //     }
-  //      for (var i = 0; i < this.dataset.length; i++) {
-
-  //      if (this.dataset[i].wo_qty_ord == 0 || this.dataset[i].wo_qty_ord == null  ) {
-  //       this.message = "Quantité ne peut pas etre 0";
-  //       this.hasFormErrors = true;
-  //       return;
-
-  //      }
-  //     }
-  //      for (var i = 0; i < this.dataset.length; i++) {
-
-  //      if (this.dataset[i].wo_rel_date == "" || this.dataset[i].wo_rel_date == null  ) {
-  //       this.message = "Date de lancement ne peut pas etre vide";
-  //       this.hasFormErrors = true;
-  //       return;
-  //      }
-  //      }
-
-  //      for (var i = 0; i < this.dataset.length; i++) {
-
-  //      if (this.dataset[i].wo_due_date == "" || this.dataset[i].wo_due_date == null  ) {
-  //       this.message = "Date Echeance ne peut pas etre vide";
-  //       this.hasFormErrors = true;
-  //       return;
-
-  //      }
-  //     }
-  //     for (var i = 0; i < this.dataset.length; i++) {
-
-  //       if (this.dataset[i].wo_bom_code == "" || this.dataset[i].wo_bom_code == null  ) {
-  //        this.message = "Code Nomenclature ne peut pas etre vide";
-  //        this.hasFormErrors = true;
-  //        return;
-  //       }
-  //       }
-
-  //     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe(
-  //       (response: any) => {
-  //     this.seq = response.data
-
-  //         if (this.seq) {
-  //          this.nof = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`
-
-  //          this.sequenceService.update(this.seq.id,{ seq_curr_val: Number(this.seq.seq_curr_val )+1 }).subscribe(
-  //           (reponse) => console.log("response", Response),
-  //           (error) => {
-  //             this.message = "Erreur modification Sequence";
-  //             this.hasFormErrors = true;
-  //             return;
-
-  //           },
-  //           )
-
-  //     let wo = this.prepare()
-  //     this.addIt( this.dataset,wo, this.nof);
-
-  //   }else {
-  //     this.message = "Parametrage Manquant pour la sequence";
-  //     this.hasFormErrors = true;
-  //     return;
-
-  //    }
-
-  // })
-
-  //     // tslint:disable-next-line:prefer-const
-
-  //   }
-
+  
   prepareWOD() {
     const controls = this.woForm.controls;
     const _tr = new InventoryTransaction();
     _tr.tr_nbr = this.nof;
     _tr.tr_lot = this.wolot;
-
+    _tr.tr_user1 = this.user1;
+    _tr.tr_user2 = this.user2;
     _tr.tr_effdate = controls.wo_ord_date.value ? `${controls.wo_ord_date.value.year}/${controls.wo_ord_date.value.month}/${controls.wo_ord_date.value.day}` : null;
-    //_tr.tr_site = controls.wo_site.value
-    // _tr.tr_so_job = controls.tr_so_job.value
-
-    // _tr.tr_rmks = controls.tr_rmks.value
-
-    return _tr;
+      return _tr;
   }
   /**
    *
@@ -817,25 +770,40 @@ export class CreateDirectWoComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 500, false, false);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-
-        //    this.router.navigateByUrl("/");
+      
       }
     );
   }
-
+onChangeCust(){}
   addWo() {
     const controls = this.woForm.controls;
     this.hasFormErrors = false;
     /** check form */
-    if (this.woForm.invalid) {
-      Object.keys(controls).forEach((controlName) => controls[controlName].markAsTouched());
-      this.message = "Modifiez quelques éléments et réessayez de soumettre.";
+    
+    if (controls.wo_user1.value == null || controls.wo_user1.value == '') {this.message = "veuillez remplir la liste des employés";
       this.hasFormErrors = true;
 
       return;
-    }
+      }
+      else {if (controls.product_color.value == null || controls.product_color.value == '') {this.message = "veuillez choisir la couleur souhaité";
+      this.hasFormErrors = true;
+
+      return;
+      }
+            else {if (controls.product_type.value == null || controls.product_type.value == '') {this.message = "veuillez choisir le type de produit souhaité";
+            this.hasFormErrors = true;
+
+            return;
+            }
+            else {if (this.color != controls.product_color.value || this.type != controls.product_type.value){
+              this.hasFormErrors = true;
+              this.message = "veuillez relancer la recherche du produit";
+           
+              this.globalState = false;
+              return;
+            }}
+                 }
+           } 
     this.sequenceService.getByOne({ seq_type: "OF", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
       this.seq = response.data;
 
@@ -861,14 +829,13 @@ export class CreateDirectWoComponent implements OnInit {
             
           },
           () => {
+            this.validate = false;
+            this.globalState = true
             this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 1000, false, false);
             controls.ref.enable();
             document.getElementById("ref").focus();
             this.loadingSubject.next(false);
-
-            //    console.log(this.provider, po, this.dataset);
-            //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-          }
+}
         );
       }
     });
@@ -900,6 +867,8 @@ export class CreateDirectWoComponent implements OnInit {
         {
           id: this.dataset.length + 1,
           tr_line: this.dataset.length + 1,
+          tr_nbr:this.nof,
+                                      tr_lot:this.wolot,
           tr_part: null,
           cmvid: "",
           desc: null,
@@ -929,13 +898,15 @@ export class CreateDirectWoComponent implements OnInit {
       .subscribe((response: any) => {
         console.log(response.data, response.data.length);
         if (response.data.length == 0) {
-          this.message = "code article n'exite pas";
-            this.hasFormErrors = true;
-            return;
           controls.wo_part.setValue("");
           controls.desc.setValue("");
           document.getElementById("part").focus();
+          this.message = "code article n'exite pas";
+            this.hasFormErrors = true;
+            return;
+          
         } else {
+          this.codeService.getBy({code_fldname:'LIMIT',code_value:response.data.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
           controls.desc.setValue(response.data[0].pt_desc1);
           this.desc2 = response.data[0].pt_desc2;
           controls.wo_serial.setValue(response.data[0].pt_part_type + response.data[0].pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
@@ -1063,7 +1034,7 @@ export class CreateDirectWoComponent implements OnInit {
         controls.desc.setValue(item.pt_desc1);
         this.desc2 = item.pt_desc2;
         controls.wo_serial.setValue(item.pt_part_type + item.pt_break_cat + date.getFullYear() + "." + Number(date.getMonth() + 1) + "." + date.getDate());
-
+        this.codeService.getBy({code_fldname:'LIMIT',code_value:item.pt_draw}).subscribe((coderesp:any)=>{this.seuil = Number(coderesp.data.code_cmmt)})
         this.um = item.pt_um;
         this.loc = item.pt_loc;
         if (item.pt_rctwo_active) {
@@ -1283,6 +1254,13 @@ export class CreateDirectWoComponent implements OnInit {
         const item = this.gridObjgamme.getDataItem(idx);
         console.log(item);
         controls.wo_routing.setValue(item.ro_routing || "");
+        this.addressService.getBy({ ad_addr: item.ro_routing }).subscribe((response: any) => {
+          //   const { data } = response;
+             console.log("aaaaaaaaaaa",response.data);
+             if (response.data != null) {
+               this.provider = response.data[0];
+             }
+           });
       });
     }
   }
@@ -1497,7 +1475,7 @@ export class CreateDirectWoComponent implements OnInit {
       //   const { data } = response;
       console.log(response.data);
       if (response.data == null) {
-        
+         
         controls.wo_routing.setValue(null);
         document.getElementById("wo_routing").focus();
       }
@@ -1527,7 +1505,8 @@ export class CreateDirectWoComponent implements OnInit {
             this.hasFormErrors = true;
             return;
             }
-        else {this.locationDetailService.getByOneRef({ ld_ref: ref }).subscribe((response: any) => {
+        else {
+          this.locationDetailService.getByOneRef({ ld_ref: ref }).subscribe((response: any) => {
               this.lddet = response.data;
               //console.log(this.lddet.ld_qty_oh)
               if (this.lddet != null) {
@@ -1549,28 +1528,29 @@ export class CreateDirectWoComponent implements OnInit {
                     } else {
                       this.stat = this.lddet.ld_status;
 
-                      // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
-                      //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
-
                       this.itemsService.getByOne({ pt_part: this.lddet.ld_part }).subscribe((respopart: any) => {
-                        console.log(respopart);
+                        
                         this.labelService.getBy({ lb_ref: ref }).subscribe((respopal: any) => {
-                          if (respopart.data.pt_draw != controls.product_type.value && respopal.data.label.lb__log01 != true && respopart.data.pt_draw != 'PERTE' ) {
+                          if (respopart.data.pt_draw != this.type && respopal.data.label.lb__log01 != true ) {
+                            this.codeService.getBy({code_fldname:this.type,code_value:respopart.data.pt_draw}).subscribe((coderesp:any) => {if(coderesp.data!=null){this.ok_types = true}})
+                            if(this.ok_types == false){
                             this.message = "type ne correspond pas au produit broyé";
-                  this.hasFormErrors = true;
-                  return;
+                            this.hasFormErrors = true;
+                            return}
                           } else { 
                             this.sctService.getByOne({ sct_site: controls.wo_site.value, sct_part: this.lddet.ld_part, sct_sim: "STD-CG" }).subscribe((respo: any) => {
                               this.sct = respo.data;
                               console.log(this.sct);
 
-                              this.codeService.getBy({ code_fldname: controls.product_color.value, code_value: respopart.data.pt_break_cat }).subscribe((rescode: any) => {
+                              this.codeService.getBy({ code_fldname: this.color, code_value: respopart.data.pt_break_cat,code_desc:'TOUS' }).subscribe((rescode: any) => {
                                 console.log(rescode);
-                                if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true || respopart.data.pt_draw == 'PERTE') {
-                                  this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{})
+                                if (rescode.data.length > 0 || respopal.data.label.lb__log01 == true ) {
+                                  this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
                                   this.gridService.addItem(
                                     {
                                       id: this.dataset.length + 1,
+                                      tr_nbr:this.nof,
+                                      tr_lot:this.wolot,
                                       tr_line: this.dataset.length + 1,
                                       tr_part: this.lddet.ld_part,
                                       break: respopart.data.pt_break_cat,
@@ -1591,9 +1571,38 @@ export class CreateDirectWoComponent implements OnInit {
                                     { position: "bottom" }
                                   );
                                 } else {
-                                  this.message = "couleur ne correspond pas au produit broyé";
-                  this.hasFormErrors = true;
-                  return;
+                                  if(respopart.data.pt_break_cat == this.color){
+                                    this.labelService.update({lb_actif : false},{id: respopal.data.id}).subscribe((res:any) =>{console.log('update label')})
+                                  this.gridService.addItem(
+                                    {
+                                      id: this.dataset.length + 1,
+                                      tr_line: this.dataset.length + 1,
+                                      tr_nbr:this.nof,
+                                      tr_lot:this.wolot,
+                                      tr_part: this.lddet.ld_part,
+                                      break: respopart.data.pt_break_cat,
+                                      cmvid: "",
+                                      desc: respopart.data.pt_desc1,
+                                      tr_qty_loc: this.lddet.ld_qty_oh,
+                                      tr_loc: this.lddet.ld_loc,
+                                      tr_um: respopart.data.pt_um,
+                                      tr_um_conv: 1,
+                                      tr_price: this.sct.sct_mtl_tl,
+                                      cmvids: "",
+                                      tr_ref: ref,
+                                      tr_serial: this.lddet.ld_lot,
+                                      tr_status: this.stat,
+                                      tr_expire: this.lddet.ld_expire,
+                                      tr_program: timedate,
+                                    },
+                                    { position: "bottom" }
+                                    )
+                                  }
+                                  else{
+                                    this.message = "couleur ne correspond pas au produit broyé";
+                                    this.hasFormErrors = true;
+                                    return;
+                                  }
                                 }
                               });
                             });
@@ -1812,7 +1821,7 @@ export class CreateDirectWoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.employeService.getAll().subscribe((response: any) => (this.emps = response.data));
+    this.employeService.getBy({emp_job:'BR'}).subscribe((response: any) => (this.emps = response.data));
   }
 
   handleSelectedRowsChangedemp(e, args) {
@@ -1831,9 +1840,9 @@ export class CreateDirectWoComponent implements OnInit {
     console.log(l.length);
     this.selectedIndexes.forEach((index) => {
       if (index == 0) {
-        l = this.emps[index]["emp_addr"];
+        l = this.emps[index]["emp_fname"];
       } else {
-        l = l + "," + this.emps[index]["emp_addr"];
+        l = l + "," + this.emps[index]["emp_fname"];
       }
       //id: index,
     });
@@ -1841,5 +1850,388 @@ export class CreateDirectWoComponent implements OnInit {
     console.log(l);
     controls.wo_user1.setValue(l);
     this.user1 = l;
+  }
+  onAlertClose($event) {
+    this.hasFormErrors = false;
+    // this.globalState=false
+  }
+  onChangeqty() {
+    
+    const controls = this.woForm.controls;
+    const qty= Number(controls.wo_qty_chg.value)
+    
+    const timedate = new Date().toLocaleTimeString();
+    
+    var bol = false;
+    
+    if(controls.wo_qty_chg.value > this.seuil || controls.wo_qty_chg.value < 0){
+      controls.wo_qty_chg.setValue(0)
+      this.message = "la quantité que vous avez saisi est erroné";
+    this.hasFormErrors = true;
+    return;}
+    else{
+      this.codeService.getByOne({code_fldname:'EMBALLAGE',code_value:'BIGBAG'}).subscribe((coderesp:any)=>{let poids = Number(coderesp.data.code_cmmt)
+        controls.wo_qty_comp.setValue(controls.wo_qty_chg.value - poids)
+      })
+    }
+    
+    
+ 
+  }
+  printpdf(nbr) {
+    // const controls = this.totForm.controls
+    const controls = this.woForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF();
+    let date = new Date()
+   
+   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image()
+    // img.src = "./assets/media/logos/create-direct-wo.png";
+    img.src = "./assets/media/logos/companyentete.png";
+    doc.addImage(img, 'png', 5, 5, 200, 30)
+    doc.setFontSize(9);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+    doc.setFontSize(14);
+  
+    doc.line(10, 35, 200, 35);
+    doc.setFontSize(12);
+    doc.text("Rapport de broyage N° : " + nbr, 70, 45);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
+    doc.setFontSize(8);
+    //console.log(this.provider.ad_misc2_id)
+    doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
+    doc.text(" " + this.provider.ad_name, 60, 50);
+    doc.text("Equipe            : " + this.shift, 120, 50);
+    doc.text("Type produit      : " + this.type, 20, 55);
+    doc.text("Employés          : " + this.user1, 120, 55);
+    doc.text("Couleur Produit   : " + this.color, 20, 60);
+    doc.text("Quantité sortie   : " + this.prodqty, 20, 65);
+    doc.text("Lot N°            : " + this.prodlot, 20, 70);
+    doc.text("N° BIGBAG         : " + this.nbpal, 20, 75);
+  
+    doc.line(10, 85, 205, 85);
+    doc.line(10, 90, 205, 90);
+    doc.line(10, 85, 10, 90);
+    doc.text("LN", 12.5, 88.5);
+    doc.line(20, 85, 20, 90);
+    doc.text("Code Article", 25, 88.5);
+    doc.line(45, 85, 45, 90);
+    doc.text("Désignation", 67.5, 88.5);
+    doc.line(100, 85, 100, 90);
+    doc.text("QTE", 107, 88.5);
+    doc.line(120, 85, 120, 90);
+    doc.text("UM", 123, 88.5);
+    doc.line(130, 85, 130, 90);
+    doc.text("Lot/Série", 152, 88.5);
+    doc.line(170, 85, 170, 90);
+    doc.text("N PAL", 172, 88.5);
+    doc.line(185, 85, 185, 90);
+    doc.text("Heure", 192, 88.5);
+    doc.line(200, 85, 200, 90);
+    var i = 95;
+    doc.setFontSize(6);
+  //   let total = 0
+  console.log(this.dataset)
+    for (let j = 0; j < this.dataset.length  ; j++) {
+      // total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc)
+      
+      if ((j % 20 == 0) && (j != 0) ) {
+  doc.addPage();
+  //img.src = "./assets/media/logos/create-direct-wo.png";
+  img.src = "./assets/media/logos/companyentete.png";
+  doc.addImage(img, 'png', 5, 5, 200, 30)
+   doc.setFontSize(9);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.setFontSize(14);
+        doc.line(10, 35, 200, 35);
+    doc.setFontSize(12);
+    doc.text("Rapport de broyage N° : " + nbr, 70, 40);
+    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
+      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+      
+    doc.text("**SUITE** " + nbr, 70, 45);
+    doc.setFontSize(8);
+    //console.log(this.provider.ad_misc2_id)
+    doc.text("Machine           : " + this.provider.ad_addr, 20, 50);
+    doc.text(" " + this.provider.ad_name, 60, 50);
+    doc.text("Equipe            : " + this.shift, 120, 50);
+    doc.text("Type produit      : " + this.type, 20, 55);
+    doc.text("Employés          : " + this.user1, 120, 55);
+    doc.text("Couleur Produit   : " + this.color, 20, 60);
+    doc.text("Quantité sortie   : " + this.prodqty, 20, 65);
+    doc.text("Lot N°            : " + this.prodlot, 20, 70);
+    doc.text("N° BIGBAG         : " + this.nbpal, 20, 75);
+  
+        doc.line(10, 85, 205, 85);
+        doc.line(10, 90, 205, 90);
+        doc.line(10, 85, 10, 90);
+        doc.text("LN", 12.5, 88.5);
+        doc.line(20, 85, 20, 90);
+        doc.text("Code Article", 25, 88.5);
+        doc.line(45, 85, 45, 90);
+        doc.text("Désignation", 67.5, 88.5);
+        doc.line(100, 85, 100, 90);
+        doc.text("QTE", 107, 88.5);
+        doc.line(120, 85, 120, 90);
+        doc.text("UM", 123, 88.5);
+        doc.line(150, 85, 150, 90);
+        doc.text("Lot/Série", 152, 88.5);
+        doc.line(170, 85, 170, 90);
+        doc.text("N° pal", 172, 88.5);
+        doc.line(185, 85, 185, 90);
+        doc.text("Heure", 192, 88.5);
+        doc.line(200, 85, 200, 90);
+        i = 95;
+        doc.setFontSize(6);
+      }
+  
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
+        let ind = desc1.indexOf(" ");
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].tr_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].tr_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].tr_serial), 168, i - 1, );
+        doc.line(170, i - 5, 170, i);
+        doc.text(String(this.dataset[j].tr_ref), 183, i - 1, );
+        doc.line(185, i - 5, 185, i);
+        doc.text(String(this.dataset[j].tr_program), 203, i - 1, );
+        doc.line(205, i - 5, 205, i);
+        // doc.line(10, i, 200, i );
+  
+        i = i + 5;
+  
+        doc.text(desc2, 47, i - 1);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(130, i - 5, 130, i);
+        doc.line(170, i - 5, 170, i);
+        doc.line(185, i - 5, 185, i);
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 200, i);
+  
+        i = i + 5;
+      } else {
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].tr_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(this.dataset[j].desc, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(Number(this.dataset[j].tr_qty_loc)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].tr_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
+        doc.line(170, i - 5, 170, i);
+        doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
+        doc.line(185, i - 5, 185, i);
+        doc.text(String(this.dataset[j].tr_program), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
+        i = i + 5;
+      }
+    }
+  
+    
+  
+    doc.line(130, i + 7, 205, i + 7);
+    doc.line(130, i + 14, 205, i + 14);
+    doc.line(130, i + 7, 130, i + 14);
+    doc.line(160, i + 7, 160, i + 14);
+    doc.line(205, i + 7, 205, i + 14);
+    doc.setFontSize(10);
+    doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
+   
+    doc.setFontSize(8);
+    doc.save('EB-' + nbr + '.pdf')
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+  }
+  angularGridReadyemp2(angularGrid: AngularGridInstance) {
+    this.angularGridemp2 = angularGrid;
+    this.gridObjemp2 = (angularGrid && angularGrid.slickGrid) || {};
+  
+    this.gridServiceemp2 = angularGrid.gridService;
+    this.dataViewemp2 = angularGrid.dataView;
+  }
+  
+  // GRID IN
+  prepareGridemp2() {
+    this.columnDefinitionsemp2 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_lname",
+        name: "Prénom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_line1",
+        name: "Adresse",
+        field: "emp_line1",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_job",
+        name: "Métier",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "emp_level",
+        name: "Niveau",
+        field: "emp_level",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsemp2 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      // frozenColumn: 0,
+      // frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    };
+  
+    // fill the dataset with your data
+    
+    if (this.adduser == false){this.employeService.getBy({}).subscribe((response: any) => (this.emps2 = response.data));}
+    else{this.employeService.getBy({emp_job:'NONE'}).subscribe((response: any) => (this.emps2 = response.data));}
+  }
+  
+  handleSelectedRowsChangedemp2(e, args) {
+    this.selectedIndexes = [];
+    this.selectedIndexes = args.rows;
+  }
+  openemp2(content) {
+    this.prepareGridemp2();
+    this.modalService.open(content, { size: "lg" });
+  }
+  addit2() {
+    // this.itinerary.push({})
+    const controls = this.woForm.controls;
+    var l2: String;
+    l2 = "";
+    console.log(l2.length);
+    this.selectedIndexes.forEach((index) => {
+      if (index == 0) {
+        l2 = this.emps2[index]["emp_fname"];
+      } else {
+        l2 = l2 + "," + this.emps2[index]["emp_fname"];
+      }
+      //id: index,
+    });
+  
+    console.log(l2);
+    controls.wo_user2.setValue(l2);
+    this.user2 = l2;
+  }
+  onChangeuser() {
+    const controls = this.woForm.controls;
+    
+    if(controls.adduser2.value == true){this.adduser = false}
+    else {this.adduser = true,controls.wo_user2.setValue(null); this.emps2=[]}
   }
 }

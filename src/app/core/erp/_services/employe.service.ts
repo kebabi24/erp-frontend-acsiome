@@ -55,9 +55,16 @@ export class EmployeService {
         return this.http.post(`${API_URL}/find`,data, 
         { headers: httpHeaders }
         )
+    
 
         
         
+    }
+    public getByReq(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findreq`,data, 
+        { headers: httpHeaders }
+        )
     }
     public getTrBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -90,7 +97,7 @@ export class EmployeService {
         
         
     }
-    public getByTimeProject(data: any) {
+    public getByTimeProject(data: any) { 
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findtimeproject`,data, { headers: httpHeaders })
 

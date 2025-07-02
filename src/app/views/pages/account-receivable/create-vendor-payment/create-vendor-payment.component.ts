@@ -115,7 +115,7 @@ export class CreateVendorPaymentComponent implements OnInit {
     this.createForm();
   }
   prepareRoles(){
-    if (this.user.usrd_site = "*") {
+    if (this.user.usrd_site == "*") {
       this.roleService.getAllRoles().subscribe(
           
           (response: any) => {

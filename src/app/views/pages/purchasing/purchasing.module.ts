@@ -92,6 +92,8 @@ import { EditPoComponent } from './edit-po/edit-po.component';
 import { CreateOaEmComponent } from './create-oa-em/create-oa-em.component';
 import { ListApprovalComponent } from './list-approval/list-approval.component';
 import { PaymentAuComponent } from './payment-au/payment-au.component';
+import { ListAuComponent } from './list-au/list-au.component';
+import { EpiCreateOaComponent } from './epi-create-oa/epi-create-oa.component';
 
 const routes: Routes = [
   {
@@ -161,6 +163,10 @@ const routes: Routes = [
         component: CreateOaComponent,
       },
       {
+        path: "epi-create-oa",
+        component: EpiCreateOaComponent,
+      },
+      {
         path: "create-oa-em",
         component: CreateOaEmComponent,
       },
@@ -200,6 +206,10 @@ const routes: Routes = [
         path: "payment-au",
         component: PaymentAuComponent,
       },
+      {
+        path: "list-au",
+        component: ListAuComponent,
+      },
     ],
   },
 ];
@@ -230,7 +240,9 @@ const routes: Routes = [
     EditPoComponent,
     CreateOaEmComponent,
     ListApprovalComponent,
-    PaymentAuComponent
+    PaymentAuComponent,
+    ListAuComponent,
+    EpiCreateOaComponent
   ],
   imports: [
     CommonModule,

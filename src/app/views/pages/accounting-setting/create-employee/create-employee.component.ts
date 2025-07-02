@@ -36,13 +36,13 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { Employe, EmployeService, JobService , CodeService, SiteService,UsersService, ItemService} from "../../../../core/erp"
+import { Employe, EmployeService, JobService , CodeService, SiteService,AddressService,UsersService, ItemService} from "../../../../core/erp"
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
 const API_URL = environment.apiUrl + "/jobs"
 @Component({
-  selector: 'kt-create-employee',
+  selector: 'kt-create-employee',  
   templateUrl: './create-employee.component.html',
   styleUrls: ['./create-employee.component.scss']
 })
@@ -71,6 +71,12 @@ export class CreateEmployeeComponent implements OnInit {
     gridOptionssite: GridOption = {}
     gridObjsite: any
     angularGridsite: AngularGridInstance
+    
+    datacust: []
+    columnDefinitionscust: Column[] = []
+    gridOptionscust: GridOption = {}
+    gridObjcust: any
+    angularGridcust: AngularGridInstance
 
     datauserid: []
     columnDefinitionsuserid: Column[] = []
@@ -142,7 +148,7 @@ export class CreateEmployeeComponent implements OnInit {
     gridOptions4: GridOption = {};
     gridObj4: any;
     angularGrid4: AngularGridInstance;
-
+nbr:any;
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -155,6 +161,7 @@ export class CreateEmployeeComponent implements OnInit {
       private jobService: JobService,
       private codeService: CodeService,
       private siteService: SiteService,
+      private addressService:AddressService,
       private http: HttpClient,
       private httpUtils: HttpUtilsService,
       private userService: UsersService,
@@ -184,6 +191,61 @@ export class CreateEmployeeComponent implements OnInit {
     this.initmvGrid();
     this.initjbGrid()
     this.inittrGrid()
+    const controls = this.empForm.controls
+  this.employeService
+      .getAll()
+      .subscribe((response: any) => {
+          if (response.data.length != 0) {this.nbr = response.data.length + 1}
+          else{this.nbr = 1}
+           controls.emp_addr.setValue('E'+String('000'+ String(this.nbr)).slice(-3))
+              controls.emp_lname.enable()
+              controls.emp_fname.enable()
+              controls.emp_sex.enable()
+              controls.emp_familysit.enable()
+              controls.emp_job.enable()
+              controls.emp_level.enable()
+              controls.emp_line1.enable()  
+              controls.emp_ss_id.enable()
+              controls.emp_country.enable()
+              controls.emp_city.enable()
+             
+              controls.emp_state.enable()
+              controls.emp_zip.enable()
+              controls.emp_phone.enable()
+              controls.emp_fax.enable()
+              controls.emp_mail.enable()
+              controls.emp_line2.enable()
+              controls.emp_shift.enable()
+              controls.emp_site.enable()
+              
+              controls.emp_first_date.enable()
+              controls.emp_last_date.enable()
+              controls.emp_rate.enable()
+              controls.emp_mrate.enable()
+              controls.emp_arate.enable()
+              controls.emp_hab_date.enable()
+              controls.emp_dlicence.enable()
+              controls.emp_anem.enable()
+              controls.emp_habiliation.enable()
+              controls.emp_blood.enable()
+              controls.emp_child_nbr.enable()
+              controls.emp_contact_fname.enable()
+              controls.emp_contact_lname.enable()
+              controls.emp_contact_adress.enable()
+              controls.emp_contact_tel.enable()
+              controls.emp_parent_liaison.enable()
+              controls.emp_userid.enable()
+
+              controls.emp_conf_date.enable()
+              controls.emp_dism_date.enable()
+              controls.emp_loyalty.enable()
+              controls.emp_loyal_date.enable()
+              controls.emp_upper.enable()
+        
+              
+
+          })
+   
 }
 initmvGrid() {
   this.mvcolumnDefinitions = [
@@ -269,7 +331,7 @@ initjbGrid() {
     },
     {
       id: "empj_job",
-      name: "Code Metier",
+      name: "Code Compétence",
       field: "empj_job",
       sortable: true,
       width: 50,
@@ -556,6 +618,7 @@ createForm() {
 
       emp_shift:  [{ value: this.employe.emp_shift, disabled: !this.isExist }],
       emp_site:  [{ value: this.employe.emp_site, disabled: !this.isExist }],
+      emp_line2:  [{ value: this.employe.emp_line2, disabled: !this.isExist }],
       emp_first_date:  [{ value: this.employe.emp_first_date, disabled: !this.isExist }],
       emp_last_date:  [{ value: this.employe.emp_last_date, disabled: !this.isExist }],
       emp_rate:  [{ value: this.employe.emp_rate, disabled: !this.isExist }],
@@ -610,6 +673,7 @@ onChangeCode() {
               controls.emp_mail.enable()
               controls.emp_shift.enable()
               controls.emp_site.enable()
+              controls.emp_line2.enable()
               controls.emp_first_date.enable()
               controls.emp_last_date.enable()
               controls.emp_rate.enable()
@@ -799,6 +863,7 @@ onSubmit() {
       _employe.emp_ss_id = controls.emp_ss_id.value
       _employe.emp_shift = controls.emp_shift.value
       _employe.emp_site = controls.emp_site.value
+      _employe.emp_line2 = controls.emp_line2.value
       _employe.emp_rate = controls.emp_rate.value
       _employe.emp_mrate = controls.emp_mrate.value
       _employe.emp_arate = controls.emp_arate.value
@@ -830,7 +895,7 @@ onSubmit() {
       : null
       _employe.emp_loyalty = controls.emp_loyalty.value
       _employe.emp_loyal_date = controls.emp_loyal_date.value
-      ? `${controls.emp_emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
+      ? `${controls.emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
       : null
       _employe.emp_upper =  controls.emp_upper.value
       
@@ -874,7 +939,7 @@ onSubmit() {
               )
               this.loadingSubject.next(false)
               
-              this.router.navigateByUrl("/accounting-setting/employe-list")
+              this.router.navigateByUrl("/accounting-setting/list-employe")
           }
       )
   }
@@ -888,7 +953,7 @@ onSubmit() {
      */
     goBack() {
       this.loadingSubject.next(false)
-      const url = `/accounting-setting/employe-list`
+      const url = `/accounting-setting/list-employe`
       this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
   }
 
@@ -1268,6 +1333,100 @@ onChangesite() {
 
           alert("Site n'existe pas  ")
           controls.emp_site.setValue(null);
+          document.getElementById("emp_site").focus();
+        }
+    
+    });
+}
+
+handleSelectedRowsChangedcust(e, args) {
+  
+  const controls = this.empForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjcust) {
+      args.rows.map((idx) => {
+          const item = this.gridObjcust.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+                  controls.emp_line2.setValue(item.ad_addr || "")
+      })
+  }
+}
+angularGridReadycust(angularGrid: AngularGridInstance) {
+  this.angularGridcust = angularGrid
+  this.gridObjcust = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridcust() {
+  this.columnDefinitionscust = [
+      {
+          id: "id",
+          field: "id",
+          excludeFromColumnPicker: true,
+          excludeFromGridMenu: true,
+          excludeFromHeaderMenu: true,
+
+          minWidth: 50,
+          maxWidth: 50,
+      },
+      
+      {
+          id: "ad_addr",
+          name: "Client",
+          field: "ad_addr",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      {
+          id: "ad_name",
+          name: "Nom",
+          field: "ad_name",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+      
+  ]
+
+  this.gridOptionscust = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+          selectActiveRow: true,
+      },
+  }
+
+  // fill the dataset with your data
+  this.addressService
+      .getAllBy({ad_type:'customer'})
+      .subscribe((response: any) => (this.datacust = response.data))
+}
+opencust(contentcust, field) {
+  this.selectedField = field
+  this.prepareGridcust()
+  this.modalService.open(contentcust, { size: "lg" })
+}
+onChangecust() {
+  const controls = this.empForm.controls;
+  const ad_addr = controls.emp_line2.value;
+  
+  this.addressService.getBy({ ad_addr:ad_addr }).subscribe(
+    (res: any) => {
+
+      if (!res.data) {
+
+          alert("Client n'existe pas  ")
+          controls.emp_line2.setValue(null);
           document.getElementById("emp_site").focus();
         }
     

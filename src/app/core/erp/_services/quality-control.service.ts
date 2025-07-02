@@ -54,6 +54,10 @@ export class QualityControlService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/createTestsHistory/`, {testsHistory}, { headers: httpHeaders })
     }
+    public GetTestHistory(testsHistory : any ){
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/GetTestsHistory/`, {testsHistory}, { headers: httpHeaders })
+    }
 
     public findSpecificationWithDetails(specification_code: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

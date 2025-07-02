@@ -271,8 +271,35 @@ prepareGrid() {
       filterable: true,
       type: FieldType.float,
     },
+    {
+      id: "as_nbr",
+      name: "OV",
+      field: "as_nbr",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      type: FieldType.float,
+    },
+    {
+      id: "as_amt",
+      name: "Montant OV",
+      field: "as_amt",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      type: FieldType.float,
+    },
+    {
+      id: "as_applied",
+      name: "réglement OV",
+      field: "as_applied",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      type: FieldType.float,
+    },
    
-    
+     
   ];
 
   this.gridOptions = {

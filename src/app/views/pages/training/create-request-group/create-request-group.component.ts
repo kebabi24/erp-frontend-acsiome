@@ -472,6 +472,7 @@ export class CreateRequestGroupComponent implements OnInit {
             rqd_um: "",
             rqd_cc: "",
             rqd_desc: "",
+            rqd_aprv_stat: 0,
         },{position:"bottom"})
     }
 
@@ -1069,6 +1070,7 @@ export class CreateRequestGroupComponent implements OnInit {
       
        let  id = 0
         for (let data of this.datasetitem){
+           
           this.gridService.addItem(
             {
               id: id + 1,
@@ -1077,6 +1079,7 @@ export class CreateRequestGroupComponent implements OnInit {
               rqd_desc : data.pt_desc1,
               rqd_req_qty : 1,
               rqd_um: data.pt_um,
+              rqd_aprv_stat: 0,
             },
             { position: "bottom" }
           );

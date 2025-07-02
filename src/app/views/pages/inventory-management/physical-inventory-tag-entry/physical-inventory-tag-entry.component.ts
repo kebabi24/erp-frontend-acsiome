@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { InventoryManagementService , ItemService} from  "../../../../core/erp";
+import { InventoryManagementService , ItemService,LabelService,InventoryStatusService,LocationDetailService,CostSimulationService,} from  "../../../../core/erp";
 import {
   NgbDropdownConfig,
   NgbTabChangeEvent,
@@ -24,7 +24,7 @@ import { Observable, BehaviorSubject, Subscription, of } from "rxjs";
 import { ActivatedRoute, Router } from "@angular/router";
 import { LayoutUtilsService, MessageType } from "../../../../core/_base/crud";
 @Component({
-  selector: "kt-physical-inventory-tag-entry",
+  selector: "kt-physical-inventory-tag-entry", 
   templateUrl: "./physical-inventory-tag-entry.component.html",
   styleUrls: ["./physical-inventory-tag-entry.component.scss"],
 })
@@ -49,14 +49,22 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
   gridOptions4: GridOption = {};
   gridObj4: any;
   angularGrid4: AngularGridInstance;
-  
+  hasFormErrors = false;
+  message = "";
+  stat: String;
+  lddet: any;
+  sct: any;
   constructor(
     private tagService: InventoryManagementService,
     private tagFB: FormBuilder,
     private modalService: NgbModal,
     private itemsService:  ItemService,
     private router: Router,
-    private layoutUtilsService: LayoutUtilsService
+    private layoutUtilsService: LayoutUtilsService,
+    private labelService: LabelService,
+    private locationDetailService: LocationDetailService,
+    private inventoryStatusService: InventoryStatusService,
+    private sctService: CostSimulationService, 
   ) {}
 
   ngOnInit(): void {
@@ -91,6 +99,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
               tag_nbr: this.tag_nbr,
               tag_part: detail.tag_part,
               tag_serial: detail.tag_serial,
+              tag_ref: detail.tag_ref,
               tag_site: detail.tag_site,
               description: detail.item.pt_desc1,
               tag_loc: detail.tag_loc,
@@ -125,6 +134,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
   //    so__chr01: [this.saleOrder.so__chr01],
       tagnbr:  [""],   
       new: [false],
+      ref:[""],   
     });
 
     
@@ -159,7 +169,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
         console.log(resp.data)
             if (resp.data) {
      
-              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , description: resp.data.pt_desc1  })
+              this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , description: resp.data.pt_desc1, tag_site: resp.data.pt_site, tag_loc:resp.data.pt_loc  })
 
       
       
@@ -192,9 +202,31 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
         },
       },
       {
+        id: "description",
+        name: "Description",
+        field: "description",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        // editor: {
+        //   model: Editors.text,
+        // },
+      },
+      {
         id: "tag_serial",
         name: "Lot",
         field: "tag_serial",
+        minWidth: 100,
+        maxWidth: 100,
+        selectable: true,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "tag_ref",
+        name: "BIG BAG",
+        field: "tag_ref",
         minWidth: 100,
         maxWidth: 100,
         selectable: true,
@@ -224,17 +256,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
           model: Editors.text,
         },
       },
-      {
-        id: "description",
-        name: "Description",
-        field: "item.pt_desc1",
-        sortable: true,
-        width: 80,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-      },
+      
       {
         id: "tag_cnt_qty",
         name: "Qte Comptee",
@@ -275,7 +297,7 @@ export class PhysicalInventoryTagEntryComponent implements OnInit {
 
     this.gridOptions = {
       asyncEditorLoading: false,
-      
+      enableFiltering:true,
       editable: true,
       enableColumnPicker: true,
       enableCellNavigation: true,
@@ -378,6 +400,7 @@ console.log(this.bool)
         tag_nbr: this.tag_nbr,
         tag_part: '',
         tag_serial: "",
+        tag_ref:"",
         tag_site:'',
         description:'',
         tag_loc:'',
@@ -435,7 +458,9 @@ console.log(this.bool)
     
         
         updateItem.tag_part = item.pt_part;
-        updateItem.desc = item.pt_desc1;
+        updateItem.description = item.pt_desc1;
+        updateItem.tag_loc = item.pt_loc;
+        updateItem.tag_site = item.pt_site;
         this.gridService.updateItem(updateItem);
       });
     }
@@ -519,5 +544,124 @@ console.log(this.bool)
     this.prepareGrid4();
     this.modalService.open(content, { size: "lg" });
   }
+  onChangePal() {
+    
+    /*kamel palette*/
+    const controls = this.tagForm.controls
+    const ref = controls.ref.value
+  var bol = false
+  let idpal;
+  console.log(ref)
+this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {bol = true}})
   
+  
+  
+    for(let ob of this.dataset) {
+
+      if(ob.tr_ref == ref) {
+        console.log("hnehnahna")
+        bol = true
+        break;
+       
+      }
+    }
+    if (!bol) {
+    this.locationDetailService.getByOneRef({ ld_ref: ref  }).subscribe(
+      (response: any) => {
+        this.lddet = response.data
+        //console.log(this.lddet.ld_qty_oh)
+    if (this.lddet != null) {
+     
+      
+      
+     
+     
+      this.inventoryStatusService.getAllDetails({isd_status: this.lddet.ld_status, isd_tr_type: "CYC-CNT" }).subscribe((resstat:any)=>{
+          console.log(resstat)
+          const { data } = resstat;
+
+          if (data) {
+            this.stat = null
+            this.message = "mouvement interdit dans cet emplacement";
+            this.hasFormErrors = true;
+            return;
+
+
+          } else {
+            this.stat = this.lddet.ld_status
+          
+
+      // this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , qty_oh: this.lddet.ld_qty_oh,
+      //   tr_um:resp.data.pt_um, tr_um_conv: 1,  tr_status: this.stat, tr_price: this.sct.sct_cst_tot, tr_expire: this.lddet.ld_expire})
+             
+     
+     this.itemsService.getByOne({pt_part: this.lddet.ld_part  }).subscribe(
+      (respopart: any) => {
+        console.log(respopart)
+
+     this.sctService.getByOne({ sct_site: this.lddet.ld_site, sct_part: this.lddet.ld_part, sct_sim: 'STD-CG' }).subscribe(
+      (respo: any) => {
+        this.sct = respo.data
+        console.log(this.sct)
+        this.labelService.getBy({lb_cab: ref}).subscribe((res:any) =>{if (res.data != null) {idpal = res.data.id}})
+        this.labelService.update({lb_actif : false},{id: idpal}).subscribe((res:any) =>{})
+
+     this.gridService.addItem(
+      { id: this.dataset.length + 1,  
+        tag_nbr: this.tag_nbr,
+        tag_part: this.lddet.ld_part,
+        tag_serial: this.lddet.ld_lot,
+        tag_ref: this.lddet.ld_ref,
+        tag_site: this.lddet.ld_site,
+        description: respopart.data.pt_desc1,
+        tag_loc: this.lddet.ld_loc,
+        tag_cnt_qty: this.lddet.ld_qty_oh,         
+        tag_cnt_nam: null,
+        tag_cnt_dt: null,
+        
+      
+        
+        
+      
+      },
+      { position: "bottom" }
+    );
+ 
+     });
+  
+})
+  
+     
+  }
+  }); 
+        
+    
+ 
+
+
+  }
+
+
+
+    else {
+      this.message = "veuillez verifier le bigbag";
+            this.hasFormErrors = true;
+            return;
+  //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
+    }
+
+    });
+
+  }
+  else {
+    this.message = "bigbag déjà scanné";
+    this.hasFormErrors = true;
+    return;
+  }
+
+  controls.ref.setValue(null)
+  document.getElementById("ref").focus();
+  
+}
+
 }

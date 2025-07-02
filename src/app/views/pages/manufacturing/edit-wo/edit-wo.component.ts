@@ -43,9 +43,10 @@ import {
   WorkOrderService,
   PsService,
   BomService,
-  
+  WorkRoutingService,
 } from "../../../../core/erp";
 import { Reason, ReasonService} from "../../../../core/erp"
+import { addDays } from "@fullcalendar/angular";
 @Component({
   selector: 'kt-edit-wo',
   templateUrl: './edit-wo.component.html',
@@ -76,9 +77,15 @@ export class EditWoComponent implements OnInit {
   message = "";
   woServer;
   user;
+  op:any;
   lpnbr: String;
   stat: String;
- 
+  gamme: any;
+  color:any;
+  micronage:any;
+  echeance: any;
+  lancement:any;
+  jours:any;
   isExist = false
   bom: any;
   woEdit: any;
@@ -95,7 +102,8 @@ export class EditWoComponent implements OnInit {
     private workOrderService: WorkOrderService,
     private psService: PsService,
     private bomService: BomService,
-    private reasonService: ReasonService
+    private reasonService: ReasonService,
+    private workRoutingService: WorkRoutingService,
   ) {
     config.autoClose = true;
   }
@@ -142,6 +150,7 @@ export class EditWoComponent implements OnInit {
       wo_so_job:[this.woEdit.wo_so_job],
       part: [this.woEdit.wo_part],
       descr: [this.woEdit.item.pt_desc1],
+      wo_queue_eff: [this.woEdit.wo_queue_eff],
       wo_status: [this.woEdit.wo_status],
       wo_routing: [this.woEdit.wo_routing],
       site: [this.woEdit.wo_site],
@@ -196,8 +205,13 @@ export class EditWoComponent implements OnInit {
     _wo.wo_routing = controls.wo_routing.value
     _wo.wo_bom_code = controls.wo_bom_code.value
     _wo.wo_qty_ord = controls.wo_qty_ord.value
+    _wo.wo_queue_eff = controls.wo_queue_eff.value
+    _wo.wo_line = this.op
     _wo.wo_rel_date = controls.wo_rel_date.value
       ? `${controls.wo_rel_date.value.year}/${controls.wo_rel_date.value.month}/${controls.wo_rel_date.value.day}`
+      : null
+      _wo.wo_due_date = this.echeance 
+      ? `${this.echeance.year}/${this.echeance.value.month}/${this.echeance.value.day}`
       : null
     _wo.wo_rmks = controls.wo_rmks.value
    
@@ -273,6 +287,8 @@ export class EditWoComponent implements OnInit {
         controls.wo_bom_code.setValue(this.woServer.wo_bom_code);
         controls.wo_status.setValue(this.woServer.wo_status)
         this.stat = this.woServer.wo_status
+        this.color = this.woServer.item.pt_break_cat
+        this.micronage = this.woServer.item.int01
         controls.wo_status.enable()
       });
   }
@@ -294,7 +310,220 @@ export class EditWoComponent implements OnInit {
     // }
    
   }
- 
+  onChangeqty() {
+  
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+      this.lancement = new Date(controls.wo_rel_date.value)      
+      if (resp.data) {console.log(resp.data.ro_run)
+        this.op = resp.data.ro_op
+        this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+        console.log(this.jours)
+             
+          if(this.lancement == null)  {this.lancement = new Date()}
+        
+       
+         console.log(this.lancement)
+          this.echeance = addDays(this.lancement,this.jours)
+          console.log(this.echeance)
+          
+           
+      } 
+      else{
+        this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro_op:0} ).subscribe((resp:any)=>{
+
+          this.lancement = new Date(controls.wo_rel_date.value)      
+          if (resp.data) {console.log(resp.data.ro_run)
+            this.op = resp.data.ro_op
+            this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+            console.log(this.jours)
+                 
+              if(this.lancement == null)  {this.lancement = new Date()}
+            
+           
+             console.log(this.lancement)
+              this.echeance = addDays(this.lancement,this.jours)
+              console.log(this.echeance)
+              
+               
+          } 
+        })
+      }
+    })
+   
+  }
+  onChangebom() {
+  
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+      this.lancement = new Date(controls.wo_rel_date.value)      
+      if (resp.data) {console.log(resp.data.ro_run)
+        this.op = resp.data.ro_op
+        this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+        console.log(this.jours)
+             
+          if(this.lancement == null)  {this.lancement = new Date()}
+        
+       
+         console.log(this.lancement)
+          this.echeance = addDays(this.lancement,this.jours)
+          console.log(this.echeance)
+          
+           
+      } 
+      else{
+        this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro_op:0} ).subscribe((resp:any)=>{
+
+          this.lancement = new Date(controls.wo_rel_date.value)      
+          if (resp.data) {console.log(resp.data.ro_run)
+            this.op = resp.data.ro_op
+            this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+            console.log(this.jours)
+                 
+              if(this.lancement == null)  {this.lancement = new Date()}
+            
+           
+             console.log(this.lancement)
+              this.echeance = addDays(this.lancement,this.jours)
+              console.log(this.echeance)
+              
+               
+          } 
+        })
+      }
+    })
+   
+  }
+  onChangerouting() {
+  
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+      this.lancement = new Date(controls.wo_rel_date.value)      
+      if (resp.data) {console.log(resp.data.ro_run)
+        this.op = resp.data.ro_op
+        this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+        console.log(this.jours)
+             
+          if(this.lancement == null)  {this.lancement = new Date()}
+        
+       
+         console.log(this.lancement)
+          this.echeance = addDays(this.lancement,this.jours)
+          console.log(this.echeance)
+          
+           
+      } 
+      else{
+        this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro_op:0} ).subscribe((resp:any)=>{
+
+          this.lancement = new Date(controls.wo_rel_date.value)      
+          if (resp.data) {console.log(resp.data.ro_run)
+            this.op = resp.data.ro_op
+            this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+            console.log(this.jours)
+                 
+              if(this.lancement == null)  {this.lancement = new Date()}
+            
+           
+             console.log(this.lancement)
+              this.echeance = addDays(this.lancement,this.jours)
+              console.log(this.echeance)
+              
+               
+          } 
+        })
+      }
+    })
+   
+  }
+  onChangeorder() {
+  
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+      this.lancement = new Date(controls.wo_rel_date.value)      
+      if (resp.data) {console.log(resp.data.ro_run)
+        this.op = resp.data.ro_op
+        this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+        console.log(this.jours)
+             
+          if(this.lancement == null)  {this.lancement = new Date()}
+        
+       
+         console.log(this.lancement)
+          this.echeance = addDays(this.lancement,this.jours)
+          console.log(this.echeance)
+          
+           
+      } 
+      else{
+        this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro_op:0} ).subscribe((resp:any)=>{
+
+          this.lancement = new Date(controls.wo_rel_date.value)      
+          if (resp.data) {console.log(resp.data.ro_run)
+            this.op = resp.data.ro_op
+            this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+            console.log(this.jours)
+                 
+              if(this.lancement == null)  {this.lancement = new Date()}
+            
+           
+             console.log(this.lancement)
+              this.echeance = addDays(this.lancement,this.jours)
+              console.log(this.echeance)
+              
+               
+          } 
+        })
+      }
+    })
+  }
+  onChangereldate() {
+  
+    const controls = this.woForm.controls;
+    this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro__chr01:this.color,ro__dec01:this.micronage} ).subscribe((resp:any)=>{
+
+      this.lancement = new Date(controls.wo_rel_date.value)      
+      if (resp.data) {console.log(resp.data.ro_run)
+        this.op = resp.data.ro_op
+        this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+        console.log(this.jours)
+             
+          if(this.lancement == null)  {this.lancement = new Date()}
+        
+       
+         console.log(this.lancement)
+          this.echeance = addDays(this.lancement,this.jours)
+          console.log(this.echeance)
+          
+           
+      } 
+      else{
+        this.workRoutingService.getByOne({ro_routing: controls.wo_routing.value,ro_op:0} ).subscribe((resp:any)=>{
+
+          this.lancement = new Date(controls.wo_rel_date.value)      
+          if (resp.data) {console.log(resp.data.ro_run)
+            this.op = resp.data.ro_op
+            this.jours = Number(Number(controls.wo_qty_ord.value) / (Number(resp.data.ro_run) * 24))
+            console.log(this.jours)
+                 
+              if(this.lancement == null)  {this.lancement = new Date()}
+            
+           
+             console.log(this.lancement)
+              this.echeance = addDays(this.lancement,this.jours)
+              console.log(this.echeance)
+              
+               
+          } 
+        })
+      }
+    })
+   
+  }
 
 
   /**
@@ -303,7 +532,7 @@ export class EditWoComponent implements OnInit {
    */
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/`;
+    const url = `/manufacturing/list-wo`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
@@ -333,6 +562,8 @@ export class EditWoComponent implements OnInit {
         controls.bom.setValue(item.wo_bom_code);
         controls.wo_status.setValue(item.wo_status)
         this.stat = this.woServer.wo_status
+        this.color = item.item.pt_break_cat
+        this.micronage = item.item.int01
         controls.wo_status.enable()
           }
         );

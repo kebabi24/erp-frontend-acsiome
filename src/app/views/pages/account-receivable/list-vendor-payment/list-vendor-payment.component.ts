@@ -508,7 +508,7 @@ export class ListVendorPaymentComponent implements OnInit {
                             this.roleService.getByOne({ role_code: this.tr.chr01 }).subscribe((res: any) => {
                               this.role = res.data
                             
-                            this.printpdf()
+                            // this.printpdf()
                              })
                             ),
                           (error) => {

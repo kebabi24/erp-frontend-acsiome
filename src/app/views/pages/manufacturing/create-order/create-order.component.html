@@ -1,10 +1,10 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Création des OF" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Création Programme Extrusion" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
         </ng-container>
     </kt-portlet-header>
@@ -21,7 +21,7 @@
                         <div class="form-group col-2">
                             <label class="form-group">Date de creation:</label>
                             <div class="input-group input-group-sm">
-                                <input class="form-control form-control-sm form-control-solid"  formControlName="wo_ord_date" 
+                                <input class="form-control form-control-sm form-control-solid"  formControlName="wo_ord_date"  (change)="onChangeDate()"
                                      placeholder="jj-mm-aaaa" name="wo_ord_date" ngbDatepicker f
                                     #wo_ord_date="ngbDatepicker"  >
                                 <div class="input-group-append">
@@ -60,7 +60,7 @@
     
                                 <input type="text"   id="gamme"
                                     [className]="woForm.controls['wo_routing'].errors && (woForm.controls['wo_routing'].dirty || woForm.controls['wo_routing'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    formControlName="wo_routing" (change)="onChangeCode()" aria-describedby="basic-addon2">
+                                    formControlName="wo_routing" (change)="onChangegamme()" aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" (click)=opengamme(contentgamme)>
                                         <i class="text-dark-50 flaticon2-search"></i> </span>
@@ -74,35 +74,36 @@
                         </div>
                         <div class="form-group col-2">
                             <label class="form-group">N° Programme : </label>
-                            <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_so_job" aria-describedby="basic-addon2"
+                            <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_so_job" aria-describedby="basic-addon2" (change)="onChangeprogram()"
                             >
     
-                            
-                        </div>
+                        </div>    
                         <div class="form-group col-2">
-                            <label class="form-group">N° Version: </label>
-                            <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_rev" disabled
-                            rows="2">
-    
-                            
+                            <label class="form-group">Cause:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control form-control-solid" formControlName="wo_rmks"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open6(content6)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-6">
-                            <label class="form-group">Remarque: </label>
-                            <textarea class="form-control form-control-sm form-control-solid" formControlName="wo_rmks"
-                            rows="2"></textarea>
-    
-                            
-                        </div>
-
+                    
                     </div>
                   
                     <div class="row">
-                        <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter ID </button>
+                        <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter ID </button>
+                        <div class="form-group col-2">
+                            <label class="form-group">   </label>
+                            <div class="input-group input-group-sm">
+                             
+                            </div>
+                           </div>
+                        <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="launchall()">Tout Lancer </button>
                     </div>
                     <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
+                        <angular-slickgrid class="col-12" gridHeight="500" gridId="mGrid"
                             [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
                             (onAngularGridCreated)="gridReady($event)">
                         </angular-slickgrid>
@@ -131,7 +132,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -158,7 +159,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -169,14 +170,14 @@
         <div>
             <ng-template #contentbom let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choisir Nomenclature </h4>
+                    <h4 class="modal-title">Choisir formule </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsite"
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridbom"
                             [columnDefinitions]="columnDefinitionsbom"
                             (onAngularGridCreated)="angularGridReadybom($event)"
                             (sgOnSelectedRowsChanged)="handleSelectedRowsChangedbom($event.detail.eventData, $event.detail.args)"
@@ -185,7 +186,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -211,7 +212,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -235,7 +236,30 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content6 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la cause</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridcause"
+                            [columnDefinitions]="columnDefinitions6" (onAngularGridCreated)="angularGridReady6($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged6($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions6" [dataset]="causes">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

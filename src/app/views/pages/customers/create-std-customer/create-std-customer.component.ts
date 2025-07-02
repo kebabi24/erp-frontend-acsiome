@@ -681,7 +681,8 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
      const controls = this.customerForm.controls
      const _customer = new Customer()
      _customer.cm_addr = this.address.ad_addr
-     _customer.cm_sort = controls.cm_sort.value
+     if(controls.cm_sort.value == null){_customer.cm_sort = this.address.ad_name}
+        else{_customer.cm_sort = controls.cm_sort.value}
      _customer.cm_type = controls.cm_type.value
      _customer.cm_seq = controls.cm_seq.value
  

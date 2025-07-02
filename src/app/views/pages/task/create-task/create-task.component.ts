@@ -122,7 +122,7 @@ export class CreateTaskComponent implements OnInit {
       tk_code: [this.task.tk_code, Validators.required],
       tk_desc: [{ value: this.task.tk_desc, disabled: !this.isExist },  Validators.required],
       tk_um: [{ value: this.task.tk_um, disabled: !this.isExist },  Validators.required],
-      tk_price: [{ value: this.task.tk_price, disabled: !this.isExist },  Validators.required],
+      tk_price: [{ value: this.task.tk_price, disabled: !this.isExist }, ],
 
      
     });

@@ -1,0 +1,86 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Affecter formule aux produits'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">enregistrer et quitter</button>
+
+                </div>
+            </div>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+
+        
+        <div class="alert alert-warning" *ngIf="confirmDelete">
+            <strong>Confirm deleting:</strong> {{alertWarning}}
+            <button   class="btn">Delete</button>
+        </div>
+
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="productPageForm">
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="500">
+   
+                Ce code page produits existe deja - fermer <button type="warn" (click)="getCurrentPageData()" class="btn" >Cliquez ici</button>
+            </kt-alert>
+            <div class="row">
+                <div class="col-6">
+
+            
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="form-group">code Formule: *</label>
+                    <input type="text" formControlName="product_page_code" (change)="onChangeCode()" id="productPageCode"
+                        [className]="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                    <div *ngIf="productPageForm.controls['product_page_code'].errors && (productPageForm.controls['product_page_code'].dirty || productPageForm.controls['product_page_code'].touched) "
+                        class="invalid-feedback">Ce Champs est obligatoire
+                    </div>
+                </div>  
+            </div>
+           
+            
+           
+        </div>
+      
+     </div> 
+            </form>
+            
+
+            <br><br>
+            <div class="example-preview">
+                <!-- <br><br>
+                <span>Sélectionnez les produits que vous souhaitez ajouter à cette page : </span> -->
+                <div class="row">
+                    <angular-slickgrid class="col-12" 
+                       
+                        gridId="gridMesure" 
+                        [columnDefinitions]="columnDefinitions"
+                        [gridOptions]="gridOptions" 
+                        [dataset]="dataset"
+                        (onAngularGridCreated)="angularGridReady($event)"
+                        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)"
+                    >
+                    </angular-slickgrid>
+                </div>
+                
+            </div>
+        </div>
+
+        
+        
+        
+    </kt-portlet-body>
+</kt-portlet>
+
+
+
+ 

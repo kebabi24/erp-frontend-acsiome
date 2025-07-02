@@ -1,0 +1,28 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Liste des Factures'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            
+                <button type="button" (click)="goback()" class="btn btn-secondary btn-sm mr-2">Retour</button>
+                <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Raffrichir</button>
+                <button type="button" (click)="oncreate()" class="btn btn-secondary btn-sm mr-2"> Créer Facture</button>
+                <button type="button" (click)="onprint()" class="btn btn-secondary btn-sm mr-2"> Imprimer Facture</button>
+                <button type="button" (click)="onimput()" class="btn btn-secondary btn-sm mr-2"> Valider Facture</button>
+                <button type="button" (click)="onSubmit()" class="btn btn-secondary btn-sm mr-2">Réglement </button>
+                
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>
+
+

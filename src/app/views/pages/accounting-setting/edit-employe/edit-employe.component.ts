@@ -37,7 +37,7 @@ import { MatDialog } from "@angular/material/dialog"
 
 import { Employe, EmployeService, JobService , CodeService, SiteService, UsersService,ItemService} from "../../../../core/erp"
 @Component({
-  selector: 'kt-edit-employe',
+  selector: 'kt-edit-employe',  
   templateUrl: './edit-employe.component.html',
   styleUrls: ['./edit-employe.component.scss']
 })
@@ -143,7 +143,7 @@ export class EditEmployeComponent implements OnInit {
     gridOptions4: GridOption = {};
     gridObj4: any;
     angularGrid4: AngularGridInstance;
-
+ i = 0;
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -179,12 +179,13 @@ export class EditEmployeComponent implements OnInit {
     this.loadingSubject.next(false)
     this.activatedRoute.params.subscribe((params) => {
       const id = params.id
+      
       this.employeService.getOne(id).subscribe((response: any)=>{
       this.employeEdit = response.data.employe
       this.mvdataset = response.data.employeScoreDetail
       this.jbdataset = response.data.employeJobDetail
       this.trdataset = response.data.employeTrDetail
-      console.log("hereeeeeeeeeeee", this.employeEdit)
+      console.log("hereeeeeeeeeeee", this.employeEdit.emp_addr)
      
                             this.loadingSubject.next(false)
                             this.title = this.title + this.employeEdit.emp_addr
@@ -204,6 +205,7 @@ export class EditEmployeComponent implements OnInit {
       
    
       this.loadingSubject.next(false)
+      
       })
     })
 }
@@ -214,22 +216,23 @@ createForm() {
   
   this.empForm = this.empFB.group({
       emp_addr: [{value: this.employeEdit.emp_addr, disabled:true}],
+      emp_fname: [{value:this.employeEdit.emp_fname},
+        Validators.required
+        
+    ],
       emp_lname: [
           this.employeEdit.emp_lname ,
-          Validators.required,
+        
       ],
-      emp_fname: [
-        this.employeEdit.emp_fname ,
-        Validators.required,
-    ],
+      
       
     emp_sex: [
       this.employeEdit.emp_sex ,
-      Validators.required,
+    
   ],
   emp_familysit: [
     this.employeEdit.emp_familysit ,
-    Validators.required,
+    
 ],
 
 
@@ -260,9 +263,9 @@ emp_hab_date: [{
 
 
       
-emp_blood: [this.employeEdit.emp_blood , Validators.required],
-      emp_line1:  [this.employeEdit.emp_line1, Validators.required,],
-      emp_ss_id:  [this.employeEdit.emp_ss_id , Validators.required,],
+    emp_blood: [this.employeEdit.emp_blood],
+      emp_line1:  [this.employeEdit.emp_line1,],
+      emp_ss_id:  [this.employeEdit.emp_ss_id , ],
       emp_country: [this.employeEdit.emp_country ],
       emp_city: [this.employeEdit.emp_city ],
       emp_state: [this.employeEdit.emp_state ],
@@ -390,7 +393,7 @@ initjbGrid() {
     },
     {
       id: "empj_job",
-      name: "Code Metier",
+      name: "Code Compétence",
       field: "empj_job",
       sortable: true,
       width: 50,
@@ -590,6 +593,7 @@ inittrGrid() {
 }
 
 addNewtrItem() {
+  
   this.trgridService.addItem(
     {
       id: this.trdataset.length + 1,
@@ -785,7 +789,7 @@ onSubmit() {
       : null
       _employe.emp_loyalty = controls.emp_loyalty.value
       _employe.emp_loyal_date = controls.emp_loyal_date.value
-      ? `${controls.emp_emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
+      ? `${controls.emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
       : null
       _employe.emp_upper =  controls.emp_upper.value
       _employe.emp_job   = controls.emp_job.value

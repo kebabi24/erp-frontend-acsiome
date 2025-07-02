@@ -173,7 +173,8 @@ export class CreateLocComponent implements OnInit {
         this.locationService
             .getBy({
                   loc_site: controls.loc_site.value,
-                  loc_loc: controls.loc_loc.value,
+                  loc_phys_addr:controls.loc_phy_adr.value,
+                  chr01: controls.chr01.value,
 
             })
             .subscribe((response: any) => {
@@ -181,6 +182,36 @@ export class CreateLocComponent implements OnInit {
                     this.isExist = true
                     console.log(response.data.length)
                 } else {
+                    controls.loc_loc.setValue(controls.chr01.value + '-' + controls.loc_phy_adr.value )
+                    controls.loc_desc.enable()
+                    controls.loc_status.enable()
+                    controls.loc_project.enable()
+                    controls.loc_perm.enable()
+                    controls.loc_type.enable()
+                    controls.loc_single.enable()
+                    controls.loc__qad01.enable()
+                    controls.loc_cap.enable()
+                    controls.loc_cap_um.enable()
+                    controls.loc_xfer_ownership.enable()
+
+                }
+         })
+      }
+      onChangeCode1() {
+        const controls = this.locationForm.controls
+        this.locationService
+            .getBy({
+                  loc_site: controls.loc_site.value,
+                  loc_loc:controls.loc_loc.value,
+                 
+
+            })
+            .subscribe((response: any) => {
+                if (response.data.length) {
+                    this.isExist = true
+                    console.log(response.data.length)
+                } else {
+                    controls.loc_loc.setValue(controls.chr01.value + '-' + controls.loc_phy_adr.value )
                     controls.loc_desc.enable()
                     controls.loc_status.enable()
                     controls.loc_project.enable()
@@ -286,7 +317,7 @@ export class CreateLocComponent implements OnInit {
      */
     goBack() {
         this.loadingSubject.next(false)
-        const url = `/`
+        const url = `/inventory-settings/list-loc`
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
     handleSelectedRowsChangedsite(e, args) {

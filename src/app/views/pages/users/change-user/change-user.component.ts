@@ -158,9 +158,9 @@ export class ChangeUserComponent implements OnInit {
       usrd_email: [this.userEdit.usrd_email],
       usrd_dft_printer: [this.userEdit.usrd_dft_printer],
       usrd_phone: [this.userEdit.usrd_phone],
-      /*      usrd_pwd: [{value: "", disabled: !this.isExist}],
-            usrd_pwd_before: [this.usrd_pwd_before, Validators.required],
-            usrd_pwd_new: [{value: "", disabled: !this.isExist}],*/
+      usrd_pwd: [{value: "", disabled: !this.isExist}],
+      usrd_pwd_before: [this.usrd_pwd_before, Validators.required],
+      usrd_pwd_new: [{value: "", disabled: !this.isExist}],
       usrd_active: [this.userEdit.usrd_active],
       init: [false],
     });

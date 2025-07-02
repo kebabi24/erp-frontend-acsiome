@@ -29,7 +29,7 @@ var app = environment.App;
 export class BaseComponent implements OnInit, OnDestroy {
   // Public variables
   selfLayout = 'default';
-  asideSelfDisplay: true;
+  asideSelfDisplay: false;
   contentClasses = '';
   contentContainerClasses = '';
   subheaderDisplay = true;

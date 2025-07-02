@@ -49,6 +49,11 @@ export class SaleShiperService {
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
  
     }
+    public getByDet(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/finddet`,data, { headers: httpHeaders })
+ 
+    }
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Ajouter Article'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">sauvegarder </button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
 
         </ng-container>
@@ -188,7 +188,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Forme Géometrique:</label>
+                                        <label class="form-group ">Forme :</label>
                                         <div class="input-group input-group-sm">
 
                                             <input type="text" class="form-control form-control-solid"
@@ -253,7 +253,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Categorie remise volume</label>
+                                        <label class="form-group ">Couleur</label>
 
                                         <input type="text" class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_break_cat">
@@ -528,20 +528,13 @@
                                         >
                                             <!-- formControlName="pt_ship_wt" -->
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group "> Qualité :</label>
                                         <input type="text" class="form-control form-control-sm form-control-solid"
                                         >
-                                        <!-- <select class="form-control form-control-sm form-control-solid" -->
-                                        
-                                            <!-- formControlName="pt_ship_wt_um" id="exampleSelects8" -->
-                                            <!-- <option value=""></option> -->
-                                            <!-- <option *ngFor="let elem of pt_ship_wt_um" [value]="elem.code_value">
-                                                {{elem.code_value}} {{elem.code_cmmt}}</option> -->
-                                        <!-- </select> -->
-
-                                    </div>
-                                    <div class="form-group col-2">
+                                       
+                                    </div> -->
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group ">Logo :</label>
                                         <select class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_promo" id="exampleSelects111">
@@ -549,7 +542,7 @@
                                             <option *ngFor="let elem of pt_promo" [value]="elem.code_value">
                                                 {{elem.code_value}} {{elem.code_cmmt}}</option>
                                         </select>
-                                </div>
+                                </div> -->
                                 </div>
 
                                 <div class="row">
@@ -731,22 +724,22 @@
                                 </div>
                                 <div class="row">
                                     
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group ">Couleur:</label>
                     
                                         <input type="text" class="form-control form-control-sm form-control-solid"
                                             formControlName="pt_break_cat">
                     
-                                    </div>
+                                    </div> -->
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Laize:</label>
+                                        <label class="form-group ">Micronage:</label>
                     
                                         <input type="number" class="form-control form-control-sm form-control-solid"
                                             formControlName="int01">
                     
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Micronage:</label>
+                                        <label class="form-group ">Laise:</label>
                     
                                         <input type="number" class="form-control form-control-sm form-control-solid"
                                             formControlName="int02">
@@ -1600,7 +1593,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1624,7 +1617,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1648,7 +1641,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1672,7 +1665,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1697,7 +1690,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1721,7 +1714,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1745,7 +1738,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1768,7 +1761,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
@@ -1793,7 +1786,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>

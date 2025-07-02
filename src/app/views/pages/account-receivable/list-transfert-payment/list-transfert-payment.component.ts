@@ -41,6 +41,9 @@ import { BankService} from "../../../../core/erp"
 import { jsPDF } from "jspdf";
 import { isNull } from "lodash"
 
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
+  value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
+
 @Component({
   selector: 'kt-list-transfert-payment',
   templateUrl: './list-transfert-payment.component.html',
@@ -59,13 +62,8 @@ export class ListTransfertPaymentComponent implements OnInit {
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   //dataviewObj: any;
-
+soForm: FormGroup;
   tr:any
-  soForm: FormGroup;
-  hasFormErrors = false;
-  loadingSubject = new BehaviorSubject<boolean>(true);
-  loading$: Observable<boolean>;
-  error = false;
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -85,7 +83,7 @@ export class ListTransfertPaymentComponent implements OnInit {
   }
 
   createForm() {
-    this.loadingSubject.next(false);
+    // this.loadingSubject.next(false);
     const date = new Date;
     
     this.soForm = this.soFB.group({
@@ -374,6 +372,164 @@ export class ListTransfertPaymentComponent implements OnInit {
                 
             }
           },
+          {
+            id: "bkh_2000",
+            name: "Billet 2000",
+            field: "bkh_2000",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+            
+          }, 
+          {
+            id: "bkh_1000",
+            name: "Billet 1000",
+            field: "bkh_1000",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+            
+          }, 
+          {
+            id: "bkh_0500",
+            name: "Billet 500",
+            field: "bkh_0500",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          }, 
+          {
+            id: "bkh_0200",
+            name: "Billet 200",
+            field: "bkh_0200",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_p200",
+            name: "Piéce 200",
+            field: "bkh_p200",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_p100",
+            name: "Piéce 100",
+            field: "bkh_p100",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_p050",
+            name: "Piéce 50",
+            field: "bkh_p050",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_p020",
+            name: "Piéce 20",
+            field: "bkh_p020",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_p010",
+            name: "Piéce 10",
+            field: "bkh_p010",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_p005",
+            name: "Piéce 5",
+            field: "bkh_p005",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_bon",
+            name: "Bon",
+            field: "bkh_bon",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+            
+          },
+          {
+            id: "bkh_rmks",
+            name: "Motif",
+            field: "bkh_rmks",
+            sortable: true,
+            filterable: true,
+            type: FieldType.text,
+            
+          },
+          {
+            id: "bkh_cheque",
+            name: "Cheque",
+            field: "bkh_cheque",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+          },
+          {
+            id: "chr03",
+            name: "Récap",
+            field: "chr03",
+            sortable: true,
+            filterable: true,
+            type: FieldType.number,
+          },
+          {
+            id: "id",
+            field: "id",
+            excludeFromHeaderMenu: true,
+            formatter: (row, cell, value, columnDef, dataContext) => {
+              // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+              return `
+                <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
+                     <i class="flaticon2-printer"></i>
+                     
+                 </a>
+                 `;
+            },
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              const index = args.dataContext.bkh_code;
+              console.log(index)
+              this.bankService.getBKHBy({bkh_code:index,bkh_type : "RCT"}).subscribe(
+                          (response: any) => (this.tr = response.data[0],
+                            
+                            this.printpdf()
+                            ),
+                          (error) => {
+                             this.tr=null
+                          },
+                          () => {}
+                      )
+             
+                
+            }
+          },
 
       ]
 
@@ -451,7 +607,7 @@ export class ListTransfertPaymentComponent implements OnInit {
       doc.text("Récap    : " + this.tr.chr03  , 5, initialY + 25);
       }
       // doc.text("Vendeur : " + this.tr.user_mobile_code + " - " + this.tr.username, 5, initialY + 20);
-  //    doc.text("Valeur : " + Number(total * 1.2138).toFixed(2) + " DZD", 65, initialY + 20);
+  //    doc.text("Valeur : " + Number(total * 1.2019).toFixed(2) + " DZD", 65, initialY + 20);
       doc.setFontSize(9);
 
  var i = 40

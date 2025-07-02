@@ -110,7 +110,25 @@ createForm() {
     wc_setup_rte: [{value: this.workcenter.wc_setup_rte,  disabled: !this.isExist } ],
     wc_lbr_rate: [{value: this.workcenter.wc_lbr_rate,  disabled: !this.isExist } ],
     wc_bdn_rate: [{value: this.workcenter.wc_bdn_rate,  disabled: !this.isExist } ],
-    wc_bdn_pct: [{value: this.workcenter.wc_bdn_pct,  disabled: !this.isExist } ]
+    wc_bdn_pct: [{value: this.workcenter.wc_bdn_pct,  disabled: !this.isExist } ],
+    
+    wc_user1:[{value: this.workcenter.wc_user1,  disabled: !this.isExist }],
+    wc_user2:[{value: this.workcenter.wc_user2,  disabled: !this.isExist }],
+    wc_fsm_type:[{value: this.workcenter.wc_fsm_type,  disabled: !this.isExist }],
+    wc__qadc01:[{value: this.workcenter.wc__qadc01,  disabled: !this.isExist }],
+    wc__qadc02:[{value: this.workcenter.wc__qadc02,  disabled: !this.isExist }],
+    
+    wc__chr01:[{value: this.workcenter.wc__chr01,  disabled: !this.isExist }],
+    wc_wk_loc:[{value: this.workcenter.wc_wk_loc,  disabled: !this.isExist }],
+    wc__chr02:[{value: this.workcenter.wc__chr02,  disabled: !this.isExist }],
+    wc__chr03:[{value: this.workcenter.wc__chr03,  disabled: !this.isExist }],
+    wc__qadc03:[{value: this.workcenter.wc__qadc03,  disabled: !this.isExist }],
+
+    chr01:[{value: this.workcenter.chr01,  disabled: !this.isExist }],
+    chr02:[{value: this.workcenter.chr02,  disabled: !this.isExist }],
+    wc_mod_date:[{value: this.workcenter.wc_mod_date,  disabled: !this.isExist }],
+    date01:[{value: this.workcenter.date01,  disabled: !this.isExist }],
+    dec01:[{value: this.workcenter.dec01,  disabled: !this.isExist }],
     
   })
 
@@ -146,6 +164,22 @@ onChangeCode() {
               controls.wc_lbr_rate.enable()
               controls.wc_bdn_rate.enable()
               controls.wc_bdn_pct.enable()
+
+              controls.wc_user1.enable()
+              controls.wc_user2.enable()
+              controls.wc_fsm_type.enable()
+              controls.wc__qadc01.enable()
+              controls.wc__qadc02.enable()
+              controls.wc__qadc03.enable()
+              controls.wc__chr01.enable()
+              controls.wc__chr02.enable()
+              controls.wc__chr03.enable()
+              controls.wc_wk_loc.enable()
+              controls.chr01.enable()
+              controls.chr02.enable()
+              controls.wc_mode_date.enable()
+              controls.date01.enable()
+              controls.dec01.enable()
           }
       })
   }
@@ -191,6 +225,22 @@ prepareCode(): WorkCenter {
   _workcenter.wc_bdn_rate = controls.wc_bdn_rate.value
   _workcenter.wc_bdn_pct = controls.wc_bdn_pct.value
 
+  _workcenter.wc_user1 = controls.wc_user1.value
+  _workcenter.wc_user2 = controls.wc_user2.value
+  _workcenter.wc_fsm_type =  controls.wc_fsm_type.value
+  _workcenter.wc__qadc01 = controls.wc__qadc01.value
+  _workcenter.wc__qadc02 = controls.wc__qadc02.value
+  _workcenter.wc__qadc03 = controls.wc__qadc03.value
+  _workcenter.wc__chr01 = controls.wc__chr01.value
+  _workcenter.wc__chr02 = controls.wc__chr02.value
+  _workcenter.wc__chr03 = controls.wc__chr03.value
+  _workcenter.wc_wk_loc = controls.wc_wk_loc.value
+  _workcenter.chr01 = controls.chr01.value
+  _workcenter.chr02 = controls.chr02.value
+  _workcenter.wc_mod_date = controls.wc_mode_date.value
+  _workcenter.date01 = controls.date01.value
+  _workcenter.dec01 =    controls.dec01.value
+   
   return _workcenter
 }
 

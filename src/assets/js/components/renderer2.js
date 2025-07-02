@@ -40,7 +40,7 @@ var ElectronPrinter2 = (function () {
       let valueToAddToX = 5;
       doc.setLineWidth(0.2);
       var img = new Image();
-      // img.src = "companylogo.png";
+      // img.src = "companyentete.png";
       // doc.addImage(img, "png", 150, 5, 50, 30);
       doc.setFontSize(12);
 
@@ -98,7 +98,7 @@ var ElectronPrinter2 = (function () {
       doc.setFontSize(8);
 console.log(printLines)
       for (let j = 0; j < printLines.length; j++) {
-        if (j % 21 == 0 && j != 0) {
+        if (j % 22 == 0 && j != 0) {
           doc.addPage();
 
           doc.setFontSize(8);
@@ -209,7 +209,7 @@ var ElectronPrinter3 = (function () {
       // // Combine the current directory with the new file name
       // const filePath = path.join(currentDirectory, newFileName);
       var img = new Image();
-      // img.src = "companylogo.png";
+      // img.src = "companyentete.png";
       // doc.addImage(img, "png", 150, 5, 50, 30);
       doc.setFontSize(14);
 
@@ -307,7 +307,7 @@ const date= new Date()
       // doc.setFontSize(22);
 
       for (let j = 0; j < printLines.length; j++) {
-        if (j % 21 == 0 && j != 0) {
+        if (j % 22 == 0 && j != 0) {
           doc.addPage();
 
           doc.setFontSize(8);
@@ -576,15 +576,17 @@ var Edelweiss = (function () {
     
   return {
       print3: function (lb, userPrinter) {
+        console.log('edelweiss')
           const options = {
               printer: userPrinter,
 
           };
+          
           const pageWidth = 284; // Width of the page in points
           const pageHeight = 284; // Height of the page in points
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-          const time = new Date().toLocaleTimeString();
+          const time = lb.lb__chr01;
           console.log('renderer.js')
           doc.text('FOURNISSEUR : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
@@ -617,7 +619,7 @@ var Edelweiss = (function () {
 
               .text('HEURE:' + time, 180, 58);
 
-          const filenamepdf = 'c://lb.lb_ref' + '.pdf';
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
 
           doc.pipe(fs.createWriteStream(filenamepdf));
 
@@ -658,7 +660,7 @@ var Edelweiss = (function () {
                 print(filenamepdf, options).then(console.log);
                 
               });
-            }, 5000);
+            }, 2000);
           
           console.log("all right")
           
@@ -672,6 +674,7 @@ var Edelweiss2 = (function () {
     
   return {
       print3: function (lb, userPrinter) {
+        console.log('print3')
           const options = {
               printer: userPrinter,
 
@@ -680,40 +683,40 @@ var Edelweiss2 = (function () {
           const pageHeight = 284; // Height of the page in points
           const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
           doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
-          const time = new Date().toLocaleTimeString();
-          console.log('renderer.js')
+          const time = lb.lb__chr01;
+          
           doc.text('MACHINE : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('DATE: ' + lb.lb_date, 20, 58);
+              .text('DATE: ' + lb.lb_date, 20, 38);
 
           doc
 
-              .text('PRODUIT :' + lb.lb_desc, 20, 78)
-              .font('Helvetica-Bold')
-              .fontSize(12)
-              .text('SILICONE :' + lb.lb_rmks, 20, 118)
+              .text('PRODUIT :' + lb.lb_desc, 20, 58)
               .font('Helvetica-Bold')
               .fontSize(12)
 
               .text('QTE :' + lb.lb_qty + 'KG', 20, 138)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('N° Lot:' + lb.lb_lot, 20, 158)
+              .text('Client:' + lb.lb__chr02, 20, 88)
               .font('Helvetica-Bold')
               .fontSize(12)
-              .text('QUALITE:', 20, 178);
+              .text('QUALITE:', 20, 108)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('PALETTE:' + lb.lb_lot, 20, 158);
 
           // Define the third rectangle and its text lines
           doc
 
-              .text('BIGBAG N°:' + lb.lb__dec01, 20, 198)
+              .text('Programme:' + lb.lb_nbr, 20, 198)
               .font('Helvetica-Bold')
               .fontSize(12)
 
-              .text('HEURE:' + time, 180, 58);
+              .text('HEURE:' + time, 180, 38);
 
-          const filenamepdf = 'c://lb.lb_ref' + '.pdf';
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
 
           doc.pipe(fs.createWriteStream(filenamepdf));
 
@@ -754,7 +757,7 @@ var Edelweiss2 = (function () {
                 print(filenamepdf, options).then(console.log);
                 
               });
-            }, 5000);
+            }, 2000);
           
           console.log("all right")
           
@@ -763,3 +766,167 @@ var Edelweiss2 = (function () {
   }
 
 }(Edelweiss2 || {}))
+var Edelweiss3 = (function () {
+    
+  return {
+      print3: function (lb, userPrinter) {
+        console.log('print3')
+          const options = {
+              printer: userPrinter,
+
+          };
+          const pageWidth = 284; // Width of the page in points
+          const pageHeight = 284; // Height of the page in points
+          const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
+          doc.page.margins = { top: 0, bottom: 0, left: 0, right: 0 };
+          const time = lb.lb__chr01;
+          
+          doc.text('MACHINE : ' + lb.lb_cust + '      GROUPE: ' + lb.lb_grp, 20, 18)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('DATE: ' + lb.lb_date, 20, 38);
+
+          doc
+
+              .text('PRODUIT :' + lb.lb_desc, 20, 58)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+
+              .text('QTE :' + lb.lb_qty + 'KG', 20, 138)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              .text('REF BOBINE:' + lb.lb_lot, 20, 88)
+              .font('Helvetica-Bold')
+              .fontSize(12)
+              
+
+          // Define the third rectangle and its text lines
+          doc
+
+              .fontSize(12)
+
+              .text('HEURE:' + time, 180, 38);
+
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
+
+          doc.pipe(fs.createWriteStream(filenamepdf));
+
+
+          // bwipjs.toBuffer(
+          //     {
+          //         bcid: 'code128', // Barcode type (replace with the desired barcode format)
+          //         text: lb.lb_ref, // Barcode data
+          //         scale: 3, // Scaling factor for the barcode image
+          //         includetext: true, // Include the barcode text
+          //         height: 10,
+          //         width: 60,
+          //     },
+          //     function (err, png) {
+          //         if (err) {
+          //             console.log(err);
+          //             return;
+          //         }
+
+          //         // Load the barcode image from the generated PNG buffer
+          //         const image = doc.openImage(png);
+
+          //         // Draw the barcode image on the PDF document
+          //         doc.image(image, 50, 223, {
+          //             fit: [5400, 40], // Adjust the size of the barcode image as needed
+          //         });
+          //         // Save the PDF document
+          //         doc.end();
+          //     },
+          // );
+
+          setTimeout(() => {
+              fs.readFile(filenamepdf, (err, data) => {
+                if (err) {
+                  console.error(err);
+                 
+                }
+                print(filenamepdf, options).then(console.log);
+                
+              });
+            }, 2000);
+          
+          console.log("all right")
+          
+      },
+
+  }
+
+}(Edelweiss3 || {}))
+
+var asset = (function () {
+    
+  return {
+      printasset: function (lb, userPrinter) {
+        console.log('printasset')
+          const options = {
+              printer: userPrinter,
+
+          };
+          const pageWidth = 164; // Width of the page in points
+          const pageHeight = 127; // Height of the page in points
+          const doc = new PDFDocument({ size: [pageWidth, pageHeight] });
+          doc.page.margins = { top: 1, bottom: 1, left: 1, right: 1 };
+          const time = lb.lb__chr01;
+          
+          doc
+          doc
+          .fontSize(10)
+          .text(lb.lb_cust, 5, 10)
+          .text(lb.lb_desc, 5,25)
+          .text('SN: ' + lb.lb_lot, 5,40);
+
+          const filenamepdf = 'lb.lb_ref' + '.pdf';
+
+          doc.pipe(fs.createWriteStream(filenamepdf));
+
+
+          bwipjs.toBuffer(
+              {
+                  bcid: 'code128', // Barcode type (replace with the desired barcode format)
+                  text: lb.lb_ref, // Barcode data
+                  scale: 4, // Scaling factor for the barcode image
+                  includetext: false, // Include the barcode text
+                  height: 10,
+                  width: 40,
+              },
+              function (err, png) {
+                  if (err) {
+                      console.log(err);
+                      return;
+                  }
+
+                  // Load the barcode image from the generated PNG buffer
+                  const image = doc.openImage(png);
+
+                  // Draw the barcode image on the PDF document
+                  doc.image(image, 5, 75, {
+                      fit: [500, 30], // Adjust the size of the barcode image as needed
+                  });
+                  // Save the PDF document
+                  doc.end();
+              },
+          );
+
+          setTimeout(() => {
+              fs.readFile(filenamepdf, (err, data) => {
+                if (err) {
+                  console.error(err);
+                 
+                }
+                print(filenamepdf, options).then(console.log);
+                
+              });
+            }, 2000);
+          
+          console.log("all right")
+          
+      },
+
+  }
+
+}(asset || {}))

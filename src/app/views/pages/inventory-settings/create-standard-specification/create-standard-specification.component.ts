@@ -80,8 +80,8 @@ export class CreateStrandardSpecificationComponent implements OnInit {
     valueIsMinMax = false;
     valueIsChar = false;
     
-
-    
+    user:any;
+    domain:any;
 
 
     constructor(
@@ -104,6 +104,9 @@ export class CreateStrandardSpecificationComponent implements OnInit {
         this.createForm()
         this.createPopupForm()
         this.prepareGrid()
+        this.user = JSON.parse(localStorage.getItem("user"));
+        this.domain = this.user.usrd_domain
+        console.log(this.domain)
     }
     //create form
 
@@ -182,7 +185,8 @@ export class CreateStrandardSpecificationComponent implements OnInit {
         let specificationHeader = {
           mp_nbr : doc_code,
           mp_desc : doc_desc,
-          mp_expire : validity_date
+          mp_expire : validity_date,
+          mp_domain:this.domain
         }
 
         let specificationDetails = []
@@ -197,7 +201,8 @@ export class CreateStrandardSpecificationComponent implements OnInit {
             mpd_chr01 : element.test_method ,
             mpd_chr02 : element.val_type,
             mpd_dec01: element.min,
-            mpd_dec02: element.max
+            mpd_dec02: element.max,
+            mpd_domain:this.domain
           })
         });
 

@@ -55,7 +55,7 @@ import { DecimalPipe } from "@angular/common";
 
 
 @Component({
-  selector: 'kt-payment-psh',
+  selector: 'kt-payment-psh', 
   templateUrl: './payment-psh.component.html',
   styleUrls: ['./payment-psh.component.scss']
 })
@@ -138,7 +138,8 @@ export class PaymentPshComponent implements OnInit {
     //    so__chr01: [this.accountShiper.as__chr01],
         as_ship:[this.accountShiper.as_ship , Validators.required],
         as_cust: [{value: this.accountShiper.as_cust , disabled: true} ],
-        name: [{value:"", disabled: true}],
+        name: [{value: '' , disabled: true} ],
+        as_app_owner: [{value:this.accountShiper.as_app_owner, disabled: true}],
         as_curr: [{value: this.accountShiper.as_curr , disabled: true}],
         amt:[{value:0, disabled: true}],
         rest:[{value:0, disabled: true}],
@@ -250,7 +251,7 @@ export class PaymentPshComponent implements OnInit {
       _as.as_ship = controls.as_ship.value;
       _as.as_cust = controls.as_cust.value;
       _as.as_curr = controls.as_curr.value;
-      
+      _as.as_app_owner = controls.as_app_owner.value;
       
       _as.as_effdate = controls.as_effdate.value
         ? `${controls.as_effdate.value.year}/${controls.as_effdate.value.month}/${controls.as_effdate.value.day}`
@@ -264,8 +265,8 @@ export class PaymentPshComponent implements OnInit {
       _as.as_pay_method = controls.as_pay_method.value;
       _as.as_check = controls.as_check.value;
     
-      _as.as_amt = controls.as_amt.value;
-      _as.as_applied = controls.as_amt.value;
+      _as.as_amt = (-1) * controls.as_amt.value;
+      _as.as_applied = (-1) * controls.as_amt.value ;
       _as.as_po = controls.as_po.value;
                       
     
@@ -345,9 +346,9 @@ export class PaymentPshComponent implements OnInit {
           
           controls.as_ship.setValue(data.as_nbr || "");
           controls.as_cust.setValue(data.as_cust || "");
-         
+          controls.as_app_owner.setValue(data.as_app_owner || "");
           controls.as_curr.setValue(data.as_curr || "");
-          controls.amt.setValue(data.as_amt || "");
+          controls.amt.setValue(data.as_sales_amt || "");
           controls.rest.setValue(Number(data.as_amt) - Number(data.as_applied) || "");
         
       // controls.as_pay_method.setValue(data.as_pay_method || "");
@@ -355,9 +356,8 @@ export class PaymentPshComponent implements OnInit {
       this.customerService.getBy({cm_addr: data.as_cust}).subscribe((response: any)=>{
                     
                     
-      
         controls.name.setValue(response.data.address.ad_name || "");
-        controls.as_bank.setValue(response.data.cm_bank || "");
+        // controls.as_bank.setValue(response.data.cm_bank || "");
         // controls.as_pay_method.setValue(response.data.cm_pay_method|| "");
          
        
@@ -439,7 +439,7 @@ export class PaymentPshComponent implements OnInit {
    */
   goBack() {
     this.loadingSubject.next(false);
-    const url = `/`;
+    const url = `/sales/list-invoices`;
     this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
   }
 
@@ -454,14 +454,15 @@ handleSelectedRowsChangedbl(e, args) {
   if (Array.isArray(args.rows) && this.gridObjbl) {
     args.rows.map((idx) => {
       const item = this.gridObjbl.getDataItem(idx);
-    //  console.log(item)
+      console.log(item.as_applied, item.as_amt)
       
       this.bl = item;
       controls.as_ship.setValue(item.as_nbr || "");
       controls.as_cust.setValue(item.as_cust || "");
+      controls.as_app_owner.setValue(item.as_app_owner || "");
       controls.as_curr.setValue(item.as_curr || "");
-      controls.amt.setValue(item.as_amt || "");
-      controls.rest.setValue(Number(item.as_amt) - Number(item.as_applied) || "");
+      controls.amt.setValue(item.as_sales_amt || "");
+      controls.rest.setValue(Number(item.as_amt) - Number(item.as_applied) || 0);
       // controls.as_pay_method.setValue(item.cm_cr_terms || "");
      
       this.customerService.getBy({cm_addr: item.as_cust}).subscribe((response: any)=>{
@@ -511,6 +512,7 @@ prepareGridbl() {
       filterable: true,
       type: FieldType.string,
     },
+    
     {
       id: "as_effdate",
       name: "Date",
@@ -521,8 +523,16 @@ prepareGridbl() {
     },
     {
       id: "as_amt",
-      name: "Montant",
+      name: "Montant OV",
       field: "as_amt",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "as_sales_amt",
+      name: "Montant Facture",
+      field: "as_sales_amt",
       sortable: true,
       filterable: true,
       type: FieldType.string,
@@ -560,9 +570,13 @@ prepareGridbl() {
   };
 
   // fill the dataset with your data
-  this.accountShiperService
-    .getBy({as_type: "I", as_open: true})
-    .subscribe((response: any) => (this.bls = response.data));
+  if (this.user.usrd_site != '*')
+  {this.accountShiperService
+    .getBy({created_by:this.user.usrd_code,as_type: "I", as_open: true})
+    .subscribe((response: any) => (this.bls = response.data));}
+    else{this.accountShiperService
+      .getBy({as_type: "I", as_open: true})
+      .subscribe((response: any) => (this.bls = response.data));}
 }
 openbl(content) {
   this.prepareGridbl();
@@ -670,7 +684,7 @@ prepareGridbank() {
   };
   // fill the dataset with your data
   this.bankService
-    .getByAll({bk_userid: this.user.usrd_code})
+    .getByAll({})
     .subscribe((response: any) => {this.banks = response.data
     console.log(this.banks)});
 }

@@ -5,6 +5,7 @@
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
 
 
+ 
 
             <!-- <div ngbDropdown class="d-inline-block">
                 <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
@@ -48,6 +49,18 @@
                         </div>
 
                     </div>
+                    <div class="row">
+                        <div class="form-group col-3">
+                            <label class="form-group">N° Palette :</label>
+                            <div class="input-group input-group-sm">
+
+                                <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()"
+                                    aria-describedby="basic-addon2">
+                                
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -80,7 +93,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -107,7 +120,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

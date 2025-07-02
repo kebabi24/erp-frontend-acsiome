@@ -2,13 +2,13 @@
     <kt-portlet-header [sticky]="true" title="Sortie Non Planifiée" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2" [disabled]="globalState">enregistrer </button>
 
         </ng-container>
     </kt-portlet-header>
-    <kt-portlet-body>
+    <kt-portlet-body> 
         <div class="example-preview">
 
             <form class="form row" [formGroup]="trForm">
@@ -16,7 +16,7 @@
                     (close)="onAlertClose($event)">
                     {{message}}
                 </kt-alert>
-                <div class="col-9">
+                <div class="col-9"> 
                     <div class="row">
                         
                         
@@ -39,16 +39,20 @@
                         </div>
                     
                         
-                        <div class="form-group col-3">
-                            <label class="form-group">N° Bon Source:</label>
+                        <div class="form-group col-2">
+                            <label class="form-group">N° DOCUMENT: </label>
+                        
                             <div class="input-group input-group-sm">
-
-                                <input type="text" class="form-control form-control-solid"  formControlName="tr_so_job"
-                                    aria-describedby="basic-addon2" >
-                                
+              
+                                <input type="text" class="form-control form-control-solid" formControlName="tr_lot" id="tr_lot"  (change)="onChangeCC()"
+                                    aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" (click)="open5(content5)">
+                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                </div>    
+                               
                             </div>
-
-                        </div>
+                        </div>   
                         <div class="form-group col-3">
                             <label class="form-group">Adresse :</label>
                             <div class="input-group input-group-sm">
@@ -63,6 +67,39 @@
 
                         </div>
                         <div class="form-group col-2">
+                            <label class="form-group">Employés:</label>
+                            <div class="input-group input-group-sm">
+                              <input type="text" class="form-control form-control-solid" formControlName="tr_user1" aria-describedby="basic-addon2" disabled />
+                              <div class="input-group-append">
+                                <span class="input-group-text" (click)="openemp(contentemp)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                              </div>
+                
+                              
+                            </div>
+                          </div> 
+                          <div class="form-group col-2">
+                            <label class="form-group">Remplacer:</label>
+                            <div class="input-group input-group-sm">
+                              <span class="switch switch-icon">
+                                <label>
+                                  <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="adduser2" (change)="onChangeuser()" />
+                                  <span></span>
+                                </label>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="form-group col-2">
+                            <label class="form-group">Remplacement:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control form-control-solid" formControlName="tr_user2" aria-describedby="basic-addon2" disabled />
+                              <div class="input-group-append">
+                                <span class="input-group-text" (click)="openemp2(contentemp2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                              </div>
+                
+                              <!-- <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div> -->
+                            </div>
+                          </div> 
+                        <div class="form-group col-2">
                             <label class="form-group">Imprimer:</label>
                             <div class="input-group input-group-sm">
     
@@ -71,7 +108,7 @@
                                         <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="print"/>
                                         <span></span>
                                     </label>
-                                </span>
+                                </span> 
                             </div>
     
                         </div>
@@ -139,7 +176,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -167,7 +204,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -194,7 +231,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -220,7 +257,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -245,7 +282,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -271,7 +308,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -297,10 +334,79 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
         </div>
+        <div>
+            <ng-template #contentemp let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir les Employés</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridemp"
+                            [columnDefinitions]="columnDefinitionsemp" (onAngularGridCreated)="angularGridReadyemp($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp($event.detail.eventData, $event.detail.args)"
+                           
+                            [gridOptions]="gridOptionsemp" [dataset]="emps">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="addemp()" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+          <ng-template #contentemp2 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                  <h4 class="modal-title">choisir les Employés</h4>
+                  <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <div class="row">
+                      <angular-slickgrid class="col-12" gridHeight="300" gridId="gridemp2"
+                          [columnDefinitions]="columnDefinitionsemp2" (onAngularGridCreated)="angularGridReadyemp2($event)"
+                          (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp2($event.detail.eventData, $event.detail.args)"
+                         
+                          [gridOptions]="gridOptionsemp2" [dataset]="emps2">
+                      </angular-slickgrid>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                  <button type="button" class="btn btn-primary" (click)="addit2()" (click)="c('Close click')">Ok</button>
+              </div>
+          </ng-template>
+          <ng-template #content5 let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir La Réception</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridda"
+                        [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptions5" [dataset]="transactions">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+      </div>
     </kt-portlet-body>
 </kt-portlet>

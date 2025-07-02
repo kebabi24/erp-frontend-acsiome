@@ -1,16 +1,20 @@
 import { Component, OnInit } from "@angular/core"
 // Angular slickgrid
 import {
-    Column,
-    GridOption,
-    Formatter,
-    Formatters,
-    Editor,
-    Editors,
-    FieldType,
-    Filters,
-    OnEventArgs,
-} from "angular-slickgrid"
+  Column,
+  GridOption,
+  Formatter,
+  Editor,
+  Editors,
+  Filters,
+  AngularGridInstance,
+  EditorValidator,
+  EditorArgs,
+  GridService,
+  Formatters,
+  FieldType,
+  OnEventArgs,
+} from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -55,6 +59,12 @@ export class ListWoComponent implements OnInit {
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
+  columnDefinitions1: Column[] = []
+  gridOptions1: GridOption = {}
+  dataset1: any[] = []
+
+  gridObj1: any;
+  angularGrid1: AngularGridInstance;
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -63,6 +73,7 @@ export class ListWoComponent implements OnInit {
       private workOrderService: WorkOrderService
   ) {
       this.prepareGrid()
+      this.prepareGrid1()
   }
 
   ngOnInit(): void {
@@ -115,15 +126,35 @@ export class ListWoComponent implements OnInit {
               maxWidth: 80,
           },
          
-          {
-            id: "wo_nbr",
-            name: "N°OF",
-            field: "wo_nbr",
-            sortable: true,
-            filterable: true,
+          // {
+          //   id: "wo_nbr",
+          //   name: "N°OF",
+          //   field: "wo_nbr",
+          //   sortable: true,
+          //   filterable: true,
            
            
-          },
+          // },
+          // {
+          //   id: "wo_so_job",
+          //   name: "Programme N°",
+          //   field: "wo_so_job",
+          //   sortable: true,
+          //   width: 50,
+          //   filterable: true,
+           
+           
+          // },
+          // {
+          //   id: "wo_rev",
+          //   name: "Version N°",
+          //   field: "wo_rev",
+          //   sortable: true,
+          //   width: 50,
+          //   filterable: true,
+           
+           
+          // },
         
           {
             id: "wo_queue_eff",
@@ -140,7 +171,7 @@ export class ListWoComponent implements OnInit {
             name: "Article",
             field: "wo_part",
             sortable: true,
-            width: 50,
+            minWidth: 150,
             filterable: true,
            
            
@@ -150,7 +181,7 @@ export class ListWoComponent implements OnInit {
             name: "dimension",
             field: "wo_ref",
             sortable: true,
-            width: 50,
+            minWidth: 150,
             filterable: true,
            
            
@@ -160,27 +191,18 @@ export class ListWoComponent implements OnInit {
             name: "couleur",
             field: "wo_batch",
             sortable: true,
-            width: 50,
+            minWidth: 150,
             filterable: true,
            
            
           },
-          {
-            id: "wo_rev",
-            name: "Qualité",
-            field: "wo_rev",
-            sortable: true,
-            width: 50,
-            filterable: true,
-           
-           
-          },
+         
           {
             id: "wo_grade",
             name: "cilicone",
             field: "wo_grade",
             sortable: true,
-            width: 50,
+            minWidth: 150,
             filterable: true,
            
            
@@ -191,7 +213,7 @@ export class ListWoComponent implements OnInit {
             name: "Quantité",
             field: "wo_qty_ord",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
            
           },
@@ -201,7 +223,7 @@ export class ListWoComponent implements OnInit {
             name: "Quantité Complété",
             field: "wo_qty_comp",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
            
           },
@@ -210,39 +232,39 @@ export class ListWoComponent implements OnInit {
             name: "Quantité Squelette",
             field: "wo_qty_rjct",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
            
           },
-          {
-            id: "wo_qty_chg",
-            name: "diff",
-            field: "wo_qty_chg",
-            sortable: true,
-            width: 80,
-            filterable: true,
+          // {
+          //   id: "wo_qty_chg",
+          //   name: "diff",
+          //   field: "wo_qty_chg",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
            
-          },
+          // },
           {
             id: "wo_yield_pct",
             name: "Squelette/Total",
             field: "wo_yield_pct",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
            
           },
-          {
-            id: "wo_ord_date",
-            name: "Date Création",
-            field: "wo_ord_date",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            formatter: Formatters.dateIso ,
-            type: FieldType.dateIso,
+          // {
+          //   id: "wo_ord_date",
+          //   name: "Date Création",
+          //   field: "wo_ord_date",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   formatter: Formatters.dateIso ,
+          //   type: FieldType.dateIso,
            
-          },
+          // },
          
     
           {
@@ -250,10 +272,20 @@ export class ListWoComponent implements OnInit {
             name: "Date Lancement",
             field: "wo_rel_date",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
             formatter: Formatters.dateIso ,
-            type: FieldType.dateIso,
+            type: FieldType.dateTimeIso,
+           
+          },
+          {
+            id: "chr01",
+            name: "Heure Debut",
+            field: "chr01",
+            sortable: true,
+            minWidth: 100,
+            filterable: true,
+            
            
           },
           {
@@ -261,30 +293,40 @@ export class ListWoComponent implements OnInit {
             name: "Date Echéance",
             field: "wo_due_date",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
             formatter: Formatters.dateIso ,
-            type: FieldType.dateIso,
+            type: FieldType.dateTimeIso,
+           
+          },
+          {
+            id: "chr02",
+            name: "Heure fin",
+            field: "chr02",
+            sortable: true,
+            minWidth: 100,
+            filterable: true,
+            
            
           },
     
-          {
-            id: "wo_bom_code",
-            name: "Code Nomenc",
-            field: "wo_bom_code",
-            sortable: true,
+          // {
+          //   id: "wo_bom_code",
+          //   name: "Code Nomenc",
+          //   field: "wo_bom_code",
+          //   sortable: true,
            
-            filterable: true,
-            type: FieldType.string,
+          //   filterable: true,
+          //   type: FieldType.string,
           
             
-          },
+          // },
           {
             id: "wo_routing",
             name: "Gamme",
             field: "wo_routing",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
             type: FieldType.string,
           
@@ -292,23 +334,23 @@ export class ListWoComponent implements OnInit {
           },
           
                   
-          {
-            id: "wo_lot_next",
-            name: "Lot/Serie",
-            field: "wo_lot_next",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "wo_lot_next",
+          //   name: "Lot/Serie",
+          //   field: "wo_lot_next",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.string,
           
             
-          },
+          // },
           {
             id: "wo_status",
             name: "Status",
             field: "wo_status",
             sortable: true,
-            width: 80,
+            minWidth: 100,
             filterable: true,
             type: FieldType.text,
              formatter: myCustomCheckboxFormatter,
@@ -318,64 +360,64 @@ export class ListWoComponent implements OnInit {
             }
           },
           
-          {
-            id: "wo_rmks",
-            name: "Remarque",
-            field: "wo_rmks",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.string,
+          // {
+          //   id: "wo_rmks",
+          //   name: "Remarque",
+          //   field: "wo_rmks",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.string,
           
-          },
+          // },
          
-          {
-            id: "wo_prod_pct",
-            name: "% Rendement",
-            field: "wo_prod_pct",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo_prod_pct",
+          //   name: "% Rendement",
+          //   field: "wo_prod_pct",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
-          {
-            id: "wo__dec01",
-            name: "Coût Matiére",
-            field: "wo__dec01",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo__dec01",
+          //   name: "Coût Matiére",
+          //   field: "wo__dec01",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
-          {
-            id: "wo__dec02",
-            name: "Coût Main d'Oeuvre",
-            field: "wo__dec02",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo__dec02",
+          //   name: "Coût Main d'Oeuvre",
+          //   field: "wo__dec02",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
-          {
-            id: "wo__dec03",
-            name: "Coût FG Variable",
-            field: "wo__dec03",
-            sortable: true,
-            width: 80,
-            filterable: true,
-            type: FieldType.float,
-            formatter: Formatters.percentComplete,
+          // {
+          //   id: "wo__dec03",
+          //   name: "Coût FG Variable",
+          //   field: "wo__dec03",
+          //   sortable: true,
+          //   width: 80,
+          //   filterable: true,
+          //   type: FieldType.float,
+          //   formatter: Formatters.percentComplete,
                      
-          },
+          // },
           
           
           
@@ -395,7 +437,7 @@ export class ListWoComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.workOrderService.getAll().subscribe(
+      this.workOrderService.getByextrusion({wo_routing:'U1'}).subscribe(
           (response: any) => (this.dataset = response.data),
           (error) => {
               this.dataset = []
@@ -403,4 +445,211 @@ export class ListWoComponent implements OnInit {
           () => {}
       )
   }
+  prepareGrid1() {
+    this.columnDefinitions1 = [
+        {
+          id: "wo_so_job",
+          name: "N° Programme",
+          field: "wo_so_job",
+          sortable: true,
+          filterable: true,
+         
+         
+        },
+       
+        {
+          id: "wo_rev",
+          name: "Version N°",
+          field: "wo_rev",
+          sortable: true,
+          width: 50,
+          filterable: true,
+         
+         
+        },
+        {
+          id: "wo_queue_eff",
+          name: "Ordre",
+          field: "wo_queue_eff",
+          sortable: true,
+          width: 50,
+          filterable: true,
+        },
+        {
+          id: "wo_qty_ord",
+          name: "Quantité",
+          field: "wo_qty_ord",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+      
+        {
+          id: "wo_qty_comp",
+          name: "Quantité Complété",
+          field: "wo_qty_comp",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+        {
+          id: "wo_qty_rjct",
+          name: "Quantité Squelette",
+          field: "wo_qty_rjct",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+        {
+          id: "wo_rel_date",
+          name: "Date Lancement",
+          field: "wo_rel_date",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          formatter: Formatters.dateTimeIso ,
+          type: FieldType.dateTimeIso,
+         
+        },
+        {
+          id: "chr03",
+          name: "Temps Production",
+          field: "chr03",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          
+         
+        },
+        {
+          id: "wo_due_date",
+          name: "Date Echéance",
+          field: "wo_due_date",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          formatter: Formatters.dateIso ,
+          type: FieldType.dateTimeIso,
+         
+        },
+        {
+          id: "chr02",
+          name: "Heure fin",
+          field: "chr02",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          
+         
+        },
+  
+       
+        {
+          id: "wo_routing",
+          name: "Gamme",
+          field: "wo_routing",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          type: FieldType.string,
+        
+          
+        },
+        
+                
+      
+       
+        
+       
+       
+       
+        
+        
+        
+       
+        
+      
+        
+        
+  
+      ];
+
+    // this.gridOptions1 = {
+    //     enableSorting: true,
+    //     enableCellNavigation: true,
+    //     enableExcelCopyBuffer: true,
+    //     enableFiltering: true,
+    //     autoEdit: false,
+    //     autoHeight: false,
+    //     frozenColumn: 0,
+    //     frozenBottom: true,
+    // }
+    this.gridOptions1 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.dataset1 = []
+    this.workOrderService.getPrograms({wo_routing:'U1'}).subscribe(
+        (response: any) => (this.dataset1 = response.data),
+        (error) => {
+            this.dataset1 = []
+        },
+        () => {}
+    )
+}
+angularGridReady1(angularGrid: AngularGridInstance) {
+    this.angularGrid1 = angularGrid;
+    this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+handleSelectedRowsChanged1(e, args) {
+  
+  
+  
+  if (Array.isArray(args.rows) && this.gridObj1) {
+    args.rows.map((idx) => {
+      const item = this.gridObj1.getDataItem(idx);
+      console.log(item)
+       
+      this.dataset = []
+      this.workOrderService.getBy({wo_routing:'U1',wo_so_job:item.wo_so_job}).subscribe(
+          (response: any) => (this.dataset = response.data),
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+    
+    
+  })
+ }
+}
 }

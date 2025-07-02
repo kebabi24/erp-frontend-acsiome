@@ -159,9 +159,9 @@ export class PurchaseOrderApprovalComponent implements OnInit {
             },
 
             {
-                id: "desc",
+                id: "rqd_desc",
                 name: "Description",
-                field: "item.pt_desc1",
+                field: "rqd_desc",
                 sortable: true,
                 width: 80,
                 filterable: false,
@@ -192,9 +192,9 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 filterable: false,
             },
             {
-                id: "rqd_desc",
+                id: "rqd_vpart",
                 name: "Observation",
-                field: "rqd_desc",
+                field: "rqd_vpart",
                 sortable: true,
                 width: 80,
                 filterable: false,

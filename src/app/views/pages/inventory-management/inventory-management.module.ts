@@ -52,7 +52,10 @@ import { AngularSlickgridModule } from "angular-slickgrid";
 
 import {
   SiteService,
+  LabelService,
+  LocationDetailService,
   LocationService,
+  CostSimulation,
   CodeService,
   InventoryStatusService,
   ItemService,
@@ -64,7 +67,8 @@ import {
   LoadRequestService,
   RoleService,
   UsersMobileService,
-  BarecodeinfosService
+  BarecodeinfosService,
+  CostSimulationService
 } from "../../../core/erp";
 import { PhysicalInventoryTagEntryComponent } from './physical-inventory-tag-entry/physical-inventory-tag-entry.component';
 import { TagGapAnalysisComponent } from './tag-gap-analysis/tag-gap-analysis.component';
@@ -185,6 +189,9 @@ const routes: Routes = [
     LayoutUtilsService,
     HttpUtilsService,
     SiteService,
+    LabelService,
+    LocationDetailService,
+    CostSimulationService,
     LocationService,
     CodeService,
     AccountService,

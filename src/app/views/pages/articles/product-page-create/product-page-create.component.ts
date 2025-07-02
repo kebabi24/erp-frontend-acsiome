@@ -97,7 +97,8 @@ export class ProductPageCreateComponent implements OnInit {
     gridServicepage: GridService;
     angularGridpage: AngularGridInstance;
     
-   
+    
+    
     constructor(
         config: NgbDropdownConfig,
         private profileFB: FormBuilder,

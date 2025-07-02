@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" title="Déclaration Bobine/Squelette Extrusion" [class]="'card-head-lg'" [viewLoading$]="loading$">
       <ng-container ktPortletTools>
-        <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuller</button>
+        <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
         <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-        <!--button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">sauvegarder </button-->
+        <button type="button" (click)="onPrint()" class="btn btn-success btn-sm mr-2">Imprimer </button>
       </ng-container>
     </kt-portlet-header>
     <kt-portlet-body>
@@ -47,16 +47,38 @@
               </div>   
             </div>    
             <div class="form-group col-2">
-              <label class="form-group">Employés:</label>
+              <label class="form-group">Employés:</label> 
               <div class="input-group input-group-sm">
-                <input type="text" id="emp" [className]="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_user1" aria-describedby="basic-addon2" />
+                <input type="text" id="emp" [className]="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_user1" aria-describedby="basic-addon2" disabled />
                 <div class="input-group-append">
                   <span class="input-group-text" (click)="openemp(contentemp)"> <i class="text-dark-50 flaticon2-search"></i> </span>
                 </div>
   
                 <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
               </div>
-            </div>   
+            </div> 
+            <div class="form-group col-2">
+              <label class="form-group">Remplacer:</label>
+              <div class="input-group input-group-sm">
+                <span class="switch switch-icon">
+                  <label>
+                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="adduser2" (change)="onChangeuser()" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+            <div class="form-group col-2">
+              <label class="form-group">Remplacement:</label>
+              <div class="input-group input-group-sm">
+                <input type="text" id="emp2" [className]="woForm.controls['wo_user2'].errors && (woForm.controls['wo_user2'].dirty || woForm.controls['wo_user2'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="wo_user2" aria-describedby="basic-addon2" disabled  />
+                <div class="input-group-append">
+                  <span class="input-group-text" (click)="openemp2(contentemp2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                </div>
+  
+                <!-- <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div> -->
+              </div>
+            </div>  
           </div>
           <div class="row">
             <div class="form-group col-2">
@@ -64,7 +86,7 @@
                 <div class="input-group input-group-sm">
 
                     <input type="text" class="form-control form-control-solid"  formControlName="wo_lot" id="id"
-                        aria-describedby="basic-addon2" (change)="onChangeOA()">
+                        aria-describedby="basic-addon2" (change)="onChangeOA()" disabled>
                     <div class="input-group-append">
                         <span class="input-group-text" (click)="open5(content5)">
                             <i class="text-dark-50 flaticon2-search"></i> </span>
@@ -73,7 +95,7 @@
 
             </div>
             
-            <div class="form-group col-2">
+            <!-- <div class="form-group col-2">
                 <label class="form-group">N° OF:</label>
                 <div class="input-group input-group-sm">
 
@@ -82,8 +104,18 @@
                     
                 </div>
 
-            </div>
+            </div> -->
             <div class="form-group col-2">
+              <label class="form-group">Pour client:</label>
+              <div class="input-group input-group-sm">
+
+                  <input type="text" class="form-control form-control-solid"  formControlName="wo_vend" disabled 
+                      aria-describedby="basic-addon2" >
+                  
+              </div>
+
+          </div>
+            <div class="form-group col-1">
               <label class="form-group">Qte Commandée:</label>
               <div class="input-group input-group-sm">
 
@@ -92,8 +124,9 @@
                   
               </div>
 
-          </div>
-          <div class="form-group col-2">
+            </div>
+            
+            <div class="form-group col-1">
             <label class="form-group">Quantité Réalisée:</label>
             <div class="input-group input-group-sm">
 
@@ -102,53 +135,48 @@
                 
             </div>
 
-        </div>
+            </div>
+            <div class="form-group col-1">
+              <label class="form-group">Quantité Restante:</label>
+              <div class="input-group input-group-sm">
+  
+                  <input type="text" class="form-control form-control-solid"  formControlName="rest_bobine" disabled
+                      aria-describedby="basic-addon2" >
+                  
+              </div>
+            </div>
+            <div class="form-group col-1">
+              <label class="form-group">Quantité Squelette:</label>
+              <div class="input-group input-group-sm">
+  
+                  <input type="text" class="form-control form-control-solid"  formControlName="total_squelette" disabled
+                      aria-describedby="basic-addon2" >
+                  
+              </div>
+
+            </div>
+          
         </div>
         
           
           <!-- SEARCH PRODUCT START  -->
           
           <div class="row">
-            <div class="form-group col-2">
-              <label class="form-group">Type de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_type" id="id_prod_type" disabled>
-                <option value=""></option>
-                <option *ngFor="let elem of product_types" [value]="elem.code_value">
-                  {{ elem.code_cmmt }}
-                </option>
-              </select>
+            <div class="form-group col-4">
+              <label class="form-group">Description: </label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm form-control-solid" formControlName="desc" />
+              </div>
             </div>
-  
             <div class="form-group col-2">
-              <label class="form-group">Couleur de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_color" id="id_prod_color" disabled>
-                <option value=""></option>
-                <option *ngFor="let elem of product_colors" [value]="elem.code_value">
-                  {{ elem.code_cmmt }}
-                </option>
-              </select>
-            </div>
-
-            <div class="form-group col-2">
-              <label class="form-group">qualite de produit:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_quality" id="id_prod_quality" disabled>
-                <option value=""></option>
-                <option *ngFor="let elem of product_qualitys" [value]="elem.code_value">
+              <label class="form-group">MANDRIN:</label>
+              <select class="form-control form-control-sm form-control-solid" formControlName="MANDRIN" id="id_MANDRIN" >
+                
+                <option *ngFor="let elem of MANDRINS" [value]="elem.code_value">
                   {{ elem.code_value }}
                 </option>
               </select>
             </div>
-
-            <div class="form-group col-2">
-              <label class="form-group">silicone:</label>
-              <select class="form-control form-control-sm form-control-solid" formControlName="product_Cyl" id="id_prod_Cyl" disabled>
-                <option value=""></option>
-                <option *ngFor="let elem of product_Cyls" [value]="elem.code_value">
-                  {{ elem.code_value }}
-                </option>
-              </select>
-            </div>
-  
             <!-- <div class="form-group col-3">
               <label class="form-group">Rechercher</label>
               <div class="input-group input-group-sm">
@@ -202,31 +230,63 @@
             </div>
           </div> -->
           <div class="row">
-            <div class="form-group col-2">
+            <div class="form-group col-1">
              <label class="form-group">Poids Bobine: </label>
              <div class="input-group input-group-sm">
-              <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_comp" step="0.5" (change)="onChangePal()" aria-describedby="basic-addon2"/>
+              <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_comp"  (change)="onChangePal()" aria-describedby="basic-addon2"/>
              </div>
             </div>
-            <div class="form-group col-2">
-              <label class="form-group">   </label>
+            <div class="form-group col-1">
+              <label class="form-group"> Max  </label>
               <div class="input-group input-group-sm">
-               
+                <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_bo_chg"  aria-describedby="basic-addon2" disabled/>
+              
               </div>
              </div>
-             <div class="form-group col-2">
-              <label class="form-group">   </label>
+             <div class="form-group col-1">
+              <label class="form-group"> Palette N°  </label>
               <div class="input-group input-group-sm">
-               
+                <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_serial"  aria-describedby="basic-addon2" disabled/>
+              
               </div>
              </div>
-            <div class="form-group col-2">
-             <label class="form-group">Poids Squelette: </label>
+            <!-- <div class="form-group col-1">
+              <label class="form-group">Fin Palette:</label>
               <div class="input-group input-group-sm">
-               <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_rjct" step="0.5" (change)="onChangeSq()" aria-describedby="basic-addon2"/>
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="onpal()" >A</button>
+              </div>
+            </div> -->
+            <button type="button" (click)="onpal()" class="btn btn-success btn-sm mr-2">Palette</button>
+
+            <div class="form-group col-1">
+              <label class="form-group"> Palette N°  </label>
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control form-control-sm form-control-solid" formControlName="wo_serial_next"  aria-describedby="basic-addon2" />
+              
+              </div>
+             </div>
+             <!-- <div class="form-group col-1">
+              <label class="form-group">Imprimer:</label>
+              <div class="input-group input-group-sm">
+                <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="printpal()" >I</button>
+              </div>
+             </div> -->
+             <button type="button" (click)="printpal()" class="btn btn-success btn-sm mr-2">Imprimer</button>
+        
+             <div class="form-group col-1">
+             <label class="form-group">Poids SQ: </label>
+              <div class="input-group input-group-sm">
+               <input type="number" class="form-control form-control-sm form-control-solid" formControlName="wo_qty_rjct" (change)="onChangeSq()" aria-describedby="basic-addon2"/>
               </div>
             </div>
+            <div class="form-group col-2">
+              <label class="form-group">Autorisation: </label>
+               <div class="input-group input-group-sm">
+                <input type="password" class="form-control form-control-sm form-control-solid" formControlName="autorisation"  (change)="authorised()" aria-describedby="basic-addon2"/>
+               </div>
+             </div>
           </div>
+          
           <!--div class="row">
                           <div class="form-group col-6">
                               <label class="form-group">Remarque: </label>
@@ -242,14 +302,14 @@
                           <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter ID </button>
                       </div-->
           <div class="row">
-            <angular-slickgrid class="col-6" gridHeight="200" gridId="mGrid" 
+            <angular-slickgrid class="col-6" gridHeight="300" gridId="mGrid" 
               [columnDefinitions]="columnDefinitions" 
               [gridOptions]="gridOptions" 
               [dataset]="dataset" 
               (onAngularGridCreated)="gridReady($event)"> 
             </angular-slickgrid>
         
-            <angular-slickgrid class="col-6" gridHeight="200" gridId="sGrid" 
+            <angular-slickgrid class="col-6" gridHeight="300" gridId="sGrid" 
               [columnDefinitions]="columnDefinitionssq" 
               [gridOptions]="gridOptionssq" 
               [dataset]="sqdataset" 
@@ -293,7 +353,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
@@ -313,7 +373,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
@@ -333,7 +393,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
@@ -353,7 +413,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
@@ -372,7 +432,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
@@ -391,7 +451,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
@@ -415,11 +475,35 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
                 <button type="button" class="btn btn-primary" (click)="addit()" (click)="c('Close click')">Ok</button>
             </div>
         </ng-template>
     </div>
+    <div>
+      <ng-template #contentemp2 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+              <h4 class="modal-title">choisir les Employés</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridemp2"
+                      [columnDefinitions]="columnDefinitionsemp2" (onAngularGridCreated)="angularGridReadyemp2($event)"
+                      (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp2($event.detail.eventData, $event.detail.args)"
+                     
+                      [gridOptions]="gridOptionsemp2" [dataset]="emps2">
+                  </angular-slickgrid>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+              <button type="button" class="btn btn-primary" (click)="addit2()" (click)="c('Close click')">Ok</button>
+          </div>
+      </ng-template>
+  </div>
     <div>
       <ng-template #content5 let-c="close" let-d="dismiss">
           <div class="modal-header">
@@ -438,7 +522,7 @@
               </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+              <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
               <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
       </ng-template>

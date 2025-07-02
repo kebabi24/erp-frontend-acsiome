@@ -3,6 +3,7 @@ import { BaseModel } from "./base.model"
 export class InventoryTransaction extends BaseModel {
     id: number   
     tr_part: String
+    tr_desc: string
     tr_date: Date
     tr_per_date: Date
     ld_lot: String

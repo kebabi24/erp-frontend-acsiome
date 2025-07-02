@@ -403,7 +403,7 @@ export class ValidateLrSupComponent implements OnInit {
      if(this.printLines[j].item.loadRequestLines[0].qt_request != 0 || this.printLines[j].item.loadRequestLines[0].qt_validated != 0) { 
       if (j % 38 == 0 && j != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
+        img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {

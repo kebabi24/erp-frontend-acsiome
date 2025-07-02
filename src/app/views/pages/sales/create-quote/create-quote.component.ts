@@ -507,8 +507,8 @@ export class CreateQuoteComponent implements OnInit {
 
               console.log(this.dataset);
 
-              if(controls.print.value == true) this.printpdf(qo.qo_nbr) //printOc(this.customer, this.dataset,qo);
-              this.router.navigateByUrl("/");
+              if(controls.print.value == true) {console.log('imprimer'); this.printpdf(qo.qo_nbr) }//printOc(this.customer, this.dataset,qo);
+              this.router.navigateByUrl("/sales/req-list");
             }
           );
       }
@@ -563,7 +563,7 @@ export class CreateQuoteComponent implements OnInit {
     
     goBack() {
         this.loadingSubject.next(false)
-        const url = `/`
+        const url = `/sales/req-list`
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
 
@@ -926,8 +926,15 @@ export class CreateQuoteComponent implements OnInit {
            
       
            console.log(tva)
-           if(controlsso.qo_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-             if (timbre > 10000) { timbre = 10000} } 
+           if(controlsso.qo_cr_terms.value == "ES") { if((tht + tva) <= 30000){timbre = round((tht + tva) / 100, 2)}
+           else{
+             if((tht + tva) > 30000 && (tht + tva) <= 100000){timbre = round((tht + tva) * 1.5 / 100 , 2)}
+             else{timbre = round((tht + tva) * 2 / 100 , 2)}
+           };
+           
+           if (timbre < 5) {
+             timbre = 5;
+           }} 
         
          }
        ttc = round(tht + tva + timbre,2)
@@ -948,7 +955,7 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/company.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 5, 5, 210, 30)
   doc.setFontSize(12);
   doc.text( 'Devis N° : ' + nbr  , 70, 40);
@@ -988,7 +995,7 @@ printpdf(nbr) {
   for (let j = 0; j < this.dataset.length  ; j++) {
     console.log("hkjhhkjhk", this.dataset[j].desc.length) 
     console.log("hnaaaaaaaaaaaaaaaaaaaaaaa")
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
       doc.addImage(img, 'png', 5, 5, 210, 30)
       doc.setFontSize(12);

@@ -45,6 +45,7 @@ import {
   SiteService,
   InventoryStatusService,
   LocationDetailService,
+  CodeService,
 } from "../../../../core/erp";
 import { Reason, ReasonService} from "../../../../core/erp"
 @Component({
@@ -103,6 +104,9 @@ export class EditStatusComponent implements OnInit {
     error = false;
     dateexpire: String;
     lddet: any
+    acts: any[] = [];
+    message = "";
+    user : any;
   constructor(
       config: NgbDropdownConfig,
       private statusFB: FormBuilder,
@@ -117,7 +121,8 @@ export class EditStatusComponent implements OnInit {
       private locationDetailService: LocationDetailService,      
       private modalService: NgbModal,
       private inventoryTransactionService: InventoryTransactionService,
-      private reasonService: ReasonService
+      private reasonService: ReasonService,
+      private codeService: CodeService,
   ) {
       config.autoClose = true
        }
@@ -126,6 +131,8 @@ export class EditStatusComponent implements OnInit {
       this.loading$ = this.loadingSubject.asObservable()
       this.loadingSubject.next(false)
       this.createForm()
+      this.getacts();
+      this.user = JSON.parse(localStorage.getItem("user"));
   }
   //create form
   createForm() {
@@ -136,12 +143,12 @@ export class EditStatusComponent implements OnInit {
           tr_loc: [this.inventoryTransaction.tr_loc, Validators.required],
           tr_part: [this.inventoryTransaction.tr_part, Validators.required],
           tr_serial_prev: [{value:this.inventoryTransaction.tr_serial, disabled:true}],
-          tr_serial: [this.inventoryTransaction.tr_serial], 
+          tr_serial: [{value:this.inventoryTransaction.tr_serial}], 
           
           tr_status: [{ value: this.inventoryTransaction.tr_status,disabled: !this.isExist }, Validators.required],
           tr_expire: [{ value: this.inventoryTransaction.tr_expire,disabled: !this.isExist }],
           tr_rmks: [this.inventoryTransaction.tr_rmks], 
-          
+          tr_user1: [this.inventoryTransaction.tr_user1],
         })
   }
 
@@ -224,6 +231,7 @@ console.log( controls.tr_serial.value)
       _it.tr_serial = controls.tr_serial.value
       _it.tr_vend_lot = controls.tr_serial_prev.value
       _it.tr_rmks = controls.tr_rmks.value
+      _it.tr_user1 = controls.tr_user1.value
       _it.tr_expire = controls.tr_expire.value
       ? `${controls.tr_expire.value.year}/${controls.tr_expire.value.month}/${controls.tr_expire.value.day}`
       : null
@@ -367,81 +375,121 @@ console.log( controls.tr_serial.value)
 
   
   changeStatus() {
-      const controls = this.statusForm.controls; // chof le champs hada wesh men form rah
+    const controls = this.statusForm.controls; // chof le champs hada wesh men form rah
     
-      let is_status: any;
-       
-         is_status = controls.tr_status.value;
-        
+    let is_status: any;
+     
+       is_status = controls.tr_status.value;
       
     
-      this.inventoryStatusService.getBy({is_status}).subscribe(
-        (res: any) => {
-          const { data } = res;
-          const message = "Ce code status n'existe pas!";
-          if (!data.length) {
-            this.layoutUtilsService.showActionNotification(
-              message,
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
-            this.error = true;
-          } else {
-            this.inventoryStatusService.getByIsm({ism_loc_start: controls.tr_loc.value,ism_loc_end:controls.tr_loc.value, ism_status_start: this.lddet.ld_status, 
-              ism_status_end:controls.tr_status.value }).subscribe((resstat:any)=>{
-              console.log(resstat)
-              const { data } = resstat;
-              if (data.length > 0) {
-                alert("Mouvement Interdit pour Status")
-                controls.tr_status.setValue(null)
-                //console.log(response.data.length)
-                document.getElementById("tr_status").focus();
-              } 
-             
-              })
-            this.error = false;
-          }
-        },
-        (error) => console.log(error)
-      );
+  
+    this.inventoryStatusService.getBy({is_status}).subscribe(
+      (res: any) => {
+        const { data } = res;
+        this.message = "Ce code status n'existe pas!";
+        if (!data.length) {
+          this.layoutUtilsService.showActionNotification(
+            this.message,
+            MessageType.Create,
+            10000,
+            true,
+            true
+          );
+          this.error = true;
+        } else {
+          this.inventoryStatusService.getByIsm({ism_loc_start: controls.tr_loc.value,ism_loc_end:controls.tr_loc.value, ism_status_start: this.lddet.ld_status, 
+            ism_status_end:controls.tr_status.value }).subscribe((resstat:any)=>{
+            console.log(resstat)
+            const { data } = resstat;
+            if (data.length > 0) {
+              
+              controls.tr_status.setValue(null)
+              //console.log(response.data.length)
+              document.getElementById("tr_status").focus();
+              this.message = "vous n'avez pas le droit de sélectionner ce statut";
+              this.hasFormErrors = true
+              return
+            } 
+            else{
+               //CONTROLE CHOIX STATUT
+                
+                this.codeService
+                .getBy({
+                  code_fldname: this.lddet.ld_status,
+                  code_value:controls.tr_status.value })
+                
+                .subscribe((response: any) => {
+                  const { data } = response;
+                  
+                  if (!data) {
+                    this.message = "vous ne pouvez pas choisir ce statut";
+                    this.hasFormErrors = true
+                    return
+                  }
+                });
+            }
+           
+            })
+          this.error = false;
+        }
+      },
+      (error) => console.log(error)
+    );
     }
     
 
   handleSelectedRowsChangedstatus(e, args) {
-      const controls1 = this.statusForm.controls;
+    const controls1 = this.statusForm.controls;
       
-      if (Array.isArray(args.rows) && this.gridObjstatus) {
-        args.rows.map((idx) => {
-          const item = this.gridObjstatus.getDataItem(idx);
-          // TODO : HERE itterate on selected field and change the value of the selected field
-          //switch (this.selectedField) {
-           // case "tr_status": {
-            this.inventoryStatusService.getByIsm({ism_loc_start: controls1.tr_loc.value,ism_loc_end:controls1.tr_loc.value, ism_status_start: this.lddet.ld_status, 
-              ism_status_end:item.is_status }).subscribe((resstat:any)=>{
-              console.log(resstat)
-              const { data } = resstat;
-              console.log(data)
-              if (data.length > 0) {
-                alert("Mouvement Interdit pour Status")
-                controls1.tr_status.setValue(null)
-                //console.log(response.data.length)
-                document.getElementById("tr_status").focus();
-              } 
-              else{
-                controls1.tr_status.setValue(item.is_status || "");
-              }
-              })
-              
-           //   break;
-          //  }
+    if (Array.isArray(args.rows) && this.gridObjstatus) {
+      args.rows.map((idx) => {
+        const item = this.gridObjstatus.getDataItem(idx);
+        // TODO : HERE itterate on selected field and change the value of the selected field
+        //switch (this.selectedField) {
+         // case "tr_status": {
+          this.inventoryStatusService.getByIsm({ism_loc_start: controls1.tr_loc.value,ism_loc_end:controls1.tr_loc.value, ism_status_start: this.lddet.ld_status, 
+            ism_status_end:item.is_status }).subscribe((resstat:any)=>{
+            console.log(resstat)
+            const { data } = resstat;
+            console.log(data)
+            if (data.length > 0) {
             
-         //   default:
-         //     break;
-          //}
-        });
-      }
+              controls1.tr_status.setValue(null)
+              //console.log(response.data.length)
+              document.getElementById("tr_status").focus();
+              this.message = "vous n'avez pas le droit de sélectionner ce staut";
+        this.hasFormErrors = true
+        return
+            } 
+            else{
+              //CONTROLE CHOIX STATUT
+              
+              this.codeService
+              .getBy({
+                code_fldname: this.lddet.ld_status,
+                code_value:controls1.tr_status.value })
+              
+              .subscribe((response: any) => {
+                const { data } = response;
+                
+                if (!data) {
+                  this.message = "vous ne pouvez pas choisir ce statut";
+                  this.hasFormErrors = true
+                  return
+                }
+              });
+              controls1.tr_status.setValue(item.is_status || "");
+            }
+            })
+            
+         //   break;
+        //  }
+          
+       //   default:
+       //     break;
+        //}
+      });
+    }
     }
   
 
@@ -775,6 +823,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         controls.tr_expire.enable()
         controls.tr_rmks.enable()     
         controls.tr_serial_prev.setValue(item.ld_lot ); 
+        controls.tr_serial.setValue(item.ld_lot ); 
         controls.tr_status.setValue(item.ld_status ); 
         this.lddet = item
        
@@ -936,7 +985,7 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
         args.rows.map((idx) => {
             const cause = this.gridObj6.getDataItem(idx)
             console.log(cause)
-            controls.wo_rmks.setValue(cause.rsn_ref || "")
+            controls.tr_rmks.setValue(cause.rsn_ref || "")
 
         })
     }
@@ -1017,5 +1066,22 @@ prepareGrid6() {
 open6(content) {
     this.prepareGrid6()
     this.modalService.open(content, { size: "lg" })
+}
+getacts() {
+  const controls = this.statusForm.controls
+  this.codeService
+    .getBy({
+      code_fldname: "act",
+      code_desc:this.user.usrd_code,
+      chr01:controls.tr_status.value
+    })
+    .subscribe((response: any) => {
+      const { data } = response;
+      this.acts = data;
+      if (!data) {
+       
+        // controls.wo_site.setValue("");
+      }
+    });
 }
 }

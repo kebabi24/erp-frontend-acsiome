@@ -1,0 +1,355 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Création Rapport'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+      <ng-container ktPortletTools>
+        <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+        <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+        <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer</button>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body> 
+      <div class="example-preview">
+        <form class="kt-form" [formGroup]="empForm">
+          <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000" (close)="onAlertClose($event)">
+            {{ message }}
+          </kt-alert>
+  
+          <div class="row">
+            <div class="form-group col-2">
+              <label class="form-group">Code session/groupe:</label>
+              <div class="input-group input-group-sm">
+
+                  <input type="text"   id="pme_nbr"
+                      [className]="empForm.controls['pme_nbr'].errors && (empForm.controls['pme_nbr'].dirty || empForm.controls['pme_nbr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                      formControlName="pme_nbr"  aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                      <span class="input-group-text" (click)=opens(contents)>
+                          <i class="text-dark-50 flaticon2-search"></i> </span>
+                  </div>
+
+                 
+              </div>
+
+
+          </div> 
+          <div class="form-group col-2">
+              <label class="form-group">code de formation</label>
+              <div class="input-group input-group-sm">
+
+                  <input type="text"   id="pme_inst"
+                      [className]="empForm.controls['pme_inst'].errors && (empForm.controls['pme_inst'].dirty || empForm.controls['pme_inst'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                      formControlName="pme_inst"  aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                      <span class="input-group-text" (click)=openinst(contentinst)>
+                          <i class="text-dark-50 flaticon2-search"></i> </span>
+                  </div>
+
+                  <div *ngIf="empForm.controls['pme_inst'].errors && (empForm.controls['pme_inst'].dirty || empForm.controls['pme_inst'].touched)"
+                      class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+
+
+          </div>
+         
+     
+          <div class="form-group col-4">
+              <label class="form-group ">Designation:</label>
+              
+                  <input type="text" class="form-control form-control-sm form-control-solid"
+                      formControlName="pmdesc">
+          </div>
+      
+         
+         
+
+            
+          </div>
+          <div class="row">
+            <div class="form-group col-2">
+              <label class="form-group">code salle de formation:</label>
+              <div class="input-group input-group-sm">
+
+                  <input type="text"   id="pmr_task" disabled
+                      [className]="empForm.controls['pmr_task'].errors && (empForm.controls['pmr_task'].dirty || empForm.controls['pmr_task'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                      formControlName="pmr_task"  aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                      <span class="input-group-text" (click)=opentask(contenttask)>
+                          <i class="text-dark-50 flaticon2-search"></i> </span>
+                  </div>
+
+                  <div *ngIf="empForm.controls['pmr_task'].errors && (empForm.controls['pmr_task'].dirty || empForm.controls['pme_task'].touched)"
+                      class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+
+
+          </div>
+          <div class="form-group col-2">
+              <label class="form-group">Formateur:</label>
+              <div class="input-group input-group-sm">
+
+                  <input type="text"   id="pmr_site"
+                      [className]="empForm.controls['pmr_site'].errors && (empForm.controls['pmr_site'].dirty || empForm.controls['pmr_site'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                      formControlName="pmr_site"  disabled aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                      <span class="input-group-text" (click)=openform(contentform)>
+                          <i class="text-dark-50 flaticon2-search"></i> </span>
+                  </div>
+
+                  <div *ngIf="empForm.controls['pmr_site'].errors && (empForm.controls['pmr_site'].dirty || empForm.controls['pme_site'].touched)"
+                      class="invalid-feedback">Ce Champs est obligatoire</div>
+              </div>
+
+
+          </div>
+            <div class="form-group col-1">
+              <label class="form-group">Status Tache:</label>
+              <input type="text" class="form-control form-control-sm form-control-solid" formControlName="pmr_task_status" />
+            </div>
+            <div class="form-group col-1">
+              <label class="form-group">Cloturé:</label>
+              <div class="input-group input-group-sm">
+                <span class="switch switch-icon">
+                  <label>
+                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="pmr_close" />
+                    <span></span>
+                  </label>
+                </span>
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-group col-12 row">
+            <label class="col-2 col-form-label text-right"> Affectation Employé: </label>
+          </div>
+  
+          <div class="row col-lg-12">
+            <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Affecter un Employé</button>
+          </div>
+          <br />
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions" [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)"> </angular-slickgrid>
+          </div>
+  
+          <div class="row">
+            <button class="btn btn-sm btn-primary btn-elevate col-lg-2" (click)="addNewcnsItem()">Ajouter un Article</button>
+          </div>
+          <div class="row">
+            <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid" [columnDefinitions]="columnDefinitionscns" [gridOptions]="gridOptionscns" [dataset]="cnsdataset" (onAngularGridCreated)="gridReadycns($event)"> </angular-slickgrid>
+          </div>
+        </form>
+      </div>
+  
+      <div>
+        <ng-template #content let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Projet</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser" [columnDefinitions]="columnDefinitions" (onAngularGridCreated)="angularGridReady($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions" [dataset]="dataset"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+      </div>
+  
+      <div>
+        <ng-template #contentinst let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Instruction</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser" [columnDefinitions]="columnDefinitionsinst" (onAngularGridCreated)="angularGridReadyinst($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedinst($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsinst" [dataset]="datasetinst"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+      </div>
+      
+  
+      <div>
+        <ng-template #contentemp let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Employé</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" [columnDefinitions]="columnDefinitionsemp" (onAngularGridCreated)="angularGridReadyemp($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsemp" [dataset]="emps"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openEmpsGrid" class="btn btn-primary" (click)="openemp(contentemp)">Launch demo modal</button>
+      </div>
+  
+      <div>
+        <ng-template #contentprov let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Fournisseur</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" [columnDefinitions]="columnDefinitionsprov" (onAngularGridCreated)="angularGridReadyprov($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedprov($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsprov" [dataset]="providers"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openProvsGrid" class="btn btn-primary" (click)="openprov(contentprov)">Launch demo modal</button>
+      </div>
+      <div>
+        <ng-template #content4 let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir l'article</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem" [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions4" [dataset]="items"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo modal</button>
+      </div>
+      <div>
+        <ng-template #contentlocdet let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir Lot</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="gridloc" [columnDefinitions]="columnDefinitionslocdet" (onAngularGridCreated)="angularGridReadylocdet($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedlocdet($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionslocdet" [dataset]="datalocdet"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openLocdetsGrid" class="btn btn-primary" (click)="openlocdet(contentlocdet)">Launch demo modal</button>
+      </div>
+      <div>
+        <ng-template #contentum let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title">Choissir UM</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <angular-slickgrid class="col-12" gridHeight="300" gridId="gridum" [columnDefinitions]="columnDefinitionsum" (onAngularGridCreated)="angularGridReadyum($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChangedum($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptionsum" [dataset]="ums"> </angular-slickgrid>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+          </div>
+        </ng-template>
+        <button hidden id="openUmsGrid" class="btn btn-primary" (click)="openum(contentum)">Launch demo modal</button>
+      </div>
+      <div>
+        <ng-template #contents let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir session/groupe </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridsession"
+                        [columnDefinitions]="columnDefinitionss" (onAngularGridCreated)="angularGridReadys($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangeds($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionss" [dataset]="datasets">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+      </div>
+      <div>
+        <ng-template #contenttask let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Salle </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionstask" (onAngularGridCreated)="angularGridReadytask($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtask($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionstask" [dataset]="datasettask">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+      </div>
+      <div>
+        <ng-template #contentform let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir Formateur </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionsform" (onAngularGridCreated)="angularGridReadyform($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedform($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsform" [dataset]="datasetform">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+      </div>
+      
+    </kt-portlet-body>
+  </kt-portlet>
+  

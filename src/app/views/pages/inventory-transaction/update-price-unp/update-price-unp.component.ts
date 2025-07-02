@@ -282,10 +282,7 @@ this.addIt(this.dataset)
               true
             );
             this.loadingSubject.next(false);
-        //    console.log(this.provider, po, this.dataset);
-        //    if(controls.print.value == true) printBc(this.provider, this.datasetPrint, po);
-        //console.log(it, this.dataset, nlot)
-        // if(controls.print.value == true) printTR(it, this.dataset, nlot)
+        
         if (controls.print.value == true) this.printpdf(controls.tr_lot.value);
           this.reset()
           this.router.navigateByUrl("/inventory-transaction/update-price-unp");
@@ -334,14 +331,14 @@ this.addIt(this.dataset)
       //const rqm_nbr = controls.tr_so_job.value;
      
       this.dataset = [];
-          this.inventoryTransactionService.getByNbr({ tr_lot: controls.tr_lot.value, tr_type:"RCT-UNP" }).subscribe(
+          this.inventoryTransactionService.getByNbr({ tr_lot: controls.tr_lot.value, tr_type:"RCT-PO" }).subscribe(
             (res: any) => {
               console.log(res)
              this.dataset = res.data;
              if (this.dataset.length > 0) {
               this.dataView.setItems(this.dataset)
          
-              this.inventoryTransactionService.getBy({ tr_lot: controls.tr_lot.value, tr_type:"RCT-UNP" }).subscribe(
+              this.inventoryTransactionService.getByRef({ tr_lot: controls.tr_lot.value, tr_type:"RCT-PO" }).subscribe(
                 (resp: any) => {
                   console.log(resp)
                   controls.tr_lot.setValue(resp.data[0].tr_lot || "");
@@ -350,10 +347,10 @@ this.addIt(this.dataset)
                   controls.tr_loc.setValue(resp.data[0].tr_loc || "");
                   controls.tr_rmks.setValue(resp.data[0].tr_rmks || "");
                   controls.tr_addr.setValue(resp.data[0].tr_addr || "");
-                  this.addressService.getBy({ad_addr: resp.data[0].tr_addr}).subscribe((response: any)=>{
+                  this.addressService.getBy({ad_name: resp.data[0].tr_addr}).subscribe((response: any)=>{
                 
                 
-                    this.provider = response.data
+                    this.provider = response.data[0]
             
                   controls.name.setValue(this.provider.ad_name);
                   }) 
@@ -500,7 +497,7 @@ handleSelectedRowsChanged5(e, args) {
       controls.tr_rmks.setValue(item.tr_rmks || "");
       controls.tr_addr.setValue(item.tr_addr || "");
       
-      this.inventoryTransactionService.getByNbr({ tr_lot: item.tr_lot }).subscribe(
+      this.inventoryTransactionService.getByNbr({ tr_lot: item.tr_lot,tr_effdate:item.tr_effdate,tr_addr:item.tr_addr }).subscribe(
         (res: any) => {
           this.dataset = res.data
           this.dataView.setItems(this.dataset)
@@ -516,7 +513,7 @@ handleSelectedRowsChanged5(e, args) {
       this.addressService.getBy({ad_addr: item.tr_addr}).subscribe((response: any)=>{
                 
                 
-        this.provider = response.data
+        this.provider = response.data[0]
 
       controls.name.setValue(this.provider.ad_name);
       })
@@ -603,7 +600,7 @@ prepareGrid5() {
 
   // fill the dataset with your data
   this.inventoryTransactionService
-    .getByGroup({ tr_type:"RCT-UNP" })
+    .getByGroup({ tr_type:"RCT-PO" })
     .subscribe((response: any) => (this.transactions = response.data));
 }
 open5(content) {
@@ -616,29 +613,35 @@ printpdf(nbr) {
   const controlss = this.trForm.controls;
   console.log("pdf");
   var doc = new jsPDF();
-  
+  let date = new Date()
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
+  // img.src = "./assets/media/logos/update-price.png";
+  img.src = "./assets/media/logos/companyentete.png";
+    doc.addImage(img, 'png', 5, 5, 200, 30)
   doc.setFontSize(9);
-  if (this.domain.dom_name != null) {
-    doc.text(this.domain.dom_name, 10, 10);
-  }
-  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  // if (this.domain.dom_name != null) {
+  //   doc.text(this.domain.dom_name, 10, 10);
+  // }
+  // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
   doc.setFontSize(14);
 
   doc.line(10, 35, 200, 35);
   doc.setFontSize(12);
   doc.text("Bon Récéption N° : " + nbr, 70, 45);
+  doc.text("Date: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+     
   doc.setFontSize(8);
   //console.log(this.provider.ad_misc2_id)
   doc.text("Site Source : " + controlss.tr_site.value, 20, 60);
   doc.text("Magasin     : " + controlss.tr_loc.value, 100, 60);
   doc.text("Fournisseur : " + controlss.tr_addr.value, 20, 65);
-  doc.text( controlss.name.value, 50, 65);
+  // doc.text( controlss.name.value, 50, 65);
  
 
   doc.line(10, 85, 205, 85);
@@ -664,28 +667,34 @@ printpdf(nbr) {
   for (let j = 0; j < this.dataset.length  ; j++) {
     total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].qty)
     console.log("this.dataset[j].", this.dataset[j].id)
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      img.src = "./assets/media/logos/companylogo.png";
-      doc.addImage(img, 'png', 150, 5, 50, 30)
+// img.src = "./assets/media/logos/update-price.png";
+img.src = "./assets/media/logos/companyentete.png";
+doc.addImage(img, 'png', 5, 5, 200, 30)
       doc.setFontSize(9);
-      if (this.domain.dom_name != null) {
-        doc.text(this.domain.dom_name, 10, 10);
-      }
-      if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-      if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-      if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+      // if (this.domain.dom_name != null) {
+      //   doc.text(this.domain.dom_name, 10, 10);
+      // }
+      // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
       doc.setFontSize(14);
       doc.line(10, 35, 200, 35);
 
       doc.setFontSize(12);
       doc.text("Bon Récéption N° : " + nbr, 70, 45);
+      doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
       doc.setFontSize(8);
       //console.log(this.provider.ad_misc2_id)
       doc.text("Site Source : " + controlss.tr_site.value, 20, 60);
       doc.text("Magasin     : " + controlss.tr_loc.value, 100, 60);
       doc.text("Fournisseur : " + controlss.tr_addr.value, 20, 65);
-      doc.text( controlss.name.value, 50, 65);
+      // doc.text( controlss.name.value, 50, 65);
 
       doc.line(10, 85, 205, 85);
       doc.line(10, 90, 205, 90);
@@ -708,11 +717,11 @@ doc.addPage();
       doc.setFontSize(6);
     }
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35);
+    if (this.dataset[j].desc.length > 45) {
+      let desc1 = this.dataset[j].desc.substring(45);
       let ind = desc1.indexOf(" ");
-      desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-      let desc2 = this.dataset[j].desc.substring(35 + ind);
+      desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+      let desc2 = this.dataset[j].desc.substring(45 + ind);
 
       doc.line(10, i - 5, 10, i);
       doc.text(String("000" + this.dataset[j].id).slice(-3), 12.5, i - 1);
@@ -786,6 +795,8 @@ doc.addPage();
   //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
 
   doc.text(String(Number(total).toFixed(2)), 198, i + 12, { align: "right" });
+  doc.text("Validé par: " , 20, i + 22);
+    doc.text("Note: " , 20, i + 32);
   //  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
   //  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
   //  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
@@ -808,6 +819,7 @@ doc.addPage();
   
   // window.open(doc.output('bloburl'), '_blank');
   //window.open(doc.output('blobUrl'));  // will open a new tab
+  doc.save('RUP-' + nbr + '.pdf')
   var blob = doc.output("blob");
   window.open(URL.createObjectURL(blob));
 }

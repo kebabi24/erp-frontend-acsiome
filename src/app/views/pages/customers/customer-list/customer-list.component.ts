@@ -56,11 +56,14 @@ const myCustomCheckboxFormatter: Formatter = (
     : '<div class="text"  aria-hidden="true">Non</div>';
 
 @Component({
-  selector: "kt-customer-list",
+  selector: "kt-customer-list", 
   templateUrl: "./customer-list.component.html",
   styleUrls: ["./customer-list.component.scss"],
 })
 export class CustomerListComponent implements OnInit {
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  user:any;
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {};
   dataset: any[] = [];
@@ -201,21 +204,21 @@ export class CustomerListComponent implements OnInit {
         },
       },
 
-      {
-        id: "ad_ref",
-        name: "Ref",
-        field: "address.ad_ref",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-        grouping: {
-          getter: "ad_ref",
-          formatter: (g) =>
-            `Ref: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          aggregateCollapsed: false,
-          collapsed: false,
-        },
-      },
+      // {
+      //   id: "ad_ref",
+      //   name: "Sexe",
+      //   field: "address.ad_ref",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      //   grouping: {
+      //     getter: "ad_ref",
+      //     formatter: (g) =>
+      //       `Sexe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+      //     aggregateCollapsed: false,
+      //     collapsed: false,
+      //   },
+      // },
       {
         id: "ad_ext",
         name: "Email",
@@ -396,7 +399,9 @@ export class CustomerListComponent implements OnInit {
 
     // fill the dataset with your data
     this.dataset = [];
-    this.customerService.getAll().subscribe(
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    if(this.user.usrd_site == '*')
+    {this.customerService.getAll().subscribe(
       (response: any) => {
         this.dataset = response.data;
         this.dataview.setItems(this.dataset);
@@ -405,7 +410,21 @@ export class CustomerListComponent implements OnInit {
         this.dataset = [];
       },
       () => {}
-    );
+    );}
+    else{
+      console.log(this.user.usrd_site)
+      this.customerService.getByAll({cm_site:this.user.usrd_site}).subscribe(
+        (response: any) => {
+          this.dataset = response.data;
+          this.dataview.setItems(this.dataset);
+        },
+        (error) => {
+          this.dataset = [];
+        },
+        () => {}
+      );
+    }
+    
   }
   onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
@@ -436,6 +455,40 @@ export class CustomerListComponent implements OnInit {
     }
     this.gridObj.invalidate(); // invalidate all rows and re-render
   }
-
+  createcustomer() {
+    this.loadingSubject.next(false)
+    const url = `/customers/customer-create`
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+replist() {
+  this.loadingSubject.next(false)
+  const url = `/customers/list-rep`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+quotelist() {
+  this.loadingSubject.next(false)
+  const url = `/sales/req-list`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+invoicelist() {
+  this.loadingSubject.next(false)
+  const url = `/sales/list-invoices`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+recouvrement() {
+  this.loadingSubject.next(false)
+  const url = `/sales/payment-psh`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+reqlist() {
+  this.loadingSubject.next(false)
+  const url = `/training/create-req-training`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
+reclamation() {
+  this.loadingSubject.next(false)
+  const url = `/customers/customer-reclamation`
+  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+}
 
 }

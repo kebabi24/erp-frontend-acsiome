@@ -78,6 +78,18 @@ import { CreateItemModComponent } from './create-item-mod/create-item-mod.compon
 import { CreateStdItemComponent } from './create-std-item/create-std-item.component';
 import { ListStdUpdateComponent } from './list-std-update/list-std-update.component';
 import { EditStdItemComponent } from './edit-std-item/edit-std-item.component';
+import { CreateModBobineComponent } from './create-mod-bobine/create-mod-bobine.component';
+import { CreateBobineModComponent } from './create-bobine-mod/create-bobine-mod.component';
+import { CreateModMpComponent } from './create-mod-mp/create-mod-mp.component';
+import { CreateMpModComponent } from './create-mp-mod/create-mp-mod.component';
+import { CreateModMaterielComponent } from './create-mod-materiel/create-mod-materiel.component';
+import { CreateMaterielModComponent } from './create-materiel-mod/create-materiel-mod.component';
+import { CreateModPfComponent } from './create-mod-pf/create-mod-pf.component';
+import { CreatePfModComponent } from './create-pf-mod/create-pf-mod.component';
+import { CreateModDivComponent } from './create-mod-div/create-mod-div.component';
+import { CreateDivModComponent } from './create-div-mod/create-div-mod.component'
+import { CreateModImmobilierComponent } from './create-mod-immobilier/create-mod-immobilier.component';
+import { CreateImmobilierModComponent } from './create-immobilier-mod/create-immobilier-mod.component'
 import { ListCopieComponent } from './list-copie/list-copie.component';
 import { CopieArticleComponent } from './copie-article/copie-article.component';
 import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
@@ -128,6 +140,30 @@ const routes: Routes = [
                 component: CreateModComponent,
             },
             {
+                path: "create-mod-bobine",
+                component: CreateModBobineComponent,
+            },
+            {
+                path: "create-mod-materiel",
+                component: CreateModMaterielComponent,
+            },
+            {
+                path: "create-mod-immobilier",
+                component: CreateModImmobilierComponent,
+            },
+            {
+                path: "create-mod-pf",
+                component: CreateModPfComponent,
+            },
+            {
+                path: "create-mod-mp",
+                component: CreateModMpComponent,
+            },
+            {
+                path: "create-mod-div",
+                component: CreateModDivComponent,
+            },
+            {
                 path: "list-mod",
                 component: ListModComponent,
             },
@@ -140,8 +176,33 @@ const routes: Routes = [
                 component: UpdateModComponent,
             },
             {
-                path: "create-item-mod",
-                component: CreateItemModComponent,
+                path: "create-mp-mod",
+                component: CreateMpModComponent,
+            },
+            
+            {
+                path: "create-div-mod",
+                component: CreateDivModComponent,
+            },
+            {
+                path: "create-materiel-mod",
+                component: CreateMaterielModComponent,
+            },
+            {
+                path: "create-immobilier-mod",
+                component: CreateImmobilierModComponent,
+            },
+            {
+                path: "create-pf-mod",
+                component: CreatePfModComponent,
+            },
+            {
+                path: "create-bobine-mod",
+                component: CreateBobineModComponent,
+            },
+            {
+                path: "create-std-item",
+                component: CreateStdItemComponent,
             },
             {
                 path: "edit-std-item/:id",
@@ -191,6 +252,21 @@ const routes: Routes = [
         CreateStdItemComponent,
         ListStdUpdateComponent,
         EditStdItemComponent,
+        CreateModBobineComponent,
+        CreateBobineModComponent,
+        CreateModMpComponent,
+        CreateMpModComponent,
+        CreateModMaterielComponent,
+        CreateMaterielModComponent,
+        CreateModPfComponent,
+        CreatePfModComponent,
+        CreateModDivComponent,
+        CreateDivModComponent,
+        ListCopieComponent,
+        CopieArticleComponent,
+        EditProductpageComponent,
+        CreateModImmobilierComponent,
+        CreateImmobilierModComponent,
         ListCopieComponent,
         CopieArticleComponent,
         EditProductpageComponent,

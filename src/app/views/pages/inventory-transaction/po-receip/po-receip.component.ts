@@ -851,7 +851,7 @@ export class PoReceipComponent implements OnInit {
         this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                 
                 
-          this.provider = response.data
+          this.provider = response.data[0]
 
         controls.name.setValue(this.provider.ad_name);
       
@@ -1143,7 +1143,7 @@ if (this.location == null) {this.stat = null} else {this.stat = this.location.lo
             this.addressService.getBy({ad_addr: ad_addr}).subscribe((response: any)=>{
                     
                     
-              this.provider = response.data
+              this.provider = response.data[0]
     
             controls.name.setValue(this.provider.ad_name);
           
@@ -2012,16 +2012,23 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
   var img = new Image()
-  img.src = "./assets/media/logos/companylogo.png";
-  doc.addImage(img, 'png', 150, 5, 50, 30)
+  // img.src = "./assets/media/logos/po-receip.png";
+  img.src = "./assets/media/logos/companyentete.png";
+  doc.addImage(img, 'png', 5, 5, 200, 30)
   doc.setFontSize(9);
-  if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
-  if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
-  if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
-  if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
+  // if(this.domain.dom_name != null) {doc.text(this.domain.dom_name, 10 , 10 )};
+  // if(this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10 , 15 );
+  // if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10 , 20 );
+  // if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
   //doc.addImage(img, 'png', 5, 5, 210, 30)
+  let date = new Date()
   doc.setFontSize(12);
   doc.text( 'RC N° : ' + nbr  , 70, 40);
+  doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+     
+     
   doc.setFontSize(8);
   
   doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 50 )
@@ -2059,7 +2066,7 @@ printpdf(nbr) {
   doc.setFontSize(6);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
-    if ((j % 35 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
 doc.addImage(img, 'png', 150, 5, 50, 30)
 doc.setFontSize(9);
@@ -2069,6 +2076,11 @@ if(this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.doma
 if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 30 );
       doc.setFontSize(12);
       doc.text( 'RC N° : ' + nbr  , 70, 40);
+      doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
       doc.setFontSize(8);
    
       doc.text('Code Fournisseur : ' + this.provider.vd_addr, 20 , 50 )
@@ -2113,11 +2125,11 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
 
 
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35)
+    if (this.dataset[j].desc.length > 45) {
+      let desc1 = this.dataset[j].desc.substring(45)
       let ind = desc1.indexOf(' ')
-      desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-      let desc2 = this.dataset[j].desc.substring(35+ind)
+      desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+      let desc2 = this.dataset[j].desc.substring(45+ind)
 
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.dataset[j].prh_line)).slice(-3), 12.5 , i  - 1);
@@ -2185,7 +2197,8 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
     i = i + 5;
     }
   }
-  
+  doc.text("Validé par: " , 20, 235);
+  doc.text("Note: " , 20, 250);
  // doc.line(10, i - 5, 200, i - 5);
 
  doc.setFontSize(10);
@@ -2193,6 +2206,7 @@ if(this.domain.dom_tel != null) doc.text('Tel : ' + this.domain.dom_tel, 10 , 3
  
        // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('RC-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
 

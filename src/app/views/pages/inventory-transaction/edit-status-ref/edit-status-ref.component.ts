@@ -45,7 +45,8 @@ import {
   SiteService,
   InventoryStatusService,
   LocationDetailService,
-  CostSimulationService
+  CostSimulationService,
+  CodeService,
 } from "../../../../core/erp";
 import { Reason, ReasonService} from "../../../../core/erp"
 @Component({
@@ -61,7 +62,8 @@ export class EditStatusRefComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true)
   loading$: Observable<boolean>
   isExist = false
-
+  message = "";
+  user : any;
   items: [];
     columnDefinitions4: Column[] = [];
     gridOptions4: GridOption = {};
@@ -104,6 +106,8 @@ export class EditStatusRefComponent implements OnInit {
     dateexpire: String;
     sct;
     lddet: any
+    
+    acts: any[] = [];
   constructor(
       config: NgbDropdownConfig,
       private statusFB: FormBuilder,
@@ -119,7 +123,8 @@ export class EditStatusRefComponent implements OnInit {
       private sctService: CostSimulationService,
       private modalService: NgbModal,
       private inventoryTransactionService: InventoryTransactionService,
-      private reasonService: ReasonService
+      private reasonService: ReasonService,
+      private codeService: CodeService,
   ) {
       config.autoClose = true
        }
@@ -127,7 +132,9 @@ export class EditStatusRefComponent implements OnInit {
   ngOnInit(): void {
       this.loading$ = this.loadingSubject.asObservable()
       this.loadingSubject.next(false)
+      this.user = JSON.parse(localStorage.getItem("user"));
       this.createForm()
+      this.getacts();
   }
   //create form
   createForm() {
@@ -139,10 +146,11 @@ export class EditStatusRefComponent implements OnInit {
           tr_loc: [{value:this.inventoryTransaction.tr_loc, disabled: true},Validators.required],
           tr_part: [{value:this.inventoryTransaction.tr_part,disabled: true}, Validators.required],
           tr_serial_prev: [{value:this.inventoryTransaction.tr_serial, disabled:true}],
-          tr_serial: [this.inventoryTransaction.tr_serial], 
+          tr_serial: [{value:this.inventoryTransaction.tr_serial}], 
           tr_status: [this.inventoryTransaction.tr_status , Validators.required],
           tr_expire: [this.inventoryTransaction.tr_expire],
           tr_rmks : [this.inventoryTransaction.tr_rmks],
+          tr_user1: [this.inventoryTransaction.tr_user1],
         })
   }
 
@@ -162,10 +170,13 @@ export class EditStatusRefComponent implements OnInit {
           Object.keys(controls).forEach((controlName) =>
               controls[controlName].markAsTouched()
           )
-
+          this.message = "vous ne pouvez pas supprimer cette ligne";
           this.hasFormErrors = true
           return
       }
+
+     
+      //CONTROLE CHOIX DECISION
 
       // tslint:disable-next-line:prefer-const
       let inventoryTransaction = this.prepareIt()
@@ -186,8 +197,9 @@ console.log( controls.tr_serial.value)
       _it.tr_ref  = controls.ref.value
       _it.tr_serial = controls.tr_serial.value
       _it.tr_vend_lot = controls.tr_serial_prev.value
-      _it.tr_expire = controls.tr_expire.value
       _it.tr_rmks = controls.tr_rmks.value
+      _it.tr_user1 = controls.tr_user1.value
+      _it.tr_expire = controls.tr_expire.value
       ? `${controls.tr_expire.value.year}/${controls.tr_expire.value.month}/${controls.tr_expire.value.day}`
       : null
       
@@ -341,10 +353,10 @@ console.log( controls.tr_serial.value)
       this.inventoryStatusService.getBy({is_status}).subscribe(
         (res: any) => {
           const { data } = res;
-          const message = "Ce code status n'existe pas!";
+          this.message = "Ce code status n'existe pas!";
           if (!data.length) {
             this.layoutUtilsService.showActionNotification(
-              message,
+              this.message,
               MessageType.Create,
               10000,
               true,
@@ -357,11 +369,32 @@ console.log( controls.tr_serial.value)
               console.log(resstat)
               const { data } = resstat;
               if (data.length > 0) {
-                alert("Mouvement Interdit pour Status")
+                
                 controls.tr_status.setValue(null)
                 //console.log(response.data.length)
                 document.getElementById("tr_status").focus();
+                this.message = "vous n'avez pas le droit de sélectionner ce statut";
+                this.hasFormErrors = true
+                return
               } 
+              else{
+                 //CONTROLE CHOIX STATUT
+                  
+                  this.codeService
+                  .getBy({
+                    code_fldname: this.lddet.ld_status,
+                    code_value:controls.tr_status.value })
+                  
+                  .subscribe((response: any) => {
+                    const { data } = response;
+                    
+                    if (!data) {
+                      this.message = "vous ne pouvez pas choisir ce statut";
+                      this.hasFormErrors = true
+                      return
+                    }
+                  });
+              }
              
               })
             this.error = false;
@@ -387,12 +420,31 @@ console.log( controls.tr_serial.value)
               const { data } = resstat;
               console.log(data)
               if (data.length > 0) {
-                alert("Mouvement Interdit pour Status")
+              
                 controls1.tr_status.setValue(null)
                 //console.log(response.data.length)
                 document.getElementById("tr_status").focus();
+                this.message = "vous n'avez pas le droit de sélectionner ce staut";
+          this.hasFormErrors = true
+          return
               } 
               else{
+                //CONTROLE CHOIX STATUT
+                
+                this.codeService
+                .getBy({
+                  code_fldname: this.lddet.ld_status,
+                  code_value:controls1.tr_status.value })
+                
+                .subscribe((response: any) => {
+                  const { data } = response;
+                  
+                  if (!data) {
+                    this.message = "vous ne pouvez pas choisir ce statut";
+                    this.hasFormErrors = true
+                    return
+                  }
+                });
                 controls1.tr_status.setValue(item.is_status || "");
               }
               })
@@ -963,7 +1015,10 @@ angularGridReadyloc(angularGrid: AngularGridInstance) {
   }
  
     else {
-    alert("Palette Nexiste pas")
+      this.message = "cette réference n'existe pas";
+      
+          this.hasFormErrors = true
+          return
   //  this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , tr_part: null })
  
 controls.ref.setValue(null)
@@ -977,7 +1032,7 @@ document.getElementById("ref").focus();
         args.rows.map((idx) => {
             const cause = this.gridObj6.getDataItem(idx)
             console.log(cause)
-            controls.wo_rmks.setValue(cause.rsn_ref || "")
+            controls.tr_rmks.setValue(cause.rsn_ref || "")
 
         })
     }
@@ -1058,5 +1113,22 @@ prepareGrid6() {
 open6(content) {
     this.prepareGrid6()
     this.modalService.open(content, { size: "lg" })
+}
+getacts() {
+  const controls=this.statusForm.controls
+  this.codeService
+    .getBy({
+      code_fldname: "act",
+      code_desc:this.user.usrd_code,
+      chr01:controls.tr_status.value
+    })
+    .subscribe((response: any) => {
+      const { data } = response;
+      this.acts = data;
+      if (!data) {
+       
+        // controls.wo_site.setValue("");
+      }
+    });
 }
 }

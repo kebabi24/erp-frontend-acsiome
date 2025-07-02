@@ -50,13 +50,19 @@ import {
     MessageType,
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
-
-import {  InventoryTransaction, InventoryTransactionService, CodeService, LabelService, Label} from "../../../../core/erp"
+import {
+  NgbModal,
+  NgbActiveModal,
+  ModalDismissReasons,
+  NgbModalOptions,
+} from "@ng-bootstrap/ng-bootstrap";
+import {  InventoryTransaction, InventoryTransactionService, ItemService,AddressService,CodeService, LabelService, Label,PrintersService,} from "../../../../core/erp"
+import { Reason, ReasonService} from "../../../../core/erp"
 import {
   NgbDropdownConfig,
   NgbTabChangeEvent,
   NgbTabsetConfig,
-  NgbModal,
+  
 } from "@ng-bootstrap/ng-bootstrap";
 import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
@@ -76,6 +82,7 @@ const mymonthFormatter: Formatter = (row: number, cell: number, valueMONTH: any,
 valueMONTH.substring(5,7)  ;
 
 
+declare var ElectronPrinter3: any;
 declare var Edelweiss: any;
 @Component({
   selector: 'kt-edit-transaction-list',
@@ -84,6 +91,30 @@ declare var Edelweiss: any;
 })
 
 export class EditTransactionListComponent implements OnInit {
+  currentPrinter: string;
+  PathPrinter: string;
+  datasetPrint = [];
+ nom :any;
+  dataprinter: [];
+  columnDefinitionsprinter: Column[] = [];
+  gridOptionsprinter: GridOption = {};
+  gridObjprinter: any;
+
+  adresses: [];
+  columnDefinitions2: Column[] = [];
+  gridOptions2: GridOption = {};
+  gridObj2: any;
+  angularGrid2: AngularGridInstance;
+
+  items: [];
+  columnDefinitions4: Column[] = [];
+  gridOptions4: GridOption = {};
+  gridObj4: any;
+  angularGrid4: AngularGridInstance;
+
+  provider: any;
+  row_number: any;
+  angularGridprinter: AngularGridInstance;
   loadingSubject = new BehaviorSubject<boolean>(true);
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
@@ -105,7 +136,10 @@ export class EditTransactionListComponent implements OnInit {
   datefilter: any;
   index: any;
   hasFormErrors = false;
+  isExist = false;
+  user : any;
   data: any[];
+  oldata: any[];
   message = "";
   trlot: string;
   constructor(
@@ -113,6 +147,7 @@ export class EditTransactionListComponent implements OnInit {
       private httpUtils: HttpUtilsService,
       private trFB: FormBuilder,
       config: NgbDropdownConfig,
+      private modalService: NgbModal,
       private activatedRoute: ActivatedRoute,
       private router: Router,
       public dialog: MatDialog,
@@ -120,6 +155,10 @@ export class EditTransactionListComponent implements OnInit {
       private codeService: CodeService,
       private inventoryTransactionService: InventoryTransactionService,
       private labelService: LabelService,
+      private addressService: AddressService,
+      private itemsService: ItemService,
+      private printerService: PrintersService,
+ 
   ) {
    
     
@@ -134,6 +173,17 @@ export class EditTransactionListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
+    this.user = JSON.parse(localStorage.getItem("user"));
+    this.currentPrinter = this.user.usrd_dft_printer;
+      this.printerService.getByPrinter({ printer_code: this.currentPrinter }).subscribe(
+        (reponse: any) => ((this.PathPrinter = reponse.data.printer_path), console.log(this.PathPrinter)),
+        (error) => {
+          this.message = "veuillez verifier l'imprimante";
+          this.isExist = true;
+          return;
+        }
+      );
     this.createForm();
     this.prepareGrid();
     this.trlist();
@@ -156,6 +206,7 @@ export class EditTransactionListComponent implements OnInit {
         month: date1.getMonth()+1,
         day: date1.getDate()
       }],
+      printer: [this.user.usrd_dft_printer],
       
     
     });
@@ -202,9 +253,11 @@ export class EditTransactionListComponent implements OnInit {
                   this.index = this.dataset.findIndex((el) => {
                     return el.tr_line == args.dataContext.tr_line;
                   });
-                  args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+                  // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
                   
                   this.data = [];
+                  
+                  
                   let obj = {
                     tr_lot:args.dataContext.tr_lot,
                     tr_nbr:args.dataContext.tr_nbr,
@@ -217,7 +270,7 @@ export class EditTransactionListComponent implements OnInit {
                     tr_line: args.dataContext.tr_line,
                     tr_part: args.dataContext.tr_part,
                     desc: args.dataContext.desc,
-                    tr_qty_loc: args.dataContext.tr_qty_chg * -1,
+                    tr_qty_loc: args.dataContext.tr_qty_loc * - 1,
                     tr_um: args.dataContext.tr_um,
                     tr_um_conv: args.dataContext.tr_um_conv,
                     tr_price: args.dataContext.tr_price,
@@ -232,26 +285,44 @@ export class EditTransactionListComponent implements OnInit {
                   this.data.push(obj);
                   let tr = obj;
                   this.trlot = args.dataContext.tr_lot;
-                  this.updatetrans(args.dataContext.id)
-                 if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
-                 else{
-                  if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
+                  // this.updatetrans(args.dataContext.id)
+                  if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
                   else{
-                   if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                    if(args.dataContext.tr_type == 'RCT-PO') {this.addRCTPO(this.data, tr, this.trlot)}
+                    else{ 
+                   if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
                    else{
-                    if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                    if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
                     else{
+                     if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                     else{ 
                       if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
                      }
+                    }
+                   }
                   }
-                   
                   }
-                 }
                   // }
                 
                 this.angularGrid.gridService.deleteItem(args.dataContext);
               }
             
+            },
+          },
+          {
+            id: "advid",
+            name: "adresse",
+            field: "advid",
+            excludeFromHeaderMenu: true,
+            formatter: Formatters.infoIcon,
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+             
+                this.row_number = args.row;
+                let element: HTMLElement = document.getElementById("openvdGrid") as HTMLElement;
+                element.click();
+              
             },
           },
           
@@ -262,6 +333,9 @@ export class EditTransactionListComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            editor: {
+              model: Editors.text,
+            },
             filter: {
 
              model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
@@ -278,7 +352,43 @@ export class EditTransactionListComponent implements OnInit {
               aggregateCollapsed: true,
              
               collapsed:true
-            }
+            },
+            onCellChange: (e: Event, args: OnEventArgs) => {
+          
+           
+            },
+          }, 
+          {
+            id: "tr_oldaddr",
+            name: "Adresse",
+            field: "tr_oldaddr",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            // editor: {
+            //   model: Editors.text,
+            // },
+            filter: {
+
+             model: Filters.compoundInput , operator: OperatorType.rangeInclusive,
+              
+             },
+            grouping: {
+              getter: 'tr_oldaddr',
+              formatter: (g) => `Adresse: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc')
+              ],
+              aggregateCollapsed: true,
+             
+              collapsed:true
+            },
+            onCellChange: (e: Event, args: OnEventArgs) => {
+          
+           
+            },
           }, 
           {
             id: "tr_part",
@@ -303,6 +413,45 @@ export class EditTransactionListComponent implements OnInit {
               collapsed:true
             }
           }, 
+          {
+            id: "tr_oldpart",
+            name: "Article",
+            field: "tr_oldpart",
+            sortable: true,
+            filterable: true,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            type: FieldType.string,
+            grouping: {
+              getter: 'tr_oldpart',
+             
+              formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+            
+              collapsed:true
+            }
+          },
+          {
+            id: "mvid",
+            name: "Article",
+            field: "cmvid",
+            excludeFromHeaderMenu: true,
+            formatter: Formatters.infoIcon,
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+             
+                this.row_number = args.row; 
+                let element: HTMLElement = document.getElementById("openItemsGrid") as HTMLElement;
+                element.click();
+              
+            },
+          },
           {
             id: "tr_desc",
             name: "Description",
@@ -400,8 +549,36 @@ export class EditTransactionListComponent implements OnInit {
             filterable: true,
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
             type: FieldType.string,
+            editor: {
+              model: Editors.text,
+            },
             grouping: {
               getter: 'tr_serial',
+              formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc')
+              ],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
+          },
+          {
+            id: "tr_oldserial",
+            name: "Lot",
+            field: "tr_oldserial",
+            sortable: true,
+            filterable: true,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            type: FieldType.string,
+            editor: {
+              model: Editors.text,
+            },
+            grouping: {
+              getter: 'tr_oldserial',
               formatter: (g) => `Lot: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               
               aggregators: [
@@ -445,46 +622,18 @@ export class EditTransactionListComponent implements OnInit {
             },
             filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive }, 
             onCellChange: (e: Event, args: OnEventArgs) => {
+              this.codeService.getByOne({code_fldname:'LIMIT',code_value:args.dataContext.tr__chr01}).subscribe((coderesp:any)=>{
+                if(coderesp.data != null)
+                {if(args.dataContext.tr_qty_loc > Number(coderesp.data.code_cmmt) || args.dataContext.tr_qty_loc < 0){
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.tr_qty_chg })
+                this.message = "quantité ne peut pas dépasser limite";
+                this.hasFormErrors = true;
+                return;
+              }}
+            })
+ 
           
-                this.data = [];
-                let obj = {
-                  tr_lot:args.dataContext.tr_lot,
-                  tr_nbr:args.dataContext.tr_nbr,
-                  tr_addr:args.dataContext.tr_addr,
-                  tr_rmks:'CORRECTION ADMINISTRATION',
-                  tr_gl_date: new Date(),
-                  tr_effdate: args.dataContext.tr_effdate,
-                  dec01:args.dataContext.dec01,
-                  dec02:args.dataContext.dec02,
-                  tr_line: args.dataContext.tr_line,
-                  tr_part: args.dataContext.tr_part,
-                  desc: args.dataContext.desc,
-                  tr_qty_loc: args.dataContext.tr_qty_loc - args.dataContext.tr_qty_chg ,
-                  tr_um: args.dataContext.tr_um,
-                  tr_um_conv: args.dataContext.tr_um_conv,
-                  tr_price: args.dataContext.tr_price,
-                  tr_site: args.dataContext.tr_site,
-                  tr_loc: args.dataContext.tr_loc,
-                  tr_serial: args.dataContext.tr_serial,
-                  tr_ref: args.dataContext.tr_ref,
-                  tr_status: args.dataContext.tr_status,
-                  tr_expire: args.dataContext.tr_expire,
-                };
-                // this.data.push(this.dataset[this.index])
-                this.data.push(obj);
-                let tr = obj;
-                this.trlot = args.dataContext.tr_lot;
-                this.updatetrans(args.dataContext.id)
-                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
-                else{
-                 if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
-                 else{
-                  if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
-                  else{
-                   if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
-                  }
-                 }
-                }
+                
                 
               
                
@@ -663,7 +812,198 @@ export class EditTransactionListComponent implements OnInit {
               
               collapsed:true
             }
-          }, 
+          },
+          {
+            id: "printed",
+            name: "corrigé",
+            field: "printed",
+            sortable: true,
+            filterable: true,
+            type: FieldType.boolean,
+           
+           
+
+          },
+          {
+            id: "idprint",
+            field: "idprint",
+            excludeFromHeaderMenu: true,
+            formatter: (row, cell, value, columnDef, dataContext) => {
+              // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+              return `
+                <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+                     <i class="flaticon2-printer" ></i>
+                     
+                 </a>
+                 `;
+            },
+            minWidth: 30,
+            maxWidth: 30,
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              console.log(args.dataContext.tr_oldpart,args.dataContext.tr_part)
+              if(args.dataContext.printed != true){
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, printed:true })
+                
+              if(args.dataContext.tr_part!=args.dataContext.tr_oldpart || args.dataContext.tr_addr!=args.dataContext.tr_oldaddr || args.dataContext.tr_serial!=args.dataContext.tr_oldserial || args.dataContext.tr_qty_loc!= args.dataContext.tr_qty_chg)   /*ajouter ligne tr_hist de suppression*/
+                { console.log('changement', args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,args.dataContext.tr_oldserial) 
+                  
+                this.index = this.dataset.findIndex((el) => {
+                  return el.tr_line == args.dataContext.tr_line;
+                });
+                // args.dataContext.tr_qty_loc = args.dataContext.tr_qty_loc * -1;
+                
+                this.oldata = [];
+                let oldobj = {
+                  tr_lot:args.dataContext.tr_lot,
+                  tr_nbr:args.dataContext.tr_nbr,
+                  tr_addr:args.dataContext.tr_oldaddr,
+                  tr_rmks:'CORRECTION ADMINISTRATION',
+                  tr_gl_date: new Date(),
+                  tr_effdate: args.dataContext.tr_effdate,
+                  dec01:args.dataContext.dec01,
+                  dec02:args.dataContext.dec02,
+                  tr_line: args.dataContext.tr_line,
+                  tr_part: args.dataContext.tr_oldpart,
+                  desc: args.dataContext.desc,
+                  tr_qty_loc: args.dataContext.tr_qty_chg * -1,
+                  tr_um: args.dataContext.tr_um,
+                  tr_um_conv: args.dataContext.tr_um_conv,
+                  tr_price: args.dataContext.tr_price,
+                  tr_site: args.dataContext.tr_site,
+                  tr_loc: args.dataContext.tr_loc,
+                  tr_serial: args.dataContext.tr_oldserial,
+                  tr_ref: args.dataContext.tr_ref,
+                  tr_status: args.dataContext.tr_status,
+                  tr_expire: args.dataContext.tr_expire,
+                  tr_rev:'CHANGED',
+                };
+                
+                args.dataContext.tr_qty_chg = 0;
+                this.oldata.push(oldobj);
+                let oldtr = oldobj;
+                this.trlot = args.dataContext.tr_lot;
+                // this.updatetrans(args.dataContext.id)
+                console.log(args.dataContext.tr_oldpart,args.dataContext.tr_oldaddr,'old')
+                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.oldata, oldtr, this.trlot)}
+                else{
+                  if(args.dataContext.tr_type == 'RCT-PO') {this.addRCTPO(this.oldata, oldtr, this.trlot)}
+                  else{
+                        if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.oldata, oldtr, this.trlot)}
+                        else{
+                          if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.oldata, oldtr)}
+                          else{
+                          if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.oldata,oldtr)}
+                          else{ 
+                            if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.oldata,oldtr)}
+                          }
+                          }
+                        }
+                  }
+                }
+                console.log('delay');
+                this.data = [];
+                let obj = {
+                      tr_lot:args.dataContext.tr_lot,
+                      tr_nbr:args.dataContext.tr_nbr,
+                      tr_addr:args.dataContext.tr_addr,
+                      tr_rmks:'CORRECTION ADMINISTRATION',
+                      tr_gl_date: new Date(),
+                      tr_effdate: args.dataContext.tr_effdate,
+                      dec01:args.dataContext.dec01,
+                      dec02:args.dataContext.dec02,
+                      tr_line: args.dataContext.tr_line,
+                      tr_part: args.dataContext.tr_part,
+                      desc: args.dataContext.desc,
+                      tr_loc_begin: 0,
+                      tr_qty_loc: args.dataContext.tr_qty_loc  ,
+                      tr_gl_amt: (args.dataContext.tr_qty_loc ) * args.dataContext.tr_price * args.dataContext.tr_um_conv,
+                      tr_um: args.dataContext.tr_um,
+                      tr_um_conv: args.dataContext.tr_um_conv,
+                      tr_price: args.dataContext.tr_price,
+                      tr_site: args.dataContext.tr_site,
+                      tr_loc: args.dataContext.tr_loc,
+                      tr_serial: args.dataContext.tr_serial,
+                      tr_ref: args.dataContext.tr_ref,
+                      tr_status: args.dataContext.tr_status,
+                      tr_expire: args.dataContext.tr_expire,
+                };
+                
+              
+                setTimeout(() => {
+                  // this.data.push(this.dataset[this.index])
+                this.data.push(obj);
+                let tr = obj;
+                this.trlot = args.dataContext.tr_lot;
+                    
+                if(args.dataContext.tr_type == 'RCT-UNP') {this.addRCTUNP(this.data, tr, this.trlot)}
+                else{
+                  if(args.dataContext.tr_type == 'RCT-PO') {this.addRCTPO(this.data, tr, this.trlot)}
+                    else{
+                    if(args.dataContext.tr_type == 'ISS-UNP') {this.addISSUNP(this.data, tr, this.trlot)}
+                    else{
+                      if(args.dataContext.tr_type == 'RCT-WO') {this.addRCTWO(this.data, tr)}
+                      else{
+                      if(args.dataContext.tr_type == 'ISS-WO') {this.addISSWO(this.data,tr)}
+                      else{ 
+                        if(args.dataContext.tr_type == 'RJCT-WO') {this.addRJCTWO(this.data,tr)}
+                      }
+                      }
+                    }
+                  }
+                }
+                  
+                  console.log('delay')
+                  const controls = this.trForm.controls;
+              let cabs : any;
+              const _lb = new Label();
+              this.labelService.getBy({ lb_ref: args.dataContext.tr_ref }).subscribe(
+                (reponse: any) => (
+                  cabs = reponse.data.label, console.log(args.dataContext.tr_ref,cabs),
+                
+                _lb.lb__dec01 = cabs.lb__dec01,
+                
+                _lb.lb_site = cabs.lb_site,
+                _lb.lb_rmks = cabs.lb_rmks,
+                _lb.lb_loc = cabs.lb_loc,
+                _lb.lb_part = args.dataContext.tr_part,
+                _lb.lb_nbr = cabs.lb_nbr, //this.trnbr
+                _lb.lb_lot = args.dataContext.tr_serial,
+                _lb.lb_date = cabs.lb_date, 
+                _lb.lb_qty = args.dataContext.tr_qty_loc,
+                _lb.lb_um = cabs.lb_um,
+                _lb.lb_ld_status = cabs.lb_ld_status,
+                _lb.lb_desc = args.dataContext.desc,
+                _lb.lb_printer = this.PathPrinter,
+                _lb.lb_cust = args.dataContext.tr_addr,
+                _lb.lb_grp = cabs.lb_Grp,
+                _lb.lb_addr = cabs.lb_addr,
+                _lb.lb_tel = cabs.lb_tel,
+                _lb.lb_ref = cabs.lb_ref,
+                _lb.lb__chr01 = cabs.lb__chr01,
+
+                this.labelService.addblob(_lb).subscribe((blob) => {                 
+                  Edelweiss.print3(_lb,this.currentPrinter);
+                })
+                
+              ),
+                (error) => {
+                  this.message = "veuillez verifier le code barre";
+                  this.isExist = true;
+                  return;
+                }
+              )  
+                },3000)
+                                    
+               
+              
+              
+              }}
+              else{ this.message = "vous avez dèjà modifié cette ligne";
+                this.hasFormErrors = true;
+                return;}
+              
+            }
+          },
           
 
       ]
@@ -706,7 +1046,7 @@ export class EditTransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:80},{columnId:"tr_part",width:80},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_um",width:10}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20}]
+          columns:[{columnId:"line",width:50},{columnId:"supp",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_addr",width:50},{columnId:"advid",width:20},{columnId:"mvid",width:20},{columnId:"tr_desc",width:150},{columnId:"tr__chr01",width:100},{columnId:"tr__chr02",width:100},{columnId:"tr__chr03",width:100},{columnId:"tr_serial",width:20},{columnId:"tr_ref",width:20}, {columnId:"tr_qty_loc",width:20}, {columnId:"tr_status",width:80}, {columnId:"tr_type",width:50}, {columnId:"tr_lot",width:20}, {columnId:"tr_nbr",width:20},{columnId:"printed",width:20},{columnId:"idprint",width:20}]
           
         },
        
@@ -743,21 +1083,32 @@ export class EditTransactionListComponent implements OnInit {
     }
 
     // fill the dataset with your data
+    const controls = this.trForm.controls
+    
     this.dataset = []
     this.copydataset = []
-    this.inventoryTransactionService.getAll().subscribe(
+    const date = controls.date.value
+    ? `${controls.date.value.year}/${controls.date.value.month}/${controls.date.value.day}`
+    : null;
+  
+    const date1 = controls.date1.value
+    ? `${controls.date1.value.year}/${controls.date1.value.month}/${controls.date1.value.day}`
+    : null;
+    
+    let obj= {date,date1}
+    this.inventoryTransactionService.getByDate(obj).subscribe(
+      (res: any) => {
+    
+      //(response: any) => (this.dataset = response.data),
+      console.log(res.data)
       
-        (response: any) => {this.dataset = response.data,
-          this.copydataset = response.data,
-          this.dataview.setItems(this.dataset)},
-        
-        (error) => {
-            this.dataset = []
-            this.copydataset = []
-        },
-        () => {}
-        
-    )
+      this.dataset  = res.data;
+      this.copydataset  = res.data;
+      this.dataview.setItems(this.dataset)
+      
+    //this.dataset = res.data
+    this.loadingSubject.next(false) 
+  })
     
 }
 onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
@@ -845,7 +1196,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       (res: any) => {
     
       //(response: any) => (this.dataset = response.data),
-      console.log(res.data.tr_gl_date)
+      console.log(res.data)
       
       this.dataset  = res.data;
       this.copydataset  = res.data;
@@ -942,19 +1293,43 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
         // window.open(fileUrl)
       },
       (error) => {
-        
-        alert("Erreur, vérifier les informations");
+        this.message = "RCT-UNP";
+        this.isExist = true
+        return
         this.loadingSubject.next(false);
       },
       () => {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
+        
+      }
+    );
+  }
+  addRCTPO(detail: any, it, nlot) {
+   
+    this.loadingSubject.next(true);
+    const controls = this.trForm.controls;
+  
+    this.inventoryTransactionService.addRCTPOCab({ detail, it, nlot }).subscribe(
+      (reponse: any) => {
+        console.log(reponse);
+        // const arrayOctet = new Uint8Array(reponse.pdf.data)
+        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
+        // const fileUrl = URL.createObjectURL(file);
+        // window.open(fileUrl)
+      },
+      (error) => {
+        this.message = "RCT-UNP";
+        this.isExist = true
+        return
+        this.loadingSubject.next(false);
+      },
+      () => {
+        this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
 
-        // this.router.navigateByUrl("/");
+        
       }
     );
   }
@@ -968,15 +1343,11 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
       .subscribe(
        (reponse: any) => {
         console.log(reponse)
-      // this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
-        // const arrayOctet = new Uint8Array(reponse.pdf.data)
-        // const file = new Blob([arrayOctet as BlobPart], {type : 'application/pdf'})
-        // const fileUrl = URL.createObjectURL(file);
-        // window.open(fileUrl)},
+      
        },
         (error) => {
           this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
+            "Erreur iss-unp",
             MessageType.Create,
             10000,
             true,
@@ -1053,7 +1424,7 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
        (reponse: any) => console.log(reponse),
         (error) => {
           this.layoutUtilsService.showActionNotification(
-            "Erreur verifier les informations",
+            "Erreur iss-wo",
             MessageType.Create,
             10000,
             true,
@@ -1077,10 +1448,315 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
         }
       );
   }
+  handleSelectedRowsChangedprinter(e, args) {
+    const controls = this.trForm.controls;
+  
+    if (Array.isArray(args.rows) && this.gridObjprinter) {
+      args.rows.map((idx) => {
+        const item = this.gridObjprinter.getDataItem(idx);
+        console.log(item);
+        // TODO : HERE itterate on selected field and change the value of the selected field
+        controls.printer.setValue(item.printer_code || "");
+        this.currentPrinter = item.printer_code;
+        this.PathPrinter = item.printer_path;
+      });
+    }
+  }
+  
+  angularGridReadyprinter(angularGrid: AngularGridInstance) {
+    this.angularGridprinter = angularGrid;
+    this.gridObjprinter = (angularGrid && angularGrid.slickGrid) || {};
+  }
+  prepareGridprinter() {
+    this.columnDefinitionsprinter = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "printer_code",
+        name: "Code",
+        field: "printer_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "printer_desc",
+        name: "Designation",
+        field: "printer_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "printer_path",
+        name: "Path",
+        field: "printer_path",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptionsprinter = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {},
+      multiSelect: false,
+      rowSelectionOptions: {
+        selectActiveRow: true,
+      },
+    };
+  
+    // fill the dataset with your data
+    this.printerService.getBy({ usrd_code: this.user.usrd_code }).subscribe((response: any) => (this.dataprinter = response.data));
+  }
+  openprinter(contentprinter) {
+    this.prepareGridprinter();
+    this.modalService.open(contentprinter, { size: "lg" });
+  }
+  handleSelectedRowsChanged2(e, args) {
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObj2) {
+      args.rows.map((idx) => {
+        const item = this.gridObj2.getDataItem(idx);
+        console.log(item);
+
+        
+            updateItem.tr_addr = item.ad_addr;
+            
+            this.gridService.updateItem(updateItem);
+          });
+          //});
+        }
+  }
+
+  angularGridReady2(angularGrid: AngularGridInstance) {
+    this.angularGrid2 = angularGrid;
+    this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGrid2() {
+    this.columnDefinitions2 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "ad_addr",
+        name: "code",
+        field: "ad_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_name",
+        name: "Nom",
+        field: "ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_phone",
+        name: "Numero telephone",
+        field: "ad_phone",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxable",
+        name: "A Taxer",
+        field: "ad_taxable",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxc",
+        name: "Taxe",
+        field: "ad_taxc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions2 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
+  }
+  open2(content) {
+    this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
+      (reponse: any) => {
+        if (reponse.data == null || reponse.data.code_value != ' ') {
+          this.prepareGrid2();
+          this.modalService.open(content, { size: "lg" });
+        }
+        console.log(reponse.data);
+      },
+      (error) => {
+        this.prepareGrid2();
+        this.modalService.open(content, { size: "lg" });
+      }
+    );
+  }
+  handleSelectedRowsChanged4(e, args) {
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    if (Array.isArray(args.rows) && this.gridObj4) {
+      args.rows.map((idx) => {
+        const item = this.gridObj4.getDataItem(idx);
+        console.log(item,this.dataset[idx].tr_oldpart);
+
+        
+            updateItem.tr_part = item.pt_part;
+            updateItem.desc = item.pt_desc1;
+            updateItem.tr_um = item.pt_um;
+            updateItem.tr_um_conv = 1;
+            // updateItem.tr_site = item.pt_site;
+            // updateItem.tr_loc = item.pt_loc;
+            updateItem.tr_price = 0; //this.sct.sct_mtl_tl;
+            updateItem.tr_desc = item.pt_desc1
+            updateItem.tr__chr01 = item.pt_draw
+            updateItem.tr__chr02 = item.pt_break_cat
+            updateItem.tr__chr03 = item.pt_group
+            this.gridService.updateItem(updateItem);
+          });
+          //});
+        }
+  }
+  
+  angularGridReady4(angularGrid: AngularGridInstance) {
+    this.angularGrid4 = angularGrid;
+    this.gridObj4 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGrid4() {
+    this.columnDefinitions4 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "pt_part",
+        name: "code ",
+        field: "pt_part",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "pt_desc1",
+        name: "desc",
+        field: "pt_desc1",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "pt_um",
+        name: "desc",
+        field: "pt_um",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptions4 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    
+    
+      this.itemsService.getAll().subscribe((response: any) => (this.items = response.data));
+    
+  }
+  open4(content) {
+    this.prepareGrid4();
+    this.modalService.open(content, { size: "lg" });
+  }
   updatetrans(details: any) {
     this.loadingSubject.next(true)
-    this.inventoryTransactionService.updatetr({id:details}).subscribe(
-        (reponse) => console.log("response", Response),
+    this.inventoryTransactionService.updatetr(details).subscribe(
+        (reponse) => console.log("response", reponse),
         (error) => {
             this.layoutUtilsService.showActionNotification(
                 "Erreur verifier les informations",
@@ -1106,3 +1782,4 @@ onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
     )
   }
 }
+

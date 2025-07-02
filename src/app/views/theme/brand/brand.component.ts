@@ -41,6 +41,7 @@ export class BrandComponent implements OnInit, AfterViewInit {
     //this.toggleAsideClick()
     this.brandClasses = this.htmlClassService.getClasses('brand', true).toString();
     this.asideSelfMinimizeToggle = this.layoutConfigService.getConfig('aside.self.minimize.toggle');
+    this.toggleAsideClick()
   }
 
   /**

@@ -50,7 +50,13 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import {CodeService} from '../../../core/erp'
+import {CodeService} from '../../../core/erp';
+import { CreateDocComponent } from './create-doc/create-doc.component';
+import { ListDocComponent } from './list-doc/list-doc.component';
+import { EditDocComponent } from './edit-doc/edit-doc.component';
+import { EpiCreateClassificationComponent } from './epi-create-classification/epi-create-classification.component';
+import { EpiListClassificationComponent } from './epi-list-classification/epi-list-classification.component';
+import { EpiEditClassificationComponent } from './epi-edit-classification/epi-edit-classification.component'
 
 const routes: Routes = [
     {
@@ -65,6 +71,30 @@ const routes: Routes = [
         path: "codes-list",
         component: ListComponent,
     },
+    {
+        path: "create-doc",
+        component: CreateDocComponent,
+    },
+    {
+        path: "edit-doc/:id",
+        component: EditDocComponent,
+    },
+    {
+        path: "list-doc",
+        component: ListDocComponent,
+    },
+    {
+        path: "epi-create-classification",
+        component: EpiCreateClassificationComponent,
+    },
+    {
+        path: "epi-edit-classification/:id",
+        component: EpiEditClassificationComponent,
+    },
+    {
+        path: "epi-list-classification",
+        component: EpiListClassificationComponent,
+    },
 ]
 
 @NgModule({
@@ -73,6 +103,12 @@ const routes: Routes = [
         CreateComponent,
         ListComponent,
         EditComponent,
+        CreateDocComponent,
+        ListDocComponent,
+        EditDocComponent,
+        EpiCreateClassificationComponent,
+        EpiListClassificationComponent,
+        EpiEditClassificationComponent,
     ],
     imports: [
         CommonModule,

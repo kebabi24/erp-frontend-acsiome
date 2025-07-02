@@ -53,6 +53,7 @@ export class BobineReceiptCabComponent implements OnInit {
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
   error = false;
+  nom:any;
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
@@ -67,7 +68,7 @@ export class BobineReceiptCabComponent implements OnInit {
   gridOptions4: GridOption = {};
   gridObj4: any;
   angularGrid4: AngularGridInstance;
-
+  printable:boolean;
   datasite: [];
   columnDefinitionssite: Column[] = [];
   gridOptionssite: GridOption = {};
@@ -276,10 +277,12 @@ export class BobineReceiptCabComponent implements OnInit {
           params: { decimalPlaces: 2 },
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
+          
           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
             alert("Modification interdite");
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_qty_loc: args.dataContext.qty });
           } else {
+            this.printable = true;
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.tr_qty_loc });
           }
         },
@@ -478,6 +481,7 @@ export class BobineReceiptCabComponent implements OnInit {
           if (args.dataContext.tr_ref != null) {
             alert("Modification interdite");
           } else {
+            this.printable = true
             this.locationDetailService.getBy({ ld_site: args.dataContext.tr_site, ld_loc: args.dataContext.tr_loc, ld_part: args.dataContext.tr_part, ld_lot: args.dataContext.tr_serial }).subscribe((response: any) => {
               console.log(response.data);
               if (response.data.length != 0) {
@@ -604,12 +608,23 @@ export class BobineReceiptCabComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           this.printbuttonState = true;
+          let barcode = ''
           // if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
           //   this.angularGrid.gridService.deleteItem(args.dataContext);
           // }
-          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+          if (args.dataContext.tr_serial == null || args.dataContext.tr_serial == '') {
+            this.hasFormErrors = true;
+            this.message = "veuillez remplir le N° de lot";
+          
+      
+            return;
+          }
+          if (this.printable == true){
+          if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null  && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
+            // this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: '-', qty: args.dataContext.tr_qty_loc });
             const controls = this.trForm.controls;
-            this.printbuttonState = true;
+            this.printbuttonState = true; 
+            this.printable = false
             const _lb = new Label();
             (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
             _lb.lb_rmks = controls.tr_rmks.value;
@@ -623,38 +638,49 @@ export class BobineReceiptCabComponent implements OnInit {
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = args.dataContext.desc;
             _lb.lb_printer = this.PathPrinter;
-            _lb.lb_cust = this.provider.ad_name;
+            _lb.lb_cust = controls.tr_addr.value;
             _lb.lb_grp = this.employeGrp;
             _lb.lb_addr = this.provider.ad_line1;
             _lb.lb_tel = this.provider.ad_phone;
+            _lb.lb__chr01 = String(new Date().toLocaleTimeString())
             let lab = null;
-            console.log(_lb);
-            // console.log(10 * 100.02)
+            
+           
             this.labelService.add(_lb).subscribe(
               (reponse: any) => {
                 lab = reponse.data;
-                this.labelService.addblob(_lb).subscribe((blob) => {
-                  Edelweiss.print3(lab);
-                });
-              },
-              (error) => {
-                alert("Erreur Impression Etiquette");
-              },
-              () => {
-                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc });
-                //console.log("id", args.dataContext.id)
-                //console.log("dataset",this.dataset[args.dataContext.id])
-                this.index = this.dataset.findIndex((el) => {
+                barcode = lab.lb_ref;
+                 this.index = this.dataset.findIndex((el) => {
                   return el.tr_line == args.dataContext.id;
                 });
-                console.log(this.index);
+                this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc });              
                 this.onSubmit();
-              }
+                this.labelService.addblob(_lb).subscribe((blob) => {                 
+                  Edelweiss.print3(lab,this.currentPrinter);
+                  
+                });
+                
+              },
+              (error) => {
+                this.message = "l'impression n'a pas été enregistrée";
+                this.hasFormErrors = true;
+                return;
+              },
+              
             );
           } else {
-            alert("Etiquette dèjà imprimée");
+            this.message = "veuillez choisir article et remplir le poids ";
+            this.hasFormErrors = true;
+            return;
           }
-        },
+         
+        }
+        else {
+          this.message = "Etiquette déjà imprimée ";
+          this.hasFormErrors = true;
+          return;
+        }
+      }
       },
     ];
 
@@ -739,7 +765,8 @@ export class BobineReceiptCabComponent implements OnInit {
         },
       ],
       tr_so_job: [this.inventoryTransaction.tr_so_job],
-
+      tr_site: [this.inventoryTransaction.tr_site],
+      tr_loc: [this.inventoryTransaction.tr_loc],
       tr_rmks: [this.inventoryTransaction.tr_rmks],
       tr_addr: [this.inventoryTransaction.tr_addr],
       printer: [this.user.usrd_dft_printer],
@@ -751,41 +778,25 @@ export class BobineReceiptCabComponent implements OnInit {
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
         if (reponse.data != null) {
-          controls.tr_addr.setValue(reponse.data.code_value), controls.tr_addr.disable();
+          if(reponse.data.code_value != ' '){controls.tr_addr.setValue(reponse.data.code_value), controls.tr_addr.disable()
+            this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
+              //   const { data } = response;
+              console.log("aaaaaaaaaaa", response.data);
+              if (response.data != null) {
+                this.provider = response.data[0];
+                this.nom = this.provider.ad_name
+              }
+            });
+          };
 
-          this.addressService.getBy({ ad_addr: reponse.data.code_value }).subscribe((response: any) => {
-            //   const { data } = response;
-            console.log("aaaaaaaaaaa", response.data);
-            if (response.data != null) {
-              this.provider = response.data;
-            }
-          });
+          
           console.log("hehehehehehehehehehe");
         }
       },
       (error) => {}
     );
 
-    this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-      this.seq = response.data;
-
-      if (this.seq) {
-        this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-
-        this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-          (reponse) => console.log("response", Response),
-          (error) => {
-            this.message = "Erreur modification Sequence";
-            this.hasFormErrors = true;
-            return;
-          }
-        );
-      } else {
-        this.message = "Parametrage Manquant pour la sequence";
-        this.hasFormErrors = true;
-        return;
-      }
-    });
+    
 
     // }
   }
@@ -797,7 +808,49 @@ export class BobineReceiptCabComponent implements OnInit {
       nbrligne: [1],
     });
   }
-  onChangeVend() {
+  onChangeSite(){
+    const controls = this.trForm.controls // chof le champs hada wesh men form rah
+    const si_site  = controls.tr_site.value ;      
+    this.siteService
+    .getByOne({si_site}).subscribe((res:any)=>{
+      console.log(res.data)
+     if (!res.data) {
+       alert("Site n'existe pas")
+      controls.tr_site.setValue(null)
+      document.getElementById("tr_site").focus(); 
+
+     }
+        })
+  
+  
+  
+  }
+  onChangeLoc() {
+    const controls = this.trForm.controls;
+    const loc_loc = controls.tr_loc.value;
+    const loc_site = controls.tr_site.value;
+   
+    
+        this.locationService.getByOne({ loc_site, loc_loc }).subscribe(
+          (res: any) => {
+            console.log(res)
+           this.location = res.data
+            if (this.location != null) {
+            
+             
+          
+            
+            }else {
+              alert("Emplacement n'existe pas ")
+              controls.tr_loc.setValue("")
+              //console.log(response.data.length)
+              document.getElementById("tr_loc").focus();
+            }
+      })    
+    
+          
+  }
+  onChangeVend() { 
     const controls = this.trForm.controls;
     this.addressService.getBy({ ad_addr: controls.tr_addr.value }).subscribe((response: any) => {
       //   const { data } = response;
@@ -806,7 +859,8 @@ export class BobineReceiptCabComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("cette Adresse n'existe pas!", MessageType.Create, 10000, true, true);
         this.error = true;
       } else {
-        this.provider = response.data;
+        this.provider = response.data[0];
+        this.nom = this.provider.ad_name
       }
     });
   }
@@ -819,6 +873,7 @@ export class BobineReceiptCabComponent implements OnInit {
   // save data
   onSubmit() {
     this.hasFormErrors = false;
+    const controls = this.trForm.controls;
     console.log("this.dataset", this.dataset);
     console.log("this.index", this.index);
     this.data = [];
@@ -830,8 +885,8 @@ export class BobineReceiptCabComponent implements OnInit {
       tr_um: this.dataset[this.index].tr_um,
       tr_um_conv: this.dataset[this.index].tr_um_conv,
       tr_price: this.dataset[this.index].tr_price,
-      tr_site: this.dataset[this.index].tr_site,
-      tr_loc: this.dataset[this.index].tr_loc,
+      tr_site: controls.tr_site.value,
+      tr_loc: controls.tr_loc.value,
       tr_serial: this.dataset[this.index].tr_serial,
       tr_ref: this.dataset[this.index].tr_ref,
       tr_status: this.dataset[this.index].tr_status,
@@ -842,7 +897,6 @@ export class BobineReceiptCabComponent implements OnInit {
 
     console.log("this.data", this.data);
     console.log(typeof this.data);
-    const controls = this.trForm.controls;
     /** check form */
 
     if (this.trForm.invalid) {
@@ -898,34 +952,33 @@ export class BobineReceiptCabComponent implements OnInit {
     // console.log("here obj",obj)
     // this.data = []
     // this.data.push(obj)
-    this.addIt(this.data, tr, this.trlot);
+    this.sequenceService.getByOne({ seq_type: "RN", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
+      this.seq = response.data;
 
-    // this.sequenceService.getByOne({ seq_type: "TR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
-    //   this.seq = response.data;
+      if (this.seq) {
+        if (this.trlot == null){
+          this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
+            (reponse) => console.log("response", Response),
+            (error) => {
+              this.message = "Erreur modification Sequence";
+              this.hasFormErrors = true;
+              return;
+            }
+          );
+          this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val)+1}`;
+        }
+        
+        this.addIt(this.data, tr, this.trlot);
+        
+      } else {
+        this.message = "Parametrage Manquant pour la sequence";
+        this.hasFormErrors = true;
+        return;
+      }
+    });
+   
 
-    //   if (this.seq) {
-    //     this.trlot = `${this.seq.seq_prefix}-${Number(this.seq.seq_curr_val) + 1}`;
-
-    //     this.sequenceService.update(this.seq.id, { seq_curr_val: Number(this.seq.seq_curr_val) + 1 }).subscribe(
-    //       (reponse) => console.log("response", Response),
-    //       (error) => {
-    //         this.message = "Erreur modification Sequence";
-    //         this.hasFormErrors = true;
-    //         return;
-    //       }
-    //     );
-
-    //     let tr = this.prepare();
-    //     this.addIt(this.dataset, tr, this.trlot);
-    //   } else {
-    //     this.message = "Parametrage Monquant pour la sequence";
-    //     this.hasFormErrors = true;
-    //     return;
-    //   }
-    // });
-
-    // tslint:disable-next-line:prefer-const
-  }
+   }
 
   prepare() {
     const controls = this.trForm.controls;
@@ -974,18 +1027,14 @@ export class BobineReceiptCabComponent implements OnInit {
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
 
-        //    console.log(this.provider, po, this.dataset);
-        // if(controls.print.value == true) printReceiveUNP(this.provider, this.dataset, nlot)
-        // if (controls.print.value == true) this.printpdf(nlot); //printBc(this.provider, this.dataset, po, this.curr);
-
-        // this.router.navigateByUrl("/");
+      
       }
     );
   }
   onPrint() {
     const controls = this.trForm.controls;
 
-    if (controls.print.value == true) this.printpdf(this.trlot); //printBc(this.provider, this.dataset, po, this.curr);
+    if (controls.print.value == true) {this.printpdf(this.trlot)}; 
     this.goBack();
   }
   /**
@@ -1025,8 +1074,7 @@ export class BobineReceiptCabComponent implements OnInit {
           tr_qty_loc: 0,
           tr_um: "",
           tr_price: 0,
-          tr_site: "",
-          tr_loc: "",
+          
           tr_serial: null,
           tr_ref: null,
           tr_status: null,
@@ -1062,8 +1110,7 @@ export class BobineReceiptCabComponent implements OnInit {
           tr_um_conv: this.dataset[i - 1].tr_um_conv,
 
           tr_price: this.dataset[i - 1].tr_price,
-          tr_site: this.dataset[i - 1].tr_site,
-          tr_loc: this.dataset[i - 1].tr_loc,
+          
           tr_serial: this.dataset[i - 1].tr_serial,
           tr_ref: null,
           tr_status: this.dataset[i - 1].tr_status,
@@ -1091,8 +1138,7 @@ export class BobineReceiptCabComponent implements OnInit {
         tr_um_conv: this.dataset[i - 1].tr_um_conv,
 
         tr_price: this.dataset[i - 1].tr_price,
-        tr_site: this.dataset[i - 1].tr_site,
-        tr_loc: this.dataset[i - 1].tr_loc,
+        
         tr_serial: this.dataset[i - 1].tr_serial,
         tr_ref: this.dataset[i - 1].tr_ref,
         tr_status: this.dataset[i - 1].tr_status,
@@ -1130,8 +1176,7 @@ export class BobineReceiptCabComponent implements OnInit {
             updateItem.desc = item.pt_desc1;
             updateItem.tr_um = item.pt_um;
             updateItem.tr_um_conv = 1;
-            updateItem.tr_site = item.pt_site;
-            updateItem.tr_loc = item.pt_loc;
+            
             updateItem.tr_price = 0; //this.sct.sct_mtl_tl;
 
             updateItem.tr_status = this.stat;
@@ -1223,7 +1268,7 @@ export class BobineReceiptCabComponent implements OnInit {
       if (this.pdl == null) {
         //this.prodligne = ["SQUELETTE", "BOBINE"]
         console.log("houhopuhouhouhou", this.prodligne, this.dsgn_grp);
-        this.itemsService.getBy({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
+        this.itemsService.getbywithperte({ pt_draw: this.prodligne, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       } else {
         this.itemsService.getByOp({ pt_break_cat: this.pdl, pt_dsgn_grp: this.dsgn_grp }).subscribe((response: any) => (this.items = response.data));
       }
@@ -1238,15 +1283,16 @@ export class BobineReceiptCabComponent implements OnInit {
   }
 
   handleSelectedRowsChangedsite(e, args) {
+    const controls = this.trForm.controls
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
     if (Array.isArray(args.rows) && this.gridObjsite) {
       args.rows.map((idx) => {
         const item = this.gridObjsite.getDataItem(idx);
         console.log(item);
 
-        updateItem.tr_site = item.si_site;
+        controls.tr_site.setValue(item.si_site);
 
-        this.gridService.updateItem(updateItem);
+        
       });
     }
   }
@@ -1320,35 +1366,14 @@ export class BobineReceiptCabComponent implements OnInit {
   }
 
   handleSelectedRowsChangedloc(e, args) {
+    const controls = this.trForm.controls
     let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
     if (Array.isArray(args.rows) && this.gridObjloc) {
       args.rows.map((idx) => {
         const item = this.gridObjloc.getDataItem(idx);
         console.log(item);
 
-        this.locationService.getByOne({ loc_loc: item.tr_loc, loc_site: updateItem.tr_site }).subscribe((response: any) => {
-          this.location = response.data;
-          if (response.data) {
-            this.inventoryStatusService.getAllDetails({ isd_status: this.location.loc_status, isd_tr_type: "RCT-UNP" }).subscribe((resstat: any) => {
-              console.log(resstat);
-              const { data } = resstat;
-
-              if (data) {
-                this.stat = null;
-              } else {
-                this.stat = this.location.loc_status;
-              }
-              updateItem.tr_loc = item.loc_loc;
-              updateItem.tr_status = this.stat;
-              this.gridService.updateItem(updateItem);
-            });
-          } else {
-            alert("Emplacement Nexiste pas");
-            updateItem.tr_loc = null;
-            updateItem.tr_status = null;
-            this.gridService.updateItem(updateItem);
-          }
-        });
+        controls.tr_loc.setValue(item.loc_loc)
       });
     }
   }
@@ -1448,10 +1473,10 @@ export class BobineReceiptCabComponent implements OnInit {
         selectActiveRow: true,
       },
     };
-    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+    const controls = this.trForm.controls
 
     // fill the dataset with your data
-    this.locationService.getBy({ loc_site: updateItem.tr_site }).subscribe((response: any) => (this.dataloc = response.data));
+    this.locationService.getBy({ loc_site: controls.tr_site.value }).subscribe((response: any) => (this.dataloc = response.data));
   }
   openloc(contentloc) {
     this.prepareGridloc();
@@ -1709,6 +1734,7 @@ export class BobineReceiptCabComponent implements OnInit {
 
         this.provider = item;
         controls.tr_addr.setValue(item.ad_addr || "");
+        this.nom = item.ad_name
       });
     }
   }
@@ -1800,12 +1826,12 @@ export class BobineReceiptCabComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
+    this.addressService.getBy({ad_type:'vendor'}).subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
     this.codeService.getByOne({ code_fldname: this.user.usrd_code }).subscribe(
       (reponse: any) => {
-        if (reponse.data == null) {
+        if (reponse.data == null || reponse.data.code_value != ' ') {
           this.prepareGrid2();
           this.modalService.open(content, { size: "lg" });
         }
@@ -1826,20 +1852,26 @@ export class BobineReceiptCabComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
-    doc.addImage(img, "png", 150, 5, 50, 30);
+    // img.src = "./assets/media/logos/bobine-receipt-cab.png";
+    img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
-    if (this.domain.dom_name != null) {
-      doc.text(this.domain.dom_name, 10, 10);
-    }
-    if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-    if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-    if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    doc.setFontSize(14);
-
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+     doc.setFontSize(14);
+    let date = new Date()
     doc.line(10, 35, 200, 35);
     doc.setFontSize(12);
     doc.text("Bon Récéption N° : " + nbr, 70, 45);
+    doc.text("Date: " + date.toLocaleDateString() , 160, 40);
+    doc.text("Heure: " + new Date().toLocaleTimeString(), 160, 50);
+    doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+    
+    
     doc.setFontSize(8);
     //console.log(this.provider.ad_misc2_id)
     doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -1885,22 +1917,27 @@ export class BobineReceiptCabComponent implements OnInit {
     for (let j = 0; j < this.dataset.length; j++) {
       total = total + Number(this.dataset[j].tr_price) * Number(this.dataset[j].tr_qty_loc);
 
-      if (j % 30 == 0 && j != 0) {
+      if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
-        doc.addImage(img, "png", 150, 5, 50, 30);
-        doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // img.src = "./assets/media/logos/bobine-receipt-cab.png";
+        img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
+    doc.setFontSize(9);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
         doc.line(10, 35, 200, 35);
 
         doc.setFontSize(12);
         doc.text("Bon Récéption N° : " + nbr, 70, 40);
+        doc.text("Date: " + date.toLocaleDateString() , 160, 40);
+    doc.text("Heure: " + new Date().toLocaleTimeString(), 160, 50);
+    doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+   
         doc.setFontSize(8);
         console.log(this.provider.ad_misc2_id);
         doc.text("Fournisseur : " + this.provider.ad_addr, 20, 50);
@@ -1944,18 +1981,20 @@ export class BobineReceiptCabComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35);
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
-        let desc2 = this.dataset[j].desc.substring(35 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+        let desc2 = this.dataset[j].desc.substring(45 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].tr_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
+        doc.setFontSize(6);
         doc.text(desc1, 47, i - 1);
+        doc.setFontSize(8);
         doc.line(100, i - 5, 100, i);
         doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
@@ -1972,9 +2011,9 @@ export class BobineReceiptCabComponent implements OnInit {
         // doc.line(10, i, 200, i );
 
         i = i + 5;
-
+        doc.setFontSize(6);
         doc.text(desc2, 47, i - 1);
-
+        doc.setFontSize(8);
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
         doc.line(45, i - 5, 45, i);
@@ -1994,7 +2033,9 @@ export class BobineReceiptCabComponent implements OnInit {
         doc.line(20, i - 5, 20, i);
         doc.text(this.dataset[j].tr_part, 25, i - 1);
         doc.line(45, i - 5, 45, i);
+        doc.setFontSize(6);
         doc.text(this.dataset[j].desc, 47, i - 1);
+        doc.setFontSize(8);
         doc.line(100, i - 5, 100, i);
         doc.text(String(this.dataset[j].tr_qty_loc.toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
@@ -2026,6 +2067,9 @@ export class BobineReceiptCabComponent implements OnInit {
     doc.setFontSize(10);
 
     doc.text("Total HT", 140, i + 12, { align: "left" });
+    doc.text("Validé par: " , 20, 235);
+    doc.text("Note: " , 20, 250);
+    
     //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
     //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
     //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
@@ -2052,6 +2096,7 @@ export class BobineReceiptCabComponent implements OnInit {
     }
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('BRB-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
   }

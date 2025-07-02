@@ -116,7 +116,12 @@ export class CreateSiteComponent implements OnInit {
             si_xfer_acct: [{ value: this.site.si_xfer_acct, disabled: !this.isExist }],
             si_auto_loc: [{ value: this.site.si_auto_loc, disabled: !this.isExist }],
             si_xfer_ownership: [{ value: this.site.si_xfer_ownership, disabled: !this.isExist }],
-
+            si_user1:[{ value: this.site.si_user1, disabled: !this.isExist }],
+            si_user2:[{ value: this.site.si_user2, disabled: !this.isExist }],
+            si_db:[{ value: this.site.si_db, disabled: !this.isExist }],
+            si_gl_set:[{ value: this.site.si_gl_set, disabled: !this.isExist }],
+            int01:[{ value: this.site.int01, disabled: !this.isExist }],
+            int02:[{ value: this.site.int02, disabled: !this.isExist }],
         })
     }
     
@@ -138,6 +143,12 @@ export class CreateSiteComponent implements OnInit {
                     controls.si_default.enable()
                     controls.si_entity.enable()
                     controls.si_cust.enable()
+                    controls.si_user1.enable()
+                    controls.si_user2.enable()
+                    controls.si_db.enable()
+                    controls.si_gl_set.enable()
+                    controls.int01.enable()
+                    controls.int02.enable()
                     controls.si_xfer_acct.enable()
                     controls.si_xfer_sub.enable()
                     controls.si_xfer_cc.enable()
@@ -217,6 +228,13 @@ export class CreateSiteComponent implements OnInit {
         _site.si_desc= controls.si_desc.value
         _site.si_entity= controls.si_entity.value
         _site.si_cust= controls.si_cust.value
+        _site.si_user1= controls.si_user1.value
+        _site.si_user2= controls.si_user2.value
+        _site.si_db= controls.si_db.value
+        _site.si_gl_set= controls.si_gl_set.value
+        
+        _site.int01= controls.int01.value
+        _site.int02= controls.int02.value
         _site.si_default= controls.si_default.value
         _site.si_status= controls.si_status.value
         _site.si_xfer_cc= controls.si_xfer_cc.value

@@ -102,7 +102,7 @@ export class ListJobComponent implements OnInit {
          
           {
               id: "jb_code",
-              name: "Code Métier",
+              name: "Code compétence",
               field: "jb_code",
               sortable: true,
               filterable: true,

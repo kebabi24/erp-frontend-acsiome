@@ -866,7 +866,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
       this.message = "Ecriture comptable vide.";
       this.hasFormErrors = true;
 
-      return;
+    //   return;
    
 
     }

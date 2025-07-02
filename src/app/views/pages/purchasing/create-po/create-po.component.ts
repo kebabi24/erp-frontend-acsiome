@@ -939,7 +939,7 @@ console.log(this.vpServer)
                 controls.po_vend.setValue(this.vpServer.vp_vend);
                 this.providersService
                   .getBy({ vd_addr: this.vpServer.vp_vend })
-                  .subscribe((res: any) => (this.provider = res.data));
+                  .subscribe((res: any) => (this.provider = res.data[0]));
                 controls.po_req_id.setValue(this.vpServer.vp_rqm_nbr);
                 controls.po_curr.setValue(this.vpServer.vp_curr);
                 this.deviseService.getBy({cu_curr: this.vpServer.vp_curr}).subscribe((resc:any)=>{  
@@ -996,7 +996,7 @@ console.log(this.vpServer)
                 controls.po_vend.setValue(this.requistionServer.rqm_vend);
                 this.providersService
                   .getBy({ vd_addr: this.requistionServer.rqm_vend })
-                  .subscribe((res: any) => (this.provider = res.data));
+                  .subscribe((res: any) => (this.provider = res.data[0]));
 
                   this.deviseService.getBy({cu_curr:this.provider.vd_curr}).subscribe((resc:any)=>{  
                     this.curr = resc.data
@@ -1660,7 +1660,7 @@ changeTax(){
                     controls.po_vend.setValue(this.vpServer.vp_vend);
                     this.providersService
                       .getBy({ vd_addr: this.vpServer.vp_vend })
-                      .subscribe((res: any) => {(this.provider = res.data);
+                      .subscribe((res: any) => {(this.provider = res.data[0]);
                     controls.po_req_id.setValue(this.vpServer.vp_rqm_nbr);
                     controls.po_curr.setValue(this.vpServer.vp_curr);
                     this.deviseService.getBy({cu_curr:this.vpServer.vp_curr}).subscribe((resc:any)=>{  
@@ -1727,7 +1727,7 @@ changeTax(){
                     this.providersService
                       .getBy({ vd_addr: this.requistionServer.rqm_vend })
                       .subscribe((res: any) =>{
-                        this.provider = res.data;
+                        this.provider = res.data[0];
                      console.log(res.data)
                       console.log("provider", this.provider.vd_cr_tems)
                      controls.po_cr_terms.setValue(this.provider.vd_cr_terms)
@@ -2528,8 +2528,15 @@ calculatetot(){
      
 
      console.log(tva)
-     if(controlsso.po_cr_terms.value == "ES") { timbre = round((tht + tva) / 100,2);
-       if (timbre > 10000) { timbre = 10000} } 
+     if(controlsso.po_cr_terms.value == "ES") { if((tht + tva) <= 30000){timbre = round((tht + tva) / 100, 2)}
+     else{
+       if((tht + tva) > 30000 && (tht + tva) <= 100000){timbre = round((tht + tva) * 1.5 / 100 , 2)}
+       else{timbre = round((tht + tva) * 2 / 100 , 2)}
+     };
+     
+     if (timbre < 5) {
+       timbre = 5;
+     } } 
   
    }
  ttc = round(tht + tva + timbre,2)
@@ -2549,7 +2556,7 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
  var img = new Image();
- img.src = "./assets/media/logos/companylogo.png";
+ img.src = "./assets/media/logos/companyentete.png";
  doc.addImage(img, "png", 150, 5, 50, 30);
  doc.setFontSize(9);
  if (this.domain.dom_name != null) {
@@ -2596,9 +2603,9 @@ printpdf(nbr) {
   doc.setFontSize(6);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
-    if ((j % 30 == 0) && (j != 0) ) {
+    if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      img.src = "./assets/media/logos/companylogo.png";
+      img.src = "./assets/media/logos/companyentete.png";
       doc.addImage(img, 'png', 150, 5, 50, 30)
       doc.setFontSize(9);
       doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
@@ -2650,11 +2657,11 @@ doc.addPage();
 
 
 
-    if (this.dataset[j].desc.length > 35) {
-      let desc1 = this.dataset[j].desc.substring(35)
+    if (this.dataset[j].desc.length > 45) {
+      let desc1 = this.dataset[j].desc.substring(45)
       let ind = desc1.indexOf(' ')
-      desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-      let desc2 = this.dataset[j].desc.substring(35+ind)
+      desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+      let desc2 = this.dataset[j].desc.substring(45+ind)
 
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
@@ -2752,7 +2759,7 @@ doc.addPage();
 
  doc.setFontSize(8);
     let mt = NumberToLetters(
-      Number(controls.ttc.value).toFixed(2),this.curr.cu_desc)
+      Number(controls.ttc.value).toFixed(2),'DINARS ALGERIENS')
 
       if (mt.length > 95) {
         let mt1 = mt.substring(90)
@@ -2769,6 +2776,7 @@ doc.addPage();
       }
     // window.open(doc.output('bloburl'), '_blank');
     //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('BC-' + nbr + '.pdf')
     var blob = doc.output("blob");
     window.open(URL.createObjectURL(blob));
 

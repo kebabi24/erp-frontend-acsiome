@@ -1378,7 +1378,7 @@ export class CreateAudiometryComponent implements OnInit {
     <section id="memo">
 
       <div class="logo">
-      <img src="../../../assets/media/logos/companylogo.png"  >
+      <img src="../../../assets/media/logos/companyentete.png"  >
       </div>
 
       <div class="company-info">

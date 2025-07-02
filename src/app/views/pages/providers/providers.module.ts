@@ -53,7 +53,7 @@ import { NgxPermissionsModule } from "ngx-permissions"
 
 //Service 
 
-import {PurchaseOrderService, AddressService, CodeService, ProviderService, AccountService, TaxeService, DeviseService, SequenceService, RepertoryService, JobService} from '../../../core/erp';
+import {PurchaseOrderService, AddressService, CodeService, ProviderService, AccountService, TaxeService, DeviseService, SequenceService, RepertoryService, JobService,SiteService} from '../../../core/erp';
 import { ItempurchasebyproviderListComponent } from './itempurchasebyprovider-list/itempurchasebyprovider-list.component';
 import { ProviderActivitylistComponent } from './provider-activitylist/provider-activitylist.component';
 import { ProviderCAlistComponent } from './provider-calist/provider-calist.component'
@@ -183,6 +183,7 @@ const routes: Routes = [
         SequenceService,
         RepertoryService,
         JobService,
+        SiteService,
     ],
     entryComponents: [
         ActionNotificationComponent,

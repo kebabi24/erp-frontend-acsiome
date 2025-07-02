@@ -75,13 +75,22 @@ import { RpBroyageComponent } from './rp-broyage/rp-broyage.component';
 
 
 
-import { BomService, PsService, ItemService, SiteService, WorkOrderService, SequenceService, LocationService, MesureService, LocationDetailService, WorkOrderDetailService, CostSimulationService, RequisitionService, AddressService, InventoryTransactionService, InventoryStatusService, ReasonService, WorkCenterService, WorkRoutingService, OperationHistoryService, WoroutingService, BomPartService, CodeService, LabelService, SaleOrderService, EmployeService, UsersService, PrintersService } from "../../../core/erp";
+import { DomainService,BomService, PsService, ItemService, SiteService, WorkOrderService, SequenceService, LocationService, MesureService, LocationDetailService, WorkOrderDetailService, CostSimulationService, RequisitionService, AddressService, InventoryTransactionService, InventoryStatusService, ReasonService, WorkCenterService, WorkRoutingService, OperationHistoryService, WoroutingService, BomPartService, CodeService, LabelService, SaleOrderService, EmployeService, UsersService, PrintersService, CustomerService, ProviderService } from "../../../core/erp";
 import { ReleaseWoComponent } from './release-wo/release-wo.component';
 import { LabelAllocationComponent } from './label-allocation/label-allocation.component';
 import { RecapBroyageComponent } from './recap-broyage/recap-broyage.component';
 import { CreateBobineWoComponent } from './create-bobine-wo/create-bobine-wo.component';
 import { IssBobineWoComponent } from './iss-bobine-wo/iss-bobine-wo.component';
 import { CreateTriWoComponent } from './create-tri-wo/create-tri-wo.component';
+import { ListBomComponent } from './list-bom/list-bom.component';
+import { ListPtbComponent } from './list-ptb/list-ptb.component';
+import { BobineIssueComponent } from './bobine-issue/bobine-issue.component';
+import { SuiviAlimentationExtrusionComponent } from './suivi-alimentation-extrusion/suivi-alimentation-extrusion.component';
+import { ListOpComponent } from './list-op/list-op.component';
+import { PrintDirectWoComponent } from './print-direct-wo/print-direct-wo.component';
+import { CreateOrderPfComponent } from './create-order-pf/create-order-pf.component';
+import { ListWoBrComponent } from './list-wo-br/list-wo-br.component';
+import { ListWoPfComponent } from './list-wo-pf/list-wo-pf.component';
 
 
 const routes: Routes = [
@@ -90,8 +99,24 @@ const routes: Routes = [
     component: CreateOrderComponent,
   },
   {
+    path: "create-order-pf",
+    component: CreateOrderPfComponent,
+  },
+  {
     path: "list-wo",
     component: ListWoComponent,
+  },
+  {
+    path: "list-wo-br",
+    component: ListWoBrComponent,
+  },
+  {
+    path: "list-wo-pf",
+    component: ListWoPfComponent,
+  },
+  {
+    path: "list-ptb",
+    component: ListPtbComponent,
   },
   {
     path: "edit-wo/:id",
@@ -100,6 +125,10 @@ const routes: Routes = [
   {
     path: "create-direct-wo",
     component: CreateDirectWoComponent,
+  },
+  {
+    path: "print-direct-wo",
+    component: PrintDirectWoComponent,
   },
   {
     path: "create-tri-wo",
@@ -124,7 +153,7 @@ const routes: Routes = [
   {
     path: "list-gamme",
     component: ListGammeComponent,
-  },
+  }, 
   {
     path: "create-rsn",
     component: CreateRsnComponent,
@@ -142,12 +171,21 @@ const routes: Routes = [
     component: CreateNomenclatureComponent,
   },
   {
+    path: "list-bom",
+    component: ListBomComponent,
+  },
+  
+  {
     path: "create-ps",
     component: CreatePsComponent,
   },
   {
     path: "list-ps",
     component: ListPsComponent,
+  },
+  {
+    path: "list-op",
+    component: ListOpComponent,
   },
   {
     path: "edit-ps/:id",
@@ -206,12 +244,20 @@ const routes: Routes = [
     component: RpBroyageComponent
   },
   {
+    path: 'suivi-alimentation-extrusion',
+    component: SuiviAlimentationExtrusionComponent
+  },
+  {
     path: 'create-bobine-wo',
     component: CreateBobineWoComponent
   },
   {
     path: 'iss-bobine-wo',
     component: IssBobineWoComponent
+  },
+  {
+    path: 'bobine-issue',
+    component: BobineIssueComponent
   },
   {
     path: 'Recap-broyage',
@@ -233,7 +279,7 @@ const routes: Routes = [
 
   
 @NgModule({
-  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent, ReleaseWoComponent, LabelAllocationComponent, RecapBroyageComponent, CreateBobineWoComponent, IssBobineWoComponent, CreateTriWoComponent],
+  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent, ReleaseWoComponent, LabelAllocationComponent, RecapBroyageComponent, CreateBobineWoComponent, IssBobineWoComponent, CreateTriWoComponent, ListBomComponent, ListPtbComponent, BobineIssueComponent, SuiviAlimentationExtrusionComponent, ListOpComponent, PrintDirectWoComponent, CreateOrderPfComponent, ListWoBrComponent, ListWoPfComponent],
 
   imports: [
     CommonModule,
@@ -296,6 +342,9 @@ const routes: Routes = [
     LabelService,
     SaleOrderService,
     EmployeService,
+    DomainService,
+    CustomerService,
+    ProviderService,
   ],
 
   entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],

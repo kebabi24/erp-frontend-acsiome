@@ -33,7 +33,7 @@ import {
   FieldType,
   OnEventArgs,
 } from "angular-slickgrid"
-import { Pricelist, PricelistService, CodeService , ItemService, CustomerService,DeviseService} from "../../../../core/erp"
+import { Pricelist, PricelistService, CodeService , ItemService, CustomerService,DeviseService,SiteService,LocationService} from "../../../../core/erp"
  
 @Component({
   selector: 'kt-edit-price',
@@ -76,6 +76,18 @@ export class EditPriceComponent implements OnInit {
   msg: String;
 datestart: string;
   row_number
+  user;
+  customers: [];
+  columnDefinitionscm: Column[] = [];
+  gridOptionscm: GridOption = {};
+  gridObjcm: any;
+  angularGridcm: AngularGridInstance;
+
+  locs: [];
+  columnDefinitionsloc: Column[] = [];
+  gridOptionsloc: GridOption = {};
+  gridObjloc: any;
+  angularGridloc: AngularGridInstance;
   
     constructor(
       config: NgbDropdownConfig,
@@ -89,7 +101,9 @@ datestart: string;
       private itemService: ItemService,
       private layoutUtilsService: LayoutUtilsService,
       private modalService: NgbModal,
-      private pricelistService: PricelistService
+      private pricelistService: PricelistService,
+      private siteService: SiteService,
+      private locationService: LocationService
   ) {
     config.autoClose = true
   }
@@ -136,7 +150,8 @@ initCode() {
     pi_um: [this.pricelistEdit.pi_um ],
     pi_curr: [this.pricelistEdit.pi_curr ],
     pi_amt_type : [this.pricelistEdit.pi_amt_type ],
-    
+    pi_user1:[this.pricelistEdit.pi_user1 ],
+    pi_user2:[this.pricelistEdit.pi_user2 ],
     pi_start: [{year: date.getFullYear(),
       month: date.getMonth()+1,
       day: date.getDate()} ],
@@ -184,13 +199,13 @@ preparePricelist(): Pricelist {
   _pricelist.pi_desc= controls.pi_desc.value
  
   _pricelist.pi_cs_code = controls.pi_cs_code.value
+  _pricelist.pi_user1 = controls.pi_user1.value
+  _pricelist.pi_user2 = controls.pi_user2.value
   _pricelist.pi_part_code = controls.pi_part_code.value
   _pricelist.pi_um = controls.pi_um.value
   _pricelist.pi_curr = controls.pi_curr.value
   _pricelist.pi_amt_type = controls.pi_amt_type.value
   _pricelist.pi_start = controls.pi_start.value
-  ? `${controls.pi_start.value.year}/${controls.pi_start.value.month}/${controls.pi_start.value.day}`
-  : null;
   _pricelist.pi_expire = controls.pi_expire.value
   ? `${controls.pi_expire.value.year}/${controls.pi_expire.value.month}/${controls.pi_expire.value.day}`
   : `${2999}-${12}-${31}`;
@@ -697,6 +712,219 @@ for (let data of detail) {
   }
   open2(content) {
     this.prepareGrid2();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedcm(e, args) {
+    const controls = this.priceForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjcm) {
+      args.rows.map((idx) => {
+        const item = this.gridObjcm.getDataItem(idx);
+        console.log(item);
+        const date = new Date();
+
+        
+        controls.pi_user1.setValue(item.si_site || "");
+       
+       
+       
+      });
+    }
+  }
+
+  angularGridReadycm(angularGrid: AngularGridInstance) {
+    this.angularGridcm = angularGrid;
+    this.gridObjcm = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridcm() {
+    this.columnDefinitionscm = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "si_site",
+        name: "code",
+        field: "si_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "si_desc",
+        name: "Projet",
+        field: "si_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      
+    
+      
+    ];
+
+    this.gridOptionscm = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    // fill the dataset with your data
+    const controls = this.priceForm.controls;
+    this.siteService.getBy({created_by:this.user.usrd_code }).subscribe((response: any) => (this.customers = response.data));
+  }
+  opensite(content) {
+    this.prepareGridcm();
+    this.modalService.open(content, { size: "lg" });
+  }
+
+  handleSelectedRowsChangedloc(e, args) {
+    const controls = this.priceForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjloc) {
+      args.rows.map((idx) => {
+        const item = this.gridObjloc.getDataItem(idx);
+        console.log(item);
+        const date = new Date();
+
+        
+        controls.pi_user2.setValue(item.loc_phys_addr || "");
+       
+       
+       
+      });
+    }
+  }
+
+  angularGridReadyloc(angularGrid: AngularGridInstance) {
+    this.angularGridloc = angularGrid;
+    this.gridObjloc = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridloc() {
+    this.columnDefinitionsloc = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "loc_site",
+        name: "Projet",
+        field: "loc_site",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "loc_loc",
+        name: "Emplacement",
+        field: "loc_loc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "loc_phys_addr",
+        name: "Etage",
+        field: "loc_phys_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "loc_desc",
+        name: "Description",
+        field: "loc_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+     
+    ];
+
+    this.gridOptionsloc = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+
+    // fill the dataset with your data
+    const controls = this.priceForm.controls;
+    this.locationService.getBy({ loc_site:controls.pi_user1.value}).subscribe((response: any) => (this.locs = response.data));
+  }
+  openloc(content) {
+    this.prepareGridloc();
     this.modalService.open(content, { size: "lg" });
   }
 

@@ -324,7 +324,7 @@ reset() {
     });
 
     var img = new Image();
-    img.src = "./assets/media/logos/companylogo.png";
+    img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, "png", 150, 5, 50, 30);
     doc.setFontSize(9);
 
@@ -383,7 +383,7 @@ reset() {
     for (let j = 0; j < this.printLines.length; j++) {
       if (j % 38 == 0 && j != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companylogo.png";
+        img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
     

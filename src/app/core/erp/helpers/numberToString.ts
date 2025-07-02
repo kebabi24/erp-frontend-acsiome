@@ -131,9 +131,9 @@ export function NumberToLetter(nombre) {
                 reste = nb % 10;
                 if (nb < 71 || (nb > 79 && nb < 91)) {
                     if (reste === 0) { numberToLetter = Dizaine(quotient * 10); }
-                    if (reste === 1) { numberToLetter = Dizaine(quotient * 10) + '-et-' + Unite(reste); }
-                    if (reste > 1) { numberToLetter = Dizaine(quotient * 10) + '-' + Unite(reste); }
-                } else { numberToLetter = Dizaine((quotient - 1) * 10) + '-' + Dizaine(10 + reste); }
+                    if (reste === 1) { numberToLetter = Dizaine(quotient * 10) + ' et ' + Unite(reste); }
+                    if (reste > 1) { numberToLetter = Dizaine(quotient * 10) + ' ' + Unite(reste); }
+                } else { numberToLetter = Dizaine((quotient - 1) * 10) + ' ' + Dizaine(10 + reste); }
             } else { numberToLetter = Dizaine(nb); }
             break;
         case 3:
@@ -263,7 +263,7 @@ export function NumberToLetters(nombre,curr) {
         console.log("hhhhhhhhhhhhhhhhh",NumberToLetter(parseFloat(nbs[0])) + ' ' + curr )
 
        // return NumberToLetter(parseFloat(nbs[0])) + ' Dinars Algérien' + ' et ' + NumberToLetter(parseFloat(nbs[1])) + ' Centimes' ;
-       return NumberToLetter(parseFloat(nbs[0])) + ' ' + curr + ' et ' + NumberToLetter(parseFloat(nbs[1])) + ' Centimes' ;
+       return NumberToLetter(parseFloat(nbs[0])) + ' ' + curr + ' et ' + NumberToLetter(parseFloat(nbs[1])) + ' Cts' ;
       
     }
     else {

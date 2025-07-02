@@ -23,7 +23,8 @@ import {
 import {
   EmployeService,
   PopulationemployeService,
-  
+  CodeService,
+  Code,
 } from "../../../../core/erp"
 import { config } from 'process';
 import * as moment from 'moment';
@@ -43,7 +44,10 @@ export class CreatePopulationComponent implements OnInit {
   populationForm: FormGroup;
 
   employes: any = [];
-  isExist = false ;
+  pop_country: any = [];
+  pop_state: any = [];
+  pop_city: any = [];
+  isExist = true ;
   cantSearch = true ;
   
   // GRID 
@@ -69,6 +73,7 @@ export class CreatePopulationComponent implements OnInit {
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
     private employeService : EmployeService,
+    private codeService:CodeService,
     private cdr: ChangeDetectorRef,
     private populationemployeService :  PopulationemployeService ,
     private modalService: NgbModal,
@@ -108,7 +113,19 @@ export class CreatePopulationComponent implements OnInit {
     this.populationForm = this.formBuilder.group({
       pop_code: [ '', Validators.required],
       pop_desc: [ {value : '',disabled : !this.isExist}, Validators.required],
-     
+      pop_fidelity:[ {value : false,disabled : !this.isExist}],
+      pop_habilitation:[ {value : false,disabled : !this.isExist}],
+      pop_last_date:[ {value : 0,disabled : !this.isExist}],
+      pop_conf_date:[ {value : 0,disabled : !this.isExist}],
+      pop_age1:[ {value : 0,disabled : !this.isExist}],
+      pop_age2:[ {value : 100,disabled : !this.isExist}],
+      pop_gender:[ {value : '',disabled : !this.isExist}],
+      pop_job:[ {value : '',disabled : !this.isExist}],
+      pop_level:[ {value : '',disabled : !this.isExist}],
+      pop_country:[ {value : false,disabled : !this.isExist}],
+      pop_state:[ {value : false,disabled : !this.isExist}],
+      pop_city:[ {value : false,disabled : !this.isExist}],
+      pop_county:[ {value : false,disabled : !this.isExist}],
    })
      
   }
@@ -124,7 +141,7 @@ export class CreatePopulationComponent implements OnInit {
             document.getElementById("pop_code").focus(); 
             controls.pop_desc.disable() 
           } else { 
-            this.isExist = true
+            this.isExist = false
             this.cantSearch = false
             controls.pop_desc.enable()    
             document.getElementById("pop_desc").focus();
@@ -158,12 +175,24 @@ export class CreatePopulationComponent implements OnInit {
         return
       }
     if(this.selectedCustomers.length == 0){
-      alert("Sélectionner au moins un client à ajouter dans la population")
+      alert("Sélectionner au moins un employé à ajouter dans la population")
       return 
     }
     const pop_code = controls.pop_code.value
     const pop_desc = controls.pop_desc.value
-
+    const pop_fidelity = controls.pop_fidelity.value
+    const pop_habilitation = controls.pop_habilitation.value
+    const pop_last_date = controls.pop_last_date.value
+    const pop_conf_date = controls.pop_conf_date.value
+    const pop_age1 = controls.pop_age1.value
+    const pop_age2 = controls.pop_age2.value
+    const pop_gender = controls.pop_gender.value
+    const pop_job = controls.pop_job.value
+    const pop_level = controls.pop_level.value
+    const pop_country = controls.pop_country.value
+    const pop_state = controls.pop_state.value
+    const pop_city = controls.pop_city.value
+    const pop_county = controls.pop_county.value
     let populationData = []
 
     
@@ -175,14 +204,43 @@ export class CreatePopulationComponent implements OnInit {
         populationData.push({
           pop_code :pop_code ,
           pop_desc:pop_desc,
+          pop_fidelity:pop_fidelity,
+          pop_habilitation:pop_habilitation,
+          pop_last_date:pop_last_date,
+          pop_conf_date:pop_conf_date,
+          pop_age1:pop_age1,
+          pop_age2:pop_age2,
+          pop_gender:pop_gender,
+          pop_job:pop_job,
+          pop_level:pop_level,
+          pop_country:pop_country,
+          pop_state:pop_state,
+          pop_city:pop_city,
+          pop_county:pop_county,
           pop_emp :employe.emp_addr,
          
         })
       })
     }else{
-      console.log('no customer selected')
-      alert("Sélectionnez au moins un client")
-      return;
+      populationData.push({
+        pop_code :pop_code ,
+        pop_desc:pop_desc,
+        pop_fidelity:pop_fidelity,
+        pop_habilitation:pop_habilitation,
+        pop_last_date:pop_last_date,
+        pop_conf_date:pop_conf_date,
+        pop_age1:pop_age1,
+        pop_age2:pop_age2,
+        pop_gender:pop_gender,
+        pop_job:pop_job,
+        pop_level:pop_level,
+        pop_country:pop_country,
+        pop_state:pop_state,
+        pop_city:pop_city,
+        pop_county:pop_county,
+        
+       
+      })
     }
 
    
@@ -432,6 +490,51 @@ onSelectedRowsChanged(e, args) {
   this.selectedCustomers = args.rows;
   console.log(this.selectedCustomers)
   
+}
+onChangeState() {
+  const controls = this.populationForm.controls
+ console.log(controls.ad_state.value)
+  this.codeService
+      .getBy({ code_fldname: "ad_city", chr01: controls.ad_state.value.substring(0, 2) })
+      .subscribe((response: any) => {(this.pop_city = response.data)
+      console.log(response.data)})    
+}
+prepareUsage(): Code {
+  const controls = this.populationForm.controls
+  const _code = new Code()
+  _code.code_fldname = 'pt_network'
+  _code.code_value = controls.pop_code.value
+  _code.code_cmmt = controls.pop_desc.value
+  
+  return _code
+}
+addCode(_code: Code) {
+  this.loadingSubject.next(true)
+  this.codeService.add(_code).subscribe(
+      (reponse) => console.log("response", Response),
+      (error) => {
+          this.layoutUtilsService.showActionNotification(
+              "Erreur verifier les informations",
+              MessageType.Create,
+              10000,
+              true,
+              true
+          )
+          this.loadingSubject.next(false)
+      },
+      () => {
+          this.layoutUtilsService.showActionNotification(
+              "Ajout avec succès",
+              MessageType.Create,
+              10000,
+              true,
+              true
+          )
+          this.loadingSubject.next(false)
+          // this.router.navigateByUrl("/code-mstr/codes-list")
+          //this.reset()
+      }
+  )
 }
 
 }

@@ -65,7 +65,7 @@ export class ListGlComponent implements OnInit {
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   dataviewObj: any;
-
+  gridservice:any;
   
   constructor(
       private activatedRoute: ActivatedRoute,
@@ -156,6 +156,13 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Réf: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [ 
+             
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
           {
@@ -170,6 +177,37 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+                
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+                
+              ],
+              lazyTotalsCalculation: true,
+            }
+          }, 
+          {
+            id: "glt_src_desc",
+            name: "type compte",
+            field: "glt_src_desc",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'glt_src_desc',
+              formatter: (g) => `Type Compte: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregateCollapsed: false,
+              collapsed: false,
+              aggregators: [
+               
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+                
+
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
           {
@@ -185,6 +223,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Compte: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+              
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+               
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
           
@@ -201,6 +247,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Sous Compte: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+              
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+               
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
           
@@ -217,6 +271,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Centre de Coût: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+                
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+               
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
           
@@ -232,6 +294,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Projet: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+              
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+               
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
 
@@ -247,6 +317,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Entité: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+               
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+               
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
 
@@ -262,6 +340,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Adresse: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+               
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+                
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
 
@@ -272,6 +358,7 @@ export class ListGlComponent implements OnInit {
             sortable: true,
             filterable: true,
             type: FieldType.string,
+            
             
           }, 
 
@@ -303,14 +390,43 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Effet Le: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+                
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+              
+              ],
+              lazyTotalsCalculation: true,
             }
           }, 
+          {
+            id: "dec01",
+            name: "Montant debit",
+            field: "dec01",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            
+          },
+          {
+            id: "dec02",
+            name: "Montant credit",
+            field: "dec02",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            
+          },
           {
             id: "glt_curr_amt",
             name: "Montant",
             field: "glt_curr_amt",
             sortable: true,
             filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             type: FieldType.float,
             
           },
@@ -328,6 +444,14 @@ export class ListGlComponent implements OnInit {
               formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregateCollapsed: false,
               collapsed: false,
+              aggregators: [
+                
+                new Aggregators.Sum('glt_curr_amt'),
+                new Aggregators.Sum('dec01'),
+                new Aggregators.Sum('dec02'),
+                
+              ],
+              lazyTotalsCalculation: true,
             }
           },
           

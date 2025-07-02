@@ -112,6 +112,14 @@ export class UpdateTrainingComponent implements OnInit {
               maxWidth: 350,
               type: FieldType.string,
               filterable:true,
+          },
+          {
+            id: "pt_dsgn_grp",
+            name: "Type",
+            field: "pt_dsgn_grp",
+            type: FieldType.string,
+            sortable: true,
+            filterable:true,
           },      
           {
             id: "pt_draw",
@@ -130,9 +138,17 @@ export class UpdateTrainingComponent implements OnInit {
            
           },     
           {
-            id: "pt_formula",
-            name: "Ext / Int",
-            field: "pt_formula",
+            id: "pt_network",
+            name: "Population ciblée",
+            field: "pt_network",
+            type: FieldType.string,
+            sortable: true,
+            filterable:true,
+          },
+          {
+            id: "pt_iss_pol",
+            name: "Interne",
+            field: "pt_iss_pol",
             type: FieldType.boolean,
             formatter: Formatters.checkmark,
             filterable:true,
@@ -140,9 +156,9 @@ export class UpdateTrainingComponent implements OnInit {
            
           }, 
           {
-            id: "pt_ms",
-            name: "Certification",
-            field: "pt_ms",
+            id: "pt_insp_rqd",
+            name: "habilitation",
+            field: "pt_insp_rqd",
             type: FieldType.boolean,
             formatter: Formatters.checkmark,
             filterable:true,
@@ -151,7 +167,7 @@ export class UpdateTrainingComponent implements OnInit {
           },      
           {
             id: "pt_rollup",
-            name: "Fidélité",
+            name: "Certifiante",
             field: "pt_rollup",
             type: FieldType.boolean,
             formatter: Formatters.checkmark,
@@ -161,15 +177,27 @@ export class UpdateTrainingComponent implements OnInit {
           },    
           {
             id: "pt_origin",
+            name: "Pays",
             field: "pt_origin",
             type: FieldType.string,
             filterable:true,
             sortable: true,
            
+          },    
+          {
+            id: "pt_critical",
+            name: "Qualifiante",
+            field: "pt_critical",
+            type: FieldType.boolean,
+            formatter: Formatters.checkmark,
+            filterable:true,
+            sortable: true,
+           
           },      
           {
-            id: "pt_meter_um",
-            field: "pt_meter_um",
+            id: "pt_bom_code",
+            name:"Mesure",
+            field: "pt_bom_code",
             type: FieldType.string,
             filterable:true,
             sortable: true,
@@ -261,13 +289,25 @@ export class UpdateTrainingComponent implements OnInit {
   
   prepareGrid1() {
     this.columnDefinitions1 = [
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        excludeFromHeaderMenu: true,
-        minWidth: 10,
-        sortable:true,
+    //   {
+    //     id: "id",
+    //     name: "id",
+    //     field: "id",
+    //     excludeFromHeaderMenu: true,
+    //     minWidth: 10,
+    //     sortable:true,
+    // },
+    {
+      id: "chr01",
+      name: "Type",
+      field: "chr01",
+      sortable: true,
+      minWidth: 50,
+      filterable: false,
+      type: FieldType.string,
+      editor: {
+        model: Editors.text,
+      },
     },
       {
         id: "ptd_desc",

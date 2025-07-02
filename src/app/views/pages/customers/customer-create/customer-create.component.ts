@@ -151,7 +151,7 @@ export class CustomerCreateComponent implements OnInit {
     gridOptions4: GridOption = {};
     gridObj4: any;
     angularGrid4: AngularGridInstance;
-    
+    nbr:any;
 fldname;
     // selects
     ad_city: any[] = []
@@ -268,6 +268,151 @@ fldname;
 
             }*/
         }
+        const controls  = this.addressForm.controls
+        const controls1 = this.customerForm.controls
+      
+        this.addressService
+            .getBy({ad_type:'customer'}).subscribe((response: any) => {
+                
+                if (response.data.length != 0) {
+                  this.nbr = response.data.length + 1
+                  controls.ad_addr.setValue('CL'+String('000'+ String(this.nbr)).slice(-3))
+                  
+                    
+                    controls.ad_name.enable()
+                    controls.ad_line1.enable()
+                    controls.ad_city.enable()
+                    controls.ad_state.enable()
+                    controls.ad_zip.enable()
+                    controls.ad_country.enable()
+                    controls.ad_temp.enable()
+                    controls.ad_phone.enable()
+                    controls.ad_phone2.enable()
+                    controls.ad_ext.enable()
+                    controls.ad_ext2.enable()
+                    controls.ad_fax.enable()
+                    controls.ad_fax2.enable()
+                    controls.ad_attn.enable()
+                    controls.ad_attn2.enable()
+                    controls.ad_taxable.enable()
+                    controls.ad_tax_zone.enable()
+                    controls.ad_taxc.enable()
+                    controls.ad_tax_usage.enable()
+                    controls.ad_tax_in.enable()
+                    controls.ad_gst_id.enable()
+                    controls.ad_pst_id.enable()
+                    controls.ad_misc1_id.enable()
+                    controls.ad_misc2_id.enable()
+                    
+                    controls1.cm_sort.enable()
+                    controls1.cm_seq.enable()
+                    controls1.cm_type.enable()
+                    controls1.cm_slspn.enable()
+                    controls1.cm_region.enable()
+                    
+                    
+                    
+                    controls1.cm_shipvia.enable()
+                    controls1.cm_curr.enable()
+                    controls1.cm_ar_acct.enable()
+                    controls1.cm_ar_sub.enable()
+                    controls1.cm_ar_cc.enable()
+                    
+                    controls1.cm_resale.enable()
+                    controls1.cm_site.enable()
+                    controls1.cm_lang.enable()
+                    controls1.cm_class.enable()
+                    controls1.cm_sic.enable()
+                    controls1.cm_bank.enable()
+                    controls1.cm_pay_method.enable()
+                    controls1.cm_fix_pr.enable()
+                    controls1.cm_inv_auto.enable()
+                    controls1.cm_partial.enable()
+                    controls1.cm_cr_limit.enable()
+                    controls1.cm_disc_pct.enable()
+                    controls1.cm_bill.enable()
+                    controls1.cm_cr_terms.enable()
+                    controls1.cm_hold.enable()
+                    controls1.cm_fin.enable()
+                    controls1.cm_stmt.enable()
+                    controls1.cm_cr_review.enable()
+                    controls1.cm_cr_update.enable()
+                    controls1.cm_db.enable()
+                    controls1.cm_po_reqd.enable()
+                    controls1.cm_stmt_cyc.enable()
+                    controls1.cm_dun.enable()
+                   
+                  }
+                  else{this.nbr =  1
+                    controls.ad_addr.setValue('CL'+String('000'+ String(this.nbr)).slice(-3))
+                    
+                      
+                      controls.ad_name.enable()
+                      controls.ad_line1.enable()
+                      controls.ad_city.enable()
+                      controls.ad_state.enable()
+                      controls.ad_zip.enable()
+                      controls.ad_country.enable()
+                      controls.ad_temp.enable()
+                      controls.ad_phone.enable()
+                      controls.ad_phone2.enable()
+                      controls.ad_ext.enable()
+                      controls.ad_ext2.enable()
+                      controls.ad_fax.enable()
+                      controls.ad_fax2.enable()
+                      controls.ad_attn.enable()
+                      controls.ad_attn2.enable()
+                      controls.ad_taxable.enable()
+                      controls.ad_tax_zone.enable()
+                      controls.ad_taxc.enable()
+                      controls.ad_tax_usage.enable()
+                      controls.ad_tax_in.enable()
+                      controls.ad_gst_id.enable()
+                      controls.ad_pst_id.enable()
+                      controls.ad_misc1_id.enable()
+                      controls.ad_misc2_id.enable()
+                      
+                      controls1.cm_sort.enable()
+                      controls1.cm_seq.enable()
+                      controls1.cm_type.enable()
+                      controls1.cm_slspn.enable()
+                      controls1.cm_region.enable()
+                      
+                      
+                      
+                      controls1.cm_shipvia.enable()
+                      controls1.cm_curr.enable()
+                      controls1.cm_ar_acct.enable()
+                      controls1.cm_ar_sub.enable()
+                      controls1.cm_ar_cc.enable()
+                      
+                      controls1.cm_resale.enable()
+                      controls1.cm_site.enable()
+                      controls1.cm_lang.enable()
+                      controls1.cm_class.enable()
+                      controls1.cm_sic.enable()
+                      controls1.cm_bank.enable()
+                      controls1.cm_pay_method.enable()
+                      controls1.cm_fix_pr.enable()
+                      controls1.cm_inv_auto.enable()
+                      controls1.cm_partial.enable()
+                      controls1.cm_cr_limit.enable()
+                      controls1.cm_disc_pct.enable()
+                      controls1.cm_bill.enable()
+                      controls1.cm_cr_terms.enable()
+                      controls1.cm_hold.enable()
+                      controls1.cm_fin.enable()
+                      controls1.cm_stmt.enable()
+                      controls1.cm_cr_review.enable()
+                      controls1.cm_cr_update.enable()
+                      controls1.cm_db.enable()
+                      controls1.cm_po_reqd.enable()
+                      controls1.cm_stmt_cyc.enable()
+                      controls1.cm_dun.enable()
+              }
+                
+          })
+
         
     }
 
@@ -512,12 +657,12 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
       */
     goBack() {
         this.loadingSubject.next(false)
-        const url = `/customers`
+        const url = `/customers/customer-list`
         this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
     }
 
     goBackWithoutId() {
-        this.router.navigateByUrl("/customers", {
+        this.router.navigateByUrl("/customers/customer-list", {
             relativeTo: this.activatedRoute,
         })
     }
@@ -638,7 +783,9 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
         const controls = this.customerForm.controls
         const _customer = new Customer()
         _customer.cm_addr = this.address.ad_addr
-        _customer.cm_sort = controls.cm_sort.value
+        if(controls.cm_sort.value == null){_customer.cm_sort = this.address.ad_name}
+        else{_customer.cm_sort = controls.cm_sort.value}
+        
         _customer.cm_type = controls.cm_type.value
         _customer.cm_seq = controls.cm_seq.value
     
@@ -789,7 +936,7 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
       * Returns component title
       */
     getComponentTitle() {
-        let result = "Ajouter Fournisseur"
+        let result = "Ajouter Client"
         // if (!this.product || !this.product.id) {
         //     return result
         // }
@@ -1535,9 +1682,9 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
     }
     handleSelectedRowsChanged5(e, args) {
       const controls = this.customerForm.controls;
-      if (Array.isArray(args.rows) && this.gridObj2) {
+      if (Array.isArray(args.rows) && this.gridObj5) {
         args.rows.map((idx) => {
-          const item = this.gridObj2.getDataItem(idx);
+          const item = this.gridObj5.getDataItem(idx);
           console.log(item)
           const date = new Date()
   
@@ -1559,7 +1706,7 @@ console.log("hhhhhhhhhhhhhhhlllllllllllllllllllllllllllllll")
     }
   
     prepareGrid5() {
-      this.columnDefinitions2 = [
+      this.columnDefinitions5 = [
         {
           id: "id",
           name: "id",

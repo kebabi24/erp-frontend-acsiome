@@ -8,7 +8,7 @@ import { round } from "lodash";
 
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
-import { Bom,Ps, Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService, SaleOrderService, Requisition, RequisitionService, SaleOrder, PurchaseOrder, DeviseService, SiteService, DealService, QualityControlService } from "../../../../core/erp";
+import {  WorkCenterService,Bom,Ps, Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService, SaleOrderService, Requisition, RequisitionService, SaleOrder, PurchaseOrder, DeviseService, SiteService, DealService, QualityControlService } from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { LayoutUtilsService, TypesUtilsService, MessageType, HttpUtilsService } from "../../../../core/_base/crud";
@@ -146,6 +146,7 @@ psdataset: any[];
     private deviseService: DeviseService,
     private siteService: SiteService, 
     private dealService: DealService,
+    private workCenterService: WorkCenterService,
     private http: HttpClient) {
     config.autoClose = true;
   }
@@ -165,6 +166,22 @@ psdataset: any[];
     this.createForm();
     this.initmvGrid();
     this.prepareTriggersGrid();
+    const controls = this.projectForm.controls;
+    this.projectService
+      .getAll().subscribe((response: any) => {
+        if (response.data.length !=0) {controls.pm_code.setValue('BT' + String("000000"+response.data.length).slice(-6))
+        
+        } 
+        else{controls.pm_code.setValue('BT' + String("000000").slice(-6))
+        }
+      });
+      controls.pm_desc.enable();
+          controls.pm_win_addr.enable();
+          controls.pm_site.enable();
+          controls.pm_amt.enable();
+          controls.pm_type.enable();
+          controls.pm_doc_list_code.enable();
+          controls.pm_deal.enable();
   }
 
   //create form
@@ -176,7 +193,7 @@ psdataset: any[];
       pm_code: [this.project.pm_code, Validators.required],
       pm_desc: [{ value: this.project.pm_desc, disabled: !this.isExist }, Validators.required],
       pm_site: [{ value: this.project.pm_site, disabled: !this.isExist }, Validators.required],
-      pm_cust: [{ value: this.project.pm_cust, disabled: !this.isExist }],
+      pm_win_addr: [{ value: this.project.pm_win_addr, disabled: !this.isExist }],
       pm_deal: [{ value: this.project.pm_deal, disabled: !this.isExist }],
       name: [{ value: "", disabled: true }],
       pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
@@ -206,7 +223,7 @@ psdataset: any[];
           this.isExist = true;
         } else {
           controls.pm_desc.enable();
-          controls.pm_cust.enable();
+          controls.pm_win_addr.enable();
           controls.pm_site.enable();
           controls.pm_amt.enable();
           controls.pm_type.enable();
@@ -253,7 +270,7 @@ psdataset: any[];
     _project.pm_code = controls.pm_code.value;
     _project.pm_desc = controls.pm_desc.value;
     _project.pm_site = controls.pm_site.value;
-    _project.pm_cust = controls.pm_cust.value;
+    _project.pm_win_addr = controls.pm_win_addr.value;
     _project.pm_deal = controls.pm_deal.value;
     _project.pm_amt = controls.pm_amt.value;
     _project.pm_cost = controls.pm_cost.value;
@@ -271,16 +288,16 @@ psdataset: any[];
   addproject(_project: Project, details: any) {
    
 
-    let l = [];
-    this.selectedIndexes.forEach((index) => {
-      l.push({
-        code_doc: this.specifications[index]["mp_nbr"],
-        trigger: this.specifications[index]["pjd_trigger"],
-      });
-    });
+    // let l = [];
+    // this.selectedIndexes.forEach((index) => {
+    //   l.push({
+    //     code_doc: this.specifications[index]["mp_nbr"],
+    //     trigger: this.specifications[index]["pjd_trigger"],
+    //   });
+    // });
 
   //  this.loadingSubject.next(true);
-    this.projectService.add({ Project: _project, ProjectDetails: details, docs_codes: l }).subscribe(
+    this.projectService.add({ Project: _project, ProjectDetails: details }).subscribe(
       (reponse) => console.log("response", Response),
       (error) => {
         alert("Erreur, vérifier les informations");
@@ -410,7 +427,7 @@ psdataset: any[];
 //     //     if(res.data.length>0) {
 
 //     //           _so.so_category =  "SO"
-//     //           _so.so_cust = controls.pm_cust.value;
+//     //           _so.so_cust = controls.pm_win_addr.value;
 //     //           _so.so_ord_date = controls.pm_ord_date.value
 //     //             ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
 //     //             : null;
@@ -429,9 +446,9 @@ psdataset: any[];
 
 //     //     }
 //     //     else {
-// console.log(controls.pm_cust.value)
+// console.log(controls.pm_win_addr.value)
 //     _so.so_category = "SO";
-//     _so.so_cust = controls.pm_cust.value;
+//     _so.so_cust = controls.pm_win_addr.value;
 //     _so.so_ord_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
 //     _so.so_due_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
 //     _so.so_po = controls.pm_code.value;
@@ -836,7 +853,7 @@ psdataset: any[];
 
   onChangeCust() {
     const controls = this.projectForm.controls; // chof le champs hada wesh men form rah
-    const cm_addr = controls.pm_cust.value;
+    const cm_addr = controls.pm_win_addr.value;
 
     this.customerService.getBy({ cm_addr }).subscribe(
       (res: any) => {
@@ -849,9 +866,9 @@ psdataset: any[];
           document.getElementById("cust").focus();
         } else {
           this.error = false;
-          controls.pm_cust.setValue(data.cm_addr || "");
+          controls.pm_win_addr.setValue(data.cm_addr || "");
           controls.name.setValue(data.address.ad_name || "");
-          this.customerService.getBy({ cm_addr: controls.pm_cust.value }).subscribe((res: any) => {
+          this.customerService.getBy({ cm_addr: controls.pm_win_addr.value }).subscribe((res: any) => {
             console.log(res);
             const { data } = res;
 
@@ -904,27 +921,10 @@ psdataset: any[];
       args.rows.map((idx) => {
         const item = this.gridObj2.getDataItem(idx);
 
-        controls.pm_cust.setValue(item.cm_addr || "");
-        controls.name.setValue(item.address.ad_name || "");
-
-        this.customerService.getBy({ cm_addr: controls.pm_cust.value }).subscribe((res: any) => {
-          console.log(res);
-          const { data } = res;
-
-          if (data) {
-            this.customer = data;
-
-            if (data.cm_curr == "DA") {
-              this.ex_rate1 = 1;
-              this.ex_rate2 = 1;
-            } else {
-              this.deviseService.getExRate({ exr_curr1: data.cm_curr, exr_curr2: "DA", date: this.date }).subscribe((res: any) => {
-                this.ex_rate1 = res.data.exr_rate;
-                this.ex_rate2 = res.data.exr_rate2;
-              });
-            }
-          }
-        });
+        controls.pm_win_addr.setValue(item.wc_mch || "");
+        controls.name.setValue(item.wc_wkctr || "");
+        controls.pm_site.setValue(item.wc__chr01)
+        
       });
     }
   }
@@ -1112,56 +1112,60 @@ psdataset: any[];
     this.modalService.open(content, { size: "lg" });
   }
 
-  prepareGrid2() {
+  prepareGrid2() { 
     this.columnDefinitions2 = [
       {
         id: "id",
-        name: "id",
         field: "id",
-        sortable: true,
-        minWidth: 80,
-        maxWidth: 80,
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+
+        minWidth: 50,
+        maxWidth: 50,
       },
+      
       {
-        id: "cm_addr",
-        name: "code",
-        field: "cm_addr",
+        id: "wc_wkctr",
+        name: "Centre Charge",
+        field: "wc_wkctr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "ad_name",
-        name: "Client",
-        field: "address.ad_name",
+        id: "wc_mch",
+        name: "Machine",
+        field: "wc_mch",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "ad_phone",
-        name: "Numero telephone",
-        field: "address.ad_phone",
+        id: "wc_dept",
+        name: "Département",
+        field: "wc_dept",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "ad_taxable",
-        name: "A Taxer",
-        field: "address.ad_taxable",
+        id: "wc_desc",
+        name: "Designation",
+        field: "wc_desc",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "ad_taxc",
-        name: "Taxe",
-        field: "address.ad_taxc",
+        id: "wc__chr01",
+        name: "Site",
+        field: "wc__chr01",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
+
     ];
 
     this.gridOptions2 = {
@@ -1203,7 +1207,9 @@ psdataset: any[];
     };
 
     // fill the dataset with your data
-    this.customerService.getAll().subscribe((response: any) => (this.customers = response.data));
+    this.workCenterService
+          .getAll()
+          .subscribe((response: any) => (this.customers = response.data));
   }
   open2(content) {
     this.prepareGrid2();
@@ -1781,7 +1787,7 @@ psdataset: any[];
 
     // fill the dataset with your data
     const controls = this.projectForm.controls;
-    this.siteService.getBy({ si_cust: controls.pm_cust.value }).subscribe((response: any) => (this.datasite = response.data));
+    this.siteService.getBy({ si_cust: controls.pm_win_addr.value }).subscribe((response: any) => (this.datasite = response.data));
   }
   opensite(contentsite) {
     this.prepareGridsite();

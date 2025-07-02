@@ -75,7 +75,7 @@ const myCustomPersentFormatter: Formatter = (row: number, cell: number, value: a
   const myCustomEcartFormatter: Formatter = (row: number, cell: number, value: Number, columnDef: Column, dataContext: any, grid?: any) => {
     if (value == null || value === 0) {
       return "0";
-    } else if (value > 0) {
+    } else if (Number(value) > 0) {
       return "<span step='0.01' style='color:red;font-weight:bold;'>" + value + "</span>";
     } 
     // else {

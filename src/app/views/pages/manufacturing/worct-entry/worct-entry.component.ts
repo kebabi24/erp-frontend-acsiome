@@ -482,17 +482,17 @@ export class WorctEntryComponent implements OnInit {
             _lb.lb_qty = args.dataContext.tr_qty_loc;
             _lb.lb_ld_status = args.dataContext.tr_status;
             _lb.lb_desc = this.product.pt_desc2;
-            _lb.lb_cust = this.address.ad_addr;
-            _lb.lb_addr = this.address.ad_line1;
+            _lb.lb_cust = 'U1';
+            _lb.lb_addr = 'DKAKNA';
             _lb.lb_grp = controls.emp_shift.value;
-            _lb.lb_tel = this.address.ad_phone;
+            _lb.lb_tel = '';
             _lb.int01 = this.product.int01;
             _lb.int02 = this.product.int02;
             _lb.lb_printer = this.PathPrinter;
             // _lb.lb_cust = controls.name.value;
 
-            _lb.lb_addr = this.provider.ad_line1;
-            _lb.lb_tel = this.provider.ad_phone;
+            // _lb.lb_addr = this.provider.ad_line1;
+            // _lb.lb_tel = this.provider.ad_phone;
             let lab = null;
 
             this.labelService.addProd(_lb).subscribe(
@@ -583,7 +583,7 @@ export class WorctEntryComponent implements OnInit {
         if (res.data.saleOrder != null) {
           this.addressService.getBy({ ad_addr: res.data.saleOrder.so_cust }).subscribe((resaddr: any) => {
             console.log(resaddr.data);
-            this.address = resaddr.data;
+            this.address = resaddr.data[0];
           });
         } else {
           alert("Commande n'existe pas");
@@ -594,7 +594,7 @@ export class WorctEntryComponent implements OnInit {
     } else {
       this.addressService.getBy({ ad_addr: "1000" }).subscribe((resaddr: any) => {
         console.log(resaddr.data);
-        this.address = resaddr.data;
+        this.address = resaddr.data[0];
       });
     }
     console.log(this.address);
@@ -705,14 +705,14 @@ export class WorctEntryComponent implements OnInit {
             if (res.data.saleOrder != null) {
               this.addressService.getBy({ ad_addr: res.data.saleOrder.so_cust }).subscribe((resaddr: any) => {
                 console.log(resaddr.data);
-                this.address = resaddr.data;
+                this.address = resaddr.data[0];
               });
             }
           });
         } else {
           this.addressService.getBy({ ad_addr: "1000" }).subscribe((resaddr: any) => {
             console.log(resaddr.data);
-            this.address = resaddr.data;
+            this.address = resaddr.data[0];
           });
         }
         console.log(this.address);
@@ -1465,7 +1465,7 @@ export class WorctEntryComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.addressService.getAll().subscribe((response: any) => (this.adresses = response.data));
+    this.addressService.getBy({ad_type:'workcenter'}).subscribe((response: any) => (this.adresses = response.data));
   }
   open2(content) {
     this.prepareGrid2();
@@ -1519,14 +1519,14 @@ export class WorctEntryComponent implements OnInit {
         if (res.data.saleOrder != null) {
           this.addressService.getBy({ ad_addr: res.data.saleOrder.so_cust }).subscribe((resaddr: any) => {
             console.log(resaddr.data);
-            this.address = resaddr.data;
+            this.address = resaddr.data[0];
           });
         }
       });
     } else {
       this.addressService.getBy({ ad_addr: "1000" }).subscribe((resaddr: any) => {
         console.log(resaddr.data);
-        this.address = resaddr.data;
+        this.address = resaddr.data[0];
       });
     }
     console.log(this.address);

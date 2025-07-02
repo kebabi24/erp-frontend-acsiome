@@ -38,7 +38,7 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import { ProjectService, TaskService, ItemService, ProviderService, CustomerService, BomService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, LocationService, InventoryTransactionService, PsService, SaleOrderService, RequisitionService, EmployeService, AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService } from "../../../core/erp";
+import {  WorkCenterService,ProjectService, TaskService, ItemService, ProviderService, CustomerService, BomService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, LocationService, InventoryTransactionService, PsService, SaleOrderService, RequisitionService, EmployeService, AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService } from "../../../core/erp";
 
 import { ListPmComponent } from "./list-pm/list-pm.component";
 import { AddReportComponent } from "./add-report/add-report.component";
@@ -125,7 +125,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ProjectComponent, CreateProjectComponent, ListProjectComponent, AccidentIncidentComponent, AssetDownComponent, ListPmComponent, AddReportComponent, AssignEmployeeComponent, LaunchProjectComponent, EmpTempComponent, UpdateProjectComponent, SensibilisationComponent, IdentificationComponent, ListEmpTempComponent, EditProjectComponent, UpdateStatusProjectComponent,ReviewCustomerReqComponent, BusinessMonitoringSheetComponent],
+  declarations: [ ProjectComponent, CreateProjectComponent, ListProjectComponent, AccidentIncidentComponent, AssetDownComponent, ListPmComponent, AddReportComponent, AssignEmployeeComponent, LaunchProjectComponent, EmpTempComponent, UpdateProjectComponent, SensibilisationComponent, IdentificationComponent, ListEmpTempComponent, EditProjectComponent, UpdateStatusProjectComponent,ReviewCustomerReqComponent, BusinessMonitoringSheetComponent],
 
   imports: [
     CommonModule,
@@ -162,6 +162,7 @@ const routes: Routes = [
     LayoutUtilsService,
     HttpUtilsService,
     ProjectService,
+    WorkCenterService,
     TaskService,
     ItemService,
     CustomerService,

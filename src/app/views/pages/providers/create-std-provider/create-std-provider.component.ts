@@ -215,9 +215,7 @@ constructor(
     this.codeService
         .getBy({ code_fldname: "vd_lang" })
         .subscribe((response: any) => (this.vd_lang = response.data))
-    this.codeService
-        .getBy({ code_fldname: "ad_tax_zone" })
-        .subscribe((response: any) => (this.ad_tax_zone = response.data))
+    
     this.codeService
         .getBy({ code_fldname: "ad_tax_zone" })
         .subscribe((response: any) => (this.ad_tax_zone = response.data))
@@ -278,8 +276,138 @@ ngOnDestroy() {
  * Init product
  */
 onchangename(){
-  document.getElementById("ad_line1").focus(); 
-        
+  const controlsX  = this.formX.controls
+  const controls1 = this.providerForm.controls;
+  const controls = this.addressForm.controls;
+  
+  let name = controlsX.ad_name.value.substring(0,3)
+  this.isExist = false
+  this.addressService
+        .getBy({ad_type:'vendor'}).subscribe((response: any) => {
+            
+            if (response.data.length != 0) {
+                
+                 
+                controls.ad_line1.enable()
+               
+                controls.ad_country.enable()
+                controls.ad_state.enable()
+                controls.ad_city.enable()
+                controls.ad_zip.enable()
+                
+                
+                controlsX.ad_temp.enable()
+                controls.ad_phone.enable()
+                controls.ad_phone2.enable()
+                controls.ad_ext.enable()
+                controls.ad_ext2.enable()
+                controls.ad_fax.enable()
+                controls.ad_fax2.enable()
+                controls.ad_attn.enable()
+                controls.ad_attn2.enable()
+                controls.ad_taxable.enable()
+                controls.ad_tax_zone.enable()
+                controls.ad_taxc.enable()
+                controls.ad_tax_usage.enable()
+                controls.ad_tax_in.enable()
+                controls.ad_gst_id.enable()
+                controls.ad_pst_id.enable()
+                controls.ad_misc1_id.enable()
+                controls.ad_misc2_id.enable()
+                controls1.vd_seq.enable()
+                controls1.vd_sort.enable()
+                controls1.vd_type.enable()
+                controls1.vd_act_acct.enable()
+                controls1.vd_act_sub.enable()
+                controls1.vd_act_cc.enable()
+                controls1.vd_ap_acct.enable()
+                controls1.vd_ap_sub.enable()
+                controls1.vd_ap_cc.enable()
+                controls1.vd_shipvia.enable()
+                controls1.vd_bank.enable()
+                controls1.vd_ckfrm.enable()
+                controls1.vd_curr.enable()
+                controls1.vd_lang.enable()
+                controls1.vd_pur_cntct.enable()
+                controls1.vd_ap_cntct.enable()
+                controls1.vd_misc_cr.enable()
+                controls1.vd_carrier_id.enable()
+                controls1.vd_promo.enable()
+                controls1.vd_kanban_supplier.enable()
+                controls1.vd_cr_terms.enable()
+                controls1.vd_disc_pct.enable()
+                controls1.vd_prepay.enable()
+                controls1.vd_debtor.enable()
+                controls1.vd_partial.enable()
+                controls1.vd_hold.enable()
+                controls1.vd_pay_spec.enable()
+                controls1.vd_db.enable()
+                controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(Number(response.data.length) + Number(1))).slice(-3))  
+               
+                document.getElementById("ad_line1").focus(); 
+            } 
+            else{ 
+              
+            controls.ad_line1.enable()
+           
+            controls.ad_country.enable()
+            controls.ad_state.enable()
+            controls.ad_city.enable()
+            controls.ad_zip.enable()
+            
+            
+            controlsX.ad_temp.enable()
+            controls.ad_phone.enable()
+            controls.ad_phone2.enable()
+            controls.ad_ext.enable()
+            controls.ad_ext2.enable()
+            controls.ad_fax.enable()
+            controls.ad_fax2.enable()
+            controls.ad_attn.enable()
+            controls.ad_attn2.enable()
+            controls.ad_taxable.enable()
+            controls.ad_tax_zone.enable()
+            controls.ad_taxc.enable()
+            controls.ad_tax_usage.enable()
+            controls.ad_tax_in.enable()
+            controls.ad_gst_id.enable()
+            controls.ad_pst_id.enable()
+            controls.ad_misc1_id.enable()
+            controls.ad_misc2_id.enable()
+            controls1.vd_seq.enable()
+            controls1.vd_sort.enable()
+            controls1.vd_type.enable()
+            controls1.vd_act_acct.enable()
+            controls1.vd_act_sub.enable()
+            controls1.vd_act_cc.enable()
+            controls1.vd_ap_acct.enable()
+            controls1.vd_ap_sub.enable()
+            controls1.vd_ap_cc.enable()
+            controls1.vd_shipvia.enable()
+            controls1.vd_bank.enable()
+            controls1.vd_ckfrm.enable()
+            controls1.vd_curr.enable()
+            controls1.vd_lang.enable()
+            controls1.vd_pur_cntct.enable()
+            controls1.vd_ap_cntct.enable()
+            controls1.vd_misc_cr.enable()
+            controls1.vd_carrier_id.enable()
+            controls1.vd_promo.enable()
+            controls1.vd_kanban_supplier.enable()
+            controls1.vd_cr_terms.enable()
+            controls1.vd_disc_pct.enable()
+            controls1.vd_prepay.enable()
+            controls1.vd_debtor.enable()
+            controls1.vd_partial.enable()
+            controls1.vd_hold.enable()
+            controls1.vd_pay_spec.enable()
+            controls1.vd_db.enable()
+            controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(1)).slice(-3)) 
+            document.getElementById("ad_line1").focus(); 
+            }
+            
+     })
+     
 }
 init() {
     this.createFormX()
@@ -331,7 +459,7 @@ createFormX(){
   this.address = new Address()
   this.formX = this.formBuilder.group({
     ad_addr: [this.address.ad_addr, Validators.required],
-    ad_name: [{ value: this.address.ad_name, disabled: !this.isExist },Validators.required],
+    ad_name: [this.address.ad_name, Validators.required],
     ad_temp: [{ value: this.address.ad_temp, disabled: !this.isExist }],
   })
  
@@ -421,7 +549,7 @@ onChangeCode() {
         })
         .subscribe((response: any) => {
             
-            if (response.data) {
+            if (response.data.length != 0) {
                 this.isExist = true
                 console.log(response.data)
                

@@ -40,7 +40,7 @@ import {
   NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
 
-import {WorkRouting, WorkRoutingService, WorkCenter, WorkCenterService,ProviderService } from "../../../../core/erp"
+import {WorkRouting, WorkRoutingService, WorkCenter, WorkCenterService,ProviderService, CodeService,} from "../../../../core/erp"
 
 @Component({
   selector: 'kt-create-gamme',
@@ -71,7 +71,10 @@ export class CreateGammeComponent implements OnInit {
   gridOptionsvend: GridOption = {};
   gridObjvend: any;
   angularGridvend: AngularGridInstance;
-
+  product_colors: any[] = [];
+  color:any;
+  message = "";
+  
   constructor(
     config: NgbDropdownConfig,
     private activatedRoute: ActivatedRoute,
@@ -83,6 +86,7 @@ export class CreateGammeComponent implements OnInit {
     private modalService: NgbModal,
     private workCenterService : WorkCenterService,
     private providerService : ProviderService,
+    private codeService: CodeService,
     ) { config.autoClose = true}
     
     
@@ -94,6 +98,7 @@ export class CreateGammeComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable()
     this.loadingSubject.next(false)
     this.createForm();
+    this.getProductColors();
   }
   //create form
   createForm() {
@@ -127,7 +132,8 @@ export class CreateGammeComponent implements OnInit {
 
       ro_start:  [{value: this.workRouting.ro_start,  disabled: !this.isExist } ],
       ro_end: [{value: this.workRouting.ro_end,  disabled: !this.isExist } ],
-     
+      product_color: [null],
+      micronage:[0, Validators.required],
     })
   }
   
@@ -149,7 +155,8 @@ export class CreateGammeComponent implements OnInit {
                   this.isExist = true
                   console.log(response.data.length)
               } else {
-                  
+                  controls.product_color.enable()
+                  controls.micronage.enable()
                   controls.ro_wkctr.enable()
                   controls.ro_mch.enable()
                   controls.ro_rollup.enable()
@@ -173,7 +180,7 @@ export class CreateGammeComponent implements OnInit {
                   controls.ro_vend.enable()
                   controls.ro_inv_value.enable()
                   controls.ro_sub_cost.enable()
-
+   
             }
           })
       }
@@ -224,8 +231,10 @@ prepareCode(): WorkRouting {
   _workrouting.ro_vend = controls.ro_vend.value
   _workrouting.ro_inv_value = controls.ro_inv_value.value
   _workrouting.ro_sub_cost = controls.ro_sub_cost.value
-
-  _workrouting.ro_start = controls.ro_start.value
+  _workrouting.ro_inv_value = controls.ro_inv_value.value
+  _workrouting.ro__chr01 = controls.product_color.value
+  _workrouting.ro__dec01 = controls.micronage.value
+  _workrouting.ro_start = controls.micronage.value
     ? `${controls.ro_start.value.year}/${controls.ro_start.value.month}/${controls.ro_start.value.day}`
     : null
 
@@ -518,5 +527,21 @@ openvend(content) {
   this.prepareGridvend();
   this.modalService.open(content, { size: "lg" });
 }
-
+getProductColors() {
+    
+  this.codeService
+  .getBy({
+    code_fldname: "pt_break_cat",
+  })
+  .subscribe((response: any) => {
+    const { data } = response;
+    this.product_colors = data;
+    if (!data) {
+      this.message = "veuillez verifier la connexion";
+      this.hasFormErrors = true;
+      return;
+      // controls.wo_site.setValue("");
+    }
+  });
+}
 }

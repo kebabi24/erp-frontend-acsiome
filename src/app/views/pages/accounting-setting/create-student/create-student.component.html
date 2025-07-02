@@ -1,0 +1,952 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Etudiant'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Retour</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-lg mr-2">enregistrer </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body> 
+        <div class="example-preview">
+            <div>
+                <ngb-tabset>
+                    <ngb-tab>
+                        <ng-template ngbTabTitle>
+                            Information personnelle
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasFormErrors"
+                                class="btn btn-lg btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <form [formGroup]="empForm" class="form">
+
+                                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                                    (close)="onAlertClose($event)">
+                                    Ce Code existe deja
+                                </kt-alert>
+                                
+                        <div class="row"> 
+                            <div class="form-group col-2">
+                                <label class="form-group">Code: *</label>
+                                
+                                <input type="text" formControlName="emp_addr"  (change)="onChangeCode()"
+                                    [className]="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                                <div *ngIf="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>
+                        <div class="row"> 
+        
+                            <div class="form-group col-4">
+                                <label class="form-group">Nom: *</label>
+                                <input type="text" formControlName="emp_lname" 
+                                    [className]="empForm.controls['emp_lname'].errors && (empForm.controls['emp_lname'].dirty || empForm.controls['emp_lname'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                                <div *ngIf="empForm.controls['emp_lname'].errors && (empForm.controls['emp_lname'].dirty || empForm.controls['emp_lname'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+        
+                            <div class="form-group col-4">
+                                <label class="form-group">Prénom: *</label>
+                                <input type="text" formControlName="emp_fname" 
+                                    [className]="empForm.controls['emp_fname'].errors && (empForm.controls['emp_fname'].dirty || empForm.controls['emp_fname'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                                <div *ngIf="empForm.controls['emp_fname'].errors && (empForm.controls['emp_fname'].dirty || empForm.controls['emp_fname'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">DATE Naissance:</label>
+                                <div class="input-group input-group-lg">
+                                    <input
+                                        [className]="empForm.controls['emp_birth_date'].errors && (empForm.controls['emp_birth_date'].dirty || empForm.controls['emp_birth_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                        placeholder="jj-mm-aaaa" name="dd" ngbDatepicker formControlName="emp_birth_date"
+                                        #dd="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="dd.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="empForm.controls['emp_birth_date'].errors && (empForm.controls['emp_birth_date'].dirty || empForm.controls['emp_birth_date'].touched)"
+                                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                                </div>
+        
+                            </div>
+                        </div>
+                        <div class="row"> 
+        
+                            <div class="form-group col-8">
+                                <label class="form-group">Adresse: *</label>
+                                <input type="text" formControlName="emp_line1" 
+                                    [className]="empForm.controls['emp_line1'].errors && (empForm.controls['emp_line1'].dirty || empForm.controls['emp_line1'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                                <div *ngIf="empForm.controls['emp_line1'].errors && (empForm.controls['emp_line1'].dirty || empForm.controls['emp_line1'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div>
+                        </div>
+                       
+                        <div class="row">
+                            <div class="form-group col-2">
+                                <label class="form-group ">Pays:</label>
+                                <select class="form-control form-control-lg form-control-solid"
+                                id="exampleSelects1" formControlName="emp_country">
+                                <option value=""></option>
+                                <option *ngFor="let elem of emp_country" [value]="elem.code_value">
+                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+                                   
+
+                            </select>
+                            </div>
+                       
+                            
+                            <div class="form-group col-2">
+                                <label class="form-group ">Wilaya:</label>
+                                    <select class="form-control form-control-lg form-control-solid"
+                                        id="exampleSelects2" formControlName="emp_state" (change)="onChangeState()">
+                                        <option value=""></option>
+                                        <option *ngFor="let elem of emp_state" [value]="elem.code_value">
+                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                    </select>
+                                
+                            </div>
+                            
+                            <div class="form-group col-2">
+                                <label class="form-group ">Commune:</label>
+                                    <select class="form-control form-control-lg form-control-solid"
+                                        id="exampleSelects1" formControlName="emp_city">
+                                        <option value=""></option>
+                                        <option *ngFor="let elem of emp_city" [value]="elem.code_value">
+                                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                    </select>
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Post:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_zip">
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                            <div class="form-group col-2">
+                                <label class="form-group ">Téléphone:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_phone">
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Fax:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_fax">
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Email:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_mail">
+                            </div>
+                        </div>
+        
+                        <div class="row"> 
+                            <!-- <div class="form-group col-2">
+                                <label class="form-group ">Sexe:</label>
+        
+                                <select
+                                    [className]="empForm.controls['emp_sex'].errors && (empForm.controls['emp_sex'].dirty || empForm.controls['emp_sex'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                    formControlName="emp_sex"  id="exampleSelects7">
+                                    <option value=""></option>
+                                    <option value="M">Masculin</option>
+                                    <option value="F">Feminin</option>
+                                
+                                </select>
+                                <div *ngIf="empForm.controls['emp_sex'].errors && (empForm.controls['emp_sex'].dirty || empForm.controls['emp_sex'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+        
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">Situation Familliale:</label>
+        
+                                <select
+                                    [className]="empForm.controls['emp_familysit'].errors && (empForm.controls['emp_familysit'].dirty || empForm.controls['emp_familysit'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                    formControlName="emp_familysit"  id="exampleSelects7">
+                                    <option value=""></option>
+                                    <option value="C">Célébataire</option>
+                                    <option value="M">Marié</option>
+                                    <option value="A">Autre</option>
+                                    
+                                </select>
+                                <div *ngIf="empForm.controls['emp_familysit'].errors && (empForm.controls['emp_familysit'].dirty || empForm.controls['emp_familysit'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+        
+
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">Nombre d'enfant: *</label>
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_child_nbr">
+                            </div>
+                       
+                            <div class="form-group col-2">
+                                <label class="form-group ">Groupe Sanguin:</label>
+        
+                                <select
+                                    [className]="empForm.controls['emp_blood'].errors && (empForm.controls['emp_blood'].dirty || empForm.controls['emp_blood'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                    formControlName="emp_blood"  id="exampleSelects7">
+                                    <option value=""></option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    
+                                </select>
+                                <div *ngIf="empForm.controls['emp_blood'].errors && (empForm.controls['emp_blood'].dirty || empForm.controls['emp_blood'].touched)"
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+        
+
+                            </div>
+                            
+                            <div class="form-group col-2">
+                                <label class="form-group">N°Sécurité sociale: *</label>
+                                <input type="text" formControlName="emp_ss_id" 
+                                    [className]="empForm.controls['emp_ss_id'].errors && (empForm.controls['emp_ss_id'].dirty || empForm.controls['emp_ss_id'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
+                                <div *ngIf="empForm.controls['emp_ss_id'].errors && (empForm.controls['emp_ss_id'].dirty || empForm.controls['emp_ss_id'].touched) "
+                                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                            </div> -->
+                            <div class="form-group col-2">
+                                <label class="form-group">Client : *</label>
+                                <div class="input-group input-group-lg">
+
+                                    <input type="text" class="form-control form-control-solid" 
+                                        aria-describedby="basic-addon2" formControlName="emp_line2" (change)="onChangecust()" id="emp_line2">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="opencust(contentcust)">
+                                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                                    </div>
+                                
+                                </div>
+        
+                                
+                            </div>
+                            <div class="form-group col-2">
+                                    <label class="form-group">Responsable : *</label>
+                                    <div class="input-group input-group-lg">
+
+                                        <input type="text" class="form-control form-control-solid" 
+                                            aria-describedby="basic-addon2" formControlName="emp_upper" (change)="onChangeUpper()" id="emp_upper">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" (click)="openupper(contentupper)">
+                                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                                        </div>
+                                    
+                                    </div>
+            
+                                    
+                            </div>    
+                            <div class="form-group col-2">
+                                    <label class="form-group">Site : *</label>
+                                    <div class="input-group input-group-lg">
+
+                                        <input type="text" class="form-control form-control-solid" 
+                                            aria-describedby="basic-addon2" formControlName="emp_site" (change)="onChangesite()" id="emp_site">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" (click)="opensite(contentsite)">
+                                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                                        </div>
+                                    
+                                    </div>
+            
+                                    
+                            </div>  
+                            <div class="form-group col-2">
+                                <label class="form-group">Utilisateur : *</label>
+                                <div class="input-group input-group-lg">
+
+                                    <input type="text" class="form-control form-control-solid" 
+                                        aria-describedby="basic-addon2" formControlName="emp_userid" (change)="onChangeUserid()" id="userid">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="openuserid(contentuserid)">
+                                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                                    </div>
+                                
+                                </div>
+        
+                                
+                            </div>  
+                            <div class="form-group col-2">
+                                <label class="form-group">Service : *</label>
+                                <div class="input-group input-group-lg">
+        
+                                    <input type="text" formControlName="emp_job" (change)="onChangeDomain()" id="job"
+                                        [className]="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                        aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="opendom(contentdom)">
+                                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                                    </div>
+                                    <div *ngIf="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched)"
+                                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                                </div>
+        
+                                
+                            </div>    
+                            <div class="form-group col-2">
+                                <label class="form-group">Niveau : *</label>
+                                <div class="input-group input-group-lg">
+        
+                                    <input type="text" formControlName="emp_level" (change)="onChangelevel()" id="level"
+                                        [className]="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                        aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="open3(content3)">
+                                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                                    </div>
+                                    <div *ngIf="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched)"
+                                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                                </div>
+        
+                                
+                            </div>
+                          
+                                
+                                
+                            
+                        </div>    
+                       
+                        <!-- <div class="row"> 
+                            <div class="form-group col-2">
+                                <label class="form-group ">N° Permis de conduire:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_dlicence">
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group"> Habiliation: </label>
+                                <span class="switch switch-icon ">
+                                    <label>
+                                        <input type="checkbox" formControlName="emp_habiliation"
+                                            class="form-control form-control-lg form-control-solid">
+                                            <span></span>    
+                                        
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group">Date Habiliation:</label>
+                                <div class="input-group input-group-lg">
+                                    <input
+                                        [className]="empForm.controls['emp_hab_date'].errors && (empForm.controls['emp_hab_date'].dirty || empForm.controls['emp_hab_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                        placeholder="jj-mm-aaaa" name="dp" ngbDatepicker formControlName="emp_hab_date"
+                                        #dp="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" (click)="dp.toggle()" type="button">
+                                            <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="empForm.controls['emp_hab_date'].errors && (empForm.controls['emp_hab_date'].dirty || empForm.controls['emp_hab_date'].touched)"
+                                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                                </div>
+        
+                            </div>
+                            <div class="form-group col-2">
+                                <label class="form-group ">ANEM:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_anem">
+                            </div>
+                        </div> -->
+                         
+                        <h3>Données Personne à Contacter </h3>
+                        <div class="row">
+
+                            <div class="form-group col-2">
+                                <label class="form-group ">Nom:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_contact_fname">
+                            </div>
+                        
+                            <div class="form-group col-2">
+                                <label class="form-group ">Prenom:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_contact_lname">
+                            </div>
+                        
+                            <div class="form-group col-4">
+                                <label class="form-group ">Adresse:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_contact_adress">
+                            </div>
+                        
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="form-group col-2">
+                                <label class="form-group ">Lien Parentale:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_parent_liaison">
+                            </div>
+                        
+                            <div class="form-group col-2">
+                                <label class="form-group ">Tel:</label>
+                                
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                        formControlName="emp_contact_tel">
+                            </div>
+                        
+                        
+                        </div>
+                        
+                            </form>
+                        </ng-template>
+                    </ngb-tab>
+                    <!-- <ngb-tab>
+                        <ng-template ngbTabTitle>
+                        
+                            Données Employé
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasEmployeFormErrors"
+                                class="btn btn-lg btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <form [formGroup]="empForm" class="form">
+                                <div class="form-group col-2">
+                                    <label class="form-group">Client : *</label>
+                                    <div class="input-group input-group-lg">
+
+                                        <input type="text" class="form-control form-control-solid" 
+                                            aria-describedby="basic-addon2" formControlName="emp_line2" (change)="onChangecust()" id="emp_line2">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" (click)="opencust(contentcust)">
+                                                <i class="text-dark-50 flaticon2-search"></i> </span>
+                                        </div>
+                                    
+                                    </div>
+            
+                                    
+                                </div>
+                                <div class="row"> 
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Responsable : *</label>
+                                        <div class="input-group input-group-lg">
+    
+                                            <input type="text" class="form-control form-control-solid" 
+                                                aria-describedby="basic-addon2" formControlName="emp_upper" (change)="onChangeUpper()" id="emp_upper">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="openupper(contentupper)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        
+                                        </div>
+                
+                                        
+                                    </div>    
+                                    <div class="form-group col-2">
+                                       
+                                        <label class="form-group ">Equipe:</label>
+                                        
+                                        <div class="input-group input-group-lg">
+
+                                            <input type="text" class="form-control form-control-solid" 
+                                                aria-describedby="basic-addon2" formControlName="emp_shift" (change)="onChangeshift()" id="emp_shift">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="openshift(contentshift)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        
+                                        </div>
+                                        
+                                    </div>    
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Site : *</label>
+                                        <div class="input-group input-group-lg">
+    
+                                            <input type="text" class="form-control form-control-solid" 
+                                                aria-describedby="basic-addon2" formControlName="emp_site" (change)="onChangesite()" id="emp_site">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="opensite(contentsite)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        
+                                        </div>
+                
+                                        
+                                    </div>    
+                              
+                                    <div class="form-group col-2">
+                                        <label class="form-group">DATE d'Embauche:</label>
+                                        <div class="input-group input-group-lg">
+                                            <input
+                                                [className]="empForm.controls['emp_first_date'].errors && (empForm.controls['emp_first_date'].dirty || empForm.controls['emp_first_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_first_date" ngbDatepicker formControlName="emp_first_date"
+                                                #emp_first_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_first_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_first_date'].errors && (empForm.controls['emp_first_date'].dirty || empForm.controls['emp_first_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Fin :</label>
+                                        <div class="input-group input-group-lg">
+                                            <input
+                                                [className]="empForm.controls['emp_last_date'].errors && (empForm.controls['emp_last_date'].dirty || empForm.controls['emp_last_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_last_date" ngbDatepicker formControlName="emp_last_date"
+                                                #emp_last_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_last_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_last_date'].errors && (empForm.controls['emp_last_date'].dirty || empForm.controls['emp_last_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Confirmation :</label>
+                                        <div class="input-group input-group-lg">
+                                            <input
+                                                [className]="empForm.controls['emp_conf_date'].errors && (empForm.controls['emp_conf_date'].dirty || empForm.controls['emp_conf_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_conf_date" ngbDatepicker formControlName="emp_conf_date"
+                                                #emp_conf_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_conf_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_conf_date'].errors && (empForm.controls['emp_conf_date'].dirty || empForm.controls['emp_conf_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Démission :</label>
+                                        <div class="input-group input-group-lg">
+                                            <input
+                                                [className]="empForm.controls['emp_dism_date'].errors && (empForm.controls['emp_dism_date'].dirty || empForm.controls['emp_dism_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_dism_date" ngbDatepicker formControlName="emp_dism_date"
+                                                #emp_dism_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_dism_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_dism_date'].errors && (empForm.controls['emp_dism_date'].dirty || empForm.controls['emp_dism_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group"> Contrat Fidélité: </label>
+                                        <span class="switch switch-icon ">
+                                            <label>
+                                                <input type="checkbox" formControlName="emp_loyalty"
+                                                    class="form-control form-control-lg form-control-solid">
+                                                    <span></span>    
+                                                
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Date Fin Fidélitée :</label>
+                                        <div class="input-group input-group-lg">
+                                            <input
+                                                [className]="empForm.controls['emp_loyal_date'].errors && (empForm.controls['emp_loyal_date'].dirty || empForm.controls['emp_loyal_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                placeholder="jj-mm-aaaa" name="emp_loyal_date" ngbDatepicker formControlName="emp_loyal_date"
+                                                #emp_loyal_date="ngbDatepicker">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" (click)="emp_loyal_date.toggle()" type="button">
+                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                                </button>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_loyal_date'].errors && (empForm.controls['emp_loyal_date'].dirty || empForm.controls['emp_loyal_date'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Utilisateur : *</label>
+                                        <div class="input-group input-group-lg">
+    
+                                            <input type="text" class="form-control form-control-solid" 
+                                                aria-describedby="basic-addon2" formControlName="emp_userid" (change)="onChangeUserid()" id="userid">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="openuserid(contentuserid)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        
+                                        </div>
+                
+                                        
+                                    </div>    
+                                  
+
+                                </div>
+
+                                  
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Taux:</label>
+                                        
+                                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                                formControlName="emp_rate">
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Taux Multiple:</label>
+                                        
+                                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                                formControlName="emp_mrate">
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Taux A:</label>
+                                        
+                                            <input type="number" class="form-control form-control-lg form-control-solid"
+                                                formControlName="emp_arate">
+                                    </div>
+                                  
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Service : *</label>
+                                        <div class="input-group input-group-lg">
+                
+                                            <input type="text" formControlName="emp_job" (change)="onChangeDomain()" id="job"
+                                                [className]="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="opendom(contentdom)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
+                                    </div>    
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Niveau : *</label>
+                                        <div class="input-group input-group-lg">
+                
+                                            <input type="text" formControlName="emp_level" (change)="onChangelevel()" id="level"
+                                                [className]="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content3)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
+                                    </div>    
+                                </div>
+
+
+                                <div class="form-group col-12 row">
+                                    <label class="col-2 col-form-label text-right"> Detail Compétence: </label>
+                                </div>
+                
+                                
+                                <div class="row">
+                                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewItem()">Ajouter </button>
+                                </div>
+                                <div class="row">
+                                    <angular-slickgrid class="col-12" gridHeight="230"  gridId="plagejbGrid" [columnDefinitions]="jbcolumnDefinitions"
+                                     [gridOptions]="jbgridOptions" [dataset]="jbdataset" (onAngularGridCreated)="jbGridReady($event)">
+                                    </angular-slickgrid>
+                                </div>
+                               
+                                
+                                <div class="form-group col-12 row">
+                                    <label class="col-2 col-form-label text-right"> Detail Salaire: </label>
+                                </div>
+                
+                                
+                                <div class="row">
+                                    <angular-slickgrid class="col-12"  gridId="plagemvGrid" [columnDefinitions]="mvcolumnDefinitions"
+                                    [gridOptions]="mvgridOptions" [dataset]="mvdataset" (onAngularGridCreated)="mvGridReady($event)">
+                                </angular-slickgrid>
+                                </div>
+                            </form>
+                        </ng-template>
+                    </ngb-tab> -->
+
+                    <ngb-tab>
+                        <ng-template ngbTabTitle>
+                        
+                           Historique de Formation
+                            <div style="width: 10px;"></div>
+                            <a *ngIf="hasEmployeFormErrors"
+                                class="btn btn-lg btn-icon btn-light-danger pulse pulse-danger mr-5">
+                                <i class="flaticon2-information"></i>
+                                <span class="pulse-ring"></span>
+                            </a>
+                        </ng-template>
+                        <ng-template ngbTabContent>
+                            <div class="form-group col-12 row">
+                                <label class="col-2 col-form-label text-right"> Detail Formation: </label>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewtrItem()">Ajouter Formation </button>
+                            </div>
+                            
+                            <div class="row">
+                                <angular-slickgrid class="col-12"  gridId="plagetrGrid" [columnDefinitions]="trcolumnDefinitions"
+                                [gridOptions]="trgridOptions" [dataset]="trdataset" (onAngularGridCreated)="trGridReady($event)">
+                            </angular-slickgrid>
+                            </div>
+                        </ng-template>
+                    </ngb-tab>
+
+                </ngb-tabset>
+
+
+
+            </div>
+          
+        </div>
+
+        <div>
+            <ng-template #contentdom let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le Service</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitionsdomain" (onAngularGridCreated)="angularGridReadydomain($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangeddomain($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsdomain" [dataset]="domains">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+        <div>
+            <ng-template #content3 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Niveau </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="data">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentsite let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Site </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionssite" (onAngularGridCreated)="angularGridReadysite($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedsite($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionssite" [dataset]="datasite">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentcust let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choisir Client </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridcust"
+                            [columnDefinitions]="columnDefinitionscust" (onAngularGridCreated)="angularGridReadycust($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedcust($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionscust" [dataset]="datacust">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentshift let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Equipe </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionsshift" (onAngularGridCreated)="angularGridReadyshift($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedshift($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsshift" [dataset]="datashift">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Compétence</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="jobs">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open2(content2)">Launch demo
+                modal</button>
+
+        </div>
+
+        <div>
+            <ng-template #contentuserid let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Utilisateur </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduserid"
+                            [columnDefinitions]="columnDefinitionsuserid" (onAngularGridCreated)="angularGridReadyuserid($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangeduserid($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsuserid" [dataset]="datauserid">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentupper let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Responsable </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitionsupper" (onAngularGridCreated)="angularGridReadyupper($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedupper($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsupper" [dataset]="dataupper">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #content4 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Formation</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditems"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="items">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemspGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
+
+        </div>
+    </kt-portlet-body>
+</kt-portlet>
+
+

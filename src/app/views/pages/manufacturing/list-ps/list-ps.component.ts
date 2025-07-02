@@ -7,7 +7,7 @@ import {
     Formatters,
     AngularGridInstance,
     GridService,
-    Editor,
+    Editor, 
     Editors,
     FieldType,
     OnEventArgs,
@@ -46,6 +46,11 @@ draggableGroupingPlugin: any;
 columnDefinitions: Column[] = [];
 gridOptions: GridOption = {};
 dataset: any[] = [];
+quantitytypesList = [
+  { value: 0, label: 'UM' },
+  { value: 1, label: '%' },
+
+];
   constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -118,24 +123,32 @@ dataset: any[] = [];
               filterable: true,
               type: FieldType.string,
           },
-          {
-            id: "ps_comp",
-            name: "Composant",
-            field: "ps_comp",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-        },
-        
+        //   {
+        //     id: "ps_comp",
+        //     name: "Composant",
+        //     field: "ps_comp",
+        //     sortable: true,
+        //     filterable: true,
+        //     type: FieldType.string,
+        // },
         {
-            id: "desc",
-            name: "Designation",
-            field: "item.pt_desc1",
-            sortable: true,
-            width: 200,
-            filterable: true,
-            type: FieldType.string,
-        },
+          id: "ps_ref",
+          name: "Famille",
+          field: "ps_ref",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+      },
+        
+        // {
+        //     id: "desc",
+        //     name: "Designation",
+        //     field: "item.pt_desc1",
+        //     sortable: true,
+        //     width: 200,
+        //     filterable: true,
+        //     type: FieldType.string,
+        // },
         {
           id: "ps_qty_per",
           name: "Quantité Requise",
@@ -144,6 +157,17 @@ dataset: any[] = [];
           width: 200,
           filterable: true,
           type: FieldType.float,
+        },     
+        {
+          id: "ps_qty_type",
+          name: "type quantité",
+          field: "ps_qty_type",
+          sortable: true,
+          width: 200,
+          filterable: true,
+          formatter: (_row, _cell, value) => this.quantitytypesList[value]?.label,
+        exportCustomFormatter: (_row, _cell, value) => this.quantitytypesList[value]?.label,
+        
         },            
           
       ]

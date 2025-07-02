@@ -243,7 +243,7 @@ addLocation(_location: Location) {
               true
           )
           this.loadingSubject.next(false)
-          this.router.navigateByUrl("/inventory-settings/list-loc")
+          this.router.navigateByUrl("/training/gestion-de-formation")
       }
   )
 }
@@ -254,7 +254,7 @@ addLocation(_location: Location) {
 */
 goBack() {
   this.loadingSubject.next(false)
-  const url = `/`
+  const url = `/training/gestion-de-formation`
   this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
 }
 

@@ -64,6 +64,26 @@ export class WorkOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })   
     }
+    public getBybroyage(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbroyage`,data, { headers: httpHeaders })   
+    }
+    public getByextrusion(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findextrusion`,data, { headers: httpHeaders })   
+    }
+    public getBythermo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findthermoformage`,data, { headers: httpHeaders })   
+    }
+    public getPrograms(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findprogram`,data, { headers: httpHeaders })   
+    }
+    public getByDistinct(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findDistinct`,data, { headers: httpHeaders })   
+    }
     
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -91,6 +111,10 @@ export class WorkOrderService {
     public getBrRep(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findbrrep`,data, { headers: httpHeaders })   
+    }
+    public getExRep(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findexrep`,data, { headers: httpHeaders })   
     }
     public getBrRecap(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

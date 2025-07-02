@@ -512,8 +512,8 @@ export class CreateItemModComponent implements OnInit {
       pt_height: [{ value: this.item.pt_height, disabled: !this.isExist }],
       pt_width: [{ value: this.item.pt_width, disabled: !this.isExist }],
       pt_origin: [{ value: this.item.pt_origin, disabled: !this.isExist }],
-      pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
-      pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
+      // pt_drwg_loc: [{ value: this.item.pt_drwg_loc, disabled: !this.isExist }],
+      // pt_drwg_size: [{ value: this.item.pt_drwg_size, disabled: !this.isExist }],
       pt_model: [{ value: this.item.pt_model, disabled: !this.isExist }],
       // pt_break_cat: [{ value: this.item.pt_break_cat, disabled: !this.isExist }],
       int01: [{ value: this.item.int01, disabled: !this.isExist }],
@@ -675,8 +675,8 @@ console.log(index)
               controls5.pt_height.enable()
               controls5.pt_width.enable()
              
-              controls5.pt_drwg_loc.enable()
-              controls5.pt_drwg_size.enable()
+              // controls5.pt_drwg_loc.enable()
+              // controls5.pt_drwg_size.enable()
               controls5.pt_model.enable()
               // controls5.pt_break_cat.enable()
               controls5.int01.enable()
@@ -783,8 +783,10 @@ onAlertClose($event) {
     let itemNB = this.prepareItemNB();
     let sct1 = this.prepareSct1();
     let sct2 = this.prepareSct2()
+    let sct3 = this.prepareSct3();
+    let sct4 = this.prepareSct4()
     this.addItem(item, sct1, sct2);
-    this.addItem(itemNB, sct1, sct2);
+    this.addItem(itemNB, sct3, sct4);
   }
   /**
    *
@@ -916,7 +918,7 @@ onAlertClose($event) {
 
     const _item = new Item();
     _item.pt_part = controls1.pt_article.value + 'NB' + this.codedesc;
-    _item.pt_desc1 = controls1.pt_desc1.value;
+    _item.pt_desc1 = controls1.pt_desc1.value + 'NON BROYE';
     _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls1.pt_um.value;
     _item.pt_prod_line = controls1.pt_prod_line.value;
@@ -1092,7 +1094,7 @@ onAlertClose($event) {
     const _sct = new CostSimulation();
     
     _sct.sct_sim      = 'STD-CG'
-    _sct.sct_part     = control1.pt_part.value;
+    _sct.sct_part     = control1.pt_article.value + 'BR' + this.codedesc;
     _sct.sct_mtl_tl   = 0;
     _sct.sct_mtl_ll   = 0;
     _sct.sct_lbr_tl   = 0;
@@ -1114,7 +1116,50 @@ onAlertClose($event) {
     const control1 = this.form1.controls;
     const _sct = new CostSimulation();
     _sct.sct_sim     = 'STD-CR'
-    _sct.sct_part    = control1.pt_part.value
+    _sct.sct_part    = control1.pt_article.value + 'BR' + this.codedesc
+    _sct.sct_mtl_tl  = 0;
+    _sct.sct_mtl_ll  = 0;
+    _sct.sct_lbr_tl  = 0;
+    _sct.sct_lbr_ll  = 0;
+    _sct.sct_bdn_tl  = 0;
+    _sct.sct_bdn_ll  = 0;
+    _sct.sct_ovh_tl  = 0;
+    _sct.sct_ovh_ll  = 0;
+    _sct.sct_sub_tl  = 0;
+    _sct.sct_sub_ll  = 0;
+    _sct.sct_cst_tot = 0;
+    _sct.sct_site    = control1.pt_site.value;
+    return _sct;
+  }
+  prepareSct3(): CostSimulation {
+    // const controls = this.sctForm.controls;
+    const control1 = this.form1.controls;
+    const _sct = new CostSimulation();
+    
+    _sct.sct_sim      = 'STD-CG'
+    _sct.sct_part     = control1.pt_article.value + 'NB' + this.codedesc;
+    _sct.sct_mtl_tl   = 0;
+    _sct.sct_mtl_ll   = 0;
+    _sct.sct_lbr_tl   = 0;
+    _sct.sct_lbr_ll   = 0;
+    _sct.sct_bdn_tl   = 0;
+    _sct.sct_bdn_ll   = 0;
+    _sct.sct_ovh_tl   = 0;
+    _sct.sct_ovh_ll   = 0;
+    _sct.sct_sub_tl   = 0;
+    _sct.sct_sub_ll   = 0;
+    _sct.sct_cst_tot  = 0;
+    _sct.sct_site     = control1.pt_site.value;
+
+    return _sct;
+  }
+
+  prepareSct4(): CostSimulation {
+    // const controls = this.sctForm1.controls;
+    const control1 = this.form1.controls;
+    const _sct = new CostSimulation();
+    _sct.sct_sim     = 'STD-CR'
+    _sct.sct_part    = control1.pt_article.value + 'NB' + this.codedesc
     _sct.sct_mtl_tl  = 0;
     _sct.sct_mtl_ll  = 0;
     _sct.sct_lbr_tl  = 0;

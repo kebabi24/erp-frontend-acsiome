@@ -35,13 +35,13 @@ import {
     ModalDismissReasons,
     NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap"
-import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService,EmployeService } from "../../../../core/erp"
+import { CodeService,Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService,EmployeService } from "../../../../core/erp"
 import { Reason, ReasonService} from "../../../../core/erp"
 import { AlertComponent } from "../../../partials/content/crud"
 import { sequence } from "@angular/animations"
 
 @Component({
-  selector: 'kt-create-req-training',
+  selector: 'kt-create-req-training', 
   encapsulation: ViewEncapsulation.None,
   templateUrl: './create-req-training.component.html',
   styleUrls: ['./create-req-training.component.scss']
@@ -101,6 +101,9 @@ selectedJob: any[] = [];
 datasetemps: any[]
 data: any[]
 un: any
+year:any[] = [];
+pt_dsgn_grp: any[]=[];
+  pt_draw: any[] = [];
   constructor(
       config: NgbDropdownConfig,
       private reqFB: FormBuilder,
@@ -115,9 +118,26 @@ un: any
       private sequencesService: SequenceService,
       private itemsService: ItemService,
       private reasonService: ReasonService,
-      private employeService: EmployeService
+      private employeService: EmployeService,
+      private codeService: CodeService,
   ) {
       config.autoClose = true
+      
+        
+        var y : any;
+        for(var i=2025; i <= 2099;i++) {
+          for (var j = 1; j <= 4; j++)
+          {y = "T" + j + '-' + i
+            this.year.push({y})}
+          
+        }
+        this.codeService
+      .getBy({ code_fldname: "pt_draw" })
+      .subscribe((response: any) => (this.pt_draw = response.data));
+      this.codeService
+      .getBy({ code_fldname: "pt_dsgn_grp" })
+      .subscribe((response: any) => (this.pt_dsgn_grp = response.data)); 
+      
       this.initGrid()
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -229,38 +249,47 @@ un: any
             sortable: true,
             width: 80,
             filterable: false,
-            type: FieldType.float,
+            type: FieldType.string,
            
         },
-          {
-            id: "rqd_need_date",
-            name: "Date Début",
-            field: "rqd_need_date",
-            sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.dateIso,
-            formatter: Formatters.dateIso,
-            editor: {
-                model: Editors.date,
+        //   {
+        //     id: "rqd_need_date",
+        //     name: "Date Début",
+        //     field: "rqd_need_date",
+        //     sortable: true,
+        //     width: 80,
+        //     filterable: false,
+        //     type: FieldType.dateIso,
+        //     formatter: Formatters.dateIso,
+        //     editor: {
+        //         model: Editors.date,
                
-            },
-        },
-        {
-          id: "rqd_expire",
-          name: "Date Fin",
-          field: "rqd_expire",
-          sortable: true,
-          width: 80,
-          filterable: false,
-          type: FieldType.dateIso,
-          formatter: Formatters.dateIso,
-          editor: {
-              model: Editors.date,
+        //     },
+        // },
+        // {
+        //   id: "rqd_expire",
+        //   name: "Date Fin",
+        //   field: "rqd_expire",
+        //   sortable: true,
+        //   width: 80,
+        //   filterable: false,
+        //   type: FieldType.dateIso,
+        //   formatter: Formatters.dateIso,
+        //   editor: {
+        //       model: Editors.date,
              
-          },
-        },
+        //   },
+        // },
+        {
+        id: "chr02",
+        name: "Pour le",
+        field: "chr02",
+        type: FieldType.string,
         
+        filterable:true,
+        sortable: true,
+       
+      },   
         {
           id: "rqd_insp_rqd",
           name: "Déja Faite",
@@ -308,25 +337,28 @@ un: any
           month: date.getMonth()+1,
           day: date.getDate()
         }],
-        rqm_need_date: [{
+        year: [null ,  Validators.required],
+        
+        rqm_need_date:[{
           year:date.getFullYear(),
           month: date.getMonth()+1,
           day: date.getDate()
-        }], 
-        rqm_due_date: [{
+        }],
+        rqm_due_date:[{
           year:date.getFullYear(),
-          month: date.getMonth()+2,
-          day: date.getDate() 
-        }], 
-        
+          month: date.getMonth()+1,
+          day: date.getDate()
+        }],
+        pt_dsgn_grp:[''],
+        pt_draw: [''],
         rqm_rqby_userid: [this.requisition.rqm_rqby_userid],
         rqm_end_userid: [this.requisition.rqm_end_userid],
         part: [null],
-        desc:[null],
+        desc:[{value:"", disabled: true}],
         rqm_rmks: [this.requisition.rqm_rmks ],
       })
       const controls = this.reqForm.controls
-      console.log(this.user.usrd_code)
+      
       this.employeService
       .getByOne({emp_userid: this.user.usrd_code})
       .subscribe((response: any) => {
@@ -370,7 +402,7 @@ un: any
   }
   onchangePart() {
     const controls = this.reqForm.controls;
-  
+    if(controls.part.value == "AUTRE"){controls.desc.enable()} else{controls.desc.disable()}
     this.itemsService
       .getByOne({
         pt_part: controls.part.value,
@@ -378,9 +410,10 @@ un: any
       .subscribe((response: any) => {
       //  console.log(response.data, response.data.length);
         if (response.data!= null) {
-         
+          
           controls.part.setValue(response.data.pt_part);
           controls.desc.setValue(response.data.pt_desc1);
+          
           this.un = response.data.pt_um
         
         } 
@@ -436,8 +469,8 @@ un: any
        
         _req.rqm_type =  "P"
         _req.rqm_req_date=  controls.rqm_req_date.value ? `${controls.rqm_req_date.value.year}/${controls.rqm_req_date.value.month}/${controls.rqm_req_date.value.day}`: null
-        _req.rqm_need_date=  controls.rqm_need_date.value ? `${controls.rqm_need_date.value.year}/${controls.rqm_need_date.value.month}/${controls.rqm_need_date.value.day}`: null
-        _req.rqm_due_date=  controls.rqm_due_date.value ? `${controls.rqm_due_date.value.year}/${controls.rqm_due_date.value.month}/${controls.rqm_due_date.value.day}`: null
+        // _req.rqm_need_date=  controls.rqm_need_date.value ? `${controls.rqm_need_date.value.year}/${controls.rqm_need_date.value.month}/${controls.rqm_need_date.value.day}`: null
+        // _req.rqm_due_date=  controls.rqm_due_date.value ? `${controls.rqm_due_date.value.year}/${controls.rqm_due_date.value.month}/${controls.rqm_due_date.value.day}`: null
         _req.rqm_rqby_userid=  controls.rqm_rqby_userid.value
         _req.rqm_end_userid=  controls.rqm_end_userid.value
         // _req.rqm_reason=  controls.rqm_reason.value
@@ -445,6 +478,9 @@ un: any
         _req.rqm_rmks=  controls.rqm_rmks.value
         _req.rqm_open= true
         _req.rqm_aprv_stat = '0'
+        _req.chr01 = controls.year.value
+        _req.chr02 =controls.pt_dsgn_grp.value
+        _req.chr03 = controls.pt_draw.value
       return _req
   }
   /**
@@ -475,7 +511,7 @@ un: any
                   true
               )
               this.loadingSubject.next(false)
-              this.router.navigateByUrl("/")
+              this.router.navigateByUrl("/training/approval-req")
           }
       )
   }
@@ -486,7 +522,7 @@ un: any
    */
   goBack() {
       this.loadingSubject.next(false)
-      const url = `/`
+      const url = `/training/approval-req`
       this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
   }
 
@@ -849,9 +885,10 @@ un: any
                 rqd_desc: controls.desc.value,
                 rqd_um: this.un,
                 rqd_rqby_userid: dat.emp_addr,
-                rqd_need_date: `${controls.rqm_need_date.value.year}-${controls.rqm_need_date.value.month}-${controls.rqm_need_date.value.day}`,
-                rqd_expire: `${controls.rqm_due_date.value.year}-${controls.rqm_due_date.value.month}-${controls.rqm_due_date.value.day}`,
+                // rqd_need_date: `${controls.rqm_need_date.value.year}-${controls.rqm_need_date.value.month}-${controls.rqm_need_date.value.day}`,
+                // rqd_expire: `${controls.rqm_due_date.value.year}-${controls.rqm_due_date.value.month}-${controls.rqm_due_date.value.day}`,
                 chr01: dat.emp_fname + ' ' + dat.emp_lname,
+                chr02:controls.year.value,
                 rqd_req_qty: 1,
                 rqd_insp_rqd: bool,
                 rqd_status: bool ? "X" : null,
@@ -973,6 +1010,7 @@ un: any
      
         controls.part.setValue(item.pt_part || ""); 
         controls.desc.setValue(item.pt_desc1 || ""); 
+        if(item.pt_part == "AUTRE"){controls.desc.enable()} else{controls.desc.disable()}
         this.un = item.pt_um
     });
   }
@@ -1108,13 +1146,27 @@ un: any
     };
 
     // fill the dataset with your data
+    const controls = this.reqForm.controls
     this.itemsService
-      .getBy({pt_part_type : "FORMATION"})
+      .getBy({pt_part_type : "FORMATION",pt_draw:controls.pt_draw.value})
       .subscribe((response: any) => (this.items = response.data));
   }
   openpart(content) {
     this.prepareGrid4();
     this.modalService.open(content, { size: "xl" });
   }
+  onchangetype() {
+    
+    
+    
   
+  }
+  onchangedomain() {
+    
+   
+  
+   
+
+  
+  } 
 }

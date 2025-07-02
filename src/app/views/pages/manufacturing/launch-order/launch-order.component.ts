@@ -132,6 +132,7 @@ export class LaunchOrderComponent implements OnInit {
   stat: String;
   details: any;
   ld: any;
+  ld_qty:any;
   bom: any;
   domain: any;
   constructor(
@@ -432,10 +433,9 @@ export class LaunchOrderComponent implements OnInit {
             true
           );
           this.loadingSubject.next(false);
-        // console.log(this.provider, poNbr, this.dataset);
-         // if(controls.print.value == true) printReceive(this.provider, this.dataset, poNbr);
+      
          this.printpdf(lpnbr,wodnbr,wodlot,part,descr,routing,gamme,qte)
-        // printLp( this.dataset, lpnbr,wodnbr,wodlot,part,descr,routing,gamme,qte );
+       
           this.router.navigateByUrl("/");
         }
       );
@@ -517,7 +517,6 @@ export class LaunchOrderComponent implements OnInit {
   
  
 
-
   onChangeqte() {
     this.dataset=[]
     const controls = this.wodForm.controls;
@@ -533,38 +532,26 @@ export class LaunchOrderComponent implements OnInit {
     
       console.log(this.details);
 
-      for (var object = 0; object < this.details.length; object++) {
+      //for (var object = 0; object < this.details.length; object++) {
       // console.log(this.details[object]);
         // const detail = this.details[object];
-        
-        var qty = Number(this.details[object].ps_qty_per) * Number (qte) / Number(controls.batch.value) ;
-        let obj = {}
-        obj = {ld_part:this.details[object].ps_comp}
-        console.log(controls.palette.value)
-    if(controls.palette.value == true) {
-        this.locationDetailService.getByFifo({ obj, qty  }).subscribe((resp: any)=>{
-        
-          console.log(resp.data)
-
-          this.ld  = resp.data;
-      
-          for (var object = 0; object < this.ld.length; object++) {
+        for (let object of this.details) {  
+          this.ld_qty = 0;
+          this.locationDetailService.getBy({ld_part: object.ps_comp}).subscribe(
+            (reponse: any) => { this.ld_qty = this.ld_qty + reponse.ld_qty_oh})
+        var qty = Number(object.ps_qty_per) * Number (qte) / Number(controls.batch.value) ;
             this.gridService.addItem(
               {
   
-                
                 id: this.dataset.length + 1,
                 wod_line: this.dataset.length + 1,
-                wod_part: this.ld[object].ld_part,
-                desc: this.ld[object].pt_desc1,
-                wod_um: this.ld[object].pt_um,
-                wod_qty_req: this.ld[object].ld_qty_oh,
-                
-                wod_site: this.ld[object].ld_site,
-                wod_loc: this.ld[object].ld_loc,
-                wod_serial: this.ld[object].ld_lot,
-                wod_ref: this.ld[object].ld_ref,         
-                
+                wod_part: object.ps_comp,
+                desc: object.item.pt_desc1,
+                wod_um: object.item.pt_um,
+                wod_qty_req: qty,
+                qty_oh: this.ld_qty,
+                wod_site: controls.site.value,
+                wod_loc: object.item.pt_loc,
                 
               },
               { position: "bottom" }
@@ -573,45 +560,104 @@ export class LaunchOrderComponent implements OnInit {
     
     
         })
-      }
-      else {
-
-        this.locationDetailService.getByFifoLot({ obj, qty  }).subscribe((resp: any)=>{
-        
-          console.log(resp.data)
-
-          this.ld  = resp.data;
       
-          for (var object = 0; object < this.ld.length; object++) {
-            this.gridService.addItem(
-              {
+   
+      
+  }
+  // onChangeqte() {
+  //   this.dataset=[]
+  //   const controls = this.wodForm.controls;
+  //   const qte = controls.qte.value;
+    
+       
+       
+  //   const ps_parent = controls.bom.value;
+    
+  //   this.psService.getBy({ps_parent}).subscribe((response: any)=>{
+            
+  //     this.details  = response.data;
+    
+  //     console.log(this.details);
+
+  //     for (var object = 0; object < this.details.length; object++) {
+  //     // console.log(this.details[object]);
+  //       // const detail = this.details[object];
+        
+  //       var qty = Number(this.details[object].ps_qty_per) * Number (qte) / Number(controls.batch.value) ;
+  //       let obj = {}
+  //       obj = {ld_part:this.details[object].ps_comp}
+        
+  //   if(controls.palette.value == true) {
+  //       this.locationDetailService.getByFifo({ obj, qty  }).subscribe((resp: any)=>{
+        
+  //         console.log(resp.data)
+
+  //         this.ld  = resp.data;
+      
+  //         for (var i= 0; i < this.ld.length; i++) {
+  //           this.gridService.addItem(
+  //             {
   
                 
-                id: this.dataset.length + 1,
-                wod_line: this.dataset.length + 1,
-                wod_part: this.ld[object].ld_part,
-                desc: this.ld[object].pt_desc1,
-                wod_um: this.ld[object].pt_um,
-                wod_qty_req: this.ld[object].ld_qty_oh,
+  //               id: this.dataset.length + 1,
+  //               wod_line: this.dataset.length + 1,
+  //               wod_part: this.ld[object].ld_part,
+  //               desc: this.ld[object].pt_desc1,
+  //               wod_um: this.ld[object].pt_um,
+  //               wod_qty_req: this.ld[object].ld_qty_oh,
                 
-                wod_site: this.ld[object].ld_site,
-                wod_loc: this.ld[object].ld_loc,
-                wod_serial: this.ld[object].ld_lot,
+  //               wod_site: this.ld[object].ld_site,
+  //               wod_loc: this.ld[object].ld_loc,
+  //               wod_serial: this.ld[object].ld_lot,
+  //               wod_ref: this.ld[object].ld_ref,         
+                
+                
+  //             },
+  //             { position: "bottom" }
+  //           );
+  //         }
+    
+    
+  //       })
+  //     }
+  //     else {
+
+  //       this.locationDetailService.getByFifoLot({ obj, qty  }).subscribe((resp: any)=>{
+        
+  //         console.log(resp.data)
+
+  //         this.ld  = resp.data;
+      
+  //         for (var object = 0; object <= this.ld.length; object++) {
+  //           this.gridService.addItem(
+  //             {
+  
+                
+  //               id: this.dataset.length + 1,
+  //               wod_line: this.dataset.length + 1,
+  //               wod_part: this.ld[object].ld_part,
+  //               desc: this.ld[object].pt_desc1,
+  //               wod_um: this.ld[object].pt_um,
+  //               wod_qty_req: this.ld[object].ld_qty_oh,
+                
+  //               wod_site: this.ld[object].ld_site,
+  //               wod_loc: this.ld[object].ld_loc,
+  //               wod_serial: this.ld[object].ld_lot,
                          
                 
                 
-              },
-              { position: "bottom" }
-            );
-          }
+  //             },
+  //             { position: "bottom" }
+  //           );
+  //         }
     
     
-        })
-      }
-      }
-    });
+  //       })
+  //     }
+  //     }
+  //   });
       
-  }
+  // }
   /**
    * Go back to the list
    *
@@ -826,10 +872,10 @@ console.log(this.details)
     const controlss = this.wodForm.controls 
     console.log("pdf")
     var doc = new jsPDF();
-   
+    let date = new Date()
    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
    var img = new Image()
-   img.src = "./assets/media/logos/companylogo.png";
+   img.src = "./assets/media/logos/companyentete.png";
    doc.addImage(img, 'png', 150, 5, 50, 30)
    doc.setFontSize(9);
    if (this.domain.dom_name != null) {
@@ -878,9 +924,9 @@ console.log(this.details)
     doc.setFontSize(6);
     for (let j = 0; j < this.dataset.length  ; j++) {
       
-      if ((j % 35 == 0) && (j != 0) ) {
+      if ((j % 20 == 0) && (j != 0) ) {
   doc.addPage();
-  img.src = "./assets/media/logos/companylogo.png";
+  img.src = "./assets/media/logos/companyentete.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
   if (this.domain.dom_name != null) {
@@ -937,11 +983,11 @@ console.log(this.details)
   
   
   
-      if (this.dataset[j].desc.length > 35) {
-        let desc1 = this.dataset[j].desc.substring(35)
+      if (this.dataset[j].desc.length > 45) {
+        let desc1 = this.dataset[j].desc.substring(45)
         let ind = desc1.indexOf(' ')
-        desc1 = this.dataset[j].desc.substring(0, 35  + ind)
-        let desc2 = this.dataset[j].desc.substring(35+ind)
+        desc1 = this.dataset[j].desc.substring(0, 45  + ind)
+        let desc2 = this.dataset[j].desc.substring(45+ind)
   
         doc.line(10, i - 5, 10, i );
         doc.text(String(("000"+ this.dataset[j].wod_line)).slice(-3), 12.5 , i  - 1);
