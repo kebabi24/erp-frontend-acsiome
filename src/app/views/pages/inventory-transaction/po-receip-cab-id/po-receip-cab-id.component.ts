@@ -738,7 +738,8 @@ export class PoReceipCabIdComponent implements OnInit {
     });
     const controls = this.prhForm.controls;
     this.addressService.getBy({ ad_addr: this.poEdit.po_vend }).subscribe((resp: any) => {
-      this.address = resp.data;
+      console.log(resp.data)
+      this.address = resp.data[0];
       this.provider = resp.data[0];
 
       controls.name.setValue(this.address.ad_name);
@@ -2270,7 +2271,7 @@ export class PoReceipCabIdComponent implements OnInit {
         i = i + 5;
       }
     }
-
+    doc.setFontSize(12);
     // doc.line(10, i - 5, 200, i - 5);
     doc.text("Validé par: " , 20, 235);
     doc.text("Note: " , 20, 250);

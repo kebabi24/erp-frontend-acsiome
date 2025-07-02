@@ -228,7 +228,7 @@ export class EditStatusPoComponent implements OnInit {
           po_stat: [
               { value: this.purchaseOrder.po_stat },
           ],
-          attach: [""],
+          // attach: [""],
           po_rmks: [{ value: this.purchaseOrder.po_rmks, disabled: true }],
           
       })
@@ -261,15 +261,15 @@ export class EditStatusPoComponent implements OnInit {
 
           return
       }
-      const formData = new FormData();
+      // const formData = new FormData();
       const _po = new PurchaseOrder()
       _po.po_stat = controls.po_stat.value;
       
-      formData.append("file", this.poForm.get("attach").value);
-      formData.append("data", JSON.stringify('test'));
+      // formData.append("file", this.poForm.get("attach").value);
+      // formData.append("data", JSON.stringify('test'));
       
       this.purchaseOrderService
-          .update({ po_stat:controls.po_stat.value,po_app_owner: formData}, this.poServer.id)
+          .update({ po_stat:controls.po_stat.value /*,po_app_owner: formData*/}, this.poServer.id)
           .subscribe( //(res) => {
 
             (reponse) => console.log("response", Response),
