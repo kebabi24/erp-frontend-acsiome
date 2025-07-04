@@ -143,7 +143,18 @@ export class PoReceipCabIdComponent implements OnInit {
         maxWidth: 30,
         onCellClick: (e: Event, args: OnEventArgs) => {
           if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
+              this.message = "vous ne pouvez pas supprimer cette ligne";
+              this.hasFormErrors = true;
+              return;
+              
+            }
+            else
+            {
+              /*ajouter ligne tr_hist de suppression*/
+          
             this.angularGrid.gridService.deleteItem(args.dataContext);
+          }
           }
         },
       },

@@ -75,5 +75,9 @@ export class RequisitionService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/finddet', data, { headers: httpHeaders })
     }
+    public getAllUser() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findalluser`, { headers: httpHeaders })
+    }
     // DELETE
 }

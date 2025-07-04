@@ -1,7 +1,7 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="getComponentTitle()" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button (click)="goBackWithoutId()" type="button" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button (click)="goBackWithoutId()" type="button" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button (click)="reset()" [disabled]="selectedTab !== 0" type="button"
                 class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
             <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">enregistrer </button>
@@ -428,11 +428,11 @@
                                         </select>
                                     </div> -->
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Taux tax:</label>
+                                        <label class="form-group ">Taux Tax:</label>
                                         <div class="input-group input-group-sm">
 
                                             <input type="text" class="form-control form-control-solid"
-                                                aria-describedby="basic-addon2" formControlName="ad_taxc">
+                                                aria-describedby="basic-addon2" formControlName="ad_taxc" id="ad_taxc" (change)="onchangetax()">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)=opentax(contenttax)>
                                                     <i class="text-dark-50 flaticon2-search"></i> </span>
@@ -490,89 +490,7 @@
 
                                 </div>
                                 
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Compte Ach:</label>
-                                       
-                                            <div class="input-group input-group-sm">
-
-                                                <input type="text" class="form-control form-control-solid" (change)="changeAcct('vd_act_acct')"
-                                                    aria-describedby="basic-addon2" formControlName="vd_act_acct">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" (click)="open3(content3,'vd_act_acct')">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group">Sous Compte</label>
-                                     
-                                           <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control form-control-solid"
-                                                    aria-describedby="basic-addon2" formControlName="vd_act_sub">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    <div class="form-group col-2 ">
-                                        <label class="form-group">centre de cout</label>
-                                            <div class="input-group input-group-sm">
-
-                                                <input type="text" class="form-control form-control-solid"
-                                                    aria-describedby="basic-addon2" formControlName="vd_act_cc">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            </div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Compte CF:</label>
-                                        
-                                            <div class="input-group input-group-sm">
-
-                                                <input type="text" class="form-control form-control-solid" (change)="changeAcct('vd_ap_acct')"
-                                                    aria-describedby="basic-addon2" formControlName="vd_ap_acct">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" (click)="open3(content3,'vd_ap_acct')">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            </div>
-                                        
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Sous Compte:</label>
-                                            <div class="input-group input-group-sm">
-
-                                                <input type="text" class="form-control form-control-solid"
-                                                    aria-describedby="basic-addon2" formControlName="vd_ap_sub">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Centre de Cout:</label>
-                                        <div class="input-group input-group-sm">
-
-                                            <input type="text" class="form-control form-control-solid"
-                                                aria-describedby="basic-addon2" formControlName="vd_ap_cc">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                               
+                                
                             </form>
                         </ng-template>
                     </ngb-tab>
@@ -660,7 +578,89 @@
                                     
 
                                 </div>
-                                
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Compte Ach:</label>
+                                       
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid" id="vd_act_acct" (change)="changeAcct('vd_act_acct')"
+                                                    aria-describedby="basic-addon2" formControlName="vd_act_acct">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content3,'vd_act_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Sous Compte</label>
+                                     
+                                           <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" formControlName="vd_act_sub">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="form-group col-2 ">
+                                        <label class="form-group">centre de cout</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" formControlName="vd_act_cc">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Compte CF:</label>
+                                        
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid" id="vd_ap_acct" (change)="changeAcct('vd_ap_acct')"
+                                                    aria-describedby="basic-addon2" formControlName="vd_ap_acct">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="open3(content3,'vd_ap_acct')">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                        
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Sous Compte:</label>
+                                            <div class="input-group input-group-sm">
+
+                                                <input type="text" class="form-control form-control-solid"
+                                                    aria-describedby="basic-addon2" formControlName="vd_ap_sub">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Centre de Cout:</label>
+                                        <div class="input-group input-group-sm">
+
+                                            <input type="text" class="form-control form-control-solid"
+                                                aria-describedby="basic-addon2" formControlName="vd_ap_cc">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                               
                             </form>
                         </ng-template>
                     </ngb-tab>
@@ -686,7 +686,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -709,7 +709,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -732,7 +732,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -756,7 +756,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -779,7 +779,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -802,7 +802,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>

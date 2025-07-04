@@ -927,6 +927,22 @@ onAlertClose($event) {
     this.hasFormErrors = false
 }
 
+onchangetax(){
+  const controls = this.addressForm.controls 
+  this.taxService.getBy({ tx2_tax_code: controls.ad_taxc.value}).subscribe(
+    (respo: any) => {
+    // this.site = res.data.si_site
+    console.log(respo.data)
+    if(respo.data == null) {
+   
+      alert("Taxe N'existe pas")
+      controls.ad_taxc.setValue(null)
+      
+      document.getElementById("ad_taxc").focus();
+  //  controls.tr_ref_site.setValue(this.site );
+    }
+  })
+}
 
 changeAcct (field){
 
@@ -951,6 +967,16 @@ changeAcct (field){
           true,
           true
       )
+      if (field=="vd_act_acct") {
+        controls1.vd_act_acct.setValue(null)
+        document.getElementById("vd_act_acct").focus();
+     
+     }
+     if (field=="vd_ap_acct") {
+      controls1.vd_act_acct.setValue(null)
+      document.getElementById("vd_ap_acct").focus();
+      
+      }
       this.error = true}
       else {
           this.error = false

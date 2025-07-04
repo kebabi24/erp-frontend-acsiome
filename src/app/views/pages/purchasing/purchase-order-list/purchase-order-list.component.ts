@@ -485,6 +485,8 @@ export class PurchaseOrderListComponent implements OnInit {
                   true
               )
               this.loadingSubject.next(false)
+              window.location.reload();
+              // this.router.navigateByUrl(`purchasing/po-list/${this.ponbr}`)
               // this.router.navigateByUrl("/purchasing/edit-status-po")
             
           }

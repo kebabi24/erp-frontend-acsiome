@@ -357,6 +357,7 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 filterable: true,
                 type: FieldType.string,
             },
+
             {
                 id: "seq_desc",
                 name: "description",
@@ -642,6 +643,14 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 filterable: true,
                 type: FieldType.string,
             },
+            {
+                id: "seq_desc",
+                name: "Description",
+                field: "req.sequence.seq_desc",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
             {
                 id: "rqm_req_date",
                 name: "Date",

@@ -109,7 +109,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
         private userService: UsersService,
         private sequencesService: SequenceService,
         private itemsService: ItemService,
-        private reasonService: ReasonService
+        private reasonService: ReasonService,
+        private providerService: ProviderService
     ) {
         config.autoClose = true
         this.initGrid()
@@ -270,9 +271,10 @@ export class CreatePurchaseOrderComponent implements OnInit {
     ngOnInit(): void {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
-        this.createForm()
         this.user =  JSON.parse(localStorage.getItem('user'))
         this.domain = JSON.parse(localStorage.getItem("domain"));
+        this.createForm()
+        
     }
 
     //create form
@@ -284,7 +286,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
           rqm_category: [this.requisition.rqm_category , Validators.required],
           rqm_nbr: [this.requisition.rqm_nbr ],
           rqm_vend: [this.requisition.rqm_vend ],
-          rqm_type: "S",
+          name: [null],
+          rqm_type: "P",
           
           rqm_req_date:[{
             year:date.getFullYear(),
@@ -300,9 +303,19 @@ export class CreatePurchaseOrderComponent implements OnInit {
           
           rqm_rqby_userid: [this.requisition.rqm_rqby_userid, Validators.required],
           rqm_reason: [this.requisition.rqm_reason ],
-          rqm_status: [this.requisition.rqm_status ],
+        //   rqm_status: [this.requisition.rqm_status ],
           rqm_rmks: [this.requisition.rqm_rmks ],
         })
+
+        const controls = this.reqForm.controls
+        this.sequencesService
+            .getBy({ seq_type: 'RQ', seq_profile: this.user.usrd_profile})
+            .subscribe((response: any) => {
+                console.log(response.data)
+controls.rqm_category.setValue(response.data[0].seq_seq)
+
+            })
+
     }
 
 
@@ -318,8 +331,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
                     console.log(response.data.length)
                     document.getElementById("SEQUENCE").focus();
                 }
-                this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
-console.log(this.nbr)
+              
             })
     }
     
@@ -358,7 +370,21 @@ console.log(this.nbr)
           delete data.cmvid
         
         }
-        this.addReq(req, this.dataset)
+        this.sequencesService
+        .getBy({seq_seq: controls.rqm_category.value, seq_type: 'RQ', seq_profile: this.user.usrd_profile})
+        .subscribe((response: any) => {
+            console.log(response)
+            if (response.data.length == 0) {
+                alert("Sequence n existe pas")
+                controls.rqm_category.setValue("")
+                console.log(response.data.length)
+                document.getElementById("SEQUENCE").focus();
+            }
+            this.nbr = `${response.data[0].seq_prefix}${Number(response.data[0].seq_curr_val)+1}`
+console.log(this.nbr)
+this.addReq(req, this.dataset)
+        })
+       
     }
     
     /**
@@ -376,7 +402,7 @@ console.log(this.nbr)
           _req.rqm_need_date=  controls.rqm_need_date.value ? `${controls.rqm_need_date.value.year}/${controls.rqm_need_date.value.month}/${controls.rqm_need_date.value.day}`: null
           _req.rqm_rqby_userid=  controls.rqm_rqby_userid.value
           _req.rqm_reason=  controls.rqm_reason.value
-          _req.rqm_status=  controls.rqm_status.value
+        //   _req.rqm_status=  controls.rqm_status.value
           _req.rqm_rmks=  controls.rqm_rmks.value
           _req.rqm_open= true
           _req.rqm_aprv_stat = '0'
@@ -411,7 +437,7 @@ console.log(this.nbr)
                 )
                 this.loadingSubject.next(false)
                 this.printpdf(this.nbr);
-                this.router.navigateByUrl("/")
+                this.router.navigateByUrl("purchasing/list-req-user")
             }
         )
     }
@@ -458,8 +484,8 @@ console.log(this.nbr)
                     console.log(response.data.length)
                     document.getElementById("SEQUENCE").focus();
                 }
-                this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
-console.log(this.nbr)
+//                 this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
+// console.log(this.nbr)
             })
             })
         }
@@ -562,12 +588,35 @@ console.log(this.nbr)
         this.prepareGrid1()
         this.modalService.open(content, { size: "lg" })
     }
+    onChangeVend() {
+        const controls = this.reqForm.controls;
+console.log("controls.rqm_vend.value",controls.rqm_vend.value)
+        if(controls.rqm_vend.value != null && controls.rqm_vend.value != "") {
+        this.providerService.getBy({ vd_addr: controls.rqm_vend.value }).subscribe((response: any) => {
+          //   const { data } = response;
+          console.log(response.data);
+          if (response.data == null ) {
+            alert("Fournisseur n'exist pas")
+            controls.rqm_vend.setValue(null)
+            document.getElementById("name").focus();
+          } else {
+            
+            controls.name.setValue(response.data[0].address.ad_name);
+          }
+        });
+    }
+    else { 
+        controls.rqm_vend.setValue(null) 
+        controls.name.setValue(null)
+    }
+      }
     handleSelectedRowsChanged2(e, args) {
         const controls = this.reqForm.controls
         if (Array.isArray(args.rows) && this.gridObj2) {
             args.rows.map((idx) => {
                 const item = this.gridObj2.getDataItem(idx)
                 controls.rqm_vend.setValue(item.vd_addr || "")
+                controls.name.setValue(item.address.ad_name)
             })
         }
     }
@@ -934,6 +983,7 @@ console.log(this.nbr)
         this.hasFormErrors = false
     }
     printpdf(nbr) {
+        console.log(this.nbr,nbr)
         // const controls = this.totForm.controls
         const controlss = this.reqForm.controls;
         console.log("pdf");

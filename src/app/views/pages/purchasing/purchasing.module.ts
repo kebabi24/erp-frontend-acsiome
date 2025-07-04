@@ -94,6 +94,8 @@ import { ListApprovalComponent } from './list-approval/list-approval.component';
 import { PaymentAuComponent } from './payment-au/payment-au.component';
 import { ListAuComponent } from './list-au/list-au.component';
 import { EpiCreateOaComponent } from './epi-create-oa/epi-create-oa.component';
+import { ListReqUserComponent } from './list-req-user/list-req-user.component';
+import { ReqApprovalComponent } from './req-approval/req-approval.component';
 
 const routes: Routes = [
   {
@@ -210,6 +212,14 @@ const routes: Routes = [
         path: "list-au",
         component: ListAuComponent,
       },
+      {
+        path: "list-req-user",
+        component: ListReqUserComponent,
+      },
+      {
+        path: "req-approval",
+        component: ReqApprovalComponent,
+      },
     ],
   },
 ];
@@ -242,7 +252,9 @@ const routes: Routes = [
     ListApprovalComponent,
     PaymentAuComponent,
     ListAuComponent,
-    EpiCreateOaComponent
+    EpiCreateOaComponent,
+    ListReqUserComponent,
+    ReqApprovalComponent
   ],
   imports: [
     CommonModule,
