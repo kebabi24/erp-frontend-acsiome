@@ -252,7 +252,7 @@
                                        
                                             <div class="input-group input-group-sm">
 
-                                                <input type="text" class="form-control form-control-solid" (change)="changeAcct('vd_act_acct')"
+                                                <input type="text" class="form-control form-control-solid" id="vd_act_acct" (change)="changeAcct('vd_act_acct')"
                                                     aria-describedby="basic-addon2" formControlName="vd_act_acct">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" (click)="open3(content3,'vd_act_acct')">
@@ -293,7 +293,7 @@
                                         
                                             <div class="input-group input-group-sm">
 
-                                                <input type="text" class="form-control form-control-solid" (change)="changeAcct('vd_ap_acct')"
+                                                <input type="text" class="form-control form-control-solid" id="vd_ap_acct" (change)="changeAcct('vd_ap_acct')"
                                                     aria-describedby="basic-addon2" formControlName="vd_ap_acct">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" (click)="open3(content3,'vd_ap_acct')">
@@ -533,7 +533,7 @@
                                             <input type="text"
                                             [className]="addressForm.controls['ad_taxc'].errors && (addressForm.controls['ad_taxc'].dirty || addressForm.controls['ad_taxc'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                         
-                                                aria-describedby="basic-addon2" formControlName="ad_taxc">
+                                                aria-describedby="basic-addon2" formControlName="ad_taxc" id="ad_taxc" (change)="onchangetax()">
                                             <div class="input-group-append">
                                                 <span class="input-group-text" (click)=opentax(contenttax)>
                                                     <i class="text-dark-50 flaticon2-search"></i> </span>

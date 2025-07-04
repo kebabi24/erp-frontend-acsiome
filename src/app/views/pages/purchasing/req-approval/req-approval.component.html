@@ -1,0 +1,18 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Approbation Demandes Achat'" [class]="'card-head-lg'">
+       
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12" gridId="gridProfil" [columnDefinitions]="columnDefinitions"
+                    [gridOptions]="gridOptions" [dataset]="dataset"
+                    (onAngularGridCreated)="angularGridReady($event)">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>
+ 

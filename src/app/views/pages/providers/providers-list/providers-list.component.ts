@@ -149,6 +149,14 @@ export class ProvidersListComponent implements OnInit {
             type: FieldType.string,
           },
           {
+            id: "vd_balance",
+            name: "Solde",
+            field: "vd_balance",
+            sortable: true,
+            filterable: true,
+            type: FieldType.float,
+          },
+          {
             id: "ad_line1",
             name: "Adresse",
             field: "address.ad_line1",

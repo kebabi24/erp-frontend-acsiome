@@ -1645,6 +1645,7 @@ export class CreateComponent implements OnInit {
     this.columnDefinitionsprov = [
       {
         id: "id",
+        name: "id",
         field: "id",
         excludeFromColumnPicker: true,
         excludeFromGridMenu: true,
@@ -1720,7 +1721,7 @@ export class CreateComponent implements OnInit {
     // fill the dataset with your data
     this.providerService
       .getAll()
-      .subscribe((response: any) => (this.providers = response.data));
+      .subscribe((response: any) => {(this.providers = response.data),console.log(response.data)});
   }
   openprov(content) {
     this.prepareGridprov();

@@ -291,7 +291,7 @@ autorisation:boolean;
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
           return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" [disabled]="printbuttonState">
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette" disabled">
                  <i class="flaticon2-printer" ></i>
                  
              </a>
@@ -311,7 +311,7 @@ autorisation:boolean;
                               this.color = reponse.data.pt_break_cat
                               if (args.dataContext.tr_part != null && args.dataContext.tr_qty_loc != null && args.dataContext.tr_loc != null && args.dataContext.tr_site != null && (args.dataContext.tr_ref == null || args.dataContext.tr_ref == "")) {
                                 const controls = this.woForm.controls;
-                                this.printbuttonState = true;
+                                this.printbuttonState = false;
                                 this.printable = false;
                                 const _lb = new Label();
                                 (_lb.lb__dec01 = args.dataContext.tr_line), (_lb.lb_site = args.dataContext.tr_site);
@@ -912,7 +912,7 @@ autorisation:boolean;
 
       wo_routing: [this.workOrder.wo_routing, Validators.required],
       ref: [{ value: null, disabled: true }],
-      wo_qty_ord: [0],
+      wo_qty_ord: [{ value: 0 },this.workOrder.wo_qty_ord],
       total_bobine:  [{value: 0,disabled: true}],
       rest_bobine:  [{value: 0,disabled: true}],
       total_squelette:  [{ value: 0 ,disabled: true}],

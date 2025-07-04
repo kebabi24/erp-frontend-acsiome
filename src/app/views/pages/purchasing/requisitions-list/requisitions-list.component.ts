@@ -113,6 +113,14 @@ draggableGroupingPlugin: any;
       },
       },
       {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
         id: "req.rqm_category",
         name: "Sequence",
         field: "req.rqm_category",
@@ -124,6 +132,14 @@ draggableGroupingPlugin: any;
         id: "rqm_nbr",
         name: "N° Demande",
         field: "req.rqm_nbr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_desc",
+        name: "Description",
+        field: "req.sequence.seq_desc",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -146,7 +162,7 @@ draggableGroupingPlugin: any;
       },
       {
         id: "rqm_status",
-        name: "status",
+        name: "Status",
         field: "req.rqm_status",
         sortable: true,
         filterable: true,
@@ -202,7 +218,7 @@ draggableGroupingPlugin: any;
       rowDetailView: {
         // We can load the "process" asynchronously in 2 different ways (httpClient OR even Promise)
         process: (item) => {
-          console.log(this.simulateServerAsyncCall(item));
+          // console.log(this.simulateServerAsyncCall(item));
           return this.simulateServerAsyncCall(item);
         },
 

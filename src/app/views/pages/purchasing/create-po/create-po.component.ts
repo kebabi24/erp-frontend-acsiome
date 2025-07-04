@@ -215,7 +215,7 @@ error = false;
         name: "N demande",
         field: "pod_req_nbr",
         minWidth: 50,
-        maxWidth: 50,
+        maxWidth: 120,
         selectable: true,
       },
       {
@@ -1280,7 +1280,7 @@ changeTax(){
         : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
   
 
-        this.provider = item;
+        this.provider = item.address;
         controls.po_vend.setValue(item.vd_addr || "");
         controls.po_curr.setValue(item.vd_curr || "");
         controls.po_taxable.setValue(item.address.ad_taxable || false);
@@ -1631,6 +1631,7 @@ changeTax(){
         this.requisitonService.findBy({ rqm_nbr: item.rqm_nbr }).subscribe(
           (res: any) => {
             const { requisition, details } = res.data;
+            console.log(res.data)
             const det1 = details;
             this.requistionServer = requisition;
             const {
@@ -1644,114 +1645,10 @@ changeTax(){
             );
             if (rqm_aprv_stat !== `${seq_appr3_lev}`) {
               this.hasFormErrors = true;
-              this.message = "cette demande d'achat n'est pas encore validee";
+              this.message = "cette demande d'Achat n'est pas encore validée";
               return;
             }
-            const vend = vp_vend ? vp_vend : this.requistionServer.rqm_vend;
-            this.vendorProposalService
-              .findByOne({ vp_vend: vend, vp_rqm_nbr: item.rqm_nbr })
-              .subscribe(
-                (res: any) => {
-                  console.log("aa", res.data);
-                  if (res.data.vendorProposal) {
-                    console.log("here");
-                    const { vendorProposal, details } = res.data;
-                    this.vpServer = vendorProposal;
-    
-                    controls.po_vend.setValue(this.vpServer.vp_vend);
-                    this.providersService
-                      .getBy({ vd_addr: this.vpServer.vp_vend })
-                      .subscribe((res: any) => {(this.provider = res.data[0]);
-                    controls.po_req_id.setValue(this.vpServer.vp_rqm_nbr);
-                    controls.po_curr.setValue(this.vpServer.vp_curr);
-                    this.deviseService.getBy({cu_curr:this.vpServer.vp_curr}).subscribe((resc:any)=>{  
-                      this.curr = resc.data
-                   })
-                  })
-            
-                    for (const object in details) {
-                      const detail = details[object];
-                      console.log(detail.item);
-                      this.gridService.addItem(
-                        {
-                          id: this.dataset.length + 1,
-                          pod_line: this.dataset.length + 1,
-                          pod_req_nbr: this.vpServer.vp_rqm_nbr,
-                          pod_part: detail.vpd_part,
-                          cmvid: "",
-                          desc: detail.item.pt_desc1,
-                          pod_qty_ord: detail.vpd_q_qty,
-                          pod_um: detail.vpd_um,
-                          pod_price: detail.vpd_q_price,
-                          pod_disc_pct: 0,
-                          pod_site: this.site,
-                          pod_loc: detail.item.pt_loc,
-                          pod_type: detail.item.pt_type,
-                          pod_cc: "",
-                          pod_taxable: detail.item.pt_taxable,
-                          pod_tax_code: detail.item.pt_taxc,
-                          
-                          pod_taxc: detail.item.taxe.tx2_tax_pct,
-                        },
-                        { position: "bottom" }
-                      );
-                      this.datasetPrint.push({
-                        id: this.dataset.length + 1,
-                        pod_line: this.dataset.length + 1,
-                        pod_req_nbr: this.vpServer.vp_rqm_nbr,
-                        pod_part: detail.vpd_part,
-                        cmvid: "",
-                        desc: detail.item.pt_desc1,
-                        pod_qty_ord: detail.vpd_q_qty,
-                        pod_um: detail.vpd_um,
-                        pod_price: detail.vpd_q_price,
-                        pod_disc_pct: 0,
-                        pod_site: this.site,
-                        pod_loc: detail.item.pt_loc,
-                        pod_type: detail.item.pt_type,
-                        pod_cc: "",
-                        pod_taxable: detail.item.pt_taxable,
-                        pod_tax_code: detail.item.pt_taxc,
-                        pod_taxc: detail.item.taxe.tx2_tax_pct,
-                        
-                      });
-                    }
-                    this.calculatetot()
-                  } else {
-                    const date = new Date()
-
-                    this.date = controls.po_ord_date.value
-                    ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
-                    : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-              
-                    controls.po_vend.setValue(this.requistionServer.rqm_vend);
-                    this.providersService
-                      .getBy({ vd_addr: this.requistionServer.rqm_vend })
-                      .subscribe((res: any) =>{
-                        this.provider = res.data[0];
-                     console.log(res.data)
-                      console.log("provider", this.provider.vd_cr_tems)
-                     controls.po_cr_terms.setValue(this.provider.vd_cr_terms)
-                     controls.po_curr.setValue(this.provider.vd_curr || "");
-                     controls.po_taxable.setValue(this.provider.address.ad_taxable || "");
-                     controls.po_taxc.setValue(this.provider.address.ad_taxc || "");
-
-                     if (this.provider.vd_curr == 'DA'){
-                      controls.po_ex_rate.setValue(1)
-                      controls.po_ex_rate2.setValue(1)
-            
-                    } else {
-                     
-                      this.deviseService.getExRate({exr_curr1:this.provider.vd_curr, exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{  
-                       controls.po_ex_rate.setValue(res.data.exr_rate)
-                       controls.po_ex_rate2.setValue(res.data.exr_rate2)
-                      
-                    })
-                        }
-                      this.deviseService.getBy({cu_curr:this.provider.vd_curr}).subscribe((resc:any)=>{  
-                        this.curr = resc.data
-                     })
-                    })
+           
                     for (const object in det1) {
                       console.log("hna",details[object]);
                       const detail = details[object];
@@ -1799,14 +1696,9 @@ changeTax(){
                       });
                     }
                     this.calculatetot()
-                  }
-                },
-                (error) => {
-                  this.message = ` erreur`;
-                  this.hasFormErrors = true;
-                },
-                () => {}
-              );
+                  })
+                
+               
           },
           (error) => {
             this.message = `Demande avec ce numero ${rqm_nbr} n'existe pas`;
@@ -1815,7 +1707,7 @@ changeTax(){
           () => {}
         );
     
-      });
+      
     }
     this.calculatetot();
   }
@@ -1891,10 +1783,10 @@ changeTax(){
         // for example, display the expand icon only on every 2nd row
         // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
       },
-      multiSelect: true,
+      multiSelect: false,
       rowSelectionOptions: {
         // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: false,
+        selectActiveRow: true,
       },
     };
 
@@ -2557,146 +2449,151 @@ printpdf(nbr) {
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
  var img = new Image();
- img.src = "./assets/media/logos/companyentete.png";
- doc.addImage(img, "png", 150, 5, 50, 30);
- doc.setFontSize(9);
- if (this.domain.dom_name != null) {
-   doc.text(this.domain.dom_name, 10, 10);
- }
- if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
- if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
- if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
- 
+ img.src = "./assets/media/logos/companylogo.png";
+ doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
   doc.setFontSize(12);
-  doc.text( 'Bon Commande N° : ' + nbr  , 70, 45);
-  doc.setFontSize(8);
-  //console.log(this.provider.address.ad_misc2_id)
-  doc.text('Code Fournisseur : ' + this.provider.vd_addr, 20 , 50 )
-  doc.text('Nom             : ' + this.provider.address.ad_name, 20 , 55)
-  doc.text('Adresse       : ' + this.provider.address.ad_line1, 20 , 60)
-  if (this.provider.address.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.address.ad_misc2_id, 20 , 65)}
-      if (this.provider.address.ad_gst_id != null) {doc.text('RC          : ' + this.provider.address.ad_gst_id, 20 , 70)}
-      if (this.provider.address.ad_pst_id) {doc.text('AI            : ' + this.provider.address.ad_pst_id, 20 , 75)}
-      if (this.provider.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.address.ad_misc1_id, 20 , 80)}
+    doc.setFontSize(12);
+    doc.text( 'Bon Commande N° : ' + nbr  , 70, 50);
+    doc.setFontSize(8);
     
-  doc.line(10, 85, 200, 85);
-  doc.line(10, 90, 200, 90);
-  doc.line(10, 85, 10, 90);
-  doc.text('LN', 12.5 , 88.5);
-  doc.line(20, 85, 20, 90);
-  doc.text('Code Article', 25 , 88.5);
-  doc.line(45, 85, 45, 90);
-  doc.text('Désignation', 67.5 , 88.5);
-  doc.line(100, 85, 100, 90);
-  doc.text('QTE', 107 , 88.5);
-  doc.line(120, 85, 120, 90);
-  doc.text('UM', 123 , 88.5);
-  doc.line(130, 85, 130, 90);
-  doc.text('PU', 138 , 88.5);
-  doc.line(150, 85, 150, 90);
-  doc.text('TVA', 152 , 88.5);
-  doc.line(160, 85, 160, 90);
-  doc.text('REM', 162 , 88.5);
-  doc.line(170, 85, 170, 90);
-  doc.text('THT', 181 , 88.5);
-  doc.line(200, 85, 200, 90);
-  var i = 95;
+    doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 60 )
+    doc.text('Nom             : ' + this.provider.ad_name, 20 , 65)
+    doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 70)
+    if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 75)}
+        if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 80)}
+        if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 85)}
+        if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 90)}
+   
+ 
+    
+        doc.line(10, 95, 200, 95);
+        doc.line(10, 100, 200, 100);
+        doc.line(10, 95, 10, 100);
+        doc.text('LN', 12.5 , 98.5);
+        doc.line(20, 95, 20, 100);
+        doc.text('Code Article', 22 , 98.5);
+        doc.line(60, 95, 60, 100);
+        doc.text('Désignation', 67.5 , 98.5);
+        doc.line(110, 95, 110, 100);
+        doc.text('QTE', 117 , 98.5);
+        doc.line(125, 95, 125, 100);
+        doc.text('UM', 128 , 98.5);
+        doc.line(135, 95, 135, 100);
+        doc.text('PU', 138 , 98.5);
+        doc.line(150, 95, 150, 100);
+        doc.text('TVA', 152 , 98.5);
+        doc.line(160, 95, 160, 100);
+        doc.text('REM', 162 , 98.5);
+        doc.line(170, 95, 170, 100);
+        doc.text('THT', 181 , 98.5);
+        doc.line(200, 95, 200, 100);
+  var i = 105;
   doc.setFontSize(6);
   for (let j = 0; j < this.dataset.length  ; j++) {
     
     if ((j % 20 == 0) && (j != 0) ) {
 doc.addPage();
-      img.src = "./assets/media/logos/companyentete.png";
-      doc.addImage(img, 'png', 150, 5, 50, 30)
-      doc.setFontSize(9);
-      doc.text('ABRACADABRA -LE KEBAB AUTHENTIQUE', 10 , 10 );
-      doc.text('Boulevard 11 décembre 1960, Résidence', 10 , 15 );
-      doc.text('ZAAMOUM, App 29 2 e étage', 10 , 20 );
-      doc.text('Alger. Algérie', 10 , 25 );
-      doc.text('Tel : +213(0)36 023 067 558', 10 , 30 );
-      doc.setFontSize(14);
-      doc.text('ABRACADABRA', 135 , 30 );
-      doc.line(10, 35, 200, 35);
-
-      doc.setFontSize(12);
-      doc.text( 'Commande N° : ' + nbr  , 70, 40);
-      doc.setFontSize(8);
-      console.log(this.provider.address.ad_misc2_id)
-      doc.text('Code Fournisseur : ' + this.provider.vd_addr, 20 , 50 )
-      doc.text('Nom             : ' + this.provider.address.ad_name, 20 , 55)
-      doc.text('Adresse       : ' + this.provider.address.ad_line1, 20 , 60)
-      if (this.provider.address.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.address.ad_misc2_id, 20 , 65)}
-      if (this.provider.address.ad_gst_id != null) {doc.text('RC          : ' + this.provider.address.ad_gst_id, 20 , 70)}
-      if (this.provider.address.ad_pst_id) {doc.text('AI            : ' + this.provider.address.ad_pst_id, 20 , 75)}
-      if (this.provider.address.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.address.ad_misc1_id, 20 , 80)}
+if (this.domain.dom_name != null) {
+  doc.text(this.domain.dom_name, 10, 10);
+}
+if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+doc.line(10, 32, 200, 32);
+doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+doc.line(10, 40, 200, 40);
+doc.setFontSize(12);
+  doc.setFontSize(12);
+  doc.text( 'Bon Commande N° : ' + nbr  , 70, 50);
+  doc.setFontSize(8);
+  
+  doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 60 )
+  doc.text('Nom             : ' + this.provider.ad_name, 20 , 65)
+  doc.text('Adresse       : ' + this.provider.ad_line1, 20 , 70)
+  if (this.provider.ad_misc2_id != null) {doc.text('MF          : ' + this.provider.ad_misc2_id, 20 , 75)}
+      if (this.provider.ad_gst_id != null) {doc.text('RC          : ' + this.provider.ad_gst_id, 20 , 80)}
+      if (this.provider.ad_pst_id) {doc.text('AI            : ' + this.provider.ad_pst_id, 20 , 85)}
+      if (this.provider.ad_misc1_id != null) {doc.text('NIS         : ' + this.provider.ad_misc1_id, 20 , 90)}
+ 
+   
     
-      doc.line(10, 85, 200, 85);
-      doc.line(10, 90, 200, 90);
-      doc.line(10, 85, 10, 90);
-      doc.text('LN', 12.5 , 88.5);
-      doc.line(20, 85, 20, 90);
-      doc.text('Code Article', 25 , 88.5);
-      doc.line(45, 85, 45, 90);
-      doc.text('Désignation', 67.5 , 88.5);
-      doc.line(100, 85, 100, 90);
-      doc.text('QTE', 107 , 88.5);
-      doc.line(120, 85, 120, 90);
-      doc.text('UM', 123 , 88.5);
-      doc.line(130, 85, 130, 90);
-      doc.text('PU', 138 , 88.5);
-      doc.line(150, 85, 150, 90);
-      doc.text('TVA', 152 , 88.5);
-      doc.line(160, 85, 160, 90);
-      doc.text('REM', 162 , 88.5);
-      doc.line(170, 85, 170, 90);
-      doc.text('THT', 181 , 88.5);
-      doc.line(200, 85, 200, 90);
-      i = 95;
+      doc.line(10, 95, 200, 95);
+      doc.line(10, 100, 200, 100);
+      doc.line(10, 95, 10, 100);
+      doc.text('LN', 12.5 , 98.5);
+      doc.line(20, 95, 20, 100);
+      doc.text('Code Article', 22 , 98.5);
+      doc.line(60, 95, 60, 100);
+      doc.text('Désignation', 67.5 , 98.5);
+      doc.line(110, 95, 110, 100);
+      doc.text('QTE', 117 , 98.5);
+      doc.line(125, 95, 125, 100);
+      doc.text('UM', 128 , 98.5);
+      doc.line(135, 95, 135, 100);
+      doc.text('PU', 138 , 98.5);
+      doc.line(150, 95, 150, 100);
+      doc.text('TVA', 152 , 98.5);
+      doc.line(160, 95, 160, 100);
+      doc.text('REM', 162 , 98.5);
+      doc.line(170, 95, 170, 100);
+      doc.text('THT', 181 , 98.5);
+      doc.line(200, 95, 200, 100);
+      i = 105;
       doc.setFontSize(6);
 
     }
 
 
 
-    if (this.dataset[j].desc.length > 45) {
-      let desc1 = this.dataset[j].desc.substring(45)
+    if (this.dataset[j].desc.length > 35) {
+      let desc1 = this.dataset[j].desc.substring(35)
       let ind = desc1.indexOf(' ')
-      desc1 = this.dataset[j].desc.substring(0, 45  + ind)
-      let desc2 = this.dataset[j].desc.substring(45+ind)
+      desc1 = this.dataset[j].desc.substring(0, 35  + ind)
+      let desc2 = this.dataset[j].desc.substring(35+ind)
 
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
       doc.line(20, i - 5, 20, i);
-      doc.text(this.dataset[j].pod_part, 25 , i  - 1);
-      doc.line(45, i - 5 , 45, i );
-      doc.text(desc1, 47 , i  - 1);
-      doc.line(100, i - 5, 100, i );
-      doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 118 , i  - 1 , { align: 'right' });
-      doc.line(120, i - 5 , 120, i );
-      doc.text(this.dataset[j].pod_um, 123 , i  - 1);
-      doc.line(130, i - 5, 130, i );
+      doc.text(this.dataset[j].pod_part, 22 , i  - 1);
+      doc.line(60, i - 5 , 60, i );
+      doc.text(desc1, 62 , i  - 1);
+      doc.line(110, i - 5, 110, i );
+      doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 123 , i  - 1 , { align: 'right' });
+      doc.line(125, i - 5 , 125, i );
+      doc.text(this.dataset[j].pod_um, 127 , i  - 1);
+      doc.line(135, i - 5, 135, i );
       doc.text( String(Number(this.dataset[j].pod_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
       doc.line(150, i - 5, 150, i );
       doc.text(String(this.dataset[j].pod_taxc) + "%" , 153 , i  - 1);
       doc.line(160, i - 5 , 160, i );
-      doc.text(String(this.dataset[j].pod_disc_pct) + "%" , 163 , i  - 1);
+      doc.text(String(Number(this.dataset[j].pod_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
       doc.line(170, i - 5 , 170, i );
       doc.text(String((this.dataset[j].pod_price *
-              ((100 - this.dataset[j].pod_disc_pct) / 100) *
+              ((100 - Number(this.dataset[j].pod_disc_pct)) / 100) *
               this.dataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
       doc.line(200, i-5 , 200, i );
      // doc.line(10, i, 200, i );
 
       i = i + 5;
 
-      doc.text(desc2, 47 , i  - 1);
+      doc.text(desc2, 62 , i  - 1);
       
       doc.line(10, i - 5, 10, i );
       doc.line(20, i - 5, 20, i);
-      doc.line(45, i - 5 , 45, i );
-      doc.line(100, i - 5, 100, i );
-      doc.line(120, i - 5 , 120, i );
-      doc.line(130, i - 5, 130, i );
+      doc.line(60, i - 5 , 60, i );
+      doc.line(110, i - 5, 110, i );
+      doc.line(125, i - 5 , 125, i );
+      doc.line(135, i - 5, 135, i );
       doc.line(150, i - 5, 150, i );
       doc.line(160, i - 5 , 160, i );
       doc.line(170, i - 5 , 170, i );
@@ -2712,23 +2609,23 @@ doc.addPage();
     doc.line(10, i - 5, 10, i );
     doc.text(String(("000"+ this.dataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
     doc.line(20, i - 5, 20, i);
-    doc.text(this.dataset[j].pod_part, 25 , i  - 1);
-    doc.line(45, i - 5 , 45, i );
-    doc.text(this.dataset[j].desc, 47 , i  - 1);
-    doc.line(100, i - 5, 100, i );
-    doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 118 , i  - 1 , { align: 'right' });
-    doc.line(120, i - 5 , 120, i );
-    doc.text(this.dataset[j].pod_um, 123 , i  - 1);
-    doc.line(130, i - 5, 130, i );
+    doc.text(this.dataset[j].pod_part, 22 , i  - 1);
+    doc.line(60, i - 5 , 60, i );
+    doc.text(this.dataset[j].desc, 62 , i  - 1);
+    doc.line(110, i - 5, 110, i );
+    doc.text( String(Number(this.dataset[j].pod_qty_ord).toFixed(2)), 123 , i  - 1 , { align: 'right' });
+    doc.line(125, i - 5 , 125, i );
+    doc.text(this.dataset[j].pod_um, 127 , i  - 1);
+    doc.line(135, i - 5, 135, i );
     doc.text( String(Number(this.dataset[j].pod_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
     doc.line(150, i - 5, 150, i );
     doc.text(String(this.dataset[j].pod_taxc) + "%" , 153 , i  - 1);
     doc.line(160, i - 5 , 160, i );
-    doc.text(String(this.dataset[j].pod_disc_pct) + "%" , 163 , i  - 1);
+    doc.text(String(Number(this.dataset[j].pod_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
     doc.line(170, i - 5 , 170, i );
-    doc.text(String((Number(this.dataset[j].pod_price) *
+    doc.text(String((this.dataset[j].pod_price *
       ((100 - Number(this.dataset[j].pod_disc_pct)) / 100) *
-      Number(this.dataset[j].pod_qty_ord)).toFixed(2)), 198 , i  - 1,{ align: 'right' });
+      this.dataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
     doc.line(200, i-5 , 200, i );
     doc.line(10, i, 200, i );
     i = i + 5;
@@ -2760,7 +2657,7 @@ doc.addPage();
 
  doc.setFontSize(8);
     let mt = NumberToLetters(
-      Number(controls.ttc.value).toFixed(2),'DINARS ALGERIENS')
+      Number(controls.ttc.value).toFixed(2),this.curr.cu_desc)
 
       if (mt.length > 95) {
         let mt1 = mt.substring(90)

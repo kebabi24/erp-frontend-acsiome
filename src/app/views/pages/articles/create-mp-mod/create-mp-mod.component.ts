@@ -541,10 +541,12 @@ onChangecolor() {
       console.log(itemresponse.data)
           if (itemresponse.data != null) {
               this.isExist = true
-              console.log('article existe')
+              console.log('Article existe')
               controls1.pt_break_cat.setValue(null)
               controls1.pt_break_cat.enable()
           } else {
+            controls1.pt_plan_ord.enable()
+            controls1.pt_dea.enable()
             this.itemModelService
         .getByOne({
               mod_code:  controls1.pt_article.value
@@ -557,7 +559,7 @@ onChangecolor() {
             let code_silicone:any;
             let vitesse:any;
             this.codeService.getBy({ code_fldname: 'pt_break_cat',code_value: controls1.pt_break_cat.value }).subscribe((coderesponse: any) => 
-              { code_couleur = coderesponse.data[0].code_desc, vitesse=Number(coderesponse.data[0].dec01)
+              { console.log(coderesponse.data);code_couleur = coderesponse.data[0].code_desc, vitesse = Number(coderesponse.data[0].dec01)
                 controls1.pt_um.setValue(modeleresponse.data.mod_um)
                 controls1.pt_group.setValue(modeleresponse.data.mod_group)
                 controls1.pt_prod_line.setValue(modeleresponse.data.mod_prod_line)
@@ -569,12 +571,13 @@ onChangecolor() {
                 controls1.pt_bom_code.setValue('BOBINE')
                 controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
                 controls1.pt_status.setValue(modeleresponse.data.mod_status)
-                controls1.pt_plan_ord.enable()
-                controls1.pt_dea.enable()
+               
+
                 controls1.pt_part.setValue(controls1.pt_article.value + code_couleur )
                 controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
                 controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
                 this.codeService.getBy({ code_fldname: 'pt_group',code_value: controls1.pt_group.value }).subscribe((coderesponse: any) => {code_silicone = coderesponse.data[0].chr01
+                
                 });
           });
             
@@ -609,10 +612,12 @@ onChangecolor() {
       console.log(itemresponse.data)
           if (itemresponse.data != null) {
               this.isExist = true
-              console.log('article existe')
+              console.log('Article existe')
               controls1.pt_break_cat.setValue(null)
               controls1.pt_break_cat.enable()
           } else {
+            controls1.pt_plan_ord.enable()
+            controls1.pt_dea.enable()
             this.itemModelService
         .getByOne({
               mod_code:  controls1.pt_article.value
@@ -624,8 +629,11 @@ onChangecolor() {
             let code_couleur:any;
             let code_silicone:any;
             let vitesse:any;
+            console.log(controls1.pt_break_cat.value)
             this.codeService.getBy({ code_fldname: 'pt_break_cat',code_value: controls1.pt_break_cat.value }).subscribe((coderesponse: any) => 
-              { code_couleur = coderesponse.data[0].code_desc, vitesse=Number(coderesponse.data[0].dec01)
+                                     
+              { console.log(coderesponse.data)
+                 code_couleur = coderesponse.data[0].code_desc, vitesse = Number(coderesponse.data[0].dec01)
                 controls1.pt_um.setValue(modeleresponse.data.mod_um)
                 controls1.pt_group.setValue(modeleresponse.data.mod_group)
                 controls1.pt_prod_line.setValue(modeleresponse.data.mod_prod_line)
@@ -1644,7 +1652,7 @@ handleSelectedRowsChangedmod(e, args) {
       
       controls1.pt_break_cat.setValue(null)
           controls1.pt_break_cat.enable()
-          controls1.pt_rev.disable()
+          // controls1.pt_rev.disable()
           controls1.pt_group.disable()
             controls1.pt_um.setValue(null)
             controls1.pt_prod_line.setValue(null)
@@ -1655,9 +1663,9 @@ handleSelectedRowsChangedmod(e, args) {
             controls1.pt_bom_code.setValue(null)
             controls1.pt_dsgn_grp.setValue(null)
             controls1.pt_status.setValue(null)
-            controls1.int01.setValue(null)
-            controls1.int02.setValue(null)
-           controls1.int03.setValue(0)
+          //   controls1.int01.setValue(null)
+          //   controls1.int02.setValue(null)
+          //  controls1.int03.setValue(0)
             controls1.pt_part.setValue(null)
             controls1.pt_desc1.setValue(null)
             controls1.pt_desc2.setValue(null)
@@ -1959,6 +1967,16 @@ prepareGridprov() {
           // True (Single Selection), False (Multiple Selections)
           selectActiveRow: true,
       },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+
   }
 
   // fill the dataset with your data

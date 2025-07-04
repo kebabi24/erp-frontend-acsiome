@@ -88,9 +88,16 @@ export class ListApprovalComponent implements OnInit {
     
     prepareGrid() {
       this.columnDefinitions = [
-
         {
-          id: "req.rqm_category",
+          id: "id",
+          name: "id",
+          field: "req.id",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "rqm_category",
           name: "Sequence",
           field: "req.rqm_category",
           sortable: true,
@@ -101,6 +108,14 @@ export class ListApprovalComponent implements OnInit {
           id: "rqm_nbr",
           name: "N° Demande",
           field: "req.rqm_nbr",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "seq_desc",
+          name: "Description",
+          field: "req.sequence.seq_desc",
           sortable: true,
           filterable: true,
           type: FieldType.string,
@@ -138,7 +153,7 @@ export class ListApprovalComponent implements OnInit {
           type: FieldType.string,
         },
         {
-          id: "req.created_by",
+          id: "created_by",
           name: "Utilisateur",
           field: "req.created_by",
           sortable: true,
@@ -146,7 +161,7 @@ export class ListApprovalComponent implements OnInit {
           type: FieldType.string,
         },
         {
-          id: "req.rqm_rqby_userid",
+          id: "rqm_rqby_userid",
           name: "Demandeur",
           field: "req.rqm_rqby_userid",
           sortable: true,
@@ -198,6 +213,11 @@ export class ListApprovalComponent implements OnInit {
         enableFiltering: true,
         autoEdit: false,
         autoHeight: true,
+        presets: {
+        sorters: [
+          { columnId: 'rqm_req_date', direction: 'ASC' }
+        ],
+      },
         dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
           var val = undefined;
           try {
@@ -219,7 +239,7 @@ export class ListApprovalComponent implements OnInit {
           },
   
           // load only once and reuse the same item detail without calling process method
-          loadOnce: true,
+          loadOnce: false,
   
           // limit expanded row to only 1 at a time
           singleRowExpand: true,
@@ -253,6 +273,7 @@ export class ListApprovalComponent implements OnInit {
       this.dataset = [];
       this.requisitionService.getAllApp().subscribe(
         (response: any) => {this.dataset = response.data
+          console.log(this.dataset)
         this.dataView.setItems(this.dataset)},
         (error) => {
           this.dataset = [];
@@ -278,7 +299,7 @@ export class ListApprovalComponent implements OnInit {
             this.requistionServer = requisition
            // this.dataset = details
       this.createForm();
-       this.modalService.open(content, { size: "lg" });
+       this.modalService.open(content, { size: "md" });
         })
      }
    
@@ -316,7 +337,7 @@ export class ListApprovalComponent implements OnInit {
         if(rqm_aprv_stat == seq_appr2_lev) value = seq_appr1_lev
         if(rqm_aprv_stat == seq_appr3_lev) value = seq_appr2_lev
     }
-    console.log(value)
+    console.log("value",value)
     this.requisitionService
         .update({ rqm_aprv_stat: value }, this.requistionServer.id)
         .subscribe(
@@ -340,7 +361,8 @@ export class ListApprovalComponent implements OnInit {
                   true
               )
               this.loadingSubject.next(false)
-               this.router.navigateByUrl("/purchasing/list-approval")
+              window.location.reload();
+              //  this.router.navigateByUrl("/purchasing/list-approval")
             
           }
          

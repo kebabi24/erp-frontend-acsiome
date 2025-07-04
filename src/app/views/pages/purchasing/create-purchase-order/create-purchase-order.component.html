@@ -2,7 +2,7 @@
     <kt-portlet-header [sticky]="true" title="Ajouter une demande d'achat" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
@@ -53,11 +53,21 @@
                         <div class="input-group input-group-sm">
 
                             <input type="text" class="form-control form-control-solid" formControlName="rqm_vend" 
-                                aria-describedby="basic-addon2">
+                                aria-describedby="basic-addon2" (change)="onChangeVend()">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open2(content2)">
                                     <i class="text-dark-50 flaticon2-search"></i> </span>
                             </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="name" formControlName="name" disabled
+                                aria-describedby="basic-addon2">
+                           
                         </div>
 
                     </div>
@@ -135,13 +145,12 @@
 
 
                     </div>
-                    <div class="form-group col-1">
+                    <!--div class="form-group col-1">
                         <label class="form-group">Status :</label>
                         <input type="text" class="form-control form-control-sm form-control-solid"
                             formControlName="rqm_status">
 
-
-                    </div>
+                    </div-->
                     <div class="form-group col-8">
                         <label class="form-group">Remarque:</label>
                         <textarea class="form-control form-control-sm form-control-solid" formControlName="rqm_rmks"
@@ -181,7 +190,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -205,7 +214,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -229,7 +238,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -252,7 +261,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
@@ -278,7 +287,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
