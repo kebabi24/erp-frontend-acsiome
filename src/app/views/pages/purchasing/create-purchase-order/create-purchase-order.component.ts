@@ -35,7 +35,7 @@ import {
     ModalDismissReasons,
     NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap"
-import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService } from "../../../../core/erp"
+import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService, EmployeService } from "../../../../core/erp"
 import { Reason, ReasonService} from "../../../../core/erp"
 import { AlertComponent } from "../../../partials/content/crud"
 import { sequence } from "@angular/animations"
@@ -110,7 +110,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
         private sequencesService: SequenceService,
         private itemsService: ItemService,
         private reasonService: ReasonService,
-        private providerService: ProviderService
+        private providerService: ProviderService,
+        private employeService : EmployeService,
     ) {
         config.autoClose = true
         this.initGrid()
@@ -284,6 +285,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         const date = new Date;
         this.reqForm = this.reqFB.group({
           rqm_category: [this.requisition.rqm_category , Validators.required],
+          seqname: [null],
           rqm_nbr: [this.requisition.rqm_nbr ],
           rqm_vend: [this.requisition.rqm_vend ],
           name: [null],
@@ -302,6 +304,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
           
           
           rqm_rqby_userid: [this.requisition.rqm_rqby_userid, Validators.required],
+          empname: [null],
           rqm_reason: [this.requisition.rqm_reason ],
         //   rqm_status: [this.requisition.rqm_status ],
           rqm_rmks: [this.requisition.rqm_rmks ],
@@ -313,6 +316,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
             .subscribe((response: any) => {
                 console.log(response.data)
 controls.rqm_category.setValue(response.data[0].seq_seq)
+controls.seqname.setValue(response.data[0].seq_desc)
 
             })
 
@@ -327,9 +331,12 @@ controls.rqm_category.setValue(response.data[0].seq_seq)
                 console.log(response)
                 if (response.data.length == 0) {
                     alert("Sequence nexiste pas")
-                    controls.rqm_category.setValue("")
+                    controls.rqm_category.setValue(null)
+                    controls.seqname.setValue(null)
                     console.log(response.data.length)
                     document.getElementById("SEQUENCE").focus();
+                } else {
+                    controls.seqname.setValue(response.data[0].seq_desc)
                 }
               
             })
@@ -394,7 +401,7 @@ this.addReq(req, this.dataset)
     prepareReq(): any {
         const controls = this.reqForm.controls
         const _req = new Requisition()
-        _req.rqm_category =  controls.rqm_category.value
+          _req.rqm_category =  controls.rqm_category.value
           _req.rqm_nbr=  controls.rqm_nbr.value
           _req.rqm_vend =  controls.rqm_vend.value
           _req.rqm_type =  controls.rqm_type.value
@@ -406,6 +413,8 @@ this.addReq(req, this.dataset)
           _req.rqm_rmks=  controls.rqm_rmks.value
           _req.rqm_open= true
           _req.rqm_aprv_stat = '0'
+          _req.chr01= controls.name.value
+          _req.chr02= controls.empname.value
         return _req
     }
     /**
@@ -473,20 +482,22 @@ this.addReq(req, this.dataset)
         if (Array.isArray(args.rows) && this.gridObj1) {
             args.rows.map((idx) => {
                 const item = this.gridObj1.getDataItem(idx)
+
                 controls.rqm_category.setValue(item.seq_seq || "")
+                controls.seqname.setValue(item.seq_desc)
                 this.sequencesService
-            .getBy({seq_seq: item.seq_seq, seq_type: 'RQ', seq_profile: this.user.usrd_profile})
-            .subscribe((response: any) => {
-                console.log(response)
-                if (response.data.length == 0) {
-                    alert("Sequence nexiste pas")
-                    controls.rqm_category.setValue("")
-                    console.log(response.data.length)
-                    document.getElementById("SEQUENCE").focus();
-                }
-//                 this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
-// console.log(this.nbr)
-            })
+//             .getBy({seq_seq: item.seq_seq, seq_type: 'RQ', seq_profile: this.user.usrd_profile})
+//             .subscribe((response: any) => {
+//                 console.log(response)
+//                 if (response.data.length == 0) {
+//                     alert("Sequence nexiste pas")
+//                     controls.rqm_category.setValue("")
+//                     console.log(response.data.length)
+//                     document.getElementById("SEQUENCE").focus();
+//                 }
+// //                 this.nbr = `${response.data[0].seq_prefix}-${Number(response.data[0].seq_curr_val)+1}`
+// // console.log(this.nbr)
+//             })
             })
         }
     }
@@ -711,13 +722,39 @@ console.log("controls.rqm_vend.value",controls.rqm_vend.value)
         this.modalService.open(content, { size: "lg" })
     }
 
+    onChangeEmp() {
+        const controls = this.reqForm.controls;
+console.log("controls.rqm_vend.value",controls.rqm_rqby_userid.value)
+        if(controls.rqm_rqby_userid.value != null && controls.rqm_rqby_userid.value != "") {
+          
+        this.employeService.getBy({ emp_addr: controls.rqm_rqby_userid.value }).subscribe((response: any) => {
+          //   const { data } = response;
+          
+          if (response.data.length == 0 ) {
+            alert("Employe n'exist pas")
+            controls.rqm_rqby_userid.setValue(null)
+            controls.empname.setValue(null)
+            document.getElementById("empname").focus();
+          } else {
+            
+            controls.empname.setValue(response.data.emp_fname);
+          }
+        });
+    }
+    else { 
+        controls.rqm_vend.setValue(null) 
+        controls.empname.setValue(null)
+    }
+      }
+    
     handleSelectedRowsChanged3(e, args) {
         const controls = this.reqForm.controls
         if (Array.isArray(args.rows) && this.gridObj3) {
             args.rows.map((idx) => {
                 const item = this.gridObj3.getDataItem(idx)
                 console.log(item)
-                controls.rqm_rqby_userid.setValue(item.usrd_code || "")
+                controls.rqm_rqby_userid.setValue(item.emp_addr || "")
+                controls.empname.setValue(item.emp_fname || "")
             })
         }
     }
@@ -736,23 +773,52 @@ console.log("controls.rqm_vend.value",controls.rqm_vend.value)
                 sortable: true,
                 minWidth: 80,
                 maxWidth: 80,
-            },
-            {
-                id: "usrd_code",
-                name: "code user",
-                field: "usrd_code",
+              },
+              {
+                id: "emp_addr",
+                name: "Code Employé",
+                field: "emp_addr",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
-            },
-            {
-                id: "usrd_name",
-                name: "nom",
-                field: "usrd_name",
+              },
+              {
+                id: "emp_fname",
+                name: "Nom",
+                field: "emp_fname",
                 sortable: true,
+                width: 80,
                 filterable: true,
                 type: FieldType.string,
-            },
+              },
+             
+              {
+                id: "emp_line1",
+                name: "Adresse",
+                field: "emp_line1",
+                sortable: true,
+                width: 80,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "emp_job",
+                name: "Métier",
+                field: "emp_job",
+                sortable: true,
+                width: 80,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "emp_level",
+                name: "Niveau",
+                field: "emp_level",
+                sortable: true,
+                width: 80,
+                filterable: true,
+                type: FieldType.string,
+              },
         ]
 
         this.gridOptions3 = {
@@ -785,9 +851,7 @@ console.log("controls.rqm_vend.value",controls.rqm_vend.value)
         }
 
         // fill the dataset with your data
-        this.userService
-            .getAllUsers()
-            .subscribe((response: any) => (this.users = response.data))
+        this.employeService.getAll().subscribe((response: any) => (this.users = response.data));
     }
     open3(content) {
         this.prepareGrid3()
@@ -1013,7 +1077,8 @@ console.log("controls.rqm_vend.value",controls.rqm_vend.value)
          
           doc.setFontSize(8);
           //console.log(this.provider.ad_misc2_id)
-          doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value, 20, 55);
+          doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value + " " + controlss.empname.value, 20, 55);
+         ( controlss.rqm_vend.value!=null &&  controlss.rqm_vend.value != "") ? doc.text("Fournisseur : " + controlss.rqm_vend.value + " " + controlss.name.value, 20, 60) : doc.text("Fournisseur : " , 20, 60) ;
           
        
     
@@ -1062,7 +1127,8 @@ console.log("controls.rqm_vend.value",controls.rqm_vend.value)
           
             doc.setFontSize(8);
             //console.log(this.provider.ad_misc2_id)
-            doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value, 20, 55);
+            doc.text("Demandeur   : " + controlss.rqm_rqby_userid.value + " " + controlss.empname.value, 20, 55);
+            ( controlss.rqm_vend.value!=null &&  controlss.rqm_vend.value != "") ? doc.text("Fournisseur : " + controlss.rqm_vend.value + " " + controlss.name.value, 20, 60) : doc.text("Fournisseur : " , 20, 60) ;
             
         doc.line(10, 85, 185, 85);
         doc.line(10, 90, 185, 90);

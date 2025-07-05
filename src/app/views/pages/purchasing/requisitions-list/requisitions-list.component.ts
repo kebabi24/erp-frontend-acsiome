@@ -150,15 +150,23 @@ draggableGroupingPlugin: any;
         field: "req.rqm_req_date",
         sortable: true,
         filterable: true,
-        type: FieldType.string,
+        type: FieldType.date,
       },
       {
-        id: "rqm_total",
-        name: "Total",
-        field: "req.rqm_total",
+        id: "rqm_vend",
+        name: "Fournisseur",
+        field: "req.rqm_vend",
         sortable: true,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.string,
+      },
+       {
+        id: "chr01",
+        name: "Nom Fournisseur",
+        field: "req.chr01",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
       },
       {
         id: "rqm_status",
@@ -185,14 +193,21 @@ draggableGroupingPlugin: any;
         type: FieldType.string,
       },
       {
-        id: "req.rqm_rqby_userid",
+        id: "rqm_rqby_userid",
         name: "Demandeur",
         field: "req.rqm_rqby_userid",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
-      
+      {
+       id: "chr02",
+       name: "Nom Demandeur",
+       field: "req.chr02",
+       sortable: true,
+       filterable: true,
+       type: FieldType.string,
+     },
     ];
 
     this.gridOptions = {
@@ -243,7 +258,7 @@ draggableGroupingPlugin: any;
         // expandableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1),
 
         // Preload View Template
-        preloadComponent: RowDetailPreloadComponent,
+         preloadComponent: RowDetailPreloadComponent,
 
         // ViewModel Template to load when row detail data is ready
         viewComponent: RowDetailViewComponent,

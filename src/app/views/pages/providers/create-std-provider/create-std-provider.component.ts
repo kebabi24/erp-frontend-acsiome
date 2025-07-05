@@ -1320,6 +1320,29 @@ angularGridReady4(angularGrid: AngularGridInstance) {
     this.prepareGrid4();
     this.modalService.open(content, { size: "lg" });
   }
+  onchangebank (){
+
+    const controls = this.providerForm.controls 
+    const bk_code  = controls.vd_bank.value
+   
+    
+  this.bankService.getBy({bk_code}).subscribe((res:any)=>{
+      //const {data} = res.data.bank
+      //console.log(res.data.bank)
+      if (res.data.bank == null){ 
+        alert("Banque n'existe pas")
+        controls.vd_bank.setValue(null)
+        document.getElementById("vd_bank").focus();
+      }
+      else {
+          this.error = false
+  
+          
+      }
+
+
+  },error=>console.log(error))
+} 
 
   handleSelectedRowsChangedbank(e, args) {
     const controls = this.providerForm.controls;

@@ -4,7 +4,7 @@
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Enregistrer </button>
 
         </ng-container>
     </kt-portlet-header>
@@ -35,18 +35,28 @@
 
 
                     </div>
-                    <div class="row">
-                        <div class="form-group col-12">
-                            <label class="form-group">Type:</label>
-                            <select class="form-control form-control-sm form-control-solid"
-                                    id="exampleSelects2" formControlName="rqm_type">
-                                    
-                                    <option value="P">Achat</option>
-                                    <option value="S">Approvisionement</option>
-                                   
-                                </select>
+                    <div class="form-group col-2">
+                        <label class="form-group">Designation: </label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="seqname" formControlName="seqname" disabled
+                                aria-describedby="basic-addon2">
+                           
                         </div>
+
                     </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Type:</label>
+                        <select class="form-control form-control-sm form-control-solid"
+                                id="exampleSelects2" formControlName="rqm_type">
+                                
+                                <option value="P">Achat</option>
+                                <option value="S">Approvisionement</option>
+                                
+                            </select>
+                    </div>
+                    
 
                     <div class="form-group col-2">
                         <label class="form-group">FOURNISSEUR :</label>
@@ -90,6 +100,8 @@
 
 
                     </div>
+                </div>
+                <div class="row">   
                     <div class="form-group col-2">
                         <label class="form-group">DATE BESOIN:</label>
                         <div class="input-group input-group-sm">
@@ -108,14 +120,15 @@
 
 
                     </div>
+                
                     <div class="form-group col-2">
                         <label class="form-group">Demandeur:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" 
+                            <input type="text"  
                             [className]="reqForm.controls['rqm_rqby_userid'].errors && (reqForm.controls['rqm_rqby_userid'].dirty || reqForm.controls['rqm_rqby_userid'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                           
-                            formControlName="rqm_rqby_userid"
+                            formControlName="rqm_rqby_userid" (change)="onChangeEmp()"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open3(content3)">
@@ -127,8 +140,17 @@
                         </div>
                        
                     </div>
-                </div>
-                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="empname" formControlName="empname" disabled
+                                aria-describedby="basic-addon2">
+                           
+                        </div>
+
+                    </div>
+
 
                     <div class="form-group col-2">
                         <label class="form-group">Cause:</label>
@@ -151,6 +173,9 @@
                             formControlName="rqm_status">
 
                     </div-->
+                </div>
+
+                <div class="row">    
                     <div class="form-group col-8">
                         <label class="form-group">Remarque:</label>
                         <textarea class="form-control form-control-sm form-control-solid" formControlName="rqm_rmks"

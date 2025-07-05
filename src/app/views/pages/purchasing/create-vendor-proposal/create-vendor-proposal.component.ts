@@ -285,8 +285,9 @@ curr: String;
         this.vendorProposal = new VendorProposal()
         this.vpForm = this.vpFB.group({
             vp_rqm_nbr: [this.vendorProposal.vp_rqm_nbr],
-            vp_nbr: [this.vendorProposal.vp_nbr],
+            vp_nbr: [this.vendorProposal.vp_nbr, Validators.required],
             vp_vend: [this.vendorProposal.vp_vend],
+            name:[null],
             vp_curr: [this.vendorProposal.vp_curr],
 
             vp_ex_rate : [this.vendorProposal.vp_ex_rate],
@@ -469,7 +470,8 @@ curr: String;
                         true
                     )
                     this.loadingSubject.next(false)
-                    this.router.navigateByUrl("/")
+
+                    this.router.navigateByUrl("purchasing/vp-list")
                 }
             )
     }
@@ -589,8 +591,18 @@ curr: String;
       
     
             controls.vp_vend.setValue(item.vd_addr || "");
+            controls.name.setValue(item.address.ad_name || "");
             controls.vp_curr.setValue(item.vd_curr || "");
-           
+            controls.vp_pay_meth.setValue(item.vd_cr_terms || "");
+            this.codeService
+            .getBy({code_fldname: "vd_cr_terms",  code_value: item.vd_cr_terms})
+            .subscribe((response: any) => {
+                console.log(response.data)
+                if (response.data.length != 0) {
+                    controls.dec01.setValue(response.data[0].dec01)
+                    
+                }
+            })
             this.deviseService.getBy({cu_curr:item.vd_curr}).subscribe((res:any)=>{  
               this.curr = res.data
            })
@@ -752,12 +764,13 @@ curr: String;
             },
             {
                 id: "pt_um",
-                name: "desc",
+                name: "UM",
                 field: "pt_um",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
             },
+            
         ]
 
         this.gridOptions4 = {
@@ -836,6 +849,8 @@ curr: String;
    
 
     handleSelectedRowsChanged5(e, args) {
+        this.dataset=[]
+        this.reset()
         const controls = this.vpForm.controls;
         if (Array.isArray(args.rows) && this.gridObj5) {
           args.rows.map((idx) => {
@@ -844,8 +859,21 @@ curr: String;
             const rqm_nbr = item.rqm_nbr
             this.requisitonService.findBy({ rqm_nbr }).subscribe(
                 (res: any) => {
+                    console.log(res.data)
                     const { requisition, details } = res.data
                     controls.vp_vend.setValue(requisition.rqm_vend) 
+                    controls.name.setValue(requisition.chr01)
+                    controls.vp_pay_meth.setValue(requisition.provider.vd_cr_terms)
+                    controls.vp_curr.setValue(requisition.provider.vd_curr)
+                    this.codeService
+                    .getBy({code_fldname: "vd_cr_terms",  code_value: requisition.provider.vd_cr_terms})
+                    .subscribe((response: any) => {
+                        console.log(response.data)
+                        if (response.data.length != 0) {
+                            controls.dec01.setValue(response.data[0].dec01)
+                            
+                        }
+                    })
                     details.map((value) => {
                         this.gridService.addItem(
                             {
@@ -881,55 +909,117 @@ curr: String;
     
       prepareGrid5() {
         this.columnDefinitions5 = [
-          {
-            id: "id",
-            name: "id",
-            field: "id",
-            sortable: true,
-            minWidth: 80,
-            maxWidth: 80,
-          },
-          {
-            id: "rqm_nbr",
-            name: "N° Demande",
-            field: "rqm_nbr",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "rqm_req_date",
-            name: "Date",
-            field: "rqm_req_date",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "rqm_total",
-            name: "Total",
-            field: "rqm_total",
-            sortable: true,
-            filterable: true,
-            type: FieldType.float,
-          },
-          {
-            id: "rqm_status",
-            name: "status",
-            field: "rqm_status",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
+            {
+                id: "id",
+                name: "id",
+                field: "id",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_category",
+                name: "Sequence",
+                field: "rqm_category",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_nbr",
+                name: "N° Demande",
+                field: "rqm_nbr",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "seq_desc",
+                name: "Description",
+                field: "sequence.seq_desc",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_req_date",
+                name: "Date",
+                field: "rqm_req_date",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_vend",
+                name: "Fournisseur",
+                field: "rqm_vend",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+               {
+                id: "chr01",
+                name: "Nom Fournisseur",
+                field: "chr01",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_status",
+                name: "status",
+                field: "rqm_status",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_aprv_stat",
+                name: "Approbation",
+                field: "rqm_aprv_stat",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "created_by",
+                name: "Utilisateur",
+                field: "created_by",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_rqby_userid",
+                name: "Demandeur",
+                field: "rqm_rqby_userid",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "chr02",
+                name: "Nom Demandeur",
+                field: "chr02",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
         ];
     
         this.gridOptions5 = {
           enableSorting: true,
           enableCellNavigation: true,
           enableExcelCopyBuffer: true,
+          autoFitColumnsOnFirstLoad: false,
+          enableAutoSizeColumns: false,
+          // then enable resize by content with these 2 flags
+          autosizeColumnsByCellContentOnFirstLoad: true,
+          enableAutoResizeColumnsByCellContent: true,
           enableFiltering: true,
           autoEdit: false,
-          autoHeight: false,
+          autoHeight: true,
+          enableAutoResize:true,
           frozenColumn: 0,
           frozenBottom: true,
           enableRowSelection: true,
@@ -944,6 +1034,15 @@ curr: String;
             // you can override the logic for showing (or not) the expand icon
             // for example, display the expand icon only on every 2nd row
             // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+          },
+          dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+            var val = undefined;
+            try {
+              val = eval("item." + column.field);
+            } catch (e) {
+              // ignore
+            }
+            return val;
           },
           multiSelect: false,
           rowSelectionOptions: {

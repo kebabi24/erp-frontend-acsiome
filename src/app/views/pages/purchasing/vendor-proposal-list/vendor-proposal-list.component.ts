@@ -110,7 +110,15 @@ export class VendorProposalListComponent implements OnInit {
             filterable: false,
             
         },
-
+        {
+            id: "name",
+            name: "Nom",
+            field: "vp.address.ad_name",
+            sortable: true,
+            width: 50,
+            filterable: false,
+            
+        },
         {
             id: "vp_vend_lead",
             name: "Delai de livraison",
@@ -204,7 +212,8 @@ export class VendorProposalListComponent implements OnInit {
        // fill the dataset with your data
        this.dataset = []
        this.vpService.getAll().subscribe(
-           (response: any) => (this.dataset = response.data),
+           (response: any) => {this.dataset = response.data
+            console.log(response.data)},
            (error) => {
                this.dataset = []
            },

@@ -80,4 +80,8 @@ export class RequisitionService {
         return this.http.get(`${API_URL}/findalluser`, { headers: httpHeaders })
     }
     // DELETE
+    public delete(nbr:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.delete(`${API_URL}/${nbr}`, { headers: httpHeaders })
+    }
 }
