@@ -40,14 +40,33 @@
     
     
                         </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Designation: </label>
+                            <div class="input-group input-group-sm">
     
+                                <input type="text" class="form-control form-control-solid" id="seqname" formControlName="seqname" disabled
+                                    aria-describedby="basic-addon2">
+                               
+                            </div>
+    
+                        </div>
+                        <div class="form-group col-2">
+                            <label class="form-group">Type:</label>
+                            <select class="form-control form-control-sm form-control-solid"
+                                    id="exampleSelects2" formControlName="rqm_type">
+                                   
+                                    <option value="P">Achat</option>
+                                    <option value="S">Approvisionement</option>
+                                    
+                                </select>
+                        </div>
                         
                     
                     <div class="form-group col-2">
                         <label class="form-group">FOURNISSEUR :</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" formControlName="rqm_vend" 
+                            <input type="text" class="form-control form-control-solid" formControlName="rqm_vend" (change)="onChangeVend()"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open2(content2)">
@@ -56,7 +75,19 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="name" formControlName="name" disabled
+                                aria-describedby="basic-addon2">
+                           
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">    
+                    <div class="form-group col-2">
                         <label class="form-group">DEMANDE LE:</label>
                         <div class="input-group input-group-sm">
                             <input
@@ -74,7 +105,8 @@
 
 
                     </div>
-                    <div class="form-group col-3">
+                
+                    <div class="form-group col-2">
                         <label class="form-group">DATE BESOIN:</label>
                         <div class="input-group input-group-sm">
                             <input
@@ -96,7 +128,7 @@
                         <label class="form-group">Demandeur:</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" formControlName="rqm_rqby_userid"
+                            <input type="text" class="form-control form-control-solid" formControlName="rqm_rqby_userid" (change)="onChangeEmp()"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="open3(content3)">
@@ -105,8 +137,18 @@
                         </div>
 
                     </div>
-                </div>
-                <div class="row">
+                
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="empname" formControlName="empname" disabled
+                                aria-describedby="basic-addon2">
+                        
+                        </div>
+
+                    </div>
+               
 
                     <div class="form-group col-2">
                         <label class="form-group">Cause:</label>
@@ -123,13 +165,15 @@
 
 
                     </div>
-                    <div class="form-group col-2">
+                </div>    
+                <div class="row">
+                    <!--div class="form-group col-2">
                         <label class="form-group">Status :</label>
                         <input type="text" class="form-control form-control-sm form-control-solid"
                             formControlName="rqm_status">
 
 
-                    </div>
+                    </div-->
                     <div class="form-group col-8">
                         <label class="form-group">Remarque:</label>
                         <textarea class="form-control form-control-sm form-control-solid" formControlName="rqm_rmks"

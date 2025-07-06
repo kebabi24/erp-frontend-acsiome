@@ -272,13 +272,29 @@ export class VendorProposalComparisonComponent implements OnInit {
             name: "id",
             field: "id",
             sortable: true,
-            minWidth: 80,
-            maxWidth: 80,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "rqm_category",
+            name: "Sequence",
+            field: "rqm_category",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
           },
           {
             id: "rqm_nbr",
             name: "N° Demande",
             field: "rqm_nbr",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "seq_desc",
+            name: "Description",
+            field: "sequence.seq_desc",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -292,12 +308,20 @@ export class VendorProposalComparisonComponent implements OnInit {
             type: FieldType.string,
           },
           {
-            id: "rqm_total",
-            name: "Total",
-            field: "rqm_total",
+            id: "rqm_vend",
+            name: "Fournisseur",
+            field: "rqm_vend",
             sortable: true,
             filterable: true,
-            type: FieldType.float,
+            type: FieldType.string,
+          },
+           {
+            id: "chr01",
+            name: "Nom Fournisseur",
+            field: "chr01",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
           },
           {
             id: "rqm_status",
@@ -307,36 +331,84 @@ export class VendorProposalComparisonComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
           },
-        ];
-    
-        this.gridOptions5 = {
-          enableSorting: true,
-          enableCellNavigation: true,
-          enableExcelCopyBuffer: true,
-          enableFiltering: true,
-          autoEdit: false,
-          autoHeight: false,
-          frozenColumn: 0,
-          frozenBottom: true,
-          enableRowSelection: true,
-          enableCheckboxSelector: true,
-          checkboxSelector: {
-            // optionally change the column index position of the icon (defaults to 0)
-            // columnIndexPosition: 1,
-    
-            // remove the unnecessary "Select All" checkbox in header when in single selection mode
-            hideSelectAllCheckbox: true,
-    
-            // you can override the logic for showing (or not) the expand icon
-            // for example, display the expand icon only on every 2nd row
-            // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+          {
+            id: "rqm_aprv_stat",
+            name: "Approbation",
+            field: "rqm_aprv_stat",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
           },
-          multiSelect: false,
-          rowSelectionOptions: {
-            // True (Single Selection), False (Multiple Selections)
-            selectActiveRow: true,
+          {
+            id: "created_by",
+            name: "Utilisateur",
+            field: "created_by",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
           },
-        };
+          {
+            id: "rqm_rqby_userid",
+            name: "Demandeur",
+            field: "rqm_rqby_userid",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "chr02",
+            name: "Nom Demandeur",
+            field: "chr02",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+    ];
+
+    this.gridOptions5 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      autoFitColumnsOnFirstLoad: false,
+      enableAutoSizeColumns: false,
+      // then enable resize by content with these 2 flags
+      autosizeColumnsByCellContentOnFirstLoad: true,
+      enableAutoResizeColumnsByCellContent: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: true,
+      enableAutoResize:true,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
     
         // fill the dataset with your data
         this.requisitonService

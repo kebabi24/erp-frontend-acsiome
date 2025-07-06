@@ -212,10 +212,10 @@ error = false;
       },
       {
         id: "pod_req_nbr",
-        name: "N demande",
+        name: "N Demande",
         field: "pod_req_nbr",
-        minWidth: 50,
-        maxWidth: 120,
+        // minWidth: 50,
+        // maxWidth: 120,
         selectable: true,
       },
       {
@@ -223,7 +223,7 @@ error = false;
         name: "Article",
         field: "pod_part",
         sortable: true,
-        width: 50,
+        // width: 50,
         filterable: false,
         editor: {
           model: Editors.text,
@@ -281,7 +281,7 @@ console.log(resp.data)
         name: "Description",
         field: "desc",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
       },
       {
@@ -289,7 +289,7 @@ console.log(resp.data)
         name: "QTE",
         field: "pod_qty_ord",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         type: FieldType.float,
         editor: {
@@ -309,7 +309,7 @@ console.log(resp.data)
         name: "UM",
         field: "pod_um",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         editor: {
           model: Editors.text,
@@ -380,7 +380,7 @@ console.log(resp.data)
         name: "Prix unitaire",
         field: "pod_price",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         //type: FieldType.float,
         editor: {
@@ -400,7 +400,7 @@ console.log(resp.data)
         name: "Remise",
         field: "pod_disc_pct",
         sortable: true,
-        width: 40,
+        // width: 40,
         filterable: false,
         //type: FieldType.float,
         editor: {
@@ -421,7 +421,7 @@ console.log(resp.data)
         name: "Site",
         field: "pod_site",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         editor: {
           model: Editors.text,
@@ -480,7 +480,7 @@ console.log(resp.data)
         name: "Emplacement",
         field: "pod_loc",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         editor: {
           model: Editors.text,
@@ -522,7 +522,7 @@ console.log(resp.data)
         name: "Type",
         field: "pod_type",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         editor: {
           model: Editors.text,
@@ -533,7 +533,7 @@ console.log(resp.data)
         name: "Centre de cout",
         field: "pod_cc",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         
         editor: {
@@ -545,7 +545,7 @@ console.log(resp.data)
         name: "Taxable",
         field: "pod_taxable",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         editor: {
           model: Editors.checkbox
@@ -564,16 +564,16 @@ console.log(resp.data)
         name: "Code de Taxe",
         field: "pod_tax_code",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         
       },  
       {
         id: "pod_taxc",
-        name: "taux de taxe",
+        name: "Taux de Taxe",
         field: "pod_taxc",
         sortable: true,
-        width: 80,
+        // width: 80,
         filterable: false,
         editor: {
           model: Editors.text,
@@ -594,6 +594,12 @@ console.log(resp.data)
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      autoFitColumnsOnFirstLoad: false,
+      enableAutoSizeColumns: false,
+      // then enable resize by content with these 2 flags
+      autosizeColumnsByCellContentOnFirstLoad: true,
+      enableAutoResizeColumnsByCellContent: true,
+      enableAutoResize:true,
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)

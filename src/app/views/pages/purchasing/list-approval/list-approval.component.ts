@@ -129,12 +129,20 @@ export class ListApprovalComponent implements OnInit {
           type: FieldType.string,
         },
         {
-          id: "rqm_total",
-          name: "Total",
-          field: "req.rqm_total",
+          id: "rqm_vend",
+          name: "Fournisseur",
+          field: "req.rqm_vend",
           sortable: true,
           filterable: true,
-          type: FieldType.float,
+          type: FieldType.string,
+        },
+         {
+          id: "chr01",
+          name: "Nom Fournisseur",
+          field: "req.chr01",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
         },
         {
           id: "rqm_status",
@@ -168,7 +176,14 @@ export class ListApprovalComponent implements OnInit {
           filterable: true,
           type: FieldType.string,
         },
-        
+        {
+          id: "chr02",
+          name: "Nom Demandeur",
+          field: "req.chr02",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
         {
           id: "edit",
           name: "Approuver",
@@ -292,10 +307,11 @@ export class ListApprovalComponent implements OnInit {
 
     openchange(content) {
       // this.prepareGridvend();
-      
+      console.log("this.reqid",this.reqid)
       this.requisitionService.findBy({id: this.reqid }).subscribe(
         (res: any) => {
             const { requisition, details } = res.data
+            console.log(res.data)
             this.requistionServer = requisition
            // this.dataset = details
       this.createForm();

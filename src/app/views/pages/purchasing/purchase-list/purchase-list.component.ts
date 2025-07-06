@@ -131,7 +131,20 @@ prepareGrid() {
         collapsed: false,
       }
     },
-
+    {
+      id: "ad_name",
+      name: "Nom",
+      field: "ad_name",
+      sortable: true,
+      width: 50,
+      filterable: true,
+      grouping: {
+        getter: 'ad_name',
+        formatter: (g) => `Nom: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregateCollapsed: false,
+        collapsed: false,
+      }
+    },
     {
       id: "po_ord_date",
       name: "Date de creation",
@@ -211,6 +224,19 @@ prepareGrid() {
       sortable: true,
       width: 50,
       filterable: true,
+      grouping: {
+        getter: 'pt_desc1',
+        formatter: (g) => `Designation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
+        aggregateCollapsed: true,
+    
+        collapsed: false,
+      }
     },
     {
       id: "pod_um",
@@ -377,15 +403,17 @@ if(this.site == null) {
   // console.log("ssssssssssssssssssssssssssss")
 this.poService.getAllwithDetail().subscribe(
     (response: any) =>  { 
+      this.dataset = response.data
       //est ce que c;est possibile juste ici parcourir dataset et rajouter f unne nouvelle dataset 2 champs et 
       // avec ce qui existe deja ...item, po_totalC:(),po_totalR:() 
-      dataset2 = response.data
-      dataset2.map((item)=>{
-        let total_price=item.pod_price * item.pod_qty_ord
-        let total_recep=item.pod_price * item.pod_qty_rcvd
-        let element= {...item,"total_price":total_price,"total_recep":total_recep,"rest_to_receive":(item.pod_qty_ord-item.pod_qty_rcvd)}
-        this.dataset.push(element)
-      })
+      console.log(this.dataset)
+      // dataset2 = response.data
+      // dataset2.map((item)=>{
+      //   let total_price=item.pod_price * item.pod_qty_ord
+      //   let total_recep=item.pod_price * item.pod_qty_rcvd
+      //   let element= {...item,"total_price":total_price,"total_recep":total_recep,"rest_to_receive":(item.pod_qty_ord-item.pod_qty_rcvd)}
+      //   this.dataset.push(element)
+      // })
       // this.dataset.map((item)=>{
       //   console.log(" item of dataset updated "+item.po_nbr+" price "+item.total_price)
       // })

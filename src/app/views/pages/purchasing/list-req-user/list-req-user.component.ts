@@ -32,14 +32,19 @@ import { RequisitionService } from "../../../../core/erp";
 import { RowDetailPreloadComponent } from "../rowDetails/row-details-preload.component";
 import { RowDetailViewComponent } from "../rowDetails/rowdetail-view.component";
 import { HttpClient } from "@angular/common/http";
-
+import {
+  NgbModal,
+  NgbActiveModal,
+  ModalDismissReasons,
+  NgbModalOptions,
+} from "@ng-bootstrap/ng-bootstrap"
 @Component({
   selector: 'kt-list-req-user',
   templateUrl: './list-req-user.component.html',
   styleUrls: ['./list-req-user.component.scss']
 })
 export class ListReqUserComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true)
    // slick grid
    columnDefinitions: Column[] = [];
    gridOptions: GridOption = {};
@@ -49,13 +54,15 @@ export class ListReqUserComponent implements OnInit {
    dataView: any;
    angularGrid: AngularGridInstance;
  draggableGroupingPlugin: any;    
+ idreq:any
    constructor(
      private activatedRoute: ActivatedRoute,
      private router: Router,
      public dialog: MatDialog,
      private layoutUtilsService: LayoutUtilsService,
      private requisitionService: RequisitionService,
-     private http: HttpClient
+     private http: HttpClient,
+     private modalService: NgbModal,
    ) {
      this.prepareGrid();
    }
@@ -79,26 +86,13 @@ export class ListReqUserComponent implements OnInit {
          excludeFromGridMenu: true,
          excludeFromHeaderMenu: true,
          formatter: (row, cell, value, columnDef, dataContext) => {
-           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-           return `
-               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
-               <span class="svg-icon svg-icon-md">
-                   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
-                       height="24px" viewBox="0 0 24 24" version="1.1">
-                       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                           <rect x="0" y="0" width="24" height="24"></rect>
-                           <path
-                               d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
-                               fill="#000000" fill-rule="nonzero"
-                               transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
-                           </path>
-                           <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
-                       </g>
-                   </svg>
-               </span>
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+               <a class="btn btn-sm btn-clean btn-icon mr-2" title="Changer Status">
+               <i class="flaticon2-pen"></i>
            </a>
            `;
-         },
+        },
          minWidth: 50,
          maxWidth: 50,
          // use onCellClick OR grid.onClick.subscribe which you can see down below
@@ -115,6 +109,39 @@ export class ListReqUserComponent implements OnInit {
        },
        },
        {
+        id: "delete",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+         // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+         return `
+              <a class="btn btn-sm btn-clean btn-icon mr-2" title="Suprimer DA">
+              <i class="flaticon-delete
+              "></i>
+          </a>
+          `;
+       },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id
+          console.log(id)
+          console.log(args.dataContext.req.rqm_aprv_stat)
+          if (args.dataContext.req.rqm_aprv_stat == "0") {
+            this.idreq = args.dataContext.req.rqm_nbr
+            console.log(this.idreq)
+            let element: HTMLElement = document.getElementById('deleteDAGrid') as HTMLElement;
+            element.click();
+          } else {
+
+            alert("Demande deja approuvee")
+          }
+      },
+      },
+       {
          id: "id",
          name: "id",
          field: "id",
@@ -123,7 +150,7 @@ export class ListReqUserComponent implements OnInit {
          type: FieldType.string,
        },
        {
-         id: "req.rqm_category",
+         id: "rqm_category",
          name: "Sequence",
          field: "req.rqm_category",
          sortable: true,
@@ -152,16 +179,24 @@ export class ListReqUserComponent implements OnInit {
          field: "req.rqm_req_date",
          sortable: true,
          filterable: true,
-         type: FieldType.string,
+         type: FieldType.date,
        },
        {
-         id: "rqm_total",
-         name: "Total",
-         field: "req.rqm_total",
-         sortable: true,
-         filterable: true,
-         type: FieldType.float,
-       },
+        id: "rqm_vend",
+        name: "Fournisseur",
+        field: "req.rqm_vend",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+       {
+        id: "chr01",
+        name: "Nom Fournisseur",
+        field: "req.chr01",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
        {
          id: "rqm_status",
          name: "Status",
@@ -179,7 +214,7 @@ export class ListReqUserComponent implements OnInit {
          type: FieldType.string,
        },
        {
-         id: "req.created_by",
+         id: "created_by",
          name: "Utilisateur",
          field: "req.created_by",
          sortable: true,
@@ -187,14 +222,21 @@ export class ListReqUserComponent implements OnInit {
          type: FieldType.string,
        },
        {
-         id: "req.rqm_rqby_userid",
+         id: "rqm_rqby_userid",
          name: "Demandeur",
          field: "req.rqm_rqby_userid",
          sortable: true,
          filterable: true,
          type: FieldType.string,
        },
-       
+       {
+        id: "chr02",
+        name: "Nom Demandeur",
+        field: "req.chr02",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
      ];
  
      this.gridOptions = {
@@ -273,5 +315,36 @@ export class ListReqUserComponent implements OnInit {
        resolve(itemDetail);
      });
    }
+
+   open(content) {
+    this.modalService.open(content, { size: "lg" })
+}
+deleteDA() {
+  this.requisitionService.delete( this.idreq ).subscribe(
+    (reponse) => console.log("response", Response),
+    (error) => {
+        this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        this.loadingSubject.next(false)
+    },
+    () => {
+        this.layoutUtilsService.showActionNotification(
+            "Ajout avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        this.loadingSubject.next(false)
+        this.modalService.dismissAll()
+        window.location.reload()
+    }
+)
+}
  }
  
