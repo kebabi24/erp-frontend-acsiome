@@ -76,7 +76,7 @@ import {
   ItemModelService,
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
-
+ import { jsPDF } from "jspdf";
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter: Formatter = (
   row,
@@ -381,7 +381,7 @@ export class CreateBobineModComponent implements OnInit {
       pt_price: [{ value: this.item.pt_price }],
       pt_plan_ord: [{ value: this.item.pt_plan_ord, disabled: !this.isExist }],
       pt_dea: [{ value: this.item.pt_dea, disabled: !this.isExist }],
-      
+       
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
       pt_draw: [{ value: 'BOBINE', disabled: !this.isExist },Validators.required],
@@ -623,13 +623,14 @@ onAlertClose($event) {
       this.hasFormErrors1 = true;
       return;
     }
+
     // tslint:disable-next-line:prefer-const
     let item = this.prepareItem();
     
     let sct1 = this.prepareSct1();
     let sct2 = this.prepareSct2();
     let sct3 = this.prepareSct3()
-    
+    this.printpdf()
     this.addItem(item, sct1, sct2, sct3);
    
   }
@@ -1799,5 +1800,64 @@ openmod(content) {
   this.prepareGridmod()
   this.modalService.open(content, { size: "lg" })
 }
+printpdf() {
+          const controls = this.form1.controls;
+          var doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            //format: [100,150]
+            })
+            let initialY = 25;
+            doc.setLineWidth(0.2);
+          
+          var img = new Image();
+          // img.src = "companylogo.png";
+          // doc.addImage(img, "png", 150, 5, 50, 30);
+          doc.setFontSize(14);
+    
+        
+          const date = new Date()
+          doc.setFontSize(14);
+    
+          
+          doc.setFont("Times-Roman");
+    
+          doc.text("Code Article : " + controls.pt_part.value, 40, initialY + 5);
+    
+          doc.setFontSize(9);
+          doc.text("Description: " + controls.pt_desc1.value, 5, initialY + 15);
+          doc.text("Modèle: " + controls.pt_article.value, 5, initialY + 20);
+          doc.text("Couleur: " + controls.pt_break_cat.value, 55, initialY + 20);
+          doc.text("Qualité: " + controls.pt_rev.value, 5, initialY + 25);
+          doc.text("Silicone: " + controls.pt_group.value, 55, initialY + 25);
+          doc.text("Unité de mesure: " + controls.pt_um.value, 5, initialY + 30);
+          doc.text("Prix: " + controls.pt_price.value, 55, initialY + 30);
+          // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
+          // doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 45);
+          doc.text("Categorie: " + controls.pt_prod_line.value, 5, initialY + 35);
+          doc.text("Type: " + controls.pt_part_type.value, 55, initialY + 35);
+          doc.text("Famille: " + controls.pt_draw.value, 105, initialY + 35);
+          doc.text("Formule: " + controls.pt_bom_code.value, 5, initialY + 40);
+          doc.text("Origine: " + controls.pt_origin.value, 55, initialY + 40);
+          // doc.text("Fournisseur: " + controls.pt_vend.value, 5, initialY + 80);
+          doc.text("Forme: " + controls.pt_dsgn_grp.value, 5, initialY + 45);
+          doc.text("Statut: " + controls.pt_status.value, 55, initialY + 45);
+          doc.text("Micronage: " + controls.int01.value, 5, initialY + 50);
+          doc.text("Laise: " + controls.int02.value, 55, initialY + 50);
+          doc.text("Vitesse: " + controls.int03.value, 5, initialY + 55);
+          doc.text("Poids: " + controls.dec01.value, 55, initialY + 55);
+      
+      
+          doc.setFontSize(9);
+    
+     var i = 35
+    
+        
+    
+          
+            var blob = doc.output("blob");
+            window.open(URL.createObjectURL(blob));   
+          }
+   
 
 }

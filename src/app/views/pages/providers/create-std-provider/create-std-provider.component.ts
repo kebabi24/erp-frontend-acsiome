@@ -72,7 +72,7 @@ import {
     SequenceService,
 } from "../../../../core/erp"
 
-
+import { jsPDF } from "jspdf";
 @Component({
   selector: 'kt-create-std-provider',
   templateUrl: './create-std-provider.component.html',
@@ -702,7 +702,7 @@ onSubmit() {
         this.hasProviderFormErrors = true
         return
     }
-
+this.printpdf()
     let address = this.prepareAddress()
     this.addAddress(address)
 }
@@ -1656,5 +1656,71 @@ open1(content) {
     this.modalService.open(content, { size: "lg" })
 }
 
-
+printpdf() {
+          const controls = this.providerForm.controls;
+          const controlsa = this.addressForm.controls;
+          const controlsx = this.formX.controls;
+          var doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            //format: [100,150]
+            })
+            let initialY = 25;
+            doc.setLineWidth(0.2);
+          
+          var img = new Image();
+          // img.src = "companylogo.png";
+          // doc.addImage(img, "png", 150, 5, 50, 30);
+          doc.setFontSize(14);
+    
+        
+          const date = new Date()
+          doc.setFontSize(14);
+    
+          
+          doc.setFont("Times-Roman");
+    
+          doc.text("Code Fournisseur : " + controlsx.ad_addr.value, 40, initialY + 5);
+    
+          doc.setFontSize(10);
+          doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 5, initialY + 15);
+          doc.text("Activité: " + controls.vd_sort.value, 55, initialY + 15);
+          
+          doc.text("Addresse: " + controlsa.ad_line1.value, 5, initialY + 20);
+          doc.text("Pays: " + controlsa.ad_country.value, 5, initialY + 25);
+          doc.text("Tel: " + controlsa.ad_phone.value, 5, initialY + 30);
+          doc.text("Email: " + controlsa.ad_ext.value, 55, initialY + 30);
+          doc.text("Taxable: " + controlsa.ad_taxable.value, 5, initialY + 45);
+          doc.text("Taux de taxe: " + controlsa.ad_taxc.value, 55, initialY + 45);
+          // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
+          // doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 45);
+          doc.text("RC N°: " + controlsa.ad_gst_id.value, 5, initialY + 55);
+          doc.text("NIF: " + controlsa.ad_misc2_id.value, 55, initialY + 55);
+          doc.text("AI: " + controlsa.ad_pst_id.value, 5, initialY + 60);
+          doc.text("NIS: " + controlsa.ad_misc1_id.value, 55, initialY + 60);
+          
+          // doc.text("Fournisseur: " + controls.pt_vend.value, 5, initialY + 80);
+          doc.text("Type: " + controls.vd_type.value, 5, initialY + 70);
+          doc.text("Séquence: " + controls.vd_seq.value, 55, initialY + 70);
+          doc.text("Modalité de transport: " + controls.vd_shipvia.value, 5, initialY + 75);
+          doc.text("Banque: " + controls.vd_bank.value, 5, initialY + 80);
+          doc.text("Méthode de paiement: " + controls.vd_ckfrm.value, 55, initialY + 80);
+          doc.text("Délai: " + controls.vd_cr_terms.value, 105, initialY + 80);
+          doc.text("Devise: " + controls.vd_curr.value, 5, initialY + 85);
+          doc.text("RIB: " + controls.vd_db.value, 55, initialY + 85);
+          doc.text("Compte: " + controls.vd_debtor.value, 5, initialY + 90);
+          
+    
+        
+      
+          doc.setFontSize(9);
+    
+     var i = 35
+    
+        
+    
+          
+            var blob = doc.output("blob");
+            window.open(URL.createObjectURL(blob));   
+          }
 }

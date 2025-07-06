@@ -6,6 +6,7 @@ import {
   OnDestroy,
   ChangeDetectorRef,
 } from "@angular/core";
+ import { jsPDF } from "jspdf";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   NgbDropdownConfig,
@@ -379,10 +380,10 @@ export class CreateMpModComponent implements OnInit {
 
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
       pt_price: [{ value: this.item.pt_price }],
-      pt_plan_ord: [{ value: this.item.pt_plan_ord , disabled: !this.isExist}],
-      pt_dea: [{ value: this.item.pt_dea , disabled: !this.isExist}],
-      pt_model: [this.item.pt_model ],
-      pt_vend: [this.item.pt_vend ],
+      pt_plan_ord: [{ value: false , disabled: !this.isExist}],
+      pt_dea: [{ value: false , disabled: !this.isExist}],
+      pt_model: ["" ],
+      pt_vend: [""],
       pt_prod_line: [{ value: this.item.pt_prod_line, disabled: !this.isExist },Validators.required],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist },Validators.required],
       pt_draw: [{ value: this.item.pt_draw, disabled: !this.isExist },Validators.required],
@@ -711,7 +712,7 @@ onAlertClose($event) {
     let sct1 = this.prepareSct1();
     let sct2 = this.prepareSct2();
     let sct3 = this.prepareSct3()
-    
+    this.printpdf()
     this.addItem(item, sct1, sct2, sct3);
    
   }
@@ -1988,4 +1989,88 @@ openprov(content) {
   this.prepareGridprov()
   this.modalService.open(content, { size: "lg" })
 }
+printpdf() {
+          const controls = this.form1.controls;
+          var doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            //format: [100,150]
+            })
+            let initialY = 25;
+            doc.setLineWidth(0.2);
+          
+          var img = new Image();
+          // img.src = "companylogo.png";
+          // doc.addImage(img, "png", 150, 5, 50, 30);
+          doc.setFontSize(14);
+    
+        
+          const date = new Date()
+          doc.setFontSize(14);
+    
+          
+          doc.setFont("Times-Roman");
+          doc.line(35, 25, 150, 25);
+          doc.line(35, 25, 35, 35);
+          doc.text("Code Article : " + controls.pt_part.value, 40, initialY + 5);
+          doc.line(35, 35, 150, 35);
+          doc.line(150, 25, 150, 35); 
+          
+          doc.setFontSize(10);
+          doc.line(5, 45, 200, 45);
+          doc.line(5, 45, 5, 62);
+          doc.text("Description: " + controls.pt_desc1.value, 7, initialY + 25);
+          doc.text("Modèle: " + controls.pt_article.value, 7, initialY + 30);
+          doc.text("Couleur: " + controls.pt_break_cat.value, 55, initialY + 30);
+          doc.text("Unité de mesure: " + controls.pt_um.value, 7, initialY + 35);
+          doc.line(5, 62, 200, 62);
+          doc.line(200, 45, 200, 62);
+          
+          // doc.text("Qualité: " + controls.pt_rev.value, 5, initialY + 25);
+          doc.line(5, 65, 200, 65);
+          doc.line(5, 65, 5, 82);
+          
+          doc.text("Categorie: " + controls.pt_prod_line.value, 7, initialY + 45);
+          doc.text("Type: " + controls.pt_part_type.value, 55, initialY + 45);
+          doc.text("Famille: " + controls.pt_draw.value, 7, initialY + 50);
+          doc.text("Sous-Famille: " + controls.pt_group.value, 55, initialY + 50);
+          doc.line(5, 82, 200, 82);
+          doc.line(200, 65, 200, 82);
+          
+          // doc.text("Prix: " + controls.pt_price.value, 55, initialY + 30);
+          doc.line(5, 85, 200, 85);
+          doc.line(5, 85, 5, 102);
+          
+          doc.text("Formule: " + controls.pt_bom_code.value, 7, initialY + 65);
+          doc.text("Origine: " + controls.pt_origin.value, 55, initialY + 65);
+          doc.text("Fournisseur: " + controls.pt_vend.value, 7, initialY + 70);
+          doc.text("Réference: " + controls.pt_model.value, 55, initialY + 70);
+          doc.line(5, 102, 200, 102);
+          doc.line(200, 85, 200, 102);
+          
+          // doc.text("Fournisseur: " + controls.pt_vend.value, 5, initialY + 80);
+          doc.line(5, 105, 200, 105);
+          doc.line(5, 105, 5, 122);
+          
+          doc.text("Forme: " + controls.pt_dsgn_grp.value, 7, initialY + 85);
+          doc.text("Statut: " + controls.pt_status.value, 55, initialY + 85);
+          doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 7, initialY + 90);
+          doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 90);
+          doc.line(5, 122, 200, 122);
+          doc.line(200, 105, 200, 122);
+          
+          // doc.text("Vitesse: " + controls.int03.value, 5, initialY + 55);
+          // doc.text("Poids: " + controls.dec01.value, 55, initialY + 55);
+      
+      
+          doc.setFontSize(9);
+    
+     var i = 35
+    
+        
+    
+          
+            var blob = doc.output("blob");
+            window.open(URL.createObjectURL(blob));   
+          }
 }
