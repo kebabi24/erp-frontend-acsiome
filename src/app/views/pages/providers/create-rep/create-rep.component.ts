@@ -133,16 +133,16 @@ export class CreateRepComponent implements OnInit {
   initGrid() {
     this.reps = [];
     this.columnDefinitions = [
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        sortable: true,
-        minWidth: 50,
-        maxWidth: 50,
-        filterable: true,
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 50,
+      //   maxWidth: 50,
+      //   filterable: true,
         
-      },
+      // },
       {
         id: "rep_contact",
         name: "Contact",
@@ -214,7 +214,7 @@ export class CreateRepComponent implements OnInit {
       enableFiltering: true,
       editable: true,
       autoHeight: false,
-      autoCommitEdit:true,
+      // autoCommitEdit:true,
       
     };
 
@@ -225,10 +225,21 @@ export class CreateRepComponent implements OnInit {
   getRep() {
     this.reps = []
    
-    const controls = this.repForm.controls
-    
-  
-   
+    const controls = this.repForm.controls;
+console.log("controls.rqm_vend.value",controls.four.value)
+  if(controls.four.value != null && controls.four.value != "") {
+  this.providerService.getBy({ vd_addr: controls.four.value }).subscribe((response: any) => {
+    //   const { data } = response;
+   console.log(response.data)
+    if (response.data == null ) {
+      alert("Fournisseur n'exist pas")
+      controls.four.setValue(null)
+      controls.name.setValue(null)
+      document.getElementById("four").focus();
+    } else {
+      
+      controls.name.setValue(response.data.address.ad_name);
+      
     this.repertoryService.getBy({ rep_type: "Provider",rep_code : controls.four.value}).subscribe(
       (response: any) => {   
         this.reps = response.data
@@ -241,6 +252,17 @@ export class CreateRepComponent implements OnInit {
       },
       () => {}
   )
+    }
+  });
+}
+else { 
+  controls.four.setValue(null) 
+  controls.name.setValue(null)
+}
+    // const controls = this.repForm.controls
+    
+  
+   
   }
   onSubmit() {
     const controls = this.repForm.controls
@@ -280,8 +302,8 @@ export class CreateRepComponent implements OnInit {
   //create form
   
   this.repForm = this.repFB.group({
-      four: [ ""]
-  
+      four: [null],
+      name:[null]
   })
 }
 
@@ -378,6 +400,7 @@ export class CreateRepComponent implements OnInit {
             // TODO : HERE itterate on selected field and change the value of the selected field
             
                     controls.four.setValue(item.vd_addr || "")
+                    controls.name.setValue(item.address.ad_name)
                     this.getRep()
             
         })
@@ -480,7 +503,28 @@ open(content) {
     this.prepareGridcust()
     this.modalService.open(content, { size: "lg" })
 }
- 
+onChangeVend() {
+  const controls = this.repForm.controls;
+console.log("controls.rqm_vend.value",controls.rqm_vend.value)
+  if(controls.rqm_vend.value != null && controls.rqm_vend.value != "") {
+  this.providerService.getBy({ vd_addr: controls.rqm_vend.value }).subscribe((response: any) => {
+    //   const { data } = response;
+    console.log(response.data);
+    if (response.data == null ) {
+      alert("Fournisseur n'exist pas")
+      controls.rqm_vend.setValue(null)
+      document.getElementById("name").focus();
+    } else {
+      
+      controls.name.setValue(response.data[0].address.ad_name);
+    }
+  });
+}
+else { 
+  controls.rqm_vend.setValue(null) 
+  controls.name.setValue(null)
+}
+}
 addNewItem() {
   const newId = this.reps.length+1;
 

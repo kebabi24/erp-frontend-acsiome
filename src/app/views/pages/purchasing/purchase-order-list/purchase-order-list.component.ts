@@ -56,6 +56,9 @@ import {
   ModalDismissReasons,
   NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap";
+import { round } from 'lodash';
+import { jsPDF } from "jspdf";
+import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 @Component({
   selector: "kt-purchase-order-list",
   templateUrl: "./purchase-order-list.component.html",
@@ -84,6 +87,9 @@ export class PurchaseOrderListComponent implements OnInit {
   poedit: any;
   address: any;
   ponbr : any;
+  domain;
+  podataset: any[] = [];
+  puo:any
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -125,15 +131,18 @@ export class PurchaseOrderListComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       const id = params.id;
-
+console.log("id",id)
       if (id) {
         this.ponbr = id
-    this.user =  JSON.parse(localStorage.getItem('user'))
+        this.domain = JSON.parse(localStorage.getItem("domain"));
+        this.user =  JSON.parse(localStorage.getItem('user'))
    if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
    this.prepareGrid();
+  //  this.setFiltersDefault()
       }
       else {
-        this.ponbr=''
+        this.ponbr=null
+        this.domain = JSON.parse(localStorage.getItem("domain"));
         this.user =  JSON.parse(localStorage.getItem('user'))
         if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
         this.prepareGrid();
@@ -186,7 +195,7 @@ export class PurchaseOrderListComponent implements OnInit {
         onCellClick: (e: Event, args: OnEventArgs) => {
           const id = args.dataContext.id
           console.log(args.dataContext.po.po_stat)
-          if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
+          if( args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
           this.router.navigateByUrl(`/purchasing/edit-po/${id}`)
           }
           else {
@@ -209,9 +218,19 @@ export class PurchaseOrderListComponent implements OnInit {
         name: "Fournisseur",
         field: "po.po_vend",
         sortable: true,
-        width: 50,
+        type: FieldType.string,
         filterable: true,
-        filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+        filter: { model: Filters.compoundInputText },
+        // filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+      },
+      {
+        id: "ad_name",
+        name: "Nom ",
+        field: "po.address.ad_name",
+        sortable: true,
+        type: FieldType.string,
+        filterable: true,
+        filter: { model: Filters.compoundInputText },
       },
 
       {
@@ -219,7 +238,7 @@ export class PurchaseOrderListComponent implements OnInit {
         name: "Date de creation",
         field: "po.po_ord_date",
         sortable: true,
-        width: 80,
+    
         filterable: true,
         type: FieldType.dateIso,
       },
@@ -228,18 +247,23 @@ export class PurchaseOrderListComponent implements OnInit {
         name: "Status",
         field: "po.po_stat",
         sortable: true,
-        width: 80,
-        filterable: false,
+        
+        filterable: true,
         type: FieldType.string,
       },
       {
-        id: "po_site",
-        name: "Status",
-        field: "po.po_site",
+        id: "po_amt",
+        name: "Montant",
+        field: "po.po_amt",
         sortable: true,
-        width: 80,
+        
         filterable: true,
-        type: FieldType.string,
+        type: FieldType.float,
+        
+        formatter:Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2, exportWithFormatter: true }, 
+        headerCssClass: 'text-right',
+        cssClass: 'text-right'
       },
 
       {
@@ -339,6 +363,44 @@ export class PurchaseOrderListComponent implements OnInit {
            this.router.navigateByUrl(`/inventory-transaction/po-receip-cab-id/${id}`)
         },
       },
+      {
+        id: "print",
+        name: "Impression",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        
+          //formatter: Formatters.editIcon,
+          formatter: (row, cell, value, columnDef, dataContext) => {
+            // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+            return `
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression BC">
+            <i class="flaticon2-printer"></i>
+        </a>
+             `;
+          },
+        
+        minWidth: 50,
+        maxWidth: 80,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+           const id = args.dataContext.id
+           
+           
+          // alert("print")
+          this.poService
+          .findBy({ po_nbr: args.dataContext.po.po_nbr })
+          .subscribe( (res:any) => {
+              console.log(res.data)
+              this.puo = res.data.purchaseOrder
+              this.podataset = res.data.details
+              console.log(this.puo.po_nbr)
+            this.printpdf()
+          })
+  
+        },
+      },
     ];
 
     this.gridOptions = {
@@ -346,8 +408,14 @@ export class PurchaseOrderListComponent implements OnInit {
       enableCellNavigation: true,
       enableExcelCopyBuffer: true,
       enableFiltering: true,
+      
       autoEdit: false,
       enableAutoResize:true,
+      autoFitColumnsOnFirstLoad: false,
+      enableAutoSizeColumns: false,
+      // then enable resize by content with these 2 flags
+      autosizeColumnsByCellContentOnFirstLoad: true,
+      enableAutoResizeColumnsByCellContent: true,
       //rowHeight: 500,
       dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
         var val = undefined;
@@ -398,14 +466,26 @@ export class PurchaseOrderListComponent implements OnInit {
         parent: this,
         // columnIndexPosition: 1,
       },
+      formatterOptions: {
+        
+        // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
+        displayNegativeNumberWithParentheses: true,
+  
+        // Defaults to undefined, minimum number of decimals
+        minDecimal: 2,
+        maxDecimal:2,
+  
+        // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
+        thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
+      },
       presets: {
         sorters: [
           { columnId: 'po_ord_date', direction: 'DESC' },
          ],
-         filters: [
-          { columnId: 'po_nbr', searchTerms: [this.ponbr] },
+      //    filters: [
+      //  { columnId: 'po_nbr', searchTerms: [this.ponbr] }  ,
           
-        ],
+      //   ],
        
       },
      
@@ -417,6 +497,7 @@ export class PurchaseOrderListComponent implements OnInit {
     this.poService.getAll().subscribe(
       (response: any) => {this.dataset = response.data
         this.dataView.setItems(this.dataset) 
+        if(this.ponbr!= null){this.setFiltersDefault()}
         },
       (error) => {
         this.dataset = [];
@@ -499,5 +580,249 @@ export class PurchaseOrderListComponent implements OnInit {
             //})
        // })
 }
+setFiltersDefault() {
+  // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+  this.angularGrid.filterService.updateFilters([
+    { columnId: 'po_nbr', searchTerms: [this.ponbr] },
+   
+  ]);
+}
+printpdf() {
+  // const controls = this.totForm.controls 
+  // const controlss = this.poForm.controls 
+  console.log("pdf")
+  var doc = new jsPDF();
+ 
+ // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+ var img = new Image();
+ img.src = "./assets/media/logos/companylogo.png";
+ doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.setFontSize(12);
+    doc.setFontSize(12);
+    doc.text( 'Bon Commande N° : ' + this.puo.po_nbr  , 70, 50);
+    doc.setFontSize(8);
+    
+    doc.text('Code Fournisseur : ' + this.puo.address.ad_addr, 20 , 60 )
+    doc.text('Nom             : ' + this.puo.address.ad_name, 20 , 65)
+    doc.text('Adresse       : ' + this.puo.address.ad_line1, 20 , 70)
+    if (this.puo.address.ad_misc2_id != null) {doc.text('MF          : ' + this.puo.address.ad_misc2_id, 20 , 75)}
+        if (this.puo.address.ad_gst_id != null) {doc.text('RC          : ' + this.puo.address.ad_gst_id, 20 , 80)}
+        if (this.puo.address.ad_pst_id) {doc.text('AI            : ' + this.puo.address.ad_pst_id, 20 , 85)}
+        if (this.puo.addressad_misc1_id != null) {doc.text('NIS         : ' + this.puo.address.ad_misc1_id, 20 , 90)}
+   
+ 
+    
+        doc.line(10, 95, 200, 95);
+        doc.line(10, 100, 200, 100);
+        doc.line(10, 95, 10, 100);
+        doc.text('LN', 12.5 , 98.5);
+        doc.line(20, 95, 20, 100);
+        doc.text('Code Article', 22 , 98.5);
+        doc.line(60, 95, 60, 100);
+        doc.text('Désignation', 67.5 , 98.5);
+        doc.line(110, 95, 110, 100);
+        doc.text('QTE', 117 , 98.5);
+        doc.line(125, 95, 125, 100);
+        doc.text('UM', 128 , 98.5);
+        doc.line(135, 95, 135, 100);
+        doc.text('PU', 138 , 98.5);
+        doc.line(150, 95, 150, 100);
+        doc.text('TVA', 152 , 98.5);
+        doc.line(160, 95, 160, 100);
+        doc.text('REM', 162 , 98.5);
+        doc.line(170, 95, 170, 100);
+        doc.text('THT', 181 , 98.5);
+        doc.line(200, 95, 200, 100);
+  var i = 105;
+  doc.setFontSize(6);
+  for (let j = 0; j < this.podataset.length  ; j++) {
+    
+    if ((j % 20 == 0) && (j != 0) ) {
+doc.addPage();
+if (this.domain.dom_name != null) {
+  doc.text(this.domain.dom_name, 10, 10);
+}
+if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+doc.line(10, 32, 200, 32);
+doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+doc.line(10, 40, 200, 40);
+doc.setFontSize(12);
+  doc.setFontSize(12);
+  doc.text( 'Bon Commande N° : ' + this.puo.po_nbr  , 70, 50);
+  doc.setFontSize(8);
+  
+  doc.text('Code Fournisseur : ' + this.puo.address.ad_addr, 20 , 60 )
+  doc.text('Nom             : ' + this.puo.address.ad_name, 20 , 65)
+  doc.text('Adresse       : ' + this.puo.address.ad_line1, 20 , 70)
+  if (this.puo.address.ad_misc2_id != null) {doc.text('MF          : ' + this.puo.address.ad_misc2_id, 20 , 75)}
+      if (this.puo.address.ad_gst_id != null) {doc.text('RC          : ' + this.puo.address.ad_gst_id, 20 , 80)}
+      if (this.puo.address.ad_pst_id) {doc.text('AI            : ' + this.puo.address.ad_pst_id, 20 , 85)}
+      if (this.puo.addressad_misc1_id != null) {doc.text('NIS         : ' + this.puo.address.ad_misc1_id, 20 , 90)}
+ 
+    
+      doc.line(10, 95, 200, 95);
+      doc.line(10, 100, 200, 100);
+      doc.line(10, 95, 10, 100);
+      doc.text('LN', 12.5 , 98.5);
+      doc.line(20, 95, 20, 100);
+      doc.text('Code Article', 22 , 98.5);
+      doc.line(60, 95, 60, 100);
+      doc.text('Désignation', 67.5 , 98.5);
+      doc.line(110, 95, 110, 100);
+      doc.text('QTE', 117 , 98.5);
+      doc.line(125, 95, 125, 100);
+      doc.text('UM', 128 , 98.5);
+      doc.line(135, 95, 135, 100);
+      doc.text('PU', 138 , 98.5);
+      doc.line(150, 95, 150, 100);
+      doc.text('TVA', 152 , 98.5);
+      doc.line(160, 95, 160, 100);
+      doc.text('REM', 162 , 98.5);
+      doc.line(170, 95, 170, 100);
+      doc.text('THT', 181 , 98.5);
+      doc.line(200, 95, 200, 100);
+      i = 105;
+      doc.setFontSize(6);
+
+    }
+
+
+
+    if (this.podataset[j].item.pt_desc1.length > 35) {
+      let desc1 = this.podataset[j].item.pt_desc1.substring(35)
+      let ind = desc1.indexOf(' ')
+      desc1 = this.podataset[j].item.pt_desc1.substring(0, 35  + ind)
+      let desc2 = this.dataset[j].item.pt_desc1.substring(35+ind)
+
+      doc.line(10, i - 5, 10, i );
+      doc.text(String(("000"+ this.podataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
+      doc.line(20, i - 5, 20, i);
+      doc.text(this.podataset[j].pod_part, 22 , i  - 1);
+      doc.line(60, i - 5 , 60, i );
+      doc.text(desc1, 62 , i  - 1);
+      doc.line(110, i - 5, 110, i );
+      doc.text( String(Number(this.podataset[j].pod_qty_ord).toFixed(2)), 123 , i  - 1 , { align: 'right' });
+      doc.line(125, i - 5 , 125, i );
+      doc.text(this.podataset[j].pod_um, 127 , i  - 1);
+      doc.line(135, i - 5, 135, i );
+      doc.text( String(Number(this.podataset[j].pod_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
+      doc.line(150, i - 5, 150, i );
+      doc.text(String(this.podataset[j].pod_taxc) + "%" , 153 , i  - 1);
+      doc.line(160, i - 5 , 160, i );
+      doc.text(String(Number(this.podataset[j].pod_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
+      doc.line(170, i - 5 , 170, i );
+      doc.text(String((this.podataset[j].pod_price *
+              ((100 - Number(this.podataset[j].pod_disc_pct)) / 100) *
+              this.podataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
+      doc.line(200, i-5 , 200, i );
+     // doc.line(10, i, 200, i );
+
+      i = i + 5;
+
+      doc.text(desc2, 62 , i  - 1);
+      
+      doc.line(10, i - 5, 10, i );
+      doc.line(20, i - 5, 20, i);
+      doc.line(60, i - 5 , 60, i );
+      doc.line(110, i - 5, 110, i );
+      doc.line(125, i - 5 , 125, i );
+      doc.line(135, i - 5, 135, i );
+      doc.line(150, i - 5, 150, i );
+      doc.line(160, i - 5 , 160, i );
+      doc.line(170, i - 5 , 170, i );
+      doc.line(200, i-5 , 200, i );
+      doc.line(10, i, 200, i );
+
+      i = i + 5 ;
+      
+    } else {
+
+
+    
+    doc.line(10, i - 5, 10, i );
+    doc.text(String(("000"+ this.podataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
+    doc.line(20, i - 5, 20, i);
+    doc.text(this.podataset[j].pod_part, 22 , i  - 1);
+    doc.line(60, i - 5 , 60, i );
+    doc.text(this.podataset[j].item.pt_desc1, 62 , i  - 1);
+    doc.line(110, i - 5, 110, i );
+    doc.text( String(Number(this.podataset[j].pod_qty_ord).toFixed(2)), 123 , i  - 1 , { align: 'right' });
+    doc.line(125, i - 5 , 125, i );
+    doc.text(this.podataset[j].pod_um, 127 , i  - 1);
+    doc.line(135, i - 5, 135, i );
+    doc.text( String(Number(this.podataset[j].pod_price).toFixed(2)), 148 , i  - 1 , { align: 'right' });
+    doc.line(150, i - 5, 150, i );
+    doc.text(String(this.podataset[j].pod_taxc) + "%" , 153 , i  - 1);
+    doc.line(160, i - 5 , 160, i );
+    doc.text(String(Number(this.podataset[j].pod_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
+    doc.line(170, i - 5 , 170, i );
+    doc.text(String((this.podataset[j].pod_price *
+      ((100 - Number(this.podataset[j].pod_disc_pct)) / 100) *
+      this.podataset[j].pod_qty_ord).toFixed(2)), 198 , i  - 1,{ align: 'right' });
+    doc.line(200, i-5 , 200, i );
+    doc.line(10, i, 200, i );
+    i = i + 5;
+    }
+  }
+  
+ // doc.line(10, i - 5, 200, i - 5);
+
+ doc.line(130, i + 7,  200, i + 7  );
+ doc.line(130, i + 14, 200, i + 14 );
+ doc.line(130, i + 21, 200, i + 21 );
+ doc.line(130, i + 28, 200, i + 28 );
+ doc.line(130, i + 35, 200, i + 35 );
+ doc.line(130, i + 7,  130, i + 35  );
+ doc.line(160, i + 7,  160, i + 35  );
+ doc.line(200, i + 7,  200, i + 35  );
+ doc.setFontSize(10);
+ 
+ doc.text('Total HT', 140 ,  i + 12 , { align: 'left' });
+ doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+ doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+ doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+
+ 
+ doc.text(String(Number(this.puo.po_amt).toFixed(2)), 198 ,  i + 12 , { align: 'right' });
+ doc.text(String(Number(this.puo.po_tax_amt).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
+ doc.text(String(Number(this.puo.po_trl1_amt).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
+ doc.text(String(Number(Number(this.puo.po_amt) + Number(this.puo.po_tax_amt) +Number(this.puo.po_trl1_amt) ).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+
+ doc.setFontSize(8);
+    let mt = NumberToLetters(
+      Number(Number(this.puo.po_amt) + Number(this.puo.po_tax_amt) +Number(this.puo.po_trl1_amt)).toFixed(2),'Dinars Algerien')
+
+      if (mt.length > 95) {
+        let mt1 = mt.substring(90)
+        let ind = mt1.indexOf(' ')
+       
+        mt1 = mt.substring(0, 90  + ind)
+        let mt2 = mt.substring(90+ind)
+   
+        doc.text( "Arretée la présente Commande a la somme de : " + mt1  , 20, i + 53)
+        doc.text(  mt2  , 20, i + 60)
+      } else {
+        doc.text( "Arretée la présente Commande a la somme de : " + mt  , 20, i + 53)
+
+      }
+    // window.open(doc.output('bloburl'), '_blank');
+    //window.open(doc.output('blobUrl'));  // will open a new tab
+    doc.save('BC-' + this.puo.po_nbr + '.pdf')
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+
+  }
 
 }
