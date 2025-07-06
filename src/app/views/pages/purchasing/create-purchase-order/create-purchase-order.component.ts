@@ -609,7 +609,8 @@ console.log("controls.rqm_vend.value",controls.rqm_vend.value)
           if (response.data == null ) {
             alert("Fournisseur n'exist pas")
             controls.rqm_vend.setValue(null)
-            document.getElementById("name").focus();
+            controls.name.setValue(null)
+            document.getElementById("rqm_vend").focus();
           } else {
             
             controls.name.setValue(response.data[0].address.ad_name);

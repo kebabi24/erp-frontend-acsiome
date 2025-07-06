@@ -182,7 +182,7 @@
                                       
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!--div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group ">Contact d'achat</label>
                                             <div class="input-group input-group-sm">
@@ -208,7 +208,7 @@
                                             </div>
                                         
                                     </div>
-                                    <!-- <div class="form-group col-2">
+                                    < <div class="form-group col-2">
                                         <label class="form-group">Crediteur divers:</label>
                                         
                                         <span class="switch switch-icon">
@@ -219,9 +219,9 @@
                                                 <span></span>
                                             </label>
                                         </span>
-                                    </div> -->
+                                    </div> >
                                     
-                                </div>
+                                </div-->
                                 <div class="row">
                                    
                                
@@ -388,7 +388,7 @@
 
                     <ngb-tab>
                         <ng-template ngbTabTitle>
-                            Données Financiéres
+                            Données Fiscales
                             <div style="width: 10px;"></div>
                             <a *ngIf="hasFormErrors"
                                 class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
@@ -535,8 +535,8 @@
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_debtor">
                                     </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group "> Check Form:</label>
+                                    <!--div class="form-group col-2">
+                                        <label class="form-group "> Mode Paiement:</label>
                                         
                                             <div class="input-group input-group-sm">
 
@@ -547,19 +547,30 @@
                                                         <i class="text-dark-50 flaticon2-search"></i> </span>
                                                 </div>
                                             </div>
+                                    </div-->
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Mode Paiement:</label>
+                                        
+                                            <select class="form-control form-control-sm form-control-solid"
+                                                formControlName="vd_ckfrm" id="vd_ckfrm" (change)="onchangeckfrm()">
+                                                <option value=""></option>
+                                                <option *ngFor="let elem of ck_frm" [value]="elem.code_value">
+                                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                            </select>
+                                      
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group "> Conditions:</label>
+                                        <label class="form-group ">Mode Paiement:</label>
                                         
-                                            <div class="input-group input-group-sm">
+                                            <select class="form-control form-control-sm form-control-solid"
+                                                formControlName="vd_cr_terms" id="vd_cr_terms" >
+                                                <option value=""></option>
+                                                <option *ngFor="let elem of cr_terms" [value]="elem.code_value">
+                                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
 
-                                                <input type="text" class="form-control form-control-solid"
-                                                    aria-describedby="basic-addon2" formControlName="vd_cr_terms">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" (click)="open4(content4,'vd_cr_terms')">
-                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
-                                                </div>
-                                            </div>
+                                            </select>
+                                      
                                     </div>
                                 </div>
                                 

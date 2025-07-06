@@ -153,6 +153,8 @@ vd_lang: any[] = []
 ad_tax_zone: any[] = []
 ad_tax_usage: any[] = []
 ad_country: any[] = []
+ck_frm: any[] = []
+cr_terms: any[] = []
 /**
  * Component constructor
  *
@@ -222,6 +224,13 @@ constructor(
     this.codeService
         .getBy({ code_fldname: "ad_tax_usage" })
         .subscribe((response: any) => (this.ad_tax_usage = response.data))        
+
+    this.codeService
+        .getBy({ code_fldname: "check_form" })
+        .subscribe((response: any) => (this.ck_frm = response.data))
+    this.codeService
+        .getBy({ code_fldname: "vd_cr_terms" })
+        .subscribe((response: any) => (this.cr_terms = response.data))            
 }
 
 /**
@@ -328,8 +337,8 @@ onchangename(){
                 controls1.vd_ckfrm.enable()
                 controls1.vd_curr.enable()
                 controls1.vd_lang.enable()
-                controls1.vd_pur_cntct.enable()
-                controls1.vd_ap_cntct.enable()
+                // controls1.vd_pur_cntct.enable()
+                // controls1.vd_ap_cntct.enable()
                 controls1.vd_misc_cr.enable()
                 controls1.vd_carrier_id.enable()
                 controls1.vd_promo.enable()
@@ -388,8 +397,8 @@ onchangename(){
             controls1.vd_ckfrm.enable()
             controls1.vd_curr.enable()
             controls1.vd_lang.enable()
-            controls1.vd_pur_cntct.enable()
-            controls1.vd_ap_cntct.enable()
+            // controls1.vd_pur_cntct.enable()
+            // controls1.vd_ap_cntct.enable()
             controls1.vd_misc_cr.enable()
             controls1.vd_carrier_id.enable()
             controls1.vd_promo.enable()
@@ -512,8 +521,8 @@ createProviderForm() {
         vd_ckfrm: [{ value: this.provider.vd_ckfrm, disabled: !this.isExist }],
         vd_curr: [{ value: this.provider.vd_curr, disabled: !this.isExist }],
         vd_lang: [{ value: this.provider.vd_lang, disabled: !this.isExist }],
-        vd_pur_cntct: [{ value: this.provider.vd_pur_cntct, disabled: !this.isExist }],
-        vd_ap_cntct: [{ value: this.provider.vd_ap_cntct, disabled: !this.isExist }],
+        // vd_pur_cntct: [{ value: this.provider.vd_pur_cntct, disabled: !this.isExist }],
+        // vd_ap_cntct: [{ value: this.provider.vd_ap_cntct, disabled: !this.isExist }],
         vd_misc_cr: [{ value: this.provider.vd_misc_cr, disabled: !this.isExist }],
         vd_carrier_id: [{ value: this.provider.vd_carrier_id, disabled: !this.isExist }],
         vd_promo: [{ value: this.provider.vd_promo, disabled: !this.isExist }],
@@ -537,6 +546,14 @@ onChangeState() {
         .getBy({ code_fldname: "ad_city", chr01: controls.ad_state.value.substring(0, 2) })
         .subscribe((response: any) => {(this.ad_city = response.data)
         console.log(response.data)})    
+}
+onchangeckfrm() {
+  const controls  = this.providerForm.controls
+
+  this.codeService
+      .getBy({ code_fldname: "vd_cr_terms", code_desc: controls.vd_ckfrm.value })
+      .subscribe((response: any) => {(this.cr_terms = response.data)
+      console.log(response.data)})    
 }
 
 onChangeCode() {
@@ -596,8 +613,8 @@ onChangeCode() {
                 controls1.vd_ckfrm.enable()
                 controls1.vd_curr.enable()
                 controls1.vd_lang.enable()
-                controls1.vd_pur_cntct.enable()
-                controls1.vd_ap_cntct.enable()
+                // controls1.vd_pur_cntct.enable()
+                // controls1.vd_ap_cntct.enable()
                 controls1.vd_misc_cr.enable()
                 controls1.vd_carrier_id.enable()
                 controls1.vd_promo.enable()
@@ -793,9 +810,9 @@ prepareProvider(): Provider {
     _provider.vd_ckfrm = controls.vd_ckfrm.value
     _provider.vd_curr = controls.vd_curr.value
     _provider.vd_lang = controls.vd_lang.value
-    _provider.vd_pur_cntct = controls.vd_pur_cntct.value
+    // _provider.vd_pur_cntct = controls.vd_pur_cntct.value
     _provider.vd_misc_cr = controls.vd_misc_cr.value
-    _provider.vd_ap_cntct = controls.vd_ap_cntct.value
+    // _provider.vd_ap_cntct = controls.vd_ap_cntct.value
     _provider.vd_carrier_id = controls.vd_carrier_id.value
     _provider.vd_promo = controls.vd_promo.value
     _provider.vd_kanban_supplier = controls.vd_kanban_supplier.value
@@ -836,7 +853,7 @@ addProvider(_provider: Provider) {
                 true
             )
             this.loadingSubject.next(false)
-            this.router.navigateByUrl("/providers")
+            this.router.navigateByUrl("/providers/list")
         }
     )
     // this.store.dispatch(new ProductOnServerCreated({ product: _product }))
