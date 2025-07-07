@@ -170,4 +170,8 @@ export class ItemService {
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         
     }
+    public delete(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
 }

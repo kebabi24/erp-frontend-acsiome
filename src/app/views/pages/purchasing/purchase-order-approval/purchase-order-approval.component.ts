@@ -632,18 +632,26 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 name: "id",
                 field: "id",
                 sortable: true,
-                minWidth: 80,
-                maxWidth: 80,
-            },
-            {
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_category",
+                name: "Sequence",
+                field: "req.rqm_category",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
                 id: "rqm_nbr",
                 name: "N° Demande",
                 field: "req.rqm_nbr",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
-            },
-            {
+              },
+              {
                 id: "seq_desc",
                 name: "Description",
                 field: "req.sequence.seq_desc",
@@ -651,30 +659,70 @@ export class PurchaseOrderApprovalComponent implements OnInit {
                 filterable: true,
                 type: FieldType.string,
               },
-            {
+              {
                 id: "rqm_req_date",
                 name: "Date",
                 field: "req.rqm_req_date",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
-            },
-            {
-                id: "rqm_total",
-                name: "Total",
-                field: "req.rqm_total",
+              },
+              {
+                id: "rqm_vend",
+                name: "Fournisseur",
+                field: "req.rqm_vend",
                 sortable: true,
                 filterable: true,
-                type: FieldType.float,
-            },
-            {
+                type: FieldType.string,
+              },
+               {
+                id: "chr01",
+                name: "Nom Fournisseur",
+                field: "req.chr01",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
                 id: "rqm_status",
                 name: "status",
                 field: "req.rqm_status",
                 sortable: true,
                 filterable: true,
                 type: FieldType.string,
-            },
+              },
+              {
+                id: "rqm_aprv_stat",
+                name: "Approbation",
+                field: "req.rqm_aprv_stat",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "created_by",
+                name: "Utilisateur",
+                field: "req.created_by",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "rqm_rqby_userid",
+                name: "Demandeur",
+                field: "req.rqm_rqby_userid",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
+              {
+                id: "chr02",
+                name: "Nom Demandeur",
+                field: "req.chr02",
+                sortable: true,
+                filterable: true,
+                type: FieldType.string,
+              },
 
         ]
 
@@ -682,41 +730,45 @@ export class PurchaseOrderApprovalComponent implements OnInit {
             enableSorting: true,
             enableCellNavigation: true,
             enableExcelCopyBuffer: true,
+            autoFitColumnsOnFirstLoad: false,
+            enableAutoSizeColumns: false,
+            // then enable resize by content with these 2 flags
+            autosizeColumnsByCellContentOnFirstLoad: true,
+            enableAutoResizeColumnsByCellContent: true,
             enableFiltering: true,
             autoEdit: false,
-            autoHeight: false,
+            autoHeight: true,
+            enableAutoResize:true,
             frozenColumn: 0,
             frozenBottom: true,
             enableRowSelection: true,
             enableCheckboxSelector: true,
             checkboxSelector: {
-                // optionally change the column index position of the icon (defaults to 0)
-                // columnIndexPosition: 1,
-
-                // remove the unnecessary "Select All" checkbox in header when in single selection mode
-                hideSelectAllCheckbox: true,
-
-                // you can override the logic for showing (or not) the expand icon
-                // for example, display the expand icon only on every 2nd row
-                // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+              // optionally change the column index position of the icon (defaults to 0)
+              // columnIndexPosition: 1,
+      
+              // remove the unnecessary "Select All" checkbox in header when in single selection mode
+              hideSelectAllCheckbox: true,
+      
+              // you can override the logic for showing (or not) the expand icon
+              // for example, display the expand icon only on every 2nd row
+              // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+            },
+            dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+              var val = undefined;
+              try {
+                val = eval("item." + column.field);
+              } catch (e) {
+                // ignore
+              }
+              return val;
             },
             multiSelect: false,
             rowSelectionOptions: {
-                // True (Single Selection), False (Multiple Selections)
-                selectActiveRow: true,
+              // True (Single Selection), False (Multiple Selections)
+              selectActiveRow: true,
             },
-      
-        dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
-            var val = undefined;
-            try {
-              val = eval("item." + column.field);
-            } catch (e) {
-              // ignore
-            }
-            return val;
-          },
-        };
-    
+          };
         
         // fill the dataset with your data
         this.requisitonService
