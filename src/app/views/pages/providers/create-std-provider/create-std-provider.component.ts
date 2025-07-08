@@ -155,6 +155,17 @@ ad_tax_usage: any[] = []
 ad_country: any[] = []
 ck_frm: any[] = []
 cr_terms: any[] = []
+
+
+pays:any;
+vdtype:any;
+seq:any;
+shipvia:any;
+banque:any;
+ckfrm:any;
+crterms:any;
+devise:any;
+
 /**
  * Component constructor
  *
@@ -719,7 +730,25 @@ onSubmit() {
         this.hasProviderFormErrors = true
         return
     }
-this.printpdf()
+this.codeService
+      .getBy({ code_fldname: 'check_form',code_value:controls_.vd_ckfrm.value })
+      .subscribe((response: any) => (
+        this.ckfrm = response.data[0].code_cmmt,
+        this.codeService.getBy({ code_fldname: 'vd_cr_term',code_value:controls_.vd_cr_terms.value })
+        .subscribe((response1: any) => (this.crterms = response1.data[0].code_cmmt,
+          this.codeService.getBy({ code_fldname: 'vd_type',code_value:controls_.vd_type.value })
+          .subscribe((response2: any) => (this.vdtype = response2.data[0].code_cmmt,
+            this.codeService.getBy({ code_fldname: 'ad_country',code_value:controls.ad_country.value })
+            .subscribe((response3: any) => (this.pays = response3.data[0].code_cmmt,
+              this.codeService.getBy({ code_fldname: 'vd_shipvia',code_value:controls_.vd_shipvia.value })
+              .subscribe((response4: any) => (this.shipvia = response4.data[0].code_cmmt,
+                                      this.printpdf()
+              ))             
+            ))
+          ))    
+        ))
+      ));
+
     let address = this.prepareAddress()
     this.addAddress(address)
 }
@@ -1235,10 +1264,12 @@ handleSelectedRowsChanged4(e, args) {
         switch (this.selectedField) {
           case "vd_cr_terms": {
             controls1.vd_cr_terms.setValue(item.code_value || "");
+            this.crterms = item.code_cmmt;
             break;
           }
           case "vd_ckfrm": {
             controls1.vd_ckfrm.setValue(item.code_value || "");
+            this.ckfrm = item.code_cmmt
             break;
           }
          
@@ -1367,7 +1398,8 @@ angularGridReady4(angularGrid: AngularGridInstance) {
       args.rows.map((idx) => {
         const item = this.gridObjbank.getDataItem(idx);
         controls.vd_bank.setValue(item.bk_code || "");
-            
+        this.banque = item.address.ad_name  
+        this.devise = item.bk_curr  
       });
     }
   }
@@ -1474,6 +1506,7 @@ angularGridReady4(angularGrid: AngularGridInstance) {
       args.rows.map((idx) => {
         const item = this.gridObj2.getDataItem(idx);
         controls.vd_curr.setValue(item.cu_curr || "");
+        this.devise = item.cu_desc
       });
     }
   }
@@ -1585,7 +1618,8 @@ angularGridReady4(angularGrid: AngularGridInstance) {
                 controls.vd_seq.setValue("")
                 console.log(response.data.length)
                 document.getElementById("SEQUENCE").focus();
-            } 
+            }
+            else{this.seq = response.data[0].seq_desc} 
         })
 }
   handleSelectedRowsChanged(e, args) {
@@ -1594,6 +1628,7 @@ angularGridReady4(angularGrid: AngularGridInstance) {
         args.rows.map((idx) => {
             const item = this.gridObj1.getDataItem(idx)
             controls.vd_seq.setValue(item.seq_seq || "")
+            this.seq = item.seq_desc
         })
     }
 }
@@ -1727,7 +1762,7 @@ printpdf() {
           doc.text("Activité: " + controls.vd_sort.value, 55, initialY + 15);
           
           doc.text("Addresse: " + controlsa.ad_line1.value, 5, initialY + 20);
-          doc.text("Pays: " + controlsa.ad_country.value, 5, initialY + 25);
+          doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 5, initialY + 25);
           doc.text("Tel: " + controlsa.ad_phone.value, 5, initialY + 30);
           doc.text("Email: " + controlsa.ad_ext.value, 55, initialY + 30);
           doc.text("Taxable: " + controlsa.ad_taxable.value, 5, initialY + 45);
@@ -1740,15 +1775,15 @@ printpdf() {
           doc.text("NIS: " + controlsa.ad_misc1_id.value, 55, initialY + 60);
           
           // doc.text("Fournisseur: " + controls.pt_vend.value, 5, initialY + 80);
-          doc.text("Type: " + controls.vd_type.value, 5, initialY + 70);
-          doc.text("Séquence: " + controls.vd_seq.value, 55, initialY + 70);
-          doc.text("Modalité de transport: " + controls.vd_shipvia.value, 5, initialY + 75);
-          doc.text("Banque: " + controls.vd_bank.value, 5, initialY + 80);
-          doc.text("Méthode de paiement: " + controls.vd_ckfrm.value, 55, initialY + 80);
-          doc.text("Délai: " + controls.vd_cr_terms.value, 105, initialY + 80);
-          doc.text("Devise: " + controls.vd_curr.value, 5, initialY + 85);
-          doc.text("RIB: " + controls.vd_db.value, 55, initialY + 85);
-          doc.text("Compte: " + controls.vd_debtor.value, 5, initialY + 90);
+          doc.text("Type: " + controls.vd_type.value + ' ' + this.vdtype, 5, initialY + 70);
+          doc.text("Séquence: " + controls.vd_seq.value + ' ' + this.seq, 5, initialY + 75);
+          doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' ' + this.shipvia, 5, initialY + 80);
+          doc.text("Banque: " + controls.vd_bank.value + ' ' + this.banque, 5, initialY + 85);
+          doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' ' + this.ckfrm, 5, initialY + 90);
+          doc.text("Délai: " + controls.vd_cr_terms.value + ' ' + this.crterms, 5, initialY + 95);
+          doc.text("Devise: " + controls.vd_curr.value + ' ' + this.devise, 5, initialY + 100);
+          doc.text("RIB: " + controls.vd_db.value, 5, initialY + 105);
+          doc.text("Compte: " + controls.vd_debtor.value, 5, initialY + 110);
           
     
         
