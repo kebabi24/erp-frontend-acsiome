@@ -65,6 +65,7 @@ import {Code,
   LocationService,
   SiteService,
   ProductLineService,
+  SequenceService,
   
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
@@ -154,7 +155,11 @@ export class CreateModDivComponent implements OnInit {
   angularGrid3: AngularGridInstance;
   selectedField = "";
   fieldcode = "";
-
+  sequences: [];
+  columnDefinitionsseq: Column[] = [];
+  gridOptionsseq: GridOption = {};
+  gridObjseq: any;
+  angularGridseq: AngularGridInstance;
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -168,6 +173,7 @@ export class CreateModDivComponent implements OnInit {
     private locationService: LocationService,
     private itemModelService: ItemModelService,
     private productLineService: ProductLineService,
+    private sequenceService : SequenceService,
    
   ) {
     config.autoClose = true;
@@ -223,7 +229,7 @@ export class CreateModDivComponent implements OnInit {
       mod_code: [{value :this.itemModel.mod_code,disabled: !this.isExist }],
       mod_desc: [{value :this.itemModel.mod_desc,disabled: !this.isExist }, ],
       mod_um: [{value :this.itemModel.mod_um,disabled: !this.isExist },],
-      
+      mod_buyer: [this.itemModel.mod_buyer],
       
       
       
@@ -495,7 +501,7 @@ export class CreateModDivComponent implements OnInit {
     _itemModel.mod_site = '1000';
     _itemModel.mod_loc = 'EMPL PLAST2';
     _itemModel.mod_iss_pol = true;
-   
+    _itemModel.mod_buyer = controls1.mod_buyer.value;
     return _itemModel;
   }
   prepareCode(): Code {
@@ -1103,5 +1109,130 @@ export class CreateModDivComponent implements OnInit {
   onAlertClose($event) {
     this.hasFormErrors1 = false;
    
+  }
+
+  handleSelectedRowsChangedseq(e, args) {
+    const controls = this.form1.controls;
+    if (Array.isArray(args.rows) && this.gridObjseq) {
+      args.rows.map((idx) => {
+        const item = this.gridObjseq.getDataItem(idx);
+        controls.mod_buyer.setValue(item.seq_seq || "");
+      });
+    }
+  }
+
+  angularGridReadyseq(angularGrid: AngularGridInstance) {
+    this.angularGridseq = angularGrid;
+    this.gridObjseq = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridseq() {
+    this.columnDefinitionsseq = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "seq_seq",
+        name: "Code Sequence",
+        field: "seq_seq",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_desc",
+        name: "Description",
+        field: "seq_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_appr1",
+        name: "Approbateur 1",
+        field: "seq_appr1",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_appr2",
+        name: "Approbateur 2",
+        field: "seq_appr2",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_appr3",
+        name: "Approbateur 3",
+        field: "seq_appr3",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionsseq = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.sequenceService
+      .getBy({seq_type:"RQ"})
+      .subscribe((response: any) => (this.sequences = response.data));
+  }
+  openseq(content) {
+    this.prepareGridseq();
+    this.modalService.open(content, { size: "lg" });
+  }
+  changeSeq() {
+    const controls = this.form1.controls; // chof le champs hada wesh men form rah
+    const seq_seq = controls.mod_buyer.value;
+    this.sequenceService.getBy({ seq_seq }).subscribe(
+      (res: any) => {
+        console.log(res.data)
+        const { data } = res;
+        if (res.data.length == 0) {
+          controls.mod_buyer.setValue(null);
+          document.getElementById("mod_buyer").focus();
+         alert("Cette Sequence n'existe pas")
+          this.error = true;
+        } else {
+          this.error = false;
+        }
+      },
+      (error) => console.log(error)
+    );
   }
 }

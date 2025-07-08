@@ -114,6 +114,21 @@
                          
                         </div>
                     </div> 
+                    <div class="form-group col-2">
+                        <label class="form-group ">Sequence Achat</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid"
+                                (change)="changeSeq()" formControlName="mod_buyer" id="mod_buyer"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openseq(contentseq)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
                     
             </div>
                 
@@ -228,5 +243,27 @@
             </div>
         </ng-template>
     </div>
-    
+    <div>
+        <ng-template #contentseq let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir la SEQUENCE</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridSeq"
+                        [columnDefinitions]="columnDefinitionsseq" (onAngularGridCreated)="angularGridReadyseq($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedseq($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsseq" [dataset]="sequences">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
 </kt-portlet>

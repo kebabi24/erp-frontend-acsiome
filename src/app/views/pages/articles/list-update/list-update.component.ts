@@ -27,8 +27,13 @@ import {
   MessageType,
 } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
-
-import { Item, ItemService } from "../../../../core/erp";
+import {
+  NgbModal,
+  NgbActiveModal,
+  ModalDismissReasons,
+  NgbModalOptions,
+} from "@ng-bootstrap/ng-bootstrap"
+import { ItemService } from "../../../../core/erp";
 
 
 @Component({
@@ -37,7 +42,7 @@ import { Item, ItemService } from "../../../../core/erp";
   styleUrls: ['./list-update.component.scss']
 })
 export class ListUpdateComponent implements OnInit {
-
+  loadingSubject = new BehaviorSubject<boolean>(true)
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
@@ -45,13 +50,16 @@ export class ListUpdateComponent implements OnInit {
   columnDefinitions: Column[];
   gridOptions: GridOption;
   dataset: any[];
-
+  idpart:any;
+  codepart:any;
+  descpart:any;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private layoutUtilsService: LayoutUtilsService,
-    private itemService: ItemService
+    private itemService: ItemService,
+    private modalService: NgbModal,
   ) {
     this.prepareGrid();
   }
@@ -76,23 +84,11 @@ export class ListUpdateComponent implements OnInit {
         formatter: (row, cell, value, columnDef, dataContext) => {
           // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
           return `
-              <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit details">
-              <span class="svg-icon svg-icon-md">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
-                      height="24px" viewBox="0 0 24 24" version="1.1">
-                      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <rect x="0" y="0" width="24" height="24"></rect>
-                          <path
-                              d="M8,17.9148182 L8,5.96685884 C8,5.56391781 8.16211443,5.17792052 8.44982609,4.89581508 L10.965708,2.42895648 C11.5426798,1.86322723 12.4640974,1.85620921 13.0496196,2.41308426 L15.5337377,4.77566479 C15.8314604,5.0588212 16,5.45170806 16,5.86258077 L16,17.9148182 C16,18.7432453 15.3284271,19.4148182 14.5,19.4148182 L9.5,19.4148182 C8.67157288,19.4148182 8,18.7432453 8,17.9148182 Z"
-                              fill="#000000" fill-rule="nonzero"
-                              transform="translate(12.000000, 10.707409) rotate(-135.000000) translate(-12.000000, -10.707409) ">
-                          </path>
-                          <rect fill="#000000" opacity="0.3" x="5" y="20" width="15" height="2" rx="1"></rect>
-                      </g>
-                  </svg>
-              </span>
-          </a>
-          `;
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Article Produit">
+                 <i class="flaticon2-pen" ></i>
+                 
+             </a>
+             `;
         },
         minWidth: 50,
         maxWidth: 50,
@@ -101,6 +97,61 @@ export class ListUpdateComponent implements OnInit {
           const id = args.dataContext.id;
           this.router.navigateByUrl(`/articles/edit/${id}`);
         },
+      },
+      {
+        id: "edit",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+          // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+          return `
+            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Copie Produit">
+                 <i class="flaticon2-copy" ></i>
+                 
+             </a>
+             `;
+        },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id;
+          this.router.navigateByUrl(`/articles/copie-article/${id}`);
+        },
+      },
+      {
+        id: "delete",
+        field: "id",
+        excludeFromColumnPicker: true,
+        excludeFromGridMenu: true,
+        excludeFromHeaderMenu: true,
+        formatter: (row, cell, value, columnDef, dataContext) => {
+         // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+         return `
+              <a class="btn btn-sm btn-clean btn-icon mr-2" title="Suprimer DA">
+              <i class="flaticon-delete
+              "></i>
+          </a>
+          `;
+       },
+        minWidth: 50,
+        maxWidth: 50,
+        // use onCellClick OR grid.onClick.subscribe which you can see down below
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          const id = args.dataContext.id
+          this.idpart = args.dataContext.id
+          console.log(id)
+        
+         
+            this.codepart = args.dataContext.pt_part
+            this.descpart = args.dataContext.pt_desc1
+           
+            let element: HTMLElement = document.getElementById('deleteDAGrid') as HTMLElement;
+            element.click();
+         
+      },
       },
       {
         id: "id",
@@ -390,4 +441,45 @@ export class ListUpdateComponent implements OnInit {
       () => {}
     );
   }
+
+  open(content) {
+    this.modalService.open(content, { size: "lg" })
+}
+
+deleteProvider() {
+  this.itemService.delete( this.idpart ).subscribe(
+    (reponse:any) =>   {
+      console.log("here",reponse.message)
+      if(reponse.bool == false) {
+        this.layoutUtilsService.showActionNotification(
+            "Supression  avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        window.location.reload()
+      }else {
+        alert(reponse.message)
+      }
+        this.loadingSubject.next(false)
+        this.modalService.dismissAll()
+       
+    },
+  
+     
+    (error) => {
+        this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        this.loadingSubject.next(false)
+    },
+ 
+  ) 
+}
+
 }

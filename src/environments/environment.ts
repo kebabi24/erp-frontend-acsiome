@@ -20,7 +20,7 @@ export const environment = {
   // apiUrl: "https://edelweiss.whitebay.limited/api/v1",
   Instance: "Prod",
   App: "ERP", // RH or ERP or DD
-  key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$b7dhzjxkuGRbLPCGSXW3Yw",
+  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
 };
 
 /*

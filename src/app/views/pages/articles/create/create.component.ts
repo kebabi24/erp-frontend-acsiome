@@ -1012,14 +1012,11 @@ export class CreateComponent implements OnInit {
     this.sequenceService.getBy({ seq_seq }).subscribe(
       (res: any) => {
         const { data } = res;
-        if (!data) {
-          this.layoutUtilsService.showActionNotification(
-            "cette sequence n'existe pas!",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+        if (res.data.length ==0) {
+          controls.pt_buyer.setValue(null);
+          document.getElementById("pt_buyer").focus();
+         alert("Cette Sequence n'existe pas")
+          this.error = true;
           this.error = true;
         } else {
           this.error = false;
