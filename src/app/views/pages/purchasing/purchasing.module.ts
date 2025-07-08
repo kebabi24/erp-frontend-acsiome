@@ -68,7 +68,8 @@ import {
   InventoryTransactionService,
   AccountUnplanifedService,
   ReasonService,
-  EmployeService
+  EmployeService,
+  TimbreService,
 } from "../../../core/erp";
 import { CreatePurchaseOrderComponent } from "./create-purchase-order/create-purchase-order.component";
 import { PurchaseOrderApprovalComponent } from "./purchase-order-approval/purchase-order-approval.component";
@@ -297,6 +298,7 @@ const routes: Routes = [
     ItemService,
     MesureService,
     CodeService,
+    TimbreService,
     AddressService,
     DeviseService,
     SiteService,

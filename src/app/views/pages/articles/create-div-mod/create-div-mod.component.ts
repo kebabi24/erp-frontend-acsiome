@@ -146,6 +146,7 @@ export class CreateDivModComponent implements OnInit {
   pt_draw: any;
   pt_rev: any;
   pt_group: any;
+  pt_buyer :any;
   pt_drwg_loc: any[] = [];
   pt_drwg_size: any[] = [];
   pt_abc: any[] = [];
@@ -537,7 +538,7 @@ onChangecolor() {
                 controls1.pt_bom_code.setValue('PF')
                 controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
                 controls1.pt_status.setValue(modeleresponse.data.mod_status)
-           
+           this.pt_buyer = modeleresponse.data.mod_buyer
                 controls1.pt_part.setValue(controls1.pt_article.value + code_couleur )
                 controls1.pt_desc1.setValue(controls1.pt_draw.value + " "  + controls1.pt_group.value )
                 controls1.pt_desc2.setValue(controls1.pt_draw.value +  " " + controls1.pt_group.value )
@@ -637,7 +638,7 @@ onAlertClose($event) {
     _item.pt_plan_ord = controls1.pt_plan_ord.value;
     _item.pt_dea = controls1.pt_dea.value;
     _item.pt_group = controls1.pt_group.value;
-   
+   _item.pt_buyer = this.pt_buyer;
     _item.pt_abc = 'C';
     _item.pt_site = '1000';
     _item.pt_loc = 'EMPL PLAST2';
@@ -1804,7 +1805,7 @@ doc.setFontSize(14);
           doc.line(5, 45, 5, 62);
           doc.text("Description: " + controls.pt_desc1.value, 7, initialY + 25);
           doc.text("Modèle: " + controls.pt_article.value, 7, initialY + 30);
-          doc.text("Couleur: " + controls.pt_break_cat.value, 55, initialY + 30);
+          // doc.text("Couleur: " + controls.pt_break_cat.value, 55, initialY + 30);
           doc.text("Unité de mesure: " + controls.pt_um.value, 7, initialY + 35);
           doc.line(5, 62, 200, 62);
           doc.line(200, 45, 200, 62);

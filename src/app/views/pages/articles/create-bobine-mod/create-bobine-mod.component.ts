@@ -153,7 +153,7 @@ export class CreateBobineModComponent implements OnInit {
   pt_net_wt_um: any[] = [];
   pt_fr_class: any[] = [];
   pt_size_um: any[] = [];
-
+pt_buyer:any;
   pt_pm_code: any[] = [];
   pt_run_seq1: any[] = [];
   pt_run_seq2: any[] = [];
@@ -542,7 +542,7 @@ onChangesilicone() {
             controls1.pt_price.setValue(0)
             controls1.pt_draw.setValue('BOBINE')
             controls1.pt_origin.setValue('EXTRUSION')
-
+ this.pt_buyer = modeleresponse.data.mod_buyer
             controls1.pt_bom_code.setValue('F' + controls1.pt_rev.value)
             controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
             controls1.pt_status.setValue('SF-ACTIF')
@@ -673,7 +673,7 @@ onAlertClose($event) {
     _item.pt_taxable = true;
     _item.pt_taxc = '19A';
     _item.pt_pm_code = 'M';
-
+_item.pt_buyer = this.pt_buyer;
 
     return _item;
   }

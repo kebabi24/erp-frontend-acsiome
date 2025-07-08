@@ -146,6 +146,7 @@ export class CreateMpModComponent implements OnInit {
   pt_draw: any;
   pt_rev: any;
   pt_group: any;
+  pt_buyer:any;
   pt_drwg_loc: any[] = [];
   pt_drwg_size: any[] = [];
   pt_abc: any[] = [];
@@ -572,7 +573,7 @@ onChangecolor() {
                 controls1.pt_bom_code.setValue('BOBINE')
                 controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
                 controls1.pt_status.setValue(modeleresponse.data.mod_status)
-               
+                this.pt_buyer = modeleresponse.data.mod_buyer
 
                 controls1.pt_part.setValue(controls1.pt_article.value + code_couleur )
                 controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
@@ -645,7 +646,7 @@ onChangecolor() {
                 controls1.pt_bom_code.setValue('BOBINE')
                 controls1.pt_dsgn_grp.setValue(modeleresponse.data.mod_dsgn_grp)
                 controls1.pt_status.setValue(modeleresponse.data.mod_status)
-           
+           this.pt_buyer = modeleresponse.data.mod_buyer
                 controls1.pt_part.setValue(controls1.pt_article.value + code_couleur + controls1.pt_vend.value )
                 controls1.pt_desc1.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
                 controls1.pt_desc2.setValue(controls1.pt_draw.value + " " + controls1.pt_part_type.value + " " + controls1.pt_group.value + " " + controls1.pt_break_cat.value)
@@ -755,7 +756,7 @@ onAlertClose($event) {
     _item.pt_ord_qty = 1;
     _item.pt_drwg_loc = 'INTERNE'
     _item.pt_added = new Date()
-
+_item.pt_buyer = this.pt_buyer;
     return _item;
   }
   

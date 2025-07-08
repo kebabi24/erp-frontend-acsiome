@@ -52,6 +52,7 @@ import {
   LocationService,
   MesureService,
   printBc,
+  TimbreService,
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -170,7 +171,8 @@ error = false;
     private siteService: SiteService,
     private locationService: LocationService,
     private mesureService: MesureService,
-    private taxService: TaxeService
+    private taxService: TaxeService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
     this.codeService
@@ -2444,6 +2446,23 @@ controls.tht.setValue(tht.toFixed(2));
 controls.tva.setValue(tva.toFixed(2));
 controls.timbre.setValue(timbre.toFixed(2));
 controls.ttc.setValue(ttc.toFixed(2));
+ this.timbreService.getTimbreValue({ code: controlsso.po_cr_terms.value, amt: round(tht + tva )}).subscribe(
+    (response: any) => {
+    //  console.log(response.data.value)
+     if(response.data != null) {
+
+      timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+      console.log("timbre",timbre)
+      if (timbre < 5) { timbre = 5}            
+     }else { timbre = 0}
+
+     ttc = round(tht + tva + timbre,2)
+
+      controls.tht.setValue(tht.toFixed(2));
+      controls.tva.setValue(tva.toFixed(2));
+      controls.timbre.setValue(timbre.toFixed(2));
+      controls.ttc.setValue(ttc.toFixed(2));
+     })
 
 }
 

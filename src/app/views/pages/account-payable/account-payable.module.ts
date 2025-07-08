@@ -77,7 +77,8 @@ import {
     LocationDeclaredService,
     FinancialchargeService,
     AccountUnplanifedService,
-    UsersMobileService
+    UsersMobileService,
+    TimbreService,
 } from "../../../core/erp";
 
 import { CreatePaymentComponent } from './create-payment/create-payment.component';
@@ -202,7 +203,7 @@ providers: [
     FinancialchargeService,
     AccountUnplanifedService,
     UsersMobileService,
-
+    TimbreService,
 
 ],
 

@@ -59,6 +59,7 @@ import {
   VoucherOrder,
   EntityService,
   Item,
+  TimbreService
 } from "../../../../core/erp";
 import { DecimalPipe } from "@angular/common";
 import * as _ from 'lodash';
@@ -229,6 +230,7 @@ entity;
     private siteService: SiteService,
     private configService: ConfigService,
     private locationDetailService: LocationDetailService,
+    private timbreService: TimbreService,
   ) {
     config.autoClose = true;
       this.codeService
@@ -1653,6 +1655,23 @@ controls.tht.setValue(tht.toFixed(2));
 controls.tva.setValue(tva.toFixed(2));
 controls.timbre.setValue(timbre.toFixed(2));
 controls.ttc.setValue(ttc.toFixed(2));
+this.timbreService.getTimbreValue({ code: controlsso.po_cr_terms.value, amt: round(tht + tva )}).subscribe(
+    (response: any) => {
+    //  console.log(response.data.value)
+     if(response.data != null) {
+
+      timbre = Math.floor((tht + tva) * Number(response.data.value)/ 100)   
+      console.log("timbre",timbre)
+      if (timbre < 5) { timbre = 5}            
+     }else { timbre = 0}
+
+     ttc = round(tht + tva + timbre,2)
+
+      controls.tht.setValue(tht.toFixed(2));
+      controls.tva.setValue(tva.toFixed(2));
+      controls.timbre.setValue(timbre.toFixed(2));
+      controls.ttc.setValue(ttc.toFixed(2));
+     })
 this.total = Number(ttc.toFixed(2));
 
 
