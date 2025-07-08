@@ -370,6 +370,13 @@ controls.seqname.setValue(response.data[0].seq_desc)
 
             return
         }
+        if (controls.rqm_req_date.value == null) {
+            
+            this.message = 'Veullez choisir une date'
+            this.hasFormErrors = true
+
+            return
+        }
         // tslint:disable-next-line:prefer-const
         let req = this.prepareReq()
         for(let data of this.dataset){

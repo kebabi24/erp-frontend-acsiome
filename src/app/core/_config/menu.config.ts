@@ -922,8 +922,12 @@ export class MenuConfig {
               page: "/purchasing/create-req",
             },
             {
-              title: "Liste des Demande d'achats",
+              title: "Consultation Demande d'achats",
               page: "/purchasing/req-list",
+            },
+            {
+              title: "Liste des Demande d'achats",
+              page: "/purchasing/list-req-user",
             },
             {
               title: "Approuver les Demandes",
@@ -1351,9 +1355,10 @@ export class MenuConfig {
               title: "Maint des Notes de Débit",
               page: "/account-payable/create-note",
             },
+           
             {
               title: "Journal Fournisseur",
-              page: "/account-payable/edit-journal-fournisseur",
+              page: "/account-payable/journal-provider",
             },
           ],
         },

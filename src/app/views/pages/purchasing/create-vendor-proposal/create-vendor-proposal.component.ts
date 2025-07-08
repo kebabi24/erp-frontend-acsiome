@@ -293,8 +293,8 @@ curr: String;
             vp_ex_rate : [this.vendorProposal.vp_ex_rate],
             vp_ex_rate2: [this.vendorProposal.vp_ex_rate2],
 
-            vp_date: [this.vendorProposal.vp_date],
-            vp_q_date: [this.vendorProposal.vp_q_date],
+            vp_date: [this.vendorProposal.vp_date, Validators.required],
+            vp_q_date: [this.vendorProposal.vp_q_date, Validators.required],
             vp_pay_meth: [this.vendorProposal.vp_pay_meth],
             dec01: [{value: this.vendorProposal.dec01, disabled :true}],
             
@@ -349,6 +349,22 @@ curr: String;
             this.hasFormErrors = true
 
             return
+        }
+        for (let data of this.dataset) {
+          if(data.vpd_q_price == "" || data.vpd_q_price == null ) {
+            this.message = "Le prix ne peut pas etre vide"
+            this.hasFormErrors = true
+
+            return
+          }
+        }
+        for (let data of this.dataset) {
+          if(data.vpd_q_qty == "" || data.vpd_q_qty == null || data.vpd_q_qty == 0 ) {
+            this.message = "Quantité ne peut pas etre 0"
+            this.hasFormErrors = true
+
+            return
+          }
         }
         // tslint:disable-next-line:prefer-const
         let req = this.prepareReq()
@@ -820,7 +836,22 @@ curr: String;
         this.requisitonService.findBy({ rqm_nbr }).subscribe(
             (res: any) => {
                 const { requisition, details } = res.data
-                controls.vp_vend.setValue(requisition.vp_vend) 
+                // controls.vp_vend.setValue(requisition.vp_vend) 
+                if(requisition.provider ) {
+                  controls.vp_vend.setValue(requisition.rqm_vend) 
+                  controls.name.setValue(requisition.chr01)
+                  controls.vp_pay_meth.setValue(requisition.provider.vd_cr_terms)
+                  controls.vp_curr.setValue(requisition.provider.vd_curr)
+                  this.codeService
+                  .getBy({code_fldname: "vd_cr_terms",  code_value: requisition.provider.vd_cr_terms})
+                  .subscribe((response: any) => {
+                      console.log(response.data)
+                      if (response.data.length != 0) {
+                          controls.dec01.setValue(response.data[0].dec01)
+                          
+                      }
+                  })
+                }
                 details.map((value) => {
                     this.gridService.addItem(
                         {
@@ -861,6 +892,7 @@ curr: String;
                 (res: any) => {
                     console.log(res.data)
                     const { requisition, details } = res.data
+                    if(requisition.provider ) {
                     controls.vp_vend.setValue(requisition.rqm_vend) 
                     controls.name.setValue(requisition.chr01)
                     controls.vp_pay_meth.setValue(requisition.provider.vd_cr_terms)
@@ -874,6 +906,7 @@ curr: String;
                             
                         }
                     })
+                  }
                     details.map((value) => {
                         this.gridService.addItem(
                             {

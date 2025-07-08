@@ -63,7 +63,8 @@ import { BalanceGeneraleComponent } from './balance-generale/balance-generale.co
 import { CreateRepComponent } from './create-rep/create-rep.component';
 import { ListRepComponent } from './list-rep/list-rep.component';
 import { CreateStdProviderComponent } from './create-std-provider/create-std-provider.component';
-import { CreateRepJobComponent } from './create-rep-job/create-rep-job.component'
+import { CreateRepJobComponent } from './create-rep-job/create-rep-job.component';
+import { ProviderActivitiesComponent } from './provider-activities/provider-activities.component'
 
 
 const routes: Routes = [
@@ -117,7 +118,10 @@ const routes: Routes = [
 	            path: "create-rep-job",
 	            component: CreateRepJobComponent,
             },
- 
+            {
+	            path: "provider-activities",
+	            component: ProviderActivitiesComponent,
+            },
         ],
     },
 ]
@@ -136,6 +140,7 @@ const routes: Routes = [
         ListRepComponent,
         CreateStdProviderComponent,
         CreateRepJobComponent,
+        ProviderActivitiesComponent,
     ],
     imports: [
         CommonModule,

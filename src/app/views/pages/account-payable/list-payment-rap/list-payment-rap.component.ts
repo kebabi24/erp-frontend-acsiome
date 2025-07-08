@@ -245,11 +245,7 @@ export class ListPaymentRapComponent implements OnInit {
       ]
 
       this.gridOptions = {
-          autoResize: {
-            containerId: 'demo-container',
-            sidePadding: 10
-          },
-         
+          
           createPreHeaderPanel: true,
           showPreHeaderPanel: true,
           preHeaderPanelHeight: 40,
@@ -258,7 +254,8 @@ export class ListPaymentRapComponent implements OnInit {
           exportOptions: {
             sanitizeDataExport: true
           },
-          
+          enableAutoResize:true,
+          autoHeight:false,
 
     
           dataItemColumnValueExtractor: function getItemColumnValue(item, column) {

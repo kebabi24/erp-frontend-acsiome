@@ -554,15 +554,7 @@ role:any[]
       }
 
       // fill the dataset with your data
-      this.dataset = []
-      this.accountReceivableService.getBy({ar_type : "P"}).subscribe(
-          (response: any) => (this.dataset = response.data),
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-console.log(this.dataset)
+    
       if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
       if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
       if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
