@@ -53,5 +53,12 @@ export class ProviderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.delete(`${API_URL}/${id}`, { headers: httpHeaders })
     }
-    
+    public getActivities(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getactivities/`, data,{ headers: httpHeaders })
+    }
+    public getActHist(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getacthist/`, data,{ headers: httpHeaders })
+    }
 }

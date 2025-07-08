@@ -72,5 +72,17 @@ export class AccountPayableService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
+    public   getAllPaymentBy(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getallpaymentby/`, data,{ headers: httpHeaders })
+    }
+    public   getAllInvoiceBy(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/getallinvoiceby/`, data,{ headers: httpHeaders })
+    }
+    public getByRange(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+`/range`, data, { headers: httpHeaders })
+    }
     // DELETE
 }

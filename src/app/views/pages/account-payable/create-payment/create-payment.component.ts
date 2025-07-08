@@ -758,6 +758,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
 
               } else {
               alert("Ce Fournisseur n'exist pas")
+              controls.ap_vend.setValue(null)
               document.getElementById("bill").focus();
               }
                
@@ -1012,7 +1013,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
           this.loadingSubject.next(false);
           console.log(this.dataset);
           
-          this.router.navigateByUrl("/account-Payable/create-account-Payable");
+          this.router.navigateByUrl("/account-payable/list-payment");
           this.reset()
         }
       );
@@ -1346,7 +1347,7 @@ prepareGridbill() {
     },
     {
       id: "ad_name",
-      name: "Client",
+      name: "Nom",
       field: "address.ad_name",
       sortable: true,
       filterable: true,
@@ -1391,6 +1392,7 @@ prepareGridbill() {
       sortable: true,
       filterable: true,
       type: FieldType.string,
+      formatter:Formatters.checkmark,
     },
     {
       id: "ad_taxc",

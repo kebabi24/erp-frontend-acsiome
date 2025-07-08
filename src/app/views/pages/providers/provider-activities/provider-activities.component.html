@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'La liste des Factures Fournisseur  '" [class]="'card-head-lg'">
+    <kt-portlet-header [sticky]="true" [title]="'Activité Fournisseur  '" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
             
 
@@ -49,23 +49,31 @@
                         <button type="button"  (click)="solist()" class="btn btn-sm btn-primary btn-elevate col-lg-4">Valider </button>
                         </div>
                     </div>    
-                    <div class="form-group col-2">
+                    <!--div class="form-group col-2">
                         <label class="form-group">Imprimer Récap: *</label>
                         <div class="input-group input-group-sm">
                            <button type="button"  class="btn btn-outline-primary mr-3" (click)="printpdf()"><i class="flaticon2-print"></i> Imprimer </button>
                         </div>
-                    </div>     
+                    </div-->     
                 </div> 
         
             <div class="row">
-                <angular-slickgrid class="col-12"  gridId="gridCode" [columnDefinitions]="mvcolumnDefinitions"
-                    [gridOptions]="mvgridOptions" [dataset]="mvdataset"   (onAngularGridCreated)="mvGridReady($event)">
+                <angular-slickgrid class="col-12" gridHeight="300" gridId="gridCode" [columnDefinitions]="mvcolumnDefinitions"
+                    [gridOptions]="mvgridOptions" [dataset]="mvdataset"   (onAngularGridCreated)="mvGridReady($event)"
+                    (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
                 </angular-slickgrid>
             </div>
+            <div class="row">
+
+                <angular-slickgrid class="col-12 "  gridId="gridLines" [columnDefinitions]="columnDefinitions2"
+                (onAngularGridCreated)="angularGridReady2($event)"
+                [gridOptions]="gridOptions2" [dataset]="datasetdet"
+               
+                    >
+                </angular-slickgrid>
+            </div>     
             </form>
         </div>
 
     </kt-portlet-body>
 </kt-portlet>
-
-

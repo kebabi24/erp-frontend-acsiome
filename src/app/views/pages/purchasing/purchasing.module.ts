@@ -222,6 +222,7 @@ const routes: Routes = [
         path: "req-approval",
         component: ReqApprovalComponent,
       },
+      
     ],
   },
 ];

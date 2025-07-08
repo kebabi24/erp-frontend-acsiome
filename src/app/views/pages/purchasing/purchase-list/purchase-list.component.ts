@@ -104,7 +104,7 @@ prepareGrid() {
     },
     {
       id: "po_nbr",
-      name: "Code",
+      name: "Code BC",
       field: "po_nbr",
       minWidth: 80,
       maxWidth: 100,
@@ -112,7 +112,17 @@ prepareGrid() {
       filterable: true,
       grouping: {
         getter: 'po_nbr',
-        formatter: (g) => `N BC: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Code BC: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
         aggregateCollapsed: false,
         collapsed: false,
       }
@@ -127,6 +137,16 @@ prepareGrid() {
       grouping: {
         getter: 'po_vend',
         formatter: (g) => `Fournisseur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
         aggregateCollapsed: false,
         collapsed: false,
       }
@@ -140,23 +160,46 @@ prepareGrid() {
       filterable: true,
       grouping: {
         getter: 'ad_name',
-        formatter: (g) => `Nom: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Nom : ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
         aggregateCollapsed: false,
         collapsed: false,
       }
     },
     {
       id: "po_ord_date",
-      name: "Date de creation",
+      name: "Date de création",
       field: "po_ord_date",
       sortable: true,
       width: 50,
       filterable: true,
       formatter: Formatters.dateIso,
       type: FieldType.dateIso,
+      filter: {
+        model: Filters.dateRange,
+      },
       grouping: {
         getter: 'po_ord_date',
-        formatter: (g) => `Date Creation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Date Création: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
         aggregateCollapsed: false,
         collapsed: false,
       }
@@ -172,7 +215,17 @@ prepareGrid() {
       type: FieldType.dateIso,
       grouping: {
         getter: 'po_due_date',
-        formatter: (g) => `Date echeance: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        formatter: (g) => `Date d'écheance: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
+        //  new Aggregators.Sum('pod_qty_rcvd')
+        ],
         aggregateCollapsed: false,
         collapsed: false,
       }
@@ -210,10 +263,13 @@ prepareGrid() {
           // (required), what aggregators (accumulator) to use and on which field to do so
          // new Aggregators.Avg('tr_qty_loc'),
           new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
         //  new Aggregators.Sum('pod_qty_rcvd')
         ],
-        aggregateCollapsed: true,
-    
+        aggregateCollapsed: false,
         collapsed: false,
       }
     },
@@ -231,10 +287,13 @@ prepareGrid() {
           // (required), what aggregators (accumulator) to use and on which field to do so
          // new Aggregators.Avg('tr_qty_loc'),
           new Aggregators.Sum('pod_qty_ord'),
+          new Aggregators.Sum('pod_qty_rcvd'),
+          new Aggregators.Sum('rest_to_receive'),
+          new Aggregators.Sum('total_price'),
+          new Aggregators.Sum('total_recep'),
         //  new Aggregators.Sum('pod_qty_rcvd')
         ],
-        aggregateCollapsed: true,
-    
+        aggregateCollapsed: false,
         collapsed: false,
       }
     },
@@ -253,9 +312,12 @@ prepareGrid() {
       sortable: true,
       width: 50,
       filterable: true,
-      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
       type: FieldType.float,
-
+      formatter: Formatters.decimal,
+      params: { minDecimal: 2, maxDecimal: 2 }, 
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      headerCssClass: 'text-right',
+      cssClass: 'text-right'
     },
     {
       id: "pod_qty_rcvd",
@@ -264,21 +326,13 @@ prepareGrid() {
       sortable: true,
       width: 50,
       filterable: true,
-      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      formatter: Formatters.decimal,
       type: FieldType.float,
-      grouping: {
-        getter: 'pod_part',
-       // formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-        aggregators: [
-          // (required), what aggregators (accumulator) to use and on which field to do so
-         // new Aggregators.Avg('tr_qty_loc'),
-          new Aggregators.Sum('pod_qty_ord'),
-        //  new Aggregators.Sum('pod_qty_rcvd')
-        ],
-        aggregateCollapsed: true,
-    
-        collapsed: false,
-      }
+      params: { minDecimal: 2, maxDecimal: 2 }, 
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      headerCssClass: 'text-right',
+      cssClass: 'text-right'
+      
     },
     {
       id: "rest_to_receive",
@@ -287,8 +341,12 @@ prepareGrid() {
       sortable: true,
       width: 50,
       filterable: true,
-      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
       type: FieldType.float,
+      formatter: Formatters.decimal,
+      params: { minDecimal: 2, maxDecimal: 2 }, 
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      headerCssClass: 'text-right',
+      cssClass: 'text-right'
 
     },
     {
@@ -317,6 +375,11 @@ prepareGrid() {
       width: 80,
       filterable: true,
       type: FieldType.float,
+      formatter: Formatters.decimal,
+      params: { minDecimal: 2, maxDecimal: 2 }, 
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      headerCssClass: 'text-right',
+      cssClass: 'text-right'
     },
     {
       id: "total_recep",
@@ -326,6 +389,11 @@ prepareGrid() {
       width: 80,
       filterable: true,
       type: FieldType.float,
+      formatter: Formatters.decimal,
+      params: { minDecimal: 2, maxDecimal: 2 }, 
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+      headerCssClass: 'text-right',
+      cssClass: 'text-right'
     }
     
   ];
@@ -348,9 +416,10 @@ prepareGrid() {
     exportOptions: {
       sanitizeDataExport: true
     },
+    
    
     // enable the filtering but hide the user filter row since we use our own single filter
-    showHeaderRow: false, // hide the filter row (header row)
+    showHeaderRow: true, // hide the filter row (header row)
 
     alwaysShowVerticalScroll: false,
     enableColumnPicker: true,

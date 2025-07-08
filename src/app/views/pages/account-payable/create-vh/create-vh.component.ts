@@ -1093,7 +1093,7 @@ var prod = args.dataContext.product;
           );
           this.loadingSubject.next(false);
         //  console.log(this.dataset);
-          this.router.navigateByUrl("/account-payable/create-vh");
+          this.router.navigateByUrl("/account-payable/list-vh");
           this.reset()
         }
       );
@@ -1102,7 +1102,7 @@ var prod = args.dataContext.product;
   addNewItem() {
     const controls = this.ihForm.controls;
 
-    if (this.dataset.length == 0 ) {
+    if (this.ihdataset.length == 0 ) {
     this.gridServiceih.addItem(
       {
         id: this.ihdataset.length + 1,
@@ -1167,14 +1167,9 @@ if (!data) {
         const { data } = res;
 
         if (!data) {
-          this.layoutUtilsService.showActionNotification(
-            "ce Fournisseur n'existe pas!",
-            MessageType.Create,
-            10000,
-            true,
-            true
-          );
+         alert("ce Fournisseur n'existe pas!");
           this.error = true;
+          controls.vh_vend.setValue(null)
           document.getElementById("vend").focus();
         } else {
           this.error = false;
@@ -1997,6 +1992,30 @@ prepareGrid2() {
       type: FieldType.string,
     },
     {
+      id: "vd_class",
+      name: "Classe",
+      field: "vd_class",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "vd_type",
+      name: "Type",
+      field: "vd_type",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "vd_curr",
+      name: "Devise",
+      field: "vd_curr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
       id: "ad_phone",
       name: "Numero telephone",
       field: "address.ad_phone",
@@ -2011,6 +2030,7 @@ prepareGrid2() {
       sortable: true,
       filterable: true,
       type: FieldType.string,
+      formatter:Formatters.checkmark,
     },
     {
       id: "ad_taxc",
