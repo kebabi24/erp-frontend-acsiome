@@ -838,7 +838,7 @@ export class PoReceipCabComponent implements OnInit {
         this.loadingSubject.next(false);
         console.log(this.provider, poNbr, this.dataset);
         if (controls.print.value == true) this.printpdf(poNbr);
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl("/purchasing/po-list");
       }
     );
   }
@@ -1995,6 +1995,224 @@ export class PoReceipCabComponent implements OnInit {
     this.modalService.open(content, { size: "lg" });
   }
 
+  // printpdf(nbr) {
+  //   //const controls = this.totForm.controls
+  //   const controls = this.prhForm.controls;
+  //   console.log("pdf");
+  //   var doc = new jsPDF();
+
+  //   // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+  //   var img = new Image();
+  //   // img.src = "./assets/media/logos/po-receip-cab.png";
+  //   img.src = "./assets/media/logos/companyentete.png";
+  //   doc.addImage(img, 'png', 5, 5, 200, 30)
+  //   doc.setFontSize(9);
+  //   // if (this.domain.dom_name != null) {
+  //   //   doc.text(this.domain.dom_name, 10, 10);
+  //   // }
+  //   // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  //   // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  //   // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  //   let date = new Date()
+  //   doc.setFontSize(12);
+  //   doc.text("RC N° : " + nbr, 70, 40);
+  //   doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+  //     doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+  //     doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
+  //   doc.setFontSize(8);
+
+  //   doc.text("Code Fournisseur : " + this.provider.ad_addr, 20, 50);
+  //   doc.text("Nom             : " + this.provider.ad_name, 20, 55);
+  //   doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+  //   if (this.provider.ad_misc2_id != null) {
+  //     doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
+  //   }
+  //   if (this.provider.ad_gst_id != null) {
+  //     doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
+  //   }
+  //   if (this.provider.ad_pst_id) {
+  //     doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
+  //   }
+  //   if (this.provider.ad_misc1_id != null) {
+  //     doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
+  //   }
+  //   doc.text("Site        : " + controls.prh_site.value, 180, 50);
+
+  //   doc.line(10, 85, 200, 85);
+  //   doc.line(10, 90, 200, 90);
+  //   doc.line(10, 85, 10, 90);
+  //   doc.text("LN", 12.5, 88.5);
+  //   doc.line(20, 85, 20, 90);
+  //   doc.text("Code Article", 25, 88.5);
+  //   doc.line(45, 85, 45, 90);
+  //   doc.text("Désignation", 67.5, 88.5);
+  //   doc.line(100, 85, 100, 90);
+  //   doc.text("QTE", 107, 88.5);
+  //   doc.line(120, 85, 120, 90);
+  //   doc.text("UM", 123, 88.5);
+  //   doc.line(130, 85, 130, 90);
+  //   doc.text("Prix", 132, 88.5);
+  //   doc.line(140, 85, 140, 90);
+  //   doc.text("Empl", 142, 88.5);
+  //   doc.line(153, 85, 153, 90);
+  //   doc.text("Lot/Serie", 158, 88.5);
+  //   doc.line(180, 85, 180, 90);
+  //   doc.text("Réference", 182, 88.5);
+  //   doc.line(200, 85, 200, 90);
+  //   var i = 95;
+  //   doc.setFontSize(6);
+  //   for (let j = 0; j < this.dataset.length; j++) {
+  //     if (j % 20 == 0 && j != 0) {
+  //       doc.addPage();
+  //       doc.addImage(img, "png", 150, 5, 50, 30);
+  //       doc.setFontSize(9);
+  //       if (this.domain.dom_name != null) {
+  //         doc.text(this.domain.dom_name, 10, 10);
+  //       }
+  //       if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  //       if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  //       if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  //       doc.setFontSize(12);
+  //       doc.text("RC N° : " + nbr, 70, 40);
+  //       doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+  //     doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+  //     doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+      
+      
+  //       doc.setFontSize(8);
+
+  //       doc.text("Code Fournisseur : " + this.provider.vd_addr, 20, 50);
+  //       doc.text("Nom             : " + this.provider.ad_name, 20, 55);
+  //       doc.text("Adresse       : " + this.provider.ad_line1, 20, 60);
+  //       if (this.provider.ad_misc2_id != null) {
+  //         doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
+  //       }
+  //       if (this.provider.ad_gst_id != null) {
+  //         doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
+  //       }
+  //       if (this.provider.ad_pst_id) {
+  //         doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
+  //       }
+  //       if (this.provider.ad_misc1_id != null) {
+  //         doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
+  //       }
+  //       doc.text("Site        : " + controls.prh_site.value, 180, 50);
+
+  //       doc.line(10, 85, 200, 85);
+  //       doc.line(10, 90, 200, 90);
+  //       doc.line(10, 85, 10, 90);
+  //       doc.text("LN", 12.5, 88.5);
+  //       doc.line(20, 85, 20, 90);
+  //       doc.text("Code Article", 25, 88.5);
+  //       doc.line(45, 85, 45, 90);
+  //       doc.text("Désignation", 67.5, 88.5);
+  //       doc.line(100, 85, 100, 90);
+  //       doc.text("QTE", 107, 88.5);
+  //       doc.line(120, 85, 120, 90);
+  //       doc.text("UM", 123, 88.5);
+  //       doc.line(130, 85, 130, 90);
+  //       doc.text("Prix", 132, 88.5);
+  //       doc.line(140, 85, 140, 90);
+  //       doc.text("Empl", 142, 88.5);
+  //       doc.line(153, 85, 153, 90);
+  //       doc.text("Lot/Série", 152, 88.5);
+  //       doc.line(180, 85, 180, 90);
+  //       doc.text("Réf", 182, 88.5);
+  //       doc.line(200, 85, 200, 90);
+  //       i = 95;
+  //       doc.setFontSize(6);
+  //     }
+
+  //     if (this.dataset[j].desc.length > 45) {
+  //       let desc1 = this.dataset[j].desc.substring(45);
+  //       let ind = desc1.indexOf(" ");
+  //       desc1 = this.dataset[j].desc.substring(0, 45 + ind);
+  //       let desc2 = this.dataset[j].desc.substring(45 + ind);
+
+  //       doc.line(10, i - 5, 10, i);
+  //       doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
+  //       doc.line(20, i - 5, 20, i);
+  //       doc.text(this.dataset[j].prh_part, 25, i - 1);
+  //       doc.line(45, i - 5, 45, i);
+  //       doc.text(desc1, 47, i - 1);
+  //       doc.line(100, i - 5, 100, i);
+  //       doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
+  //       doc.line(120, i - 5, 120, i);
+  //       doc.text(this.dataset[j].prh_um, 123, i - 1);
+  //       doc.line(130, i - 5, 130, i);
+  //       doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
+  //       doc.line(140, i - 5, 140, i);
+  //       doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+  //       doc.line(153, i - 5, 153, i);
+  //       if (this.dataset[j].prh_serial != null) {
+  //         doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
+  //       }
+  //       doc.line(180, i - 5, 180, i);
+  //       if (this.dataset[j].tr_ref != null) {
+  //         doc.text(String(this.dataset[j].tr_ref), 182, i - 1);
+  //       }
+  //       doc.line(200, i - 5, 200, i);
+  //       // doc.line(10, i, 200, i );
+
+  //       i = i + 5;
+
+  //       doc.text(desc2, 47, i - 1);
+
+  //       doc.line(10, i - 5, 10, i);
+  //       doc.line(20, i - 5, 20, i);
+  //       doc.line(45, i - 5, 45, i);
+  //       doc.line(100, i - 5, 100, i);
+  //       doc.line(120, i - 5, 120, i);
+  //       doc.line(130, i - 5, 130, i);
+  //       doc.line(140, i - 5, 140, i);
+  //       doc.line(153, i - 5, 153, i);
+  //       doc.line(180, i - 5, 180, i);
+  //       doc.line(200, i - 5, 200, i);
+  //       doc.line(10, i, 200, i);
+
+  //       i = i + 5;
+  //     } else {
+  //       doc.line(10, i - 5, 10, i);
+  //       doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
+  //       doc.line(20, i - 5, 20, i);
+  //       doc.text(this.dataset[j].prh_part, 25, i - 1);
+  //       doc.line(45, i - 5, 45, i);
+  //       doc.text(this.dataset[j].desc, 47, i - 1);
+  //       doc.line(100, i - 5, 100, i);
+  //       doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
+  //       doc.line(120, i - 5, 120, i);
+  //       doc.text(this.dataset[j].prh_um, 123, i - 1);
+  //       doc.line(130, i - 5, 130, i);
+  //       doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
+  //       doc.line(140, i - 5, 140, i);
+  //       doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+  //       doc.line(153, i - 5, 153, i);
+  //       if (this.dataset[j].prh_serial != null) {
+  //         doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
+  //       }
+  //       doc.line(180, i - 5, 180, i);
+  //       if (this.dataset[j].tr_ref) {
+  //         doc.text(String(this.dataset[j].tr_ref), 182, i - 1);
+  //       }
+  //       doc.line(200, i - 5, 200, i);
+  //       doc.line(10, i, 200, i);
+  //       i = i + 5;
+  //     }
+  //   }
+
+  //   // doc.line(10, i - 5, 200, i - 5);
+  //   doc.text("Validé par: " , 20, 235);
+  //   doc.text("Note: " , 20, 250);
+  //   doc.setFontSize(10);
+
+  //   // window.open(doc.output('bloburl'), '_blank');
+  //   //window.open(doc.output('blobUrl'));  // will open a new tab
+  //   doc.save('RC-' + nbr + '.pdf')
+  //   var blob = doc.output("blob");
+  //   window.open(URL.createObjectURL(blob));
+  // }
   printpdf(nbr) {
     //const controls = this.totForm.controls
     const controls = this.prhForm.controls;
@@ -2003,7 +2221,7 @@ export class PoReceipCabComponent implements OnInit {
 
     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
     var img = new Image();
-    // img.src = "./assets/media/logos/po-receip-cab.png";
+    // img.src = "./assets/media/logos/po-receip-cab-id.png";
     img.src = "./assets/media/logos/companyentete.png";
     doc.addImage(img, 'png', 5, 5, 200, 30)
     doc.setFontSize(9);
@@ -2013,8 +2231,20 @@ export class PoReceipCabComponent implements OnInit {
     // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
     // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-    let date = new Date()
+    // img.src = "./assets/media/logos/companylogo.png";
+    
+    doc.setFontSize(9);
+    // if (this.domain.dom_name != null) {
+    //   doc.text(this.domain.dom_name, 10, 10);
+    // }
+    // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+    // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+    // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+
+    // doc.addImage(img, "png", 160, 5, 50, 30);
+
     doc.setFontSize(12);
+    let date = new Date()
     doc.text("RC N° : " + nbr, 70, 40);
     doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
@@ -2038,7 +2268,7 @@ export class PoReceipCabComponent implements OnInit {
     if (this.provider.ad_misc1_id != null) {
       doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
     }
-    doc.text("Site        : " + controls.prh_site.value, 180, 50);
+    // doc.text("Site        : " + controls.prh_site.value, 180, 50);
 
     doc.line(10, 85, 200, 85);
     doc.line(10, 90, 200, 90);
@@ -2046,16 +2276,16 @@ export class PoReceipCabComponent implements OnInit {
     doc.text("LN", 12.5, 88.5);
     doc.line(20, 85, 20, 90);
     doc.text("Code Article", 25, 88.5);
-    doc.line(45, 85, 45, 90);
+    doc.line(60, 85, 60, 90);
     doc.text("Désignation", 67.5, 88.5);
-    doc.line(100, 85, 100, 90);
-    doc.text("QTE", 107, 88.5);
-    doc.line(120, 85, 120, 90);
-    doc.text("UM", 123, 88.5);
-    doc.line(130, 85, 130, 90);
-    doc.text("Prix", 132, 88.5);
-    doc.line(140, 85, 140, 90);
-    doc.text("Empl", 142, 88.5);
+    doc.line(110, 85, 110, 90);
+    doc.text("QTE", 115, 88.5);
+    doc.line(125, 85, 125, 90);
+    doc.text("UM", 127, 88.5);
+    doc.line(135, 85, 135, 90);
+    doc.text("Prix", 137, 88.5);
+    // doc.line(140, 85, 140, 90);
+    // doc.text("Empl", 142, 88.5);
     doc.line(153, 85, 153, 90);
     doc.text("Lot/Serie", 158, 88.5);
     doc.line(180, 85, 180, 90);
@@ -2066,14 +2296,16 @@ export class PoReceipCabComponent implements OnInit {
     for (let j = 0; j < this.dataset.length; j++) {
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        doc.addImage(img, "png", 150, 5, 50, 30);
+
+        // doc.addImage(img, "png", 170, 5, 30, 30);
         doc.setFontSize(9);
-        if (this.domain.dom_name != null) {
-          doc.text(this.domain.dom_name, 10, 10);
-        }
-        if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-        if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-        if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        // if (this.domain.dom_name != null) {
+        //   doc.text(this.domain.dom_name, 10, 10);
+        // }
+        // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+        // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+        // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+        doc.addImage(img, "png", 160, 5, 50, 30);
         doc.setFontSize(12);
         doc.text("RC N° : " + nbr, 70, 40);
         doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
@@ -2106,16 +2338,16 @@ export class PoReceipCabComponent implements OnInit {
         doc.text("LN", 12.5, 88.5);
         doc.line(20, 85, 20, 90);
         doc.text("Code Article", 25, 88.5);
-        doc.line(45, 85, 45, 90);
+        doc.line(60, 85, 60, 90);
         doc.text("Désignation", 67.5, 88.5);
-        doc.line(100, 85, 100, 90);
-        doc.text("QTE", 107, 88.5);
-        doc.line(120, 85, 120, 90);
-        doc.text("UM", 123, 88.5);
-        doc.line(130, 85, 130, 90);
-        doc.text("Prix", 132, 88.5);
-        doc.line(140, 85, 140, 90);
-        doc.text("Empl", 142, 88.5);
+        doc.line(110, 85, 110, 90);
+        doc.text("QTE", 115, 88.5);
+        doc.line(125, 85, 125, 90);
+        doc.text("UM", 127, 88.5);
+        doc.line(135, 85, 135, 90);
+        doc.text("Prix", 137, 88.5);
+        // doc.line(140, 85, 140, 90);
+        // doc.text("Empl", 142, 88.5);
         doc.line(153, 85, 153, 90);
         doc.text("Lot/Série", 152, 88.5);
         doc.line(180, 85, 180, 90);
@@ -2125,26 +2357,26 @@ export class PoReceipCabComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 45) {
-        let desc1 = this.dataset[j].desc.substring(45);
+      if (this.dataset[j].desc.length > 35) {
+        let desc1 = this.dataset[j].desc.substring(35);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
-        let desc2 = this.dataset[j].desc.substring(45 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
+        let desc2 = this.dataset[j].desc.substring(35 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].prh_part, 25, i - 1);
-        doc.line(45, i - 5, 45, i);
-        doc.text(desc1, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].prh_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
-        doc.line(140, i - 5, 140, i);
-        doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+        doc.text(this.dataset[j].prh_part, 22, i - 1);
+        doc.line(60, i - 5, 60, i);
+        doc.text(desc1, 62, i - 1);
+        doc.line(110, i - 5, 110, i);
+        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 123, i - 1, { align: "right" });
+        doc.line(125, i - 5, 125, i);
+        doc.text(this.dataset[j].prh_um, 127, i - 1);
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(Number(this.dataset[j].prh_pur_cost).toFixed(2)), 151, i - 1, { align: "right" });
+        // doc.line(140, i - 5, 140, i);
+        // doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
         doc.line(153, i - 5, 153, i);
         if (this.dataset[j].prh_serial != null) {
           doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
@@ -2158,15 +2390,15 @@ export class PoReceipCabComponent implements OnInit {
 
         i = i + 5;
 
-        doc.text(desc2, 47, i - 1);
+        doc.text(desc2, 62, i - 1);
 
         doc.line(10, i - 5, 10, i);
         doc.line(20, i - 5, 20, i);
-        doc.line(45, i - 5, 45, i);
-        doc.line(100, i - 5, 100, i);
-        doc.line(120, i - 5, 120, i);
-        doc.line(130, i - 5, 130, i);
-        doc.line(140, i - 5, 140, i);
+        doc.line(60, i - 5, 60, i);
+        doc.line(110, i - 5, 110, i);
+        doc.line(125, i - 5, 125, i);
+        doc.line(135, i - 5, 135, i);
+        // doc.line(140, i - 5, 140, i);
         doc.line(153, i - 5, 153, i);
         doc.line(180, i - 5, 180, i);
         doc.line(200, i - 5, 200, i);
@@ -2177,17 +2409,17 @@ export class PoReceipCabComponent implements OnInit {
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].prh_part, 25, i - 1);
-        doc.line(45, i - 5, 45, i);
-        doc.text(this.dataset[j].desc, 47, i - 1);
-        doc.line(100, i - 5, 100, i);
-        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 118, i - 1, { align: "right" });
-        doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].prh_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(this.dataset[j].prh_pur_cost), 132, i - 1);
-        doc.line(140, i - 5, 140, i);
-        doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
+        doc.text(this.dataset[j].prh_part, 22, i - 1);
+        doc.line(60, i - 5, 60, i);
+        doc.text(this.dataset[j].desc, 62, i - 1);
+        doc.line(110, i - 5, 110, i);
+        doc.text(String(Number(this.dataset[j].prh_rcvd).toFixed(2)), 123, i - 1, { align: "right" });
+        doc.line(125, i - 5, 125, i);
+        doc.text(this.dataset[j].prh_um, 127, i - 1);
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(Number(this.dataset[j].prh_pur_cost).toFixed(2)), 151, i - 1, { align: "right" });
+        // doc.line(140, i - 5, 140, i);
+        // doc.text(String(this.dataset[j].prh_loc), 141, i - 1);
         doc.line(153, i - 5, 153, i);
         if (this.dataset[j].prh_serial != null) {
           doc.text(String(this.dataset[j].prh_serial), 156, i - 1);
@@ -2201,7 +2433,7 @@ export class PoReceipCabComponent implements OnInit {
         i = i + 5;
       }
     }
-
+    doc.setFontSize(12);
     // doc.line(10, i - 5, 200, i - 5);
     doc.text("Validé par: " , 20, 235);
     doc.text("Note: " , 20, 250);

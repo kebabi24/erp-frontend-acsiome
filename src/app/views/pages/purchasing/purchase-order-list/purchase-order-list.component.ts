@@ -704,7 +704,7 @@ doc.setFontSize(12);
       let desc1 = this.podataset[j].item.pt_desc1.substring(35)
       let ind = desc1.indexOf(' ')
       desc1 = this.podataset[j].item.pt_desc1.substring(0, 35  + ind)
-      let desc2 = this.dataset[j].item.pt_desc1.substring(35+ind)
+      let desc2 = this.podataset[j].item.pt_desc1.substring(35+ind)
 
       doc.line(10, i - 5, 10, i );
       doc.text(String(("000"+ this.podataset[j].pod_line)).slice(-3), 12.5 , i  - 1);
