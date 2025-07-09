@@ -351,7 +351,7 @@ export class PoUnreceipCabComponent implements OnInit {
 
     console.log(this.prhnbr);
     this.prhForm = this.prhFB.group({
-      prh_receiver: [this.prhnbr],
+      prh_receiver: [null],
       prh_nbr: [this.purchaseReceive.prh_nbr],
       prh_vend: [this.purchaseReceive.prh_vend],
       name: "",
@@ -381,6 +381,7 @@ export class PoUnreceipCabComponent implements OnInit {
     this.inventoryTransaction = new InventoryTransaction();
     this.createForm();
     this.hasFormErrors = false;
+    this.dataset=[]
   }
   // save data
   onSubmit() {
@@ -471,7 +472,8 @@ export class PoUnreceipCabComponent implements OnInit {
         this.loadingSubject.next(false);
         console.log(this.provider, poNbr, this.dataset);
         if (controls.print.value == true) this.printpdf(poNbr);
-        this.router.navigateByUrl("/");
+        this.reset()
+        this.router.navigateByUrl("/inventory-transaction/po-unreceip-cab");
       }
     );
   }
@@ -1648,7 +1650,7 @@ export class PoUnreceipCabComponent implements OnInit {
     // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     let date = new Date()
     doc.setFontSize(12);
-    doc.text("RC N° : " + nbr, 70, 40);
+    doc.text("Annulation RC N° : " + nbr, 50, 40);
     doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
       doc.text("Edité par: " + this.user.usrd_code, 160, 55);
@@ -1710,7 +1712,7 @@ export class PoUnreceipCabComponent implements OnInit {
         if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
         if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(12);
-        doc.text("RC N° : " + nbr, 70, 40);
+        doc.text("Annulation RC N° : " + nbr, 70, 40);
         doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
       doc.text("Edité par: " + this.user.usrd_code, 160, 55);

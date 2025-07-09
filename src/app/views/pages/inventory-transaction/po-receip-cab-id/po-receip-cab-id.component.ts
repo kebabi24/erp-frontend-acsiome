@@ -903,7 +903,7 @@ export class PoReceipCabIdComponent implements OnInit {
         this.loadingSubject.next(false);
         console.log(this.provider, poNbr, this.dataset);
         if (controls.print.value == true) this.printpdf(poNbr);
-        this.router.navigateByUrl("/");
+        this.router.navigateByUrl("/purchasing/po-list");
       }
     );
   }

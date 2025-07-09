@@ -441,7 +441,8 @@ this.addReq(req, this.dataset)
     addReq(_req: any, detail:any) {
         this.loadingSubject.next(true)
         this.requisitonService.add({ requisition: _req, requisitionDetail: detail }).subscribe(
-            (reponse) => console.log("response", Response),
+            (reponse:any) => (console.log("response", Response), 
+            this.nbr = reponse.data.rqm_nbr),
             (error) => {
                 this.layoutUtilsService.showActionNotification(
                     "Erreur verifier les informations",
@@ -452,7 +453,8 @@ this.addReq(req, this.dataset)
                 )
                 this.loadingSubject.next(false)
             },
-            () => {
+            () =>
+             {
                 this.layoutUtilsService.showActionNotification(
                     "Ajout avec succès",
                     MessageType.Create,
@@ -463,7 +465,8 @@ this.addReq(req, this.dataset)
                 this.loadingSubject.next(false)
                 this.printpdf(this.nbr);
                 this.router.navigateByUrl("purchasing/list-req-user")
-            }
+            },
+           
         )
     }
 
