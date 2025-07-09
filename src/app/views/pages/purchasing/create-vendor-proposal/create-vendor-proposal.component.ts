@@ -1224,8 +1224,9 @@ curr: String;
          for (var i = 0; i < this.dataset.length; i++) {
            console.log(this.dataset[i]  )
            ttc += round((this.dataset[i].vpd_q_price  *  this.dataset[i].vpd_q_qty),2) 
-           return ttc
+           
          }
+         return ttc
       
       }
       

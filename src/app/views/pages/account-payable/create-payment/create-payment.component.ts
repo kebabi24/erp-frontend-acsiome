@@ -335,6 +335,8 @@ export class CreatePaymentComponent implements OnInit {
         minWidth: 200,
         maxWidth: 200,
         filterable: false,
+        formatter: Formatters.decimal,
+        params: { minDecimal: 2, maxDecimal: 2 }, 
       
       
         
@@ -406,7 +408,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
       formatterOptions: {
         
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
-        displayNegativeNumberWithParentheses: true,
+        displayNegativeNumberWithParentheses: false,
   
         // Defaults to undefined, minimum number of decimals
         minDecimal: 2,

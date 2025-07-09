@@ -768,10 +768,10 @@ export class PoReceipCabComponent implements OnInit {
           );
           
         }
-         controls.prh_receiver.setValue(this.prhnbr);
-         let pr = this.prepare();
+        
+        controls.prh_receiver.setValue(this.prhnbr);
+        let pr = this.prepare();
         this.addIt(this.dataset, pr, this.prhnbr);
-       
       } else {
         this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
@@ -2071,7 +2071,7 @@ export class PoReceipCabComponent implements OnInit {
     for (let j = 0; j < this.dataset.length; j++) {
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
-        doc.addImage(img, "png", 150, 5, 50, 30);
+        doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);

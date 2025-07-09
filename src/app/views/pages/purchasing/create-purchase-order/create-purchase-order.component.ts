@@ -393,20 +393,20 @@ controls.seqname.setValue(response.data[0].seq_desc)
           delete data.cmvid
         
         }
-        this.sequencesService
-        .getBy({seq_seq: controls.rqm_category.value, seq_type: 'RQ', seq_profile: this.user.usrd_profile})
-        .subscribe((response: any) => {
-            console.log(response)
-            if (response.data.length == 0) {
-                alert("Sequence n existe pas")
-                controls.rqm_category.setValue("")
-                console.log(response.data.length)
-                document.getElementById("SEQUENCE").focus();
-            }
-            this.nbr = `${response.data[0].seq_prefix}${Number(response.data[0].seq_curr_val)+1}`
+        // this.sequencesService
+        // .getBy({seq_seq: controls.rqm_category.value, seq_type: 'RQ', seq_profile: this.user.usrd_profile})
+        // .subscribe((response: any) => {
+        //     console.log(response)
+        //     if (response.data.length == 0) {
+        //         alert("Sequence n existe pas")
+        //         controls.rqm_category.setValue("")
+        //         console.log(response.data.length)
+        //         document.getElementById("SEQUENCE").focus();
+        //     }
+        //     this.nbr = `${response.data[0].seq_prefix}${Number(response.data[0].seq_curr_val)+1}`
 console.log(this.nbr)
 this.addReq(req, this.dataset)
-        })
+        // })
        
     }
     
