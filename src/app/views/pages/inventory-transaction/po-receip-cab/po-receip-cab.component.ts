@@ -741,7 +741,7 @@ export class PoReceipCabComponent implements OnInit {
     }
 
     
-    let pr = this.prepare();
+    
     this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
       this.seq = response.data;
     
@@ -763,8 +763,10 @@ export class PoReceipCabComponent implements OnInit {
           );
           
         }
-        this.addIt(this.dataset, pr, this.prhnbr);
+        
         controls.prh_receiver.setValue(this.prhnbr);
+        let pr = this.prepare();
+        this.addIt(this.dataset, pr, this.prhnbr);
       } else {
         this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;
