@@ -209,7 +209,7 @@ export class MenuConfig {
             },
             {
               title: "Activité Fournisseur",
-              page: "/providers/provider-activitylist",
+              page: "/providers/provider-activities",
             },
             {
               title: "Chiffre d'affaire par Fournisseur",
@@ -221,7 +221,7 @@ export class MenuConfig {
             },
             {
               title: "Ajouter Fournisseurs",
-              page: "/providers/add",
+              page: "/providers/create-std-provider",
             },
             {
               title: "Répertoire Fournisseurs",

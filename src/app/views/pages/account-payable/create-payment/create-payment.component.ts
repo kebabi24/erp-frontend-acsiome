@@ -882,6 +882,13 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
           effdate: null,
           apd_amt: 0,
           applied: 0,
+          apd_type: "VO",
+          apd_acct: this.provider.vd_ap_acct,
+          apd_sub: this.provider.vd_ap_sub,
+          apd_cc: this.provider.vd_ap_cc,
+          apd_ex_rate: controls.ap_ex_rate.value,
+          apd_ex_rate2: controls.ap_ex_rate2.value,
+          apd_dy_code: controls.ap_dy_code.value,
         },
         { position: "bottom" }
       );
