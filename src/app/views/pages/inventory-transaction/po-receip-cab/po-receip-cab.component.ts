@@ -264,16 +264,10 @@ export class PoReceipCabComponent implements OnInit {
             return;
             
           } else {
-            if(args.dataContext.prh_rcvd < 2000 && args.dataContext.prh_rcvd > 0){
+           
             this.printable = true
             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, qty: args.dataContext.prh_rcvd });
-            }  
-            else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_rcvd: args.dataContext.qty });
-            this.message = "la quantité ne doit pas dépasser 2000";
-            this.hasFormErrors = true;
-            return;
-            }      
+             
           }
         },
       },
@@ -484,6 +478,13 @@ export class PoReceipCabComponent implements OnInit {
         },
         onCellChange: (e: Event, args: OnEventArgs) => {
           const controls = this.prhForm.controls;
+           if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_serial:null });
+            this.message = "vous ne pouvez pas modifier cette ligne";
+            this.hasFormErrors = true;
+            return;
+            
+          } else {
           this.locationDetailService.getBy({ ld_site: controls.prh_site.value, ld_loc: args.dataContext.prh_loc, ld_part: args.dataContext.prh_part, ld_lot: args.dataContext.prh_serial }).subscribe((response: any) => {
             this.lddet = response.data;
 
@@ -492,6 +493,8 @@ export class PoReceipCabComponent implements OnInit {
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.lddet[0].ld_status, tr_expire: this.lddet[0].tr_expire });
             }
           });
+          this.printable = true;
+        }
         },
       },
       {
@@ -2017,7 +2020,7 @@ export class PoReceipCabComponent implements OnInit {
     doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
       doc.text("Edité par: " + this.user.usrd_code, 160, 55);
-      
+    doc.text("Site        : " + controls.prh_site.value, 160, 60);  
       
     doc.setFontSize(8);
 
@@ -2036,7 +2039,7 @@ export class PoReceipCabComponent implements OnInit {
     if (this.provider.ad_misc1_id != null) {
       doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
     }
-    doc.text("Site        : " + controls.prh_site.value, 180, 50);
+    
 
     doc.line(10, 85, 200, 85);
     doc.line(10, 90, 200, 90);
@@ -2077,7 +2080,7 @@ export class PoReceipCabComponent implements OnInit {
         doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
       doc.text("Edité par: " + this.user.usrd_code, 160, 55);
-      
+      doc.text("Site        : " + controls.prh_site.value, 160, 60);
       
         doc.setFontSize(8);
 
@@ -2096,7 +2099,7 @@ export class PoReceipCabComponent implements OnInit {
         if (this.provider.ad_misc1_id != null) {
           doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
         }
-        doc.text("Site        : " + controls.prh_site.value, 180, 50);
+        
 
         doc.line(10, 85, 200, 85);
         doc.line(10, 90, 200, 90);
@@ -2123,16 +2126,16 @@ export class PoReceipCabComponent implements OnInit {
         doc.setFontSize(6);
       }
 
-      if (this.dataset[j].desc.length > 45) {
-        let desc1 = this.dataset[j].desc.substring(45);
+      if (this.dataset[j].desc.length > 35) {
+        let desc1 = this.dataset[j].desc.substring(35);
         let ind = desc1.indexOf(" ");
-        desc1 = this.dataset[j].desc.substring(0, 45 + ind);
-        let desc2 = this.dataset[j].desc.substring(45 + ind);
+        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
+        let desc2 = this.dataset[j].desc.substring(35 + ind);
 
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].prh_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].prh_part, 25, i - 1);
+        doc.text(this.dataset[j].prh_part, 22, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);

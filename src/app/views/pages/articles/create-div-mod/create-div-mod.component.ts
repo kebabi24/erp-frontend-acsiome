@@ -1827,8 +1827,8 @@ doc.setFontSize(14);
           
           doc.text("Formule: " + controls.pt_bom_code.value, 7, initialY + 65);
           doc.text("Origine: " + controls.pt_origin.value, 55, initialY + 65);
-          doc.text("Fournisseur: " + controls.pt_vend.value, 7, initialY + 70);
-          doc.text("Réference: " + controls.pt_model.value, 55, initialY + 70);
+          // doc.text("Fournisseur: " + controls.pt_vend.value, 7, initialY + 70);
+          // doc.text("Réference: " + controls.pt_model.value, 55, initialY + 70);
           doc.line(5, 102, 200, 102);
           doc.line(200, 85, 200, 102);
           
