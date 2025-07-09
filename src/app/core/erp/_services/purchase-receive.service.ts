@@ -68,7 +68,11 @@ export class PurchaseReceiveService {
     public getGroupRCP() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/grouprcp`, { headers: httpHeaders })
-    }
+    } 
+    public getGroupRCPCancel() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/grouprcpcancel`, { headers: httpHeaders })
+    } 
     // UPDATE
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -78,5 +82,14 @@ export class PurchaseReceiveService {
     public getGroupAmt() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/groupamt`, { headers: httpHeaders })
+    }
+    public getByTr(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbytr`,data, { headers: httpHeaders })
+ 
+    }
+    public Unreceip(data: any, prhnbr:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/UNR/${prhnbr}`, data, { headers: httpHeaders })
     }
 }

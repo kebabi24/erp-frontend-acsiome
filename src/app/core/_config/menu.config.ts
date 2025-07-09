@@ -715,6 +715,10 @@ export class MenuConfig {
               page: "/inventory-transaction/po-receip-cab",
             },
             {
+              title: "Annuler Réception",
+              page: "/inventory-transaction/po-unreceip-cab",
+            },
+            {
               title: "Etiquetage MP",
               page: "/inventory-transaction/label-create",
             },
