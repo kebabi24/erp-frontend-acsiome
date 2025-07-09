@@ -479,7 +479,7 @@ export class PoReceipCabComponent implements OnInit {
         onCellChange: (e: Event, args: OnEventArgs) => {
           const controls = this.prhForm.controls;
            if (args.dataContext.tr_ref != null && args.dataContext.tr_ref != "") {
-            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_serial:null });
+            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, prh_serial:args.dataContext.oldlot });
             this.message = "vous ne pouvez pas modifier cette ligne";
             this.hasFormErrors = true;
             return;
@@ -490,7 +490,9 @@ export class PoReceipCabComponent implements OnInit {
 
             console.log(response.data.length);
             if (response.data.length != 0) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.lddet[0].ld_status, tr_expire: this.lddet[0].tr_expire });
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_status: this.lddet[0].ld_status, tr_expire: this.lddet[0].tr_expire,oldlot:args.dataContext.prh_serial });
+            }
+            else{this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, oldlot:args.dataContext.prh_serial });
             }
           });
           this.printable = true;
@@ -744,7 +746,7 @@ export class PoReceipCabComponent implements OnInit {
     }
 
     
-    let pr = this.prepare();
+    
     this.sequenceService.getByOne({ seq_type: "PR", seq_profile: this.user.usrd_profile }).subscribe((response: any) => {
       this.seq = response.data;
     
@@ -766,8 +768,10 @@ export class PoReceipCabComponent implements OnInit {
           );
           
         }
+         controls.prh_receiver.setValue(this.prhnbr);
+         let pr = this.prepare();
         this.addIt(this.dataset, pr, this.prhnbr);
-        controls.prh_receiver.setValue(this.prhnbr);
+       
       } else {
         this.message = "Parametrage Manquant pour la sequence";
         this.hasFormErrors = true;

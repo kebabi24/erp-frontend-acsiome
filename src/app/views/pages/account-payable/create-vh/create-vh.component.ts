@@ -1650,7 +1650,7 @@ controls.tht.setValue(tht.toFixed(2));
 controls.tva.setValue(tva.toFixed(2));
 controls.timbre.setValue(timbre.toFixed(2));
 controls.ttc.setValue(ttc.toFixed(2));
-this.timbreService.getTimbreValue({ code: controlsso.po_cr_terms.value, amt: round(tht + tva )}).subscribe(
+this.timbreService.getTimbreValue({ code: controlsso.vh_cr_terms.value, amt: round(tht + tva )}).subscribe(
     (response: any) => {
     //  console.log(response.data.value)
      if(response.data != null) {

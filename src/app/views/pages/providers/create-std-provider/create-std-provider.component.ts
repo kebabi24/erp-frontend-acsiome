@@ -165,7 +165,8 @@ banque:any;
 ckfrm:any;
 crterms:any;
 devise:any;
-
+docs:any[]=[];
+exist:any;
 /**
  * Component constructor
  *
@@ -261,6 +262,13 @@ ngOnInit() {
         const style = getComputedStyle(document.getElementById("kt_header"))
         this.headerMargin = parseInt(style.height, 0)
     }
+    this.codeService
+    .getBy({ code_fldname: "providers/create-std-provider" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
 }
 
 // loadProduct(_product, fromService: boolean = false) {
@@ -439,6 +447,7 @@ init() {
     this.deviseService.getBy({ cu_active:  true }).subscribe(
       (response: any) => {
     controls.vd_curr.setValue(response.data.cu_curr)
+    this.devise = response.data.cu_desc
       })
       this.taxService.getBy({ tx2_default: true}).subscribe(
         (respo: any) => {
@@ -1748,68 +1757,79 @@ printpdf() {
           var img = new Image();
            img.src = "./assets/media/logos/companyentete.png";
            doc.addImage(img, "png", 5, 5, 200, 30);
-          doc.setFontSize(14);
-    
+          doc.setFontSize(8);
+       if(this.exist == true){
+    doc.text(this.docs[0].code_value, 160, 17); 
+    doc.setFontSize(10);
+    doc.text(this.docs[0].code_cmmt, 55, 22);
+    doc.setFontSize(8);
+    doc.text(this.docs[0].code_desc, 165, 12);
+    doc.text(this.docs[0].chr01, 22, 27);
+    doc.text(String(1), 22, 32);
+    doc.text(this.docs[0].dec01, 170, 32);
+    doc.text(this.docs[0].date01, 180, 22);
+    doc.text(this.docs[0].date02, 180, 27);
+  }
         
           const date = new Date()
           doc.setFontSize(16);
     
           
           doc.setFont("Times-Roman");
-          doc.line(5,25,200,25)
-          doc.text("Code Fournisseur : " + controlsx.ad_addr.value, 40, 30);
-          doc.line(5,35,200,35)
+          doc.line(35,35,150,35)
+          doc.text("Code Fournisseur : " + controlsx.ad_addr.value, 40, 40);
+          doc.line(35,45,150,45)
           doc.setFontSize(12);
           
-          doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 40);
-          if(controls.vd_sort.value != null){doc.text("Activité: " + controls.vd_sort.value, 7, 45);}
-          else {doc.text("Activité: " , 7, 45);}
-          doc.line(5,50,200,50)
-          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value, 7, 55);}
-          else{doc.text("Addresse: ", 7, 55);}
-          if(controlsa.ad_country.value != null){doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 7, 60);}
-          else{doc.text("Pays: ", 7, 60);}
-          doc.line(5,65,200,65)
-          if(controlsa.ad_phone.value != null){doc.text("Tel: " + controlsa.ad_phone.value, 7, 70);}
-          else{doc.text("Tel: ", 7, 70);}  
-          if(controlsa.ad_ext.value != null){doc.text("Email: " + controlsa.ad_ext.value, 57, 70);}
-          else{doc.text("Email: ", 57, 70)}  
-          doc.line(5,75,200,75)
-          doc.text("Taxable: " + controlsa.ad_taxable.value, 7, 80);
-          doc.text("Taux de taxe: " + controlsa.ad_taxc.value, 57, 80);
+          doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 50);
+          if(controls.vd_sort.value != null){doc.text("Activité: " + controls.vd_sort.value, 7, 55);}
+          else {doc.text("Activité: " , 7, 55);}
+          doc.line(5,60,200,60)
+          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value, 7, 65);}
+          else{doc.text("Addresse: ", 7, 65);}
+          if(controlsa.ad_country.value != null){doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 7, 70);}
+          else{doc.text("Pays: ", 7, 70);}
+          // doc.line(5,75,200,75)
+          if(controlsa.ad_phone.value != null){doc.text("Tel: " + controlsa.ad_phone.value, 7, 80);}
+          else{doc.text("Tel: ", 7, 80);}  
+          if(controlsa.ad_ext.value != null){doc.text("Email: " + controlsa.ad_ext.value, 57, 80);}
+          else{doc.text("Email: ", 57, 80)}  
           doc.line(5,85,200,85)
+          doc.text("Taxable: " + controlsa.ad_taxable.value, 7, 90);
+          doc.text("Taux de taxe: " + controlsa.ad_taxc.value, 57, 90);
+          // doc.line(5,85,200,85)
           // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
           // doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 45);
-          if(controlsa.ad_gst_id.value != null){doc.text("RC N°: " + controlsa.ad_gst_id.value, 7, 90);}
-          else{doc.text("RC N°: ", 7, 90)}
-          if(controlsa.ad_misc2_id.value != null){doc.text("NIF: " + controlsa.ad_misc2_id.value, 57, 90);}
-          else{doc.text("NIF: ", 57, 90)}
-          if(controlsa.ad_pst_id.value != null){doc.text("AI: " + controlsa.ad_pst_id.value, 7, 95);}
-          else{doc.text("AI: " , 7, 95)}
-          if(controlsa.ad_misc1_id.value != null){doc.text("NIS: " + controlsa.ad_misc1_id.value, 57, 95);}
-          {doc.text("NIS: ", 57, 95)}
-          doc.line(5,100,200,100)
+          if(controlsa.ad_gst_id.value != null){doc.text("RC N°: " + controlsa.ad_gst_id.value, 7, 95);}
+          else{doc.text("RC N°: ", 7, 95)}
+          if(controlsa.ad_misc2_id.value != null){doc.text("NIF: " + controlsa.ad_misc2_id.value, 57, 95);}
+          else{doc.text("NIF: ", 57, 95)}
+          if(controlsa.ad_pst_id.value != null){doc.text("AI: " + controlsa.ad_pst_id.value, 7, 100);}
+          else{doc.text("AI: " , 7, 100)}
+          if(controlsa.ad_misc1_id.value != null){doc.text("NIS: " + controlsa.ad_misc1_id.value, 57, 100);}
+          {doc.text("NIS: ", 57, 100)}
+          doc.line(5,105,200,105)
           
-          if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value + ' - ' + this.vdtype, 7, 105);}
-          else{doc.text("Type: ", 7, 105)}
-          if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 110);}
-          else{doc.text("Séquence: ", 7, 110)}
-          if(controls.vd_shipvia.value!=null){doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 115);}
-          else{doc.text("Modealité de transport: ", 7, 115)}
-          doc.line(5,120,200,120)
-          if(controls.vd_bank.value!=null){doc.text("Banque: " + controls.vd_bank.value + ' - ' + this.banque, 7, 125);}
-          else{doc.text("Banque: ", 7, 125)}
-          if(controls.vd_ckfrm.value!=null){doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' - ' + this.ckfrm, 7, 130);}
-          else{doc.text("Méthode de paiement: ", 7, 130)}
-          if(controls.vd_cr_terms.value!=null){doc.text("Condition: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 135);}
-          else{doc.text("Condition: ", 7, 135)}
-          if(controls.vd_curr.value!=null){doc.text("Devise: " + controls.vd_curr.value + ' - ' + this.devise, 7, 140);}
-          else{doc.text("Devise: ", 7, 140)}
-          if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 145);}
-          else{doc.text("RIB: ", 7, 145)}
-          if(controls.vd_debtor.value!=null){doc.text("Compte: " + controls.vd_debtor.value, 7, 150);}
-          else{doc.text("Compte: ", 7, 150)}
-          doc.line(5,155,200,155)
+          if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value + ' - ' + this.vdtype, 7, 110);}
+          else{doc.text("Type: ", 7, 110)}
+          if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 115);}
+          else{doc.text("Séquence: ", 7, 115)}
+          if(controls.vd_shipvia.value!=null){doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 120);}
+          else{doc.text("Modealité de transport: ", 7, 120)}
+          doc.line(5,125,200,125)
+          if(controls.vd_bank.value!=null){doc.text("Banque: " + controls.vd_bank.value + ' - ' + this.banque, 7, 130);}
+          else{doc.text("Banque: ", 7, 130)}
+          if(controls.vd_ckfrm.value!=null){doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' - ' + this.ckfrm, 7, 135);}
+          else{doc.text("Méthode de paiement: ", 7, 135)}
+          if(controls.vd_cr_terms.value!=null){doc.text("Condition: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 140);}
+          else{doc.text("Condition: ", 7, 140)}
+          if(controls.vd_curr.value!=null){doc.text("Devise: " + controls.vd_curr.value + ' - ' + this.devise, 7, 145);}
+          else{doc.text("Devise: ", 7, 145)}
+          if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}
+          else{doc.text("RIB: ", 7, 150)}
+          if(controls.vd_debtor.value!=null){doc.text("Compte: " + controls.vd_debtor.value, 7, 155);}
+          else{doc.text("Compte: ", 7, 155)}
+          doc.line(5,160,200,160)
     
         
       

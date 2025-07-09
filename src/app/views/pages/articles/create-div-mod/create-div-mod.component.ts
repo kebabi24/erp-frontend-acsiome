@@ -220,6 +220,8 @@ export class CreateDivModComponent implements OnInit {
   sctForm1: FormGroup;
 
   model : any
+  docs: any[] = [];
+  exist:any;
   constructor(
     config: NgbDropdownConfig,
     private formBuilder: FormBuilder,
@@ -259,6 +261,13 @@ export class CreateDivModComponent implements OnInit {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.createForm();
+    this.codeService
+    .getBy({ code_fldname: "articles/create-div-mod" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
   }
   prepareGrid() {
     this.columnDefinitions = [
@@ -1784,64 +1793,65 @@ printpdf() {
             doc.setLineWidth(0.2);
           
           var img = new Image();
-          // img.src = "companylogo.png";
-          // doc.addImage(img, "png", 150, 5, 50, 30);
-          doc.setFontSize(14);
-    
+           img.src = "./assets/media/logos/companyentete.png";
+           doc.addImage(img, "png", 5, 5, 200, 30);
+          doc.setFontSize(8);
+       if(this.exist == true){
+    doc.text(this.docs[0].code_value, 160, 17); 
+    doc.setFontSize(10);
+    doc.text(this.docs[0].code_cmmt, 55, 22);
+    doc.setFontSize(8);
+    doc.text(this.docs[0].code_desc, 165, 12);
+    doc.text(this.docs[0].chr01, 22, 27);
+    doc.text(String(1), 22, 32);
+    doc.text(this.docs[0].dec01, 170, 32);
+    doc.text(this.docs[0].date01, 180, 22);
+    doc.text(this.docs[0].date02, 180, 27);
+  }
         
           const date = new Date()
 doc.setFontSize(14);
     
           
           doc.setFont("Times-Roman");
-          doc.line(35, 25, 150, 25);
-          doc.line(35, 25, 35, 35);
-          doc.text("Code Article : " + controls.pt_part.value, 40, initialY + 5);
           doc.line(35, 35, 150, 35);
-          doc.line(150, 25, 150, 35); 
+          doc.text("Code Article : " + controls.pt_part.value, 40, 40);
+          doc.line(35, 45, 150, 45);
+           
           
           doc.setFontSize(10);
-          doc.line(5, 45, 200, 45);
-          doc.line(5, 45, 5, 62);
-          doc.text("Description: " + controls.pt_desc1.value, 7, initialY + 25);
-          doc.text("Modèle: " + controls.pt_article.value, 7, initialY + 30);
+          
+          doc.text("Description: " + controls.pt_desc1.value, 7, 50);
+          doc.text("Modèle: " + controls.pt_article.value, 7, 55);
           // doc.text("Couleur: " + controls.pt_break_cat.value, 55, initialY + 30);
-          doc.text("Unité de mesure: " + controls.pt_um.value, 7, initialY + 35);
-          doc.line(5, 62, 200, 62);
-          doc.line(200, 45, 200, 62);
+          doc.text("Unité de mesure: " + controls.pt_um.value, 7, 60);
+          doc.line(5, 65, 200, 65);
+          
           
           // doc.text("Qualité: " + controls.pt_rev.value, 5, initialY + 25);
-          doc.line(5, 65, 200, 65);
-          doc.line(5, 65, 5, 82);
           
-          doc.text("Categorie: " + controls.pt_prod_line.value, 7, initialY + 45);
-          doc.text("Type: " + controls.pt_part_type.value, 55, initialY + 45);
-          doc.text("Famille: " + controls.pt_draw.value, 7, initialY + 50);
-          doc.text("Sous-Famille: " + controls.pt_group.value, 55, initialY + 50);
-          doc.line(5, 82, 200, 82);
-          doc.line(200, 65, 200, 82);
+          
+          doc.text("Categorie: " + controls.pt_prod_line.value, 7, 70);
+          doc.text("Type: " + controls.pt_part_type.value, 7, 75);
+          doc.text("Famille: " + controls.pt_draw.value, 7, 80);
+          doc.text("Sous-Famille: " + controls.pt_group.value, 7, 85);
+          doc.line(5, 90, 200, 90);
           
           // doc.text("Prix: " + controls.pt_price.value, 55, initialY + 30);
-          doc.line(5, 85, 200, 85);
-          doc.line(5, 85, 5, 102);
           
-          doc.text("Formule: " + controls.pt_bom_code.value, 7, initialY + 65);
-          doc.text("Origine: " + controls.pt_origin.value, 55, initialY + 65);
+          doc.text("Formule: " + controls.pt_bom_code.value, 7, 95);
+          doc.text("Origine: " + controls.pt_origin.value, 7, 100);
           // doc.text("Fournisseur: " + controls.pt_vend.value, 7, initialY + 70);
           // doc.text("Réference: " + controls.pt_model.value, 55, initialY + 70);
-          doc.line(5, 102, 200, 102);
-          doc.line(200, 85, 200, 102);
+          doc.line(5, 105, 200, 105);
           
           // doc.text("Fournisseur: " + controls.pt_vend.value, 5, initialY + 80);
-          doc.line(5, 105, 200, 105);
-          doc.line(5, 105, 5, 122);
           
-          doc.text("Forme: " + controls.pt_dsgn_grp.value, 7, initialY + 85);
-          doc.text("Statut: " + controls.pt_status.value, 55, initialY + 85);
-          doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 7, initialY + 90);
-          doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 90);
-          doc.line(5, 122, 200, 122);
-          doc.line(200, 105, 200, 122);
+          doc.text("Forme: " + controls.pt_dsgn_grp.value, 7, 110);
+          doc.text("Statut: " + controls.pt_status.value, 7, 115);
+          doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 7, 120);
+          doc.text("Achat: " + controls.pt_dea.value, 55, 120);
+          doc.line(5, 125, 200, 125);
           
           // doc.text("Vitesse: " + controls.int03.value, 5, initialY + 55);
           // doc.text("Poids: " + controls.dec01.value, 55, initialY + 55);

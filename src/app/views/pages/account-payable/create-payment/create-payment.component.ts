@@ -930,7 +930,7 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
 
   prepareAP(): any {
     const controls = this.apForm.controls;
-   
+   console.log(controls.ap_ex_rate,controls.ap_ex_rate2)
     const _ap = new AccountPayable();
    console.log(controls.ap_check.value) 
     _ap.ap_vend = controls.ap_vend.value;

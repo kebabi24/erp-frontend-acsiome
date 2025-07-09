@@ -35,7 +35,7 @@ import {
     ModalDismissReasons,
     NgbModalOptions,
 } from "@ng-bootstrap/ng-bootstrap"
-import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService, EmployeService } from "../../../../core/erp"
+import { Requisition, RequisitionService, SequenceService, ProviderService, UsersService, ItemService, EmployeService,CodeService } from "../../../../core/erp"
 import { Reason, ReasonService} from "../../../../core/erp"
 import { AlertComponent } from "../../../partials/content/crud"
 import { sequence } from "@angular/animations"
@@ -95,7 +95,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
     domain: any;
     message='';
     nbr:any;
-
+docs: any[] = [];
+  exist:any;
     constructor(
         config: NgbDropdownConfig,
         private reqFB: FormBuilder,
@@ -112,6 +113,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         private reasonService: ReasonService,
         private providerService: ProviderService,
         private employeService : EmployeService,
+        private codeService:CodeService,
     ) {
         config.autoClose = true
         this.initGrid()
@@ -274,7 +276,14 @@ export class CreatePurchaseOrderComponent implements OnInit {
         this.loadingSubject.next(false)
         this.user =  JSON.parse(localStorage.getItem('user'))
         this.domain = JSON.parse(localStorage.getItem("domain"));
-        this.createForm()
+        this.createForm();
+        this.codeService
+    .getBy({ code_fldname: "articles/create-div-mod" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
         
     }
 
@@ -1066,6 +1075,18 @@ console.log("controls.rqm_vend.value",controls.rqm_rqby_userid.value)
         img.src = "./assets/media/logos/companyentete.png";
         doc.addImage(img, 'png', 5, 5, 200, 30)
         doc.setFontSize(9);
+        if(this.exist == true){
+    doc.text(this.docs[0].code_value, 160, 17); 
+    doc.setFontSize(10);
+    doc.text(this.docs[0].code_cmmt, 55, 22);
+    doc.setFontSize(8);
+    doc.text(this.docs[0].code_desc, 165, 12);
+    doc.text(this.docs[0].chr01, 22, 27);
+    doc.text(String(1), 22, 32);
+    doc.text(this.docs[0].dec01, 170, 32);
+    doc.text(this.docs[0].date01, 180, 22);
+    doc.text(this.docs[0].date02, 180, 27);
+  }
         // if (this.domain.dom_name != null) {
         //   doc.text(this.domain.dom_name, 10, 10);
         // }
