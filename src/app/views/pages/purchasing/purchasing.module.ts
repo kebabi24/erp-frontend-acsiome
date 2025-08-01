@@ -98,6 +98,7 @@ import { ListAuComponent } from './list-au/list-au.component';
 import { EpiCreateOaComponent } from './epi-create-oa/epi-create-oa.component';
 import { ListReqUserComponent } from './list-req-user/list-req-user.component';
 import { ReqApprovalComponent } from './req-approval/req-approval.component';
+import { EditVendorProposalComponent } from './edit-vendor-proposal/edit-vendor-proposal.component';
 
 const routes: Routes = [
   {
@@ -222,7 +223,10 @@ const routes: Routes = [
         path: "req-approval",
         component: ReqApprovalComponent,
       },
-      
+      {
+        path: "edit-vendor-proposal/:id",
+        component: EditVendorProposalComponent,
+      },
     ],
   },
 ];
@@ -257,7 +261,8 @@ const routes: Routes = [
     ListAuComponent,
     EpiCreateOaComponent,
     ListReqUserComponent,
-    ReqApprovalComponent
+    ReqApprovalComponent,
+    EditVendorProposalComponent
   ],
   imports: [
     CommonModule,

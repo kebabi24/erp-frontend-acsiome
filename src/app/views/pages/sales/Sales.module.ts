@@ -53,9 +53,9 @@ import { LabelService,QuoteService, UsersService, ItemService, CodeService, Taxe
          LocationDetailService, InventoryTransactionService, DeviseService, InventoryStatusService,
          PricelistService,InvoiceOrderService,AccountShiperService, BankService, ProjectService, 
          ConfigService, PayMethService, InvoiceOrderTempService, PosCategoryService, PsService,MobileSettingsService,
-         EntityService,AccountReceivableService,
+         EntityService,AccountReceivableService,RoleService,
          CostlistService, CustomerMobileService,ItineraryService,UsersMobileService, AccountOrderService,
-         PriceListQuantityService,BarecodeinfosService, TimbreService ,  AddressService, AccountService,LoadRequestService
+         PriceListQuantityService,BarecodeinfosService, TimbreService ,  AddressService, AccountService,LoadRequestService, AffectEquipementService
         } from '../../../core/erp';
 import { CreateQuoteComponent } from './create-quote/create-quote.component';
 import { CreatesaleorderComponent } from './create-so/create-so.component';
@@ -112,6 +112,8 @@ import { ListInvoiceAccComponent } from './list-invoice-acc/list-invoice-acc.com
 import { ListSalesAccComponent } from './list-sales-acc/list-sales-acc.component';
 import { ListCreditRoleComponent } from './list-credit-role/list-credit-role.component';
 import { ListCreditDdComponent } from './list-credit-dd/list-credit-dd.component';
+import { AffectEquipementComponent } from './affect-equipement/affect-equipement.component';
+import { ListAffectEquipementComponent } from './list-affect-equipement/list-affect-equipement.component';
 
 
 const routes: Routes = [
@@ -344,6 +346,14 @@ component: AttestationReservationComponent,
             path: "list-credit-dd",
             component: ListCreditDdComponent,
           },
+          {
+            path: "affect-equipement",
+            component: AffectEquipementComponent,
+          },
+          {
+            path: "list-affect-equipement",
+            component: ListAffectEquipementComponent,
+          },
         ],
     },
 ]
@@ -351,7 +361,7 @@ component: AttestationReservationComponent,
 @NgModule({
     declarations: [SalesComponent, CreateQuoteComponent, CreatesaleorderComponent, CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent,
        CreatesaleorderComponent, CreatePshComponent, CreateInvoiceComponent, CreateDirectInvoiceComponent, PrintInvoiceComponent, PaymentPshComponent, UnblockSoComponent, SoListComponent, ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ReqListComponent, PaymentPshEmployeComponent
-     ,ListCaDdComponent, PaymentSoComponent, ListInvoicesDetailComponent, PshListComponent, CreateSoImmobilierComponent, CreatePvReceptionComponent, CreateSatisfactionComponent, RemiseDesClesComponent, ControleActeComponent, DecisionAffectationComponent, ClotureSoldeComponent, AttestationReservationComponent,ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent, CreateAccountingInvComponent, ListInvoiceAccComponent, ListSalesAccComponent, ListCreditRoleComponent, ListCreditDdComponent],
+     ,ListCaDdComponent, PaymentSoComponent, ListInvoicesDetailComponent, PshListComponent, CreateSoImmobilierComponent, CreatePvReceptionComponent, CreateSatisfactionComponent, RemiseDesClesComponent, ControleActeComponent, DecisionAffectationComponent, ClotureSoldeComponent, AttestationReservationComponent,ConfirmSoComponent, EditSoComponent, CreateProjectInvoiceComponent, InputInvoiceComponent, DaylySiteTransComponent, ListSalesComponent, ListPosComponent, ListCaisseComponent, ListSiteCaComponent, ListInvoiceMobComponent, ListSoEditComponent,ListInvoicesComponent, ListPaiementMobComponent, ListVisitMobComponent, ImputProjectInvoiceComponent, CreateCeramSoComponent, CreatePaymentCustComponent, ListSalesDdComponent, CreateInvMobComponent, ListCaDdComponent, PaymentSoComponent, ListSalesRoleComponent, ListSalesTypeComponent, CreateSoPlqComponent, CreatePshPlqComponent, CreateSoBcComponent, ListPshComponent, ReprintInvoiceComponent, ListRolesSalesComponent, CreateAccountingInvComponent, ListInvoiceAccComponent, ListSalesAccComponent, ListCreditRoleComponent, ListCreditDdComponent, AffectEquipementComponent, ListAffectEquipementComponent],
     imports: [
         CommonModule,
         HttpClientModule,
@@ -422,14 +432,13 @@ component: AttestationReservationComponent,
         AccountOrderService,
         AccountReceivableService,
         EntityService,
-
-
+        RoleService,
         PriceListQuantityService,
         BarecodeinfosService,
         TimbreService,
         LoadRequestService,        
         AddressService,
-       
+       AffectEquipementService,
         AccountService,
        
         

@@ -499,7 +499,33 @@ export class MenuDDConfig {
             ],
           },
   
-          
+          {
+            title: "Gestion des Equipements",
+            bullet: "dot",
+            icon: "flaticon2-delivery-truck",
+            root: true,
+            submenu: [
+             
+              {
+                title: "Affectation des Equipement",
+                page: "/sales/affect-equipement",
+              },
+              {
+                title: "Listes des Affectations des Equipements",
+                page: "/sales/list-affect-equipement",
+              },
+              
+              {
+                title: "Paiemennt des Equipement",
+                page: "/account-receivable/create-caution-cust",
+              },
+              {
+                title: "Listes des Paiements des Equipements",
+                page: "/account-receivable/list-itinerary",
+              },
+             
+            ],
+          },
           {
             title: "Gestion des Ventes",
             root: true,

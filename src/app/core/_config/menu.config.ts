@@ -217,7 +217,7 @@ export class MenuConfig {
             },
             {
               title: "La liste des Fournisseurs",
-              page: "/providers/list",
+              page: "/providers/list-std-provider",
             },
             {
               title: "Ajouter Fournisseurs",
@@ -235,6 +235,15 @@ export class MenuConfig {
               title: "Liste Répertoire Fournisseurs",
               page: "/providers/list-rep",
             },
+            {
+              title: "Paramétrage Fournisseur",
+              page: "/providers/provider-settings",
+            },
+            {
+              title: "Liste Paramétrage Fournisseur",
+              page: "/providers/provider-settings-list",
+            },
+           
           ],
         },
         /**/

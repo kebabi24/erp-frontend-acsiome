@@ -28,6 +28,11 @@ export class PurchaseReceiveService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/cab', data, { headers: httpHeaders })
     }
+    prhcab
+    public addPrhCab(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/prhcab', data, { headers: httpHeaders })
+    }
     public addCabDet(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/cabdet', data, { headers: httpHeaders })

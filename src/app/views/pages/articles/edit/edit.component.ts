@@ -812,7 +812,7 @@ prepareItem(): Item {
                   true
                 );
                 this.loadingSubject.next(false);
-                this.router.navigateByUrl("/articles/-update");
+                this.router.navigateByUrl("/articles/list-update");
               }
             //);
     //      }

@@ -18,6 +18,8 @@ import {
   GroupTotalFormatters,
   SortDirectionNumber,
   Sorters,
+  GridService
+ 
 } from "angular-slickgrid"
 
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
@@ -36,14 +38,9 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { BankService} from "../../../../core/erp"
-
+import { BankService,RoleService} from "../../../../core/erp"
 import { jsPDF } from "jspdf";
-import { isNull } from "lodash"
-
-const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
-  value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
-
+import { replaceAll } from "chartist"
 @Component({
   selector: 'kt-list-transfert-payment',
   templateUrl: './list-transfert-payment.component.html',
@@ -52,19 +49,27 @@ const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: 
 export class ListTransfertPaymentComponent implements OnInit {
 
  
-  columnDefinitions: Column[] = []
-  gridOptions: GridOption = {}
-  dataset: any[] = []
-  dataView: any;
-  
-  angularGrid: AngularGridInstance;
+  mvangularGrid: AngularGridInstance;
+  mvgrid: any;
+  mvgridService: GridService;
+  mvdataView: any;
+  mvcolumnDefinitions: Column[];
+  mvgridOptions: GridOption;
+  mvdataset: any[];
 
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   //dataviewObj: any;
 soForm: FormGroup;
   tr:any
+  hasFormErrors = false;
+  loadingSubject = new BehaviorSubject<boolean>(true);
+  loading$: Observable<boolean>;
+  error = false;
+  user: any
+  domain: any
   constructor(
+    
       private activatedRoute: ActivatedRoute,
       private router: Router,
       private soFB: FormBuilder,
@@ -73,15 +78,22 @@ soForm: FormGroup;
       private bankService: BankService,
       
   ) {
-      //this.prepareGrid()
+    
   }
 
   ngOnInit(): void {
+    this.loading$ = this.loadingSubject.asObservable();
+    this.loadingSubject.next(false);
+    this.user =  JSON.parse(localStorage.getItem('user'))
+    
+    this.domain = JSON.parse(localStorage.getItem("domain"));
+    // this.prepareRoles();
+    console.log(this.user)
     this.createForm();
-    this.prepareGrid()
+    this.initmvGrid();
     this.solist();
+   
   }
-
   createForm() {
     // this.loadingSubject.next(false);
     const date = new Date;
@@ -101,7 +113,7 @@ soForm: FormGroup;
     });
   }
   solist() {
-    this.dataset = []
+    this.mvdataset = []
    
     const controls = this.soForm.controls
     const date = controls.calc_date.value
@@ -115,36 +127,34 @@ soForm: FormGroup;
     let obj= {date,date1}
     this.bankService.getBKHRCTBy(obj).subscribe(
       (response: any) => {   
-        this.dataset = response.data
-       console.log(this.dataset)
-       this.dataView.setItems(this.dataset);
+        this.mvdataset = response.data
+       console.log(this.mvdataset)
+       this.mvdataView.setItems(this.mvdataset);
         
          },
       (error) => {
-          this.dataset = []
+          this.mvdataset = []
       },
       () => {}
   )
   }
   
-  angularGridReady(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
-    this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataView = angularGrid.dataView;
+  mvGridReady(angularGrid: AngularGridInstance) {
+    this.mvangularGrid = angularGrid;
+    this.mvdataView = angularGrid.dataView;
+    this.mvgrid = angularGrid.slickGrid;
+    this.mvgridService = angularGrid.gridService;
   }
-  prepareGrid() {
+  initmvGrid() {
 
-      this.columnDefinitions = [
-          {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
-    
-            minWidth: 50,
-            maxWidth: 50,
-          },
+      this.mvcolumnDefinitions = [
+          // {
+          //   id: "id",
+          //   field: "id",
+           
+          //   minWidth: 50,
+          //   maxWidth: 50,
+          // },
           // {
           //   id: "bkh_num_doc",
           //   name: "N° Document",
@@ -332,6 +342,9 @@ soForm: FormGroup;
             formatter: Formatters.decimal,
             params: { minDecimal: 2, maxDecimal: 2 }, 
           },
+         
+          
+
           {
             id: "chr03",
             name: "Récap",
@@ -341,165 +354,7 @@ soForm: FormGroup;
             type: FieldType.number,
           },
           {
-            id: "id",
-            field: "id",
-            excludeFromHeaderMenu: true,
-            formatter: (row, cell, value, columnDef, dataContext) => {
-              // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-              return `
-                <a class="btn btn-sm btn-clean btn-icon mr-2" title="Impression Etiquette">
-                     <i class="flaticon2-printer"></i>
-                     
-                 </a>
-                 `;
-            },
-            minWidth: 30,
-            maxWidth: 30,
-            onCellClick: (e: Event, args: OnEventArgs) => {
-              const index = args.dataContext.bkh_code;
-              console.log(index)
-              this.bankService.getBKHBy({bkh_code:index,bkh_type : "RCT"}).subscribe(
-                          (response: any) => (this.tr = response.data[0],
-                            
-                            this.printpdf()
-                            ),
-                          (error) => {
-                             this.tr=null
-                          },
-                          () => {}
-                      )
-             
-                
-            }
-          },
-          {
-            id: "bkh_2000",
-            name: "Billet 2000",
-            field: "bkh_2000",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-            
-          }, 
-          {
-            id: "bkh_1000",
-            name: "Billet 1000",
-            field: "bkh_1000",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-            
-          }, 
-          {
-            id: "bkh_0500",
-            name: "Billet 500",
-            field: "bkh_0500",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          }, 
-          {
-            id: "bkh_0200",
-            name: "Billet 200",
-            field: "bkh_0200",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_p200",
-            name: "Piéce 200",
-            field: "bkh_p200",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_p100",
-            name: "Piéce 100",
-            field: "bkh_p100",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_p050",
-            name: "Piéce 50",
-            field: "bkh_p050",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_p020",
-            name: "Piéce 20",
-            field: "bkh_p020",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_p010",
-            name: "Piéce 10",
-            field: "bkh_p010",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_p005",
-            name: "Piéce 5",
-            field: "bkh_p005",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_bon",
-            name: "Bon",
-            field: "bkh_bon",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-            
-          },
-          {
-            id: "bkh_rmks",
-            name: "Motif",
-            field: "bkh_rmks",
-            sortable: true,
-            filterable: true,
-            type: FieldType.text,
-            
-          },
-          {
-            id: "bkh_cheque",
-            name: "Cheque",
-            field: "bkh_cheque",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-          },
-          {
-            id: "chr03",
-            name: "Récap",
-            field: "chr03",
-            sortable: true,
-            filterable: true,
-            type: FieldType.number,
-          },
-          {
-            id: "id",
+            id: "idp",
             field: "id",
             excludeFromHeaderMenu: true,
             formatter: (row, cell, value, columnDef, dataContext) => {
@@ -533,16 +388,13 @@ soForm: FormGroup;
 
       ]
 
-      this.gridOptions = {
+      this.mvgridOptions = {
         
-          createPreHeaderPanel: true,
-          showPreHeaderPanel: true,
-          preHeaderPanelHeight: 40,
-          enableAutoResizeColumnsByCellContent:true,
-          enableAutoSizeColumns:true,
+      
           enableFiltering: true,
           enableSorting: true,
           enableAutoResize:true,
+          
           autoHeight:false,
           exportOptions: {
             sanitizeDataExport: true
@@ -564,7 +416,7 @@ soForm: FormGroup;
       }
 
       // fill the dataset with your data
-       this.dataset = []
+       this.mvdataset = []
 //       this.bankService.getTransfertBy().subscribe(
 //           (response: any) => (this.dataset = response.data),
 //           (error) => {

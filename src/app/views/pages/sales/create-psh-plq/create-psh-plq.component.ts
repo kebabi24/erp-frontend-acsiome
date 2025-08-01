@@ -2401,7 +2401,7 @@ doc.text( 'Bon Livraison N° : ' + nbr  , 87, 45);
     doc.line(150, i - 5, 150, i );
     doc.text(String(this.dataset[j].psh_taxc) + "%" , 153 , i  - 1);
     doc.line(160, i - 5 , 160, i );
-    doc.text(String(this.dataset[j].psh_disc_pct) + "%" , 163 , i  - 1);
+    doc.text(String(Number(this.dataset[j].psh_disc_pct)) + "%" , 163 , i  - 1);
     doc.line(170, i - 5 , 170, i );
     doc.text(String((this.dataset[j].psh_price *
       ((100 - this.dataset[j].psh_disc_pct) / 100) *

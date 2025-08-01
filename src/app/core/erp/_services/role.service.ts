@@ -78,7 +78,10 @@ export class RoleService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(`${API_URL_ROLE}/findone`, data, { headers: httpHeaders });
   }
-
+  public getByRole(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ROLE}/find`, data, { headers: httpHeaders });
+  }
   public getAllLocations() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(GET_LOCAIONS, { headers: httpHeaders });
@@ -86,5 +89,9 @@ export class RoleService {
   public getAllSites() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(GET_SITES, { headers: httpHeaders });
+  }
+  public getSupRoles(data:any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(`${API_URL_ROLE}/findsuprole`,data, { headers: httpHeaders });
   }
 }

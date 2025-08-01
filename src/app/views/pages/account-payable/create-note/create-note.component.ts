@@ -1006,7 +1006,7 @@ prepareGridbill() {
     },
     {
       id: "ad_name",
-      name: "Client",
+      name: "Fournisseur",
       field: "address.ad_name",
       sortable: true,
       filterable: true,

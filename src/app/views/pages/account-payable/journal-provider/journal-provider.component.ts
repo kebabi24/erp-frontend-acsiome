@@ -648,7 +648,7 @@ console.log("date",date1)
     if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
     if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
     doc.setFontSize(14);
-    doc.text("Journal Client " + controls.cust.value + ' Du :' + date + ' A :' + date1  , 70, 40);
+    doc.text("Journal Fournisseur " + controls.cust.value + ' Du :' + date + ' A :' + date1  , 70, 40);
     doc.setFontSize(12);
     
     
@@ -657,9 +657,9 @@ console.log("date",date1)
     doc.line(5, 60, 290, 60);
     
     doc.line(5, 55, 5, 60);
-    doc.text("Code Client", 10, 58.5);
+    doc.text("Code ", 10, 58.5);
     doc.line(30, 55, 30, 60);
-    doc.text("Nom Client", 42, 58.5);
+    doc.text("Nom Fournisseur", 42, 58.5);
     doc.line(75, 55, 75, 60);
     doc.text("N° Piéce", 90, 58.5);
     doc.line(115, 55, 115, 60);
@@ -725,7 +725,7 @@ console.log("date",date1)
         if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
         if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
         doc.setFontSize(14);
-        doc.text("Journal Client " + controls.cust.value + ' Du :' + date + ' A :' + date1  , 70, 40);
+        doc.text("Journal Fournisseur " + controls.cust.value + ' Du :' + date + ' A :' + date1  , 70, 40);
         doc.setFontSize(12);
         
         
@@ -734,9 +734,9 @@ console.log("date",date1)
         doc.line(5, 60, 290, 60);
         
         doc.line(5, 55, 5, 60);
-        doc.text("Code Client", 10, 58.5);
+        doc.text("Code ", 10, 58.5);
         doc.line(30, 55, 30, 60);
-        doc.text("Nom Client", 42, 58.5);
+        doc.text("Nom Fournisseur", 42, 58.5);
         doc.line(75, 55, 75, 60);
         doc.text("N° Piéce", 90, 58.5);
         doc.line(115, 55, 115, 60);

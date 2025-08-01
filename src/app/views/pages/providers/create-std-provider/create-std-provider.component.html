@@ -4,7 +4,7 @@
             <button (click)="goBackWithoutId()" type="button" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button (click)="reset()" [disabled]="selectedTab !== 0" type="button"
                 class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">enregistrer </button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">Enregistrer </button>
 
 
 
@@ -14,6 +14,7 @@
         <div class="example-preview">
             <div>
                 <form [formGroup]="formX" class="form">   
+                    
                     <div class="row">
                         <div class="form-group col-4">
                             <label class="form-group ">Nom:</label>
@@ -158,8 +159,8 @@
                                         
                                             <div class="input-group input-group-sm">
 
-                                                <input type="text" class="form-control form-control-solid"
-                                                    aria-describedby="basic-addon2" formControlName="vd_curr">
+                                                <input type="text" class="form-control form-control-solid" (change)="OnchangeCurr()"
+                                                    aria-describedby="basic-addon2" formControlName="vd_curr" id="vd_curr">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" (click)="open2(content2)">
                                                         <i class="text-dark-50 flaticon2-search"></i> </span>
@@ -321,7 +322,7 @@
                                             </select>
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Post:</label>
+                                        <label class="form-group ">Code Postal:</label>
                                         
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_zip">
@@ -336,10 +337,15 @@
                                                 formControlName="ad_attn">
                                     </div>
                                     
-
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Poste:</label>
+                                       
+                                            <input type="text" class="form-control form-control-sm form-control-solid"
+                                                formControlName="ad_user1">
+                                    </div>
 
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Telephone:</label>
+                                        <label class="form-group ">Téléphone:</label>
                                         
                                             <input type="text"
                                             class="form-control form-control-sm form-control-solid" formControlName="ad_phone">
@@ -369,7 +375,14 @@
                                                 formControlName="ad_attn2">
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Tel 2:</label>
+                                        <label class="form-group ">Poste:</label>
+                                       
+                                            <input type="text" class="form-control form-control-sm form-control-solid"
+                                                formControlName="ad_user2">
+                                    </div>
+
+                                    <div class="form-group col-2">
+                                        <label class="form-group ">Téléphone 2:</label>
                                         
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="ad_phone2">
@@ -477,25 +490,25 @@
                                     <div class="form-group col-2">
                                         <label class="form-group ">Marticule Fiscale:</label>
                                         
-                                            <input type="text" class="form-control form-control-sm form-control-solid"
-                                                formControlName="ad_misc2_id">
+                                            <input type="text" class="form-control form-control-sm form-control-solid" (change)="onchangeMF()"
+                                                formControlName="ad_misc2_id" id="ad_misc2_id">
                                     </div>
                                     <div class="form-group col-2">
                                         <label class="form-group ">RC N°:</label>
                                         
-                                            <input type="text" class="form-control form-control-sm form-control-solid"
-                                                formControlName="ad_gst_id">
+                                            <input type="text" class="form-control form-control-sm form-control-solid" (change)="onchangeRC()"
+                                                formControlName="ad_gst_id" id="ad_gst_id">
                                     </div>
                                     <div class="form-group col-2">
                                         <label class="form-group ">AI N°:</label>
-                                            <input type="text" class="form-control form-control-sm form-control-solid"
-                                                formControlName="ad_pst_id">
+                                            <input type="text" class="form-control form-control-sm form-control-solid" (change)="onchangeAI()"
+                                                formControlName="ad_pst_id" id="ad_pst_id">
                                     </div>
                                     <div class="form-group col-2">
                                         <label class="form-group ">NIS N°:</label>
                                         
-                                            <input type="text" class="form-control form-control-sm form-control-solid"
-                                                formControlName="ad_misc1_id">
+                                            <input type="text" class="form-control form-control-sm form-control-solid" (change)="onchangeNIS()"
+                                                formControlName="ad_misc1_id" id="ad_misc1_id">
                                         
                                     </div>
 
@@ -523,7 +536,7 @@
                                     (close)="onAlertClose($event)">
                                     veuillez remplir les informations manquantes.
                                 </kt-alert>
-                                <div class="row">
+                                <!--div class="row">
                                     <div class="form-group col-2">
                                     <label class="form-group "> Banque:</label>
                                     <div class="input-group input-group-sm">
@@ -531,7 +544,7 @@
                                         <input type="text" class="form-control form-control-solid" id="vd_bank" (change)="onchangebank()"
                                             formControlName="vd_bank" aria-describedby="basic-addon2">
                                         <div class="input-group-append">
-                                            <span class="input-group-text" (click)="openbank(contentbank)">
+                                            <span class="input-group-text" (click)="open4(content4,'vd_bank')">
                                                 <i class="text-dark-50 flaticon2-search"></i> </span>
                                         </div>
                                     </div>
@@ -546,6 +559,7 @@
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_debtor">
                                     </div>
+                                </div-->                                    
                                     <!--div class="form-group col-2">
                                         <label class="form-group "> Mode Paiement:</label>
                                         
@@ -559,6 +573,7 @@
                                                 </div>
                                             </div>
                                     </div-->
+                                <div class="row">    
                                     <div class="form-group col-2">
                                         <label class="form-group ">Mode Paiement:</label>
                                         
@@ -572,7 +587,7 @@
                                       
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Mode Paiement:</label>
+                                        <label class="form-group ">Délai Paiement:</label>
                                         
                                             <select class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_cr_terms" id="vd_cr_terms" >
@@ -583,16 +598,14 @@
                                             </select>
                                       
                                     </div>
-                                </div>
                                 
-                                <div class="row">    
                                     <div class="form-group col-2">
                                         <label class="form-group ">% remise:</label>
                                         <input type="number" class="form-control form-control-sm form-control-solid"
                                             formControlName="vd_disc_pct">
                                     </div>
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Solde acompte:</label>
+                                        <label class="form-group ">Solde Initial:</label>
                                             <input type="number" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_prepay">
                                     </div>
@@ -682,7 +695,18 @@
                                     </div>
 
                                 </div>
-                               
+                                <div class="form-group col-12 row">
+                                    <label class="col-2 col-form-label text-right"> Detail Banque: </label>
+                                </div>
+                                <div class="row">
+                                    <button class="btn btn-primary btn-elevate col-lg-2" (click)="addNewtrItem()">Ajouter Banque </button>
+                                </div>
+                                
+                                <div class="row">
+                                    <angular-slickgrid class="col-12"  gridId="plagetrGrid" [columnDefinitions]="trcolumnDefinitions"
+                                    [gridOptions]="trgridOptions" [dataset]="trdataset" (onAngularGridCreated)="trGridReady($event)">
+                                </angular-slickgrid>
+                                </div>
                             </form>
                         </ng-template>
                     </ngb-tab>
@@ -758,6 +782,8 @@
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
+            <button hidden id="openBanksGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
         </div>
 
         <div>
@@ -782,6 +808,8 @@
                     <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
                 </div>
             </ng-template>
+            
+
         </div>
         <div>
             <ng-template #content2 let-c="close" let-d="dismiss">

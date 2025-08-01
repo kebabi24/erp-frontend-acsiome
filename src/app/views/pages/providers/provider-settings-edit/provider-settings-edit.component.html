@@ -1,0 +1,83 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="title" [class]="'card-head-lg'" [viewLoading$]="loading$">
+      <ng-container ktPortletTools>
+        <button type="button"   (click)="goBack()" class="btn btn-secondary btn-sm mr-2"> Annuler  </button>
+        <button type="button"  (click)="reset()" class="btn btn-secondary btn-sm mr-2"> Réinitialiser </button>
+        <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2"> Enregistrer </button>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <div class="example-preview">
+        <form class="form" [formGroup]="codeForm">
+            <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="3000"
+            (close)="onAlertClose($event)">
+            Ce Code existe deja
+        </kt-alert> 
+          <div class="row">
+            <div class="form-group col-2">
+              <label class="form-group">Paramétre:</label>
+              <input type="text" formControlName="code_fldname" [(ngModel)]="codeEdit.code_fldname" disabled class='form-control form-control-sm form-control-solid' >
+    
+             
+            </div>
+          </div>
+          <div class="row">   
+            <div class="form-group col-2">
+              <label class="form-group">Code:</label>
+              <input type="text" formControlName="code_value" disabled class='form-control form-control-sm form-control-solid' >
+      
+            
+            </div>
+        </div>
+        <div class="row">       
+            <div class="form-group col-6">
+              <label class="form-group">Designation:</label>
+              <input
+                type="text"
+                [className]="
+                  codeForm.controls['code_cmmt'].errors &&
+                  (codeForm.controls['code_cmmt'].dirty ||
+                    codeForm.controls['code_cmmt'].touched)
+                    ? 'form-control form-control-sm form-control-solid is-invalid'
+                    : 'form-control form-control-sm form-control-solid'
+                "
+                formControlName="code_cmmt"
+              />
+  
+              <div
+                *ngIf="
+                  codeForm.controls['code_cmmt'].errors &&
+                  (codeForm.controls['code_cmmt'].dirty ||
+                    codeForm.controls['code_cmmt'].touched)
+                "
+                class="invalid-feedback"
+              >
+                Ce Champs est obligatoire
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-2">
+                <label class="form-group ">Usage:</label>
+               
+                    <select class="form-control form-control-sm form-control-solid"
+                        formControlName="code_desc" id="exampleSelects4">
+                      
+                        <option *ngFor="let elem of check_form" [value]="elem.code_value">
+                            {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                    </select>
+                    <div *ngIf="codeForm.controls['code_desc'].errors && (codeForm.controls['code_desc'].dirty || codeForm.controls['code_desc'].touched)"
+            class="invalid-feedback">Ce Champs est obligatoire</div>
+                
+            </div>
+            <div class="form-group col-3">
+                <label class="form-group">Délai: </label>
+                <input type="number" formControlName="dec01" placeholder="délai de paiement" class='form-control form-control-sm form-control-solid' >
+            </div>
+          </div>   
+        </form>
+    </div>
+</kt-portlet-body>
+</kt-portlet>
+

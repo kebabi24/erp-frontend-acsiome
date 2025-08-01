@@ -933,6 +933,7 @@ export class PoReceipCabIdComponent implements OnInit {
 
     this.purchaseOrderService.findBy({ po_nbr }).subscribe((res: any) => {
       const { purchaseOrder, details } = res.data;
+      if(purchaseOrder.po_stat == 'V') {
       const det1 = details;
       this.prhServer = purchaseOrder;
 
@@ -1009,6 +1010,11 @@ export class PoReceipCabIdComponent implements OnInit {
           });
         }
       });
+    } else {
+      alert("Bon de Commande n'exist pas ou n'est pas Validé")
+      controls.prh_nbr.setValue(null)
+      document.getElementById("prh_nbr").focus();
+    }
     });
   }
 
@@ -2095,7 +2101,7 @@ export class PoReceipCabIdComponent implements OnInit {
     doc.setFontSize(12);
     let date = new Date()
     doc.text("RC N° : " + nbr, 70, 40);
-    doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+    doc.text("imprimé Le: " + date.toLocaleDateString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' }) , 160, 40);
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
       doc.text("Edité par: " + this.user.usrd_code, 160, 55);
       
@@ -2157,7 +2163,8 @@ export class PoReceipCabIdComponent implements OnInit {
         doc.addImage(img, "png", 160, 5, 50, 30);
         doc.setFontSize(12);
         doc.text("RC N° : " + nbr, 70, 40);
-        doc.text("imprimé Le: " + date.toLocaleDateString() , 160, 40);
+        doc.text("imprimé Le: " + date.toLocaleDateString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' }) , 160, 40);
+   
       doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
       doc.text("Edité par: " + this.user.usrd_code, 160, 55);
       

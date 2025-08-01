@@ -208,7 +208,7 @@ export class ListApprovalComponent implements OnInit {
             const id = args.dataContext.id
             console.log(this.dataset)
             console.log(args.dataContext.req.rqm_aprv_stat)
-            if (args.dataContext.req.rqm_aprv_stat == "0") {
+            if (args.dataContext.req.rqm_aprv_stat != "3") {
               let element: HTMLElement = document.getElementById(
                 "openDaGrid"
               ) as HTMLElement;

@@ -181,6 +181,7 @@ curr: String;
                     model: Editors.text,
                 },
             },
+
             {
                 id: "mvid",
                 field: "cmvid",
@@ -196,6 +197,15 @@ curr: String;
                     element.click()
                 },
             },
+            {
+              id: "desc",
+              name: "Désignation",
+              field: "desc",
+              sortable: true,
+              width: 50,
+              filterable: false,
+            
+          },
             {
                 id: "vpd_vend_part",
                 name: "Description Fournisseur",
@@ -269,6 +279,7 @@ curr: String;
             enableColumnPicker: true,
             enableCellNavigation: true,
             enableRowSelection: true,
+            
         }
 
         this.dataset = []
@@ -858,6 +869,7 @@ curr: String;
                             id: this.dataset.length + 1,
                             vpd_line: this.dataset.length + 1,
                             vpd_part: value.rqd_part,
+                            desc:value.rqd_desc,
                             cmvid: "",
                             vpd_vend_part: "",
                             vpd_q_qty: value.rqd_req_qty,
@@ -913,6 +925,7 @@ curr: String;
                                 id: this.dataset.length + 1,
                                 vpd_line: this.dataset.length + 1,
                                 vpd_part: value.rqd_part,
+                                desc: value.rqd_desc,
                                 cmvid: "",
                                 vpd_vend_part: "",
                                 vpd_q_qty: value.rqd_req_qty,

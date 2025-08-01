@@ -87,6 +87,7 @@ import { EpiReceiptComponent } from './epi-receipt/epi-receipt.component';
 import { EpiMonthlyDistributionComponent } from './epi-monthly-distribution/epi-monthly-distribution.component';
 import { EpiInventoryReportComponent } from './epi-inventory-report/epi-inventory-report.component';
 import { PoUnreceipCabComponent } from './po-unreceip-cab/po-unreceip-cab.component';
+import { PoReceipCabIdLabComponent } from './po-receip-cab-id-lab/po-receip-cab-id-lab.component';
 
 // import { CreateComponent } from "../articles/create/create.component";
 
@@ -279,10 +280,14 @@ const routes: Routes = [
     path: "po-unreceip-cab",
     component: PoUnreceipCabComponent,
   },
+  {
+    path: "po-receip-cab-id-lab/:id",
+    component: PoReceipCabIdLabComponent,
+  },
 ];
 
 @NgModule({
-  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent, EchantillonReceiptCabComponent, InventoryDetailComponent, PurchaseReceiptColorantComponent, EpiInventoryTransactionComponent, EpiIssueComponent, EpiReceiptComponent, EpiMonthlyDistributionComponent, EpiInventoryReportComponent, PoUnreceipCabComponent],
+  declarations: [InventoryTransactionComponent, TransferComponent, UnplanifiedIssueComponent, UnplanifiedReceptComponent, InventoryListComponent, PoReceipComponent, TransactionListComponent, EditStatusComponent, TransListGrpComponent, ListInvComponent, ListRctComponent, ConsoReportComponent, LabelCreateComponent, PoReceipIdComponent, PoReceipCabComponent, EditStatusRefComponent, PoReceipCabIdComponent, UnplanifiedReceiptCabComponent, PoReceiptDetComponent, LoadingVansV2Component, EditLdStatusComponent, UpdatePriceUnpComponent, BobineReceiptCabComponent, EditTransactionListComponent, ActivityListComponent, ReprintCabComponent, ReturnCabComponent, RemodifyCabComponent, ListInvBobineComponent, RctUnpPrintComponent, RctTrPrintComponent, IssUnpPrintComponent, PurchaseReceiptCabComponent, RctPoPrintComponent, MachineActivityPrintComponent, RctUnpGlobalprintComponent, RctTrGlobalprintComponent, RctPoGlobalprintComponent, IssUnpGlobalprintComponent, AssetReceiveCabComponent, EchantillonReceiptCabComponent, InventoryDetailComponent, PurchaseReceiptColorantComponent, EpiInventoryTransactionComponent, EpiIssueComponent, EpiReceiptComponent, EpiMonthlyDistributionComponent, EpiInventoryReportComponent, PoUnreceipCabComponent, PoReceipCabIdLabComponent],
   imports: [
     CommonModule,
     HttpClientModule,

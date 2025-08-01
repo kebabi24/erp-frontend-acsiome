@@ -53,9 +53,11 @@
         
             
                 <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="gridCode" [columnDefinitions]="columnDefinitions"
-                        [gridOptions]="gridOptions" [dataset]="dataset">
-                    </angular-slickgrid>
+                    <angular-slickgrid class="col-12"  gridId="plageGrid"  
+                    [columnDefinitions]="mvcolumnDefinitions"
+                    [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
+                    (onAngularGridCreated)="mvGridReady($event)">
+              </angular-slickgrid>
                 </div>
             </form>    
         </div>

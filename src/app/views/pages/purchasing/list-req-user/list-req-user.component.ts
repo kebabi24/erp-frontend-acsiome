@@ -295,6 +295,16 @@ export class ListReqUserComponent implements OnInit {
          // Optionally pass your Parent Component reference to your Child Component (row detail component)
          parent: this,
        },
+       presets: {
+        sorters: [
+          { columnId: 'rqm_req_date', direction: 'DESC' },
+         ],
+      //    filters: [
+      //  { columnId: 'po_nbr', searchTerms: [this.ponbr] }  ,
+          
+      //   ],
+       
+      },
      };
  
      // fill the dataset with your data

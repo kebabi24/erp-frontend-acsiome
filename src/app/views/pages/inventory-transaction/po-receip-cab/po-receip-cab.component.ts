@@ -878,7 +878,11 @@ export class PoReceipCabComponent implements OnInit {
     const po_nbr = controls.prh_nbr.value;
 
     this.purchaseOrderService.findBy({ po_nbr }).subscribe((res: any) => {
+      
       const { purchaseOrder, details } = res.data;
+      console.log(purchaseOrder)
+      if(purchaseOrder.po_stat == 'V') {
+      
       const det1 = details;
       this.prhServer = purchaseOrder;
 
@@ -955,6 +959,12 @@ export class PoReceipCabComponent implements OnInit {
           });
         }
       });
+      }else {
+        alert("Bon de Commande n'exist pas ou n'est pas Validé")
+        controls.prh_nbr.setValue(null)
+        document.getElementById("prh_nbr").focus();
+      }
+    
     });
   }
 

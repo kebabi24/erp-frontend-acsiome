@@ -21,9 +21,9 @@ export class ProviderService {
     ) {}
 
     // CREATE
-    public add(provider: Provider) {
+    public add(data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
-        return this.http.post(API_URL, provider, { headers: httpHeaders })
+        return this.http.post(API_URL, data, { headers: httpHeaders })
     }
     // READ
     public getAll() {

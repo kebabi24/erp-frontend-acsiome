@@ -374,6 +374,7 @@ export class CreatePaymentComponent implements OnInit {
       if( args.dataContext.applied > args.dataContext.open ) {
 
         alert("Montant ne doit pas etre superieur au montant ouvert")
+        this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , applied: 0 })
       } 
       else {
         console.log(this.rest)
@@ -702,8 +703,8 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
                   controls.ap_check.enable()
                   controls.name.setValue(this.provider.address.ad_name || "")
                   controls.ap_curr.setValue(this.provider.vd_curr || "")
-                  controls.ap_bank.setValue(this.provider.vd_bank || "")
-                  controls.ap_cr_terms.setValue(this.provider.vd_ckfrm || "")
+                  // controls.ap_bank.setValue(this.provider.vd_bank || "")
+                  // controls.ap_cr_terms.setValue(this.provider.vd_ckfrm || "")
                   
 
                   this.deviseService.getBy({ cu_curr: this.provider.vd_curr }).subscribe(
@@ -731,30 +732,30 @@ this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , appli
         
                       }
                  
-                  this.bankService
-                  .getAP({
-                        bk_code: this.provider.vd_bank,
-                  })
-                  .subscribe((res: any) => {
-                    //console.log("jjjjjj",res.data)
-                    controls.bank_name.setValue(res.data.bank.bk_desc || "")
-                    controls.ap_entity.setValue(res.data.bank.bk_entity || "")
-                    this.ap_cr_termss = res.data.details
+                  // this.bankService
+                  // .getAP({
+                  //       bk_code: this.provider.vd_bank,
+                  // })
+                  // .subscribe((res: any) => {
+                  //   //console.log("jjjjjj",res.data)
+                  //   controls.bank_name.setValue(res.data.bank.bk_desc || "")
+                  //   controls.ap_entity.setValue(res.data.bank.bk_entity || "")
+                  //   this.ap_cr_termss = res.data.details
          
-                  })
-                  this.bankService
-                  .getAllDetails({
-                        bkd_bank: this.provider.vd_bank,
-                        bkd_module: "AP",
-                        bkd_pay_method:  this.provider.vd_ckfrm,
+                  // })
+                  // this.bankService
+                  // .getAllDetails({
+                  //       bkd_bank: this.provider.vd_bank,
+                  //       bkd_module: "AP",
+                  //       bkd_pay_method:  this.provider.vd_ckfrm,
                         
-                  })
-                  .subscribe((resp: any) => {
-                   // console.log(resp.data)
+                  // })
+                  // .subscribe((resp: any) => {
+                  //  // console.log(resp.data)
          
-                   controls.ap_dy_code.setValue(resp.data[0].bkd_dy_code || "")
+                  //  controls.ap_dy_code.setValue(resp.data[0].bkd_dy_code || "")
            
-                  })
+                  // })
               
                  
 
@@ -1269,8 +1270,8 @@ handleSelectedRowsChangedbill(e, args) {
 
                   controls.name.setValue(this.provider.address.ad_name || "")
                   controls.ap_curr.setValue(this.provider.vd_curr || "")
-                  controls.ap_bank.setValue(this.provider.vd_bank || "")
-                  controls.ap_cr_terms.setValue(this.provider.vd_ckfrm || "")
+                  // controls.ap_bank.setValue(this.provider.vd_bank || "")
+                  // controls.ap_cr_terms.setValue(this.provider.vd_ckfrm || "")
 
 
                   this.deviseService.getBy({ cu_curr: item.vd_curr }).subscribe(
@@ -1301,30 +1302,30 @@ handleSelectedRowsChangedbill(e, args) {
                       }
             
 
-                  this.bankService
-                  .getAP({
-                        bk_code: this.provider.vd_bank, 
+                  // this.bankService
+                  // .getAP({
+                  //       bk_code: this.provider.vd_bank, 
                         
-                  })
-                  .subscribe((res: any) => {
+                  // })
+                  // .subscribe((res: any) => {
                    
-                    controls.bank_name.setValue(res.data.bank.bk_desc || "")
-                    controls.ap_entity.setValue(res.data.bank.bk_entity || "")
-                    this.ap_cr_termss = res.data.details
+                  //   controls.bank_name.setValue(res.data.bank.bk_desc || "")
+                  //   controls.ap_entity.setValue(res.data.bank.bk_entity || "")
+                  //   this.ap_cr_termss = res.data.details
          
-                  })
-                  this.bankService
-                  .getAllDetails({
-                        bkd_bank: this.provider.vd_bank,
-                        bkd_module: "AP",
-                        bkd_pay_method:  this.provider.vd_ckfrm,
+                  // })
+                  // this.bankService
+                  // .getAllDetails({
+                  //       bkd_bank: this.provider.vd_bank,
+                  //       bkd_module: "AP",
+                  //       bkd_pay_method:  this.provider.vd_ckfrm,
                         
-                  })
-                  .subscribe((resp: any) => {
+                  // })
+                  // .subscribe((resp: any) => {
          
-                   controls.ap_dy_code.setValue(resp.data[0].bkd_dy_code || "")
+                  //  controls.ap_dy_code.setValue(resp.data[0].bkd_dy_code || "")
            
-                  })
+                  // })
       
 
     });
@@ -2008,7 +2009,7 @@ this.gridServicecf.addItem(
             const item = this.gridObjbank.getDataItem(idx);
             controls.ap_bank.setValue(item.bk_code || "");
             controls.bank_name.setValue(item.address.ad_name || "");
-
+            controls.ap_entity.setValue(item.bk_entity || "");
 
             this.bankService.getAP({bk_code: item.bk_code}).subscribe((res:any)=>{
              console.log(res.data)

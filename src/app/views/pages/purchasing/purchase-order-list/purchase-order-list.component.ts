@@ -210,6 +210,7 @@ console.log("id",id)
         field: "po.po_nbr",
         minWidth: 80,
         maxWidth: 100,
+        sortable:true,
         selectable: true,
         filterable: true,
       },
@@ -291,7 +292,7 @@ console.log("id",id)
            this.poService.getOne(id).subscribe(
             (respo: any) => {this.poedit = respo.data.purchaseOrder
               this.addressService.getBy({ad_addr: this.poedit.po_vend}).subscribe(
-                (resp: any) => {this.address = resp.data
+                (resp: any) => {this.address = resp.data[0]
                   console.log(this.address)
                   console.log(this.poedit)
           // if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
@@ -333,7 +334,10 @@ console.log("id",id)
         onCellClick: (e: Event, args: OnEventArgs) => {
            const id = args.dataContext.id
            console.log(args.dataContext.po.po_stat)
-           this.router.navigateByUrl(`/inventory-transaction/po-receip-id/${id}`)
+           if(args.dataContext.po.po_stat != 'V') { 
+            alert("Bon de Commande doit etre Validé")
+           } else {
+           this.router.navigateByUrl(`/inventory-transaction/po-receip-id/${id}`)}
         },
       },
       {
@@ -360,7 +364,10 @@ console.log("id",id)
         onCellClick: (e: Event, args: OnEventArgs) => {
            const id = args.dataContext.id
            console.log(args.dataContext.po.po_stat)
-           this.router.navigateByUrl(`/inventory-transaction/po-receip-cab-id/${id}`)
+           if(args.dataContext.po.po_stat != 'V') { 
+            alert("Bon de Commande doit etre Validé")
+           } else
+                {  this.router.navigateByUrl(`/inventory-transaction/po-receip-cab-id/${id}`) }
         },
       },
       {

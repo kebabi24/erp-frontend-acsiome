@@ -1,0 +1,149 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter Article'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button (click)="goBack()" type="button" class="btn btn-secondary btn-sm mr-2">Annuler</button>
+            <button (click)="reset()" type="button" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button (click)="onSubmit()" type="button" class="btn btn-success btn-sm mr-2">Enregistrer </button>
+
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div>
+            
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    Ce Code existe deja
+                </kt-alert>
+                <form [formGroup]="aeForm" class="form">   
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group">Date :</label>
+                        <div class="input-group input-group">
+                          <input class="form-control form-control form-control-solid" formControlName="ae_effdate"  placeholder="jj-mm-aaaa" name="ae_effdate" ngbDatepicker f #ae_effdate="ngbDatepicker"  />
+                          <div class="input-group-append">
+                            <button class="btn btn-primary" (click)="ae_effdate.toggle()" type="button">
+                              <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                            </button>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Zone:</label>
+
+                        <select
+                        class="form-control form-control-solid" (change)="onchangezone()"
+                            formControlName="ae_sup" id="ae_sup">
+                            <option value=""></option>
+                            <option *ngFor="let elem of ae_sup" [value]="elem.usrd_code">
+                                {{elem.usrd_code}} {{elem.usrd_name}}</option>
+
+                        </select>
+                       
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Role:</label>
+
+                        <select
+                        class="form-control form-control-solid" (change)="onchangerole()"
+                            formControlName="ae_role" id="ae_role">
+                            <option value=""></option>
+                            <option *ngFor="let elem of ae_role" [value]="elem.role_code">
+                                {{elem.role_code}} {{elem.role_name}}</option>
+
+                        </select>
+                       
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Tournée:</label>
+
+                        <select
+                        class="form-control form-control-solid"
+                            formControlName="ae_itin" id="ae_itin">
+                            <option value=""></option>
+                            <option *ngFor="let elem of ae_itin" [value]="elem.itinerary_code">
+                                {{elem.itinerary_code}} {{elem.itinerary_name}}</option>
+
+                        </select>
+                       
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Client :</label>
+                        <div class="input-group input-group">
+                          <input type="text" class="form-control form-control-solid" formControlName="ae_cust" disabled aria-describedby="basic-addon2" />
+                          <div class="input-group-append">
+                            <span class="input-group-text" (click)="open2(content2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom :</label>
+                        <div class="input-group input-group"> 
+                          <input type="text" class="form-control form-control-solid" formControlName="name"disabled aria-describedby="basic-addon2" />
+                          
+                        </div>
+                    </div>
+               
+                    <div class="form-group col-2">
+                        <label class="form-group ">Equipement:</label>
+
+                        <select
+                        class="form-control form-control-solid" (change)="onchangeeqp()"
+                            formControlName="ae_eqp" id="ae_eqp">
+                            <option value=""></option>
+                            <option *ngFor="let elem of ae_eqp" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                       
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Nombre :</label>
+                        <div class="input-group input-group"> 
+                          <input type="number" class="form-control form-control-solid" formControlName="ae_eqp_nbr" aria-describedby="basic-addon2"  (change)="onchangenbr()"/>
+                          
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Montant Unitaire :</label>
+                        <div class="input-group input-group"> 
+                          <input type="number" class="form-control form-control-solid" disabled formControlName="ae_amt_un" aria-describedby="basic-addon2" />
+                          
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Montant TTC :</label>
+                        <div class="input-group input-group"> 
+                          <input type="number" class="form-control form-control-solid" formControlName="ae_amt" aria-describedby="basic-addon2" />
+                          
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title">Choissir le Client</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro" [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)" (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)" [gridOptions]="gridOptions2" [dataset]="customers"> </angular-slickgrid>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+              </div>
+            </ng-template>
+          </div>
+    </kt-portlet-body>
+</kt-portlet>    

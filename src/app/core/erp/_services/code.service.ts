@@ -65,4 +65,8 @@ export class CodeService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/deletes`, data,{ headers: httpHeaders })
     }
+    public getAllProvider() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/findprovider`, { headers: httpHeaders })
+    }
 }

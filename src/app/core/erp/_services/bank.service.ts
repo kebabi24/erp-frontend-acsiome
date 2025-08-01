@@ -96,6 +96,12 @@ export class BankService {
             headers: httpHeaders,
         });
     }
+    public addBkhCautionDetail(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders();
+        return this.http.post(`${API_URL}/addbkhcautiondet`, data, {
+            headers: httpHeaders,
+        });
+    }
     public addBkhTransfertC(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders();
         return this.http.post(`${API_URL}/addbkhtransfertc`, data, {
