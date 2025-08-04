@@ -157,7 +157,7 @@ export class AffectEquipementComponent implements OnInit {
       name: [""],
       ae_eqp : [this.affectEquipement.ae_eqp, Validators.required],
       ae_eqp_nbr : [this.affectEquipement.ae_eqp_nbr, Validators.required],
-      ae_amt_un : [this.affectEquipement.ae_amt_un,Validators.required],
+      // ae_amt_un : [this.affectEquipement.ae_amt_un,Validators.required],
       ae_amt : [this.affectEquipement.ae_amt,Validators.required]
       
       // user_mobile_code : [{value:"",disabled:true}],
@@ -319,15 +319,15 @@ export class AffectEquipementComponent implements OnInit {
     this.prepareGrid2();
     this.modalService.open(content, { size: "xl" });
   }
-onchangenbr() {
-  const controls = this.aeForm.controls
-  controls.ae_amt.setValue(Number(controls.ae_eqp_nbr.value) * Number(controls.ae_amt_un.value))
-  console.log("here", Number(controls.ae_eqp_nbr.value) * Number(controls.ae_amt_un.value))
-}
+// onchangenbr() {
+//   const controls = this.aeForm.controls
+//   controls.ae_amt.setValue(Number(controls.ae_eqp_nbr.value) * Number(controls.ae_amt_un.value))
+//   console.log("here", Number(controls.ae_eqp_nbr.value) * Number(controls.ae_amt_un.value))
+// }
 onchangeeqp() {
   const controls = this.aeForm.controls
   let index = this.ae_eqp.findIndex((item)=>{return item.code_value === controls.ae_eqp.value})
-  controls.ae_amt_un.setValue(this.ae_eqp[index].dec01)
+  controls.ae_amt.setValue(this.ae_eqp[index].dec01)
     
 }
 
@@ -363,7 +363,7 @@ prepareAffect(): AffectEquipement {
   
   _ae.ae_eqp = controls.ae_eqp.value
   _ae.ae_eqp_nbr = controls.ae_eqp_nbr.value
-  _ae.ae_amt_un = controls.ae_amt_un.value
+  // _ae.ae_amt_un = controls.ae_amt_un.value
   _ae.ae_amt = controls.ae_amt.value
   
   _ae.ae_effdate = controls.ae_effdate.value
@@ -464,7 +464,7 @@ var i = 110
 
   //   doc.line(2, i - 5, 2, i);
      doc.text("Equipement :" + String(controls.ae_eqp.value) , 10, i );
-     doc.text("Nombre : " + String(controls.ae_eqp_nbr.value)  , 10, i +10 ); 
+     doc.text("N° Série : " + String(controls.ae_eqp_nbr.value)  , 10, i +10 ); 
      
      doc.setFontSize(14);
      doc.setFont("Times-Roman-bold");

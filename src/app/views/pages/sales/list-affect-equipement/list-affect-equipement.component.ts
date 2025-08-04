@@ -292,16 +292,11 @@ export class ListAffectEquipementComponent implements OnInit {
       },
       {
         id: "ae_eqp_nbr",
-        name: "Nombre",
+        name: "N° Série",
         field: "ae_eqp_nbr",
         sortable: true,
         filterable: true,
-        type: FieldType.float,
-        formatter: Formatters.decimal,
-        params: { minDecimal: 2, maxDecimal: 2 }, 
-        groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-        headerCssClass: 'text-right',
-        cssClass: 'text-right'
+        type: FieldType.text,
        
       },
       {

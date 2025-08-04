@@ -507,7 +507,7 @@ export class MenuDDConfig {
             submenu: [
              
               {
-                title: "Affectation des Equipement",
+                title: "Affectation des Equipements",
                 page: "/sales/affect-equipement",
               },
               {
@@ -516,12 +516,12 @@ export class MenuDDConfig {
               },
               
               {
-                title: "Paiemennt des Equipement",
+                title: "Paiement des Equipements",
                 page: "/account-receivable/create-caution-cust",
               },
               {
                 title: "Listes des Paiements des Equipements",
-                page: "/account-receivable/list-itinerary",
+                page: "/account-receivable/list-caution-cust",
               },
              
             ],

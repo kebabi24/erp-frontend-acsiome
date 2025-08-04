@@ -11,7 +11,7 @@ export class AffectEquipement extends BaseModel{
  ae_itin: String
  ae_cust: String
  ae_eqp: String
- ae_eqp_nbr: Number
+ ae_eqp_nbr: String
  ae_amt_un: Number
  ae_amt: Number
  ae_effdate: String
