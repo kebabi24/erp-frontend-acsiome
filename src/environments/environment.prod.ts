@@ -19,12 +19,12 @@ export const environment = {
   
   //  apiUrl: "http://192.168.1.252:3001/api/v1",
   //  apiUrl: "http://10.10.130.9:3001/api/v1",
-  apiUrl: "http://10.10.3.6:4141/api/v1",
+  apiUrl: "http://http://38.242.222.65:7909//api/v1",
   Instance: "Prod",
-  App: "DD",
+  App: "ERP",
    
 
-  // key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
-  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$Y1rdOurgRpPWagKn1En/X3ATJ2FfskmqvzdZLDMfFk4"
+  key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
+  // prima key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$Y1rdOurgRpPWagKn1En/X3ATJ2FfskmqvzdZLDMfFk4"
  //edelweiss key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$zHjTc5y+XDtK0x6zun1KfIkkfhpDa+rYV4lBLLZX4Bc"
 };
