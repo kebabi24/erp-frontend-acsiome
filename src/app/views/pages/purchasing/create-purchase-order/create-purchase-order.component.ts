@@ -277,13 +277,13 @@ docs: any[] = [];
         this.user =  JSON.parse(localStorage.getItem('user'))
         this.domain = JSON.parse(localStorage.getItem("domain"));
         this.createForm();
-        this.codeService
-    .getBy({ code_fldname: "articles/create-div-mod" })
-    .subscribe((response: any) => {
-      const { data } = response;
-     this.docs = data; 
-     if(response.data.length != 0){this.exist = true} 
-    });
+    //     this.codeService
+    // .getBy({ code_fldname: "articles/create-div-mod" })
+    // .subscribe((response: any) => {
+    //   const { data } = response;
+    //  this.docs = data; 
+    //  if(response.data.length != 0){this.exist = true} 
+    // });
         
     }
 

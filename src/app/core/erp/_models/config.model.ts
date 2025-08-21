@@ -7,6 +7,7 @@ export class Config extends BaseModel{
     cfg_crm: boolean
     cfg_accounting: boolean
     cfg_declared: boolean
-   
+    cfg_po_threshold : Number
+    cfg_threshold_user : String
 
 }

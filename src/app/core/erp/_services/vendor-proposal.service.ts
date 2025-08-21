@@ -42,5 +42,9 @@ export class VendorProposalService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
     }
+    public getOne(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
     // DELETE
 }

@@ -136,7 +136,7 @@ export class ProvidersEditComponent implements OnInit {
   // selects
     ad_city: any[] = []
     ad_state: any[] = []
-    ad_county: any[] = []
+    ad_country: any[] = []
     vd_type: any[] = []
     vd_shipvia: any[] = []
     vd_promo: any[] = []
@@ -187,8 +187,11 @@ export class ProvidersEditComponent implements OnInit {
             .getBy({ code_fldname: "ad_state" })
             .subscribe((response: any) => (this.ad_state = response.data))
         this.codeService
-            .getBy({ code_fldname: "ad_county" })
-            .subscribe((response: any) => (this.ad_county = response.data))
+            .getBy({ code_fldname: "ad_city" })
+            .subscribe((response: any) => (this.ad_city = response.data))
+        this.codeService
+            .getBy({ code_fldname: "ad_country" })
+            .subscribe((response: any) => (this.ad_country = response.data))
         this.codeService
             .getBy({ code_fldname: "vd_type" })
             .subscribe((response: any) => (this.vd_type = response.data))

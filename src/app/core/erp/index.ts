@@ -101,6 +101,8 @@ export { Populationemploye } from "./_models/populationemploye.model";
 export { Trainingcalender } from "./_models/trainingcalender.model";
 export { AccountOrder } from "./_models/account-order.model";
 export { PriceListQuantity } from "./_models/price-list-quantity.model";
+export { AffectEquipement } from "./_models/affect-equipement.model";
+export { VoucherProforma } from "./_models/voucher-proforma.model";
 //Services
 export { AddressService } from "./_services/address.service";
 export { CodeService } from "./_services/code.service";
@@ -210,4 +212,7 @@ export { DecompteService } from "./_services/decompte.service";
 export { AccountOrderService } from "./_services/account-order.service";
 export { PriceListQuantityService } from "./_services/price-list-quantity.service";
 export { TimbreService } from "./_services/timbre.service";
+export { AffectEquipementService } from "./_services/affect-equipement.service";
+export { ProfileServiceService } from "./_services/profile-service.service";
+export { VoucherProformaService } from "./_services/voucher-proforma.service";
 export { printBc, printTag, printReceive, printReceiveUNP, printTR, printISSUNP, printOc, printSO, printBL, printIH, printInventory, printInventoryOfSecurity, printInventoryActivity, printProviderBalance, printInventoryByLoc, printInventoryByStatus, printItemPurchaseByProvider, printProviderActivity, printProviderCA, printItemSalesByCustomer, printCustomerActivity, printCustomerSolde, printCustomerCAList, printLp } from "./helpers/print";

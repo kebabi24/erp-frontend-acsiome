@@ -417,7 +417,15 @@ prepareGrid() {
       sanitizeDataExport: true
     },
     
-   
+    excelExportOptions: {
+      filename: 'Consultation des Achats',
+      sanitizeDataExport: true,
+     
+      columnHeaderStyle: {
+        font: { color: 'FFFFFFFF' },
+        fill: { type: 'pattern', patternType: 'solid', fgColor: 'FF4a6c91' }
+      }
+    },
     // enable the filtering but hide the user filter row since we use our own single filter
     showHeaderRow: true, // hide the filter row (header row)
 

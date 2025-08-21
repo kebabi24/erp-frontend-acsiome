@@ -1,9 +1,9 @@
 <kt-portlet>
     <kt-portlet-header [sticky]="true" [title]="'Configuration Modules'" [class]="'card-head-lg'">
         <ng-container ktPortletTools>
-            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Enregistrer </button>
 
 
         </ng-container>
@@ -112,10 +112,60 @@
 
 
                 </div>
+                <div class="row">
+                    <div class="form-group col-2">
+                        <label class="form-group ">Seuil Commande:</label>
+
+                        <div class="input-group input-group-sm">
+
+                            <input type="number" class="form-control form-control-solid"
+                                formControlName="cfg_po_threshold" aria-describedby="basic-addon2">
+                            <!--div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div-->
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Validé Par :</label>
+                        <div class="input-group input-group-sm">
+                          <input type="text" id="emp" [className]="cfgForm.controls['cfg_threshold_user'].errors && (cfgForm.controls['cfg_threshold_user'].dirty || cfgForm.controls['cfg_threshold_user'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'" formControlName="cfg_threshold_user" aria-describedby="basic-addon2" disabled />
+                          <div class="input-group-append">
+                            <span class="input-group-text" (click)="openemp(contentemp)"> <i class="text-dark-50 flaticon2-search"></i> </span>
+                          </div>
+            
+                          <div *ngIf="cfgForm.controls['cfg_threshold_user'].errors && (cfgForm.controls['cfg_threshold_user'].dirty || cfgForm.controls['cfg_threshold_user'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
+                        </div>
+                      </div> 
+                </div>    
             </form>
         </div>
 
     </kt-portlet-body>
 
-
+    <div>
+        <ng-template #contentemp let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir les Utilisateurs</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridemp"
+                        [columnDefinitions]="columnDefinitionsemp" (onAngularGridCreated)="angularGridReadyemp($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedemp($event.detail.eventData, $event.detail.args)"
+                       
+                        [gridOptions]="gridOptionsemp" [dataset]="emps">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                <button type="button" class="btn btn-primary" (click)="addit()" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
 </kt-portlet>

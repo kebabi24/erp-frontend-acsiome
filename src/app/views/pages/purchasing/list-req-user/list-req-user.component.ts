@@ -222,6 +222,14 @@ export class ListReqUserComponent implements OnInit {
          type: FieldType.string,
        },
        {
+        id: "chr04",
+        name: "Service",
+        field: "req.chr04",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+       {
          id: "rqm_rqby_userid",
          name: "Demandeur",
          field: "req.rqm_rqby_userid",
@@ -295,6 +303,16 @@ export class ListReqUserComponent implements OnInit {
          // Optionally pass your Parent Component reference to your Child Component (row detail component)
          parent: this,
        },
+       presets: {
+        sorters: [
+          { columnId: 'rqm_req_date', direction: 'DESC' },
+         ],
+      //    filters: [
+      //  { columnId: 'po_nbr', searchTerms: [this.ponbr] }  ,
+          
+      //   ],
+       
+      },
      };
  
      // fill the dataset with your data

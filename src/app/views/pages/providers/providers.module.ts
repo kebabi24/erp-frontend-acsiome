@@ -64,7 +64,12 @@ import { CreateRepComponent } from './create-rep/create-rep.component';
 import { ListRepComponent } from './list-rep/list-rep.component';
 import { CreateStdProviderComponent } from './create-std-provider/create-std-provider.component';
 import { CreateRepJobComponent } from './create-rep-job/create-rep-job.component';
-import { ProviderActivitiesComponent } from './provider-activities/provider-activities.component'
+import { ProviderActivitiesComponent } from './provider-activities/provider-activities.component';
+import { ProviderSettingsComponent } from './provider-settings/provider-settings.component';
+import { ProviderSettingsListComponent } from './provider-settings-list/provider-settings-list.component';
+import { ProviderSettingsEditComponent } from './provider-settings-edit/provider-settings-edit.component';
+import { EditStdProviderComponent } from './edit-std-provider/edit-std-provider.component';
+import { ListStdProviderComponent } from './list-std-provider/list-std-provider.component'
 
 
 const routes: Routes = [
@@ -122,6 +127,26 @@ const routes: Routes = [
 	            path: "provider-activities",
 	            component: ProviderActivitiesComponent,
             },
+            {
+	            path: "provider-settings",
+	            component: ProviderSettingsComponent,
+            },
+            {
+	            path: "provider-settings-list",
+	            component: ProviderSettingsListComponent,
+            },
+            {
+	            path: "provider-settings-edit/:id",
+	            component: ProviderSettingsEditComponent,
+            },
+            {
+                path: "edit-std-provider/:id",
+                component: EditStdProviderComponent,
+            },
+            {
+	            path: "list-std-provider",
+	            component: ListStdProviderComponent,
+            },
         ],
     },
 ]
@@ -141,6 +166,11 @@ const routes: Routes = [
         CreateStdProviderComponent,
         CreateRepJobComponent,
         ProviderActivitiesComponent,
+        ProviderSettingsComponent,
+        ProviderSettingsListComponent,
+        ProviderSettingsEditComponent,
+        EditStdProviderComponent,
+        ListStdProviderComponent,
     ],
     imports: [
         CommonModule,

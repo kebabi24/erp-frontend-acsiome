@@ -217,7 +217,7 @@ export class MenuConfig {
             },
             {
               title: "La liste des Fournisseurs",
-              page: "/providers/list",
+              page: "/providers/list-std-provider",
             },
             {
               title: "Ajouter Fournisseurs",
@@ -235,6 +235,15 @@ export class MenuConfig {
               title: "Liste Répertoire Fournisseurs",
               page: "/providers/list-rep",
             },
+            {
+              title: "Paramétrage Fournisseur",
+              page: "/providers/provider-settings",
+            },
+            {
+              title: "Liste Paramétrage Fournisseur",
+              page: "/providers/provider-settings-list",
+            },
+           
           ],
         },
         /**/
@@ -2080,11 +2089,12 @@ export class MenuConfig {
               submenu: [
                 {
                   title: "Ajouter un utilisateur",
-                  icon: "flaticon-user-add",
+                
                   page: "/users/create-user",
                 },
                 {
                   title: "La liste des utilisateurs",
+                
                   page: "/users/users-list",
                 },
               ],
@@ -2155,6 +2165,23 @@ export class MenuConfig {
           bullet: "dot",
           icon: "flaticon2-settings",
           submenu: [
+            {
+              title: "Paramétrage des Achats",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-settings-1",
+              submenu: [
+                {
+                  title: "Groupe d'achat",
+                  page: "/purchasing/create-seq-req",
+                },
+                {
+                  title: "Liste des groupes d'achat",
+                  page: "/purchasing/list-seq-req",
+                },
+               
+              ],
+            },
             {
               title: "Parametrage Stock",
               root: true,

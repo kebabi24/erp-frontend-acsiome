@@ -18,6 +18,7 @@ export const environment = {
   apiUrl: "http://192.168.1.112:3001/api/v1",
   // apiUrl: "http://25.7.193.22:3001/api/v1",
   // apiUrl: "https://edelweiss.whitebay.limited/api/v1",
+  // apiUrl: "http://loalhost:3001/api/v1",
   Instance: "Prod",
   App: "ERP", // RH or ERP or DD
   // key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$b7dhzjxkuGRbLPCGSXW3Yw",

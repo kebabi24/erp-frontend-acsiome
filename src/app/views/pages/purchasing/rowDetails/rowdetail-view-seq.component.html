@@ -1,0 +1,22 @@
+<div>
+    <table class="table mb-5">
+        <thead class="thead-dark">
+            <tr>
+                
+                <th scope="col">Code Service</th>
+                <th scope="col">Designation</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of model.details">
+               
+                <td>{{item.usgseq_service}}</td>
+                <td>{{item.chr01}}</td>
+               
+
+            </tr>
+            
+        </tbody>
+    </table>
+</div>

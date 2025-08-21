@@ -66,14 +66,14 @@
                             </div>
                         </div>    
                     </div> 
-                <div class="row">
-                    <angular-slickgrid class="col-12"  gridId="plagemvGrid"  
-                          [columnDefinitions]="mvcolumnDefinitions"
-                          
-                          [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
-                          (onAngularGridCreated)="mvGridReady($event)">
-                    </angular-slickgrid>
-                </div>
+                    <div class="row">
+                        <angular-slickgrid class="col-12"  gridId="plagemvGrid"  
+                              [columnDefinitions]="mvcolumnDefinitions"
+                              [gridOptions]="mvgridOptions" [dataset]="mvdataset" 
+                              (onAngularGridCreated)="mvGridReady($event)">
+                        </angular-slickgrid>
+                    </div>
+                   
                
                
             </form>

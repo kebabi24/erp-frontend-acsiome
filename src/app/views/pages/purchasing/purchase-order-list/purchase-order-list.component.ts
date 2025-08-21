@@ -47,7 +47,7 @@ import {
 } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 
-import { PurchaseOrderService, SiteService,AddressService } from "../../../../core/erp";
+import { PurchaseOrderService, SiteService,AddressService, ConfigService } from "../../../../core/erp";
 import { RowDetailViewPoComponent } from "../rowDetails/rowdetail-view-po.component";
 import { RowDetailPreloadComponent } from '../rowDetails/row-details-preload.component';
 import {
@@ -59,6 +59,24 @@ import {
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+  if (value=="V"){
+    return `<div class="text"  aria-hidden="Validé">Validé</div>`
+  }
+  if (value=="I"){
+    return `<div class="text"  aria-hidden="Imprimé">Imprimé</div>`
+  }
+  if (value=="E"){
+    return `<div class="text"  aria-hidden="Envoyé">Envoyé</div>`
+  }
+  if (value=="X"){
+    return `<div class="text"  aria-hidden="Suprimé">Suprimé</div>`
+  }
+  if (value=="C"){
+    return `<div class="text"  aria-hidden="Cloturé">Cloturé</div>`
+  }
+ 
+  }
 @Component({
   selector: "kt-purchase-order-list",
   templateUrl: "./purchase-order-list.component.html",
@@ -90,6 +108,8 @@ export class PurchaseOrderListComponent implements OnInit {
   domain;
   podataset: any[] = [];
   puo:any
+  cfg_po_threshold : number
+  cfg_threshold_user : String
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -100,8 +120,21 @@ export class PurchaseOrderListComponent implements OnInit {
     private siteService: SiteService,
     private addressService: AddressService,
     private modalService: NgbModal,
+    private configService: ConfigService,
   ) {
-   
+    this.configService.getOne( 1 ).subscribe(
+      (resp: any) => {
+        console.log(resp.data)
+        if (resp.data) { 
+          this.cfg_po_threshold = resp.data.cfg_po_threshold
+          this.cfg_threshold_user=resp.data.cfg_threshold_user
+        }
+       else {
+        this.cfg_po_threshold = 0
+        this.cfg_threshold_user=null
+       }
+        
+      })  
   }
 
   createForm() {
@@ -120,7 +153,7 @@ export class PurchaseOrderListComponent implements OnInit {
           month: date.getMonth()+1,
           day: date.getDate()
         }],
-        
+        po_amt: [this.poedit.po_amt],
         po_stat: [
             { value: this.poedit.po_stat },
         ],
@@ -210,6 +243,7 @@ console.log("id",id)
         field: "po.po_nbr",
         minWidth: 80,
         maxWidth: 100,
+        sortable:true,
         selectable: true,
         filterable: true,
       },
@@ -250,6 +284,13 @@ console.log("id",id)
         
         filterable: true,
         type: FieldType.string,
+       formatter:myCustomCheckboxFormatter,
+        filter: {
+           collection: [ { value: '', label: '' }, { value: 'V', label: 'Validé' }, { value: 'I', label: 'Imprimé' }, { value: 'E', label: 'Envoyé' }, { value: 'X', label: 'Suprimé' }, { value: 'C', label: 'Cloturé' } ],
+           model: Filters.multipleSelect,
+    
+           placeholder: 'choisir une option'
+       }
       },
       {
         id: "po_amt",
@@ -291,7 +332,7 @@ console.log("id",id)
            this.poService.getOne(id).subscribe(
             (respo: any) => {this.poedit = respo.data.purchaseOrder
               this.addressService.getBy({ad_addr: this.poedit.po_vend}).subscribe(
-                (resp: any) => {this.address = resp.data
+                (resp: any) => {this.address = resp.data[0]
                   console.log(this.address)
                   console.log(this.poedit)
           // if( args.dataContext.po.po_stat == "V" ||  args.dataContext.po.po_stat == "P" || args.dataContext.po.po_stat == null) {
@@ -333,7 +374,10 @@ console.log("id",id)
         onCellClick: (e: Event, args: OnEventArgs) => {
            const id = args.dataContext.id
            console.log(args.dataContext.po.po_stat)
-           this.router.navigateByUrl(`/inventory-transaction/po-receip-id/${id}`)
+           if(args.dataContext.po.po_stat != 'V') { 
+            alert("Bon de Commande doit etre Validé")
+           } else {
+           this.router.navigateByUrl(`/inventory-transaction/po-receip-id/${id}`)}
         },
       },
       {
@@ -360,7 +404,10 @@ console.log("id",id)
         onCellClick: (e: Event, args: OnEventArgs) => {
            const id = args.dataContext.id
            console.log(args.dataContext.po.po_stat)
-           this.router.navigateByUrl(`/inventory-transaction/po-receip-cab-id/${id}`)
+           if(args.dataContext.po.po_stat != 'V') { 
+            alert("Bon de Commande doit etre Validé")
+           } else
+                {  this.router.navigateByUrl(`/inventory-transaction/po-receip-cab-id/${id}`) }
         },
       },
       {
@@ -541,39 +588,79 @@ console.log("id",id)
     this.hasFormErrors = false
     const controls = this.poForm.controls
     /** check form */
+  
+   if(Number(controls.po_amt.value) >= Number(this.cfg_po_threshold)) {
+
+          if (this.cfg_threshold_user.indexOf(this.user.usrd_code) !== -1) {
+            this.poService
+            .update({ po_stat: controls.po_stat.value }, this.poedit.id)
+            .subscribe( //(res) => {
+
+              (reponse) => console.log("response", Response),
+              (error) => {
+                  this.layoutUtilsService.showActionNotification(
+                      "Erreur verifier les informations",
+                      MessageType.Create,
+                      10000,
+                      true,
+                      true
+                  )
+                  this.loadingSubject.next(false)
+              },
+              () => {
+                  this.layoutUtilsService.showActionNotification(
+                      "Modification Status avec succès",
+                      MessageType.Create,
+                      10000,
+                      true,
+                      true
+                  )
+                  this.loadingSubject.next(false)
+                  window.location.reload();
+                  // this.router.navigateByUrl(`purchasing/po-list/${this.ponbr}`)
+                  // this.router.navigateByUrl("/purchasing/edit-status-po")
+                
+              }
+          )
+        } else {
+         alert("Montant dépasse le seuil autorisé vous ne pouvez pas Valider ce bon de commande")
+        }
+
+   }
+   else {
    
-    this.poService
-        .update({ po_stat: controls.po_stat.value }, this.poedit.id)
-        .subscribe( //(res) => {
+          this.poService
+              .update({ po_stat: controls.po_stat.value }, this.poedit.id)
+              .subscribe( //(res) => {
 
-          (reponse) => console.log("response", Response),
-          (error) => {
-              this.layoutUtilsService.showActionNotification(
-                  "Erreur verifier les informations",
-                  MessageType.Create,
-                  10000,
-                  true,
-                  true
-              )
-              this.loadingSubject.next(false)
-          },
-          () => {
-              this.layoutUtilsService.showActionNotification(
-                  "Modification Status avec succès",
-                  MessageType.Create,
-                  10000,
-                  true,
-                  true
-              )
-              this.loadingSubject.next(false)
-              window.location.reload();
-              // this.router.navigateByUrl(`purchasing/po-list/${this.ponbr}`)
-              // this.router.navigateByUrl("/purchasing/edit-status-po")
-            
-          }
-      )
+                (reponse) => console.log("response", Response),
+                (error) => {
+                    this.layoutUtilsService.showActionNotification(
+                        "Erreur verifier les informations",
+                        MessageType.Create,
+                        10000,
+                        true,
+                        true
+                    )
+                    this.loadingSubject.next(false)
+                },
+                () => {
+                    this.layoutUtilsService.showActionNotification(
+                        "Modification Status avec succès",
+                        MessageType.Create,
+                        10000,
+                        true,
+                        true
+                    )
+                    this.loadingSubject.next(false)
+                    window.location.reload();
+                    // this.router.navigateByUrl(`purchasing/po-list/${this.ponbr}`)
+                    // this.router.navigateByUrl("/purchasing/edit-status-po")
+                  
+                }
+            )
 
-
+        }
           //  const url = `/`
             //this.router.navigateByUrl(url, {
               //  relativeTo: this.activatedRoute,

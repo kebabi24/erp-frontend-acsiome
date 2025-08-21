@@ -51,7 +51,7 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import { UsersService, CodeService, TaxeService, CustomerService, SequenceService, ConfigService,
-  DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,ProjectService, MobileServiceService, RoleService, UsersMobileService,MobileSettingsService, SiteService, LoadRequestService} from '../../../core/erp';
+  DeviseService,  InvoiceOrderService, BankService, AccountReceivableService,ProjectService, MobileServiceService, RoleService, UsersMobileService,MobileSettingsService, SiteService, LoadRequestService, AffectEquipementService} from '../../../core/erp';
 import { CreateNoteComponent } from './create-note/create-note.component';
 import { EditPaymentComponent } from './edit-payment/edit-payment.component';
 import { ListPaymentRapComponent } from './list-payment-rap/list-payment-rap.component';
@@ -70,6 +70,8 @@ import { TransfertCaisseDetComponent } from './transfert-caisse-det/transfert-ca
 import { EditJournalComponent } from './edit-journal/edit-journal.component';
 import { BankJournalComponent } from './bank-journal/bank-journal.component';
 import { ListGlobalVendorPaymentComponent } from './list-global-vendor-payment/list-global-vendor-payment.component';
+import { CreateCautionCustComponent } from './create-caution-cust/create-caution-cust.component';
+import { ListCautionCustComponent } from './list-caution-cust/list-caution-cust.component';
 
   const routes: Routes = [
     {
@@ -155,12 +157,20 @@ import { ListGlobalVendorPaymentComponent } from './list-global-vendor-payment/l
                 path: "list-global-vendor-payment",
                 component: ListGlobalVendorPaymentComponent,
               },
+              {
+                path: "create-caution-cust",
+                component: CreateCautionCustComponent,
+              },
+              {
+                path: "list-caution-cust",
+                component: ListCautionCustComponent,
+              },
         ],
     },
 ]
 
 @NgModule({
-  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent, ListGlobalVendorPaymentComponent],
+  declarations: [AccountReceivableComponent, CreateAccountReceivableComponent, CreateNoteComponent, EditPaymentComponent, ListPaymentRapComponent, ListPaymentComponent, CreateProjectPaymentComponent, CreateVendorPaymentComponent, TransfertArComponent, ListVendorPaymentComponent, ListTransfertPaymentComponent, CreateVendorPaymentDetailComponent, CreateRolePaymentDetailComponent, ListBankDetailComponent, ListCaisseComponent, TransfertCaisseComponent, TransfertCaisseDetComponent, EditJournalComponent, BankJournalComponent, ListGlobalVendorPaymentComponent, CreateCautionCustComponent, ListCautionCustComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -211,7 +221,8 @@ providers: [
     UsersMobileService,
     MobileSettingsService,
     SiteService,
-    LoadRequestService
+    LoadRequestService,
+    AffectEquipementService,
 ],
 
 entryComponents: [

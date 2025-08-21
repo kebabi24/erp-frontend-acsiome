@@ -716,7 +716,7 @@ console.log("date",date1)
         doc.addPage();
 
         // img.src = "./assets/media/logos/companylogo.png";
-        doc.addImage(img, "png", 160, 5, 50, 30);
+        doc.addImage(img, "png", 250, 5, 50, 30);
         doc.setFontSize(10);
         if (this.domain.dom_name != null) {
           doc.text(this.domain.dom_name, 10, 10);

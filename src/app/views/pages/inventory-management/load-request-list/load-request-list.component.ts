@@ -699,7 +699,7 @@ updateDates(){
   let valueToAddToX = 5
 
   var img = new Image()
-  img.src = "./assets/media/logos/companyentete.png";
+  img.src = "./assets/media/logos/companylogo.png";
   doc.addImage(img, 'png', 150, 5, 50, 30)
   doc.setFontSize(9);
 
@@ -764,7 +764,7 @@ console.log(this.printLines)
     
      if ((j % 30 == 0) && (j != 0) ) {
        doc.addPage();
-       img.src = "./assets/media/logos/companyentete.png";
+       img.src = "./assets/media/logos/companylogo.png";
        doc.addImage(img, 'png', 150, 5, 50, 30)
        doc.setFontSize(9);
         if (this.domain.dom_name != null) {
@@ -831,7 +831,7 @@ console.log(this.printLines)
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(line.pt_price), 118, i - 1, { align: "right" });
+        doc.text(String(Number(line.pt_price).toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(String(line.qt_request), 143, i - 1 , { align: "right" });
         doc.line(145, i - 5, 145, i);
@@ -866,7 +866,7 @@ console.log(this.printLines)
         doc.line(45, i - 5, 45, i);
         doc.text(line.item.pt_desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
-        doc.text(String(line.pt_price), 118, i - 1 , { align: "right" });
+        doc.text(String(Number(line.pt_price).toFixed(2)), 118, i - 1 , { align: "right" });
         doc.line(120, i - 5, 120, i);
         doc.text(String(line.qt_request), 143, i - 1 , { align: "right" });
         doc.line(145, i - 5, 145, i);

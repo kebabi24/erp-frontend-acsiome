@@ -102,15 +102,20 @@ export class ListRolesSalesComponent implements OnInit {
   mvdataset: any[];
 
   
+  // angularGrid: AngularGridInstance;
+  // grid: any;
+  // gridService: GridService;
+  // dataView: any;
+  // columnDefinitions: Column[];
+  // gridOptions: GridOption;
+  // dataset: any[];
+
   angularGrid: AngularGridInstance;
   grid: any;
   gridService: GridService;
   dataView: any;
   columnDefinitions: Column[];
   gridOptions: GridOption;
-  dataset: any[];
-
-  
   
   datasite: [];
   columnDefinitionssite: Column[] = [];
@@ -151,13 +156,11 @@ export class ListRolesSalesComponent implements OnInit {
     
   }
 
-  mvGridReady(mvangularGrid: AngularGridInstance) {
-    this.mvangularGrid = mvangularGrid;
-    this.mvdataView = mvangularGrid.dataView;
-    this.mvgrid = mvangularGrid.slickGrid;
-    this.mvgridService = mvangularGrid.gridService;
-    // const filtered = this.mvangularGrid.dataView.getFilteredItems();
-    // console.log(filtered)
+  mvGridReady(angularGrid: AngularGridInstance) {
+    this.mvangularGrid = angularGrid;
+    this.mvdataView = angularGrid.dataView;
+    this.mvgrid = angularGrid.slickGrid;
+    this.mvgridService = angularGrid.gridService;
   }
   
   ngOnInit(): void {
@@ -169,7 +172,7 @@ export class ListRolesSalesComponent implements OnInit {
     this.createForm();
     this.initmvGrid();
     //this.initGrid();
-   
+   this.solist()
    
   }
 
@@ -203,7 +206,7 @@ export class ListRolesSalesComponent implements OnInit {
      
       {
         id: "role_code",
-        name: "CodeRole",
+        name: "Code Role",
         field: "role_code",
         sortable: true,
         minWidth:50,
@@ -324,14 +327,24 @@ export class ListRolesSalesComponent implements OnInit {
 
     this.mvgridOptions = {
     
-        enableFiltering: true,
-        enableAutoResize: true,
-        enableAutoResizeColumnsByCellContent:true,
-        enableSorting: true,
+      enableFiltering: true,
+      enableAutoResize: true,
+      enableSorting: true,
+      enableExcelExport:true,
+      enableExcelCopyBuffer: true,
         exportOptions: {
           sanitizeDataExport: true
         },
-        
+       
+        excelExportOptions: {
+          filename: 'Liste des Vente Par Role',
+          sanitizeDataExport: true,
+         
+          columnHeaderStyle: {
+            font: { color: 'FFFFFFFF' },
+            fill: { type: 'pattern', patternType: 'solid', fgColor: 'FF4a6c91' }
+          }
+        },
         
         
         //enableRowSelection: true,
@@ -372,30 +385,30 @@ export class ListRolesSalesComponent implements OnInit {
     }
     this.mvdataset = [];
     
-    console.log(this.user)
-    const controls = this.soForm.controls
-    const date = controls.calc_date.value
-    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
-    : null;
+  //   console.log(this.user)
+  //   const controls = this.soForm.controls
+  //   const date = controls.calc_date.value
+  //   ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
+  //   : null;
   
-    const date1 = controls.calc_date1.value
-    ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
-    : null;
-    console.log(date,controls.calc_date.value,date1)
+  //   const date1 = controls.calc_date1.value
+  //   ? `${controls.calc_date1.value.year}/${controls.calc_date1.value.month}/${controls.calc_date1.value.day}`
+  //   : null;
+  //   console.log(date,controls.calc_date.value,date1)
    
-    let obj= {date,date1}
-    this.mobileSettingsService.getRolesSales(obj).subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-       console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
+  //   let obj= {date,date1}
+  //   this.mobileSettingsService.getRolesSales(obj).subscribe(
+  //     (response: any) => {   
+  //       this.mvdataset = response.data
+  //      console.log(this.mvdataset)
+  //      this.mvdataView.setItems(this.mvdataset);
         
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )
+  //        },
+  //     (error) => {
+  //         this.mvdataset = []
+  //     },
+  //     () => {}
+  // )
   }
   solist() {
     this.mvdataset = []

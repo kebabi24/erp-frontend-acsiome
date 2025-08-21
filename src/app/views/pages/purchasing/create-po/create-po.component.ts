@@ -149,6 +149,7 @@ error = false;
   date: String;
   po_cr_terms: any[] = [];
   domain : any;
+  prov:any;
   constructor(
     config: NgbDropdownConfig,
     private poFB: FormBuilder,
@@ -283,7 +284,7 @@ console.log(resp.data)
         name: "Description",
         field: "desc",
         sortable: true,
-        // width: 80,
+        width: 300,
         filterable: false,
       },
       {
@@ -643,14 +644,18 @@ console.log(this.vpServer)
            
             this.providersService
                   .getBy({ vd_addr: this.vpServer.vp_vend })
-                  .subscribe((res: any) => {this.provider = res.data
-                    controls.po_taxable.setValue(this.provider.address.ad_taxable)
-                    controls.po_taxc.setValue(this.provider.address.ad_taxc)
-                    controls.po_cr_terms.setValue(this.provider.vd_cr_terms || "");
-                  this.deviseService.getBy({cu_curr:this.provider.vd_curr}).subscribe((resc:any)=>{  
+                  .subscribe((resprov: any) => {
+                    
+                    this.provider = resprov.data.address
+                    this.prov = resprov.data
+                    console.log("this.provider", this.provider)
+                    controls.po_taxable.setValue(this.provider.ad_taxable)
+                    controls.po_taxc.setValue(this.provider.ad_taxc)
+                    controls.po_cr_terms.setValue(this.prov.vd_cr_terms || "");
+                  this.deviseService.getBy({cu_curr:this.prov.vd_curr}).subscribe((resc:any)=>{  
                     this.curr = resc.data
 
-                    if (this.provider.vd_curr == 'DA'){
+                    if (this.prov.vd_curr == 'DA'){
                       controls.po_ex_rate.setValue(1)
                       controls.po_ex_rate2.setValue(1)
             
@@ -660,9 +665,9 @@ console.log(this.vpServer)
                       ? `${controls.po_ord_date.value.year}/${controls.po_ord_date.value.month}/${controls.po_ord_date.value.day}`
                       : `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
                 
-                      this.deviseService.getExRate({exr_curr1:this.provider.vd_curr, exr_curr2:'DA', date: this.date}).subscribe((res:any)=>{  
-                       controls.po_ex_rate.setValue(res.data.exr_rate)
-                       controls.po_ex_rate2.setValue(res.data.exr_rate2)
+                      this.deviseService.getExRate({exr_curr1:this.prov.vd_curr, exr_curr2:'DA', date: this.date}).subscribe((resdev:any)=>{  
+                       controls.po_ex_rate.setValue(resdev.data.exr_rate)
+                       controls.po_ex_rate2.setValue(resdev.data.exr_rate2)
                       
                       })
                     }
@@ -913,10 +918,12 @@ console.log(this.vpServer)
     const controls = this.poForm.controls;
     const rqm_nbr = controls.po_req_id.value;
     const vp_vend = controls.po_vend.value;
-
+this.dataset=[]
     this.requisitonService.findBy({ rqm_nbr }).subscribe(
       (res: any) => {
+       
         const { requisition, details } = res.data;
+        if  (requisition != null) {
         const det1 = details;
         this.requistionServer = requisition;
         const {
@@ -933,74 +940,7 @@ console.log(this.vpServer)
           this.message = "cette demande d'achat n'est pas encore validee";
           return;
         }
-        const vend = vp_vend ? vp_vend : this.requistionServer.rqm_vend;
-        this.vendorProposalService
-          .findByOne({ vp_vend: vend, vp_rqm_nbr: rqm_nbr })
-          .subscribe(
-            (res: any) => {
-              console.log("aa", res.data);
-              if (res.data.vendorProposal) {
-                console.log("here");
-                const { vendorProposal, details } = res.data;
-                this.vpServer = vendorProposal;
-
-                controls.po_vend.setValue(this.vpServer.vp_vend);
-                this.providersService
-                  .getBy({ vd_addr: this.vpServer.vp_vend })
-                  .subscribe((res: any) => (this.provider = res.data[0]));
-                controls.po_req_id.setValue(this.vpServer.vp_rqm_nbr);
-                controls.po_curr.setValue(this.vpServer.vp_curr);
-                this.deviseService.getBy({cu_curr: this.vpServer.vp_curr}).subscribe((resc:any)=>{  
-                  this.curr = resc.data
-               })
-        
-                for (const object in details) {
-                  const detail = details[object];
-                  console.log(detail.item);
-                  this.gridService.addItem(
-                    {
-                      id: this.dataset.length + 1,
-                      pod_line: this.dataset.length + 1,
-                      pod_req_nbr: this.vpServer.vp_rqm_nbr,
-                      pod_part: detail.vpd_part,
-                      cmvid: "",
-                      desc: detail.item.pt_desc1,
-                      pod_qty_ord: detail.vpd_q_qty,
-                      pod_um: detail.vpd_um,
-                      pod_price: detail.vpd_q_price,
-                      pod_disc_pct: 0,
-                      pod_site: this.site,
-                      pod_loc: detail.item.pt_loc,
-                      pod_type: "",
-                      pod_cc: "",
-                      pod_taxable: detail.item.pt_taxable,
-                      pod_tax_code: detail.item.pt_taxc,
-                      pod_taxc: detail.item.taxe.tx2_tax_pct,
-                    },
-                    { position: "bottom" }
-                  );
-                  this.datasetPrint.push({
-                    id: this.dataset.length + 1,
-                    pod_line: this.dataset.length + 1,
-                    pod_req_nbr: this.vpServer.vp_rqm_nbr,
-                    pod_part: detail.vpd_part,
-                    cmvid: "",
-                    desc: detail.item.pt_desc1,
-                    pod_qty_ord: detail.vpd_q_qty,
-                    pod_um: detail.vpd_um,
-                    pod_price: detail.vpd_q_price,
-                    pod_disc_pct: 0,
-                    pod_site: this.site,
-                    pod_loc: detail.item.pt_loc,
-                    pod_type: detail.item.pt_type,
-                    pod_cc: "",
-                    pod_taxable: detail.item.pt_taxable,
-                    pod_tax_code: detail.item.pt_taxc,
-                    pod_taxc: detail.item.taxe.tx2_tax_pct,
-                    
-                  });
-                }
-              } else {
+       
                 controls.po_vend.setValue(this.requistionServer.rqm_vend);
                 this.providersService
                   .getBy({ vd_addr: this.requistionServer.rqm_vend })
@@ -1020,7 +960,7 @@ console.log(this.vpServer)
                       pod_req_nbr: rqm_nbr,
                       pod_part: detail.rqd_part,
                       cmvid: "",
-                      desc: "",
+                      desc: detail.rqd_desc,
                       pod_qty_ord: 0,
                       pod_um: detail.item.pt_um,
                       pod_price: 0,
@@ -1040,7 +980,7 @@ console.log(this.vpServer)
                     pod_req_nbr: rqm_nbr,
                     pod_part: detail.rqd_part,
                     cmvid: "",
-                    desc: "",
+                    desc: detail.rqd_desc,
                     pod_qty_ord: 0,
                     pod_um: detail.item.pt_um,
                     pod_price: 0,
@@ -1056,20 +996,14 @@ console.log(this.vpServer)
                   });
                 }
               }
-            },
-            (error) => {
-              this.message = ` erreur`;
-              this.hasFormErrors = true;
-            },
-            () => {}
-          );
-      },
-      (error) => {
-        this.message = `Demande avec ce numero ${rqm_nbr} n'existe pas`;
-        this.hasFormErrors = true;
-      },
-      () => {}
-    );
+             else {
+              alert("Demande n'exist pas")
+              controls.po_req_id.setValue(null)
+              document.getElementById("po_req_id").focus();
+            }  
+  });
+    /*HERE*/ 
+          
     this.calculatetot();
   }
 
@@ -2469,7 +2403,7 @@ controls.ttc.setValue(ttc.toFixed(2));
 printpdf(nbr) {
   const controls = this.totForm.controls 
   const controlss = this.poForm.controls 
-  console.log("pdf")
+  console.log("pdf",this.provider)
   var doc = new jsPDF();
  
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);

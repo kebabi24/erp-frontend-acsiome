@@ -1,0 +1,271 @@
+<kt-portlet>
+    <kt-portlet-header
+      [sticky]="false"
+      title="Verssement Caution Client"
+      [class]="'card-head-lg'"
+      [viewLoading$]="loading$"
+    >
+      <!--ng-container ktPortletTools>
+          <button type="button" (click)="goBack()" class="btn btn-secondary btn-lg mr-2">Annuller</button>
+          <button type="button" (click)="reset()" class="btn btn-secondary btn-lg mr-2">Réinitialiser</button>
+          <button type="button" (click)="onSubmit()" class="btn btn-success btn-lg mr-2">sauvegarder </button>
+  
+      </ng-container-->
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <div class="example-preview">
+        <form class="form" [formGroup]="rvForm">
+            <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true"
+            [duration]="300" (close)="onAlertClose($event)">
+            Modifiez quelques éléments et réessayez de soumettre.
+        </kt-alert>
+          <!--div class="row" style="display: flex; justify-content: center"-->
+          <div class="row">
+            <div class="form-group col-1">
+                <label class="form-group">Banque:</label>
+                <div class="input-group input-group">
+
+                    <input type="text" class="form-control form-control-solid"  formControlName="bank_code"  id= "bank_code" 
+                        aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <span class="input-group-text"  (click)="openbank(contentbank)">
+                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group col-2">
+              <label class="form-group">Date d'effet:</label>
+              <div class="input-group input-group">
+                <input
+                  class="form-control form-control form-control-solid"
+                  formControlName="calc_date"
+                 
+                  placeholder="jj-mm-aaaa"
+                  name="calc_date"
+                  ngbDatepicker
+                  f
+                  #calc_date="ngbDatepicker"
+                 
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    (click)="calc_date.toggle()"
+                    type="button"
+                  >
+                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-2">
+                <label class="form-group">N° Ordre Versement:</label>
+                <div class="input-group input-group">
+
+                    <input type="text" class="form-control form-control-solid"  formControlName="aeid"  id= "aeid"  (change)="onchangeid()"
+                        aria-describedby="basic-addon2">
+                   
+                </div>
+
+            </div>
+            <div class="form-group col-2">
+                <label class="form-group">Role Code:</label>
+                <input type="text"  disabled
+                
+                name="role_code"
+                id="role_code"
+                formControlName="role_code"
+                class="form-control form-control form-control-solid">
+                
+                
+               
+            </div>  
+            
+
+            <div class="form-group col-2">
+              <label class="form-group">Client:</label>
+              <div class="input-group input-group">
+
+                  <input type="text" class="form-control form-control-solid"  formControlName="customer_code"  disabled
+                      aria-describedby="basic-addon2">
+              </div>
+
+          </div>
+          <div class="form-group col-2">
+            <label class="form-group">Nom:</label>
+            <div class="input-group input-group">
+
+                <input type="text" class="form-control form-control-solid"  formControlName="customer_name" 
+                    aria-describedby="basic-addon2">
+            </div>
+          </div>  
+        </div>
+          
+          <div class="row">       
+            <div class="form-group col-3">
+                <label class="form-group">Type:</label>
+    
+                <select
+                  [className]="
+                    rvForm.controls['bkh_terms'].errors &&
+                    (rvForm.controls['bkh_terms'].dirty ||
+                      rvForm.controls['bkh_terms'].touched)
+                      ? 'form-control form-control-sm form-control-solid is-invalid'
+                      : 'form-control form-control-sm form-control-solid'
+                  "
+                  formControlName="bkh_terms" (change)="onchangeterms()"
+                 
+                  id="exampleSelects7"
+                >
+                
+                  <option value="CODPM1">ESPECE</option>
+                  <option value="CODPM3">CHEQUE</option>
+                
+                </select>
+                <div
+                  *ngIf="
+                    rvForm.controls['bkh_terms'].errors &&
+                    (rvForm.controls['bkh_terms'].dirty ||
+                      rvForm.controls['bkh_terms'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
+                </div>
+              </div>
+              <div class="form-group col-2">
+                <label class="form-group" id="code">Cheque : </label>
+                <input
+                  type="number" id="bkh_cheque" 
+                  [className]="
+                    rvForm.controls['bkh_cheque'].errors &&
+                    (rvForm.controls['bkh_cheque'].dirty ||
+                      rvForm.controls['bkh_cheque'].touched)
+                      ? 'form-control form-control-lg form-control-solid is-invalid'
+                      : 'form-control form-control-lg form-control-solid'
+                  "
+                  formControlName="bkh_cheque"
+                />
+                <div
+                  *ngIf="
+                    rvForm.controls['bkh_cheque'].errors &&
+                    (rvForm.controls['bkh_cheque'].dirty ||
+                      rvForm.controls['bkh_cheque'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
+                </div>
+              </div>
+            <div class="form-group col-2">
+              <label class="form-group">Montant Encaissé:</label>
+  
+              <div class="input-group input-group">
+                <input
+                  type="text"
+                  formControlName="montant_tr"
+                  [className]="
+                    rvForm.controls['montant_tr'].errors &&
+                    (rvForm.controls['montant_tr'].dirty ||
+                      rvForm.controls['montant_tr'].touched)
+                      ? 'form-control form-control form-control-solid is-invalid'
+                      : 'form-control form-control form-control-solid'
+                  "
+                  aria-describedby="basic-addon2"
+                />
+  
+                <div
+                  *ngIf="
+                    rvForm.controls['montant_tr'].errors &&
+                    (rvForm.controls['montant_tr'].dirty ||
+                      rvForm.controls['montant_tr'].touched)
+                  "
+                  class="invalid-feedback"
+                >
+                  Ce Champs est obligatoire
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-2">
+                <label class="form-group">Equipement:</label>
+    
+                <div class="input-group input-group">
+                  <input
+                    type="text"
+                    formControlName="equipement"
+                    [className]="
+                      rvForm.controls['equipement'].errors &&
+                      (rvForm.controls['equipement'].dirty ||
+                        rvForm.controls['equipement'].touched)
+                        ? 'form-control form-control form-control-solid is-invalid'
+                        : 'form-control form-control form-control-solid'
+                    "
+                    aria-describedby="basic-addon2"
+                  />
+    
+                  <div
+                    *ngIf="
+                      rvForm.controls['equipement'].errors &&
+                      (rvForm.controls['equipement'].dirty ||
+                        rvForm.controls['equipement'].touched)
+                    "
+                    class="invalid-feedback"
+                  >
+                    Ce Champs est obligatoire
+                  </div>
+                </div>
+              </div>
+            <div class="form-group col-3">
+            
+              <button
+                type="button"
+                id="submit"
+                (click)="onSubmit()"
+                class="btn btn-success btn col-lg-8 mr-5 mt-9 "
+              >
+                Valider
+              </button>
+            </div>
+          </div>
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="form-group">Motif:</label>
+                    <div class="input-group input-group-lg">
+
+                        <input type="text" class="form-control form-control-solid"  formControlName="bkh_rmks"
+                            aria-describedby="basic-addon2" >
+                    
+                    </div>
+
+                </div>
+            </div>    
+        </form>
+      </div>
+      <div>
+        <ng-template #contentbank let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir la banque</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                        [columnDefinitions]="columnDefinitionsbank" (onAngularGridCreated)="angularGridReadybank($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedbank($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionsbank" [dataset]="banks">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuller</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+    </kt-portlet-body>
+  </kt-portlet>
+  
+

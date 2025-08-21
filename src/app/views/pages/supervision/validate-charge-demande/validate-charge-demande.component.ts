@@ -410,7 +410,7 @@ let line_load = 0
       line_load = line_load + 1
       if (line_load % 38 == 0 && line_load != 0) {
         doc.addPage();
-        img.src = "./assets/media/logos/companyentete.png";
+        img.src = "./assets/media/logos/companylogo.png";
         doc.addImage(img, "png", 150, 5, 50, 30);
         doc.setFontSize(9);
         if (this.domain.dom_name != null) {

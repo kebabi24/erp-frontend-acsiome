@@ -89,7 +89,11 @@ export class VendorProposalListComponent implements OnInit {
                maxWidth: 50,
                // use onCellClick OR grid.onClick.subscribe which you can see down below
                onCellClick: (e: Event, args: OnEventArgs) => {
-                  
+                const id = args.dataContext.id
+                console.log(this.dataset)
+           
+                this.router.navigateByUrl(`/purchasing/edit-vendor-proposal/${id}`)
+                
                },
            },
           
@@ -100,6 +104,8 @@ export class VendorProposalListComponent implements OnInit {
             minWidth: 80,
             maxWidth: 80,
             selectable: true,
+            filterable:true,
+            sortable:true
         },
         {
             id: "vp_vend",
@@ -107,7 +113,16 @@ export class VendorProposalListComponent implements OnInit {
             field: "vp.vp_vend",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
+            
+        },
+        {
+            id: "vp_rqm_nbr",
+            name: "N° DA",
+            field: "vp.vp_rqm_nbr",
+            sortable: true,
+            width: 80,
+            filterable: true,
             
         },
         {
@@ -116,7 +131,7 @@ export class VendorProposalListComponent implements OnInit {
             field: "vp.address.ad_name",
             sortable: true,
             width: 50,
-            filterable: false,
+            filterable: true,
             
         },
         {
@@ -125,7 +140,7 @@ export class VendorProposalListComponent implements OnInit {
             field: "vp.vp_vend_lead",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             
         },
         {
@@ -134,7 +149,7 @@ export class VendorProposalListComponent implements OnInit {
             field: "vp.vp_pay_meth",
             sortable: true,
             width: 80,
-            filterable: false,
+            filterable: true,
             type: FieldType.float,
             
         },
@@ -158,6 +173,7 @@ export class VendorProposalListComponent implements OnInit {
            enableFiltering: true,
            autoEdit: false,
            enableAutoResize: true,
+           
 
            dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
              var val = undefined;

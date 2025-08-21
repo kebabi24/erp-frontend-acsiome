@@ -32,6 +32,10 @@ export class UsersService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL_PROFILE+'/'+id, { headers: httpHeaders })
     }
+    public getByProfile(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL_PROFILE}/find`,data, { headers: httpHeaders })   
+    }
     public addUser(user: User) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL_USER, user, { headers: httpHeaders })

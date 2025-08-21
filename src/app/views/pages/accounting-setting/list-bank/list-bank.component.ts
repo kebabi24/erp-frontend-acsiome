@@ -130,7 +130,7 @@ export class ListBankComponent implements OnInit {
           },
           {
             id: "bk_code",
-            name: "code",
+            name: "Code",
             field: "bk_code",
             sortable: true,
             filterable: true,

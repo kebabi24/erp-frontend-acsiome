@@ -167,6 +167,15 @@ crterms:any;
 devise:any;
 docs:any[]=[];
 exist:any;
+
+trangularGrid: AngularGridInstance;
+trgrid: any;
+trgridService: GridService;
+trdataView: any;
+trcolumnDefinitions: Column[];
+trgridOptions: GridOption;
+trdataset: any[];
+row_number : any
 /**
  * Component constructor
  *
@@ -214,9 +223,9 @@ constructor(
         this.codeService
         .getBy({ code_fldname: "ad_country" })
         .subscribe((response: any) => (this.ad_country = response.data))
-    this.codeService
-        .getBy({ code_fldname: "ad_county" })
-        .subscribe((response: any) => (this.ad_county = response.data))
+    // this.codeService
+    //     .getBy({ code_fldname: "ad_county" })
+    //     .subscribe((response: any) => (this.ad_county = response.data))
     this.codeService
         .getBy({ code_fldname: "vd_type" })
         .subscribe((response: any) => (this.vd_type = response.data))
@@ -257,6 +266,7 @@ ngOnInit() {
     this.loadingSubject.next(false)
     this.user =  JSON.parse(localStorage.getItem('user'))
     this.init()
+    this.inittrGrid()
     // sticky portlet header
     window.onload = () => {
         const style = getComputedStyle(document.getElementById("kt_header"))
@@ -333,6 +343,8 @@ onchangename(){
                 controls.ad_fax2.enable()
                 controls.ad_attn.enable()
                 controls.ad_attn2.enable()
+                controls.ad_user1.enable()
+                controls.ad_user2.enable()
                 controls.ad_taxable.enable()
                 controls.ad_tax_zone.enable()
                 controls.ad_taxc.enable()
@@ -352,7 +364,7 @@ onchangename(){
                 controls1.vd_ap_sub.enable()
                 controls1.vd_ap_cc.enable()
                 controls1.vd_shipvia.enable()
-                controls1.vd_bank.enable()
+                // controls1.vd_bank.enable()
                 controls1.vd_ckfrm.enable()
                 controls1.vd_curr.enable()
                 controls1.vd_lang.enable()
@@ -365,14 +377,14 @@ onchangename(){
                 controls1.vd_cr_terms.enable()
                 controls1.vd_disc_pct.enable()
                 controls1.vd_prepay.enable()
-                controls1.vd_debtor.enable()
+                // controls1.vd_debtor.enable()
                 controls1.vd_partial.enable()
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
-                controls1.vd_db.enable()
+                // controls1.vd_db.enable()
                 controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(Number(response.data.length) + Number(1))).slice(-3))  
                
-                document.getElementById("ad_line1").focus(); 
+                // document.getElementById("ad_line1").focus(); 
             } 
             else{ 
               
@@ -393,6 +405,8 @@ onchangename(){
             controls.ad_fax2.enable()
             controls.ad_attn.enable()
             controls.ad_attn2.enable()
+            controls.ad_user1.enable()
+            controls.ad_user2.enable()
             controls.ad_taxable.enable()
             controls.ad_tax_zone.enable()
             controls.ad_taxc.enable()
@@ -412,7 +426,7 @@ onchangename(){
             controls1.vd_ap_sub.enable()
             controls1.vd_ap_cc.enable()
             controls1.vd_shipvia.enable()
-            controls1.vd_bank.enable()
+            // controls1.vd_bank.enable()
             controls1.vd_ckfrm.enable()
             controls1.vd_curr.enable()
             controls1.vd_lang.enable()
@@ -425,11 +439,11 @@ onchangename(){
             controls1.vd_cr_terms.enable()
             controls1.vd_disc_pct.enable()
             controls1.vd_prepay.enable()
-            controls1.vd_debtor.enable()
+            // controls1.vd_debtor.enable()
             controls1.vd_partial.enable()
             controls1.vd_hold.enable()
             controls1.vd_pay_spec.enable()
-            controls1.vd_db.enable()
+            // controls1.vd_db.enable()
             controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(1)).slice(-3)) 
             document.getElementById("ad_line1").focus(); 
             }
@@ -502,7 +516,7 @@ createAddressForm() {
         ad_state: [{ value: this.address.ad_state, disabled: !this.isExist }],
         ad_zip: [{ value: this.address.ad_zip, disabled: !this.isExist }],
         ad_format: [{ value: this.address.ad_format, disabled: !this.isExist }],
-        ad_county: [{ value: this.address.ad_county, disabled: !this.isExist }],
+        // ad_county: [{ value: this.address.ad_county, disabled: !this.isExist }],
         ad_country: [{ value: this.address.ad_country, disabled: !this.isExist }],
         
         ad_phone: [{ value: this.address.ad_phone, disabled: !this.isExist }],
@@ -512,6 +526,8 @@ createAddressForm() {
         ad_fax: [{ value: this.address.ad_fax, disabled: !this.isExist }],
         ad_fax2: [{ value: this.address.ad_fax2, disabled: !this.isExist }],
         ad_attn: [{ value: this.address.ad_attn, disabled: !this.isExist }],
+        ad_user1: [{ value: this.address.ad_user1, disabled: !this.isExist }],
+        ad_user2: [{ value: this.address.ad_user2, disabled: !this.isExist }],
         ad_attn2: [{ value: this.address.ad_attn2, disabled: !this.isExist }],
         ad_taxable: [{ value: this.address.ad_taxable, disabled: !this.isExist }],
         ad_tax_zone: [{ value: this.address.ad_tax_zone, disabled: !this.isExist }],
@@ -537,7 +553,7 @@ createProviderForm() {
         vd_ap_sub: [{ value: this.provider.vd_ap_sub, disabled: !this.isExist }],
         vd_ap_cc: [{ value: this.provider.vd_ap_cc, disabled: !this.isExist }],
         vd_shipvia: [{ value: this.provider.vd_shipvia, disabled: !this.isExist }],
-        vd_bank: [{ value: this.provider.vd_bank, disabled: !this.isExist }],
+        // vd_bank: [{ value: this.provider.vd_bank, disabled: !this.isExist }],
         vd_ckfrm: [{ value: this.provider.vd_ckfrm, disabled: !this.isExist }],
         vd_curr: [{ value: this.provider.vd_curr, disabled: !this.isExist }],
         vd_lang: [{ value: this.provider.vd_lang, disabled: !this.isExist }],
@@ -549,16 +565,55 @@ createProviderForm() {
         vd_kanban_supplier: [{ value: this.provider.vd_kanban_supplier, disabled: !this.isExist }],
         vd_cr_terms: [{ value: this.provider.vd_cr_terms, disabled: !this.isExist }],
         vd_disc_pct: [{ value: this.provider.vd_disc_pct, disabled: !this.isExist }],
-        vd_prepay: [{ value: this.provider.vd_prepay, disabled: !this.isExist }],
-        vd_debtor: [{ value: this.provider.vd_debtor, disabled: !this.isExist }],
+         vd_prepay: [{ value: this.provider.vd_prepay, disabled: !this.isExist }],
+        // vd_debtor: [{ value: this.provider.vd_debtor, disabled: !this.isExist }],
         vd_partial: [{ value: this.provider.vd_partial, disabled: !this.isExist }],
         vd_hold: [{ value: this.provider.vd_hold, disabled: !this.isExist }],
         vd_pay_spec: [{ value: this.provider.vd_pay_spec, disabled: !this.isExist }],
-        vd_db: [{ value: this.provider.vd_db, disabled: !this.isExist }],
+        // vd_db: [{ value: this.provider.vd_db, disabled: !this.isExist }],
     })
 }
 
-
+onchangeRC(){
+  const controls = this.addressForm.controls
+  if(controls.ad_country.value == 'DZ') {
+    console.log("controls.ad_gst_id.value.length",controls.ad_gst_id.value.length)
+    if(controls.ad_gst_id.value.length != 15) {
+      alert("RC n'est pas conforme au réglementation")
+      document.getElementById("ad_gst_id").focus(); 
+    }
+  }
+}
+onchangeMF(){
+  const controls = this.addressForm.controls
+  if(controls.ad_country.value == 'DZ') {
+    console.log("controls.ad_misc2_id.value.length",controls.ad_misc2_id.value.length)
+    if(controls.ad_misc2_id.value.length != 15) {
+      alert("MF n'est pas conforme au réglementation")
+      document.getElementById("ad_misc2_id").focus(); 
+    }
+  }
+}
+onchangeAI(){
+  const controls = this.addressForm.controls
+  if(controls.ad_country.value == 'DZ') {
+    console.log("controls.ad_pst_id.value.length",controls.ad_pst_id.value.length)
+    if(controls.ad_pst_id.value.length != 15) {
+      alert("AI n'est pas conforme au réglementation")
+      document.getElementById("ad_pst_id").focus(); 
+    }
+  }
+}
+onchangeNIS(){
+  const controls = this.addressForm.controls
+  if(controls.ad_country.value == 'DZ') {
+    console.log("controls.ad_misc1_id.value.length",controls.ad_misc1_id.value.length)
+    if(controls.ad_misc1_id.value.length != 15) {
+      alert("NIS n'est pas conforme au réglementation")
+      document.getElementById("ad_misc1_id").focus(); 
+    }
+  }
+}
 onChangeState() {
     const controls  = this.addressForm.controls
    console.log(controls.ad_state.value)
@@ -610,6 +665,8 @@ onChangeCode() {
                 controls.ad_fax2.enable()
                 controls.ad_attn.enable()
                 controls.ad_attn2.enable()
+                controls.ad_user1.enable()
+                controls.ad_user2.enable()
                 controls.ad_taxable.enable()
                 controls.ad_tax_zone.enable()
                 controls.ad_taxc.enable()
@@ -629,7 +686,7 @@ onChangeCode() {
                 controls1.vd_ap_sub.enable()
                 controls1.vd_ap_cc.enable()
                 controls1.vd_shipvia.enable()
-                controls1.vd_bank.enable()
+                // controls1.vd_bank.enable()
                 controls1.vd_ckfrm.enable()
                 controls1.vd_curr.enable()
                 controls1.vd_lang.enable()
@@ -642,11 +699,11 @@ onChangeCode() {
                 controls1.vd_cr_terms.enable()
                 controls1.vd_disc_pct.enable()
                 controls1.vd_prepay.enable()
-                controls1.vd_debtor.enable()
+                // controls1.vd_debtor.enable()
                 controls1.vd_partial.enable()
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
-                controls1.vd_db.enable()
+                // controls1.vd_db.enable()
                 document.getElementById("ad_name").focus(); 
             }
            
@@ -790,6 +847,8 @@ prepareAddress(): Address {
     _address.ad_fax2 = controls.ad_fax2.value
     _address.ad_attn = controls.ad_attn.value
     _address.ad_attn2 = controls.ad_attn2.value
+    _address.ad_user1 = controls.ad_user1.value
+    _address.ad_user2 = controls.ad_user2.value
     _address.ad_taxable = controls.ad_taxable.value
     _address.ad_tax_zone = controls.ad_tax_zone.value
     _address.ad_taxc = controls.ad_taxc.value
@@ -822,8 +881,12 @@ addAddress(_address: Address) {
                 true
             ),
         () => {
+          for(let tr of this.trdataset) {
+            delete tr.id
+            delete tr.cmvid
+          }
             let provider = this.prepareProvider()
-            this.addProvider(provider)
+            this.addProvider(provider,this.trdataset)
         }
     )
 }
@@ -846,7 +909,7 @@ prepareProvider(): Provider {
     _provider.vd_ap_cc = controls.vd_ap_cc.value
     _provider.vd_shipvia = controls.vd_shipvia.value
     // _provider.vd_rmks = controls.vd_rmks.value
-    _provider.vd_bank = controls.vd_bank.value
+    // _provider.vd_bank = controls.vd_bank.value
     _provider.vd_ckfrm = controls.vd_ckfrm.value
     _provider.vd_curr = controls.vd_curr.value
     _provider.vd_lang = controls.vd_lang.value
@@ -859,11 +922,11 @@ prepareProvider(): Provider {
     _provider.vd_cr_terms = controls.vd_cr_terms.value
     _provider.vd_disc_pct = controls.vd_disc_pct.value
     _provider.vd_prepay = controls.vd_prepay.value
-    _provider.vd_debtor = controls.vd_debtor.value
+    // _provider.vd_debtor = controls.vd_debtor.value
     _provider.vd_partial = controls.vd_partial.value
     _provider.vd_hold = controls.vd_hold.value
     _provider.vd_pay_spec = controls.vd_pay_spec.value
-    _provider.vd_db = controls.vd_db.value
+    // _provider.vd_db = controls.vd_db.value
     return _provider
 }
 
@@ -872,9 +935,9 @@ prepareProvider(): Provider {
  *
  * @param _product: ProductModel
  */
-addProvider(_provider: Provider) {
+addProvider(_provider: Provider,detail:any) {
     this.loadingSubject.next(true)
-    this.providerService.add(_provider).subscribe(
+    this.providerService.add({Provider:_provider,BankDetails:detail}).subscribe(
         (reponse) => console.log("response", Response),
         (error) =>
             this.layoutUtilsService.showActionNotification(
@@ -893,7 +956,7 @@ addProvider(_provider: Provider) {
                 true
             )
             this.loadingSubject.next(false)
-            this.router.navigateByUrl("/providers/list")
+            this.router.navigateByUrl("/providers/list-std-provider")
         }
     )
     // this.store.dispatch(new ProductOnServerCreated({ product: _product }))
@@ -1266,27 +1329,21 @@ opentax(contenttax) {
 
 
 handleSelectedRowsChanged4(e, args) {
+  let updateItem = this.trgridService.getDataItemByRowIndex(this.row_number);
     const controls1 = this.providerForm.controls;
     
     if (Array.isArray(args.rows) && this.gridObj4) {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
         // TODO : HERE itterate on selected field and change the value of the selected field
-        switch (this.selectedField) {
-          case "vd_cr_terms": {
-            controls1.vd_cr_terms.setValue(item.code_value || "");
-            this.crterms = item.code_cmmt;
-            break;
-          }
-          case "vd_ckfrm": {
-            controls1.vd_ckfrm.setValue(item.code_value || "");
-            this.ckfrm = item.code_cmmt
-            break;
-          }
+        
+            // controls1.vd_bank.setValue(item.code_value || "");
+            updateItem.vdbk_bank = item.code_value
+            updateItem.vdbk_desc = item.code_cmmt
+            this.trgridService.updateItem(updateItem);
+            this.banque = item.code_cmmt
          
-          default:
-            break;
-        }
+        
       });
     }
 }
@@ -1297,32 +1354,32 @@ angularGridReady4(angularGrid: AngularGridInstance) {
 
   prepareGrid4() {
     this.columnDefinitions4 = [
-      {
-        id: "id",
-        field: "id",
-        excludeFromColumnPicker: true,
-        excludeFromGridMenu: true,
-        excludeFromHeaderMenu: true,
+      // {
+      //   id: "id",
+      //   field: "id",
+      //   excludeFromColumnPicker: true,
+      //   excludeFromGridMenu: true,
+      //   excludeFromHeaderMenu: true,
 
-        minWidth: 50,
-        maxWidth: 50,
-      },
-      {
-        id: "id",
-        name: "id",
-        field: "id",
-        sortable: true,
-        minWidth: 80,
-        maxWidth: 80,
-      },
-      {
-        id: "code_fldname",
-        name: "Champs",
-        field: "code_fldname",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
+      //   minWidth: 50,
+      //   maxWidth: 50,
+      // },
+      // {
+      //   id: "id",
+      //   name: "id",
+      //   field: "id",
+      //   sortable: true,
+      //   minWidth: 80,
+      //   maxWidth: 80,
+      // },
+      // {
+      //   id: "code_fldname",
+      //   name: "Champs",
+      //   field: "code_fldname",
+      //   sortable: true,
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },
       {
         id: "code_value",
         name: "Code",
@@ -1333,7 +1390,7 @@ angularGridReady4(angularGrid: AngularGridInstance) {
       },
       {
         id: "code_cmmt",
-        name: "Description",
+        name: "Désignation",
         field: "code_cmmt",
         sortable: true,
         width: 200,
@@ -1360,22 +1417,19 @@ angularGridReady4(angularGrid: AngularGridInstance) {
       },
     };
 
-    if (this.selectedField == "vd_ckfrm") {
-
-        this.fldname = "check_form"
-      }
-      else {
-        this.fldname = this.selectedField
-      }
+    
   
     // fill the dataset with your data
     this.codeService
-      .getBy({ code_fldname: this.fldname })
-      .subscribe((response: any) => (this.datacode = response.data));
+      .getBy({ code_fldname: 'bank' })
+      .subscribe((response: any) => {
+        console.log(response.data)
+        this.datacode = response.data})
+    
   }
 
-  open4(content, field) {
-    this.selectedField = field;
+  open4(content) {
+    // this.selectedField = field;
     this.prepareGrid4();
     this.modalService.open(content, { size: "lg" });
   }
@@ -1385,17 +1439,20 @@ angularGridReady4(angularGrid: AngularGridInstance) {
     const bk_code  = controls.vd_bank.value
    
     
-  this.bankService.getBy({bk_code}).subscribe((res:any)=>{
+  this.codeService.getBy({code_fldname:'bank', code_value:bk_code}).subscribe((res:any)=>{
       //const {data} = res.data.bank
       //console.log(res.data.bank)
-      if (res.data.bank == null){ 
+      if (res.data.length == 0){ 
         alert("Banque n'existe pas")
         controls.vd_bank.setValue(null)
         document.getElementById("vd_bank").focus();
+        
+       
       }
       else {
           this.error = false
-  
+          this.banque = res.data[0].code_cmmt  
+          // this.devise = res.data.bank.bk_curr  
           
       }
 
@@ -1521,7 +1578,21 @@ angularGridReady4(angularGrid: AngularGridInstance) {
       });
     }
   }
+  OnchangeCurr(){
+    const controls = this.providerForm.controls
+    
+          this.deviseService
+          .getBy({ cu_curr: controls.vd_curr.value })
+          .subscribe((response: any) => {
 
+            if (response.data == null){ 
+              alert("Devise n'existe pas")
+              controls.vd_curr.setValue(null)
+              document.getElementById("vd_curr").focus();
+            }
+        })
+         
+  }
   angularGridReady2(angularGrid: AngularGridInstance) {
     this.angularGrid2 = angularGrid;
     this.gridObj2 = (angularGrid && angularGrid.slickGrid) || {};
@@ -1775,7 +1846,7 @@ printpdf() {
           doc.setFontSize(16);
     
           
-          doc.setFont("Times-Roman");
+          // doc.setFont("Times-Roman");
           doc.line(35,35,150,35)
           doc.text("Code Fournisseur : " + controlsx.ad_addr.value, 40, 40);
           doc.line(35,45,150,45)
@@ -1795,7 +1866,10 @@ printpdf() {
           if(controlsa.ad_ext.value != null){doc.text("Email: " + controlsa.ad_ext.value, 57, 80);}
           else{doc.text("Email: ", 57, 80)}  
           doc.line(5,85,200,85)
-          doc.text("Taxable: " + controlsa.ad_taxable.value, 7, 90);
+          if ( controlsa.ad_taxable.value == true) {
+          doc.text("Taxable: " + "OUI", 7, 90); } else {
+            doc.text("Taxable: " + "NON", 7, 90);
+          }
           doc.text("Taux de taxe: " + controlsa.ad_taxc.value, 57, 90);
           // doc.line(5,85,200,85)
           // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
@@ -1810,27 +1884,68 @@ printpdf() {
           {doc.text("NIS: ", 57, 100)}
           doc.line(5,105,200,105)
           
-          if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value + ' - ' + this.vdtype, 7, 110);}
+          if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value , 7, 110);}
           else{doc.text("Type: ", 7, 110)}
           if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 115);}
           else{doc.text("Séquence: ", 7, 115)}
           if(controls.vd_shipvia.value!=null){doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 120);}
-          else{doc.text("Modealité de transport: ", 7, 120)}
+          else{doc.text("Modalité de transport: ", 7, 120)}
           doc.line(5,125,200,125)
-          if(controls.vd_bank.value!=null){doc.text("Banque: " + controls.vd_bank.value + ' - ' + this.banque, 7, 130);}
-          else{doc.text("Banque: ", 7, 130)}
-          if(controls.vd_ckfrm.value!=null){doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' - ' + this.ckfrm, 7, 135);}
-          else{doc.text("Méthode de paiement: ", 7, 135)}
-          if(controls.vd_cr_terms.value!=null){doc.text("Condition: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 140);}
-          else{doc.text("Condition: ", 7, 140)}
-          if(controls.vd_curr.value!=null){doc.text("Devise: " + controls.vd_curr.value + ' - ' + this.devise, 7, 145);}
-          else{doc.text("Devise: ", 7, 145)}
-          if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}
-          else{doc.text("RIB: ", 7, 150)}
-          if(controls.vd_debtor.value!=null){doc.text("Compte: " + controls.vd_debtor.value, 7, 155);}
-          else{doc.text("Compte: ", 7, 155)}
-          doc.line(5,160,200,160)
-    
+         
+          if(controls.vd_ckfrm.value!=null){doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' - ' + this.ckfrm, 7, 130);}
+          else{doc.text("Méthode de paiement: ", 7, 130)}
+          if(controls.vd_cr_terms.value!=null){doc.text("Condition: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 135);}
+          else{doc.text("Condition: ", 7, 135)}
+          if(controls.vd_curr.value!=null){doc.text("Devise: " + controls.vd_curr.value + ' - ' + this.devise, 7, 140);}
+          else{doc.text("Devise: ", 7, 140)}
+          // if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}
+          // else{doc.text("RIB: ", 7, 150)}
+          // if(controls.vd_debtor.value!=null){doc.text("Compte: " + controls.vd_debtor.value, 7, 155);}
+          // else{doc.text("Compte: ", 7, 155)}
+          doc.line(5,145,200,145)
+
+          if(controlsa.ad_attn.value != null){doc.text("Contact 1: " + controlsa.ad_attn.value, 7, 150)}
+          if(controlsa.ad_user1.value != null){doc.text("Poste: " + controlsa.ad_user1.value, 7, 155)}
+          if(controlsa.ad_phone.value != null){doc.text("Téléphone: " + controlsa.ad_phone.value, 7, 160)}
+          if(controlsa.ad_ext.value != null){doc.text("Email: " + controlsa.ad_ext.value, 7, 165)}
+          if(controlsa.ad_fax.value != null){doc.text("Fax: " + controlsa.ad_fax.value, 7, 170)}
+
+          if(controlsa.ad_attn2.value != null){doc.text("Contact 2: " + controlsa.ad_attn2.value, 7, 175)}
+          if(controlsa.ad_user2.value != null){doc.text("Poste: " + controlsa.ad_user2.value, 7, 180)}
+          if(controlsa.ad_phone2.value != null){doc.text("Téléphone: " + controlsa.ad_phone2.value, 7, 185)}
+          if(controlsa.ad_ext2.value != null){doc.text("Email: " + controlsa.ad_ext2.value, 7, 190)}
+          if(controlsa.ad_fax2.value != null){doc.text("Fax: " + controlsa.ad_fax2.value, 7, 195)}
+          doc.line(5,200,200,200)
+          {doc.text("Banques: " , 7, 205)}
+          doc.setFontSize(9);
+          doc.line(5, 210, 200, 210);
+          doc.line(5, 215, 200, 215);
+          doc.line(5, 210, 5, 215);
+          doc.text('Banque', 15 , 213.5);
+          doc.line(30, 210, 30, 215);
+          doc.text('Désignation', 52 , 213.5);
+          doc.line(110, 210, 110, 215);
+          doc.text('RIB', 130 , 213.5);
+          doc.line(155, 210, 155, 215);
+          doc.text('N° Compte', 160 , 213.5);
+          doc.line(200, 210, 200, 215);
+          i = 220
+          for (let tr of this.trdataset) {
+            doc.line(5, i - 5, 5, i);
+            doc.text( String(tr.vdbk_bank), 7,  i-1)
+            doc.line(30, i - 5, 30, i);
+            doc.text( String(tr.vdbk_desc), 32,  i-1)
+            doc.line(110, i - 5, 110, i);
+            doc.text( String(tr.vdbk_rib), 112,  i-1)
+            doc.line(155, i - 5, 155, i);
+            doc.text( String(tr.vdbk_num), 157,  i-1)
+            doc.line(200, i - 5, 200, i);
+
+            doc.line(5, i, 200, i );
+            i = i + 5
+
+          }
+          
         
       
           doc.setFontSize(9);
@@ -1843,4 +1958,128 @@ printpdf() {
             var blob = doc.output("blob");
             window.open(URL.createObjectURL(blob));   
           }
+
+
+  trGridReady(angularGrid: AngularGridInstance) {
+    this.trangularGrid = angularGrid;
+    this.trdataView = angularGrid.dataView;
+    this.trgrid = angularGrid.slickGrid;
+    this.trgridService = angularGrid.gridService;
+  }
+  inittrGrid() {
+    this.trcolumnDefinitions = [
+      {
+        id: "id",
+        field: "id",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.deleteIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          if (confirm("Êtes-vous sûr de supprimer cette ligne?")) {
+            this.trangularGrid.gridService.deleteItem(args.dataContext);
+          }
+        },
+      
+      },
+      {
+        id: "vdbk_bank",
+        name: "Code Banque",
+        field: "vdbk_bank",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        // editor: {
+        //   model: Editors.text,
+        // },
+      },
+      {
+        id: "mvid",
+        field: "cmvid",
+        excludeFromHeaderMenu: true,
+        formatter: Formatters.infoIcon,
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+        
+         console.log(args.row)
+           this.row_number = args.row
+          let element: HTMLElement = document.getElementById(
+              "openBanksGrid"
+          ) as HTMLElement
+          element.click()
+          }  
+        
+      },
+      {
+        id: "vdbk_desc",
+        name: "Designation",
+        field: "vdbk_desc",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+      
+      },
+      {
+        id: "vdbk_rib",
+        name: "RIB",
+        field: "vdbk_rib",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+      },
+      {
+        id: "vdbk_num",
+        name: "N° Compte",
+        field: "vdbk_num",
+        sortable: true,
+        width: 50,
+        filterable: false,
+        type: FieldType.string,
+        editor: {
+          model: Editors.text,
+        },
+      },
+     
+    ];
+  
+    this.trgridOptions = {
+      asyncEditorLoading: false,
+      editable: true,
+      enableAutoResize:true,
+      autoHeight:false,
+      enableColumnPicker: true,
+      enableCellNavigation: true,
+      enableRowSelection: true,
+      rowHeight:40,
+    };
+    this.trdataset=[]
+  
+  }
+  
+  addNewtrItem() {
+    const controlsX = this.formX.controls
+    this.trgridService.addItem(
+      {
+        id: this.trdataset.length + 1,
+        vdbk_addr: controlsX.ad_addr.value,
+        vdbk_bank: null,
+        vdbk_rib: null,
+        vdbk_num: null
+      },
+      { position: "bottom" }
+    );
+    this.row_number = this.trdataset.length - 1;
+          // this.row_number = args.row
+          let element: HTMLElement = document.getElementById(
+            "openBanksGrid"
+        ) as HTMLElement
+        element.click()
+  }
 }

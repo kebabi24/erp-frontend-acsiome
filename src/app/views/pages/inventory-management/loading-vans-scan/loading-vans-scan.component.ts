@@ -274,7 +274,7 @@ input?.setAttribute('disabled', '');
   }
   print2ticket() {
     this.printpdf()
-    
+  
     // this.modalService.dismissAll()
     // this.printLines= []
     // this.dataset=[]
@@ -282,7 +282,8 @@ input?.setAttribute('disabled', '');
   }
   print2ticket2() {
     this.printpdf2()
-    
+    const input = document.getElementById('confirmPrinting') as HTMLInputElement | null;
+    input.removeAttribute("disabled");  
     // this.modalService.dismissAll()
     // this.printLines= []
     // this.dataset=[]
@@ -371,6 +372,8 @@ input?.setAttribute('disabled', '');
     }
   }
   confirmPrinting(content12) {
+    const input = document.getElementById('confirmPrinting') as HTMLInputElement | null;
+    input?.setAttribute('disabled', '');
     const controls = this.chargeForm.controls;
     const details = [];
     const lines = [];

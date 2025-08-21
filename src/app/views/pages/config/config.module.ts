@@ -46,7 +46,7 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import {ConfigService} from '../../../core/erp'
+import {ConfigService, UsersService} from '../../../core/erp'
 import { ConfigComponent } from './config.component';
 import { MaintConfigComponent } from './maint-config/maint-config.component';
 
@@ -96,6 +96,7 @@ providers: [
     ConfigService,
     TypesUtilsService,
     LayoutUtilsService,
+    UsersService,
 ],
 entryComponents: [
     ActionNotificationComponent,
