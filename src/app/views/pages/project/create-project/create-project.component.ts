@@ -1,14 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-
+import { jsPDF } from "jspdf";
 // Angular slickgrid
 import { Column, GridOption, Formatter, Editor, Editors, AngularGridInstance, GridService, FieldType, Formatters, OnEventArgs } from "angular-slickgrid";
 import { round } from "lodash";
 
 import { BehaviorSubject, Observable } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
-import {  WorkCenterService,Bom,Ps, Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService, SaleOrderService, Requisition, RequisitionService, SaleOrder, PurchaseOrder, DeviseService, SiteService, DealService, QualityControlService } from "../../../../core/erp";
+import {  WorkCenterService,Bom,Ps, Project, ProjectService, CustomerService, ProviderService, ItemService, BomService, TaskService, PsService, SaleOrderService, Requisition, RequisitionService, SaleOrder, PurchaseOrder, DeviseService, SiteService, DealService, QualityControlService,OperationHistoryService } from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { LayoutUtilsService, TypesUtilsService, MessageType, HttpUtilsService } from "../../../../core/_base/crud";
@@ -33,6 +33,8 @@ export class CreateProjectComponent implements OnInit {
   error = false;
   specifications: [];
   project_types: [];
+  project_lists: [];
+  project_reasons: [];
   customers: [];
   columnDefinitions2: Column[] = [];
   gridOptions2: GridOption = {};
@@ -125,6 +127,7 @@ export class CreateProjectComponent implements OnInit {
 bom: any
 product : any
 psdataset: any[];
+user;
   constructor(config: NgbDropdownConfig, 
     private httpUtils: HttpUtilsService, 
     private projectFB: FormBuilder, 
@@ -147,6 +150,7 @@ psdataset: any[];
     private siteService: SiteService, 
     private dealService: DealService,
     private workCenterService: WorkCenterService,
+    private operationhistoryService:OperationHistoryService,
     private http: HttpClient) {
     config.autoClose = true;
   }
@@ -158,15 +162,18 @@ psdataset: any[];
     this.mvgridService = angularGrid.gridService;
   }
   ngOnInit(): void {
+    this.user =  JSON.parse(localStorage.getItem('user'))
     this.reset();
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.getSpecifications();
     this.getProjectTypes();
+    this.getProjectLists();
+    this.getProjectReasons();
     this.createForm();
     this.initmvGrid();
     this.prepareTriggersGrid();
-    const controls = this.projectForm.controls;
+    const controls = this.projectForm.controls; 
     this.projectService
       .getAll().subscribe((response: any) => {
         if (response.data.length !=0) {controls.pm_code.setValue('BT' + String("000000"+response.data.length).slice(-6))
@@ -180,7 +187,8 @@ psdataset: any[];
           controls.pm_site.enable();
           controls.pm_amt.enable();
           controls.pm_type.enable();
-          controls.pm_doc_list_code.enable();
+          controls.pm_doc_list.enable();
+          controls.pm_reason.enable();
           controls.pm_deal.enable();
   }
 
@@ -194,6 +202,7 @@ psdataset: any[];
       pm_desc: [{ value: this.project.pm_desc, disabled: !this.isExist }, Validators.required],
       pm_site: [{ value: this.project.pm_site, disabled: !this.isExist }, Validators.required],
       pm_win_addr: [{ value: this.project.pm_win_addr, disabled: !this.isExist }],
+      pm_cust:[{ value: this.project.pm_cust }],
       pm_deal: [{ value: this.project.pm_deal, disabled: !this.isExist }],
       name: [{ value: "", disabled: true }],
       pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
@@ -206,7 +215,8 @@ psdataset: any[];
         },
       ],
       pm_type: [{ value: this.project.pm_type, disabled: !this.isExist }],
-      pm_doc_list_code: [{ value: this.project.pm_doc_list_code, disabled: !this.isExist }],
+      pm_doc_list: [{ value: this.project.pm_doc_list, disabled: !this.isExist }],
+      pm_reason: [{ value: this.project.pm_reason, disabled: !this.isExist }],
     });
   }
 
@@ -227,7 +237,8 @@ psdataset: any[];
           controls.pm_site.enable();
           controls.pm_amt.enable();
           controls.pm_type.enable();
-          controls.pm_doc_list_code.enable();
+          controls.pm_doc_list.enable();
+          controls.pm_reason.enable();
           controls.pm_deal.enable();
         }
       });
@@ -254,6 +265,7 @@ psdataset: any[];
     }
 
     // tslint:disable-next-line:prefer-const
+    this.printpdf()
     let project = this.prepareproject();
     for (let data of this.mvdataset) {
       delete data.id;
@@ -271,11 +283,13 @@ psdataset: any[];
     _project.pm_desc = controls.pm_desc.value;
     _project.pm_site = controls.pm_site.value;
     _project.pm_win_addr = controls.pm_win_addr.value;
+    _project.pm_cust = controls.pm_cust.value;
     _project.pm_deal = controls.pm_deal.value;
     _project.pm_amt = controls.pm_amt.value;
     _project.pm_cost = controls.pm_cost.value;
     _project.pm_type = controls.pm_type.value;
-    _project.pm_doc_list_code = controls.pm_doc_list_code.value;
+    _project.pm_doc_list = controls.pm_doc_list.value;
+    _project.pm_reason = controls.pm_reason.value;
     _project.pm_ord_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
 //     
     return _project;
@@ -896,19 +910,20 @@ psdataset: any[];
     const controls = this.projectForm.controls; // chof le champs hada wesh men form rah
     const deal_code = controls.pm_deal.value;
 
-    this.dealService.getByOne({ deal_code }).subscribe(
+    this.operationhistoryService.getBy({op_wo_nbr: deal_code }).subscribe(
       (res: any) => {
         console.log(res);
         const { data } = res;
 
         if (!data) {
-          this.layoutUtilsService.showActionNotification("ce contrat n'existe pas!", MessageType.Create, 10000, true, true);
+          this.layoutUtilsService.showActionNotification("cette demande n'existe pas!", MessageType.Create, 10000, true, true);
           this.error = true;
           document.getElementById("deal").focus();
           controls.pm_deal.setValue(null);
         } else {
           this.error = false;
-          controls.pm_deal.setValue(data.deal_code || "");
+          controls.pm_deal.setValue(data.op_wo_nbr || "");
+          
         }
       },
       (error) => console.log(error)
@@ -922,6 +937,7 @@ psdataset: any[];
         const item = this.gridObj2.getDataItem(idx);
 
         controls.pm_win_addr.setValue(item.wc_mch || "");
+        controls.pm_cust.setValue(item.wc_desc||"");
         controls.name.setValue(item.wc_wkctr || "");
         controls.pm_site.setValue(item.wc__chr01)
         
@@ -1711,6 +1727,36 @@ psdataset: any[];
       }
     );
   }
+  getProjectLists() {
+    this.projectService.getProjectLists().subscribe(
+      (response) => {
+        if (response["data"] != null) {
+          this.project_lists = response["data"];
+          console.log(this.project_lists);
+          
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification("Erreur lors de la récupération des données du backend", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      }
+    );
+  }
+  getProjectReasons() {
+    this.projectService.getProjectReasons().subscribe(
+      (response) => {
+        if (response["data"] != null) {
+          this.project_reasons = response["data"];
+          console.log(this.project_reasons);
+          console.log(response["data"]);
+        }
+      },
+      (error) => {
+        this.layoutUtilsService.showActionNotification("Erreur lors de la récupération des données du backend", MessageType.Create, 10000, true, true);
+        this.loadingSubject.next(false);
+      }
+    );
+  }
 
   handleSelectedRowsChangedsite(e, args) {
     const controls = this.projectForm.controls;
@@ -1802,7 +1848,11 @@ psdataset: any[];
         const item = this.gridObjdeal.getDataItem(idx);
         // TODO : HERE itterate on selected field and change the value of the selected field
 
-        controls.pm_deal.setValue(item.deal_code || "");
+        controls.pm_deal.setValue(item.op_wo_nbr || "");
+        controls.pm_win_addr.setValue(item.op_mch|| "");
+        controls.pm_cust.setValue(item.op_user1|| "");
+        controls.name.setValue(item.op_wkctr|| "");
+        controls.pm_site.setValue(item.op_site|| "")
       });
     }
   }
@@ -1825,80 +1875,47 @@ psdataset: any[];
       },
 
       {
-        id: "deal_code",
-        name: "Code",
-        field: "deal_code",
+        id: "op_wo_nbr",
+        name: "Demande",
+        field: "op_wo_nbr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "deal_desc",
-        name: "Designation",
-        field: "deal_desc",
+        id: "op_wkctr",
+        name: "Ligne",
+        field: "op_wkctr",
         sortable: true,
         width: 200,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "deal_start_date",
-        name: "Date Début",
-        field: "deal_start_date",
+        id: "op_mch",
+        name: "Equipement",
+        field: "op_mch",
         sortable: true,
         filterable: true,
         type: FieldType.dateIso,
       },
       {
-        id: "deal_end_date",
-        name: "Date Fin",
-        field: "deal_end_date",
+        id: "op_rsn_down",
+        name: "Cause",
+        field: "op_rsn_down",
         sortable: true,
         filterable: true,
         type: FieldType.dateIso,
       },
       {
-        id: "deal_amt",
-        name: "Montant",
-        field: "deal_amt",
+        id: "op_date",
+        name: "Date",
+        field: "op_date",
         sortable: true,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.dateIso,
       },
-      {
-        id: "deal_inv_meth",
-        name: "Méthode de Facturaion",
-        field: "deal_inv_meth",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
-        id: "deal_pay_meth",
-        name: "Méthode de Paiement",
-        field: "deal_pay_meth",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-
-      {
-        id: "deal_status",
-        name: "Status",
-        field: "deal_status",
-        sortable: true,
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
-        id: "deal_open",
-        name: "Ouvert/Ferme",
-        field: "deal_open",
-        sortable: true,
-        filterable: true,
-        formatter: Formatters.checkmark,
-        type: FieldType.boolean,
-      },
+      
     ];
 
     this.gridOptionsdeal = {
@@ -1921,7 +1938,7 @@ psdataset: any[];
 
     // fill the dataset with your data
     const controls = this.projectForm.controls;
-    this.dealService.getAll().subscribe((response: any) => (this.datadeal = response.data));
+    this.operationhistoryService.getBy({op_type:'down',op_rsn:null}).subscribe((response: any) => (this.datadeal = response.data));
   }
   opendeal(content) {
     this.prepareGriddeal();
@@ -2124,4 +2141,105 @@ psdataset: any[];
       )
       this.modalService.dismissAll()
   }
+  printpdf() {
+            const controls = this.projectForm.controls;
+           
+            var doc = new jsPDF({
+              orientation: 'landscape',
+              unit: 'mm',
+              //format: [100,150]
+              })
+              let initialY = 25;
+              doc.setLineWidth(0.2);
+            
+            var img = new Image();
+             img.src = "./assets/media/logos/companyentete.png";
+             doc.addImage(img, "png", 5, 5, 280, 30);
+            doc.setFontSize(8);
+    //      if(this.exist == true){
+    //   doc.text(this.docs[0].code_value, 160, 17); 
+    //   doc.setFontSize(10);
+    //   doc.text(this.docs[0].code_cmmt, 55, 22);
+    //   doc.setFontSize(8);
+    //   doc.text(this.docs[0].code_desc, 165, 12);
+    //   doc.text(this.docs[0].chr01, 22, 27);
+    //   doc.text(String(1), 22, 32);
+    //   doc.text(this.docs[0].dec01, 170, 32);
+    //   doc.text(this.docs[0].date01, 180, 22);
+    //   doc.text(this.docs[0].date02, 180, 27);
+    // }
+          
+            const date = controls.pm_ord_date.value
+              ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}`
+              : null
+  
+            
+            doc.setFontSize(16);
+      
+            
+            doc.setFont("Times-Roman");
+            doc.text("Ordre de Travail N° : " + controls.pm_code.value, 100, 40);
+            doc.line(5,45,280,45)
+            doc.line(5,45,5,185)
+            doc.line(280,45,280,185)
+            doc.setFontSize(10);
+            doc.text("Date Debut des travaux : " + date , 10, 49);
+            doc.line(5,50,280,50)
+            doc.text("Date Fin des travaux : "  , 10, 54);
+            doc.line(5,55,280,55)
+            doc.text("Unité d'intervention : " + controls.pm_win_addr.value + ' ' + controls.pm_cust.value + '-' + controls.name.value, 10, 59);
+            doc.line(180,55,180,60)
+            doc.text("Compteur : " , 185, 59);
+            doc.line(230,55,230,60)
+            doc.text("Demande N°: " + controls.pm_deal.value, 235, 59);
+            doc.line(5,60,280,60)
+            doc.text("I- OBJET : " , 120, 64);
+            doc.line(5,65,280,65)
+            doc.text(controls.pm_desc.value, 10, 69);
+            doc.line(5,80,280,80)
+            doc.text("Type de travaux :   " + controls.pm_type.value, 10, 84);
+            doc.line(5,85,280,85)
+            doc.text("Famille de travaux :   " + controls.pm_doc_list.value , 10, 89);
+            doc.line(5,90,280,90)
+            doc.text("Nature de travaux :   " + controls.pm_reason.value , 10, 94);
+            doc.line(5,95,280,95)
+            doc.text("II- RESSOURCES INTERNES : " , 120, 99);
+            doc.line(5,100,280,100)
+            doc.text("Matricule : " , 10, 104);
+            doc.line(40,100,40,130)
+            doc.text("Nom & Prénom : ", 45, 104);
+            doc.line(120,100,120,130)
+            doc.text("Debut prévue : ", 125, 104);
+            doc.line(160,100,160,130)
+            doc.text("Fin prévue : " , 165, 104);
+            doc.line(200,100,200,130)
+            doc.text("debut réelle : " , 205, 104);
+            doc.line(240,100,240,130)
+            doc.text("Fin réelle : " , 245, 104);
+            doc.line(5,105,280,105)
+            doc.line(5,130,280,130)
+            doc.text("III- COMPTE RENDU" , 120, 134);
+            doc.line(5,135,280,135)
+            doc.line(5,160,280,160)
+            doc.text("IV- PIECES DE RECHANGES" , 120, 164);
+            doc.line(5,165,280,165)
+            doc.text("Réference" , 10, 169);
+            doc.line(45,165,45,185)
+            doc.text("Désignation" , 47, 169);
+            doc.line(215,165,215,185)
+            doc.text("Quantité" , 217, 169);
+            doc.line(5,170,280,170)
+
+            doc.line(5,185,280,185)  
+            doc.text("Responsable maintenance",15,190);
+          doc.text("Demandeur d'intervention",200,190);
+      
+            doc.setFontSize(9);
+      
+      var i = 105
+      
+      i = i + 5;
+      var blob = doc.output("blob");
+      window.open(URL.createObjectURL(blob));   
+    }
 }

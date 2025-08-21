@@ -62,29 +62,29 @@ export class ListPmComponent implements OnInit {
   prepareGrid() {
       this.columnDefinitions = [
           
-        {
-          id: "edit",
-          field: "id",
-          excludeFromColumnPicker: true,
-          excludeFromGridMenu: true,
-          excludeFromHeaderMenu: true,
-          formatter: (row, cell, value, columnDef, dataContext) => {
-            // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-            return `
-            <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit Projet">
-                 <i class="flaticon-edit"></i>
+      //   {
+      //     id: "edit",
+      //     field: "id",
+      //     excludeFromColumnPicker: true,
+      //     excludeFromGridMenu: true,
+      //     excludeFromHeaderMenu: true,
+      //     formatter: (row, cell, value, columnDef, dataContext) => {
+      //       // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+      //       return `
+      //       <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit Projet">
+      //            <i class="flaticon-edit"></i>
                  
-             </a>
-             `;
-          },
-          minWidth: 50,
-          maxWidth: 50,
-          // use onCellClick OR grid.onClick.subscribe which you can see down below
-          onCellClick: (e: Event, args: OnEventArgs) => {
-              const id = args.dataContext.id
-              this.router.navigateByUrl(`/project/edit-project/${id}`)
-          },
-      },
+      //        </a>
+      //        `;
+      //     },
+      //     minWidth: 50,
+      //     maxWidth: 50,
+      //     // use onCellClick OR grid.onClick.subscribe which you can see down below
+      //     onCellClick: (e: Event, args: OnEventArgs) => {
+      //         const id = args.dataContext.id
+      //         this.router.navigateByUrl(`/project/edit-project/${id}`)
+      //     },
+      // },
         
           {
               id: "id",
@@ -95,24 +95,8 @@ export class ListPmComponent implements OnInit {
               maxWidth: 30,
           },
           {
-            id: "pm_cust",
-            name: "Code Client",
-            field: "pm_cust",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "ad_name",
-            name: "Client",
-            field: "ad_name",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-        },
-          {
               id: "pm_code",
-              name: "Code Projet",
+              name: "BT",
               field: "pm_code",
               sortable: true,
               filterable: true,
@@ -127,39 +111,69 @@ export class ListPmComponent implements OnInit {
             filterable: true,
             type: FieldType.string,
         },
-          {
-            id: "pm_amt",
-            name: "Selling Price",
-            field: "pm_amt",
+         {
+            id: "pm_status",
+            name: "Statut",
+            field: "pm_status",
             sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.float,
-           
-          },
-          {
-            id: "pm_cost",
-            name: "Budget",
-            field: "pm_cost",
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+         {
+            id: "pm_site",
+            name: "Site",
+            field: "pm_site",
             sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.float,
-           
-          },
-          {
-            id: "gm",
-            name: "GM %",
-            field: "gm",
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+         {
+            id: "pm_ord_date",
+            name: "Date ",
+            field: "pm_ord_date",
             sortable: true,
-            width: 80,
-            filterable: false,
-            type: FieldType.float,
-            formatter: Formatters.percent,
-            params: { minDecimal: 1, maxDecimal: 2 },
-           
-          },
-
+            width: 120,
+            filterable: true,
+            type: FieldType.dateIso,
+        },
+         {
+            id: "pm_win_addr",
+            name: "Equipement",
+            field: "pm_win_addr",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+{
+            id: "pm_type",
+            name: "Type Travaux",
+            field: "pm_type",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "pm_doc_list",
+            name: "Famille de travaux",
+            field: "pm_doc_list",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
+        {
+            id: "pm_reason",
+            name: "Nature de travaux",
+            field: "pm_reason",
+            sortable: true,
+            width: 120,
+            filterable: true,
+            type: FieldType.string,
+        },
 
           
           
@@ -178,7 +192,7 @@ export class ListPmComponent implements OnInit {
       }    
       // fill the dataset with your data
       this.dataset = []
-      this.projectService.getAllPmdetail().subscribe(
+      this.projectService.getByAll({}).subscribe(
         
           (response: any) => {
           //  console.log(response.data),

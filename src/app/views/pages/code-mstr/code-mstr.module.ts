@@ -56,7 +56,12 @@ import { ListDocComponent } from './list-doc/list-doc.component';
 import { EditDocComponent } from './edit-doc/edit-doc.component';
 import { EpiCreateClassificationComponent } from './epi-create-classification/epi-create-classification.component';
 import { EpiListClassificationComponent } from './epi-list-classification/epi-list-classification.component';
-import { EpiEditClassificationComponent } from './epi-edit-classification/epi-edit-classification.component'
+import { EpiEditClassificationComponent } from './epi-edit-classification/epi-edit-classification.component';
+import { EpiCreateHclassificationComponent } from './epi-create-hclassification/epi-create-hclassification.component';
+import { EpiCreateHorganigrammeComponent } from './epi-create-horganigramme/epi-create-horganigramme.component';
+import { EpiCreateOrganigrammeComponent } from './epi-create-organigramme/epi-create-organigramme.component';
+import { EpiListOrganigrammeComponent } from './epi-list-organigramme/epi-list-organigramme.component';
+
 
 const routes: Routes = [
     {
@@ -84,6 +89,10 @@ const routes: Routes = [
         component: ListDocComponent,
     },
     {
+        path: "epi-create-hclassification",
+        component: EpiCreateHclassificationComponent,
+    },
+    {
         path: "epi-create-classification",
         component: EpiCreateClassificationComponent,
     },
@@ -94,6 +103,19 @@ const routes: Routes = [
     {
         path: "epi-list-classification",
         component: EpiListClassificationComponent,
+    },
+    {
+        path: "epi-create-horganigramme",
+        component: EpiCreateHorganigrammeComponent,
+    },
+    {
+        path: "epi-create-organigramme",
+        component: EpiCreateOrganigrammeComponent,
+    },
+    
+    {
+        path: "epi-list-organigramme",
+        component: EpiListOrganigrammeComponent,
     },
 ]
 
@@ -109,6 +131,11 @@ const routes: Routes = [
         EpiCreateClassificationComponent,
         EpiListClassificationComponent,
         EpiEditClassificationComponent,
+        EpiCreateHclassificationComponent,
+        EpiCreateHorganigrammeComponent,
+        EpiCreateOrganigrammeComponent,
+        EpiListOrganigrammeComponent,
+        
     ],
     imports: [
         CommonModule,

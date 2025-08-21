@@ -375,6 +375,7 @@ prepareCode(): any {
         controls.pme_pm_code.setValue(item.pm_code || "");
         controls.pmdesc.setValue(item.pm_desc || "");
         controls.pme_site.setValue(item.pm_site);
+        controls.pme_inst.setValue(item.pm_win_addr)
         controls.pme_site.disable();
       });
     }

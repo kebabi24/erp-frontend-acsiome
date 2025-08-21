@@ -14,6 +14,8 @@ const API_URL_MPD = environment.apiUrl + "/qualityControl";
 const API_URL_SPECIFICATIONS = environment.apiUrl + "/qualityControl/findSpecifications";
 const API_URL_SPECIFICATION_DATA = environment.apiUrl + "/qualityControl/findSpecificationWithDetails";
 const API_URL_PROJECT_TYPE = environment.apiUrl + "/projects/projectTypes";
+const API_URL_PROJECT_LIST = environment.apiUrl + "/projects/projectLists";
+const API_URL_PROJECT_REASON = environment.apiUrl + "/projects/projectReasons";
 const API_URL_TESTS_HISTORY = environment.apiUrl + "/qualityControl/createTestsHistory";
 const API_URL_TESTS_HISTORY_UPDATE = environment.apiUrl + "/qualityControl/createTestsHistoryUpdateStatus";
 const API_URL_SITES = environment.apiUrl + "/sites/";
@@ -45,6 +47,14 @@ export class ProjectService {
   public getProjectTypes() {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.get(API_URL_PROJECT_TYPE, { headers: httpHeaders });
+  }
+  public getProjectLists() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_PROJECT_LIST, { headers: httpHeaders });
+  }
+  public getProjectReasons() {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.get(API_URL_PROJECT_REASON, { headers: httpHeaders });
   }
 
   public getAllSites() {

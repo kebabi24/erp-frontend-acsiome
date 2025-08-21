@@ -109,16 +109,6 @@ export class EpiInventoryTransactionComponent implements OnInit {
 
       this.columnDefinitions = [
           
-          // {
-          //   id: "id",
-          //   field: "id",
-          //   excludeFromColumnPicker: true,
-          //   excludeFromGridMenu: true,
-          //   excludeFromHeaderMenu: true,
-    
-          //   minWidth: 50,
-          //   maxWidth: 50,
-          // },
           {
             id: "ld_site",
             name: "Site",
@@ -161,7 +151,7 @@ export class EpiInventoryTransactionComponent implements OnInit {
           }, 
           {
             id: "ld_part",
-            name: "Article",
+            name: "code",
             field: "ld_part",
             sortable: true,
             filterable: true,
@@ -205,7 +195,7 @@ export class EpiInventoryTransactionComponent implements OnInit {
           }, 
           {
             id: "chr05",
-            name: "Categorie",
+            name: "Famille",
             field: "chr05",
             sortable: true,
             filterable: true,
@@ -225,10 +215,33 @@ export class EpiInventoryTransactionComponent implements OnInit {
               collapsed:true
             }
             
+          },
+           {
+            id: "ld__chr02",
+            name: "Sous-Famille",
+            field: "ld__chr02",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+            grouping: {
+              getter: 'ld__chr02',
+              formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
           }, 
           {
             id: "chr01",
-            name: "FAMILLE",
+            name: "Article",
             field: "chr01",
             sortable: true,
             filterable: true,
@@ -249,9 +262,32 @@ export class EpiInventoryTransactionComponent implements OnInit {
             }
             
           }, 
+           {
+            id: "chr03",
+            name: "Groupe",
+            field: "chr03",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
+            grouping: {
+              getter: 'chr03',
+              formatter: (g) => `Sous-famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('ld_qty_oh'),
+                new Aggregators.Sum('int03')
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          },
           {
             id: "chr02",
-            name: "groupe",
+            name: "Couleur",
             field: "chr02",
             sortable: true,
             filterable: true,
@@ -274,56 +310,12 @@ export class EpiInventoryTransactionComponent implements OnInit {
             }
             
           }, 
+         
+          
           {
-            id: "chr03",
-            name: "Etat",
-            field: "chr03",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
-            grouping: {
-              getter: 'chr03',
-              formatter: (g) => `Etat: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh'),
-                new Aggregators.Sum('int03')
-              ],
-              aggregateCollapsed: true,
-              lazyTotalsCalculation:true,
-              collapsed:true
-            }
-            
-          },
-          {
-            id: "ld__chr02",
-            name: "Couleur",
-            field: "ld__chr02",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
-            grouping: {
-              getter: 'ld__chr02',
-              formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                // (required), what aggregators (accumulator) to use and on which field to do so
-               // new Aggregators.Avg('ld_qty_oh'),
-                new Aggregators.Sum('ld_qty_oh'),
-                new Aggregators.Sum('int03')
-              ],
-              aggregateCollapsed: true,
-              lazyTotalsCalculation:true,
-              collapsed:true
-            }
-            
-          }, 
-          {
-            id: "int03",
+            id: "ld_rev",
             name: "Taille",
-            field: "int03",
+            field: "ld_rev",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -331,7 +323,7 @@ export class EpiInventoryTransactionComponent implements OnInit {
             // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/etats`),model: Filters.multipleSelect , operator: OperatorType.inContains},
             grouping: {
               getter: 'int03',
-              formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              formatter: (g) => `Taille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('ld_qty_oh'),
@@ -396,69 +388,7 @@ export class EpiInventoryTransactionComponent implements OnInit {
               collapsed: true,
             }
           }, 
-          // {
-          //   id: "ld_ref",
-          //   name: "Reference",
-          //   field: "ld_ref",
-          //   sortable: true,
-          //   filterable: true,
-          //   type: FieldType.string,
-          //   grouping: {
-          //     getter: 'int03',
-          //     formatter: (g) => `Surface: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-          //     aggregators: [
-          //       // (required), what aggregators (accumulator) to use and on which field to do so
-          //      // new Aggregators.Avg('ld_qty_oh'),
-          //       new Aggregators.Sum('ld_qty_oh'),
-          //       new Aggregators.Sum('int03')
-          //     ],
-          //     aggregateCollapsed: true,
-          //     lazyTotalsCalculation:true,
-          //     collapsed:true
-          //   }
-          // },
-          {
-            id: "chr04",
-            name: "Fournisseur",
-            field: "chr04",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'chr04',
-              formatter: (g) => `Reference: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: true,
-              collapsed: true,
-            }
-          }, 
-          {
-            id: "created_by",
-            name: "Saisie par",
-            field: "created_by",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'created_by',
-              formatter: (g) => `Users: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: true,
-              collapsed: true,
-            }
-          }, 
-          {
-            id: "last_modified_by",
-            name: "Modifié par",
-            field: "last_modified_by",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'last_modified_by',
-              formatter: (g) => `Users: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregateCollapsed: true,
-              collapsed: true,
-            }
-          }, 
+           
           {
             id: "ld_date",
             name: "Date Entrée",
@@ -537,7 +467,7 @@ export class EpiInventoryTransactionComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.locationDetailService.getBy({}).subscribe( 
+      this.locationDetailService.getBy({chr05:'EPI'}).subscribe( 
         
           (response: any) => {this.dataset = response.data
             console.log(this.dataset)
@@ -807,7 +737,7 @@ export class EpiInventoryTransactionComponent implements OnInit {
     reset() {
     
       this.dataset = []
-      this.locationDetailService.getAll().subscribe( 
+      this.locationDetailService.getBy({chr05:'EPI'}).subscribe( 
         
           (response: any) => {this.dataset = response.data
             console.log(this.dataset)

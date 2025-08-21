@@ -858,7 +858,7 @@ onSubmit() {
               )
               this.loadingSubject.next(false)
               
-              this.router.navigateByUrl("/training/gestion-de-formation")
+              this.router.navigateByUrl("/accounting-setting/list-employe")
           }
       )
   }
@@ -994,58 +994,28 @@ onSubmit() {
 prepareGrid3() {
   const controls = this.empForm.controls;
     this.columnDefinitions3 = [
-        {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
-
-            minWidth: 50,
-            maxWidth: 50,
-        },
-        {
-            id: "id",
-            name: "id",
-            field: "id",
-            sortable: true,
-            minWidth: 80,
-            maxWidth: 80,
-        },
-        {
-            id: "jbd_code",
-            name: "Code Métier",
-            field: "jbd_code",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-        },
-        {
-          id: "jbd_level",
-          name: "Niveau",
-          field: "jbd_level",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
+  {
+        id: "code_value",
+        name: "Code Poste",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        maxWidth: 100,
+        filterable: true,
+        type: FieldType.string,
       
-        {
-            id: "jbd_desc",
-            name: "Designation",
-            field: "jbd_desc",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-        },
-        {
-          id: "jbd_time_rate",
-          name: "Taux Horaire",
-          field: "jbd_time_rate",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        maxWidth: 300,
+        filterable: true,
+        type: FieldType.string,
         
+    },        
     ]
 
     this.gridOptions3 = {
@@ -1068,9 +1038,13 @@ prepareGrid3() {
     }
 
     // fill the dataset with your data
-    this.jobService
-        .getByDet({jbd_code: controls.emp_job.value})
-        .subscribe((response: any) => (this.data = response.data))
+     this.codeService
+      .getBy({code_fldname:"emp_level",code_desc:controls.emp_job.value})
+      .subscribe((response: any) => (this.data = response.data));
+  
+    // this.jobService
+    //     .getByDet({jbd_code: controls.emp_job.value})
+    //     .subscribe((response: any) => (this.data = response.data))
 }
 open3(content) {
    
@@ -1696,7 +1670,7 @@ prepareGriddomain() {
 
   // fill the dataset with your data
   this.codeService
-    .getBy({code_fldname:"pt_draw"})
+    .getBy({code_fldname:"emp_job"})
     .subscribe((response: any) => (this.domains = response.data));
 }
 opendom(content) {

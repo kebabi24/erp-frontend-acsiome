@@ -32,7 +32,7 @@
                                 
                         <div class="row"> 
                             <div class="form-group col-2">
-                                <label class="form-group">Code: *</label>
+                                <label class="form-group">Matricule: *</label>
                                 
                                 <input type="text" formControlName="emp_addr"  (change)="onChangeCode()"
                                     [className]="empForm.controls['emp_addr'].errors && (empForm.controls['emp_addr'].dirty || empForm.controls['emp_addr'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'">
@@ -123,7 +123,7 @@
                                     </select>
                             </div>
                             <div class="form-group col-2">
-                                <label class="form-group ">Post:</label>
+                                <label class="form-group ">code Postale:</label>
                                 
                                     <input type="text" class="form-control form-control-lg form-control-solid"
                                         formControlName="emp_zip">
@@ -153,12 +153,11 @@
         
                         <div class="row"> 
                             <div class="form-group col-2">
-                                <label class="form-group ">Sexe:</label>
+                                <label class="form-group ">Genre:</label>
         
                                 <select
                                     [className]="empForm.controls['emp_sex'].errors && (empForm.controls['emp_sex'].dirty || empForm.controls['emp_sex'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
                                     formControlName="emp_sex"  id="exampleSelects7">
-                                    <option value=""></option>
                                     <option value="M">Masculin</option>
                                     <option value="F">Feminin</option>
                                 
@@ -173,8 +172,7 @@
                                 <select
                                     [className]="empForm.controls['emp_familysit'].errors && (empForm.controls['emp_familysit'].dirty || empForm.controls['emp_familysit'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
                                     formControlName="emp_familysit"  id="exampleSelects7">
-                                    <option value=""></option>
-                                    <option value="C">Célébataire</option>
+                                    <option value="C">Celibataire</option>
                                     <option value="M">Marié</option>
                                     <option value="A">Autre</option>
                                     
@@ -196,7 +194,7 @@
                                 <select
                                     [className]="empForm.controls['emp_blood'].errors && (empForm.controls['emp_blood'].dirty || empForm.controls['emp_blood'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
                                     formControlName="emp_blood"  id="exampleSelects7">
-                                    <option value=""></option>
+                                    
                                     <option value="A+">A+</option>
                                     <option value="A-">A-</option>
 
@@ -232,7 +230,7 @@
                                     <input type="text" class="form-control form-control-lg form-control-solid"
                                         formControlName="emp_dlicence">
                             </div>
-                            <div class="form-group col-2">
+                            <!-- <div class="form-group col-2">
                                 <label class="form-group"> Habiliation: </label>
                                 <span class="switch switch-icon ">
                                     <label>
@@ -242,8 +240,8 @@
                                         
                                     </label>
                                 </span>
-                            </div>
-                            <div class="form-group col-2">
+                            </div> -->
+                            <!-- <div class="form-group col-2">
                                 <label class="form-group">Date Habiliation:</label>
                                 <div class="input-group input-group-lg">
                                     <input
@@ -259,7 +257,7 @@
                                         class="invalid-feedback">Ce Champs est obligatoire</div>
                                 </div>
         
-                            </div>
+                            </div> -->
                             <div class="form-group col-2">
                                 <label class="form-group ">ANEM:</label>
                                 
@@ -331,24 +329,10 @@
                         </ng-template>
                         <ng-template ngbTabContent>
                             <form [formGroup]="empForm" class="form">
-                                <div class="form-group col-2">
-                                    <label class="form-group">Client : *</label>
-                                    <div class="input-group input-group-lg">
-
-                                        <input type="text" class="form-control form-control-solid" 
-                                            aria-describedby="basic-addon2" formControlName="emp_line2" (change)="onChangecust()" id="emp_line2">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" (click)="opencust(contentcust)">
-                                                <i class="text-dark-50 flaticon2-search"></i> </span>
-                                        </div>
-                                    
-                                    </div>
-            
-                                    
-                                </div>
+                                
                                 <div class="row"> 
                                     <div class="form-group col-2">
-                                        <label class="form-group">Responsable : *</label>
+                                        <label class="form-group">Structure : *</label>
                                         <div class="input-group input-group-lg">
     
                                             <input type="text" class="form-control form-control-solid" 
@@ -361,7 +345,59 @@
                                         </div>
                 
                                         
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Service : *</label>
+                                        <div class="input-group input-group-lg">
+                
+                                            <input type="text" formControlName="emp_job" (change)="changeDomain()" id="job"
+                                                [className]="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="opendom(contentdom)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
                                     </div>    
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Poste : *</label>
+                                        <div class="input-group input-group-lg">
+                
+                                            <input type="text" formControlName="emp_level" (change)="onChangelevel()" id="level"
+                                                [className]="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="open3(content3)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
+                                    </div> 
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Spécialité : *</label>
+                                        <div class="input-group input-group-lg">
+                
+                                            <input type="text" formControlName="emp_line2" (change)="onChangespec()" id="spec"
+                                                [className]="empForm.controls['emp_line2'].errors && (empForm.controls['emp_line2'].dirty || empForm.controls['emp_line2'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
+                                                aria-describedby="basic-addon2">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" (click)="opencust(contentcust)">
+                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                                            </div>
+                                            <div *ngIf="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched)"
+                                                class="invalid-feedback">Ce Champs est obligatoire</div>
+                                        </div>
+                
+                                        
+                                    </div> 
+                                        
                                     <div class="form-group col-2">
                                        
                                         <label class="form-group ">Equipe:</label>
@@ -394,6 +430,9 @@
                                         
                                     </div>    
                               
+                                    
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group">DATE d'Embauche:</label>
                                         <div class="input-group input-group-lg">
@@ -428,8 +467,6 @@
                                         </div>
                 
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group">Date Confirmation :</label>
                                         <div class="input-group input-group-lg">
@@ -464,34 +501,7 @@
                                         </div>
                 
                                     </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group"> Contrat Fidélité: </label>
-                                        <span class="switch switch-icon ">
-                                            <label>
-                                                <input type="checkbox" formControlName="emp_loyalty"
-                                                    class="form-control form-control-lg form-control-solid">
-                                                    <span></span>    
-                                                
-                                            </label>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group">Date Fin Fidélitée :</label>
-                                        <div class="input-group input-group-lg">
-                                            <input
-                                                [className]="empForm.controls['emp_loyal_date'].errors && (empForm.controls['emp_loyal_date'].dirty || empForm.controls['emp_loyal_date'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
-                                                placeholder="jj-mm-aaaa" name="emp_loyal_date" ngbDatepicker formControlName="emp_loyal_date"
-                                                #emp_loyal_date="ngbDatepicker">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" (click)="emp_loyal_date.toggle()" type="button">
-                                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
-                                                </button>
-                                            </div>
-                                            <div *ngIf="empForm.controls['emp_loyal_date'].errors && (empForm.controls['emp_loyal_date'].dirty || empForm.controls['emp_loyal_date'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        </div>
-                
-                                    </div>
+                                    
                                     <div class="form-group col-2">
                                         <label class="form-group">Utilisateur : *</label>
                                         <div class="input-group input-group-lg">
@@ -510,7 +520,18 @@
                                   
 
                                 </div>
-
+<div class="row">
+    <div class="form-group col-2">
+        <label class="form-group ">Taille H:</label>
+        <input type="text" class="form-control form-control-lg form-control-solid"
+            formControlName="chr01">
+    </div>
+    <div class="form-group col-2">
+        <label class="form-group ">Pointure:</label>
+        <input type="number" class="form-control form-control-lg form-control-solid"
+            formControlName="int01">
+    </div>
+</div>
                                   
                                 <div class="row">
                                     <div class="form-group col-2">
@@ -532,40 +553,7 @@
                                                 formControlName="emp_arate">
                                     </div>
                                   
-                                    <div class="form-group col-2">
-                                        <label class="form-group">Service : *</label>
-                                        <div class="input-group input-group-lg">
-                
-                                            <input type="text" formControlName="emp_job" (change)="onChangeDomain()" id="job"
-                                                [className]="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
-                                                aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" (click)="opendom(contentdom)">
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                            <div *ngIf="empForm.controls['emp_job'].errors && (empForm.controls['emp_job'].dirty || empForm.controls['emp_job'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        </div>
-                
-                                        
-                                    </div>    
-                                    <div class="form-group col-2">
-                                        <label class="form-group">Niveau : *</label>
-                                        <div class="input-group input-group-lg">
-                
-                                            <input type="text" formControlName="emp_level" (change)="onChangelevel()" id="level"
-                                                [className]="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched) ? 'form-control form-control-lg form-control-solid is-invalid' : 'form-control form-control-lg form-control-solid'"
-                                                aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" (click)="open3(content3)">
-                                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                                            </div>
-                                            <div *ngIf="empForm.controls['emp_level'].errors && (empForm.controls['emp_level'].dirty || empForm.controls['emp_level'].touched)"
-                                                class="invalid-feedback">Ce Champs est obligatoire</div>
-                                        </div>
-                
-                                        
-                                    </div>    
+                                       
                                 </div>
 
 
@@ -681,6 +669,29 @@
             </ng-template>
         </div>
         <div>
+            <ng-template #contentspec let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Spécialité </h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                            [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedspec($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions3" [dataset]="data">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
             <ng-template #contentsite let-c="close" let-d="dismiss">
                 <div class="modal-header">
                     <h4 class="modal-title">Choissir Site </h4>
@@ -706,7 +717,7 @@
         <div>
             <ng-template #contentcust let-c="close" let-d="dismiss">
                 <div class="modal-header">
-                    <h4 class="modal-title">Choisir Client </h4>
+                    <h4 class="modal-title">Choisir Spécialité </h4>
                     <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
                         <span aria-hidden="true">&times;</span>
                     </button>

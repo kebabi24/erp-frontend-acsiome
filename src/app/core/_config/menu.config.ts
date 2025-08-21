@@ -738,10 +738,7 @@ export class MenuConfig {
               title: "Sortie non Planifiée ",
               page: "/inventory-transaction/unplanified-issue",
             },
-            {
-              title: "Décharge EPI",
-              page: "/inventory-transaction/epi-issue",
-            },
+            
             {
               title: "Impirmer Bon de Sortie non Planifiée ",
               page: "/inventory-transaction/iss-unp-print",
@@ -755,10 +752,7 @@ export class MenuConfig {
               title: "déclaration réalisation  ",
               page: "/inventory-transaction/unplanified-recept",
             },
-            {
-              title: "Réstitution EPI",
-              page: "/inventory-transaction/epi-receipt",
-            },
+            
             {
               title: "Réception non Planifiée Etiquetage",
               page: "/inventory-transaction/unplanified-receipt-cab",
@@ -829,18 +823,8 @@ export class MenuConfig {
               title: "Consultation Stocks ",
               page: "/inventory-transaction/inventory-list",
             },
-            {
-              title: "Consultation Stocks EPI",
-              page: "/inventory-transaction/epi-inventory-transaction",
-            },
-            {
-              title: "rapport Mouvement EPI",
-              page: "/inventory-transaction/epi-inventory-report",
-            },
-            {
-              title: "rapport distribution EPI",
-              page: "/inventory-transaction/epi-monthly-distribution",
-            },
+            
+            
             {
               title: "Suivi des stocks",
               page: "/inventory-transaction/inventory-detail",
@@ -962,10 +946,7 @@ export class MenuConfig {
               title: "Bon de commande",
               page: "/purchasing/create-po",
             },
-            {
-              title: "Besoin EPI",
-              page: "/purchasing/epi-create-oa",
-            },
+            
             {
               title: "Simulateur des commandes",
               page: "/purchasing/create-oa",
@@ -1568,10 +1549,17 @@ export class MenuConfig {
               page: "/accounting-setting/affect-emp",
             },
             {
+              title: "Liste des affectations",
+              page: "/training/training-session-list",
+            },
+            {
               title: "Rapport des activités",
               page: "/project/add-report",
             },
-            
+            {
+              title: "Liste des Rapports",
+              page: "/training/training-report-list",
+            },
           ],
         },
         {
@@ -1604,30 +1592,7 @@ export class MenuConfig {
               title: "Liste des Employés",
               page: "/accounting-setting/list-employe",
             },
-            {
-              title: "Recap Mvt Epi par Employés",
-              page: "/accounting-setting/epi-byemploye-list",
-            },
-            {
-              title: "Recap Mvt Epi par article",
-              page: "/accounting-setting/epi-bypart-list",
-            },
-            {
-              title: "Détail des Mvts EPI par Employés",
-              page: "/accounting-setting/epi-byemployedetail-list",
-            },
-            {
-              title: "Détail des Mvts EPI par Articles",
-              page: "/accounting-setting/epi-bypartdetail-list",
-            },
-            {
-              title: "Liste des Nouveaux employés en attente d'EPI",
-              page: "/accounting-setting/epi-newemploye-list",
-            },
-            {
-              title: "Liste des employés en attente d'EPI",
-              page: "/accounting-setting/epi-cycleemploye-list",
-            },
+            
             {
               title: "Maint Congés des Employés",
               page: "/accounting-setting/create-emp-avail",
@@ -1658,6 +1623,122 @@ export class MenuConfig {
                   title: "Ajouter un Code compétence",
                   page: "/job/create-job",
                 },
+              ],
+            },
+            {
+                title: "Paramétrage des EPI",
+                root: true,
+                bullet: "dot",
+                icon: "flaticon-network",
+                submenu: [
+                  {
+                    title: "créer hiérarchie classification",
+                    page: "/code-mstr/epi-create-hclassification",
+                  },
+                  {
+                    title: "créer classification",
+                    page: "/code-mstr/epi-create-classification",
+                  },
+                  {
+                    title: "Liste des classification",
+                    page: "/code-mstr/epi-list-classification",
+                  },
+                  {
+                    title: "créer hiérarchie Oranigramme",
+                    page: "/code-mstr/epi-create-horganigramme",
+                  },
+                  {
+                    title: "créer Organigramme",
+                    page: "/code-mstr/epi-create-organigramme",
+                  },
+                  {
+                    title: "Liste des Postes",
+                    page: "/code-mstr/epi-list-organigramme",
+                  },
+                  {
+                    title: "Ajouter un EPI",
+                    page: "/articles/create-epi-mod",
+                  },
+                  {
+                    title: "Modifier un EPI",
+                    page: "/articles/update-epi-mod",
+                  },
+                  {
+                    title: "Barème distribution",
+                    page: "/manufacturing/bareme-epi-temps",
+                  },
+                  {
+                    title: "Liste Barème distribution ",
+                    page: "/manufacturing/list-epi-temps",
+                  },
+                  {
+                    title: "Barème distribution article",
+                    page: "/manufacturing/bareme-epi-article",
+                  },
+                  {
+                    title: "Liste Barème distribution EPI",
+                    page: "/manufacturing/list-epi-article",
+                  },
+            ]},
+            {
+              title: "Gestion des EPIs",
+              root: true,
+              bullet: "dot",
+              icon: "flaticon-network",
+              submenu: [
+                
+                {
+                  title: "Consultation Stocks EPI",
+                  page: "/inventory-transaction/epi-inventory-transaction",
+                },
+                {
+                  title: "Besoin EPI",
+                  page: "/purchasing/epi-create-oa",
+                },
+                {
+                  title: "Liste des Nouveaux employés en attente d'EPI",
+                  page: "/accounting-setting/epi-newemploye-list",
+                },
+                {
+                  title: "Liste des employés en attente d'EPI",
+                  page: "/accounting-setting/epi-cycleemploye-list",
+                },
+                {
+                  title: "Décharge EPI",
+                  page: "/inventory-transaction/epi-issue",
+                },
+                {
+                  title: "Réstitution EPI",
+                  page: "/inventory-transaction/epi-receipt",
+                },
+                {
+                  title: "rapport Mouvement EPI",
+                  page: "/inventory-transaction/epi-inventory-report",
+                },
+                {
+                  title: "rapport distribution EPI",
+                  page: "/inventory-transaction/epi-monthly-distribution",
+                },
+                
+                
+                {
+                  title: "Recap Mvt Epi par Employés",
+                  page: "/accounting-setting/epi-byemploye-list",
+                },
+                {
+                  title: "Recap Mvt Epi par article",
+                  page: "/accounting-setting/epi-bypart-list",
+                },
+                {
+                  title: "Détail des Mvts EPI par Employés",
+                  page: "/accounting-setting/epi-byemployedetail-list",
+                },
+                {
+                  title: "Détail des Mvts EPI par Articles",
+                  page: "/accounting-setting/epi-bypartdetail-list",
+                },
+                
+              
               ],
             },
             {
@@ -2228,14 +2309,7 @@ export class MenuConfig {
                   title: "Liste des documents",
                   page: "/code-mstr/list-doc",
                 },
-                {
-                  title: "créer classification",
-                  page: "/code-mstr/epi-create-classification",
-                },
-                {
-                  title: "Liste des classification",
-                  page: "/code-mstr/epi-list-classification",
-                },
+                
                 {
                   title: "Maint des sequence",
                   page: "/purchasing/create-sequence",

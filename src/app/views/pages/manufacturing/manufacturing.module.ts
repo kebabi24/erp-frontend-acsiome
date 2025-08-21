@@ -91,6 +91,10 @@ import { PrintDirectWoComponent } from './print-direct-wo/print-direct-wo.compon
 import { CreateOrderPfComponent } from './create-order-pf/create-order-pf.component';
 import { ListWoBrComponent } from './list-wo-br/list-wo-br.component';
 import { ListWoPfComponent } from './list-wo-pf/list-wo-pf.component';
+import { BaremeEpiTempsComponent } from './bareme-epi-temps/bareme-epi-temps.component';
+import { BaremeEpiArticleComponent } from './bareme-epi-article/bareme-epi-article.component';
+import { ListEpiTempsComponent } from './list-epi-temps/list-epi-temps.component';
+import { ListEpiArticleComponent } from './list-epi-article/list-epi-article.component';
 
 
 const routes: Routes = [
@@ -174,7 +178,22 @@ const routes: Routes = [
     path: "list-bom",
     component: ListBomComponent,
   },
-  
+  {
+    path: "bareme-epi-temps",
+    component: BaremeEpiTempsComponent,
+  },
+  {
+    path: "list-epi-temps",
+    component: ListEpiTempsComponent,
+  },
+  {
+    path: "bareme-epi-article",
+    component: BaremeEpiArticleComponent,
+  },
+  {
+    path: "list-epi-article",
+    component: ListEpiArticleComponent,
+  },
   {
     path: "create-ps",
     component: CreatePsComponent,
@@ -279,7 +298,7 @@ const routes: Routes = [
 
   
 @NgModule({
-  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent, ReleaseWoComponent, LabelAllocationComponent, RecapBroyageComponent, CreateBobineWoComponent, IssBobineWoComponent, CreateTriWoComponent, ListBomComponent, ListPtbComponent, BobineIssueComponent, SuiviAlimentationExtrusionComponent, ListOpComponent, PrintDirectWoComponent, CreateOrderPfComponent, ListWoBrComponent, ListWoPfComponent],
+  declarations: [ManufacturingComponent, CreateOrderComponent, LaunchOrderComponent, CreateWorkCenterComponent, CreateGammeComponent, MoEntriesComponent, CreateNomenclatureComponent, CreateCauseComponent, WorctEntryComponent, WoissEntryComponent, CreatePsComponent, ListWoComponent, EditWoComponent, CreateOpComponent, CreateRsnComponent, EditRsnComponent, ListRsnComponent, ListGammeComponent, EditGammeComponent, EditWorkCenterComponent, ListWorkCenterComponent, AffectBomComponent, ListPsComponent, EditPsComponent, CreateDirectWoComponent, WorctEntryPalComponent, RoCostComponent, BomCostComponent, CalcCoutWoComponent, CostpriceListComponent, CreateWoSoComponent,CreateWoSfComponent,RpBroyageComponent, ReleaseWoComponent, LabelAllocationComponent, RecapBroyageComponent, CreateBobineWoComponent, IssBobineWoComponent, CreateTriWoComponent, ListBomComponent, ListPtbComponent, BobineIssueComponent, SuiviAlimentationExtrusionComponent, ListOpComponent, PrintDirectWoComponent, CreateOrderPfComponent, ListWoBrComponent, ListWoPfComponent, BaremeEpiTempsComponent, BaremeEpiArticleComponent, ListEpiTempsComponent, ListEpiArticleComponent],
 
   imports: [
     CommonModule,

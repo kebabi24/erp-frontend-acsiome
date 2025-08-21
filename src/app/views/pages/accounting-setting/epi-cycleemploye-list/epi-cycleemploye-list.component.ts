@@ -93,119 +93,119 @@ export class EpiCycleemployeListComponent implements OnInit {
     }
     prepareGrid() {
         this.columnDefinitions = [
-            {
-                id: "edit",
-                field: "id",
-                excludeFromColumnPicker: true,
-                excludeFromGridMenu: true,
-                excludeFromHeaderMenu: true,
-                formatter: (row, cell, value, columnDef, dataContext) => {
-                  // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-                  return `
-                       <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Employe">
-                       <i class="flaticon2-pen"></i>
-                   </a>
-                   `;
-                },
-                minWidth: 50,
-                maxWidth: 50,
-                // use onCellClick OR grid.onClick.subscribe which you can see down below
-                onCellClick: (e: Event, args: OnEventArgs) => {
-                    const id = args.dataContext.id
-                    this.router.navigateByUrl(`/training/edit-student/${id}`)
-                },
-            },
-            {
-                id: "id",
-                name: "id",
-                field: "id",
-                sortable: true,
-                minWidth: 80,
-                maxWidth: 80,
-            },
-            {
-                id: "emp_addr",
-                name: "Code",
-                field: "emp_addr",
-                sortable: true,
-                filterable: true,
-                type: FieldType.string,
-            },
-            {
-                id: "emp_fname",
-                name: "Nom",
-                field: "emp_fname",
-                sortable: true,
-                filterable: true,
-                width: 50,
-                type: FieldType.string,
-            },
-            {
-                id: "emp_lname",
-                name: "Prénom",
-                field: "emp_lname",
-                sortable: true,
-                filterable: true,
-                width: 50,
-                type: FieldType.string,
-            },
-            {
-              id: "emp_line1",
-              name: "Adresse",
-              field: "emp_line1",
-              sortable: true,
-              width: 120,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "emp_birth_date",
-              name: "Date Naissance",
-              field: "emp_birth_date",
-              sortable: true,
-              filterable: true,
-              width: 50,
-              type: FieldType.dateIso,
-            },
-            
-            {
-              id: "emp_job",
-              name: "Domaine de formation",
-              field: "emp_job",
-              sortable: true,
-              filterable: true,
-              width: 50,
-              type: FieldType.string,
-            },
-            
-            {
-              id: "emp_level",
-              name: "Niveau",
-              field: "emp_level",
-              sortable: true,
-              filterable: true,
-              width: 50,
-              type: FieldType.string,
-            },
-            {
-              id: "emp_site",
-              name: "Site",
-              field: "emp_site",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            
-            // {
-            //   id: "emp_shift",
-            //   name: "Equipe",
-            //   field: "emp_shift",
-            //   sortable: true,
-            //   filterable: true,
-            //   type: FieldType.string,
-            // },
-         
-           
+          {
+                          id: "id",
+                          name: "id",
+                          field: "id",
+                          sortable: true,
+                          minWidth: 80,
+                          maxWidth: 80,
+                      },
+                      {
+                          id: "emp_addr",
+                          name: "Matricule",
+                          field: "emp_addr",
+                          sortable: true,
+                          filterable: true,
+                          type: FieldType.string,
+                      },
+                      {
+                          id: "emp_fname",
+                          name: "Nom",
+                          field: "emp_fname",
+                          sortable: true,
+                          filterable: true,
+                          width: 50,
+                          type: FieldType.string,
+                      },
+                      {
+                          id: "emp_lname",
+                          name: "Prénom",
+                          field: "emp_lname",
+                          sortable: true,
+                          filterable: true,
+                          width: 50,
+                          type: FieldType.string,
+                      },
+                      {
+                        id: "emp_first_date",
+                        name: "Date Recrutement",
+                        field: "emp_first_date",
+                        sortable: true,
+                        filterable: true,
+                        width: 50,
+                        type: FieldType.dateIso,
+                      },
+                      
+                      {
+                        id: "emp_job",
+                        name: "Service",
+                        field: "emp_job",
+                        sortable: true,
+                        filterable: true,
+                        width: 50,
+                        type: FieldType.string,
+                      },
+                      
+                      {
+                        id: "emp_level",
+                        name: "Poste",
+                        field: "emp_level",
+                        sortable: true,
+                        filterable: true,
+                        width: 50,
+                        type: FieldType.string,
+                      },
+                      {
+                        id: "emp_last_date",
+                        name: "Date Départ",
+                        field: "emp_last_date",
+                        sortable: true,
+                        filterable: true,
+                        width: 50,
+                        type: FieldType.dateIso,
+                      },
+                      {
+                        id: "chr01",
+                        name: "Taille H",
+                        field: "chr01",
+                        sortable: true,
+                        filterable: true,
+                        type: FieldType.string,
+                      },
+                      {
+                        id: "int01",
+                        name: "Pointure",
+                        field: "int01",
+                        sortable: true,
+                        filterable: true,
+                        type: FieldType.string,
+                      },
+                      {
+                        id: "emp_sex",
+                        name: "Genre",
+                        field: "emp_sex",
+                        sortable: true,
+                        filterable: true,
+                        type: FieldType.string,
+                      },
+                      {
+                        id: "date01",
+                        name: "Date Prochaine distribution",
+                        field: "date01",
+                        sortable: true,
+                        filterable: true,
+                        width: 50,
+                        type: FieldType.dateIso,
+                      },
+                      {
+                        id: "int02",
+                        name: "Nombre distribution",
+                        field: "int02",
+                        sortable: true,
+                        filterable: true,
+                        type: FieldType.string,
+                      },
         ]
 
         this.gridOptions = {
@@ -226,7 +226,7 @@ export class EpiCycleemployeListComponent implements OnInit {
         this.user = JSON.parse(localStorage.getItem("user"));
         console.log(this.user)
         if(this.user.usrd_site == '*')
-        {this.employeService.getAll().subscribe(
+        {this.employeService.getByCycle({}).subscribe(
             (response: any) => {this.dataset = response.data
               this.dataView.setItems(this.dataset)},
             (error) => {
@@ -234,7 +234,7 @@ export class EpiCycleemployeListComponent implements OnInit {
             },
             () => {}
         )}
-        else{this.employeService.getBy({emp_site:this.user.usrd_site}).subscribe(
+        else{this.employeService.getByCycle({emp_site:this.user.usrd_site}).subscribe(
           (response: any) => {this.dataset = response.data
             this.dataView.setItems(this.dataset)},
           (error) => {

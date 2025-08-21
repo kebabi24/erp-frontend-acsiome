@@ -15,7 +15,7 @@ const myCustomStringFormatter: Formatter = (row: number, cell: number, value: an
     return `<div class="text"  aria-hidden="${value}" style="font-size:14px; font-weight: bold;" >${value}</div>`
   }
 }
-@Component({
+@Component({ 
   selector: 'kt-create-training-domain',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './create-training-domain.component.html',

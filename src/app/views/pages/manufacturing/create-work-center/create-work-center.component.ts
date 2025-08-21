@@ -66,6 +66,13 @@ columnDefinitions3: Column[] = [];
 gridOptions3: GridOption = {};
 gridObj3: any;
 angularGrid3: AngularGridInstance;
+
+dataset: [];
+columnDefinitionswc: Column[] = [];
+gridOptionswc: GridOption = {};
+gridObjwc: any;
+angularGridwc: AngularGridInstance;
+
 selectedField = "";
 fieldcode = "";
 msg: String;
@@ -123,7 +130,7 @@ createForm() {
     wc__chr02:[{value: this.workcenter.wc__chr02,  disabled: !this.isExist }],
     wc__chr03:[{value: this.workcenter.wc__chr03,  disabled: !this.isExist }],
     wc__qadc03:[{value: this.workcenter.wc__qadc03,  disabled: !this.isExist }],
-
+    wc_userid:[{value: this.workcenter.wc_userid,  disabled: !this.isExist }],
     chr01:[{value: this.workcenter.chr01,  disabled: !this.isExist }],
     chr02:[{value: this.workcenter.chr02,  disabled: !this.isExist }],
     wc_mod_date:[{value: this.workcenter.wc_mod_date,  disabled: !this.isExist }],
@@ -171,13 +178,14 @@ onChangeCode() {
               controls.wc__qadc01.enable()
               controls.wc__qadc02.enable()
               controls.wc__qadc03.enable()
+              controls.wc_userid.enable()
               controls.wc__chr01.enable()
               controls.wc__chr02.enable()
               controls.wc__chr03.enable()
               controls.wc_wk_loc.enable()
               controls.chr01.enable()
               controls.chr02.enable()
-              controls.wc_mode_date.enable()
+              controls.wc_mod_date.enable()
               controls.date01.enable()
               controls.dec01.enable()
           }
@@ -231,13 +239,14 @@ prepareCode(): WorkCenter {
   _workcenter.wc__qadc01 = controls.wc__qadc01.value
   _workcenter.wc__qadc02 = controls.wc__qadc02.value
   _workcenter.wc__qadc03 = controls.wc__qadc03.value
+  _workcenter.wc_userid = controls.wc_userid.value
   _workcenter.wc__chr01 = controls.wc__chr01.value
   _workcenter.wc__chr02 = controls.wc__chr02.value
   _workcenter.wc__chr03 = controls.wc__chr03.value
   _workcenter.wc_wk_loc = controls.wc_wk_loc.value
   _workcenter.chr01 = controls.chr01.value
   _workcenter.chr02 = controls.chr02.value
-  _workcenter.wc_mod_date = controls.wc_mode_date.value
+  _workcenter.wc_mod_date = controls.wc_mod_date.value
   _workcenter.date01 = controls.date01.value
   _workcenter.dec01 =    controls.dec01.value
    
@@ -304,6 +313,54 @@ handleSelectedRowsChanged3(e, args) {
       switch (this.selectedField) {
         case "wc_dept": {
           controls.wc_dept.setValue(item.code_value || "");
+          break;
+        }
+        case "wc_user1": {
+          controls.wc_user1.setValue(item.code_value || "");
+          break;
+        }
+        case "wc_user2": {
+          controls.wc_user2.setValue(item.code_value || "");
+          break;
+        }
+        case "wc_userid": {
+          controls.wc_userid.setValue(item.code_value || "");
+          break;
+        }
+        case "wc_fsm_type": {
+          controls.wc_fsm_type.setValue(item.code_value || "");
+          break;
+        }
+        case "wc__qadc01": {
+          controls.wc__qadc01.setValue(item.code_value || "");
+          break;
+        }
+        case "wc__qadc02": {
+          controls.wc__qadc02.setValue(item.code_value || "");
+          break;
+        }
+        case "wc__qadc03": {
+          controls.wc__qadc03.setValue(item.code_value || "");
+          break;
+        }
+        case "wc__chr01": {
+          controls.wc__chr01.setValue(item.code_value || "");
+          break;
+        }
+        case "wc_wk_loc": {
+          controls.wc_wk_loc.setValue(item.code_value || "");
+          break;
+        }
+        case "wc__chr02": {
+          controls.wc__chr02.setValue(item.code_value || "");
+          break;
+        }
+        case "wc__chr03": {
+          controls.wc__chr03.setValue(item.code_value || "");
+          break;
+        }
+        case "chr02": {
+          controls.chr02.setValue(item.code_value || "");
           break;
         }
         default:
@@ -431,5 +488,121 @@ changeCode(field) {
   );
   
 }
+handleSelectedRowsChangedwc(e, args) {
+  const controls = this.wcForm.controls;
 
+  if (Array.isArray(args.rows) && this.gridObjwc) {
+    args.rows.map((idx) => {
+      const item = this.gridObjwc.getDataItem(idx);
+      // TODO : HERE itterate on selected field and change the value of the selected field
+      controls.wc_wkctr.setValue(item.wc_wkctr)
+      controls.wc_mch.setValue(item.wc_mch)
+      controls.wc_desc.setValue(item.wc_desc)
+      controls.wc_dept.setValue(item.wc_dept)
+      controls.wc_queue.setValue(item.wc_queue)
+      controls.wc_wait.setValue(item.wc_wait)
+    controls.wc_mch_op.setValue(item.wc_mch_op)
+    controls.wc_setup_men.setValue(item.wc_setup_men)
+    controls.wc_men_mch.setValue(item.wc_men_mch)
+    controls.wc_mch_wkctr.setValue(item.wc_mch_wkctr)
+    controls.wc_mch_bdn.setValue(item.wc_mch_bdn)
+    controls.wc_setup_rte.setValue(item.wc_setup_rte)
+    controls.wc_lbr_rate.setValue(item.wc_lbr_rate)
+    controls.wc_bdn_rate.setValue(item.wc_bdn_rate)
+    controls.wc_bdn_pct.setValue(item.wc_bdn_pct)
+    
+    controls.wc_user1.setValue(item.wc_user1)
+    controls.wc_user2.setValue(item.wc_user2)
+    controls.wc_fsm_type.setValue(item.wc_fsm_type)
+    controls.wc__qadc01.setValue(item.wc__qadc01)
+    controls.wc__qadc02.setValue(item.wc__qadc02)
+    
+    controls.wc__chr01.setValue(item.wc__chr01)
+    controls.wc_wk_loc.setValue(item.wc_wk_loc)
+    controls.wc__chr02.setValue(item.wc__chr02)
+    controls.wc__chr03.setValue(item.wc__chr03)
+    controls.wc__qadc03.setValue(item.wc__qadc03)
+
+    controls.chr01.setValue(item.chr01)
+    controls.chr02.setValue(item.chr02)
+    controls.wc_mod_date.setValue(item.wc_mod_date)
+    controls.date01.setValue(item.date01)
+    controls.dec01.setValue(item.dec01)
+    
+    });
+  }
+}
+
+angularGridReadywc(angularGrid: AngularGridInstance) {
+  this.angularGridwc = angularGrid;
+  this.gridObjwc = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridwc() {
+  this.columnDefinitionswc = [
+    {
+      id: "id",
+      field: "id",
+      excludeFromColumnPicker: true,
+      excludeFromGridMenu: true,
+      excludeFromHeaderMenu: true,
+
+      minWidth: 50,
+      maxWidth: 50,
+    },
+    
+    {
+      id: "wc_wkctr",
+      name: "Ligne",
+      field: "wc_wkctr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "wc_mch",
+      name: "Machine",
+      field: "wc_mch",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "wc_desc",
+      name: "Description",
+      field: "wc_desc",
+      sortable: true,
+      width: 200,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptionswc = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {},
+    multiSelect: false,
+    rowSelectionOptions: {
+      selectActiveRow: true,
+    },
+  };
+
+  // fill the dataset with your data
+  this.workcenterService
+    .getBy({ })
+    .subscribe((response: any) => (this.dataset = response.data));
+}
+openwc(contentwc) {
+  this.prepareGridwc();
+  this.modalService.open(contentwc, { size: "lg" });
+}
 }

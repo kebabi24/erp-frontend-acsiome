@@ -93,29 +93,7 @@ export class EpiNewemployeListComponent implements OnInit {
     }
     prepareGrid() {
         this.columnDefinitions = [
-            {
-                id: "edit",
-                field: "id",
-                excludeFromColumnPicker: true,
-                excludeFromGridMenu: true,
-                excludeFromHeaderMenu: true,
-                formatter: (row, cell, value, columnDef, dataContext) => {
-                  // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-                  return `
-                       <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Employe">
-                       <i class="flaticon2-pen"></i>
-                   </a>
-                   `;
-                },
-                minWidth: 50,
-                maxWidth: 50,
-                // use onCellClick OR grid.onClick.subscribe which you can see down below
-                onCellClick: (e: Event, args: OnEventArgs) => {
-                    const id = args.dataContext.id
-                    this.router.navigateByUrl(`/training/edit-student/${id}`)
-                },
-            },
-            {
+           {
                 id: "id",
                 name: "id",
                 field: "id",
@@ -125,7 +103,7 @@ export class EpiNewemployeListComponent implements OnInit {
             },
             {
                 id: "emp_addr",
-                name: "Code",
+                name: "Matricule",
                 field: "emp_addr",
                 sortable: true,
                 filterable: true,
@@ -150,18 +128,9 @@ export class EpiNewemployeListComponent implements OnInit {
                 type: FieldType.string,
             },
             {
-              id: "emp_line1",
-              name: "Adresse",
-              field: "emp_line1",
-              sortable: true,
-              width: 120,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "emp_birth_date",
-              name: "Date Naissance",
-              field: "emp_birth_date",
+              id: "emp_first_date",
+              name: "Date Recrutement",
+              field: "emp_first_date",
               sortable: true,
               filterable: true,
               width: 50,
@@ -170,7 +139,7 @@ export class EpiNewemployeListComponent implements OnInit {
             
             {
               id: "emp_job",
-              name: "Domaine de formation",
+              name: "Service",
               field: "emp_job",
               sortable: true,
               filterable: true,
@@ -180,7 +149,7 @@ export class EpiNewemployeListComponent implements OnInit {
             
             {
               id: "emp_level",
-              name: "Niveau",
+              name: "Poste",
               field: "emp_level",
               sortable: true,
               filterable: true,
@@ -188,23 +157,57 @@ export class EpiNewemployeListComponent implements OnInit {
               type: FieldType.string,
             },
             {
-              id: "emp_site",
-              name: "Site",
-              field: "emp_site",
+              id: "emp_last_date",
+              name: "Date Départ",
+              field: "emp_last_date",
+              sortable: true,
+              filterable: true,
+              width: 50,
+              type: FieldType.dateIso,
+            },
+            {
+              id: "chr01",
+              name: "Taille H",
+              field: "chr01",
               sortable: true,
               filterable: true,
               type: FieldType.string,
             },
+            {
+              id: "int01",
+              name: "Pointure",
+              field: "int01",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "emp_sex",
+              name: "Genre",
+              field: "emp_sex",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "date01",
+              name: "Date Prochaine distribution",
+              field: "date01",
+              sortable: true,
+              filterable: true,
+              width: 50,
+              type: FieldType.dateIso,
+            },
+            {
+              id: "int02",
+              name: "Nombre distribution",
+              field: "int02",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+
             
-            // {
-            //   id: "emp_shift",
-            //   name: "Equipe",
-            //   field: "emp_shift",
-            //   sortable: true,
-            //   filterable: true,
-            //   type: FieldType.string,
-            // },
-         
            
         ]
 
@@ -226,7 +229,7 @@ export class EpiNewemployeListComponent implements OnInit {
         this.user = JSON.parse(localStorage.getItem("user"));
         console.log(this.user)
         if(this.user.usrd_site == '*')
-        {this.employeService.getAll().subscribe(
+        {this.employeService.getBy({int02:0}).subscribe(
             (response: any) => {this.dataset = response.data
               this.dataView.setItems(this.dataset)},
             (error) => {
@@ -234,7 +237,7 @@ export class EpiNewemployeListComponent implements OnInit {
             },
             () => {}
         )}
-        else{this.employeService.getBy({emp_site:this.user.usrd_site}).subscribe(
+        else{this.employeService.getBy({emp_site:this.user.usrd_site,int02:0}).subscribe(
           (response: any) => {this.dataset = response.data
             this.dataView.setItems(this.dataset)},
           (error) => {

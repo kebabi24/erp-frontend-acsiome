@@ -77,7 +77,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
   return { valid: true, msg: '' };
 };
 
-@Component({
+@Component({ 
   selector: 'kt-epi-issue',
   templateUrl: './epi-issue.component.html',
   styleUrls: ['./epi-issue.component.scss']
@@ -842,11 +842,11 @@ export class EpiIssueComponent implements OnInit {
         tr_so_job: [this.inventoryTransaction.tr_so_job],
         
         tr_rmks: [this.inventoryTransaction.tr_rmks],
-        tr_addr: [this.inventoryTransaction.tr_addr],
+        tr_addr: ['INV'],
         print:[false],
         ref: [null],
         tr_user1: [this.inventoryTransaction.tr_user1],
-        tr_user2: [this.inventoryTransaction.tr_user2, ],
+        dec_nbr: [0],
         adduser2:[false]
       });
       const controls = this.trForm.controls;
@@ -1029,7 +1029,7 @@ export class EpiIssueComponent implements OnInit {
       _tr.tr_rmks = controls.tr_rmks.value
       _tr.tr_addr = controls.tr_addr.value
       _tr.tr_user1 = controls.tr_user1.value;
-      _tr.tr_user2 = controls.tr_user2.value;
+     
       return _tr
     }
     /**
@@ -1051,7 +1051,7 @@ export class EpiIssueComponent implements OnInit {
       const controls = this.trForm.controls;
   
       this.inventoryTransactionService
-        .addIssUnp({detail, it,nlot})
+        .addIssEpi({detail, it,nlot})
         .subscribe(
          (reponse: any) => {
           console.log(reponse)
@@ -2526,6 +2526,8 @@ addemp() {
   l = "";
   console.log(l.length);
   this.selectedIndexes.forEach((index) => {
+    this.employeService.getBy({emp_addr:this.emps[index]["emp_addr"]}).subscribe((response: any) => (controls.dec_nbr.setValue(response.data[0].int01)));
+  
     if (index == 0) {
       l = this.emps[index]["emp_fname"];
     } else {
@@ -2536,6 +2538,7 @@ addemp() {
 
   console.log(l);
   controls.tr_user1.setValue(l);
+      
   this.user1 = l;
 }
 

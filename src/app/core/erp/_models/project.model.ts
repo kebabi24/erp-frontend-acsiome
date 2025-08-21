@@ -4,7 +4,7 @@ export class Project extends BaseModel {
     id: Number
     pm_code: String
 
-    pm_desc: Boolean
+    pm_desc: String
     pm_site: String
     pm_domain: String
     pm_status: String
@@ -14,7 +14,7 @@ export class Project extends BaseModel {
     pm_ord_date: String
     pm_type:String
     pm_doc_list_code : String
-
+pm_doc_list: String
     
     pm_reason : String
     pm_win_addr : String

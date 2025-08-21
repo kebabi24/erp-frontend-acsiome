@@ -1,26 +1,20 @@
 import { Component, OnInit } from "@angular/core"
+// Angular slickgrid
 import {
+  Column,
+  GridOption,
   Formatter,
   Editor,
   Editors,
-  OnEventArgs,
-  AngularGridInstance,
-  Aggregators,
-  Column,
-  DelimiterType,
-  FieldType,
-  FileType,
   Filters,
+  AngularGridInstance,
+  EditorValidator,
+  EditorArgs,
   GridService,
   Formatters,
-  GridOption,
-  Grouping,
-  GroupingGetterFunction,
-  GroupTotalFormatters,
-  SortDirectionNumber,
-  Sorters,
-} from "angular-slickgrid"
-
+  FieldType,
+  OnEventArgs,
+} from "angular-slickgrid";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -37,615 +31,307 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import { EmployeService,UsersService,} from "../../../../core/erp"
+import {  InventoryTransactionService } from "../../../../core/erp"
 
-@Component({ 
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
+if (value=="C"){
+  return `<div class="text"  aria-hidden="C">Cloturé</div>`
+}
+if (value=="R"){
+  return `<div class="text"  aria-hidden="R">Lancé</div>`
+}
+if (value=="F"){
+  return `<div class="text"  aria-hidden="F">Valide</div>`
+}
+if (value=="D"){
+  return `<div class="text"  aria-hidden="D">Reporté</div>`
+}
+}
+  // return  value  ? `<div class="text"  aria-hidden="C">Clos</div>` : '<div class="text"  aria-hidden="R">Lancé</div>';}
+@Component({
   selector: 'kt-epi-bypart-list',
   templateUrl: './epi-bypart-list.component.html',
   styleUrls: ['./epi-bypart-list.component.scss']
 })
 export class EpiBypartListComponent implements OnInit {
-  repForm: FormGroup;
-  loadingSubject = new BehaviorSubject<boolean>(true)
-  loading$: Observable<boolean>
-  hasFormErrors = false
-  grid: any;
-  gridService: GridService;
-  dataView: any;
-  user;
-  domain;
-  angularGrid: AngularGridInstance;
-  draggableGroupingPlugin: any;    
+
+  // slick grid
   columnDefinitions: Column[] = []
-    gridOptions: GridOption = {}
-    dataset: any[] = []
-    constructor(
-        private repFB: FormBuilder,
-        private activatedRoute: ActivatedRoute,
-        private router: Router,
-        public dialog: MatDialog,
-        private layoutUtilsService: LayoutUtilsService,
-        private employeService: EmployeService,
-        private userService: UsersService,
-    ) {
-        this.prepareGrid()
-    }
+  gridOptions: GridOption = {}
+  dataset: any[] = []
+  columnDefinitions1: Column[] = []
+  gridOptions1: GridOption = {}
+  dataset1: any[] = []
 
-    ngOnInit(): void {
-      this.loading$ = this.loadingSubject.asObservable();
-    this.loadingSubject.next(false);
-      this.user = JSON.parse(localStorage.getItem("user"));
-    this.domain = JSON.parse(localStorage.getItem("domain"));
-      
-      
-      
-      this.createForm();
-      this.hasFormErrors = false
-     
-    }
-    
+  gridObj1: any;
+  angularGrid1: AngularGridInstance;
+  constructor(
+      private activatedRoute: ActivatedRoute,
+      private router: Router,
+      public dialog: MatDialog,
+      private layoutUtilsService: LayoutUtilsService,
+ 
+      private inventorytransaction: InventoryTransactionService
+  ) {
+      this.prepareGrid()
+      this.prepareGrid1()
+  }
 
-    angularGridReady(angularGrid: AngularGridInstance) {
-      this.angularGrid = angularGrid;
-      this.grid = angularGrid.slickGrid; // grid object
-      this.dataView = angularGrid.dataView;
-      this.gridService = angularGrid.gridService;
-    }
-    prepareGrid() {
-        this.columnDefinitions = [
-            {
-                id: "edit",
-                field: "id",
-                excludeFromColumnPicker: true,
-                excludeFromGridMenu: true,
-                excludeFromHeaderMenu: true,
-                formatter: (row, cell, value, columnDef, dataContext) => {
-                  // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
-                  return `
-                       <a class="btn btn-sm btn-clean btn-icon mr-2" title="Modifier Employe">
-                       <i class="flaticon2-pen"></i>
-                   </a>
-                   `;
-                },
-                minWidth: 50,
-                maxWidth: 50,
-                // use onCellClick OR grid.onClick.subscribe which you can see down below
-                onCellClick: (e: Event, args: OnEventArgs) => {
-                    const id = args.dataContext.id
-                    this.router.navigateByUrl(`/training/edit-student/${id}`)
-                },
-            },
-            {
-                id: "id",
-                name: "id",
-                field: "id",
-                sortable: true,
-                minWidth: 80,
-                maxWidth: 80,
-            },
-            {
-                id: "emp_addr",
-                name: "Code",
-                field: "emp_addr",
-                sortable: true,
-                filterable: true,
-                type: FieldType.string,
-            },
-            {
-                id: "emp_fname",
-                name: "Nom",
-                field: "emp_fname",
-                sortable: true,
-                filterable: true,
-                width: 50,
-                type: FieldType.string,
-            },
-            {
-                id: "emp_lname",
-                name: "Prénom",
-                field: "emp_lname",
-                sortable: true,
-                filterable: true,
-                width: 50,
-                type: FieldType.string,
-            },
-            {
-              id: "emp_line1",
-              name: "Adresse",
-              field: "emp_line1",
-              sortable: true,
-              width: 120,
-              filterable: true,
-              type: FieldType.string,
-            },
-            {
-              id: "emp_birth_date",
-              name: "Date Naissance",
-              field: "emp_birth_date",
-              sortable: true,
-              filterable: true,
-              width: 50,
-              type: FieldType.dateIso,
-            },
-            
-            {
-              id: "emp_job",
-              name: "Domaine de formation",
-              field: "emp_job",
-              sortable: true,
-              filterable: true,
-              width: 50,
-              type: FieldType.string,
-            },
-            
-            {
-              id: "emp_level",
-              name: "Niveau",
-              field: "emp_level",
-              sortable: true,
-              filterable: true,
-              width: 50,
-              type: FieldType.string,
-            },
-            {
-              id: "emp_site",
-              name: "Site",
-              field: "emp_site",
-              sortable: true,
-              filterable: true,
-              type: FieldType.string,
-            },
-            
-            // {
-            //   id: "emp_shift",
-            //   name: "Equipe",
-            //   field: "emp_shift",
-            //   sortable: true,
-            //   filterable: true,
-            //   type: FieldType.string,
-            // },
+  ngOnInit(): void {
+  }
+
+  prepareGrid() {
+      this.columnDefinitions = [
          
+          {
+              id: "id",
+              name: "id",
+              field: "id",
+              sortable: true,
+              minWidth: 80,
+              maxWidth: 80,
+          },
+         
+          
+          {
+            id: "tr_part",
+            name: "EPI",
+            field: "tr_part",
+            sortable: true,
+            width: 50,
+            filterable: true,
            
-        ]
+           
+          },
+          {
+            id: "tr_rev",
+            name: "taille",
+            field: "tr_rev",
+            sortable: true,
+            width: 50,
+            filterable: true,
+           
+           
+          },
+        {
+            id: "tr_user1",
+            name: "Employé",
+            field: "tr_user1",
+            sortable: true,
+            filterable: true,
+           
+           
+          },
+          {
+            id: "tr_nbr",
+            name: "Ordre",
+            field: "tr_nbr",
+            sortable: true,
+            width: 50,
+            filterable: true,
+           
+           
+          },
+          {
+            id: "tr_effdate",
+            name: "Date",
+            field: "tr_effdate",
+            sortable: true,
+            minWidth: 150,
+            filterable: true,
+           
+           
+          },
+                   
+          {
+            id: "tr_qty_loc",
+            name: "Quantité",
+            field: "tr_qty_loc",
+            sortable: true,
+            minWidth: 100,
+            filterable: true,
+           
+          },
+        
+          
+    
+        ];
 
-        this.gridOptions = {
-            enableSorting: true,
-            enableCellNavigation: true,
-            enableExcelCopyBuffer: true,
-            // enableFiltering: true,
-            autoEdit: false,
-            autoHeight: false,
-            enableAutoResize:true,
-            frozenColumn: 0,
-            frozenBottom: true,
-            rowHeight:40,
-        }
+      this.gridOptions = {
+          enableSorting: true,
+          enableCellNavigation: true,
+          enableExcelCopyBuffer: true,
+          enableFiltering: true,
+          autoEdit: false,
+          autoHeight: false,
+          frozenColumn: 0,
+          frozenBottom: true,
+      }
 
-        // fill the dataset with your data
-        this.dataset = []
-        this.user = JSON.parse(localStorage.getItem("user"));
-        console.log(this.user)
-        if(this.user.usrd_site == '*')
-        {this.employeService.getAll().subscribe(
-            (response: any) => {this.dataset = response.data
-              this.dataView.setItems(this.dataset)},
-            (error) => {
-                this.dataset = []
-            },
-            () => {}
-        )}
-        else{this.employeService.getBy({emp_site:this.user.usrd_site}).subscribe(
-          (response: any) => {this.dataset = response.data
-            this.dataView.setItems(this.dataset)},
+      // fill the dataset with your data
+      this.dataset = []
+      this.inventorytransaction.getByepi({}).subscribe(
+          (response: any) => (this.dataset = response.data),
           (error) => {
               this.dataset = []
           },
           () => {}
-      )}
-    }
-    createemp() {
-      this.loadingSubject.next(false)
-      const url = `/accounting-setting/create-student`
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+      )
   }
-  students() {
-    this.loadingSubject.next(false)
-    const url = `/accounting-setting/list-employe`
-    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-listsession() {
-  this.loadingSubject.next(false)
-  const url = `/training/training-session-list`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-listtraining() {
-  this.loadingSubject.next(false)
-  const url = `/training/list-training`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-createtraining() {
-  this.loadingSubject.next(false)
-  const url = `/training/create-training`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
+  prepareGrid1() {
+    this.columnDefinitions1 = [
+        
+        
+        {
+          id: "code",
+          name: "EPI",
+          field: "code",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+        {
+          id: "sous-famille",
+          name: "Sous-famille",
+          field: "sous-famille",
+          sortable: true,
+          width: 50,
+          filterable: true,
+         
+         
+        },
+        {
+          id: "groupe",
+          name: "Groupe",
+          field: "groupe",
+          sortable: true,
+          width: 50,
+          filterable: true,
+        },
+        {
+          id: "article",
+          name: "Article",
+          field: "article",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+      
+        {
+          id: "model",
+          name: "Modèle",
+          field: "model",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+        {
+          id: "taille",
+          name: "Taille",
+          field: "taille",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+        {
+          id: "couleur",
+          name: "Couleur",
+          field: "couleur",
+          sortable: true,
+          width: 80,
+          filterable: true,
+         
+        },
+             
+        {
+          id: "quantite",
+          name: "Quantité",
+          field: "quantite",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          
+        },
+        
+      ];
 
-createsession() {
-this.loadingSubject.next(false)
-const url = `/training/create-training-session`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+    // this.gridOptions1 = {
+    //     enableSorting: true,
+    //     enableCellNavigation: true,
+    //     enableExcelCopyBuffer: true,
+    //     enableFiltering: true,
+    //     autoEdit: false,
+    //     autoHeight: false,
+    //     frozenColumn: 0,
+    //     frozenBottom: true,
+    // }
+    this.gridOptions1 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.dataset1 = []
+    this.inventorytransaction.getByGroupEpi({}).subscribe(
+        (response: any) => (this.dataset1 = response.data),
+        (error) => {
+            this.dataset1 = []
+        },
+        () => {}
+    )
 }
-approverequest() {
-this.loadingSubject.next(false)
-const url = `/training/approval-req`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-createTrainor() {
-this.loadingSubject.next(false)
-const url = `/providers/create-rep-job`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-createlocation() {
-this.loadingSubject.next(false)
-const url = `/inventory-settings/list-loc`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-payment() {
-  this.loadingSubject.next(false)
-  const url = `/sales/payment-psh`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
+angularGridReady1(angularGrid: AngularGridInstance) {
+    this.angularGrid1 = angularGrid;
+    this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {};
   }
-  createForm() {
-    this.loadingSubject.next(false)
-  //create form
+handleSelectedRowsChanged1(e, args) {
   
-  this.repForm = this.repFB.group({
-      filter1: [ ""],
-      filter2: [ ""],
-      filter3: [ ""]
   
+  
+  if (Array.isArray(args.rows) && this.gridObj1) {
+    args.rows.map((idx) => {
+      const item = this.gridObj1.getDataItem(idx);
+      console.log(item)
+       
+      this.dataset = []
+      this.inventorytransaction.getByepi({tr_part:item.code}).subscribe(
+          (response: any) => (this.dataset = response.data),
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+      )
+    
+    
   })
-}
-getemp1() {
-  this.dataset = []
- 
-  const controls = this.repForm.controls
-  if(controls.filter1.value == ''){
-    if(controls.filter2.value == '' ){
-      if(controls.filter3.value == ''){this.dataset =[]}
-      else{this.employeService.getBy({ emp_level : controls.filter3.value}).subscribe(
-            (response: any) => {   
-            this.dataset = response.data
-            console.log(this.dataset)
-            this.dataView.setItems(this.dataset);
-          
-              },
-              (error) => {
-                this.dataset = []
-                },
-              () => {}
-            )
-          }
-    }
-    else{
-      if(controls.filter3.value == ''){this.employeService.getBy({ emp_lname : controls.filter2.value}).subscribe(
-        (response: any) => {   
-        this.dataset = response.data
-        console.log(this.dataset)
-        this.dataView.setItems(this.dataset);
-      
-          },
-          (error) => {
-            this.dataset = []
-            },
-          () => {}
-        )}
-      else{this.employeService.getBy({ emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
-            (response: any) => {   
-            this.dataset = response.data
-            console.log(this.dataset)
-            this.dataView.setItems(this.dataset);
-          
-              },
-              (error) => {
-                this.dataset = []
-                },
-              () => {}
-            )
-          }
-    }
-  } 
-  else{
-    if(controls.filter2.value == ''){
-      if(controls.filter3.value == ''){console.log('getemp1-1',controls.filter1.value)
-        this.employeService.getBy({ emp_fname : controls.filter1.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-      else{console.log('getemp1-2')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-    }
-    else {
-      if(controls.filter3.value == ''){console.log('getemp1-3')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname : controls.filter2.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-      else{console.log('getemp1-4')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-    }
-  } 
-
- 
-  
-}
-getemp2() {
-  this.dataset = []
- 
-  const controls = this.repForm.controls
-  if(controls.filter2.value == ''){
-    if(controls.filter1.value == '' ){
-      if(controls.filter3.value == ''){this.dataset =[]}
-      else{this.employeService.getBy({ emp_level : controls.filter3.value}).subscribe(
-            (response: any) => {   
-            this.dataset = response.data
-            console.log(this.dataset)
-            this.dataView.setItems(this.dataset);
-          
-              },
-              (error) => {
-                this.dataset = []
-                },
-              () => {}
-            )
-          }
-    }
-    else{
-      if(controls.filter3.value == ''){this.employeService.getBy({ emp_fname : controls.filter1.value}).subscribe(
-        (response: any) => {   
-        this.dataset = response.data
-        console.log(this.dataset)
-        this.dataView.setItems(this.dataset);
-      
-          },
-          (error) => {
-            this.dataset = []
-            },
-          () => {}
-        )}
-      else{this.employeService.getBy({ emp_fname:controls.filter1.value,emp_level : controls.filter3.value}).subscribe(
-            (response: any) => {   
-            this.dataset = response.data
-            console.log(this.dataset)
-            this.dataView.setItems(this.dataset);
-          
-              },
-              (error) => {
-                this.dataset = []
-                },
-              () => {}
-            )
-          }
-    }
-  } 
-  else{
-    if(controls.filter1.value == ''){
-      if(controls.filter3.value == ''){console.log('getemp1-1',controls.filter2.value)
-        this.employeService.getBy({ emp_lname : controls.filter2.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-      else{console.log('getemp1-2')
-        this.employeService.getBy({ emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-    }
-    else {
-      if(controls.filter3.value == ''){console.log('getemp1-3')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname : controls.filter2.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-      else{console.log('getemp1-4')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-    }
-  } 
-  
-}
-
-getemp3() {
-  this.dataset = []
- 
-  const controls = this.repForm.controls
-  if(controls.filter3.value == ''){
-    if(controls.filter1.value == '' ){
-      if(controls.filter2.value == ''){this.dataset =[]}
-      else{this.employeService.getBy({ emp_lname : controls.filter2.value}).subscribe(
-            (response: any) => {   
-            this.dataset = response.data
-            console.log(this.dataset)
-            this.dataView.setItems(this.dataset);
-          
-              },
-              (error) => {
-                this.dataset = []
-                },
-              () => {}
-            )
-          }
-    }
-    else{
-      if(controls.filter2.value == ''){this.employeService.getBy({ emp_fname : controls.filter1.value}).subscribe(
-        (response: any) => {   
-        this.dataset = response.data
-        console.log(this.dataset)
-        this.dataView.setItems(this.dataset);
-      
-          },
-          (error) => {
-            this.dataset = []
-            },
-          () => {}
-        )}
-      else{this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname : controls.filter2.value}).subscribe(
-            (response: any) => {   
-            this.dataset = response.data
-            console.log(this.dataset)
-            this.dataView.setItems(this.dataset);
-          
-              },
-              (error) => {
-                this.dataset = []
-                },
-              () => {}
-            )
-          }
-    }
-  } 
-  else{
-    if(controls.filter1.value == ''){
-      if(controls.filter2.value == ''){console.log('getemp1-1',controls.filter2.value)
-        this.employeService.getBy({ emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-      else{console.log('getemp1-2')
-        this.employeService.getBy({ emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-    }
-    else {
-      if(controls.filter2.value == ''){console.log('getemp1-3')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-      else{console.log('getemp1-4')
-        this.employeService.getBy({ emp_fname:controls.filter1.value,emp_lname:controls.filter2.value,emp_level : controls.filter3.value}).subscribe(
-          (response: any) => {   
-            this.dataset = response.data
-           console.log(this.dataset)
-           this.dataView.setItems(this.dataset);
-            
-             },
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-      }
-    }
-  } 
-  
-  
+ }
 }
 }

@@ -93,7 +93,9 @@ import { CreateImmobilierModComponent } from './create-immobilier-mod/create-imm
 import { ListCopieComponent } from './list-copie/list-copie.component';
 import { CopieArticleComponent } from './copie-article/copie-article.component';
 import { EditProductpageComponent } from './edit-productpage/edit-productpage.component';
-import { UpdatePriceDdComponent } from './update-price-dd/update-price-dd.component'
+import { UpdatePriceDdComponent } from './update-price-dd/update-price-dd.component';
+import { CreateEpiModComponent } from './create-epi-mod/create-epi-mod.component';
+import { UpdateEpiModComponent } from './update-epi-mod/update-epi-mod.component'
 
 
 const routes: Routes = [
@@ -185,6 +187,14 @@ const routes: Routes = [
                 component: CreateDivModComponent,
             },
             {
+                path: "create-epi-mod",
+                component: CreateEpiModComponent,
+            },
+            {
+                path: "update-epi-mod",
+                component: UpdateEpiModComponent,
+            },
+            {
                 path: "create-materiel-mod",
                 component: CreateMaterielModComponent,
             },
@@ -271,6 +281,8 @@ const routes: Routes = [
         CopieArticleComponent,
         EditProductpageComponent,
         UpdatePriceDdComponent,
+        CreateEpiModComponent,
+        UpdateEpiModComponent,
     ],
     imports: [
         CommonModule,

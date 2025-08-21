@@ -11,6 +11,11 @@ import {
     Editors,
     FieldType,
     OnEventArgs,
+    Aggregators,
+     Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+   OperatorType,
 } from "angular-slickgrid"
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
@@ -43,10 +48,11 @@ gridObj: any;
 gridService: GridService;
 dataviewObj: any;
 angularGrid: AngularGridInstance;
-draggableGroupingPlugin: any;    
 columnDefinitions: Column[] = [];
 gridOptions: GridOption = {};
 dataset: any[] = [];
+draggableGroupingPlugin: any;    
+selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
 // quantitytypesList = [
 //   { value: 0, label: 'UM' },
 //   { value: 1, label: '%' },
@@ -115,14 +121,44 @@ dataset: any[] = [];
               minWidth: 80,
               maxWidth: 80,
           },
-         
+         {
+              id: "op_wo_nbr",
+              name: "N° demande",
+              field: "op_wo_nbr",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+              grouping: {
+              getter: 'op_wo_nbr',
+              formatter: (g) => `Demande: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
+          },
           {
               id: "op_wkctr",
-              name: "Centre de charge",
+              name: "Ligne",
               field: "op_wkctr",
               sortable: true,
               filterable: true,
               type: FieldType.string,
+              grouping: {
+              getter: 'op_wkctr',
+              formatter: (g) => `Ligne: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
           },
         
         {
@@ -132,6 +168,17 @@ dataset: any[] = [];
           sortable: true,
           filterable: true,
           type: FieldType.string,
+          grouping: {
+              getter: 'op_mch',
+              formatter: (g) => `Machine: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
         },
         
         
@@ -143,6 +190,17 @@ dataset: any[] = [];
           width: 80,
           filterable: true,
           type: FieldType.string,
+          grouping: {
+              getter: 'op_shift',
+              formatter: (g) => `Equipe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
         },     
         {
           id: "op_date",
@@ -151,16 +209,38 @@ dataset: any[] = [];
           sortable: true,
           width: 100,
           filterable: true,
-          type:FieldType.date
+          type:FieldType.date,
+          grouping: {
+              getter: 'op_date',
+              formatter: (g) => `Date: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
         },
         {
-          id: "op_type",
-          name: "Type Opération",
-          field: "op_type",
+          id: "op_program",
+          name: "Priorité",
+          field: "op_program",
           sortable: true,
           width: 80,
           filterable: true,
           type: FieldType.string,
+          grouping: {
+              getter: 'op_program',
+              formatter: (g) => `Priorité: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
         }, 
         {
           id: "op_act_run",
@@ -170,6 +250,7 @@ dataset: any[] = [];
           width: 80,
           filterable: true,
           type: FieldType.float,
+          groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
         }, 
         {
           id: "chr01",
@@ -180,6 +261,16 @@ dataset: any[] = [];
           filterable: true,
           type: FieldType.dateIso,
         },
+        {
+          id: "op_tran_date",
+          name: "Date Fin",
+          field: "op_tran_date",
+          sortable: true,
+          width: 60,
+          filterable: true,
+          type: FieldType.dateIso,
+        },
+        
         {
           id: "chr02",
           name: "Heure Fin",
@@ -197,6 +288,17 @@ dataset: any[] = [];
           width: 80,
           filterable: true,
           type: FieldType.string,
+          grouping: {
+              getter: 'op_rsn_down',
+              formatter: (g) => `Cause: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
         },
         
         {
@@ -207,17 +309,113 @@ dataset: any[] = [];
           width: 200,
           filterable: true,
           type: FieldType.string,
+          grouping: {
+              getter: 'op_comment',
+              formatter: (g) => `Remarque: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
+        },
+        {
+          id: "chr03",
+          name: "Impact",
+          field: "chr03",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          type: FieldType.string,
+          grouping: {
+              getter: 'chr03',
+              formatter: (g) => `Impact: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
+        }, 
+        {
+          id: "op_rsn",
+          name: "Statut",
+          field: "op_rsn",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          type: FieldType.string,
+          grouping: {
+              getter: 'op_rsn',
+              formatter: (g) => `Statut: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
         },            
-          
+         {
+          id: "int01",
+          name: "Relevé",
+          field: "int01",
+          sortable: true,
+          width: 80,
+          filterable: true,
+          type: FieldType.integer,
+           grouping: {
+              getter: 'int01',
+              formatter: (g) => `Relevé: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('ld_qty_oh'),
+                new Aggregators.Sum('op_act_run'),
+                // new Aggregators.Sum('ar_amt')
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,}
+        }, 
       ]
 
       this.gridOptions = {
-          enableSorting: true,
-          enableCellNavigation: true,
-          enableExcelCopyBuffer: true,
+         /* autoResize: {
+            containerId: 'demo-container',
+            sidePadding: 10
+          },*/
+          enableDraggableGrouping: true,
+          createPreHeaderPanel: true,
+          showPreHeaderPanel: true,
+          preHeaderPanelHeight: 40,
           enableFiltering: true,
+          enableSorting: true,
           enableAutoResize: true,
+          exportOptions: {
+            sanitizeDataExport: true
+          },
+          gridMenu: {
+            onCommand: (e, args) => {
+              if (args.command === 'toggle-preheader') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.clearGrouping();
+              }
+            },
+          },
+          draggableGrouping: {
+            dropPlaceHolderText: 'Drop a column header here to group by the column',
+            // groupIconCssClass: 'fa fa-outdent',
+            deleteIconCssClass: 'fa fa-times',
+            onGroupChanged: (e, args) => this.onGroupChanged(args),
+            onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
         
+        },
+
+    
           dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
             var val = undefined;
             try {
@@ -227,12 +425,8 @@ dataset: any[] = [];
             }
             return val;
           },
-          presets:{
-            sorters: [
-              { columnId: 'id', direction: 'ASC' }
-            ],
-          }
-      
+
+
       }
 
       // fill the dataset with your data
@@ -248,4 +442,33 @@ dataset: any[] = [];
           () => {}
       )
   }
+  onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
+      // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+      const caller = change && change.caller || [];
+      const groups = change && change.groupColumns || [];
+
+      if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+        // update all Group By select dropdown
+        this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+      } else if (groups.length === 0 && caller === 'remove-group') {
+        this.clearGroupingSelects();
+      }
+    }
+    clearGroupingSelects() {
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+    }
+    
+    collapseAllGroups() {
+      this.dataviewObj.collapseAllGroups();
+    }
+  
+    expandAllGroups() {
+      this.dataviewObj.expandAllGroups();
+    }
+    clearGrouping() {
+      if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+        this.draggableGroupingPlugin.clearDroppedGroups();
+      }
+      this.gridObj.invalidate(); // invalidate all rows and re-render
+    }
 }

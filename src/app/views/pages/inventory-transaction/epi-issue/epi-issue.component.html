@@ -53,7 +53,7 @@
                                
                             </div>
                         </div>   
-                        <div class="form-group col-3">
+                        <!-- <div class="form-group col-3">
                             <label class="form-group">Adresse :</label>
                             <div class="input-group input-group-sm">
 
@@ -65,7 +65,7 @@
                                 </div>
                             </div>
 
-                        </div>
+                        </div> -->
                         <div class="form-group col-2">
                             <label class="form-group">Employés:</label>
                             <div class="input-group input-group-sm">
@@ -76,29 +76,16 @@
                 
                               
                             </div>
-                          </div> 
-                          <div class="form-group col-2">
-                            <label class="form-group">Remplacer:</label>
+                        </div> 
+                        <div class="form-group col-2">
+                            <label class="form-group">N° décharge:</label>
                             <div class="input-group input-group-sm">
-                              <span class="switch switch-icon">
-                                <label>
-                                  <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="adduser2" (change)="onChangeuser()" />
-                                  <span></span>
-                                </label>
-                              </span>
-                            </div>
-                          </div>
-                          <div class="form-group col-2">
-                            <label class="form-group">Remplacement:</label>
-                            <div class="input-group input-group-sm">
-                                <input type="text" class="form-control form-control-solid" formControlName="tr_user2" aria-describedby="basic-addon2" disabled />
-                              <div class="input-group-append">
-                                <span class="input-group-text" (click)="openemp2(contentemp2)"> <i class="text-dark-50 flaticon2-search"></i> </span>
-                              </div>
+                              <input type="text" class="form-control form-control-solid" formControlName="dec_nbr" aria-describedby="basic-addon2" disabled />
+                              
                 
-                              <!-- <div *ngIf="woForm.controls['wo_user1'].errors && (woForm.controls['wo_user1'].dirty || woForm.controls['wo_user1'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div> -->
+                              
                             </div>
-                          </div> 
+                        </div>  
                         <div class="form-group col-2">
                             <label class="form-group">Imprimer:</label>
                             <div class="input-group input-group-sm">
@@ -115,18 +102,7 @@
       
                         
                     </div>
-                    <div class="row">
-                        <div class="form-group col-3">
-                            <label class="form-group">N° Palette :</label>
-                            <div class="input-group input-group-sm">
-
-                                <input type="text" class="cab" id="ref" formControlName="ref" (change)="onChangePal()"
-                                    aria-describedby="basic-addon2">
-                                
-                            </div>
-
-                        </div>
-                    </div>
+                    
             
 
                 </div>

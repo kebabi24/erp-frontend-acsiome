@@ -1,0 +1,84 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Ajouter un Entéte document'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
+
+
+
+            <!-- <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-sm" id="dropdownBasic1" ngbDropdownToggle><i
+                        class="icon-2x text-dark-50 flaticon-more-v2"></i></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button class="dropdown-item">enregistrer et quitter</button>
+
+                </div>
+            </div> -->
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="codeForm">
+
+                <kt-alert *ngIf="isExist" type="warn" [showCloseButton]="true" [duration]="10000"
+                                    (close)="onAlertClose($event)">
+                                    Ce Code existe deja
+                </kt-alert>
+                <div class='row'>    
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Barème: *</label>
+                        <input type="text" formControlName="code_value" (change)="onChangeCode()"
+                            [className]="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="codeForm.controls['code_value'].errors && (codeForm.controls['code_value'].dirty || codeForm.controls['code_value'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-6">
+                        <label class="form-group">Désignation: *</label>
+                        <input type="text" formControlName="code_cmmt" 
+                            [className]="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'">
+                        <div *ngIf="codeForm.controls['code_cmmt'].errors && (codeForm.controls['code_cmmt'].dirty || codeForm.controls['code_cmmt'].touched) "
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-1">
+                        <label class="form-group">Délai distribution: </label>
+                        <input type="number" formControlName="dec01" class='form-control form-control-sm form-control-solid' >
+                    </div>
+                    <div class="form-group col-1">
+                        <label class="form-group">Cycle distribution: </label>
+                        <input type="number" formControlName="dec02" class='form-control form-control-sm form-control-solid' >
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-3">
+                            <label class="form-group">Date création: </label>
+                        
+                            <div class="input-group input-group-sm">
+                                <input class="form-control form-control-solid" placeholder="jj-mm-aaaa"
+                                       name="date01"
+                                       formControlName="date01"
+                                       ngbDatepicker
+                                       #date01="ngbDatepicker">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" (click)="date01.toggle()" type="button">
+                                        <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                    </button>
+                                </div>
+                            </div>
+    
+                        
+                    </div>
+                </div>
+
+
+
+               
+
+            </form>
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>

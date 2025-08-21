@@ -63,7 +63,7 @@ export class TrainingReportListComponent implements OnInit {
           },
           {
               id: "pmr_nbr",
-              name: "Session",
+              name: "Rapport",
               field: "pmr_nbr",
               sortable: true,
               minWidth: 70,
@@ -73,7 +73,7 @@ export class TrainingReportListComponent implements OnInit {
           },
           {
               id: "pmr_pm_code",
-              name: "Programme",
+              name: "BT",
               field: "pmr_pm_code",
               sortable: true,
               minWidth: 100,
@@ -83,7 +83,7 @@ export class TrainingReportListComponent implements OnInit {
           }, 
           {
             id: "pmr_site",
-            name: "formateur",
+            name: "Site",
             field: "pmr_site",
             type: FieldType.string,
             sortable: true,
@@ -91,7 +91,7 @@ export class TrainingReportListComponent implements OnInit {
           },         
           {
             id: "pmr_inst",
-            name: "formation",
+            name: "Equipement",
             field: "pmr_inst",
             type: FieldType.string,
             sortable: true,
@@ -99,7 +99,7 @@ export class TrainingReportListComponent implements OnInit {
           },     
           {
             id: "pmr_task",
-            name: "salle de formation",
+            name: "Tache",
             field: "pmr_task",
             type: FieldType.string,
             sortable: true,
@@ -145,46 +145,55 @@ export class TrainingReportListComponent implements OnInit {
             sortable: true,
            
           },         
-          {
-            id: "pmr_present",
-            name: "présent",
-            field: "pmr_present",
-            type: FieldType.string,
+          // {
+          //   id: "pmr_present",
+          //   name: "présent",
+          //   field: "pmr_present",
+          //   type: FieldType.string,
             
+          //   filterable:true,
+          //   sortable: true,
+           
+          // },         
+          // {
+          //   id: "pmr_dissipated",
+          //   name: "dissipé",
+          //   field: "pmr_dissipated",
+          //   type: FieldType.string,
+            
+          //   filterable:true,
+          //   sortable: true,
+           
+          // },  
+          // {
+          //   id: "pmr_acted",
+          //   name: "présent",
+          //   field: "pmr_acted",
+          //   type: FieldType.string,
+            
+          //   filterable:true,
+          //   sortable: true,
+           
+          // },  
+          // {
+          //   id: "pmr_mastered",
+          //   name: "maitrisé",
+          //   field: "pmr_mastered",
+          //   type: FieldType.string,
+            
+          //   filterable:true,
+          //   sortable: true,
+           
+          // }, 
+          {
+            id: "pmr_duration",
+            name: "Durée",
+            field: "pmr_duration",
+            type: FieldType.float,
             filterable:true,
             sortable: true,
            
-          },         
-          {
-            id: "pmr_dissipated",
-            name: "dissipé",
-            field: "pmr_dissipated",
-            type: FieldType.string,
-            
-            filterable:true,
-            sortable: true,
-           
-          },  
-          {
-            id: "pmr_acted",
-            name: "présent",
-            field: "pmr_acted",
-            type: FieldType.string,
-            
-            filterable:true,
-            sortable: true,
-           
-          },  
-          {
-            id: "pmr_mastered",
-            name: "maitrisé",
-            field: "pmr_mastered",
-            type: FieldType.string,
-            
-            filterable:true,
-            sortable: true,
-           
-          },  
+          },   
           {
             id: "pmr_cmmt",
             name: "Commentaire",

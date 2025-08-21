@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" title="Ajouter centre de charge" [class]="'card-head-lg'"
+    <kt-portlet-header [sticky]="true" title="Ajouter Equipement" [class]="'card-head-lg'"
         [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">annuler</button>
@@ -18,19 +18,23 @@
                 Ce Code existe deja
             </kt-alert>
                 <div class="row">
-                    <div class="form-group col-2">
-                        <label class="form-group">Centre de Charge: *</label>
+                    <div class="form-group col-1">
+                        <label class="form-group">Ligne: *</label>
                     
                         <div class="input-group input-group-sm">
 
                             <input type="text" formControlName="wc_wkctr"
                                 [className]="wcForm.controls['wc_wkctr'].errors && (wcForm.controls['wc_wkctr'].dirty || wcForm.controls['wc_wkctr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="openwc(contentwc)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>    
                             <div *ngIf="wcForm.controls['wc_wkctr'].errors && (wcForm.controls['wc_wkctr'].dirty || wcForm.controls['wc_wkctr'].touched)"
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
                         </div>
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Machine: *</label>
                     
                         <div class="input-group input-group-sm">
@@ -38,6 +42,9 @@
                             <input type="text" formControlName="wc_mch" (change)="onChangeCode()"
                                 [className]="wcForm.controls['wc_mch'].errors && (wcForm.controls['wc_mch'].dirty || wcForm.controls['wc_mch'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                 aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                
+                            </div>
                             
                             <div *ngIf="wcForm.controls['wc_mch'].errors && (wcForm.controls['wc_mch'].dirty || wcForm.controls['wc_mch'].touched)"
                                 class="invalid-feedback">Ce Champs est obligatoire</div>
@@ -54,7 +61,17 @@
 
 
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
+                        <label class="form-group">Parent </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc_user1" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc_user1')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="form-group col-1">
                         <label class="form-group">Département: *</label>
                         <div class="input-group input-group-sm">
                             <input type="text" id="dept"
@@ -76,31 +93,31 @@
                 
                 <div class="row">    
 
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Equipe réglage </label>
                         <div class="input-group input-group-sm">
                             <input type="number" formControlName="wc_setup_men" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Taux réglage: </label>
                         <div class="input-group input-group-sm">
                             <input type="number" formControlName="wc_setup_rte" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Equipe éxecution: </label>
                         <div class="input-group input-group-sm">
                             <input type="number" formControlName="wc_men_mch" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Taux éxecution: </label>
                         <div class="input-group input-group-sm">
                             <input type="number" formControlName="wc_lbr_rate" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Taux FGV MO: </label>
                         <div class="input-group input-group-sm">
                             <input type="number" formControlName="wc_bdn_rate" class='form-control form-control-sm form-control-solid' >
@@ -109,55 +126,78 @@
                 </div>
                 <div class="row">    
 
-                    <div class="form-group col-2">
-                        <label class="form-group">Parent </label>
-                        <div class="input-group input-group-sm">
-                            <input type="text" formControlName="wc_user1" class='form-control form-control-sm form-control-solid' >
-                        </div>    
-                    </div>
-                    <div class="form-group col-2">
+                    
+                    <div class="form-group col-1">
                         <label class="form-group">Fonction: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc_user2" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc_user2')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Categorie: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc_fsm_type" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc_fsm_type')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Famille: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc__qadc01" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc__qadc01')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Sous-Famille: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc__qadc02" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc__qadc02')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div> 
                 </div>
                 <div class="row">    
 
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Site </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc__chr01" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc__chr01')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Emplacement: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc_wk_loc" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc_wk_loc')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Fournisseur: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="wc__chr02" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc__chr02')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
                     <div class="form-group col-2">
@@ -172,6 +212,17 @@
                             <input type="text" formControlName="wc__qadc03" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div> 
+                    <div class="form-group col-2">
+                        <label class="form-group">Code Compteur: </label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" formControlName="wc_userid" class='form-control form-control-sm form-control-solid' >
+                        <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'wc_userid')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                        </div> 
+                        </div> 
+                          
+                    </div> 
                 </div>
                 <div class="row">    
 
@@ -181,10 +232,14 @@
                             <input type="text" formControlName="chr01" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Responsable: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="chr02" class='form-control form-control-sm form-control-solid' >
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open3(content,'chr02')">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
                         </div>    
                     </div>
                     <div class="form-group col-2">
@@ -199,7 +254,7 @@
                             <input type="text" formControlName="date01" class='form-control form-control-sm form-control-solid' >
                         </div>    
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-1">
                         <label class="form-group">Nombre Année: </label>
                         <div class="input-group input-group-sm">
                             <input type="text" formControlName="dec01" class='form-control form-control-sm form-control-solid' >
@@ -225,6 +280,29 @@
                         [columnDefinitions]="columnDefinitions3" (onAngularGridCreated)="angularGridReady3($event)"
                         (sgOnSelectedRowsChanged)="handleSelectedRowsChanged3($event.detail.eventData, $event.detail.args)"
                         [gridOptions]="gridOptions3" [dataset]="data">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
+     <div>
+        <ng-template #contentwc let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choisir Equipement </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionswc" (onAngularGridCreated)="angularGridReadywc($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedwc($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionswc" [dataset]="dataset">
                     </angular-slickgrid>
                 </div>
             </div>

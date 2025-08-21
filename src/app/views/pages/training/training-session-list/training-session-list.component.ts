@@ -78,7 +78,7 @@ export class TrainingSessionListComponent implements OnInit {
           },
           {
               id: "pme_nbr",
-              name: "Session",
+              name: "BT",
               field: "pme_nbr",
               sortable: true,
               minWidth: 70,
@@ -96,7 +96,7 @@ export class TrainingSessionListComponent implements OnInit {
           },
           {
               id: "pme_pm_code",
-              name: "Programme",
+              name: "BT",
               field: "pme_pm_code",
               sortable: true,
               minWidth: 100,
@@ -114,7 +114,7 @@ export class TrainingSessionListComponent implements OnInit {
           }, 
           {
             id: "pme_site",
-            name: "formateur",
+            name: "site",
             field: "pme_site",
             type: FieldType.string,
             sortable: true,
@@ -130,7 +130,7 @@ export class TrainingSessionListComponent implements OnInit {
           },         
           {
             id: "pme_inst",
-            name: "formation",
+            name: "Equipement",
             field: "pme_inst",
             type: FieldType.string,
             sortable: true,
@@ -144,18 +144,18 @@ export class TrainingSessionListComponent implements OnInit {
               collapsed:true
             }
           },     
-          {
-            id: "price",
-            name: "Budget",
-            field: "price",
-            type: FieldType.string,
-            sortable: true,
-            filterable:true,
-            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
-          },     
+          // {
+          //   id: "price",
+          //   name: "Budget",
+          //   field: "price",
+          //   type: FieldType.string,
+          //   sortable: true,
+          //   filterable:true,
+          //   groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+          // },     
           {
             id: "pme_task",
-            name: "salle de formation",
+            name: "Tache",
             field: "pme_task",
             type: FieldType.string,
             sortable: true,
@@ -220,23 +220,23 @@ export class TrainingSessionListComponent implements OnInit {
               collapsed:true
             }
           }, 
-          {
-            id: "pme_duration",
-            name: "Durée",
-            field: "pme_duration",
-            type: FieldType.integer,
+          // {
+          //   id: "pme_duration",
+          //   name: "Durée",
+          //   field: "pme_duration",
+          //   type: FieldType.integer,
             
-            filterable:true,
-            sortable: true,
-            grouping: {
-              getter: 'pme_duration',
-              formatter: (g) => `Debut Session: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [new Aggregators.Sum('price')],
-              aggregateCollapsed: true,
+          //   filterable:true,
+          //   sortable: true,
+          //   grouping: {
+          //     getter: 'pme_duration',
+          //     formatter: (g) => `Debut Session: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+          //     aggregators: [new Aggregators.Sum('price')],
+          //     aggregateCollapsed: true,
               
-              collapsed:true
-            }
-          },
+          //     collapsed:true
+          //   }
+          // },
           {
             id: "pme_start_time",
             name: "Heure debut",
@@ -254,7 +254,23 @@ export class TrainingSessionListComponent implements OnInit {
               collapsed:true
             }
           },   
-          
+          {
+            id: "pme_end_time",
+            name: "Heure Fin",
+            field: "pme_end_time",
+            type: FieldType.date,
+            
+            filterable:true,
+            sortable: true,
+            grouping: {
+              getter: 'pme_end_Time',
+              formatter: (g) => `Heure Fin: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [new Aggregators.Sum('price')],
+              aggregateCollapsed: true,
+              
+              collapsed:true
+            }
+          },
           
           
         

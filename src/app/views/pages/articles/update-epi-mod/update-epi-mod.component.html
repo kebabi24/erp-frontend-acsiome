@@ -1,0 +1,24 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" [title]="'Consultation & Modificiation des on EPI'" [class]="'card-head-lg'">
+        <ng-container ktPortletTools>
+            
+                <button type="button"  (click)="reset()"class="btn btn-secondary btn-sm ml-2">Raffraichir </button>
+                <!-- <button type="button"  (click)="printpdf()"class="btn btn-secondary btn-sm ml-2">Imprimer état </button> -->
+                
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+            <div class="row">
+                <angular-slickgrid class="col-12"  gridId="gridMesure" [columnDefinitions]="columnDefinitions"
+                (onAngularGridCreated)="angularGridReady($event)"
+                    [gridOptions]="gridOptions" [dataset]="dataset">
+                </angular-slickgrid>
+            </div>
+            
+        </div>
+
+    </kt-portlet-body>
+</kt-portlet>
+
+

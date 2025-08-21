@@ -25,9 +25,17 @@ export class InventoryTransactionService {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(API_URL + "/rct-unp", data, { headers: httpHeaders });
   }
+   public addRCTEPI(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL + "/rct-epi", data, { headers: httpHeaders });
+  }
   public addIssUnp(data: any) {
     const httpHeaders = this.httpUtils.getHTTPHeaders();
     return this.http.post(API_URL + "/iss-unp", data, { headers: httpHeaders });
+  }
+  public addIssEpi(data: any) {
+    const httpHeaders = this.httpUtils.getHTTPHeaders();
+    return this.http.post(API_URL + "/iss-epi", data, { headers: httpHeaders });
   }
 
     public addRCTWO(data: any) {
@@ -90,6 +98,16 @@ export class InventoryTransactionService {
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
+ 
+    }
+    public getByemploye(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findemploye`,data, { headers: httpHeaders })
+ 
+    }
+    public getByepi(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findepi`,data, { headers: httpHeaders })
  
     }
     public getByIss(data: any) {
@@ -174,6 +192,16 @@ export class InventoryTransactionService {
     public getByGroup(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findgroup`,data, { headers: httpHeaders })
+ 
+    }
+    public getByGroupEpi(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findgroupepi`,data, { headers: httpHeaders })
+ 
+    }
+    public getByGroupEmp(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findgroupemp`,data, { headers: httpHeaders })
  
     }
     public getByRef(data: any) {

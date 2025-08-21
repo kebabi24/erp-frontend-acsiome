@@ -50,6 +50,16 @@ export class EmployeService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
     }
+    public getByCycle(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findcycle`,data, 
+        { headers: httpHeaders }
+        )
+    
+
+        
+        
+    }
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, 

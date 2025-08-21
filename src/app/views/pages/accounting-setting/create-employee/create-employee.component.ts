@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core"
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
+import { addDays,addMs } from "@fullcalendar/angular";
 import {
   NgbModal,
   NgbActiveModal,
@@ -149,6 +150,7 @@ export class CreateEmployeeComponent implements OnInit {
     gridObj4: any;
     angularGrid4: AngularGridInstance;
 nbr:any;
+distdays:any;
   constructor(
       config: NgbDropdownConfig,
       private empFB: FormBuilder,
@@ -192,6 +194,9 @@ nbr:any;
     this.initjbGrid()
     this.inittrGrid()
     const controls = this.empForm.controls
+   this.codeService.getBy({ code_fldname: "bareme_temps" })
+  .subscribe((response: any) => (this.distdays = response.data[0].dec01));
+  
   this.employeService
       .getAll()
       .subscribe((response: any) => {
@@ -220,6 +225,8 @@ nbr:any;
               
               controls.emp_first_date.enable()
               controls.emp_last_date.enable()
+              controls.chr01.enable()
+              controls.int01.enable()
               controls.emp_rate.enable()
               controls.emp_mrate.enable()
               controls.emp_arate.enable()
@@ -621,6 +628,9 @@ createForm() {
       emp_line2:  [{ value: this.employe.emp_line2, disabled: !this.isExist }],
       emp_first_date:  [{ value: this.employe.emp_first_date, disabled: !this.isExist }],
       emp_last_date:  [{ value: this.employe.emp_last_date, disabled: !this.isExist }],
+      chr01:  [{ value: this.employe.chr01, disabled: !this.isExist }],
+      int01: [{ value: this.employe.int01, disabled: !this.isExist }],
+      
       emp_rate:  [{ value: this.employe.emp_rate, disabled: !this.isExist }],
       emp_mrate: [{ value: this.employe.emp_mrate, disabled: !this.isExist }],
       emp_arate: [{ value: this.employe.emp_arate, disabled: !this.isExist }],
@@ -676,6 +686,8 @@ onChangeCode() {
               controls.emp_line2.enable()
               controls.emp_first_date.enable()
               controls.emp_last_date.enable()
+              controls.chr01.enable()
+              controls.int01.enable()
               controls.emp_rate.enable()
               controls.emp_mrate.enable()
               controls.emp_arate.enable()
@@ -827,14 +839,20 @@ onSubmit() {
      */
     prepareCode(): Employe {
       const controls = this.empForm.controls
+      
       const _employe = new Employe()
       _employe.emp_addr = controls.emp_addr.value
       _employe.emp_lname = controls.emp_lname.value
       _employe.emp_fname = controls.emp_fname.value
       _employe.emp_sex = controls.emp_sex.value
       _employe.emp_familysit = controls.emp_familysit.value
+      _employe.emp_upper =  controls.emp_upper.value
       _employe.emp_job = controls.emp_job.value
       _employe.emp_level = controls.emp_level.value
+      _employe.emp_line2 = controls.emp_line2.value
+      _employe.emp_shift = controls.emp_shift.value
+      _employe.emp_site = controls.emp_site.value
+    
       _employe.emp_birth_date = controls.emp_birth_date.value
       ? `${controls.emp_birth_date.value.year}/${controls.emp_birth_date.value.month}/${controls.emp_birth_date.value.day}`
       : null
@@ -846,7 +864,6 @@ onSubmit() {
       : null
 
       _employe.emp_line1 = controls.emp_line1.value
-      
       _employe.emp_country = controls.emp_country.value
       _employe.emp_city = controls.emp_city.value
       
@@ -861,9 +878,9 @@ onSubmit() {
 
 
       _employe.emp_ss_id = controls.emp_ss_id.value
-      _employe.emp_shift = controls.emp_shift.value
-      _employe.emp_site = controls.emp_site.value
-      _employe.emp_line2 = controls.emp_line2.value
+      
+      _employe.chr01 = controls.chr01.value
+      _employe.int01 = controls.int01.value
       _employe.emp_rate = controls.emp_rate.value
       _employe.emp_mrate = controls.emp_mrate.value
       _employe.emp_arate = controls.emp_arate.value
@@ -897,7 +914,6 @@ onSubmit() {
       _employe.emp_loyal_date = controls.emp_loyal_date.value
       ? `${controls.emp_loyal_date.value.year}/${controls.emp_loyal_date.value.month}/${controls.emp_loyal_date.value.day}`
       : null
-      _employe.emp_upper =  controls.emp_upper.value
       
       return _employe
   }
@@ -963,7 +979,7 @@ onSubmit() {
   changeDomain(){
     const controls = this.empForm.controls // chof le champs hada wesh men form rah
     const code_value  = controls.emp_job.value
-    this.codeService.getBy({code_fldname:"pt_draw",code_value:code_value}).subscribe((res:any)=>{
+    this.codeService.getBy({code_fldname:"emp_job",code_desc:controls.emp_upper.value,code_value:code_value}).subscribe((res:any)=>{
         const {data} = res
         console.log(res)
         if (!data){ this.layoutUtilsService.showActionNotification(
@@ -1002,7 +1018,7 @@ onSubmit() {
      
       {
         id: "code_value",
-        name: "Code Domaine",
+        name: "Code Service",
         field: "code_value",
         sortable: true,
         minWidth: 70,
@@ -1054,8 +1070,9 @@ onSubmit() {
     };
 
     // fill the dataset with your data
+    const controls= this.empForm.controls
     this.codeService
-      .getBy({code_fldname:"pt_draw"})
+      .getBy({code_fldname:"emp_job",code_desc:controls.emp_upper.value})
       .subscribe((response: any) => (this.domains = response.data));
   }
   opendom(content) {
@@ -1063,6 +1080,11 @@ onSubmit() {
     this.modalService.open(content, { size: "lg" });
   }
 
+
+
+
+
+  
 
   angularGridReady2(angularGrid: AngularGridInstance) {
     this.angularGrid2 = angularGrid;
@@ -1142,7 +1164,7 @@ onSubmit() {
     if (Array.isArray(args.rows) && this.gridObj3) {
       args.rows.map((idx) => {
         const item = this.gridObj3.getDataItem(idx);
-        controls.emp_level.setValue(item.jbd_level || "");
+        controls.emp_level.setValue(item.code_value || "");
       });
     }
 }
@@ -1155,56 +1177,27 @@ prepareGrid3() {
   const controls = this.empForm.controls;
     this.columnDefinitions3 = [
         {
-            id: "id",
-            field: "id",
-            excludeFromColumnPicker: true,
-            excludeFromGridMenu: true,
-            excludeFromHeaderMenu: true,
-
-            minWidth: 50,
-            maxWidth: 50,
-        },
-        {
-            id: "id",
-            name: "id",
-            field: "id",
-            sortable: true,
-            minWidth: 80,
-            maxWidth: 80,
-        },
-        {
-            id: "jbd_code",
-            name: "Code Métier",
-            field: "jbd_code",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-        },
-        {
-          id: "jbd_level",
-          name: "Niveau",
-          field: "jbd_level",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
+        id: "code_value",
+        name: "Code Poste",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        maxWidth: 100,
+        filterable: true,
+        type: FieldType.string,
       
-        {
-            id: "jbd_desc",
-            name: "Designation",
-            field: "jbd_desc",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-        },
-        {
-          id: "jbd_time_rate",
-          name: "Taux Horaire",
-          field: "jbd_time_rate",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        maxWidth: 300,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
         
     ]
 
@@ -1228,15 +1221,96 @@ prepareGrid3() {
     }
 
     // fill the dataset with your data
-    this.jobService
-        .getByDet({jbd_code: controls.emp_job.value})
-        .subscribe((response: any) => (this.data = response.data))
+      this.codeService
+      .getBy({code_fldname:"emp_level",code_desc:controls.emp_job.value})
+      .subscribe((response: any) => (this.data = response.data));
+  
+    // this.jobService
+    //     .getByDet({jbd_code: controls.emp_job.value})
+    //     .subscribe((response: any) => (this.data = response.data))
 }
 open3(content) {
    
     this.prepareGrid3()
     this.modalService.open(content, { size: "lg" })
 }
+
+ handleSelectedRowsChangedcust(e, args) {
+    const controls = this.empForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjcust) {
+      args.rows.map((idx) => {
+        const item = this.gridObjcust.getDataItem(idx);
+        controls.emp_line2.setValue(item.code_value || "");
+      });
+    }
+}
+  angularGridReadycust(angularGrid: AngularGridInstance) {
+    this.angularGridcust = angularGrid
+    this.gridObjcust = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridcust() {
+  const controls = this.empForm.controls;
+    this.columnDefinitionscust = [
+        {
+        id: "code_value",
+        name: "Code Spécialité",
+        field: "code_value",
+        sortable: true,
+        minWidth: 70,
+        maxWidth: 100,
+        filterable: true,
+        type: FieldType.string,
+      
+    },
+    {
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        maxWidth: 300,
+        filterable: true,
+        type: FieldType.string,
+        
+    },
+        
+    ]
+
+    this.gridOptionscust = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: false,
+        rowSelectionOptions: {
+            selectActiveRow: true,
+        },
+    }
+
+    // fill the dataset with your data
+      this.codeService
+      .getBy({code_fldname:"emp_spec",code_desc:controls.emp_level.value})
+      .subscribe((response: any) => (this.datacust = response.data));
+  
+    // this.jobService
+    //     .getByDet({jbd_code: controls.emp_job.value})
+    //     .subscribe((response: any) => (this.data = response.data))
+}
+opencust(content) {
+   
+    this.prepareGridcust()
+    this.modalService.open(content, { size: "lg" })
+}
+
 
 handleSelectedRowsChangedsite(e, args) {
   
@@ -1339,83 +1413,83 @@ onChangesite() {
     });
 }
 
-handleSelectedRowsChangedcust(e, args) {
+// handleSelectedRowsChangedcust(e, args) {
   
-  const controls = this.empForm.controls;
-  if (Array.isArray(args.rows) && this.gridObjcust) {
-      args.rows.map((idx) => {
-          const item = this.gridObjcust.getDataItem(idx)
-          // TODO : HERE itterate on selected field and change the value of the selected field
-                  controls.emp_line2.setValue(item.ad_addr || "")
-      })
-  }
-}
-angularGridReadycust(angularGrid: AngularGridInstance) {
-  this.angularGridcust = angularGrid
-  this.gridObjcust = (angularGrid && angularGrid.slickGrid) || {}
-}
+//   const controls = this.empForm.controls;
+//   if (Array.isArray(args.rows) && this.gridObjcust) {
+//       args.rows.map((idx) => {
+//           const item = this.gridObjcust.getDataItem(idx)
+//           // TODO : HERE itterate on selected field and change the value of the selected field
+//                   controls.emp_line2.setValue(item.ad_addr || "")
+//       })
+//   }
+// }
+// angularGridReadycust(angularGrid: AngularGridInstance) {
+//   this.angularGridcust = angularGrid
+//   this.gridObjcust = (angularGrid && angularGrid.slickGrid) || {}
+// }
 
-prepareGridcust() {
-  this.columnDefinitionscust = [
-      {
-          id: "id",
-          field: "id",
-          excludeFromColumnPicker: true,
-          excludeFromGridMenu: true,
-          excludeFromHeaderMenu: true,
+// prepareGridcust() {
+//   this.columnDefinitionscust = [
+//       {
+//           id: "id",
+//           field: "id",
+//           excludeFromColumnPicker: true,
+//           excludeFromGridMenu: true,
+//           excludeFromHeaderMenu: true,
 
-          minWidth: 50,
-          maxWidth: 50,
-      },
+//           minWidth: 50,
+//           maxWidth: 50,
+//       },
       
-      {
-          id: "ad_addr",
-          name: "Client",
-          field: "ad_addr",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
-      {
-          id: "ad_name",
-          name: "Nom",
-          field: "ad_name",
-          sortable: true,
-          filterable: true,
-          type: FieldType.string,
-      },
+//       {
+//           id: "ad_addr",
+//           name: "Client",
+//           field: "ad_addr",
+//           sortable: true,
+//           filterable: true,
+//           type: FieldType.string,
+//       },
+//       {
+//           id: "ad_name",
+//           name: "Nom",
+//           field: "ad_name",
+//           sortable: true,
+//           filterable: true,
+//           type: FieldType.string,
+//       },
       
-  ]
+//   ]
 
-  this.gridOptionscust = {
-      enableSorting: true,
-      enableCellNavigation: true,
-      enableExcelCopyBuffer: true,
-      enableFiltering: true,
-      autoEdit: false,
-      autoHeight: false,
-      frozenColumn: 0,
-      frozenBottom: true,
-      enableRowSelection: true,
-      enableCheckboxSelector: true,
-      checkboxSelector: {
-      },
-      multiSelect: false,
-      rowSelectionOptions: {
-          selectActiveRow: true,
-      },
-  }
+//   this.gridOptionscust = {
+//       enableSorting: true,
+//       enableCellNavigation: true,
+//       enableExcelCopyBuffer: true,
+//       enableFiltering: true,
+//       autoEdit: false,
+//       autoHeight: false,
+//       frozenColumn: 0,
+//       frozenBottom: true,
+//       enableRowSelection: true,
+//       enableCheckboxSelector: true,
+//       checkboxSelector: {
+//       },
+//       multiSelect: false,
+//       rowSelectionOptions: {
+//           selectActiveRow: true,
+//       },
+//   }
 
-  // fill the dataset with your data
-  this.addressService
-      .getAllBy({ad_type:'customer'})
-      .subscribe((response: any) => (this.datacust = response.data))
-}
-opencust(contentcust, field) {
-  this.selectedField = field
-  this.prepareGridcust()
-  this.modalService.open(contentcust, { size: "lg" })
-}
+//   // fill the dataset with your data
+//   this.addressService
+//       .getAllBy({ad_type:'customer'})
+//       .subscribe((response: any) => (this.datacust = response.data))
+// }
+// opencust(contentcust, field) {
+//   this.selectedField = field
+//   this.prepareGridcust()
+//   this.modalService.open(contentcust, { size: "lg" })
+// }
 onChangecust() {
   const controls = this.empForm.controls;
   const ad_addr = controls.emp_line2.value;
@@ -1687,13 +1761,13 @@ onChangeUserid() {
 handleSelectedRowsChangedupper(e, args) {
   
   const controls = this.empForm.controls;
-  if (Array.isArray(args.rows) && this.gridObjupper) {
+    if (Array.isArray(args.rows) && this.gridObjupper) {
       args.rows.map((idx) => {
-          const item = this.gridObjupper.getDataItem(idx)
-          // TODO : HERE itterate on selected field and change the value of the selected field
-                  controls.emp_upper.setValue(item.emp_addr || "")
-      })
-  }
+        const item = this.gridObjupper.getDataItem(idx);
+        controls.emp_upper.setValue(item.code_value || "");
+      });
+    }
+
 }
 angularGridReadyupper(angularGrid: AngularGridInstance) {
   this.angularGridupper = angularGrid
@@ -1702,120 +1776,29 @@ angularGridReadyupper(angularGrid: AngularGridInstance) {
 
 prepareGridupper() {
   this.columnDefinitionsupper = [
-    {
-      id: "id",
-      name: "id",
-      field: "id",
-      sortable: true,
-      minWidth: 80,
-      maxWidth: 80,
-    },
-    {
-        id: "emp_addr",
-        name: "Code Employe",
-        field: "emp_addr",
+     
+      {
+        id: "code_value",
+        name: "Code Structure",
+        field: "code_value",
         sortable: true,
+        minWidth: 70,
+        maxWidth: 100,
         filterable: true,
         type: FieldType.string,
+      
     },
     {
-      id: "emp_fname",
-      name: "Nom",
-      field: "emp_fname",
-      sortable: true,
-      filterable: true,
-      width: 50,
-      type: FieldType.string,
-  },
-  {
-      id: "emp_lname",
-      name: "Prénom",
-      field: "emp_lname",
-      sortable: true,
-      filterable: true,
-      width: 50,
-      type: FieldType.string,
-  },
-  {
-    id: "emp_line1",
-    name: "Adresse",
-    field: "emp_line1",
-    sortable: true,
-    width: 120,
-    filterable: true,
-    type: FieldType.string,
-  },
-  {
-    id: "emp_birth_date",
-    name: "Date Naissance",
-    field: "emp_birth_date",
-    sortable: true,
-    filterable: true,
-    width: 50,
-    type: FieldType.dateIso,
-  },
-  
-  {
-    id: "emp_job",
-    name: "Métier",
-    field: "emp_job",
-    sortable: true,
-    filterable: true,
-    width: 50,
-    type: FieldType.string,
-  },
-  
-  {
-    id: "emp_level",
-    name: "Niveau",
-    field: "emp_level",
-    sortable: true,
-    filterable: true,
-    width: 50,
-    type: FieldType.string,
-  },
-  {
-    id: "emp_site",
-    name: "Site",
-    field: "emp_site",
-    sortable: true,
-    filterable: true,
-    type: FieldType.string,
-  },
-  
-  {
-    id: "emp_shift",
-    name: "Equipe",
-    field: "emp_shift",
-    sortable: true,
-    filterable: true,
-    type: FieldType.string,
-  },
-
-  {
-    id: "emp_rate",
-    name: "Taux",
-    field: "emp_rate",
-    sortable: true,
-    filterable: true,
-    type: FieldType.float,
-  },
-  {
-    id: "emp_mrate",
-    name: "Taux Multiple",
-    field: "emp_mrate",
-    sortable: true,
-    filterable: true,
-    type: FieldType.float,
-  },
-  {
-    id: "emp_arate",
-    name: "Taux",
-    field: "emp_arate",
-    sortable: true,
-    filterable: true,
-    type: FieldType.float,
-  },
+        id: "code_cmmt",
+        name: "Désignation",
+        field: "code_cmmt",
+        sortable: true,
+        minWidth: 100,
+        maxWidth: 300,
+        filterable: true,
+        type: FieldType.string,
+        
+    },   
       
   ]
 
@@ -1839,10 +1822,10 @@ prepareGridupper() {
   }
 
   // fill the dataset with your data
-  this.employeService
-      .getAll()
-      .subscribe((response: any) => (this.dataupper = response.data))
-}
+    this.codeService
+      .getBy({code_fldname:"emp_upper"})
+      .subscribe((response: any) => (this.dataupper = response.data));
+  }
 openupper(content) {
  
   this.prepareGridupper()
@@ -1852,17 +1835,17 @@ onChangeUpper() {
   const controls = this.empForm.controls;
   const emp_addr = controls.emp_upper.value;
   
-  this.employeService.getByOne({ emp_addr }).subscribe(
-    (res: any) => {
-console.log(res.data)
-      if (!res.data) {
+//   this.employeService.getByOne({ emp_addr }).subscribe(
+//     (res: any) => {
+// console.log(res.data)
+//       if (!res.data) {
 
-          alert("Employe n'existe pas  ")
-          controls.emp_upper.setValue(null);
-          document.getElementById("emp_upper").focus();
-        }
+//           alert("Employe n'existe pas  ")
+//           controls.emp_upper.setValue(null);
+//           document.getElementById("emp_upper").focus();
+//         }
     
-    });
+//     });
 }
 
 handleSelectedRowsChanged4(e, args) {

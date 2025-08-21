@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap";
-
+import { HttpClient } from "@angular/common/http";
+import { HttpUtilsService } from "../../../../core/_base/crud";
+import { jsPDF } from "jspdf";
 // Angular slickgrid
 import {
   Column,
@@ -78,8 +80,8 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 };
 const myCustomTimeFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
    `<div class="time" ></div>` ;
-
-
+import { environment } from "../../../../../environments/environment";
+const API_URL = environment.apiUrl + "/codes";
 @Component({
   selector: 'kt-create-op',
   templateUrl: './create-op.component.html',
@@ -180,9 +182,11 @@ export class CreateOpComponent implements OnInit {
   message = "";
   detail;
   woServer;
- 
+ httpOptions = this.httpUtils.getHTTPHeaders();
   constructor(
     config: NgbDropdownConfig,
+    private http: HttpClient,
+    private httpUtils: HttpUtilsService,
     private opFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -210,6 +214,7 @@ export class CreateOpComponent implements OnInit {
     this.initGrid();
     this.initGriddwn();
     this.initGridrjct();
+    
   }
   gridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -520,9 +525,9 @@ export class CreateOpComponent implements OnInit {
         },
       },
       {
-        id: "line",
+        id: "op_line",
         name: "ligne",
-        field: "line",
+        field: "op_line",
         sortable: true,
         minWidth: 50,
         maxWidth: 50,
@@ -539,7 +544,20 @@ export class CreateOpComponent implements OnInit {
       editor: {
         model: Editors.text,
   
-      }
+      },
+     onCellChange: (e: Event, args: OnEventArgs) => {
+let desc:any;
+desc='test'
+      this.reasonService
+            .getBy({rsn_type: "Down",rsn_code:args.dataContext.op_rsn_down}) 
+            .subscribe((response: any) => (
+desc = response.data[0].rsn_desc              
+            )); 
+      this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , desc_cause: desc })
+
+      
+      
+    }
       
     }, 
 
@@ -568,6 +586,35 @@ export class CreateOpComponent implements OnInit {
       filterable: false,
       
     },
+     {
+      id: "op_date",
+      name: "Date",
+      field: "op_date",
+      sortable: true,
+      minWidth: 120,
+      maxWidth: 120,
+      filterable: false,
+      type: FieldType.dateTimeShortIso,
+        editor: {
+          model: Editors.date
+        },
+
+    onCellChange: (e: Event, args: OnEventArgs) => {
+
+       
+      let time = args.dataContext.debut_cause
+      
+      
+      if (time > new Date()) {
+        this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , debut_cause: new Date() })
+        this.message = "debut d'arret ne peut pas dépasser date du jour"
+        this.hasFormErrors = true;
+        return
+      }
+    }
+   
+    },
+
     {
       id: "chr01",
       name: "Debut",
@@ -596,23 +643,37 @@ export class CreateOpComponent implements OnInit {
     }
    
     },
+ {
+      id: "op_tran_date",
+      name: "Date Fin",
+      field: "op_tran_date",
+      sortable: true,
+      minWidth: 120,
+      maxWidth: 120,
+      filterable: false,
+      type: FieldType.dateTimeShortIso,
+        editor: {
+          model: Editors.date
+        },
 
+    
+    },
     {
-      id: "fin_cause",
+      id: "chr02",
       name: "Fin",
-      field: "fin_cause",
+      field: "chr02",
       sortable: true,
       minWidth: 120,
       maxWidth: 120,
       filterable: false,
       type: FieldType.dateTimeShortIso,
       editor: {
-        model: Editors.date,
+        model: Editors.text,
       },
     onCellChange: (e: Event, args: OnEventArgs) => {
 
        
-      let time = args.dataContext.fin_cause
+      let time = args.dataContext.chr02
    
 if(time !=null )     
   { if (time > new Date()) {
@@ -621,17 +682,47 @@ if(time !=null )
         this.hasFormErrors = true;
         return
       }
-      if(time < args.dataContext.chr01)
-        {
-          this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: new Date() })
-          this.message = "Fin d'arret ne peut pas dépasser date debut d'arret"
-          this.hasFormErrors = true;
-          return
-        }
+      // if(time < args.dataContext.chr01)
+      //   {
+      //     this.gridServicedwn.updateItemById(args.dataContext.id,{...args.dataContext , fin_cause: new Date() })
+      //     this.message = "Fin d'arret ne peut pas dépasser date debut d'arret"
+      //     this.hasFormErrors = true;
+      //     return
+      //   }
    
     } 
   } 
     },
+    // {
+    //         id: "priority",
+    //         name: "Priorité",
+    //         field: "priority",
+    //         sortable: true,
+    //         width: 50,
+    //         filterable: true,
+    //         type: FieldType.string,
+    //         editor: {
+    //           model: Editors.singleSelect,
+    //           enableRenderHtml: true,
+    //           collectionAsync: this.http.get(`${API_URL}/priority`), 
+             
+    //         },
+    //       },
+    {
+            id: "chr03",
+            name: "Impact",
+            field: "chr03",
+            sortable: true,
+            width: 80,
+            type: FieldType.string,
+            editor: {
+              model: Editors.singleSelect,
+              enableRenderHtml: true,
+              collectionAsync: this.http.get(`${API_URL}/impact`), 
+             
+            },
+    
+          },
     {
       id: "op_comment",
       name: "Remarque",
@@ -644,7 +735,21 @@ if(time !=null )
   
       }
     },
-      
+     {
+            id: "op_rsn",
+            name: "Statut",
+            field: "op_rsn",
+            sortable: true,
+            width: 80,
+            type: FieldType.string,
+            editor: {
+              model: Editors.singleSelect,
+              enableRenderHtml: true,
+              collectionAsync: this.http.get(`${API_URL}/opstatus`), 
+             
+            },
+    
+          },
     ];
 
     this.gridOptionsdwn = {
@@ -889,7 +994,15 @@ if(time !=null )
     this.loadingSubject.next(false);
     this.createForm();
     this.user =  JSON.parse(localStorage.getItem('user'))
-    
+    const controls = this.opForm.controls
+    this.operationHistoryService
+      .getBy({op_type:'down'}).subscribe((response: any) => {
+        if (response.data.length !=0) {controls.op_wo_nbr.setValue('DT' + String("000000"+ Number(response.data.length + 1)).slice(-6))
+        
+        } 
+        else{controls.op_wo_nbr.setValue('DT' + String("0000001").slice(-6))
+        }
+      });
   }
 
   //create form
@@ -903,13 +1016,16 @@ if(time !=null )
         month: date.getMonth()+1,
         day: date.getDate()
       }],
+      op_wo_nbr: [this.operationHistory.op_wo_nbr],
       op_site  : [this.operationHistory.op_site],
       op_wkctr : [this.operationHistory.op_wkctr],
       op_mch   : [this.operationHistory.op_mch],
+      desc:[''],
       op_dept  : [{value: this.operationHistory.op_dept, disabled:true}],
       op_shift : [this.operationHistory.op_shift],
-      // op_emp   : [this.operationHistory.op_emp],
-      
+      op_emp   : [this.operationHistory.op_emp],
+      op_program : [this.operationHistory.op_program],
+      int01: [this.operationHistory.int01],
       
         
     
@@ -1029,7 +1145,7 @@ if(time !=null )
     }
 
 */    
-
+this.printpdf()
         let op = this.prepare()
         this.addIt( this.dataset, this.dwndataset,this.rjctdataset, op);
 
@@ -1046,9 +1162,11 @@ if(time !=null )
     _op.op_mch   = controls.op_mch.value
     _op.op_dept  = controls.op_dept.value
     _op.op_shift = controls.op_shift.value
-    // _op.op_emp   = controls.op_emp.value
-        
-    
+    _op.op_wo_nbr = controls.op_wo_nbr.value
+    _op.op_emp   = controls.op_emp.value
+    _op.op_program = controls.op_program.value    
+    _op.int01 = controls.int01.value
+    _op.op_user1 = controls.desc.value
     
     
     
@@ -1180,7 +1298,32 @@ if(time !=null )
       
       });
   }
-
+onChangenbr() {
+    
+    const controls = this.opForm.controls;
+    const nbr = controls.op_wo_nbr.value;
+    
+    this.operationHistoryService.getBy({ op_wo_nbr:nbr,op_type:'down' }).subscribe(
+      (res: any) => {
+this.dwndataset =[]
+        console.log(res.data)
+        controls.op_dept.setValue(res.data[0].op_dept);
+        controls.op_wkctr.setValue(res.data[0].op_wkctr);
+        controls.op_mch.setValue(res.data[0].op_mch);
+        controls.desc.setValue(res.data[0].op_user1);
+        controls.op_site.setValue(res.data[0].op_site);
+        controls.op_shift.setValue(res.data[0].op_shift);
+        controls.op_program.setValue(res.data[0].op_program); 
+        controls.int01.setValue(res.data[0].int01); 
+          
+       this.dwndataset = res.data
+       this.dwndataset[0].desc_cause = 'test'
+       this.dataViewdwn.setItems(this.dwndataset)
+         
+        
+      
+      });
+  }
   
   onChangemch() {
     
@@ -1194,6 +1337,7 @@ if(time !=null )
         if (res.data.length == 0) {
             alert("Machine n'existe pas  ")
             controls.op_mch.setValue(null);
+            controls.desc.setValue(null);
             document.getElementById("op_mch").focus();
           }
        
@@ -1231,7 +1375,6 @@ if(time !=null )
         cmvid: "",
         desc_cause: "",
         debut_cause: new Date(),
-        
         fin_cause: null,
         op_comment: "",
         debut: "HH:MM",
@@ -1260,7 +1403,8 @@ if(time !=null )
 
 
   handleSelectedRowsChanged4(e, args) {
-    let updateItem = this.gridServicerjct.getDataItemByRowIndex(this.row_number);
+    const controls = this.opForm.controls
+    
     if (Array.isArray(args.rows) && this.gridObj4) {
       args.rows.map((idx) => {
         const item = this.gridObj4.getDataItem(idx);
@@ -1268,14 +1412,27 @@ if(time !=null )
 
        
         
-            this.workOrderService.getByOne({ id: item.id, }).subscribe(
-              (response: any) => {
-            
-              updateItem.op_wo_lot = item.id;
-              updateItem.op_wo_nbr = item.wo_nbr;
-             
-              this.gridServicerjct.updateItem(updateItem);
-           });
+             this.operationHistoryService.getBy({ op_wo_nbr:item.op_wo_nbr,op_type:'down' }).subscribe(
+      (res: any) => {
+this.dwndataset =[]
+        console.log(res.data)
+        controls.op_wo_nbr.setValue(res.data[0].op_wo_nbr)
+        controls.op_dept.setValue(res.data[0].op_dept);
+        controls.op_wkctr.setValue(res.data[0].op_wkctr);
+        controls.op_mch.setValue(res.data[0].op_mch);
+        controls.desc.setValue(res.data[0].op_user1);
+        controls.op_site.setValue(res.data[0].op_site);
+        controls.op_shift.setValue(res.data[0].op_shift);
+        controls.op_program.setValue(res.data[0].op_program);
+        controls.int01.setValue(res.data[0].int01); 
+           
+       this.dwndataset = res.data
+       this.dwndataset[0].desc_cause = 'test'
+       this.dataViewdwn.setItems(this.dwndataset)
+         
+        
+      
+      });
       });
     
   }
@@ -1296,26 +1453,26 @@ if(time !=null )
         maxWidth: 80,
       },
       {
-        id: "wo_nbr",
-        name: "N° OF ",
-        field: "wo_nbr",
+        id: "op_wo_nbr",
+        name: "N° Demande ",
+        field: "op_wo_nbr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
 
       {
-        id: "wo_part",
-        name: "Article ",
-        field: "wo_part",
+        id: "op_wkctr",
+        name: "Ligne ",
+        field: "op_wkctr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "wo_qty_comp",
-        name: "Qte ",
-        field: "wo_qty_comp",
+        id: "op_mch",
+        name: "Machine",
+        field: "op_mch",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1353,8 +1510,8 @@ if(time !=null )
     };
 
     // fill the dataset with your data
-    this.workOrderService
-      .getBy({wo_status : "C"})
+    this.operationHistoryService
+      .getBy({op_type : "down"})
       .subscribe((response: any) => (this.wos = response.data) 
       
       
@@ -1605,10 +1762,14 @@ if(time !=null )
               controls.op_shift.setValue(item.code_value || "");
               break;
             }
-            // case "op_emp": {
-            //   controls.op_emp.setValue(item.code_value || "");
-            //   break;
-            // }
+             case "op_program": {
+              controls.op_program.setValue(item.code_value || "");
+              break;
+            }
+            case "op_emp": {
+              controls.op_emp.setValue(item.code_value || "");
+              break;
+            }
             default:
               break;
           }
@@ -1694,7 +1855,12 @@ if(time !=null )
 
           this.fldname = "emp_shift"
         }
-        else{this.fldname = this.selectedField}
+        else{
+           if (this.selectedField == "op_program") {
+
+          this.fldname = "priority"
+        }
+          this.fldname = this.selectedField}
       }
     
       // fill the dataset with your data
@@ -1728,14 +1894,14 @@ if(time !=null )
           code_fldname: "op_shift",
         };
       }
-      // if (field == "op_emp") {
-      //   this.msg = " Employé ";
-      //   const code_value = controls.op_emp.value;
-      //   obj = {
-      //     code_value,
-      //     code_fldname: "op_emp",
-      //   };
-      // }
+      if (field == "op_emp") {
+        this.msg = " Employé ";
+        const code_value = controls.op_emp.value;
+        obj = {
+          code_value,
+          code_fldname: "op_emp",
+        };
+      }
       this.codeService.getBy(obj).subscribe(
         (res: any) => {
           const { data } = res;
@@ -1768,12 +1934,14 @@ if(time !=null )
             controls.op_wkctr.setValue(item.wc_wkctr || "")
             controls.op_dept.setValue(item.wc_dept || "")
             controls.op_mch.setValue(item.wc_mch || "")
+            controls.desc.setValue(item.wc_desc || "");
             this.dwndataset = []
             let date =  controls.op_date.value
             ? `${controls.op_date.value.year}/${controls.op_date.value.month}/${controls.op_date.value.day}`
             : null
-            this.operationHistoryService.getBy({op_wkctr:item.wc_wkctr,op_mch:item.wc_mch,op_date:date}).subscribe(
+            this.operationHistoryService.getBy({op_wkctr:item.wc_wkctr,op_mch:item.wc_mch,op_date:date,op_wo_nbr:controls.op_wo_nbr.value}).subscribe(
                 (response: any) => {this.dwndataset = response.data
+                  this.dwndataset[0].desc_cause = 'test'
                  // console.log(this.dataset)
                   this.dataViewdwn.setItems(this.dwndataset)},
          
@@ -1893,6 +2061,7 @@ if(time !=null )
               const item = this.gridObjmch.getDataItem(idx);
                   
               controls.op_mch.setValue(item.wc_mch || "")
+              controls.desc.setValue(item.wc_desc || "");
               controls.op_wkctr.setValue(item.wc_wkctr || "")
               
         });
@@ -2177,11 +2346,102 @@ if(time !=null )
           this.prepareGridrejct();
           this.modalService.open(content, { size: "lg" });
         }
+printpdf() {
+          const controls = this.opForm.controls;
+         
+          var doc = new jsPDF({
+            orientation: 'landscape',
+            unit: 'mm',
+            //format: [100,150]
+            })
+            let initialY = 25;
+            doc.setLineWidth(0.2);
+          
+          var img = new Image();
+           img.src = "./assets/media/logos/companyentete.png";
+           doc.addImage(img, "png", 5, 5, 280, 30);
+          doc.setFontSize(8);
+  //      if(this.exist == true){
+  //   doc.text(this.docs[0].code_value, 160, 17); 
+  //   doc.setFontSize(10);
+  //   doc.text(this.docs[0].code_cmmt, 55, 22);
+  //   doc.setFontSize(8);
+  //   doc.text(this.docs[0].code_desc, 165, 12);
+  //   doc.text(this.docs[0].chr01, 22, 27);
+  //   doc.text(String(1), 22, 32);
+  //   doc.text(this.docs[0].dec01, 170, 32);
+  //   doc.text(this.docs[0].date01, 180, 22);
+  //   doc.text(this.docs[0].date02, 180, 27);
+  // }
+        
+          const date = controls.op_date.value
+            ? `${controls.op_date.value.year}/${controls.op_date.value.month}/${controls.op_date.value.day}`
+            : null
 
+          
+          doc.setFontSize(16);
+    
+          
+          doc.setFont("Times-Roman");
+          doc.text("Demande de service : " + controls.op_wo_nbr.value, 100, 40);
+          doc.line(5,45,280,45)
+          doc.line(5,45,5,165)
+          doc.text("Degré d'urgence : " + controls.op_program.value , 10, 50);
+          doc.line(90,45,90,55)
+          doc.text("Demandeur : " + this.user.usrd_user_name , 100, 50);
+          doc.line(195,45,195,55)
+          doc.text("Date Demande : " + date, 200, 50);
+          doc.line(5,55,280,55)
+          doc.text("Ligne : " + controls.op_wkctr.value, 10, 60);
+          doc.line(90,55,90,65)
+          doc.text("Service : " + controls.op_dept.value, 100, 60);
+          doc.line(195,55,195,65)
+          doc.text("Date limite : " , 200, 60);
+          doc.line(5,65,280,65)
+          doc.text("Equipement : " + controls.op_mch.value + ' ' + controls.desc.value, 10, 70);
+          doc.line(90,65,90,75)
+          doc.text("Interlocuteur : " + controls.op_shift.value , 100, 70);
+          doc.line(195,65,195,75)
+          doc.line(5,75,280,75)
+          doc.text("Unité d'intervention : " , 10, 80);
+          doc.line(195,75,195,85)
+          doc.text("Compteur(H) : " + controls.int01.value, 200, 80);
+          doc.line(5,85,280,85)
+          doc.line(5,165,280,165)
+          doc.line(280,45,280,165)
+          doc.setFontSize(12);
+          doc.text("OBJET/CONSTAT" , 120, 90);
+          doc.line(5,95,280,95)
+      doc.line(5,130,280,130)
+    doc.text("ACTION IMMEDIATE" , 120, 135);
+    doc.line(5,140,280,140)    
+    doc.text("Responsable maintenance",15,170);
+    doc.text("Chef d'équipe",200,170);
+    
+          doc.setFontSize(9);
+    
+    var i = 105
+    for (let j = 0; j < this.dwndataset.length; j++) {
+          
+        doc.text(String("000" + this.dwndataset[j].op_line).slice(-3), 12.5, i - 1);
+        
+        // doc.text(this.dwndataset[j].op_rsn_down, 25, i - 1);
+        
+        doc.text(this.dwndataset[j].desc_cause, 25, i - 1);
+        
+        
+        doc.text(String(this.dwndataset[j].chr01), 47, i - 1, );
+        
+        doc.text(this.dwndataset[j].op_comment, 68, i - 1);
+        
+        doc.text(String(this.dwndataset[j].chr03), 160, i - 1,);
+         doc.text(String(this.dwndataset[j].op_tran_date), 190, i - 1, );
+        doc.text(String(this.dwndataset[j].chr02), 220, i - 1, );
+        doc.text(String(this.dwndataset[j].op_rsn), 250, i - 1, );
+        
+      }
+    i = i + 5;
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));   
+  }
 }
-
-
-
-
-
-

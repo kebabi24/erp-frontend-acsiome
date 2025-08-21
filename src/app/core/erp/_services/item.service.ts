@@ -103,7 +103,11 @@ export class ItemService {
         return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
     }
     
-
+    public epiupdate(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/epiUpdate`,data, { headers: httpHeaders })
+ 
+    }
     // GET PRODUCT PAGE BY CODE
     public getProductPageByCode(product_page_code: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

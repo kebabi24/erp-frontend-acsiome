@@ -50,11 +50,11 @@
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                      </div>
-                     <!-- <div class="form-group col-2">
-                        <label class="form-group">Contrat :</label>
+                     <div class="form-group col-2">
+                        <label class="form-group">Demande N° :</label>
                         <div class="input-group input-group-sm">
 
-                            <input type="text" class="form-control form-control-solid" id="deal" formControlName="pm_deal"  (change)="onChangeDeal()"
+                            <input type="text" class="form-control form-control-solid" id="pm_deal" formControlName="pm_deal"  (change)="onChangeDeal()"
                                 aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <span class="input-group-text" (click)="opendeal(contentdeal)">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
 
-                    </div> -->
+                    </div>
                      
                 </div>
                 <div class="row">
@@ -79,8 +79,18 @@
                         </div>
 
                     </div>
-                    <div class="form-group col-5">
-                        <label class="form-group">Machine :</label>
+                    <div class="form-group col-2">
+                        <label class="form-group">Desc :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="pm_cust"  
+                                aria-describedby="basic-addon2">
+                            
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Ligne :</label>
                         <div class="input-group input-group-sm">
 
                             <input type="text" class="form-control form-control-solid" formControlName="name"  
@@ -133,44 +143,41 @@
                 </div> -->
 
                 <div class="row">
-                    <div class="form-group col-3">
+                    <div class="form-group col-2">
                         <!-- pm_type -->
                         <label class="form-group">Type Travaux:</label> 
                         <div class="input-group input-group-sm">
                             <select    
                             formControlName="pm_type" class="form-control form-control-sm form-control-solid">
-                            <option *ngFor="let type of project_types" [value]="type.code_value" class="mt-2 mb-2 dropdown-item">{{type.code_desc}}</option>
+                            <option *ngFor="let type of project_types" [value]="type.code_value" class="mt-2 mb-2 dropdown-item">{{type.code_cmmt}}</option>
                         </select>
                             
                         </div>
 
                     </div>
 
-                    <!-- <div class="form-group col-3">
-                        <label class="form-group ">Code specification:</label>
-                        <select    
-                            formControlName="pm_doc_list_code" class="form-control form-control-sm form-control-solid">
-                            <option *ngFor="let spec of specifications" [value]="spec.mp_nbr" class="mt-2 mb-2 dropdown-item">{{spec.mp_nbr}}</option>
-                        </select>
-
-                        <input type="text" class="form-control form-control-solid" id="docl" formControlName="pm_doc_list_code"  (change)="onChangeCust()"
-                        aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <span class="input-group-text" (click)="open2(content2)">
-                                <i class="text-dark-50 flaticon2-search"></i> </span>
-                        </div>
-                    </div> -->
-
+                    
                     <div class="form-group col-2">
-                        <label class="form-group">Code specification :</label>
+                        <!-- pm_type -->
+                        <label class="form-group">Famille Travaux:</label> 
                         <div class="input-group input-group-sm">
+                            <select    
+                            formControlName="pm_doc_list" class="form-control form-control-sm form-control-solid">
+                            <option *ngFor="let list of project_lists" [value]="list.code_value" class="mt-2 mb-2 dropdown-item">{{list.code_cmmt}}</option>
+                        </select>
+                            
+                        </div>
 
-                            <input type="text" class="form-control form-control-solid" id="cust" formControlName="pm_doc_list_code"  (change)="onChangeCust()"
-                                aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <span class="input-group-text" (click)="open3(content3)">
-                                    <i class="text-dark-50 flaticon2-search"></i> </span>
-                            </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <!-- pm_type -->
+                        <label class="form-group">Nature Travaux:</label> 
+                        <div class="input-group input-group-sm">
+                            <select    
+                            formControlName="pm_reason" class="form-control form-control-sm form-control-solid">
+                            <option *ngFor="let rsn of project_reasons" [value]="rsn.code_value" class="mt-2 mb-2 dropdown-item">{{rsn.code_cmmt}}</option>
+                        </select>
+                            
                         </div>
 
                     </div>

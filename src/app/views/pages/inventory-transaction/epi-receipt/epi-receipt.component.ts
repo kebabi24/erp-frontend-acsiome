@@ -931,7 +931,7 @@ export class EpiReceiptComponent implements OnInit {
     this.loadingSubject.next(true);
     const controls = this.trForm.controls;
 
-    this.inventoryTransactionService.addRCTUNP({ detail, it, nlot }).subscribe(
+    this.inventoryTransactionService.addRCTEPI({ detail, it, nlot }).subscribe(
       (reponse: any) => {
         console.log(reponse);
         // const arrayOctet = new Uint8Array(reponse.pdf.data)

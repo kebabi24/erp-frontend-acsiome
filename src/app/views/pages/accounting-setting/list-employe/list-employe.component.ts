@@ -112,7 +112,7 @@ export class ListEmployeComponent implements OnInit {
                 // use onCellClick OR grid.onClick.subscribe which you can see down below
                 onCellClick: (e: Event, args: OnEventArgs) => {
                     const id = args.dataContext.id
-                    this.router.navigateByUrl(`/training/edit-student/${id}`)
+                    this.router.navigateByUrl(`/accounting-setting/edit-employe/${id}`)
                 },
             },
             {
@@ -125,7 +125,7 @@ export class ListEmployeComponent implements OnInit {
             },
             {
                 id: "emp_addr",
-                name: "Code",
+                name: "Matricule",
                 field: "emp_addr",
                 sortable: true,
                 filterable: true,
@@ -150,6 +150,44 @@ export class ListEmployeComponent implements OnInit {
                 type: FieldType.string,
             },
             {
+              id: "emp_first_date",
+              name: "Date Recrutement",
+              field: "emp_first_date",
+              sortable: true,
+              filterable: true,
+              width: 50,
+              type: FieldType.dateIso,
+            },
+            
+            {
+              id: "emp_job",
+              name: "Service",
+              field: "emp_job",
+              sortable: true,
+              filterable: true,
+              width: 50,
+              type: FieldType.string,
+            },
+            
+            {
+              id: "emp_level",
+              name: "Poste",
+              field: "emp_level",
+              sortable: true,
+              filterable: true,
+              width: 50,
+              type: FieldType.string,
+            },
+            {
+              id: "emp_last_date",
+              name: "Date Départ",
+              field: "emp_last_date",
+              sortable: true,
+              filterable: true,
+              width: 50,
+              type: FieldType.dateIso,
+            },
+            {
               id: "emp_line1",
               name: "Adresse",
               field: "emp_line1",
@@ -169,41 +207,94 @@ export class ListEmployeComponent implements OnInit {
             },
             
             {
-              id: "emp_job",
-              name: "Domaine de formation",
-              field: "emp_job",
+              id: "emp_ss_id",
+              name: "N° Sécurité sociale",
+              field: "emp_ss_id",
               sortable: true,
               filterable: true,
-              width: 50,
-              type: FieldType.string,
-            },
-            
-            {
-              id: "emp_level",
-              name: "Niveau",
-              field: "emp_level",
-              sortable: true,
-              filterable: true,
-              width: 50,
               type: FieldType.string,
             },
             {
-              id: "emp_site",
-              name: "Site",
-              field: "emp_site",
+              id: "chr01",
+              name: "Taille H",
+              field: "chr01",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "int01",
+              name: "Pointure",
+              field: "int01",
               sortable: true,
               filterable: true,
               type: FieldType.string,
             },
             
-            // {
-            //   id: "emp_shift",
-            //   name: "Equipe",
-            //   field: "emp_shift",
-            //   sortable: true,
-            //   filterable: true,
-            //   type: FieldType.string,
-            // },
+            {
+              id: "emp_sex",
+              name: "Genre",
+              field: "emp_sex",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "emp_blood",
+              name: "Groupe Sanguin",
+              field: "emp_blood",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+             {
+              id: "emp_familysit",
+              name: "Situation familliale",
+              field: "emp_familysit",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+             {
+              id: "emp_child_nbr",
+              name: "Enfants",
+              field: "emp_child_nbr",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+             {
+              id: "emp_child_nbr",
+              name: "Enfants",
+              field: "emp_child_nbr",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+             {
+              id: "emp_phone",
+              name: "N° Téléphone",
+              field: "emp_phone",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "emp_mail",
+              name: "Email",
+              field: "emp_mail",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
+            {
+              id: "emp_contact_tel",
+              name: "Contact urgence",
+              field: "emp_contact_tel",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
          
            
         ]
@@ -243,58 +334,8 @@ export class ListEmployeComponent implements OnInit {
           () => {}
       )}
     }
-    createemp() {
-      this.loadingSubject.next(false)
-      const url = `/accounting-setting/create-student`
-      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-  }
-  students() {
-    this.loadingSubject.next(false)
-    const url = `/accounting-setting/list-employe`
-    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-listsession() {
-  this.loadingSubject.next(false)
-  const url = `/training/training-session-list`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-listtraining() {
-  this.loadingSubject.next(false)
-  const url = `/training/list-training`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-createtraining() {
-  this.loadingSubject.next(false)
-  const url = `/training/create-training`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-
-createsession() {
-this.loadingSubject.next(false)
-const url = `/training/create-training-session`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-approverequest() {
-this.loadingSubject.next(false)
-const url = `/training/approval-req`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-createTrainor() {
-this.loadingSubject.next(false)
-const url = `/providers/create-rep-job`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-createlocation() {
-this.loadingSubject.next(false)
-const url = `/inventory-settings/list-loc`
-this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-}
-payment() {
-  this.loadingSubject.next(false)
-  const url = `/sales/payment-psh`
-  this.router.navigateByUrl(url, { relativeTo: this.activatedRoute })
-  }
-  createForm() {
+    
+createForm() {
     this.loadingSubject.next(false)
   //create form
   

@@ -6,7 +6,7 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "
 import { Column, GridOption, Formatter, EditorValidator, EditorArgs, Editor, Editors, AngularGridInstance, GridService, FieldType, Formatters, OnEventArgs } from "angular-slickgrid";
 import { BehaviorSubject, Observable, Observer } from "rxjs";
 import { FormGroup, FormBuilder, Validators, NgControlStatus } from "@angular/forms";
-import { EmployeService, CodeService, ProjectService, TaskService, ProviderService, AddReportService, AddReport, SequenceService, ItemService, LocationService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, InventoryTransactionService } from "../../../../core/erp";
+import { EmployeService, CodeService, ProjectService, TaskService, ProviderService, AddReportService, AddReport, SequenceService, ItemService, LocationService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, InventoryTransactionService,AffectEmpService,WorkCenterService } from "../../../../core/erp";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
@@ -134,7 +134,7 @@ export class AddReportComponent implements OnInit {
 
   alertWarning: any;
 
-  constructor(config: NgbDropdownConfig, private empFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private modalService: NgbModal, private employeService: EmployeService, private addReportService: AddReportService, private sequenceService: SequenceService, private projectService: ProjectService, private providerService: ProviderService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private locationService: LocationService, private codeService: CodeService, private inventoryStatusService: InventoryStatusService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService) {
+  constructor(config: NgbDropdownConfig, private empFB: FormBuilder, private activatedRoute: ActivatedRoute, private router: Router, public dialog: MatDialog, private layoutUtilsService: LayoutUtilsService, private modalService: NgbModal, private employeService: EmployeService, private addReportService: AddReportService, private sequenceService: SequenceService, private projectService: ProjectService,private affectEmpService: AffectEmpService, private providerService: ProviderService, private inventoryTransactionService: InventoryTransactionService, private sctService: CostSimulationService, private itemsService: ItemService, private locationService: LocationService, private codeService: CodeService, private inventoryStatusService: InventoryStatusService, private siteService: SiteService, private mesureService: MesureService, private locationDetailService: LocationDetailService,private workcenterService:WorkCenterService) {
     config.autoClose = true;
   }
 
@@ -165,13 +165,13 @@ export class AddReportComponent implements OnInit {
     this.addReport = new AddReport();
 
     this.empForm = this.empFB.group({
-      pmr_pm_code: [this.addReport.pmr_pm_code, Validators.required],
+      pmr_pm_code: [this.addReport.pmr_pm_code,],
       pmdesc: [{ value: "", disabled: true }],
       pmr_inst: [this.addReport.pmr_inst, Validators.required],
-      pmr_task: [this.addReport.pmr_task, Validators.required],
+      pmr_task: [this.addReport.pmr_task,],
       taskdesc: [{ value: "", disabled: true }],
 
-      pmr_task_status: [this.addReport.pmr_task_status, Validators.required],
+      pmr_task_status: [this.addReport.pmr_task_status,],
       pmr_close: [false],
     });
   }
@@ -1188,21 +1188,10 @@ export class AddReportComponent implements OnInit {
         this.pm_win_addr = item.pm_win_addr;
         controls.pmr_pm_code.setValue(item.pm_code || "");
         controls.pmdesc.setValue(item.pm_desc || "");
-        this.siteService.getByOne({ si_cust: item.pm_win_addr }).subscribe((res: any) => {
-          this.site = res.data.si_site;
-
-          // this.locationService.getByOne({ loc_site: this.site, loc_project: item.pm_code }).subscribe((resp: any) => {
-          //   if (resp.data == null) {
-          //     alert("BT n'est pas affecté à un emplacement ");
-
-          //     controls.pmr_pm_code.setValue(null);
-          //     controls.pmdesc.setValue(null);
-          //   } else {
-          //     console.log(resp.data);
-          //     this.loc = resp.data.loc_loc;
-          //     console.log(this.site, this.loc);
-          //   }
-          // });
+        controls.pmr_inst.setValue(item.pm_win_addr)
+        this.affectEmpService.getBy({ pme_pm_code: item.pm_code }).subscribe((res: any) => {
+         this.mvdataset = res.data
+          this.mvdataView.setItems(this.mvdataset)
         });
       });
     }
@@ -1283,7 +1272,7 @@ export class AddReportComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObjinst.getDataItem(idx);
         console.log(item);
-        controls.pmr_inst.setValue(item.pmd_task || "");
+        controls.pmr_inst.setValue(item.wc_mch || "");
       });
     }
   }
@@ -1304,31 +1293,32 @@ export class AddReportComponent implements OnInit {
         maxWidth: 40,
       },
       {
-        id: "pmd_task",
-        name: "Code Instruction",
-        field: "pmd_task",
+        id: "wc_wkctr",
+        name: "Code Ligne",
+        field: "wc_wkctr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "tk_desc",
-        name: "Designation",
-        field: "task.tk_desc",
-        sortable: true,
-        width: 120,
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
-        id: "pmd_qty",
-        name: "Quantité",
-        field: "pmd_qty",
+        id: "wc_mch",
+        name: "Machine",
+        field: "wc_mch",
         sortable: true,
         width: 80,
         filterable: true,
         type: FieldType.string,
       },
+      {
+        id: "wc_desc",
+        name: "Designation",
+        field: "wc_desc",
+        sortable: true,
+        width: 120,
+        filterable: true,
+        type: FieldType.string,
+      },
+      
       /* {
         id: "pmd_price",
         name: "Prix",
@@ -1338,24 +1328,24 @@ export class AddReportComponent implements OnInit {
         filterable: true,
         type: FieldType.float,
     },*/
-      {
-        id: "tk_um",
-        name: "UM",
-        field: "task.tk_um",
-        sortable: true,
+      // {
+      //   id: "tk_um",
+      //   name: "UM",
+      //   field: "task.tk_um",
+      //   sortable: true,
 
-        filterable: true,
-        type: FieldType.string,
-      },
-      {
-        id: "pmd_price",
-        name: "Prix",
-        field: "pmd_price",
-        sortable: true,
-        width: 80,
-        filterable: true,
-        type: FieldType.float,
-      },
+      //   filterable: true,
+      //   type: FieldType.string,
+      // },
+      // {
+      //   id: "pmd_price",
+      //   name: "Prix",
+      //   field: "pmd_price",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: true,
+      //   type: FieldType.float,
+      // },
     ];
 
     this.gridOptionsinst = {
@@ -1397,7 +1387,7 @@ export class AddReportComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.projectService.getBy({ pm_code: controls.pmr_pm_code.value }).subscribe((response: any) => (this.datasetinst = response.data.details));
+    this.workcenterService.getBy({}).subscribe((response: any) => (this.datasetinst = response.data));
   }
   openinst(content) {
     this.prepareGridinst();

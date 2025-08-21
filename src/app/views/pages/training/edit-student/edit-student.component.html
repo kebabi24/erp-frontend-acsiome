@@ -223,21 +223,7 @@
                                 <div *ngIf="empForm.controls['emp_ss_id'].errors && (empForm.controls['emp_ss_id'].dirty || empForm.controls['emp_ss_id'].touched) "
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                             </div> -->
-                            <div class="form-group col-2">
-                                <label class="form-group">Client : *</label>
-                                <div class="input-group input-group-lg">
-
-                                    <input type="text" class="form-control form-control-solid" 
-                                        aria-describedby="basic-addon2" formControlName="emp_line2" (change)="onChangecust()" id="emp_line2">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" (click)="opencust(contentcust)">
-                                            <i class="text-dark-50 flaticon2-search"></i> </span>
-                                    </div>
-                                
-                                </div>
-        
-                                
-                            </div>
+                            
                             <div class="form-group col-2">
                                     <label class="form-group">Responsable : *</label>
                                     <div class="input-group input-group-lg">
@@ -284,6 +270,21 @@
                                 
                             </div>  
                             <div class="form-group col-2">
+                                <label class="form-group">Structure : *</label>
+                                <div class="input-group input-group-lg">
+
+                                    <input type="text" class="form-control form-control-solid" 
+                                        aria-describedby="basic-addon2" formControlName="emp_line2" (change)="onChangecust()" id="emp_line2">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" (click)="opencust(contentcust)">
+                                            <i class="text-dark-50 flaticon2-search"></i> </span>
+                                    </div>
+                                
+                                </div>
+        
+                                
+                            </div>
+                            <div class="form-group col-2">
                                 <label class="form-group">Service : *</label>
                                 <div class="input-group input-group-lg">
         
@@ -301,7 +302,7 @@
                                 
                             </div>    
                             <div class="form-group col-2">
-                                <label class="form-group">Niveau : *</label>
+                                <label class="form-group">Poste : *</label>
                                 <div class="input-group input-group-lg">
         
                                     <input type="text" formControlName="emp_level" (change)="onChangelevel()" id="level"

@@ -38,7 +38,7 @@ import { NgbProgressbarModule, NgbProgressbarConfig } from "@ng-bootstrap/ng-boo
 import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularSlickgridModule } from "angular-slickgrid";
 
-import {  WorkCenterService,ProjectService, TaskService, ItemService, ProviderService, CustomerService, BomService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, LocationService, InventoryTransactionService, PsService, SaleOrderService, RequisitionService, EmployeService, AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService } from "../../../core/erp";
+import {  WorkCenterService,ProjectService, TaskService, ItemService, ProviderService, CustomerService, BomService, CostSimulationService, LocationDetailService, InventoryStatusService, MesureService, SiteService, LocationService, InventoryTransactionService, PsService, SaleOrderService, RequisitionService, EmployeService, AddReportService, SequenceService, DeviseService, QualityControlService, AffectEmpService, DealService,OperationHistoryService } from "../../../core/erp";
 
 import { ListPmComponent } from "./list-pm/list-pm.component";
 import { AddReportComponent } from "./add-report/add-report.component";
@@ -187,6 +187,7 @@ const routes: Routes = [
     InventoryTransactionService,
     TypesUtilsService,
     LayoutUtilsService,
+    OperationHistoryService,
   ],
   entryComponents: [ActionNotificationComponent, DeleteEntityDialogComponent, FetchEntityDialogComponent, UpdateStatusDialogComponent],
 })
