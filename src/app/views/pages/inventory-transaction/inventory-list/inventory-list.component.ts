@@ -253,7 +253,7 @@ export class InventoryListComponent implements OnInit {
            
           {
             id: "chr01",
-            name: "FAMILLE",
+            name: "Famille",
             field: "chr01",
             sortable: true,
             filterable: true,
@@ -276,7 +276,7 @@ export class InventoryListComponent implements OnInit {
           }, 
           {
             id: "chr02",
-            name: "groupe",
+            name: "Groupe",
             field: "chr02",
             sortable: true,
             filterable: true,

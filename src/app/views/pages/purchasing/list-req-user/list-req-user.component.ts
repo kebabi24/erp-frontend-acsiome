@@ -222,6 +222,14 @@ export class ListReqUserComponent implements OnInit {
          type: FieldType.string,
        },
        {
+        id: "chr04",
+        name: "Service",
+        field: "req.chr04",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+       {
          id: "rqm_rqby_userid",
          name: "Demandeur",
          field: "req.rqm_rqby_userid",

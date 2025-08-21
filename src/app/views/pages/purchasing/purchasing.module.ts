@@ -70,6 +70,8 @@ import {
   ReasonService,
   EmployeService,
   TimbreService,
+  ConfigService,
+  VoucherProformaService,
 } from "../../../core/erp";
 import { CreatePurchaseOrderComponent } from "./create-purchase-order/create-purchase-order.component";
 import { PurchaseOrderApprovalComponent } from "./purchase-order-approval/purchase-order-approval.component";
@@ -81,6 +83,7 @@ import { VendorProposalListComponent } from "./vendor-proposal-list/vendor-propo
 import { PurchaseOrderListComponent } from "./purchase-order-list/purchase-order-list.component";
 import { RowDetailViewComponent } from "./rowDetails/rowdetail-view.component";
 import { RowDetailPreloadComponent } from "./rowDetails/row-details-preload.component";
+import { RowDetailViewSeqComponent } from './rowDetails/rowdetail-view-seq.component';
 import { RowDetailViewVpComponent } from './rowDetails/rowdetail-view-vp.component';
 import { RowDetailViewPoComponent } from './rowDetails/rowdetail-view-po.component';
 import { EditStatusPoComponent } from './edit-status-po/edit-status-po.component';
@@ -99,6 +102,12 @@ import { EpiCreateOaComponent } from './epi-create-oa/epi-create-oa.component';
 import { ListReqUserComponent } from './list-req-user/list-req-user.component';
 import { ReqApprovalComponent } from './req-approval/req-approval.component';
 import { EditVendorProposalComponent } from './edit-vendor-proposal/edit-vendor-proposal.component';
+import { CreateOaServiceComponent } from './create-oa-service/create-oa-service.component';
+import { CreateSeqReqComponent } from './create-seq-req/create-seq-req.component';
+import { ListSeqReqComponent } from './list-seq-req/list-seq-req.component';
+import { EditSeqReqComponent } from './edit-seq-req/edit-seq-req.component';
+import { CreateProformaComponent } from './create-proforma/create-proforma.component';
+import { ListProformaComponent } from './list-proforma/list-proforma.component';
 
 const routes: Routes = [
   {
@@ -227,6 +236,30 @@ const routes: Routes = [
         path: "edit-vendor-proposal/:id",
         component: EditVendorProposalComponent,
       },
+      {
+        path: "create-oa-service",
+        component: CreateOaServiceComponent,
+      },
+      {
+        path: "create-seq-req",
+        component: CreateSeqReqComponent,
+      },
+      {
+        path: "list-seq-req",
+        component: ListSeqReqComponent,
+      },
+      {
+        path: "edit-seq-req/:id",
+        component: EditSeqReqComponent,
+      },
+      {
+        path: "create-proforma",
+        component: CreateProformaComponent,
+      },
+      {
+        path: "list-proforma",
+        component: ListProformaComponent,
+      },
     ],
   },
 ];
@@ -246,6 +279,7 @@ const routes: Routes = [
     RowDetailPreloadComponent,
     RowDetailViewComponent,
     RowDetailViewVpComponent,
+    RowDetailViewSeqComponent,
     RowDetailViewPoComponent,
     EditStatusPoComponent,
     PurchaseListComponent,
@@ -262,7 +296,13 @@ const routes: Routes = [
     EpiCreateOaComponent,
     ListReqUserComponent,
     ReqApprovalComponent,
-    EditVendorProposalComponent
+    EditVendorProposalComponent,
+    CreateOaServiceComponent,
+    CreateSeqReqComponent,
+    ListSeqReqComponent,
+    EditSeqReqComponent,
+    CreateProformaComponent,
+    ListProformaComponent
   ],
   imports: [
     CommonModule,
@@ -318,6 +358,8 @@ const routes: Routes = [
     AccountUnplanifedService,
     ReasonService,
     EmployeService,
+    ConfigService,
+    VoucherProformaService,
   ],
 
   entryComponents: [
@@ -328,7 +370,8 @@ const routes: Routes = [
     RowDetailPreloadComponent,
     RowDetailViewComponent,
     RowDetailViewVpComponent,
-    RowDetailViewPoComponent
+    RowDetailViewPoComponent,
+    RowDetailViewSeqComponent
   ],
 })
 export class PurchasingModule {}

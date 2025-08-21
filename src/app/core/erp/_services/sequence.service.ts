@@ -25,6 +25,10 @@ export class SequenceService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, sequence, { headers: httpHeaders })
     }
+    public addS(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/S`, data, { headers: httpHeaders })
+    }
     // READ
     public getAll() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
@@ -34,18 +38,35 @@ export class SequenceService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
     }
+    public getByService(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findservice`,data, { headers: httpHeaders })
+    }
+    public getBySequence() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL+'/findsequence', { headers: httpHeaders })
+    }
     public getByOne(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findone`,data, { headers: httpHeaders })
     }
+   
     public getOne(id: Number) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
+    public getOneSer(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/Ser/${id}`, { headers: httpHeaders })
     }
     // UPDATE
     public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`,data, { headers: httpHeaders })
+    }
+    public updateD(id: Number, data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/det/${id}`,data, { headers: httpHeaders })
     }
     // DELETE
 }

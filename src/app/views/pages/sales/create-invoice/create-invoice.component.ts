@@ -1858,7 +1858,7 @@ console.log("this.iharray[j].desc",this.iharray)
       doc.line(150, i - 5, 150, i );
       doc.text(String(this.iharray[j].itdh_taxc) + "%" , 153 , i  - 1);
       doc.line(160, i - 5 , 160, i );
-      doc.text(String(this.iharray[j].itdh_disc_pct) + "%" , 163 , i  - 1);
+      doc.text(String(Number(this.iharray[j].itdh_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
       doc.line(170, i - 5 , 170, i );
       doc.text(String((this.iharray[j].itdh_price *
               ((100 - this.iharray[j].itdh_disc_pct) / 100) *
@@ -1903,7 +1903,7 @@ console.log("this.iharray[j].desc",this.iharray)
     doc.line(150, i - 5, 150, i );
     doc.text(String(this.iharray[j].itdh_taxc) + "%" , 153 , i  - 1);
     doc.line(160, i - 5 , 160, i );
-    doc.text(String(this.iharray[j].itdh_disc_pct) + "%" , 163 , i  - 1);
+    doc.text(String(Number(this.iharray[j].itdh_disc_pct).toFixed(2)) + "%" , 163 , i  - 1);
     doc.line(170, i - 5 , 170, i );
     doc.text(String((this.iharray[j].itdh_price *
       ((100 - this.iharray[j].itdh_disc_pct) / 100) *

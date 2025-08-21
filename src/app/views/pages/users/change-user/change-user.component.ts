@@ -39,7 +39,7 @@ export class ChangeUserComponent implements OnInit {
   usrd_pwd_new: String;
   usrd_pwd_before: string;
   userEdit: any;
-  title: String = "Modifier Devise - ";
+  title: String = "Modifier Utilisateur - ";
   datasite: [];
   dataprinter: [];
   columnDefinitionssite: Column[] = [];
@@ -158,9 +158,9 @@ export class ChangeUserComponent implements OnInit {
       usrd_email: [this.userEdit.usrd_email],
       usrd_dft_printer: [this.userEdit.usrd_dft_printer],
       usrd_phone: [this.userEdit.usrd_phone],
-      usrd_pwd: [{value: "", disabled: !this.isExist}],
-      usrd_pwd_before: [this.usrd_pwd_before, Validators.required],
-      usrd_pwd_new: [{value: "", disabled: !this.isExist}],
+      // usrd_pwd: [{value: "", disabled: !this.isExist}],
+      // usrd_pwd_before: [this.usrd_pwd_before, Validators.required],
+      // usrd_pwd_new: [{value: "", disabled: !this.isExist}],
       usrd_active: [this.userEdit.usrd_active],
       init: [false],
     });

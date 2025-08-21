@@ -544,6 +544,7 @@ as: any
              console.log(this.dataset)
              this.accountShiperService.getBy({as_nbr:args.dataContext.psh_shiper}).subscribe(
               (respo: any) => {   
+                console.log(respo.data)
                 this.as = respo.data[0]
                 this.customerService.getBy({cm_addr:this.as.as_cust}).subscribe(
                   (respon: any) => {   

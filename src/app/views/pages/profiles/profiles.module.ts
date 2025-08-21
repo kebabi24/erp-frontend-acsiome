@@ -50,9 +50,12 @@ import {
 } from "@ng-bootstrap/ng-bootstrap"
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
-import { UsersService } from "../../../core/erp"
+import { CodeService, ProfileServiceService, UsersService } from "../../../core/erp"
 import { TreeModule } from "@circlon/angular-tree-component";
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { ProfileServiceComponent } from './profile-service/profile-service.component';
+import { ListProfileServiceComponent } from './list-profile-service/list-profile-service.component';
+import { EditProfileServiceComponent } from './edit-profile-service/edit-profile-service.component';
 
 const routes: Routes = [
     {
@@ -67,6 +70,18 @@ const routes: Routes = [
         path: "edit-profile/:id",
         component: EditProfileComponent,
     },
+    {
+        path: "profile-service",
+        component: ProfileServiceComponent,
+    },
+    {
+        path: "list-profile-service",
+        component: ListProfileServiceComponent,
+    },
+    {
+        path: "edit-profile-service/:id",
+        component: EditProfileServiceComponent,
+    },
 ]
 
 @NgModule({
@@ -75,6 +90,9 @@ const routes: Routes = [
         CreateProfileComponent,
         ProfilesListComponent,
         EditProfileComponent,
+        ProfileServiceComponent,
+        ListProfileServiceComponent,
+        EditProfileServiceComponent,
     ],
     imports: [
         CommonModule,
@@ -111,6 +129,8 @@ const routes: Routes = [
         LayoutUtilsService,
         HttpUtilsService,
         UsersService,
+        CodeService,
+        ProfileServiceService,
         TypesUtilsService,
         LayoutUtilsService,
     ],

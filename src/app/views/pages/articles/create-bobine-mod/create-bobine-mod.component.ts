@@ -103,9 +103,9 @@ const myCustomCheckmarkFormatter: Formatter = (
 };
 
 @Component({
-  selector: 'kt-create-Bobine-mod',
-  templateUrl: './create-Bobine-mod.component.html',
-  styleUrls: ['./create-Bobine-mod.component.scss']
+  selector: 'kt-create-bobine-mod',
+  templateUrl: './create-bobine-mod.component.html',
+  styleUrls: ['./create-bobine-mod.component.scss']
 })
 export class CreateBobineModComponent implements OnInit {
 
