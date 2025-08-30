@@ -1002,7 +1002,7 @@ onSubmit() {
      
       {
         id: "code_value",
-        name: "Code Domaine",
+        name: "Code Service",
         field: "code_value",
         sortable: true,
         minWidth: 70,
@@ -1055,7 +1055,7 @@ onSubmit() {
 
     // fill the dataset with your data
     this.codeService
-      .getBy({code_fldname:"pt_draw"})
+      .getBy({code_fldname:"emp_job"})
       .subscribe((response: any) => (this.domains = response.data));
   }
   opendom(content) {

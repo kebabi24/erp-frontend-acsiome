@@ -1,0 +1,354 @@
+<kt-portlet>
+    <kt-portlet-header [sticky]="true" title="title" [class]="'card-head-lg'"
+        [viewLoading$]="loading$">
+        <ng-container ktPortletTools>
+            <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
+            <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Enregistrer </button>
+
+        </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+        <div class="example-preview">
+
+            <form class="form" [formGroup]="vpForm">
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+                    (close)="onAlertClose($event)">
+                    {{message}}
+                </kt-alert>
+                <div class="row">
+                  
+                    <div class="form-group col-2">
+                        <label class="form-group">N° Facture Proforma:</label>
+                        <input type="text"  [(ngModel)]="vhpEdit.vhp_inv_nbr"   disabled
+                        [className]="vpForm.controls['vhp_inv_nbr'].errors && (vpForm.controls['vhp_inv_nbr'].dirty || vpForm.controls['vhp_inv_nbr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                              
+                            formControlName="vhp_inv_nbr">
+                            <div *ngIf="vpForm.controls['vhp_inv_nbr'].errors && (vpForm.controls['vhp_inv_nbr'].dirty || vpForm.controls['vhp_inv_nbr'].touched)"
+                            class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Numero BC:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="vhp_po_nbr"
+                                aria-describedby="basic-addon2" (change)="onChange()">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open5(content5)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">FOURNISSEUR :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="vhp_vend" (change)="onChangeVend()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="open2(content2)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Nom :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" id="name" formControlName="name" disabled
+                                aria-describedby="basic-addon2">
+                           
+                        </div>
+
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Date offre:</label>
+                        <div class="input-group input-group-sm">
+                            <input 
+                            
+                            [className]="vpForm.controls['vhp_inv_date'].errors && (vpForm.controls['vhp_inv_date'].dirty || vpForm.controls['vhp_inv_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                       
+                            formControlName="vhp_inv_date"
+                                placeholder="jj-mm-aaaa" name="vhp_inv_date" ngbDatepicker f #vhp_inv_date="ngbDatepicker" >
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="vhp_inv_date.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                        <div *ngIf="vpForm.controls['vhp_inv_date'].errors && (vpForm.controls['vhp_inv_date'].dirty || vpForm.controls['vhp_inv_date'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Echéance:</label>
+                        <div class="input-group input-group-sm">
+                            <input
+                            [className]="vpForm.controls['vhp_due_date'].errors && (vpForm.controls['vhp_due_date'].dirty || vpForm.controls['vhp_due_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                       
+                            formControlName="vhp_due_date"
+                                placeholder="jj-mm-aaaa" name="vhp_due_date" ngbDatepicker f #vhp_due_date="ngbDatepicker" (ngModelChange)= "changeRateCurr()">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" (click)="vhp_due_date.toggle()" type="button">
+                                    <i class="flaticon-calendar-with-a-clock-time-tools"></i>
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div *ngIf="vpForm.controls['vhp_due_date'].errors && (vpForm.controls['vhp_due_date'].dirty || vpForm.controls['vhp_due_date'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Methode de paiement:</label>
+                        <select class="form-control form-control-sm form-control-solid" formControlName="vhp_cr_terms" (change)="onChangePay()"
+                            id="vhp_cr_terms">
+                            <option value=""></option>
+                            <option *ngFor="let elem of paymentMethods" [value]="elem.code_value">
+                                {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                        </select>
+                        <div *ngIf="vpForm.controls['vhp_cr_terms'].errors && (vpForm.controls['vhp_cr_terms'].dirty || vpForm.controls['vhp_cr_terms'].touched)"
+                        class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                    </div>
+                    
+                    
+                    <div class="form-group col-2">
+                        <label class="form-group">DEVISE :</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="vhp_curr" (change)="changeCurr()"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" (click)="opencurr(contentcurr)">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Taux de change:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="vhp_ex_rate"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-2">
+                        <label class="form-group">Taux de change:</label>
+                        <div class="input-group input-group-sm">
+
+                            <input type="text" class="form-control form-control-solid" formControlName="vhp_ex_rate2"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="text-dark-50 flaticon2-search"></i> </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Mode Exp:</label>
+                        
+                            <select  [className]="vpForm.controls['vhp_shipvia'].errors && (vpForm.controls['vhp_shipvia'].dirty || vpForm.controls['vhp_shipvia'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                       
+                                formControlName="vhp_shipvia" id="exampleSelects5">
+                                <option value=""></option>
+                                <option *ngFor="let elem of vd_shipvia" [value]="elem.code_value">
+                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                            </select>
+                            <div *ngIf="vpForm.controls['vhp_shipvia'].errors && (vpForm.controls['vhp_shipvia'].dirty || vpForm.controls['vhp_shipvia'].touched)"
+                    class="invalid-feedback">Ce Champs est obligatoire</div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group">Taxable:</label>
+                        <div class="input-group input-group-sm">
+
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox" class="form-control form-control-sm form-control-solid" formControlName="vhp_taxable" (change)="onChangeTAX()" />
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">    
+                    <div class="form-group col-8">
+                        <label class="form-group">Remarque:</label>
+                        <textarea class="form-control form-control-sm form-control-solid" formControlName="vhp_rmks"
+                            rows="2"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <button class="btn btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter un
+                        Article</button>
+                </div>
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="mGrid"
+                        [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions" [dataset]="dataset"
+                        (onAngularGridCreated)="gridReady($event)">
+                    </angular-slickgrid>
+                </div>
+            </form>
+            <form class="form" [formGroup]="totForm">
+                <h3 class="card-title text-center" col-6>Totaux:                </h3>
+                <div class row col-6>
+                   
+                        
+                        <div class="form-group-sm row">
+                            <label class="col-9 col-form-label  text-right ">Total HT</label>
+                            <div class="col-2">
+                                <input class="form-control" type="number"  style="text-align: right;" formControlName="tht">
+                            </div>
+                        </div>
+                    
+                        <div class="form-group-sm row">
+                            <label class="col-9 col-form-label  text-right ">TVA</label>
+                            <div class="col-2">
+                                <input class="form-control" type="number" style="text-align: right;" formControlName="tva">
+                            </div>
+                        </div>
+                        <div class="form-group-sm row">
+                            <label class="col-9 col-form-label  text-right ">Timbre</label>
+                            <div class="col-2">
+                                <input class="form-control" type="number" style="text-align: right;" formControlName="timbre">
+                            </div>
+                        </div>
+                        <div class="form-group-sm row">
+                            <label class="col-9 col-form-label  text-right ">TTC</label>
+                            <div class="col-2">
+                                <input class="form-control" type="number" style="text-align: right;" formControlName="ttc">
+                            </div>
+                        </div>
+                    
+                </div>            
+            </form>
+        </div>
+
+
+        <div>
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir le FOURNISSEUR</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitions2" (onAngularGridCreated)="angularGridReady2($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged2($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions2" [dataset]="providers">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+
+
+        <div>
+            <ng-template #content4 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir l'article</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitions4" (onAngularGridCreated)="angularGridReady4($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged4($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions4" [dataset]="items">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
+
+        </div>
+        <div>
+            <ng-template #content5 let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir La Demande</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="griditem"
+                            [columnDefinitions]="columnDefinitions5" (onAngularGridCreated)="angularGridReady5($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChanged5($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptions5" [dataset]="requisitions">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+            <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo
+                modal</button>
+
+        </div>
+        <div>
+            <ng-template #contentcurr let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir la Devise</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridpro"
+                            [columnDefinitions]="columnDefinitionscurr" (onAngularGridCreated)="angularGridReadycurr($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedcurr($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionscurr" [dataset]="devises">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>

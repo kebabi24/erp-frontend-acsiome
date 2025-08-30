@@ -52,6 +52,7 @@ import {
     SiteService,
     LocationService,
     MesureService,
+    EmployeService,
 } from "../../../../core/erp"
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -168,6 +169,8 @@ export class EditPoComponent implements OnInit {
       private siteService: SiteService,
       private locationService: LocationService,
       private mesureService: MesureService,
+      private employeService: EmployeService,
+      
       private taxService: TaxeService
   ) {
       config.autoClose = true
@@ -759,6 +762,12 @@ export class EditPoComponent implements OnInit {
 
           return
       }
+      if (controls.po_cr_terms.value.startsWith("ES" ) && (controls.po_buyer.value == null || controls.po_buyer.value == "" )) {
+        this.message = "Acheteur Obligatoire pour le mode Espece"
+        this.hasFormErrors = true
+
+        return
+    }
       let po = this.preparePo();
       this.addPo(po, this.dataset);
       
@@ -846,6 +855,19 @@ export class EditPoComponent implements OnInit {
     return _po;
   
   }
+  onChangeEmp() {
+    const controls = this.poForm.controls;
+      
+    this.employeService.getBy({ emp_addr: controls.po_buyer.value }).subscribe((response: any) => {
+      //   const { data } = response;
+      
+      if (response.data.length == 0 ) {
+        alert("Employe n'exist pas")
+        controls.po_buyer.setValue(null)
+        document.getElementById("po_buyer").focus();
+      } 
+    });
+}
   onChangeTAX() {
     const controls = this.poForm.controls;
     const tax = controls.po_taxable.value;
@@ -912,20 +934,41 @@ export class EditPoComponent implements OnInit {
         maxWidth: 80,
       },
       {
-        id: "usrd_code",
-        name: "code user",
-        field: "usrd_code",
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "usrd_name",
-        name: "nom",
-        field: "usrd_name",
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
         sortable: true,
+        width: 80,
         filterable: true,
         type: FieldType.string,
+      },
+     
+     
+      {
+        id: "emp_job",
+        name: "Service",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "occ",
+        name: "Nombre des Achats",
+        field: "occ",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.integer,
       },
     ];
 
@@ -959,9 +1002,7 @@ export class EditPoComponent implements OnInit {
     };
 
     // fill the dataset with your data
-    this.userService
-      .getAllUsers()
-      .subscribe((response: any) => (this.users = response.data));
+    this.employeService.getByPo({}).subscribe((response: any) => (this.users = response.data));
   }
   open3(content) {
     this.prepareGrid3();

@@ -54,6 +54,9 @@ import { replaceAll } from "chartist"
 const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
   value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
 
+  import { RowDetailPreloadComponent } from "../rowDetails/row-details-preload.component";
+import { RowDetailViewFpComponent } from "../rowDetails/rowdetail-views-fp.component";
+
 @Component({
   selector: 'kt-list-proforma',
   templateUrl: './list-proforma.component.html',
@@ -159,93 +162,77 @@ export class ListProformaComponent implements OnInit {
             maxWidth: 50,
           },
           {
-            id: "vhp_inv_nbr",
-            name: "N°Facture",
-            field: "vhp_inv_nbr",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "vhp_po_nbr",
-            name: "N° BC",
-            field: "vhp_po_nbr",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-          },
-          {
-            id: "vhp_vend",
-            name: "Fournisseur",
-            field: "vhp_vend",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-                getter: 'vhp_vend',
-                formatter: (g) => `Fournisseur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-                aggregators: [
-                  new Aggregators.Sum('vhp_amt'),  
-                  new Aggregators.Sum('vhp_tax_amt'),
-                  new Aggregators.Sum('vhp_trl1_amt'),  
-                  new Aggregators.Sum('dec01'),  
-                      
-                      
-                
-                ],
-                  aggregateCollapsed: false,
-                  collapsed: false,
-              }
-          },
-          {
-            id: "ad_name",
-            name: "Nom",
-            field: "address.ad_name",
-            sortable: true,
-            filterable: true,
-            type: FieldType.string,
-            grouping: {
-              getter: 'address.ad_name',
-              formatter: (g) => `Nom: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                new Aggregators.Sum('vhp_amt'),  
-                new Aggregators.Sum('vhp_tax_amt'),
-                new Aggregators.Sum('vhp_trl1_amt'),  
-                new Aggregators.Sum('dec01'),  
-                    
-                    
+            id: "edit",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
+            formatter: (row, cell, value, columnDef, dataContext) => {
+             // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+             return `
+                  <a class="btn btn-sm btn-clean btn-icon mr-2" title="Edit Proforma">
+                  <i class="flaticon2-pen"></i>
+              </a>
+              `;
+           },
+            minWidth: 50,
+            maxWidth: 50,
+            // use onCellClick OR grid.onClick.subscribe which you can see down below
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              const id = args.dataContext.id
+              console.log(this.mvdataset)
+              console.log(args.dataContext.vh.vph_inv_nbr)
+              this.router.navigateByUrl(`/purchasing/edit-proforma/${id}`)
               
-              ],
-                aggregateCollapsed: false,
-                collapsed: false,
-            }
+          },
           },
           {
-            id: "vhp_inv_date",
+            id: "vh.vhp_inv_nbr",
+            name: "N°Facture",
+            field: "vh.vhp_inv_nbr",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "vh.vhp_po_nbr",
+            name: "N° BC",
+            field: "vh.vhp_po_nbr",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+          },
+          {
+            id: "vh.vhp_vend",
+            name: "Fournisseur",
+            field: "vh.vhp_vend",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+           
+          },
+          {
+            id: "vh.address.ad_name",
+            name: "Nom",
+            field: "vh.address.ad_name",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+           
+          },
+          {
+            id: "vh.vhp_inv_date",
             name: "Date Effet",
-            field: "vhp_inv_date",
+            field: "vh.vhp_inv_date",
             sortable: true,
             filterable: true,
             type: FieldType.date,
-            grouping: {
-              getter: 'vhp_inv_date',
-              formatter: (g) => `Effet: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                new Aggregators.Sum('vhp_amt'),  
-                  new Aggregators.Sum('vhp_tax_amt'),
-                  new Aggregators.Sum('vhp_trl1_amt'),  
-                  new Aggregators.Sum('dec01'),  
-                    
-              
-              ],
-                aggregateCollapsed: false,
-                collapsed: false,
-            }
+           
           }, 
           {
-            id: "vhp_curr",
+            id: "vh.vhp_curr",
             name: "Devise",
-            field: "vhp_curr",
+            field: "vh.vhp_curr",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -253,93 +240,85 @@ export class ListProformaComponent implements OnInit {
           }, 
           
           {
-            id: "vhp_cr_terms",
-            name: "Mode Paiement",
-            field: "vhp_cr_terms",
+            id: "vh.vhp_shipvia",
+            name: "Mode Expédition",
+            field: "vh.vhp_shipvia",
             sortable: true,
             filterable: true,
             type: FieldType.string,
-            grouping: {
-              getter: 'vhp_cr_terms',
-              formatter: (g) => `Mode Paiement: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-              aggregators: [
-                new Aggregators.Sum('vhp_amt'),  
-                new Aggregators.Sum('vhp_tax_amt'),
-                new Aggregators.Sum('vhp_trl1_amt'),  
-                new Aggregators.Sum('dec01'),  
-                    
-              
-              ],
-                aggregateCollapsed: false,
-                collapsed: false,
-            }
+            
+          }, 
+          {
+            id: "vh.vhp_cr_terms",
+            name: "Mode Paiement",
+            field: "vh.vhp_cr_terms",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+           
           },
           {
-            id: "vhp_ex_rate",
+            id: "vh.vhp_ex_rate",
             name: "Taux Change",
-            field: "vhp_ex_rate",
+            field: "vh.vhp_ex_rate",
             sortable: true,
             filterable: true,
             type: FieldType.float,
           },
           {
-            id: "vhp_ex_rate2",
+            id: "vh.vhp_ex_rate2",
             name: "Taux Change",
-            field: "vhp_ex_rate2",
+            field: "vh.vhp_ex_rate2",
             sortable: true,
             filterable: true,
             type: FieldType.float,
           },
           {
-            id: "vhp_amt",
+            id: "vh.vhp_amt",
             name: "Montant",
-            field: "vhp_amt",
+            field: "vh.vhp_amt",
             sortable: true,
             filterable: true,
             type: FieldType.float,
             formatter: Formatters.decimal,
             params: { minDecimal: 2, maxDecimal: 2 }, 
            
-            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             headerCssClass: 'text-right',
             cssClass: 'text-right'
           },
           {
-            id: "vhp_tax_amt",
+            id: "vh.vhp_tax_amt",
             name: "TVA",
-            field: "vhp_tax_amt",
+            field: "vh.vhp_tax_amt",
             sortable: true,
             filterable: true,
             type: FieldType.float,
             formatter: Formatters.decimal,
             params: { minDecimal: 2, maxDecimal: 2 }, 
-            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             headerCssClass: 'text-right',
             cssClass: 'text-right'
           },
           {
-            id: "vhp_trl1_amt",
+            id: "vh.vhp_trl1_amt",
             name: "Timbre",
-            field: "vhp_trl1_amt",
+            field: "vh.vhp_trl1_amt",
             sortable: true,
             filterable: true,
             type: FieldType.float,
             formatter: Formatters.decimal,
             params: { minDecimal: 2, maxDecimal: 2 }, 
-            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             headerCssClass: 'text-right',
             cssClass: 'text-right'
           },
           {
-            id: "dec01",
+            id: "vh.vh.dec01",
             name: "TTC",
-            field: "dec01",
+            field: "vh.dec01",
             sortable: true,
             filterable: true,
             type: FieldType.float,
             formatter: Formatters.decimal,
             params: { minDecimal: 2, maxDecimal: 2 }, 
-            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
             headerCssClass: 'text-right',
             cssClass: 'text-right'
           },
@@ -347,10 +326,6 @@ export class ListProformaComponent implements OnInit {
       ]
 
       this.mvgridOptions = {
-        enableDraggableGrouping: true,
-        createPreHeaderPanel: true,
-        showPreHeaderPanel: true,
-        preHeaderPanelHeight: 40,
         enableFiltering: true,
         enableAutoResize: true,
         enableSorting: true,
@@ -358,7 +333,46 @@ export class ListProformaComponent implements OnInit {
         exportOptions: {
           sanitizeDataExport: true
         },
-       
+        enableRowDetailView: true,
+        rowSelectionOptions: {
+          selectActiveRow: true,
+        },
+        rowDetailView: {
+          // We can load the "process" asynchronously in 2 different ways (httpClient OR even Promise)
+          process: (item) => {
+            // console.log(this.simulateServerAsyncCall(item));
+            return this.simulateServerAsyncCall(item);
+          },
+  
+          // load only once and reuse the same item detail without calling process method
+          loadOnce: true,
+  
+          // limit expanded row to only 1 at a time
+          singleRowExpand: true,
+  
+          // false by default, clicking anywhere on the row will open the detail view
+          // when set to false, only the "+" icon would open the row detail
+          // if you use editor or cell navigation you would want this flag set to false (default)
+          useRowClick: false,
+  
+          // how many grid rows do we want to use for the row detail panel (this is only set once and will be used for all row detail)
+          // also note that the detail view adds an extra 1 row for padding purposes
+          // so if you choose 4 panelRows, the display will in fact use 5 rows
+          panelRows: 9,
+  
+          // you can override the logic for showing (or not) the expand icon
+          // for example, display the expand icon only on every 2nd row
+          // expandableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1),
+  
+          // Preload View Template
+           preloadComponent: RowDetailPreloadComponent,
+  
+          // ViewModel Template to load when row detail data is ready
+          viewComponent: RowDetailViewFpComponent,
+  
+          // Optionally pass your Parent Component reference to your Child Component (row detail component)
+          parent: this,
+        },
         //enableRowSelection: true,
         enableCellNavigation: true,
         
@@ -373,23 +387,7 @@ export class ListProformaComponent implements OnInit {
           // Defaults to empty string, thousand separator on a number. Example: 12345678 becomes 12,345,678
           thousandSeparator: ' ', // can be any of ',' | '_' | ' ' | ''
         },
-        gridMenu: {
-          onCommand: (e, args) => {
-            if (args.command === 'toggle-preheader') {
-              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-              this.clearGrouping();
-            }
-          },
-        },
-        draggableGrouping: {
-          dropPlaceHolderText: 'Drop a column header here to group by the column',
-          // groupIconCssClass: 'fa fa-outdent',
-          deleteIconCssClass: 'fa fa-times',
-          onGroupChanged: (e, args) => this.onGroupChanged(args),
-          onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      
-      },
-
+        
     
           dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
             var val = undefined;
@@ -445,55 +443,16 @@ export class ListProformaComponent implements OnInit {
     )
     }
 
-    onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
-      // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
-      const caller = change && change.caller || [];
-      const groups = change && change.groupColumns || [];
-  
-      if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
-        // update all Group By select dropdown
-        this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
-      } else if (groups.length === 0 && caller === 'remove-group') {
-        this.clearGroupingSelects();
-      }
-    }
-    clearGroupingSelects() {
-      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
-    }
-    
-    collapseAllGroups() {
-      this.mvdataView.collapseAllGroups();
-    }
-  
-    expandAllGroups() {
-      this.mvdataView.expandAllGroups();
-    }
-    clearGrouping() {
-      if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
-        this.draggableGroupingPlugin.clearDroppedGroups();
-      }
-      this.mvgrid.invalidate(); // invalidate all rows and re-render
-    }
      
     
   
   
-      onGroupChangedp(change: { caller?: string; groupColumns: Grouping[] }) {
-      // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
-      const caller = change && change.caller || [];
-      const groups = change && change.groupColumns || [];
-  
-      if (Array.isArray(this.selectedGroupingFieldsp) && Array.isArray(groups) && groups.length > 0) {
-        // update all Group By select dropdown
-        this.selectedGroupingFieldsp.forEach((g, i) => this.selectedGroupingFieldsp[i] = groups[i] && groups[i].getter || '');
-      } else if (groups.length === 0 && caller === 'remove-group') {
-        this.clearGroupingSelectsp();
-      }
+    simulateServerAsyncCall(item: any) {
+      return new Promise((resolve) => {
+        const itemDetail = item;
+        resolve(itemDetail);
+      });
     }
-    clearGroupingSelectsp() {
-      this.selectedGroupingFieldsp.forEach((g, i) => this.selectedGroupingFieldsp[i] = '');
-    }
-    
     printpdf() {
 
       console.log(this.mvdataView.getFilteredItems())

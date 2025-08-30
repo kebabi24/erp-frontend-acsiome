@@ -53,11 +53,11 @@ import {
 import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY } from "@angular/cdk/overlay/overlay-directives"
 
 @Component({
-  selector: 'kt-create-proforma',
-  templateUrl: './create-proforma.component.html',
-  styleUrls: ['./create-proforma.component.scss']
+  selector: 'kt-edit-proforma',
+  templateUrl: './edit-proforma.component.html',
+  styleUrls: ['./edit-proforma.component.scss']
 })
-export class CreateProformaComponent implements OnInit {
+export class EditProformaComponent implements OnInit {
 
   voucherProforma: VoucherProforma
     vpForm: FormGroup
@@ -117,7 +117,12 @@ export class CreateProformaComponent implements OnInit {
     paymentMethods: any[] = []
     vd_shipvia: any[] = []
     total:any = 0;
+    vhpEdit: any
 curr: String;
+user: any
+orddate: any;
+duedate: any;
+title: String = "Modifier Facture Proforma - "
     constructor(
         config: NgbDropdownConfig,
         private vpFB: FormBuilder,
@@ -154,7 +159,11 @@ curr: String;
         this.grid = angularGrid.slickGrid
         this.gridService = angularGrid.gridService
     }
-
+    initCode() {
+      this.createForm()
+      this.createtotForm()
+      this.loadingSubject.next(false)
+  }
     initGrid() {
        // const controls = this.vpForm.controls
         this.columnDefinitions = [
@@ -364,30 +373,74 @@ curr: String;
     ngOnInit(): void {
         this.loading$ = this.loadingSubject.asObservable()
         this.loadingSubject.next(false)
-        this.createForm()
-        this.createtotForm();
+        
+        this.activatedRoute.params.subscribe((params) => {
+          const id = params.id
+          
+          this.voucherProformaService.getOne(id).subscribe((response: any)=>{
+            console.log(response.data.voucherProforma)
+            this.vhpEdit = response.data.voucherProforma
+          
+            this.dataset = response.data.details
+            // this.addressService.getBy({ad_addr: this.poEdit.po_vend}).subscribe((res: any)=>{
+            //   this.addressEdit = res.data
+          
+            this.orddate = new Date(this.vhpEdit.vhp_inv_date)
+            this.duedate = new Date(this.vhpEdit.vhp_due_date)
+            this.orddate.setDate(this.orddate.getDate() )
+            this.duedate.setDate(this.duedate.getDate() )
+            //console.log(this.reqdate)
+                  
+          
+           this.initCode()
+           this.loadingSubject.next(false)
+           this.user = JSON.parse(localStorage.getItem('user'))
+          //  const controls = this.poForm.controls
+       
+          //  controls.po_nbr.setValue(this.poEdit.po_nbr)
+     
+           for(var i=0; i< this.dataset.length; i++) {
+  
+            this.dataset[i].desc = this.dataset[i].item.pt_desc1
+           }
+            this.loadingSubject.next(false)
+           this.title = this.title + this.vhpEdit.vhp_inv_nbr
+            // })
+          })
+        })
+        //this.createForm()
+        this.initGrid()
     }
 
     //create form
     createForm() {
         this.loadingSubject.next(false)
-        this.voucherProforma = new VoucherProforma()
+        
         this.vpForm = this.vpFB.group({
-            vhp_po_nbr: [this.voucherProforma.vhp_po_nbr],
-            vhp_inv_nbr: [this.voucherProforma.vhp_inv_nbr, Validators.required],
-            vhp_vend: [this.voucherProforma.vhp_vend],
-            name:[null],
-            vhp_curr: [this.voucherProforma.vhp_curr],
+            vhp_po_nbr: [this.vhpEdit.vhp_po_nbr],
+            vhp_inv_nbr: [this.vhpEdit.vhp_inv_nbr, Validators.required],
+            vhp_vend: [this.vhpEdit.vhp_vend],
+            name:[this.vhpEdit.address.ad_name],
+            vhp_curr: [this.vhpEdit.vhp_curr],
 
-            vhp_ex_rate : [this.voucherProforma.vhp_ex_rate],
-            vhp_ex_rate2: [this.voucherProforma.vhp_ex_rate2],
+            vhp_ex_rate : [this.vhpEdit.vhp_ex_rate],
+            vhp_ex_rate2: [this.vhpEdit.vhp_ex_rate2],
 
-            vhp_inv_date: [this.voucherProforma.vhp_inv_date, Validators.required],
-            vhp_due_date: [this.voucherProforma.vhp_due_date, Validators.required],
-            vhp_cr_terms: [this.voucherProforma.vhp_cr_terms, Validators.required],
-            vhp_shipvia: [this.voucherProforma.vhp_shipvia,Validators.required],
-            vhp_taxable: [this.voucherProforma.vhp_taxable,Validators.required],
-            vhp_rmks: [this.voucherProforma.vhp_rmks],
+            vhp_inv_date:  [{
+              year: this.orddate.getFullYear(),
+              month: this.orddate.getMonth() + 1,
+              day: this.orddate.getDate() ,
+              
+            }],
+            vhp_due_date:  [{
+              year:this.duedate.getFullYear(),
+              month: this.duedate.getMonth()+1,
+              day: this.duedate.getDate()
+            }],
+            vhp_cr_terms: [this.vhpEdit.vhp_cr_terms, Validators.required],
+            vhp_shipvia: [this.vhpEdit.vhp_shipvia,Validators.required],
+            vhp_taxable: [this.vhpEdit.vhp_taxable,Validators.required],
+            vhp_rmks: [this.vhpEdit.vhp_rmks],
         })
     }
     createtotForm() {
@@ -397,10 +450,10 @@ curr: String;
       
       this.totForm = this.totFB.group({
     //    so__chr01: [this.saleOrder.so__chr01],
-        tht: [{value: 0.00 , disabled: true}],
-        tva: [{value: 0.00 , disabled: true}],
-        timbre: [{value: 0.00 , disabled: true}],
-        ttc: [{value: 0.00 , disabled: true}],
+        tht: [{value: this.vhpEdit.vhp_amt , disabled: true}],
+        tva: [{value: this.vhpEdit.vhp_tax_amt , disabled: true}],
+        timbre: [{value: this.vhpEdit.vhp_trl1_amt , disabled: true}],
+        ttc: [{value: this.vhpEdit.dec01 , disabled: true}],
       });
   
       
@@ -453,7 +506,8 @@ curr: String;
           }
         }
         for (let data of this.dataset) {
-          if(data.vdhp_inv_qty == "" || data.vdhp_inv_qty == null || data.vdhp_inv_qty == 0 ) {
+          console.log(data.vdhp_qty_inv)
+          if(data.vdhp_qty_inv == "" || data.vdhp_qty_inv == null || data.vdhp_qty_inv == 0 ) {
             this.message = "Quantité ne peut pas etre 0"
             this.hasFormErrors = true
 
@@ -561,34 +615,39 @@ curr: String;
      * @param _vp: req
      */
     addVp(_vp: any, detail: any) {
-        this.loadingSubject.next(true)
-        this.voucherProformaService
-            .add({ voucherProforma: _vp, voucherProformaDetail: detail })
-            .subscribe(
-                (reponse) => console.log("response", Response),
-                (error) => {
-                    this.layoutUtilsService.showActionNotification(
-                        "Erreur verifier les informations",
-                        MessageType.Create,
-                        10000,
-                        true,
-                        true
-                    )
-                    this.loadingSubject.next(false)
-                },
-                () => {
-                    this.layoutUtilsService.showActionNotification(
-                        "Ajout avec succès",
-                        MessageType.Create,
-                        10000,
-                        true,
-                        true
-                    )
-                    this.loadingSubject.next(false)
-
-                    this.router.navigateByUrl("purchasing/list-proforma")
-                }
-            )
+      for (let data of detail) {
+        delete data.id;
+        delete data.cmvid;
+      }
+      this.voucherProformaService
+            .updatedet({ voucherOrder: _vp, detail: this.dataset}, this.vhpEdit.id)
+            .subscribe( //(res) => {
+  
+              (reponse) => console.log("response", Response),
+              (error) => {
+                  this.layoutUtilsService.showActionNotification(
+                      "Erreur verifier les informations",
+                      MessageType.Create,
+                      10000,
+                      true,
+                      true
+                  )
+                  this.loadingSubject.next(false)
+              },
+              () => {
+                  this.layoutUtilsService.showActionNotification(
+                      "Modification Status avec succès",
+                      MessageType.Create,
+                      10000,
+                      true,
+                      true
+                  )
+                  this.loadingSubject.next(false)
+                  this.router.navigateByUrl("/purchasing/list-proforma")
+                
+              }
+          )
+  
     }
     onChangeTAX() {
       const controls = this.vpForm.controls;
@@ -856,8 +915,9 @@ curr: String;
                 const item = this.gridObj4.getDataItem(idx)
                 console.log(item)
                 updateItem.vdhp_part = item.pt_part
-                updateItem.vdhp_um = item.pt_um
                 updateItem.desc = item.pt_desc1
+                updateItem.vdhp_um = item.pt_um
+                
                 updateItem.vdhp_taxable = item.pt_taxable
                 updateItem.vdhp_tax_code = item.pt_taxc
                 updateItem.vdhp_price = item.pt_pur_price

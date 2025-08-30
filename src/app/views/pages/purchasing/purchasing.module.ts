@@ -85,6 +85,7 @@ import { RowDetailViewComponent } from "./rowDetails/rowdetail-view.component";
 import { RowDetailPreloadComponent } from "./rowDetails/row-details-preload.component";
 import { RowDetailViewSeqComponent } from './rowDetails/rowdetail-view-seq.component';
 import { RowDetailViewVpComponent } from './rowDetails/rowdetail-view-vp.component';
+import { RowDetailViewFpComponent } from './rowDetails/rowdetail-views-fp.component';
 import { RowDetailViewPoComponent } from './rowDetails/rowdetail-view-po.component';
 import { EditStatusPoComponent } from './edit-status-po/edit-status-po.component';
 import { PurchaseListComponent } from './purchase-list/purchase-list.component';
@@ -108,6 +109,7 @@ import { ListSeqReqComponent } from './list-seq-req/list-seq-req.component';
 import { EditSeqReqComponent } from './edit-seq-req/edit-seq-req.component';
 import { CreateProformaComponent } from './create-proforma/create-proforma.component';
 import { ListProformaComponent } from './list-proforma/list-proforma.component';
+import { EditProformaComponent } from './edit-proforma/edit-proforma.component';
 
 const routes: Routes = [
   {
@@ -260,6 +262,10 @@ const routes: Routes = [
         path: "list-proforma",
         component: ListProformaComponent,
       },
+      {
+        path: "edit-proforma/:id",
+        component: EditProformaComponent,
+      },
     ],
   },
 ];
@@ -279,6 +285,7 @@ const routes: Routes = [
     RowDetailPreloadComponent,
     RowDetailViewComponent,
     RowDetailViewVpComponent,
+    RowDetailViewFpComponent,
     RowDetailViewSeqComponent,
     RowDetailViewPoComponent,
     EditStatusPoComponent,
@@ -302,7 +309,8 @@ const routes: Routes = [
     ListSeqReqComponent,
     EditSeqReqComponent,
     CreateProformaComponent,
-    ListProformaComponent
+    ListProformaComponent,
+    EditProformaComponent
   ],
   imports: [
     CommonModule,
@@ -370,6 +378,7 @@ const routes: Routes = [
     RowDetailPreloadComponent,
     RowDetailViewComponent,
     RowDetailViewVpComponent,
+    RowDetailViewFpComponent,
     RowDetailViewPoComponent,
     RowDetailViewSeqComponent
   ],

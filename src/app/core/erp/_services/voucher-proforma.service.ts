@@ -29,6 +29,10 @@ export class VoucherProformaService {
         return this.http.post(API_URL+'/direct', data, { headers: httpHeaders })
     }*/
     // READ
+    public getOne(id: Number) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
+    }
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/find', data, { headers: httpHeaders })
@@ -57,6 +61,10 @@ export class VoucherProformaService {
     public update(data: any, id:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.put(`${API_URL}/${id}`, data, { headers: httpHeaders })
+    }
+    public updatedet(data: any, id:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.put(`${API_URL}/up/${id}`, data, { headers: httpHeaders })
     }
     // DELETE
 }

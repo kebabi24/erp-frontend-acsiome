@@ -724,6 +724,10 @@ export class MenuConfig {
               page: "/inventory-transaction/po-receip-cab",
             },
             {
+              title: "Retour Fournisseur",
+              page: "/inventory-transaction/po-unreceip-vend",
+            },
+            {
               title: "Annuler Réception",
               page: "/inventory-transaction/po-unreceip-cab",
             },
@@ -935,6 +939,10 @@ export class MenuConfig {
               page: "/purchasing/create-req",
             },
             {
+              title: "Création Demande d'achat",
+              page: "/purchasing/create-oa-service",
+            },
+            {
               title: "Consultation Demande d'achats",
               page: "/purchasing/req-list",
             },
@@ -971,18 +979,18 @@ export class MenuConfig {
               title: "Bon de commande",
               page: "/purchasing/create-po",
             },
-            {
-              title: "Besoin EPI",
-              page: "/purchasing/epi-create-oa",
-            },
-            {
-              title: "Simulateur des commandes",
-              page: "/purchasing/create-oa",
-            },
-            {
-              title: "Simulateur des commandes Embalage",
-              page: "/purchasing/create-oa-em",
-            },
+            // {
+            //   title: "Besoin EPI",
+            //   page: "/purchasing/epi-create-oa",
+            // },
+            // {
+            //   title: "Simulateur des commandes",
+            //   page: "/purchasing/create-oa",
+            // },
+            // {
+            //   title: "Simulateur des commandes Embalage",
+            //   page: "/purchasing/create-oa-em",
+            // },
             {
               title: "Impression Bon de commande",
               page: "/purchasing/print-po",
@@ -2097,6 +2105,14 @@ export class MenuConfig {
                 {
                   title: "Liste des groupes d'achat",
                   page: "/purchasing/list-seq-req",
+                },
+                {
+                  title: "Affectation profil Services",
+                  page: "/profiles/profile-service",
+                },
+                {
+                  title: "liste des Affectation profils Services",
+                  page: "/profiles/list-profile-service",
                 },
                
               ],

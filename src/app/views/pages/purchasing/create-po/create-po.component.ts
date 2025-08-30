@@ -53,6 +53,7 @@ import {
   MesureService,
   printBc,
   TimbreService,
+  EmployeService,
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -174,6 +175,7 @@ error = false;
     private mesureService: MesureService,
     private taxService: TaxeService,
     private timbreService: TimbreService,
+    private employeService: EmployeService
   ) {
     config.autoClose = true;
     this.codeService
@@ -824,6 +826,12 @@ console.log(this.vpServer)
 
       return;
     }
+    if (controls.po_cr_terms.value.startsWith("ES" ) && (controls.po_buyer.value == null || controls.po_buyer.value == "" )) {
+      this.message = "Acheteur Obligatoire pour le mode Espece"
+      this.hasFormErrors = true
+
+      return
+  }
     // tslint:disable-next-line:prefer-const
     let po = this.preparePo();
     
@@ -914,6 +922,20 @@ console.log(this.vpServer)
         }
       );
   }
+
+  onChangeEmp() {
+    const controls = this.poForm.controls;
+      
+    this.employeService.getBy({ emp_addr: controls.po_buyer.value }).subscribe((response: any) => {
+      //   const { data } = response;
+      
+      if (response.data.length == 0 ) {
+        alert("Employe n'exist pas")
+        controls.po_buyer.setValue(null)
+        document.getElementById("po_buyer").focus();
+      } 
+    });
+}
   onChangeReqNbr() {
     const controls = this.poForm.controls;
     const rqm_nbr = controls.po_req_id.value;
@@ -1362,7 +1384,7 @@ changeTax(){
       args.rows.map((idx) => {
         const item = this.gridObj3.getDataItem(idx);
         console.log(item);
-        controls.po_buyer.setValue(item.usrd_code || "");
+        controls.po_buyer.setValue(item.emp_addr || "");
       });
     }
   }
@@ -1383,20 +1405,41 @@ changeTax(){
         maxWidth: 80,
       },
       {
-        id: "usrd_code",
-        name: "code user",
-        field: "usrd_code",
+        id: "emp_addr",
+        name: "Code Employé",
+        field: "emp_addr",
         sortable: true,
         filterable: true,
         type: FieldType.string,
       },
       {
-        id: "usrd_name",
-        name: "nom",
-        field: "usrd_name",
+        id: "emp_fname",
+        name: "Nom",
+        field: "emp_fname",
         sortable: true,
+        width: 80,
         filterable: true,
         type: FieldType.string,
+      },
+     
+     
+      {
+        id: "emp_job",
+        name: "Service",
+        field: "emp_job",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "occ",
+        name: "Nombre des Achats",
+        field: "occ",
+        sortable: true,
+        width: 80,
+        filterable: true,
+        type: FieldType.integer,
       },
     ];
 
@@ -1430,9 +1473,7 @@ changeTax(){
     };
 
     // fill the dataset with your data
-    this.userService
-      .getAllUsers()
-      .subscribe((response: any) => (this.users = response.data));
+    this.employeService.getByPo({}).subscribe((response: any) => (this.users = response.data));
   }
   open3(content) {
     this.prepareGrid3();
