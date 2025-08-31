@@ -65,6 +65,7 @@ import {
 import { DecimalPipe } from "@angular/common";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
+import { replaceAll } from "chartist";
 
 @Component({
   selector: 'kt-create-invoice',
@@ -1926,16 +1927,44 @@ console.log("this.iharray[j].desc",this.iharray)
  doc.line(200, i + 7,  200, i + 35  );
  doc.setFontSize(10);
  
+ let thtax =  String(  Number(controls.tht.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let tht = replaceAll(thtax,","," ")
+
+let ttva =  String(  Number(controls.tva.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let tva = replaceAll(ttva,","," ")
+
+let ttimbre =  String(  Number(controls.timbre.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let timbre = replaceAll(ttimbre,","," ")
+
+let tttc =  String(  Number(controls.ttc.value).toLocaleString("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+}))
+
+let ttc = replaceAll(tttc,","," ")
  doc.text('Total HT', 140 ,  i + 12 , { align: 'left' });
  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
 
+
  
- doc.text(String(Number(controls.tht.value).toFixed(2)), 198 ,  i + 12 , { align: 'right' });
- doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
- doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
- doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+ doc.text(tht, 198 ,  i + 12 , { align: 'right' });
+ doc.text(tva, 198 ,  i + 19 , { align: 'right' });
+ doc.text(timbre, 198 ,  i + 26 , { align: 'right' });
+ doc.text(ttc, 198 ,  i + 33 , { align: 'right' });
 
  doc.setFontSize(8);
     let mt = NumberToLetters(

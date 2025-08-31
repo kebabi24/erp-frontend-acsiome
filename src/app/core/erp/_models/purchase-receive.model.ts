@@ -6,6 +6,7 @@ export class PurchaseReceive extends BaseModel{
     prh_line: number
     prh_part:  String
     prh_tax_code: String
+    prh_taxable: Boolean
     prh_rcp_date: String
     prh_rcvd: number
     prh_pur_cost: number
@@ -65,7 +66,7 @@ export class PurchaseReceive extends BaseModel{
     prh_tax_env: String
     prh_tax_usage: String
     prh_tax_in: boolean
-    prh_taxc: String
+    prh_taxc: Number
     prh_vend_lot: String
     prh_ship_date: String
     prh_ex_rate2: number

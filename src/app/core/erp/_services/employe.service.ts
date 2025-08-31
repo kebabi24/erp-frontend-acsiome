@@ -155,4 +155,11 @@ export class EmployeService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL_EmpSalary, data, { headers: httpHeaders })
     }
+    public getByPo(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findbypo`,data, 
+        { headers: httpHeaders }
+        )
+    }
+
 }

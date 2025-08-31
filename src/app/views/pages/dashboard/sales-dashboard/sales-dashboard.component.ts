@@ -109,10 +109,13 @@ ca_dist : any
 ca_dd : any
 rv_dist : any
 rv_dd : any
-
+qtygros : Number
+qtydd : Number
 ddqty_type_data : any = []
 ddamt_type_data : any = []
 ca_role : any = []
+qty_role : any = []
+qty_cust : any = []
 credit_role : any = []
 credit_Cust : any = []
 credit_dd : any
@@ -197,6 +200,8 @@ updateData(){
         this.ca_zone_data = res.ca_zone_data
         this.ca_cust = res.ca_bill
         this.ca_role = res.ca_role
+        this.qty_role = res.qty_role
+        this.qty_cust = res.qty_cust
         this.credit_role = res.credit_role
         this.credit_Cust = res.credit_Cust
         this.data =  res.credit_Cust
@@ -246,15 +251,32 @@ updateData(){
         let cred_gross = replaceAll(cred_gros,","," ")
         this.credit_gros = cred_gross
         
-        this.createQtyTypeChart()
-        this.createCATypeChart()
+        // let qtyd =  String(  Number(res.qtydd).toLocaleString("en-US", {
+        //   minimumFractionDigits: 0,
+        //   maximumFractionDigits: 0,
+        // }))
+        
+        // let qtyddd = replaceAll(qtyd,",","")
+        this.qtydd = res.qtydd
 
-        this.createDDQtyTypeChart()
-        this.createDDCATypeChart()
+        // let qtyg =  String(  Number(res.qtygros).toLocaleString("en-US", {
+        //   minimumFractionDigits: 0,
+        //   maximumFractionDigits: 0,
+        // }))
+        
+        // let qtygr= replaceAll(qtyg,",","")
+        this.qtygros = res.qtygros
+        // this.createQtyTypeChart()
+        // this.createCATypeChart()
+
+        // this.createDDQtyTypeChart()
+        // this.createDDCATypeChart()
         // this.createCaZoneChart()
         this.createCaCustChart()
         this.createCAZonechartPie()
         this.createCaRoleChart()
+        this.createQtyRoleChart()
+        this.createQtyCustChart()
         this.createCreditRoleChart()
         this.createCreditCustChart()
      
@@ -288,6 +310,8 @@ getSalesDashboarData(startDate: any , endDate:any){
         this.ca_zone_data = res.ca_zone_data
         this.ca_cust = res.ca_bill
         this.ca_role = res.ca_role
+        this.qty_role = res.qty_role
+        this.qty_cust = res.qty_cust
         this.credit_role = res.credit_role
         this.credit_Cust = res.credit_Cust
         this.data =  res.credit_Cust
@@ -341,14 +365,19 @@ getSalesDashboarData(startDate: any , endDate:any){
         let cred_gross = replaceAll(cred_gros,","," ")
         this.credit_gros = cred_gross
      
-        this.createQtyTypeChart()
-        this.createCATypeChart()
-        this.createDDQtyTypeChart()
-        this.createDDCATypeChart()
+        this.qtydd = res.qtydd
+
+        this.qtygros = res.qtygros
+        // this.createQtyTypeChart()
+        // this.createCATypeChart()
+        // this.createDDQtyTypeChart()
+        // this.createDDCATypeChart()
         // this.createCaZoneChart()
         this.createCaCustChart()
         this.createCAZonechartPie()
         this.createCaRoleChart()
+        this.createQtyRoleChart()
+        this.createQtyCustChart()
         this.createCreditRoleChart()
         this.createCreditCustChart()
       },
@@ -622,6 +651,106 @@ series.columns.template.adapter.add("fill", function(fill, target) {
 // Cursor
 chart.cursor = new am4charts.XYCursor();
 }
+
+createQtyRoleChart(){
+  let chart = am4core.create("chartdivN10", am4charts.XYChart);
+chart.scrollbarX = new am4core.Scrollbar();
+
+// Add data
+chart.data = this.qty_role
+console.log(this.qty_role)
+
+// Create axes
+let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "role_code";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 30;
+categoryAxis.renderer.labels.template.horizontalCenter = "right";
+categoryAxis.renderer.labels.template.verticalCenter = "middle";
+categoryAxis.renderer.labels.template.rotation = 270;
+categoryAxis.tooltip.disabled = true;
+categoryAxis.renderer.minHeight = 110;
+
+let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.renderer.minWidth = 50;
+
+// Create series
+let series = chart.series.push(new am4charts.ColumnSeries());
+series.sequencedInterpolation = true;
+series.dataFields.valueY = "qte";
+series.dataFields.categoryX = "role_code";
+series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+series.columns.template.strokeWidth = 0;
+
+series.tooltip.pointerOrientation = "vertical";
+
+series.columns.template.column.cornerRadiusTopLeft = 10;
+series.columns.template.column.cornerRadiusTopRight = 10;
+series.columns.template.column.fillOpacity = 0.8;
+
+// on hover, make corner radiuses bigger
+let hoverState = series.columns.template.column.states.create("hover");
+hoverState.properties.cornerRadiusTopLeft = 0;
+hoverState.properties.cornerRadiusTopRight = 0;
+hoverState.properties.fillOpacity = 1;
+
+series.columns.template.adapter.add("fill", function(fill, target) {
+  return chart.colors.getIndex(target.dataItem.index);
+});
+
+// Cursor
+chart.cursor = new am4charts.XYCursor();
+}
+createQtyCustChart(){
+  let chart = am4core.create("chartdivN11", am4charts.XYChart);
+chart.scrollbarX = new am4core.Scrollbar();
+
+// Add data
+chart.data = this.qty_cust
+console.log(this.qty_cust)
+
+// Create axes
+let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "ad_name";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 30;
+categoryAxis.renderer.labels.template.horizontalCenter = "right";
+categoryAxis.renderer.labels.template.verticalCenter = "middle";
+categoryAxis.renderer.labels.template.rotation = 270;
+categoryAxis.tooltip.disabled = true;
+categoryAxis.renderer.minHeight = 110;
+
+let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.renderer.minWidth = 50;
+
+// Create series
+let series = chart.series.push(new am4charts.ColumnSeries());
+series.sequencedInterpolation = true;
+series.dataFields.valueY = "qte";
+series.dataFields.categoryX = "ad_name";
+series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+series.columns.template.strokeWidth = 0;
+
+series.tooltip.pointerOrientation = "vertical";
+
+series.columns.template.column.cornerRadiusTopLeft = 10;
+series.columns.template.column.cornerRadiusTopRight = 10;
+series.columns.template.column.fillOpacity = 0.8;
+
+// on hover, make corner radiuses bigger
+let hoverState = series.columns.template.column.states.create("hover");
+hoverState.properties.cornerRadiusTopLeft = 0;
+hoverState.properties.cornerRadiusTopRight = 0;
+hoverState.properties.fillOpacity = 1;
+
+series.columns.template.adapter.add("fill", function(fill, target) {
+  return chart.colors.getIndex(target.dataItem.index);
+});
+
+// Cursor
+chart.cursor = new am4charts.XYCursor();
+}
+
 
 createCreditRoleChart(){
   let chart = am4core.create("chartdivN8", am4charts.XYChart);

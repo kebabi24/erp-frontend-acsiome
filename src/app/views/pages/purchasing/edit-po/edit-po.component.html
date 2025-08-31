@@ -3,7 +3,7 @@
         <ng-container ktPortletTools>
             <button type="button" (click)="goBack()" class="btn btn-secondary btn-sm mr-2">Annuler</button>
             <button type="button" (click)="reset()" class="btn btn-secondary btn-sm mr-2">Réinitialiser</button>
-            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Anregistrer </button>
+            <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">Enregistrer </button>
 
         </ng-container>
     </kt-portlet-header>
@@ -11,10 +11,10 @@
         <div class="example-preview">
 
             <form class="kt-form" [formGroup]="poForm">
-                <!--kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
-                    (close)="onAlertClose($event)">
-                    {{message}}
-                </kt-alert-->
+                <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="5000"
+                (close)="onAlertClose($event)">
+                {{message}}
+            </kt-alert>
                
                     
                     <div class="row">
@@ -170,7 +170,7 @@
                             <label class="form-group">Acheteur:</label>
                             <div class="input-group input-group-sm">
     
-                                <input type="text" class="form-control form-control-solid" formControlName="po_buyer"
+                                <input type="text" class="form-control form-control-solid" id="po_buyer" formControlName="po_buyer" (change)="onChangeEmp()"
                                     aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" (click)="open3(content3)">

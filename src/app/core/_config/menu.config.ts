@@ -724,6 +724,10 @@ export class MenuConfig {
               page: "/inventory-transaction/po-receip-cab",
             },
             {
+              title: "Retour Fournisseur",
+              page: "/inventory-transaction/po-unreceip-vend",
+            },
+            {
               title: "Annuler Réception",
               page: "/inventory-transaction/po-unreceip-cab",
             },
@@ -919,6 +923,10 @@ export class MenuConfig {
               page: "/purchasing/create-req",
             },
             {
+              title: "Création Demande d'achat",
+              page: "/purchasing/create-oa-service",
+            },
+            {
               title: "Consultation Demande d'achats",
               page: "/purchasing/req-list",
             },
@@ -988,6 +996,15 @@ export class MenuConfig {
               title: "Paiement des Récéption",
               page: "/purchasing/payment-au",
             },
+            {
+              title: "Ajouter Facture Proforma",
+              page: "/purchasing/create-proforma",
+            },
+            {
+              title: "Liste des Factures Proforma",
+              page: "/purchasing/list-proforma",
+            },
+           
           ],
         },
 
@@ -2178,6 +2195,14 @@ export class MenuConfig {
                 {
                   title: "Liste des groupes d'achat",
                   page: "/purchasing/list-seq-req",
+                },
+                {
+                  title: "Affectation profil Services",
+                  page: "/profiles/profile-service",
+                },
+                {
+                  title: "liste des Affectation profils Services",
+                  page: "/profiles/list-profile-service",
                 },
                
               ],
