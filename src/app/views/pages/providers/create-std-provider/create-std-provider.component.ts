@@ -70,7 +70,7 @@ import {
     BankService,
     DeviseService,
     SequenceService,
-} from "../../../../core/erp"
+} from "../../../../core/erp" 
 
 import { jsPDF } from "jspdf";
 @Component({

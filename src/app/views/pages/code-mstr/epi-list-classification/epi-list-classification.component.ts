@@ -202,16 +202,16 @@ export class EpiListClassificationComponent implements OnInit {
               }
         },
         {
-            id: "code_desc",
-            name: "Lien",
-            field: "code_desc",
+            id: "chr02",
+            name: "Type",
+            field: "chr02",
             sortable: true,
             width: 200,
             filterable: true,
             type: FieldType.string,
             grouping: {
-                getter: 'code_desc',
-                formatter: (g) => `Desc: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                getter: 'chr02',
+                formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
                 aggregators: [new Aggregators.Sum('dec01')],
                 aggregateCollapsed: true,
                 
@@ -220,12 +220,20 @@ export class EpiListClassificationComponent implements OnInit {
         },
         {
             id: "chr01",
-            name: "Type",
+            name: "Lié à",
             field: "chr01",
             sortable: true,
             width: 80,
             filterable: true,
             type: FieldType.string,
+            grouping: {
+                getter: 'chr01',
+                formatter: (g) => `Liaison: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                aggregators: [new Aggregators.Sum('dec01')],
+                aggregateCollapsed: true,
+                
+                collapsed:true
+              }
         },
         // // {
         // //     id: "chr02",
@@ -327,7 +335,7 @@ export class EpiListClassificationComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.codeService.getBy({chr02:'CLASSIFICATION'}).subscribe(
+      this.codeService.getBy({code_desc:'EPI'}).subscribe(
           (response: any) => {
               this.dataset = response.data
               this.dataviewObj.setItems(this.dataset)

@@ -42,6 +42,7 @@ import { HttpUtilsService } from "../../../../core/_base/crud"
 import { environment } from "../../../../../environments/environment"
 import { array } from "@amcharts/amcharts4/core";
 const API_URL = environment.apiUrl + "/jobs"
+import { jsPDF } from "jspdf";
 @Component({
   selector: 'kt-create-employee',  
   templateUrl: './create-employee.component.html',
@@ -58,6 +59,17 @@ export class CreateEmployeeComponent implements OnInit {
   error = false
   field = ""
   selectedTab = 0
+  docs:any[]=[];
+exist:any;
+pays:any;
+vdtype:any;
+seq:any;
+shipvia:any;
+banque:any;
+ckfrm:any;
+crterms:any;
+devise:any;
+
     data: []
     columnDefinitions3: Column[] = []
     gridOptions3: GridOption = {}
@@ -252,6 +264,13 @@ distdays:any;
               
 
           })
+          this.codeService
+    .getBy({ code_fldname: "accounitng-setting/create-employee" })
+    .subscribe((response: any) => {
+      const { data } = response;
+     this.docs = data; 
+     if(response.data.length != 0){this.exist = true} 
+    });
    
 }
 initmvGrid() {
@@ -832,7 +851,27 @@ onSubmit() {
     delete data.desc;
   }
   this.addEmploye(employe,this.mvdataset,this.jbdataset,this.trdataset)
-  
+  this.codeService
+      .getBy({ code_fldname: 'ad_country',code_value:controls.emp_country.value })
+      .subscribe((response: any) => (
+        this.pays = response.data[0].code_cmmt,
+        
+        this.codeService.getBy({ code_fldname: 'vd_cr_terms',code_value:controls.vd_cr_terms.value })
+        .subscribe((response1: any) => (this.crterms = response1.data[0].code_cmmt,
+          this.codeService.getBy({ code_fldname: 'vd_type',code_value:controls.vd_type.value })
+          .subscribe((response2: any) => (this.vdtype = response2.data[0].code_cmmt,
+            this.codeService.getBy({ code_fldname: 'ad_country',code_value:controls.ad_country.value })
+            .subscribe((response3: any) => (this.pays = response3.data[0].code_cmmt,
+              this.codeService.getBy({ code_fldname: 'vd_shipvia',code_value:controls.vd_shipvia.value })
+              .subscribe((response4: any) => (this.shipvia = response4.data[0].code_cmmt,
+                
+                      this.printpdf()
+              ))             
+            ))
+          ))    
+        ))
+      ));
+
 }
 /**
      * Returns object for saving
@@ -979,7 +1018,7 @@ onSubmit() {
   changeDomain(){
     const controls = this.empForm.controls // chof le champs hada wesh men form rah
     const code_value  = controls.emp_job.value
-    this.codeService.getBy({code_fldname:"emp_job",code_desc:controls.emp_upper.value,code_value:code_value}).subscribe((res:any)=>{
+    this.codeService.getBy({code_fldname:"emp_job",chr01:controls.emp_upper.value,code_value:code_value}).subscribe((res:any)=>{
         const {data} = res
         console.log(res)
         if (!data){ this.layoutUtilsService.showActionNotification(
@@ -1072,7 +1111,7 @@ onSubmit() {
     // fill the dataset with your data
     const controls= this.empForm.controls
     this.codeService
-      .getBy({code_fldname:"emp_job",code_desc:controls.emp_upper.value})
+      .getBy({code_fldname:"emp_job",chr01:controls.emp_upper.value})
       .subscribe((response: any) => (this.domains = response.data));
   }
   opendom(content) {
@@ -1222,7 +1261,7 @@ prepareGrid3() {
 
     // fill the dataset with your data
       this.codeService
-      .getBy({code_fldname:"emp_level",code_desc:controls.emp_job.value})
+      .getBy({code_fldname:"emp_level",chr01:controls.emp_job.value})
       .subscribe((response: any) => (this.data = response.data));
   
     // this.jobService
@@ -1298,7 +1337,7 @@ prepareGridcust() {
 
     // fill the dataset with your data
       this.codeService
-      .getBy({code_fldname:"emp_spec",code_desc:controls.emp_level.value})
+      .getBy({code_fldname:"emp_spec",chr01:controls.emp_level.value})
       .subscribe((response: any) => (this.datacust = response.data));
   
     // this.jobService
@@ -1937,5 +1976,112 @@ open4(content) {
   this.prepareGrid4();
   this.modalService.open(content, { size: "lg" });
 }
+printpdf() {
+          const controls = this.empForm.controls;
+         
+          var doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            //format: [100,150]
+            })
+            let initialY = 25;
+            doc.setLineWidth(0.2);
+          
+          var img = new Image();
+           img.src = "./assets/media/logos/companyentete.png";
+           doc.addImage(img, "png", 5, 5, 200, 30);
+          doc.setFontSize(8);
+       if(this.exist == true){
+    doc.text(this.docs[0].code_value, 160, 17); 
+    doc.setFontSize(10);
+    doc.text(this.docs[0].code_cmmt, 55, 22);
+    doc.setFontSize(8);
+    doc.text(this.docs[0].code_desc, 165, 12);
+    doc.text(this.docs[0].chr01, 22, 27);
+    doc.text(String(1), 22, 32);
+    doc.text(this.docs[0].dec01, 170, 32);
+    doc.text(this.docs[0].date01, 180, 22);
+    doc.text(this.docs[0].date02, 180, 27);
+  }
+        
+          const date = new Date()
+          doc.setFontSize(16);
+    
+          
+          // doc.setFont("Times-Roman");
+          doc.line(35,35,150,35)
+          doc.text("Matricule : " + controls.emp_addr.value, 40, 40);
+          doc.line(35,45,150,45)
+          doc.setFontSize(12);
+          
+          doc.text("Nom Employé: " + controls.emp_fname.value + ' ' + controls.emp_lname.value, 7, 50);
+          
+          doc.line(5,60,200,60)
+          if(controls.emp_line1.value != null){doc.text("Addresse: " + controls.ad_line1.value, 7, 65);}
+          else{doc.text("Addresse: ", 7, 65);}
+          if(controls.emp_country.value != null){doc.text("Pays: " + controls.emp_country.value + ' ' + this.pays, 7, 70);}
+          else{doc.text("Pays: ", 7, 70);}
+          // doc.line(5,75,200,75)
+          if(controls.emp_phone.value != null){doc.text("Tel: " + controls.emp_phone.value, 7, 80);}
+          else{doc.text("Tel: ", 7, 80);}  
+          if(controls.emp_mail.value != null){doc.text("Email: " + controls.emp_mail.value, 57, 80);}
+          else{doc.text("Email: ", 57, 80)}  
+          doc.line(5,85,200,85)
+          if ( controls.emp_sex.value == 'M') {
+          doc.text("Genre: " + "MASCULIN", 7, 90); } else {
+            doc.text("Genre: " + "FEMININ", 7, 90);
+          }
+          if ( controls.emp_familysit.value == 'M') {
+          doc.text("Situation: " + "MARIE", 7, 90); } else {
+           if ( controls.emp_familysit.value == 'C') { doc.text("Situation: " + "CELIBATAIRE", 7, 90);}
+           else{ doc.text("Situation: " + "AUTRE", 7, 90);}
+          }
+          // doc.line(5,85,200,85)
+          // doc.text("DA Obligatoire: " + controls.pt_plan_ord.value, 5, initialY + 45);
+          // doc.text("Achat: " + controls.pt_dea.value, 55, initialY + 45);
+          if(controls.emp_child_nbr.value != null){doc.text("Nombre enfant: " + controls.emp_child_nbr.value, 7, 95);}
+          else{doc.text("Nombre enfant: 0", 7, 95)}
+          if(controls.emp_blood.value != null){doc.text("Groupe Sanguin: " + controls.emp_blood.value, 57, 95);}
+          else{doc.text("Groupe Sanguin: ", 57, 95)}
+          if(controls.emp_ss_id.value != null){doc.text("N°Sécurité sociale:: " + controls.emp_ss_id.value, 7, 100);}
+          else{doc.text("N°Sécurité sociale: " , 7, 100)}
+          if(controls.emp_dlicence.value != null){doc.text("N° Permis de conduire: " + controls.emp_dlicence.value, 57, 100);}
+          {doc.text("N° Permis de conduire: ", 57, 100)}
+          doc.line(5,105,200,105)
+          
+          if(controls.emp_upper.value != null){doc.text("Structure: " + controls.emp_upper.value , 7, 110);}
+          else{doc.text("Type: ", 7, 110)}
+          if(controls.emp_job.value!=null){doc.text("Service: " + controls.emp_job.value + ' - ' + this.seq, 7, 115);}
+          else{doc.text("Service: ", 7, 115)}
+          if(controls.emp_level.value!=null){doc.text("Poste: " + controls.emp_level.value + ' - ' + this.shipvia, 7, 120);}
+          else{doc.text("Poste: ", 7, 120)}
+          if(controls.emp_line2.value!=null){doc.text("Spécialité: " + controls.emp_line2.value , 55, 120);}
+          else{doc.text("Poste: ",55, 120)}
+          
+          doc.line(5,125,200,125)
+         
+          if(controls.emp_first_date.value!=null){doc.text("Embauché le: " + controls.emp_first_date.value , 7, 130);}
+          
+          if(controls.emp_last_date.value!=null){doc.text("Fin de contrat: " + controls.emp_last_date.value , 7, 135);}
+          
+          // if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}
+          // else{doc.text("RIB: ", 7, 150)}
+          // if(controls.vd_debtor.value!=null){doc.text("Compte: " + controls.vd_debtor.value, 7, 155);}
+          // else{doc.text("Compte: ", 7, 155)}
+          doc.line(5,145,200,145)
 
+          
+          
+        
+      
+          doc.setFontSize(9);
+    
+     var i = 35
+    
+        
+    
+          
+            var blob = doc.output("blob");
+            window.open(URL.createObjectURL(blob));   
+          }
 }

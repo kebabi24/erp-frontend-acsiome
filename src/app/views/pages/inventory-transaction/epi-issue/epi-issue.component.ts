@@ -130,6 +130,10 @@ export class EpiIssueComponent implements OnInit {
   index: any;
   user1: any;
   user2: any;
+  poste:any;
+  coleur:any;
+  taille:any;
+  pointure:any;
   adduser: boolean = true;
     items: [];
     columnDefinitions4: Column[] = [];
@@ -874,6 +878,14 @@ export class EpiIssueComponent implements OnInit {
           },
          
         );
+        this.addressService.getBy({ ad_addr: 'INV' }).subscribe((response: any) => {
+              //   const { data } = response;
+                 console.log("aaaaaaaaaaa",response.data);
+                 if (response.data != null) {
+                   this.provider = response.data[0];
+                   this.nom = this.provider.ad_name
+                 }
+               });
     
         
   
@@ -1270,8 +1282,10 @@ export class EpiIssueComponent implements OnInit {
       };
   
       // fill the dataset with your data
+      const controls=this.trForm.controls
+      
       this.itemsService
-        .getAll()
+        .getBy({pt_prod_line:'EPI',pt_rev:this.taille})
         .subscribe((response: any) => (this.items = response.data));
     }
     open4(content) {
@@ -2526,13 +2540,20 @@ addemp() {
   l = "";
   console.log(l.length);
   this.selectedIndexes.forEach((index) => {
-    this.employeService.getBy({emp_addr:this.emps[index]["emp_addr"]}).subscribe((response: any) => (controls.dec_nbr.setValue(response.data[0].int01)));
+    this.employeService.getBy({emp_addr:this.emps[index]["emp_addr"]}).subscribe((response: any) => (
+      controls.dec_nbr.setValue(response.data[0].int02),
+      this.poste = response.data[0].emp_level,
+      this.taille = response.data[0].chr01,
+      this.pointure = response.data[0].int01
+
+  ));
   
     if (index == 0) {
       l = this.emps[index]["emp_fname"];
     } else {
       l = l + "," + this.emps[index]["emp_fname"];
     }
+ 
     //id: index,
   });
 
@@ -2840,7 +2861,7 @@ handleSelectedRowsChanged5(e, args) {
         month: new Date(item.tr_effdate).getMonth() + 1,
         day: new Date(item.tr_effdate).getDate(),});
         let oldata=[]
-      this.inventoryTransactionService.getByRef({ tr_lot: item.tr_lot,tr_type:'ISS-UNP',tr_effdate:item.tr_effdate,tr_addr:item.tr_addr }).subscribe(
+      this.inventoryTransactionService.getByRef({ tr_lot: item.tr_lot,tr_type:'ISS-EPI',tr_effdate:item.tr_effdate,tr_addr:item.tr_addr }).subscribe(
         (res: any) => {
           oldata = res.data
           for (let i = 0; i < oldata.length; i++)
@@ -2988,14 +3009,14 @@ onChangeCC() {
   //const rqm_nbr = controls.tr_so_job.value;
  
   this.dataset = [];
-      this.inventoryTransactionService.getByNbr({ tr_lot: controls.tr_lot.value, tr_type:"ISS-UNP",tr_addr:controls.tr_addr.value }).subscribe(
+      this.inventoryTransactionService.getByNbr({ tr_lot: controls.tr_lot.value, tr_type:"ISS-EPI",tr_addr:controls.tr_addr.value }).subscribe(
         (res: any) => {
           console.log(res)
          this.dataset = res.data;
          if (this.dataset.length > 0) {
           this.dataView.setItems(this.dataset)
      
-          this.inventoryTransactionService.getByRef({ tr_lot: controls.tr_lot.value, tr_type:"ISS-UNP",tr_addr:controls.tr_addr.value }).subscribe(
+          this.inventoryTransactionService.getByRef({ tr_lot: controls.tr_lot.value, tr_type:"ISS-EPI",tr_addr:controls.tr_addr.value }).subscribe(
             (resp: any) => {
               console.log(resp)
               controls.tr_lot.setValue(resp.data[0].tr_lot || "");

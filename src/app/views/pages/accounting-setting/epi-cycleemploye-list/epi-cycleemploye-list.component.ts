@@ -34,7 +34,7 @@ import {
     LayoutUtilsService,
     TypesUtilsService,
     MessageType,
-} from "../../../../core/_base/crud"
+} from "../../../../core/_base/crud" 
 import { MatDialog } from "@angular/material/dialog"
 
 import { EmployeService,UsersService,} from "../../../../core/erp"
@@ -135,6 +135,12 @@ export class EpiCycleemployeListComponent implements OnInit {
                         filterable: true,
                         width: 50,
                         type: FieldType.dateIso,
+                         filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
                       },
                       
                       {
@@ -164,6 +170,12 @@ export class EpiCycleemployeListComponent implements OnInit {
                         filterable: true,
                         width: 50,
                         type: FieldType.dateIso,
+                         filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
                       },
                       {
                         id: "chr01",
@@ -197,6 +209,12 @@ export class EpiCycleemployeListComponent implements OnInit {
                         filterable: true,
                         width: 50,
                         type: FieldType.dateIso,
+                         filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
                       },
                       {
                         id: "int02",
@@ -212,7 +230,7 @@ export class EpiCycleemployeListComponent implements OnInit {
             enableSorting: true,
             enableCellNavigation: true,
             enableExcelCopyBuffer: true,
-            // enableFiltering: true,
+            enableFiltering: true,
             autoEdit: false,
             autoHeight: false,
             enableAutoResize:true,

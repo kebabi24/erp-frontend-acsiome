@@ -62,7 +62,8 @@ import {
 import { NgxPermissionsModule } from "ngx-permissions"
 import { AngularSlickgridModule } from "angular-slickgrid"
 import {AccountService, SubaccountService, CostcenterService, BankService, ProductLineService,DaybookService, EmployeService, JobService,
-        SiteService,AffectEmpService, ProviderService,ProjectService,TaskService, PayMethService, UsersService, ItemService, TimbreService} from '../../../core/erp';
+        SiteService,AffectEmpService, ProviderService,ProjectService,TaskService, PayMethService, UsersService, ItemService, TimbreService,
+        InventoryTransactionService} from '../../../core/erp';
 import {TaxeService} from '../../../core/erp';
 import {CodeService} from '../../../core/erp';
 import { EditAccountComponent } from './edit-account/edit-account.component';
@@ -351,6 +352,7 @@ const routes: Routes = [
         DeviseService,
         BankService,
         EmployeService,
+        InventoryTransactionService,
         DaybookService,
         JobService,
         SiteService,

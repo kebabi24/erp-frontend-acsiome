@@ -50,7 +50,7 @@
                                         <select
                                             [className]="form1.controls['pt_part_type'].errors && (form1.controls['pt_part_type'].dirty || form1.controls['pt_part_type'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                                             formControlName="pt_part_type" id="exampleSelectscat" (change)="onChangeparttype()">
-                                            
+                                             
                                             <option *ngFor="let elem of pt_part_type" [value]="elem.code_value">
                                                 {{elem.code_value}}</option>
 

@@ -1021,6 +1021,7 @@ if(time !=null )
       op_wkctr : [this.operationHistory.op_wkctr],
       op_mch   : [this.operationHistory.op_mch],
       desc:[''],
+      parent: [''],
       op_dept  : [{value: this.operationHistory.op_dept, disabled:true}],
       op_shift : [this.operationHistory.op_shift],
       op_emp   : [this.operationHistory.op_emp],
@@ -1167,7 +1168,7 @@ this.printpdf()
     _op.op_program = controls.op_program.value    
     _op.int01 = controls.int01.value
     _op.op_user1 = controls.desc.value
-    
+    _op.op_user2 = controls.parent.value
     
     
     _op.op_date = controls.op_date.value
@@ -1311,6 +1312,7 @@ this.dwndataset =[]
         controls.op_wkctr.setValue(res.data[0].op_wkctr);
         controls.op_mch.setValue(res.data[0].op_mch);
         controls.desc.setValue(res.data[0].op_user1);
+        controls.parent.setValue(res.data[0].op_user2);
         controls.op_site.setValue(res.data[0].op_site);
         controls.op_shift.setValue(res.data[0].op_shift);
         controls.op_program.setValue(res.data[0].op_program); 
@@ -1421,6 +1423,7 @@ this.dwndataset =[]
         controls.op_wkctr.setValue(res.data[0].op_wkctr);
         controls.op_mch.setValue(res.data[0].op_mch);
         controls.desc.setValue(res.data[0].op_user1);
+        controls.parent.setValue(res.data[0].op_user2);
         controls.op_site.setValue(res.data[0].op_site);
         controls.op_shift.setValue(res.data[0].op_shift);
         controls.op_program.setValue(res.data[0].op_program);
@@ -1935,6 +1938,7 @@ this.dwndataset =[]
             controls.op_dept.setValue(item.wc_dept || "")
             controls.op_mch.setValue(item.wc_mch || "")
             controls.desc.setValue(item.wc_desc || "");
+            controls.parent.setValue(item.wc_user1 || "");
             this.dwndataset = []
             let date =  controls.op_date.value
             ? `${controls.op_date.value.year}/${controls.op_date.value.month}/${controls.op_date.value.day}`
@@ -1996,17 +2000,17 @@ this.dwndataset =[]
             type: FieldType.string,
           },
           {
-            id: "wc_dept",
-            name: "Département",
-            field: "wc_dept",
+            id: "wc_desc",
+            name: "Designation",
+            field: "wc_desc",
             sortable: true,
             filterable: true,
             type: FieldType.string,
           },
           {
-            id: "wc_desc",
-            name: "Designation",
-            field: "wc_desc",
+            id: "wc_user1",
+            name: "Organe Parent",
+            field: "wc_user1",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -2043,7 +2047,7 @@ this.dwndataset =[]
           };
         // fill the dataset with your data
         this.workCenterService
-          .getAll()
+          .getByparent({})
           .subscribe((response: any) => (this.datawkctr = response.data));
       }
       openwkctr(content) {
@@ -2062,6 +2066,7 @@ this.dwndataset =[]
                   
               controls.op_mch.setValue(item.wc_mch || "")
               controls.desc.setValue(item.wc_desc || "");
+              controls.parent.setValue(item.wc_user1||"")
               controls.op_wkctr.setValue(item.wc_wkctr || "")
               
         });
@@ -2119,6 +2124,14 @@ this.dwndataset =[]
               filterable: true,
               type: FieldType.string,
             },
+            {
+              id: "wc_user1",
+              name: "Parent",
+              field: "wc_user1",
+              sortable: true,
+              filterable: true,
+              type: FieldType.string,
+            },
           ];
       
           this.gridOptionsmch = {
@@ -2151,7 +2164,7 @@ this.dwndataset =[]
             };
           // fill the dataset with your data
           this.workCenterService
-            .getBy({ wc_wkctr: controls.op_wkctr.value })
+            .getByparent({ wc_wkctr: controls.op_wkctr.value })
             .subscribe((response: any) => (this.datamch = response.data));
         }
         openmch(content) {
@@ -2398,7 +2411,7 @@ printpdf() {
           doc.line(195,55,195,65)
           doc.text("Date limite : " , 200, 60);
           doc.line(5,65,280,65)
-          doc.text("Equipement : " + controls.op_mch.value + ' ' + controls.desc.value, 10, 70);
+          doc.text("Equipement : " + controls.op_mch.value + ' ' + controls.desc.value + ' - ' + controls.parent.value, 10, 70);
           doc.line(90,65,90,75)
           doc.text("Interlocuteur : " + controls.op_shift.value , 100, 70);
           doc.line(195,65,195,75)

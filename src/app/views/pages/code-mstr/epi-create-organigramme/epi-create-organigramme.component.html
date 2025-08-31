@@ -1,5 +1,5 @@
 <kt-portlet>
-    <kt-portlet-header [sticky]="true" [title]="'Créer organigramme'" [class]="'card-head-lg'" [viewLoading$]="loading$">
+    <kt-portlet-header [sticky]="true" [title]="'Créer Organigramme'" [class]="'card-head-lg'" [viewLoading$]="loading$">
         <ng-container ktPortletTools>
             <button type="button" (click)="onSubmit()" class="btn btn-success btn-sm mr-2">enregistrer </button>
 
@@ -24,9 +24,15 @@
         </div>
 
         <br/>
-        <button class="btn  btn-sm btn-primary btn-elevate col-lg-4" (click)="addNewItem()">Ajouter Domaine</button>
+        <button type="button" class="btn  btn-sm btn-primary btn-sm mr-2" (click)="addNewItemS()">Ajouter Structure</button>
+                    
+        <button type="button" class="btn  btn-sm btn-primary btn-sm mr-2" (click)="addNewItemD()">Ajouter Service</button>
+        
+        <button type="button" class="btn  btn-sm btn-primary btn-sm mr-2" (click)="addNewItemP()">Ajouter Poste</button>
+        
+        <button type="button" class="btn  btn-sm btn-primary btn-sm mr-2" (click)="addNewItemN()">Ajouter Spécialité</button>
             <br><br><br>
-            <span>Liste des Domaines de Formation</span>
+            <span>Liste des Doonnées de Classification</span>
             <br><br>
         <div class="row">
             <angular-slickgrid class="col-6" 
@@ -62,7 +68,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <span>Voulez vous vraiment Supprimer ce Domaine</span>
+            <span>Voulez vous vraiment Supprimer cette Ligne</span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="c('Close click')">Non</button>
@@ -72,4 +78,3 @@
         <button hidden id="openDeletesGrid" class="btn btn-primary" (click)="openDelete(content5)">Launch demo modal</button>
       </div>
 </kt-portlet>
-

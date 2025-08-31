@@ -170,7 +170,7 @@ export class EpiInventoryReportComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.inventorytransaction.getByemploye({}).subscribe(
+      this.inventorytransaction.getByGroupEmp({}).subscribe(
           (response: any) => (this.dataset = response.data),
           (error) => {
               this.dataset = []

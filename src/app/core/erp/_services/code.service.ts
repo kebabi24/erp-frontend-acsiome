@@ -61,6 +61,10 @@ export class CodeService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/sumbitDomain/`, {...domain, ...updateData,...field},{ headers: httpHeaders })
     }
+    public submitData(domain: any , updateData : any, field:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/sumbitData/`, {...domain, ...updateData,},{ headers: httpHeaders })
+    }
     public deletes(data : any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/deletes`, data,{ headers: httpHeaders })

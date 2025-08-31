@@ -15,7 +15,7 @@ const myCustomStringFormatter: Formatter = (row: number, cell: number, value: an
     return `<div class="text"  aria-hidden="${value}" style="font-size:14px; font-weight: bold;" >${value}</div>`
   }
 }
-@Component({ 
+@Component({  
   selector: 'kt-epi-create-organigramme',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './epi-create-organigramme.component.html',
@@ -63,6 +63,7 @@ code:any
   confirmDelete: boolean;
   alertWarning: string;
 indexd:any
+field:any
   constructor(
     config: NgbDropdownConfig,
         private serviceF : FormBuilder,
@@ -153,7 +154,7 @@ indexd:any
                   // this.dataView.setItems(this.dataset)
                   console.log(args.dataContext.id)
                   this.codeService.getByOne(
-                    {code_fldname:"pt_group",chr01: args.dataContext.code_value},
+                    {code_fldname:args.dataContext.code_fldname,chr01: args.dataContext.code_value},
                     ).subscribe(
                     (response: any) => {
                       console.log(response.data)
@@ -163,6 +164,7 @@ indexd:any
                       else {
 
                         this.indexd = args.dataContext.id
+                        this.field = args.dataContext.code_fldname
                         console.log(this.dataView.getIdxById(args.dataContext.id))
                         let element: HTMLElement = document.getElementById("openDeletesGrid") as HTMLElement;
                         element.click();
@@ -195,7 +197,7 @@ indexd:any
               // },
               {
                   id: "code_value",
-                  name: "Code Domaine",
+                  name: "Code Classification",
                   field: "code_value",
                   sortable: true,
                   editor: {
@@ -219,6 +221,27 @@ indexd:any
                   id: "code_cmmt",
                   name: "Désignation",
                   field: "code_cmmt",
+                  sortable: true,
+                  editor: {
+                    model: Editors.text,
+                  },
+                  minWidth: 100,
+                  maxWidth: 300,
+                  filterable: true,
+                  type: FieldType.string,
+                  formatter:myCustomStringFormatter,
+                  onCellChange: (e: Event, args: OnEventArgs) => {
+                    if(args.dataContext.etat_service != true){
+                      this.addToUpdatedIds(args.dataContext.id)
+                   }
+                    // this.dataView.getItemById(args.dataContext.id).meta
+                    // console.log(Object.keys(this.dataView))
+                  },
+              },
+              {
+                  id: "chr01",
+                  name: "Lié à",
+                  field: "chr01",
                   sortable: true,
                   editor: {
                     model: Editors.text,
@@ -271,7 +294,7 @@ indexd:any
     }
 
 
-    this.codeService.getBy({code_fldname:"pt_draw"}).subscribe(
+    this.codeService.getBy({code_desc:"EMP"}).subscribe(
       (response: any) => {
         this.dataset = response.data
           console.log(this.dataset)
@@ -309,10 +332,10 @@ indexd:any
     for (let data of this.newVisitResults ) {
       delete data.id
     }
-    this.codeService.submitDomainData(
+    this.codeService.submitData(
       {domain: this.newVisitResults},
       {updateData :updateData },
-      {field: "pt_draw"}
+      {}
       ).subscribe(
       (response: any) => {
         console.log(response.updatedResults)
@@ -406,7 +429,7 @@ angularGridReady(angularGrid: AngularGridInstance) {
 //   };
 // }
 
-addNewItem() {
+addNewItemS() {
   var maxObj = null;
       var iddd = 0;
   if (this.dataset.length > 0) {
@@ -422,14 +445,99 @@ addNewItem() {
     {
       // id: this.dataset.length + 1,
       id : iddd,
+      code_fldname:"emp_upper",
       code_value:"", 
       code_cmmt: "", 
-      etat_service:true
+      etat_service:true,
+      code_desc:'EMP',
+      chr02:'STRUCTURE'
       
     },
     { position: "top" }
   );
 }
+addNewItemD() {
+  var maxObj = null;
+      var iddd = 0;
+  if (this.dataset.length > 0) {
+    maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1);
+    iddd = maxObj.id + 1;
+  } else {
+    iddd = 1;
+  }
+  this.angularGrid.gridService.addItem(
+    {
+      // id: this.dataset.length + 1,
+      id : iddd,
+      code_fldname:"emp_job",
+      code_value:"", 
+      code_cmmt: "", 
+      etat_service:true,
+      code_desc:'EMP',
+      chr02:'SERVICE'
+      
+    },
+    { position: "top" }
+  );
+}
+addNewItemP() {
+  var maxObj = null;
+      var iddd = 0;
+  if (this.dataset.length > 0) {
+    maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1);
+    iddd = maxObj.id + 1;
+  } else {
+    iddd = 1;
+  }
+  this.angularGrid.gridService.addItem(
+    {
+      // id: this.dataset.length + 1,
+      id : iddd,
+      code_fldname:"emp_level",
+      code_value:"", 
+      code_cmmt: "", 
+      etat_service:true,
+      code_desc:'EMP',
+      chr02:'POSTE'
+      
+    },
+    { position: "top" }
+  );
+}
+addNewItemN() {
+  var maxObj = null;
+      var iddd = 0;
+  if (this.dataset.length > 0) {
+    maxObj = this.dataset.reduce((accumulator, current) => {
+      return accumulator.id > current.id ? accumulator : current;
+    });
+    console.log(maxObj.id + 1);
+    iddd = maxObj.id + 1;
+  } else {
+    iddd = 1;
+  }
+  this.angularGrid.gridService.addItem(
+    {
+      // id: this.dataset.length + 1,
+      id : iddd,
+      code_fldname:"emp_spec",
+      code_value:"", 
+      code_cmmt: "", 
+      etat_service:true,
+      code_desc:'EMP',
+      chr02:'SPECIALITE'
+      
+    },
+    { position: "top" }
+  );
+}
+
 openDelete(content) {
   this.modalService.open(content, { size: "lg" });
 }
@@ -437,7 +545,7 @@ confirmDeleting(){
  // let updateItem = this.gridService.getDataItemByRowIndex(this.indexd);
  this.codeService.deletes(
   {id:this.indexd,
-  field:"pt_draw"
+  field:this.field
   }
   ).subscribe(
   (response: any) => {
@@ -465,7 +573,8 @@ onSelectedRowsChanged(e,args) {
   const index = args.rows;
   
   this.code = this.gridService.getDataItemByRowIndex(index).code_value
-  console.log("this.group", this.code)
+  this.field = this.gridService.getDataItemByRowIndex(index).code_fldname
+  console.log(this.field, this.code)
   // this.itemService.getByOne(
   //   {pt_group: this.group},
   //   ).subscribe(
@@ -486,7 +595,7 @@ this.updateData()
 updateData(){
 console.log("hereeeeeeeeeeeeeeeeee")
   this.codeService.getBy(
-    {code_fldname:"pt_group",chr01: this.code},
+    {chr01: this.code,code_desc:'EMP'},
     ).subscribe(
     (response: any) => {
       console.log(response.data)
@@ -524,7 +633,7 @@ prepareGridtr() {
         },
         {
             id: "code_value",
-            name: "Code Rubrique",
+            name: "Code Classification",
             field: "code_value",
             sortable: true,
             minWidth: 70,

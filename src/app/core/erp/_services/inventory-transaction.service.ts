@@ -100,6 +100,11 @@ export class InventoryTransactionService {
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
  
     }
+    public getBydistribution(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/finddistribution`,data, { headers: httpHeaders })
+ 
+    }
     public getByemploye(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findemploye`,data, { headers: httpHeaders })

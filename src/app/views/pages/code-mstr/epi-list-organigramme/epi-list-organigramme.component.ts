@@ -202,16 +202,16 @@ export class EpiListOrganigrammeComponent implements OnInit {
               }
         },
         {
-            id: "code_desc",
-            name: "Service",
-            field: "code_desc",
+            id: "chr01",
+            name: "Parent",
+            field: "chr01",
             sortable: true,
             width: 200,
             filterable: true,
             type: FieldType.string,
             grouping: {
-                getter: 'code_desc',
-                formatter: (g) => `Desc: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                getter: 'chr01',
+                formatter: (g) => `Liaison: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
                 aggregators: [new Aggregators.Sum('dec01')],
                 aggregateCollapsed: true,
                 
@@ -227,15 +227,23 @@ export class EpiListOrganigrammeComponent implements OnInit {
         //     filterable: true,
         //     type: FieldType.string,
         // },
-        // // {
-        // //     id: "chr02",
-        // //     name: "chr02",
-        // //     field: "chr02",
-        // //     sortable: true,
-        // //     width: 80,
-        // //     filterable: true,
-        // //     type: FieldType.string,
-        // // },
+        {
+            id: "chr02",
+            name: "Type",
+            field: "chr02",
+            sortable: true,
+            width: 80,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+                getter: 'chr02',
+                formatter: (g) => `Type: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+                aggregators: [new Aggregators.Sum('dec01')],
+                aggregateCollapsed: true,
+                
+                collapsed:true
+              }
+        },
         // {
         //     id: "dec01",
         //     name: "Version",
@@ -327,7 +335,7 @@ export class EpiListOrganigrammeComponent implements OnInit {
 
       // fill the dataset with your data
       this.dataset = []
-      this.codeService.getBy({chr02:'ORGANIGRAMME'}).subscribe(
+      this.codeService.getBy({code_desc:'EMP'}).subscribe(
           (response: any) => {
               this.dataset = response.data
               this.dataviewObj.setItems(this.dataset)

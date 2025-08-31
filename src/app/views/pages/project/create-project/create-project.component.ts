@@ -203,6 +203,7 @@ user;
       pm_site: [{ value: this.project.pm_site, disabled: !this.isExist }, Validators.required],
       pm_win_addr: [{ value: this.project.pm_win_addr, disabled: !this.isExist }],
       pm_cust:[{ value: this.project.pm_cust }],
+      parent:[''],
       pm_deal: [{ value: this.project.pm_deal, disabled: !this.isExist }],
       name: [{ value: "", disabled: true }],
       pm_amt: [{ value: this.project.pm_amt, disabled: !this.isExist }],
@@ -931,13 +932,14 @@ user;
   }
 
   handleSelectedRowsChanged2(e, args) {
-    const controls = this.projectForm.controls;
+    const controls = this.projectForm.controls; 
     if (Array.isArray(args.rows) && this.gridObj2) {
       args.rows.map((idx) => {
         const item = this.gridObj2.getDataItem(idx);
 
         controls.pm_win_addr.setValue(item.wc_mch || "");
         controls.pm_cust.setValue(item.wc_desc||"");
+        controls.parent.setValue(item.wc_user1||"")
         controls.name.setValue(item.wc_wkctr || "");
         controls.pm_site.setValue(item.wc__chr01)
         
@@ -1158,9 +1160,9 @@ user;
         type: FieldType.string,
       },
       {
-        id: "wc_dept",
-        name: "Département",
-        field: "wc_dept",
+        id: "wc_user1",
+        name: "Organe",
+        field: "wc_user1",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1224,7 +1226,7 @@ user;
 
     // fill the dataset with your data
     this.workCenterService
-          .getAll()
+          .getByparent({})
           .subscribe((response: any) => (this.customers = response.data));
   }
   open2(content) {
@@ -1851,6 +1853,7 @@ user;
         controls.pm_deal.setValue(item.op_wo_nbr || "");
         controls.pm_win_addr.setValue(item.op_mch|| "");
         controls.pm_cust.setValue(item.op_user1|| "");
+        controls.parent.setValue(item.op_user2|| "");
         controls.name.setValue(item.op_wkctr|| "");
         controls.pm_site.setValue(item.op_site|| "")
       });
@@ -2187,7 +2190,7 @@ user;
             doc.line(5,50,280,50)
             doc.text("Date Fin des travaux : "  , 10, 54);
             doc.line(5,55,280,55)
-            doc.text("Unité d'intervention : " + controls.pm_win_addr.value + ' ' + controls.pm_cust.value + '-' + controls.name.value, 10, 59);
+            doc.text("Unité d'intervention : " + controls.pm_win_addr.value + ' ' + controls.pm_cust.value + ' - ' + controls.parent.value + ' - ' + controls.name.value, 10, 59);
             doc.line(180,55,180,60)
             doc.text("Compteur : " , 185, 59);
             doc.line(230,55,230,60)

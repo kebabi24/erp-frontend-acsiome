@@ -73,6 +73,7 @@ import {
   PsService,
   PosCategoryService,
   printBc,
+  EmployeService
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -203,6 +204,8 @@ error = false;
     private psService: PsService,
     private taxService: TaxeService,
     private posCategoryService: PosCategoryService,
+    private employeservice: EmployeService,
+    
   ) {
     config.autoClose = true;
     
@@ -556,9 +559,27 @@ error = false;
         type: FieldType.string,
       },
       {
-        id: "emp_fname",
-        name: "Prénom",
-        field: "emp_fname",
+        id: "emp_lname",
+        name: "Nom",
+        field: "emp_lname",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
+      {
+        id: "bom",
+        name: "Poste",
+        field: "bom",
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+      },
+      {
+        id: "date01",
+        name: "Date Distribution",
+        field: "date01",
         sortable: true,
         width: 80,
         filterable: false,
@@ -600,6 +621,7 @@ error = false;
         filterable: false,
         type: FieldType.string,
       },
+      
 
       {
         id: "ord_qty",
@@ -649,26 +671,14 @@ error = false;
 
     this.mvdataset = [];
     
-   /* console.log(this.user)
-    const controls = this.poForm.controls
-    
-    const date = controls.calc_date.value
-    ? `${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`
-    : null;
-   // const date = new Date(`${controls.calc_date.value.year}/${controls.calc_date.value.month}/${controls.calc_date.value.day}`)
-    console.log(date,controls.calc_date.value)
-    this.posCategoryService.getSumeQtyPs({usrd_site: controls.site.value, created_date: date}).subscribe(
-      (response: any) => {   
-        this.mvdataset = response.data
-       console.log(this.mvdataset)
-       this.mvdataView.setItems(this.mvdataset);
-        
-         },
-      (error) => {
-          this.mvdataset = []
-      },
-      () => {}
-  )*/
+   this.employeservice.getByCycleDetail({}).subscribe(
+            (response: any) => {this.mvdataset = response.data
+              this.mvdataView.setItems(this.mvdataset)},
+            (error) => {
+                this.mvdataset = []
+            },
+            () => {}
+        )
   }
   change() {
     this.mvdataset = []

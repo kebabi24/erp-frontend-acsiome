@@ -38,6 +38,10 @@ export class WorkCenterService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/find`,data, { headers: httpHeaders })
     }
+    public getByparent(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findparent`,data, { headers: httpHeaders })
+    }
     // UPDATE
     public update(id: Number, data:any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

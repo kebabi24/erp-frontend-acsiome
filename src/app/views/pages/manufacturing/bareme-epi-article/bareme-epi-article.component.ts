@@ -606,7 +606,7 @@ export class BaremeEpiArticleComponent implements OnInit {
         cmvid: "",
         desc: "",
         ps_qty_req: 0,
-        ps_scrp_pct:controls.ps_scrp_pct.value,
+        
         ps_start:new Date()
       },
       { position: "bottom" }
@@ -627,7 +627,12 @@ export class BaremeEpiArticleComponent implements OnInit {
         const item = this.gridObjbom.getDataItem(idx);
         controls.ps_parent.setValue(item.code_desc || "");
         controls.ps_userid.setValue(item.code_value)
-        
+        this.psService.getBy({ps_parent:item.code_desc,ps_userid:item.code_value}).subscribe((response: any)=>{
+        this.dataset = response.data
+        console.log(this.dataset)
+      
+      
+    })
         
 
       });
@@ -782,7 +787,7 @@ export class BaremeEpiArticleComponent implements OnInit {
       },
       {
         id: "pt_um",
-        name: "desc",
+        name: "Unité de mesure",
         field: "pt_um",
         sortable: true,
         filterable: true,
@@ -822,7 +827,7 @@ export class BaremeEpiArticleComponent implements OnInit {
     // fill the dataset with your data
     const controls = this.psForm.controls
     this.itemsService
-      .getBy({pt_part_type:'CONSOMMABLE'})
+      .getBy({pt_prod_line:'EPI'})
       .subscribe((response: any) => (this.items = response.data));
   }
   open4(content) {

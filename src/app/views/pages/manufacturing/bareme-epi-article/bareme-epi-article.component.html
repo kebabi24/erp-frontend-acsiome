@@ -24,7 +24,7 @@
     
                                 <input type="text"   id="code"
                                     [className]="psForm.controls['ps_parent'].errors && (psForm.controls['ps_parent'].dirty || psForm.controls['ps_parent'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
-                                    formControlName="ps_parent" (change)="onChangeCode()" aria-describedby="basic-addon2">
+                                    formControlName="ps_parent" disabled aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <span class="input-group-text" (click)=openbom(contentbom)>
                                         <i class="text-dark-50 flaticon2-search"></i> </span>

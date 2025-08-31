@@ -248,7 +248,7 @@ export class CreateEpiModComponent implements OnInit {
     this.prepareGrid();
     this.prepareGrid2();
     this.codeService
-      .getBy({ code_fldname: "pt_break_cat" })
+      .getBy({ code_fldname: "pt_break_cat",code_desc:'EPI' })
       .subscribe((response: any) => (this.pt_break_cat = response.data));
     
     this.codeService
@@ -258,7 +258,7 @@ this.codeService
       .getBy({ code_fldname: "pt_article" })
       .subscribe((response: any) => (this.pt_article = response.data));
       this.codeService
-      .getBy({ code_fldname: "pt_part_type" })
+      .getBy({ code_fldname: "pt_part_type",code_desc:'EPI' })
       .subscribe((response: any) => (this.pt_part_type = response.data));
       this.codeService
       .getBy({ code_fldname: "pt_draw" })
@@ -407,7 +407,7 @@ this.codeService
       pt_draw: [{ value: this.item.pt_draw, },Validators.required],
       pt_rev: [ this.item.pt_rev, Validators.required],
       pt_group: [{value: this.item.pt_group,},Validators.required ],
-      pt_model:[{value: this.item.pt_model,},Validators.required ],
+      pt_model:['',Validators.required ],
       pt_break_cat:[{value: this.item.pt_break_cat,},Validators.required ],
       
 
@@ -549,18 +549,25 @@ onChangegroup() {
   const controls1 = this.form1.controls
   
  controls1.pt_group.disable()
-  
+ this.codeService
+      .getBy({ code_fldname: "pt_draw",code_desc:'EPI',chr01:controls1.pt_group.value })
+      .subscribe((response: any) => (this.pt_draw = response.data)); 
 }
 onChangedraw() {
   const controls1 = this.form1.controls
   
  controls1.pt_draw.disable()
+   this.codeService
+      .getBy({code_fldname:'pt_rev',code_desc:'EPI',chr01:controls1.pt_draw.value})
+      .subscribe((response: any) => (this.datamod = response.data))
 }
 onChangeparttype() {
   const controls1 = this.form1.controls
   
  controls1.pt_part_type.disable()
-  
+ this.codeService
+      .getBy({ code_fldname: "pt_group",code_desc:'EPI',chr01:controls1.pt_part_type.value })
+      .subscribe((response: any) => (this.pt_group = response.data)); 
  
 }
 onAlertClose($event) {
@@ -650,6 +657,7 @@ onAlertClose($event) {
     _item.pt_drwg_loc = 'INTERNE'
     _item.pt_added = new Date()
     _item.pt_rev = controls1.pt_rev.value;
+    _item.pt_model = controls1.pt_model.value;
     return _item;
   }
   

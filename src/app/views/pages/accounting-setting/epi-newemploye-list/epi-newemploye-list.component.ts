@@ -135,6 +135,12 @@ export class EpiNewemployeListComponent implements OnInit {
               filterable: true,
               width: 50,
               type: FieldType.dateIso,
+              filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
             },
             
             {
@@ -164,6 +170,12 @@ export class EpiNewemployeListComponent implements OnInit {
               filterable: true,
               width: 50,
               type: FieldType.dateIso,
+              filter: {
+                        model: Filters.dateRange,
+                        operator: 'RangeInclusive',
+                        // override any of the Flatpickr options through "filterOptions"
+                        //editorOptions: { minDate: 'today' } as FlatpickrOption
+                      },
             },
             {
               id: "chr01",
@@ -195,6 +207,12 @@ export class EpiNewemployeListComponent implements OnInit {
               field: "date01",
               sortable: true,
               filterable: true,
+              filter: {
+          model: Filters.dateRange,
+          operator: 'RangeInclusive',
+          // override any of the Flatpickr options through "filterOptions"
+          //editorOptions: { minDate: 'today' } as FlatpickrOption
+        },
               width: 50,
               type: FieldType.dateIso,
             },
@@ -215,7 +233,7 @@ export class EpiNewemployeListComponent implements OnInit {
             enableSorting: true,
             enableCellNavigation: true,
             enableExcelCopyBuffer: true,
-            // enableFiltering: true,
+            enableFiltering: true,
             autoEdit: false,
             autoHeight: false,
             enableAutoResize:true,
