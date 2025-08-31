@@ -70,7 +70,8 @@ import {
     BankService,
     DeviseService,
     SequenceService,
-} from "../../../../core/erp" 
+    CustomerService,
+} from "../../../../core/erp"
 
 import { jsPDF } from "jspdf";
 @Component({
@@ -133,6 +134,11 @@ gridOptions2: GridOption = {};
 gridObj2: any;
 angularGrid2: AngularGridInstance;
 
+customers: [];
+    columnDefinitions5: Column[] = [];
+    gridOptions5: GridOption = {};
+    gridObj5: any;
+    angularGrid5: AngularGridInstance;
 
 datacode: [];
 columnDefinitions4: Column[] = [];
@@ -213,6 +219,7 @@ constructor(
     private cdr: ChangeDetectorRef,
     private deviseService: DeviseService,
     private sequenceService: SequenceService,
+    private customerService : CustomerService,
     config: NgbDropdownConfig
 ) {
     config.autoClose = true
@@ -381,7 +388,7 @@ onchangename(){
                 controls1.vd_partial.enable()
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
-                // controls1.vd_db.enable()
+                controls1.vd_vt_id.enable()
                 controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(Number(response.data.length) + Number(1))).slice(-3))  
                
                 // document.getElementById("ad_line1").focus(); 
@@ -443,7 +450,7 @@ onchangename(){
             controls1.vd_partial.enable()
             controls1.vd_hold.enable()
             controls1.vd_pay_spec.enable()
-            // controls1.vd_db.enable()
+            controls1.vd_vt_id.enable()
             controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(1)).slice(-3)) 
             document.getElementById("ad_line1").focus(); 
             }
@@ -570,6 +577,7 @@ createProviderForm() {
         vd_partial: [{ value: this.provider.vd_partial, disabled: !this.isExist }],
         vd_hold: [{ value: this.provider.vd_hold, disabled: !this.isExist }],
         vd_pay_spec: [{ value: this.provider.vd_pay_spec, disabled: !this.isExist }],
+        vd_vt_id: [{ value: this.provider.vd_vt_id, disabled: !this.isExist }],
         // vd_db: [{ value: this.provider.vd_db, disabled: !this.isExist }],
     })
 }
@@ -703,6 +711,7 @@ onChangeCode() {
                 controls1.vd_partial.enable()
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
+                controls1.vd_vt_id.enable()
                 // controls1.vd_db.enable()
                 document.getElementById("ad_name").focus(); 
             }
@@ -926,6 +935,7 @@ prepareProvider(): Provider {
     _provider.vd_partial = controls.vd_partial.value
     _provider.vd_hold = controls.vd_hold.value
     _provider.vd_pay_spec = controls.vd_pay_spec.value
+    _provider.vd_vt_id = controls.vd_vt_id.value
     // _provider.vd_db = controls.vd_db.value
     return _provider
 }
@@ -1812,7 +1822,159 @@ open1(content) {
     this.prepareGrid1()
     this.modalService.open(content, { size: "lg" })
 }
+onChangeCust() {
+  const controls = this.providerForm.controls; // chof le champs hada wesh men form rah
+  const cm_addr = controls.vd_vt_id.value;
+ 
+  this.customerService.getBy({ cm_addr, cm_hold: false }).subscribe(
+    (res: any) => {
+      console.log(res);
+      const { data } = res;
 
+      if (!data) {
+        this.layoutUtilsService.showActionNotification(
+          "ce client n'existe pas! ou bien bloqué",
+          MessageType.Create,
+          10000,
+          true,
+          true
+        );
+        this.error = true;
+      } else {
+        this.error = false;
+      
+       
+       
+      }
+       
+    },
+    (error) => console.log(error)
+  );
+}
+handleSelectedRowsChanged5(e, args) {
+  const controls = this.providerForm.controls;
+  if (Array.isArray(args.rows) && this.gridObj5) {
+    args.rows.map((idx) => {
+      const item = this.gridObj5.getDataItem(idx);
+      console.log(item)
+      const date = new Date()
+
+
+      // this.customer = item;
+      controls.vd_vt_id.setValue(item.cm_addr || "");
+      
+     
+     
+      
+
+    });
+  }
+}
+
+angularGridReady5(angularGrid: AngularGridInstance) {
+  this.angularGrid5 = angularGrid;
+  this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGrid5() {
+  this.columnDefinitions5 = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "cm_addr",
+      name: "code",
+      field: "cm_addr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_name",
+      name: "Client",
+      field: "address.ad_name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_phone",
+      name: "Numero telephone",
+      field: "address.ad_phone",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_taxable",
+      name: "A Taxer",
+      field: "address.ad_taxable",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "ad_taxc",
+      name: "Taxe",
+      field: "address.ad_taxc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+  ];
+
+  this.gridOptions5 = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+      var val = undefined;
+      try {
+        val = eval("item." + column.field);
+      } catch (e) {
+        // ignore
+      }
+      return val;
+    },
+  };
+
+  // fill the dataset with your data
+  this.customerService
+    .getByAll({ cm_hold: false })
+    .subscribe((response: any) => (this.customers = response.data));
+}
+open5(content) {
+  this.prepareGrid5();
+  this.modalService.open(content, { size: "lg" });
+}
 printpdf() {
           const controls = this.providerForm.controls;
           const controlsa = this.addressForm.controls;
