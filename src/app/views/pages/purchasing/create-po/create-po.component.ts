@@ -653,7 +653,7 @@ console.log(this.vpServer)
                     console.log("this.provider", this.provider)
                     controls.po_taxable.setValue(this.provider.ad_taxable)
                     controls.po_taxc.setValue(this.provider.ad_taxc)
-                    controls.po_cr_terms.setValue(this.prov.vd_cr_terms || "");
+                    controls.po_cr_terms.setValue(this.vpServer.vp_pay_meth || "");
                   this.deviseService.getBy({cu_curr:this.prov.vd_curr}).subscribe((resc:any)=>{  
                     this.curr = resc.data
 
