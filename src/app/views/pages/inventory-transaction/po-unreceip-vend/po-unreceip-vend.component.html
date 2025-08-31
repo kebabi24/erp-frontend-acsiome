@@ -217,7 +217,7 @@
             <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
-        <button hidden id="openprh_sitesGrid" class="btn btn-primary" (click)="openprh_site(contentprh_site)">Launch demo modal</button>
+        <button hidden id="openprh_sitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo modal</button>
       </div>
   
       <div>
@@ -398,7 +398,29 @@
         <button hidden id="openSitesGrid" class="btn btn-primary" (click)="opensite(contentsite)">Launch demo
             modal</button>
     </div>
-    
+    <div>
+        <ng-template #contenttax let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">Choissir </h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <angular-slickgrid class="col-12" gridHeight="300" gridId="griduser"
+                        [columnDefinitions]="columnDefinitionstax" (onAngularGridCreated)="angularGridReadytax($event)"
+                        (sgOnSelectedRowsChanged)="handleSelectedRowsChangedtax($event.detail.eventData, $event.detail.args)"
+                        [gridOptions]="gridOptionstax" [dataset]="datatax">
+                    </angular-slickgrid>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+            </div>
+        </ng-template>
+    </div>
     </kt-portlet-body>
   </kt-portlet>
   

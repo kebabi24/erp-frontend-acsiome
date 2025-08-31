@@ -1015,6 +1015,15 @@ export class MenuConfig {
               title: "Paiement des Récéption",
               page: "/purchasing/payment-au",
             },
+            {
+              title: "Ajouter Facture Proforma",
+              page: "/purchasing/create-proforma",
+            },
+            {
+              title: "Liste des Factures Proforma",
+              page: "/purchasing/list-proforma",
+            },
+           
           ],
         },
 

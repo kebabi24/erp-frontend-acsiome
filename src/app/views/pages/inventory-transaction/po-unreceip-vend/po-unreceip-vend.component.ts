@@ -94,6 +94,13 @@ export class PoUnreceipVendComponent implements OnInit {
   gridObjcurr: any;
   angularGridcurr: AngularGridInstance;
 
+  
+  datatax: [];
+  columnDefinitionstax: Column[] = [];
+  gridOptionstax: GridOption = {};
+  gridObjtax: any;
+  angularGridtax: AngularGridInstance;
+
   datasite: [];
   columnDefinitionssite: Column[] = [];
   gridOptionssite: GridOption = {};
@@ -1332,6 +1339,103 @@ this.labelService.getBy({lb_cab: ref,lb_actif: false}).subscribe((res:any) =>{if
     this.modalService.open(content, { size: "lg" });
   }
 
+  handleSelectedRowsChangedtax(e, args) {
+    const controls = this.prhForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjtax) {
+      args.rows.map((idx) => {
+        const item = this.gridObjtax.getDataItem(idx);
+        controls.prh_tax_code.setValue(item.tx2_tax_code || "");
+      });
+    }
+  }
+
+  angularGridReadytax(angularGrid: AngularGridInstance) {
+    this.angularGridtax = angularGrid;
+    this.gridObjtax = (angularGrid && angularGrid.slickGrid) || {};
+  }
+
+  prepareGridtax() {
+    this.columnDefinitionstax = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "tx2_tax_code",
+        name: "code ",
+        field: "tx2_tax_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "tx2_tax_pct",
+        name: "Taux Taxe ",
+        field: "tx2_tax_pct",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+      },
+      {
+        id: "tx2_desc",
+        name: "Designation",
+        field: "tx2_desc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "tx2_tax_type",
+        name: "Type Taxe",
+        field: "tx2_tax_type",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+
+    this.gridOptionstax = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+
+    // fill the dataset with your data
+    this.taxService
+      .getAll()
+      .subscribe((response: any) => (this.datatax = response.data));
+  }
+  opentax(contenttax) {
+    this.prepareGridtax();
+    this.modalService.open(contenttax, { size: "lg" });
+  }
 
   
   onChangesite() {
