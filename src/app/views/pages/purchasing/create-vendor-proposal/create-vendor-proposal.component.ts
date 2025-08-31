@@ -1064,7 +1064,7 @@ curr: String;
           enableAutoResizeColumnsByCellContent: true,
           enableFiltering: true,
           autoEdit: false,
-          autoHeight: true,
+          autoHeight: false,
           enableAutoResize:true,
           frozenColumn: 0,
           frozenBottom: true,
@@ -1104,7 +1104,7 @@ curr: String;
       }
       open5(content) {
         this.prepareGrid5();
-        this.modalService.open(content, { size: "lg" });
+        this.modalService.open(content, { size: "xl" });
       }
 
       handleSelectedRowsChangedcurr(e, args) {

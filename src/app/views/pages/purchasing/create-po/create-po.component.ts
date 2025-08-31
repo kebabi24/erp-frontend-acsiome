@@ -1707,13 +1707,29 @@ changeTax(){
         name: "id",
         field: "id",
         sortable: true,
-        minWidth: 80,
-        maxWidth: 80,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "rqm_category",
+        name: "Sequence",
+        field: "rqm_category",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
       },
       {
         id: "rqm_nbr",
         name: "N° Demande",
         field: "rqm_nbr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "seq_desc",
+        name: "Description",
+        field: "sequence.seq_desc",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1727,17 +1743,57 @@ changeTax(){
         type: FieldType.string,
       },
       {
-        id: "rqm_total",
-        name: "Total",
-        field: "rqm_total",
+        id: "rqm_vend",
+        name: "Fournisseur",
+        field: "rqm_vend",
         sortable: true,
         filterable: true,
-        type: FieldType.float,
+        type: FieldType.string,
+      },
+       {
+        id: "chr01",
+        name: "Nom Fournisseur",
+        field: "chr01",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
       },
       {
         id: "rqm_status",
         name: "status",
         field: "rqm_status",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "rqm_aprv_stat",
+        name: "Approbation",
+        field: "rqm_aprv_stat",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "created_by",
+        name: "Utilisateur",
+        field: "created_by",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "rqm_rqby_userid",
+        name: "Demandeur",
+        field: "rqm_rqby_userid",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "chr02",
+        name: "Nom Demandeur",
+        field: "chr02",
         sortable: true,
         filterable: true,
         type: FieldType.string,
@@ -1780,7 +1836,7 @@ changeTax(){
   }
   open5(content) {
     this.prepareGrid5();
-    this.modalService.open(content, { size: "lg" });
+    this.modalService.open(content, { size: "xl" });
   }
   handleSelectedRowsChangedtax(e, args) {
     const controls = this.poForm.controls;
