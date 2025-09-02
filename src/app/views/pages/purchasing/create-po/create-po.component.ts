@@ -2502,7 +2502,7 @@ printpdf(nbr) {
   const controlss = this.poForm.controls 
   console.log("pdf",this.provider)
   var doc = new jsPDF();
- 
+  let date = new Date()
  // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
  var img = new Image();
  img.src = "./assets/media/logos/companylogo.png";
@@ -2520,6 +2520,10 @@ printpdf(nbr) {
   doc.setFontSize(12);
     doc.setFontSize(12);
     doc.text( 'Bon Commande N° : ' + nbr  , 70, 50);
+    doc.text("Date: " + date.toLocaleDateString() , 160, 60);
+        
+    doc.text("A: " + new Date().toLocaleTimeString(), 160, 65);
+    doc.text("Edité par: " + this.user.usrd_code, 160, 70);
     doc.setFontSize(8);
     
     doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 60 )
@@ -2571,6 +2575,10 @@ doc.line(10, 40, 200, 40);
 doc.setFontSize(12);
   doc.setFontSize(12);
   doc.text( 'Bon Commande N° : ' + nbr  , 70, 50);
+    doc.text("Date: " + date.toLocaleDateString() , 160, 60);
+        
+    doc.text("A: " + new Date().toLocaleTimeString(), 160, 65);
+    doc.text("Edité par: " + this.user.usrd_code, 160, 70);
   doc.setFontSize(8);
   
   doc.text('Code Fournisseur : ' + this.provider.ad_addr, 20 , 60 )
