@@ -69,6 +69,7 @@ import {
     BankService,
     DeviseService,
     SequenceService,
+    CustomerService,
 } from "../../../../core/erp"
 
 import { jsPDF } from "jspdf";
@@ -157,6 +158,12 @@ ck_frm: any[] = []
 cr_terms: any[] = []
 
 
+customers: [];
+    columnDefinitions5: Column[] = [];
+    gridOptions5: GridOption = {};
+    gridObj5: any;
+    angularGrid5: AngularGridInstance;
+
 pays:any;
 vdtype:any;
 seq:any;
@@ -179,6 +186,12 @@ trcolumnDefinitions: Column[];
 trgridOptions: GridOption;
 trdataset: any[];
 row_number : any
+dataAct: any[]
+columnDefinitionsAct: Column[] = []
+gridOptionsAct: GridOption = {}
+gridObjAct: any
+angularGridAct: AngularGridInstance
+selectedIndexes2: any[];
 /**
  * Component constructor
  *
@@ -216,6 +229,7 @@ constructor(
     private cdr: ChangeDetectorRef,
     private deviseService: DeviseService,
     private sequenceService: SequenceService,
+    private customerService: CustomerService,
     config: NgbDropdownConfig
 ) {
     config.autoClose = true
@@ -254,7 +268,10 @@ constructor(
         .subscribe((response: any) => (this.ck_frm = response.data))
     this.codeService
         .getBy({ code_fldname: "vd_cr_terms" })
-        .subscribe((response: any) => (this.cr_terms = response.data))            
+        .subscribe((response: any) => (this.cr_terms = response.data))      
+        this.codeService
+        .getBy({ code_fldname: "vd_sort" })
+        .subscribe((response: any) => (this.dataAct = response.data))          
 }
 
 /**
@@ -398,6 +415,7 @@ onchangename(){
                 controls1.vd_partial.enable()
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
+                controls1.vd_vt_id.enable()
                 controls1.vd_db.enable()
                 controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(Number(response.data.length) + Number(1))).slice(-3))  
                
@@ -460,6 +478,7 @@ onchangename(){
             controls1.vd_partial.enable()
             controls1.vd_hold.enable()
             controls1.vd_pay_spec.enable()
+            controls1.vd_vt_id.enable()
             controls1.vd_db.enable()
             controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(1)).slice(-3)) 
             document.getElementById("ad_line1").focus(); 
@@ -604,6 +623,7 @@ createProviderForm() {
         vd_partial: [this.providerEdit.vd_partial],
         vd_hold: [this.providerEdit.vd_hold],
         vd_pay_spec: [this.providerEdit.vd_pay_spec],
+        vd_vt_id: [this.providerEdit.vd_vt_id],
         vd_db: [this.providerEdit.vd_db],
     })
 }
@@ -737,6 +757,7 @@ onChangeCode() {
                 controls1.vd_partial.enable()
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
+                controls1.vd_vt_id.enable()
                 controls1.vd_db.enable()
                 document.getElementById("ad_name").focus(); 
             }
@@ -960,6 +981,7 @@ prepareProvider(): Provider {
     _provider.vd_partial = controls.vd_partial.value
     _provider.vd_hold = controls.vd_hold.value
     _provider.vd_pay_spec = controls.vd_pay_spec.value
+    _provider.vd_vt_id = controls.vd_vt_id.value
     _provider.vd_db = controls.vd_db.value
     return _provider
 }
@@ -2113,4 +2135,265 @@ printpdf() {
         ) as HTMLElement
         element.click()
   }
+
+  onChangeCust() {
+    const controls = this.providerForm.controls; // chof le champs hada wesh men form rah
+    const cm_addr = controls.vd_vt_id.value;
+   
+    this.customerService.getBy({ cm_addr, cm_hold: false }).subscribe(
+      (res: any) => {
+        console.log(res);
+        const { data } = res;
+  
+        if (!data) {
+          alert( "ce client n'existe pas! ou bien bloqué")
+          controls.vd_vt_id.setValue(null)
+          document.getElementById("vd_vt_id").focus()
+          this.error = true;
+        } else {
+          this.error = false;
+        
+         
+         
+        }
+         
+      },
+      (error) => console.log(error)
+    );
+  }
+  handleSelectedRowsChanged5(e, args) {
+    const controls = this.providerForm.controls;
+    if (Array.isArray(args.rows) && this.gridObj5) {
+      args.rows.map((idx) => {
+        const item = this.gridObj5.getDataItem(idx);
+        console.log(item)
+        const date = new Date()
+  
+  
+        // this.customer = item;
+        controls.vd_vt_id.setValue(item.cm_addr || "");
+        
+       
+       
+        
+  
+      });
+    }
+  }
+  
+  angularGridReady5(angularGrid: AngularGridInstance) {
+    this.angularGrid5 = angularGrid;
+    this.gridObj5 = (angularGrid && angularGrid.slickGrid) || {};
+  }
+  
+  prepareGrid5() {
+    this.columnDefinitions5 = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "cm_addr",
+        name: "code",
+        field: "cm_addr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_name",
+        name: "Client",
+        field: "address.ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_phone",
+        name: "Numero telephone",
+        field: "address.ad_phone",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxable",
+        name: "A Taxer",
+        field: "address.ad_taxable",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "ad_taxc",
+        name: "Taxe",
+        field: "address.ad_taxc",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+    ];
+  
+    this.gridOptions5 = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+  
+    // fill the dataset with your data
+    this.customerService
+      .getByAll({ cm_hold: false })
+      .subscribe((response: any) => (this.customers = response.data));
+  }
+  open5(content) {
+    this.prepareGrid5();
+    this.modalService.open(content, { size: "lg" });
+  }
+  handleSelectedRowsChangedAct(e, args) {
+    const controls1 = this.providerForm.controls
+    let act=''
+  
+    if (Array.isArray(args.rows) && this.gridObjAct) {
+        args.rows.map((idx) => {
+            const item = this.gridObjAct.getDataItem(idx)
+            // TODO : HERE itterate on selected field and change the value of the selected field
+           if(act =='') { act = item.code_value } else {
+               act = act + "," +  item.code_value }
+           
+        })
+    }
+    controls1.vd_sort.setValue(act)
+  }
+  angularGridReadyAct(angularGrid: AngularGridInstance) {
+    this.angularGridAct = angularGrid
+    this.gridObjAct = (angularGrid && angularGrid.slickGrid) || {}
+  }
+  
+  prepareGridAct() {
+    this.columnDefinitionsAct = [
+        
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+       
+        {
+          id: "code_value",
+          name: "Code",
+          field: "code_value",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "code_cmmt",
+          name: "Designation",
+          field: "code_cmmt",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+  
+    ]
+  
+    this.gridOptionsAct = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    }
+  
+    // fill the dataset with your data
+    // this.codeService
+    //     .getBy({code_fldname:"vd_sort"})
+    //     .subscribe((response: any) => (this.dataAct = response.data))
+  }
+  openAct(content) {
+    console.log(this.dataAct)
+    const controls = this.providerForm.controls
+    const myArray = controls.vd_sort.value.split(',');
+    console.log(myArray)
+    // let dd = myArray;
+    let dd=[]
+    console.log(dd.length)
+    for (let i = 0; i < myArray.length; i++) {
+     console.log(myArray[i])
+      //this.selectedIndexes2.push(1)
+    //   let index = this.dataAct.findIndex((service:any)=>{return service.code_value === dd[i]})
+      let index = this.dataAct.findIndex(x => x.code_value == myArray[i]); 
+      // console.log(index)
+      if (index != -1) {
+      dd.push(index);
+      }
+      // console.log("i",i)
+    }
+    console.log(dd)
+    // console.log(this.selectedIndexes2)
+    // console.log(dd)
+    this.selectedIndexes2 = dd;
+    this.prepareGridAct()
+    this.modalService.open(content, { size: "lg" })
+  }
+  
 }

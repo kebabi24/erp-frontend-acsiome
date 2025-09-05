@@ -120,6 +120,13 @@ gridObj3: any
 angularGrid3: AngularGridInstance
 selectedField = ""
 
+dataAct: []
+columnDefinitionsAct: Column[] = []
+gridOptionsAct: GridOption = {}
+gridObjAct: any
+angularGridAct: AngularGridInstance
+
+
 error = false
 
 datatax: []
@@ -1239,6 +1246,86 @@ open3(content, field) {
     this.modalService.open(content, { size: "lg" })
 }
 
+handleSelectedRowsChangedAct(e, args) {
+  const controls1 = this.providerForm.controls
+  let act=''
+
+  if (Array.isArray(args.rows) && this.gridObjAct) {
+      args.rows.map((idx) => {
+          const item = this.gridObjAct.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+         if(act =='') { act = item.code_value } else {
+             act = act + "," +  item.code_value }
+         
+      })
+  }
+  controls1.vd_sort.setValue(act)
+}
+angularGridReadyAct(angularGrid: AngularGridInstance) {
+  this.angularGridAct = angularGrid
+  this.gridObjAct = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridAct() {
+  this.columnDefinitionsAct = [
+      
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+     
+      {
+        id: "code_value",
+        name: "Code",
+        field: "code_value",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "code_cmmt",
+        name: "Designation",
+        field: "code_cmmt",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+
+  ]
+
+  this.gridOptionsAct = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+          selectActiveRow: false,
+      },
+  }
+
+  // fill the dataset with your data
+  this.codeService
+      .getBy({code_fldname:"vd_sort"})
+      .subscribe((response: any) => (this.dataAct = response.data))
+}
+openAct(content) {
+  this.prepareGridAct()
+  this.modalService.open(content, { size: "lg" })
+}
+
 handleSelectedRowsChangedtax(e, args) {
     const controls = this.addressForm.controls
     if (Array.isArray(args.rows) && this.gridObjtax) {
@@ -1832,13 +1919,9 @@ onChangeCust() {
       const { data } = res;
 
       if (!data) {
-        this.layoutUtilsService.showActionNotification(
-          "ce client n'existe pas! ou bien bloqué",
-          MessageType.Create,
-          10000,
-          true,
-          true
-        );
+        alert( "ce client n'existe pas! ou bien bloqué")
+        controls.vd_vt_id.setValue(null)
+        document.getElementById("vd_vt_id").focus()
         this.error = true;
       } else {
         this.error = false;
