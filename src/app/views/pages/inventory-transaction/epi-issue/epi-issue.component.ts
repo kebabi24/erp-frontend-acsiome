@@ -78,7 +78,7 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 };
 
 @Component({ 
-  selector: 'kt-epi-issue',
+  selector: 'kt-epi-issue', 
   templateUrl: './epi-issue.component.html',
   styleUrls: ['./epi-issue.component.scss']
 })
@@ -681,9 +681,9 @@ export class EpiIssueComponent implements OnInit {
           
         // },
         {
-          id: "tr_ref",
-          name: "Palette",
-          field: "tr_ref",
+          id: "taille",
+          name: "Taille",
+          field: "taille",
           sortable: true,
           width: 80,
           filterable: false,
@@ -692,22 +692,33 @@ export class EpiIssueComponent implements OnInit {
           //},
           
         },
-        
-        // {
-        //     id: "tr_price",
-        //     name: "Prix unitaire",
-        //     field: "tr_price",
-        //     sortable: true,
-        //     width: 80,
-        //     filterable: false,
-        //     //type: FieldType.float,
-        //     editor: {
-        //         model: Editors.float,
-        //         params: { decimalPlaces: 2 }
-        //     },
-        //     formatter: Formatters.decimal,
+        {
+          id: "couleur",
+          name: "Couleur",
+          field: "couleur",
+          sortable: true,
+          width: 80,
+          filterable: false,
+         // editor: {
+         //     model: Editors.float,
+          //},
+          
+        },
+        {
+            id: "tr_price",
+            name: "Prix unitaire",
+            field: "tr_price",
+            sortable: true,
+            width: 80,
+            filterable: false,
+            //type: FieldType.float,
+            editor: {
+                model: Editors.float,
+                params: { decimalPlaces: 2 }
+            },
+            formatter: Formatters.decimal,
             
-        // },
+        },
                 
         // {
         //   id: "tr_status",
@@ -969,7 +980,7 @@ export class EpiIssueComponent implements OnInit {
 
       }
 
-      this.sequenceService.getByOne({ seq_type: "SN", seq_profile: this.user.usrd_profile }).subscribe(
+      this.sequenceService.getByOne({ seq_type: "DC", seq_profile: this.user.usrd_profile }).subscribe(
         (response: any) => {
       this.seq = response.data
       console.log(this.seq)   
@@ -1178,6 +1189,8 @@ export class EpiIssueComponent implements OnInit {
                 updateItem.tr_site = item.pt_site;
                 updateItem.tr_loc = item.pt_loc;
                 updateItem.tr_price = this.sct.sct_mtl_tl;
+                updateItem.taille = item.pt_rev;
+                updateItem.couleur = item.pt_break_cat;
                 
                 updateItem.qty_oh =  this.lddet.ld_qty_oh;
                 
@@ -1285,7 +1298,7 @@ export class EpiIssueComponent implements OnInit {
       const controls=this.trForm.controls
       
       this.itemsService
-        .getBy({pt_prod_line:'EPI',pt_rev:this.taille})
+        .getByTaille({pt_prod_line:'EPI',taille:this.taille,pointure:this.pointure})
         .subscribe((response: any) => (this.items = response.data));
     }
     open4(content) {
@@ -2299,32 +2312,17 @@ printpdf(nbr) {
 
   doc.line(10, 35, 200, 35);
   doc.setFontSize(12);
-  doc.text("Bon Sortie N° : " + nbr, 70, 45);
+  doc.text("DECHARGE N° : " + nbr, 70, 45);
   doc.text("Date: " + date.toLocaleDateString(), 160, 45);
-  
-      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
-      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
-      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
-      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
+  doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
+  doc.text("Edité par: " + this.user.usrd_code, 160, 55);
+  if(this.user1 != null){  doc.text("Reçu par: " + this.user1, 20, 83)};
+  if(this.user1 != null){  doc.text("Structure: " + this.user1, 20, 83)};
+  if(this.user1 != null){  doc.text("Poste: " + this.user1, 20, 83)};
       
   doc.setFontSize(8);
   //console.log(this.provider.ad_misc2_id)
-  doc.text("Adresse : " + this.provider.ad_addr, 20, 50);
-  doc.text("Nom             : " + this.provider.ad_name, 20, 55);
-  doc.text("Lieu       : " + this.provider.ad_line1, 20, 60);
-  if (this.provider.ad_misc2_id != null) {
-    doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
-  }
-  if (this.provider.ad_gst_id != null) {
-    doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
-  }
-  if (this.provider.ad_pst_id) {
-    doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
-  }
-  if (this.provider.ad_misc1_id != null) {
-    doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
-  }
-
+  
   doc.line(10, 85, 205, 85);
   doc.line(10, 90, 205, 90);
   doc.line(10, 85, 10, 90);
@@ -2342,9 +2340,9 @@ printpdf(nbr) {
   doc.line(150, 85, 150, 90);
   doc.text("Lot/Série", 152, 88.5);
   doc.line(170, 85, 170, 90);
-  doc.text("N PAL", 172, 88.5);
+  doc.text("Couleur", 172, 88.5);
   doc.line(185, 85, 185, 90);
-  doc.text("THT", 195, 88.5);
+  doc.text("Taille", 195, 88.5);
   doc.line(205, 85, 205, 90);
   var i = 95;
   doc.setFontSize(6);
@@ -2352,72 +2350,7 @@ printpdf(nbr) {
   for (let j = 0; j < this.dataset.length  ; j++) {
     total = total +  Number(this.dataset[j].tr_qty_loc)
     
-    if ((j % 20 == 0) && (j != 0) ) {
-doc.addPage();
-// img.src = "./assets/media/logos/unplanified-issue.png";
-img.src = "./assets/media/logos/companyentete.png";
-doc.addImage(img, 'png', 5, 5, 200, 30)
-      doc.setFontSize(9);
-      // if (this.domain.dom_name != null) {
-      //   doc.text(this.domain.dom_name, 10, 10);
-      // }
-      // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
-      // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
-      // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
-      doc.setFontSize(14);
-      doc.line(10, 35, 200, 35);
-
-      doc.setFontSize(12);
-      doc.text("Bon Sortie N° : " + nbr, 70, 40);
-      doc.text("Date: " + date.toLocaleDateString() , 160, 40);
-      
-      doc.text("A: " + new Date().toLocaleTimeString(), 160, 50);
-      doc.text("Edité par: " + this.user.usrd_code, 160, 55);
-      if(this.user1 != null){  doc.text("Fait par: " + this.user1, 20, 83)};
-      if(this.user2 != null){doc.text("Et: " + this.user2, 90, 83);}
-      
-      doc.setFontSize(8);
-      console.log(this.provider.ad_misc2_id);
-      doc.text("Adresse : " + this.provider.ad_addr, 20, 50);
-      doc.text("Nom             : " + this.provider.ad_name, 20, 55);
-      doc.text("Lieu       : " + this.provider.ad_line1, 20, 60);
-      if (this.provider.ad_misc2_id != null) {
-        doc.text("MF          : " + this.provider.ad_misc2_id, 20, 65);
-      }
-      if (this.provider.ad_gst_id != null) {
-        doc.text("RC          : " + this.provider.ad_gst_id, 20, 70);
-      }
-      if (this.provider.ad_pst_id) {
-        doc.text("AI            : " + this.provider.ad_pst_id, 20, 75);
-      }
-      if (this.provider.ad_misc1_id != null) {
-        doc.text("NIS         : " + this.provider.ad_misc1_id, 20, 80);
-      }
-
-      doc.line(10, 85, 205, 85);
-      doc.line(10, 90, 205, 90);
-      doc.line(10, 85, 10, 90);
-      doc.text("LN", 12.5, 88.5);
-      doc.line(20, 85, 20, 90);
-      doc.text("Code Article", 25, 88.5);
-      doc.line(45, 85, 45, 90);
-      doc.text("Désignation", 67.5, 88.5);
-      doc.line(100, 85, 100, 90);
-      doc.text("QTE", 107, 88.5);
-      doc.line(120, 85, 120, 90);
-      doc.text("UM", 123, 88.5);
-      doc.line(130, 85, 130, 90);
-      doc.text("PU", 138, 88.5);
-      doc.line(150, 85, 150, 90);
-      doc.text("Lot/Série", 152, 88.5);
-      doc.line(170, 85, 170, 90);
-      doc.text("N PAL", 172, 88.5);
-      doc.line(185, 85, 185, 90);
-      doc.text("THT", 195, 88.5);
-      doc.line(205, 85, 205, 90);
-      i = 95;
-      doc.setFontSize(6);
-    }
+   
 
     if (this.dataset[j].tr_desc.length > 45) {
       let desc1 = this.dataset[j].tr_desc.substring(45);
@@ -2440,9 +2373,9 @@ doc.addImage(img, 'png', 5, 5, 200, 30)
       doc.line(150, i - 5, 150, i);
       doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
       doc.line(170, i - 5, 170, i);
-      doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
+      doc.text(String(this.dataset[j].couleur), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String(Number((Number(this.dataset[j].tr_price) * Number((this.dataset[j].tr_qty_loc))))), 203, i - 1, { align: "right" });
+      doc.text(String(this.dataset[j].taille), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       // doc.line(10, i, 200, i );
 
@@ -2479,9 +2412,9 @@ doc.addImage(img, 'png', 5, 5, 200, 30)
       doc.line(150, i - 5, 150, i);
       doc.text(String(this.dataset[j].tr_serial), 168, i - 1, { align: "right" });
       doc.line(170, i - 5, 170, i);
-      doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
+      doc.text(String(this.dataset[j].couleur), 183, i - 1, { align: "right" });
       doc.line(185, i - 5, 185, i);
-      doc.text(String(Number(Number((this.dataset[j].tr_price)) * Number((this.dataset[j].tr_qty_loc)))), 203, i - 1, { align: "right" });
+      doc.text(String(this.dataset[j].taille), 203, i - 1, { align: "right" });
       doc.line(205, i - 5, 205, i);
       doc.line(10, i, 205, i);
       i = i + 5;
@@ -2997,7 +2930,7 @@ prepareGrid5() {
  const controls = this.trForm.controls
   // fill the dataset with your data
   this.inventoryTransactionService
-    .getByGroup({ tr_type:"ISS-UNP" })
+    .getByGroup({ tr_type:"ISS-EPI" })
     .subscribe((response: any) => (this.transactions = response.data));
 }
 open5(content) {

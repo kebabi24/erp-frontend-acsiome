@@ -1,20 +1,33 @@
 import { Component, OnInit } from "@angular/core"
-// Angular slickgrid
 import {
-  Column,
-  GridOption,
   Formatter,
   Editor,
   Editors,
-  Filters,
-  AngularGridInstance,
-  EditorValidator,
-  EditorArgs,
-  GridService,
-  Formatters,
-  FieldType,
   OnEventArgs,
-} from "angular-slickgrid";
+  AngularGridInstance,
+  Aggregators, 
+  Column,
+  DelimiterType, 
+  FieldType,
+  FileType,
+  Filters,
+  Formatters,
+  GridOption,
+  Grouping,
+  GroupingGetterFunction,
+  GroupTotalFormatters,
+  SortDirectionNumber,
+  Sorters,
+  GridService,
+  ColumnFilter,
+  Filter,
+  FilterArguments,
+  FilterCallback,
+  OperatorType,
+  OperatorString,
+  SearchTerm,
+} from "angular-slickgrid"
+
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Observable, BehaviorSubject, Subscription, of } from "rxjs"
 import { ActivatedRoute, Router } from "@angular/router"
@@ -31,23 +44,17 @@ import {
 } from "../../../../core/_base/crud"
 import { MatDialog } from "@angular/material/dialog"
 
-import {  InventoryTransactionService } from "../../../../core/erp"
+import { InventoryTransactionService,LocationDetail, LocationDetailService, CodeService} from "../../../../core/erp"
+import { jsPDF } from "jspdf";
+import { HttpUtilsService } from "../../../../core/_base/crud"
+import { environment } from "../../../../../environments/environment"
+import { HttpClient } from "@angular/common/http"
+import { L } from "@angular/cdk/keycodes"
 
-const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>{
-if (value=="C"){
-  return `<div class="text"  aria-hidden="C">Cloturé</div>`
-}
-if (value=="R"){
-  return `<div class="text"  aria-hidden="R">Lancé</div>`
-}
-if (value=="F"){
-  return `<div class="text"  aria-hidden="F">Valide</div>`
-}
-if (value=="D"){
-  return `<div class="text"  aria-hidden="D">Reporté</div>`
-}
-}
-  // return  value  ? `<div class="text"  aria-hidden="C">Clos</div>` : '<div class="text"  aria-hidden="R">Lancé</div>';}
+const myCustomCheckboxFormatter: Formatter = (row: number, cell: number, value: any, columnDef: Column, dataContext: any, grid?: any) =>
+  value ? `<div class="text"  aria-hidden="true">Oui</div>` : '<div class="text"  aria-hidden="true">Non</div>';
+  const API_URL_codes = environment.apiUrl + "/codes"
+
 @Component({
   selector: 'kt-epi-inventory-report',
   templateUrl: './epi-inventory-report.component.html',
@@ -55,272 +62,624 @@ if (value=="D"){
 })
 export class EpiInventoryReportComponent implements OnInit {
 
-  // slick grid
   columnDefinitions: Column[] = []
   gridOptions: GridOption = {}
   dataset: any[] = []
-  columnDefinitions1: Column[] = []
-  gridOptions1: GridOption = {}
-  dataset1: any[] = []
+  draggableGroupingPlugin: any;
+  angularGrid: AngularGridInstance;
 
-  gridObj1: any;
-  angularGrid1: AngularGridInstance;
+  grid: any;
+  gridService: GridService;
+  dataview: any;
+ 
+  domain    : any;
+  user : any;
+  selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
+  gridObj: any;
+  dataviewObj: any;
+
+  
   constructor(
+      private http: HttpClient,
+      private httpUtils: HttpUtilsService,
       private activatedRoute: ActivatedRoute,
       private router: Router,
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
-      
-      private inventorytransaction: InventoryTransactionService
+     
+      private locationDetailService: LocationDetailService,
+      private inventorytransactionService: InventoryTransactionService,
   ) {
       this.prepareGrid()
-      this.prepareGrid1()
   }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem("user"));
+    this.domain = JSON.parse(localStorage.getItem("domain"));
   }
 
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.grid = angularGrid.slickGrid; // grid object
+    this.dataview = angularGrid.dataView;
+    this.gridService = angularGrid.gridService;
+  }
+  
+  
   prepareGrid() {
+
       this.columnDefinitions = [
-         
-          {
-              id: "id",
-              name: "id",
-              field: "id",
-              sortable: true,
-              minWidth: 80,
-              maxWidth: 80,
-          },
-         
-          {
-            id: "tr_user1",
-            name: "Employé",
-            field: "tr_user1",
-            sortable: true,
-            filterable: true,
-           
-           
-          },
-          {
-            id: "tr_part",
-            name: "EPI",
-            field: "tr_part",
-            sortable: true,
-            width: 50,
-            filterable: true,
-           
-           
-          },
-          {
-            id: "tr_rev",
-            name: "taille",
-            field: "tr_rev",
-            sortable: true,
-            width: 50,
-            filterable: true,
-           
-           
-          },
-        
-          {
-            id: "tr_nbr",
-            name: "Ordre",
-            field: "tr_nbr",
-            sortable: true,
-            width: 50,
-            filterable: true,
-           
-           
-          },
-          {
-            id: "tr_effdate",
-            name: "Date",
-            field: "tr_effdate",
-            sortable: true,
-            minWidth: 150,
-            filterable: true,
-           
-           
-          },
-                   
-          {
-            id: "tr_qty_loc",
-            name: "Quantité",
-            field: "tr_qty_loc",
-            sortable: true,
-            minWidth: 100,
-            filterable: true,
-           
-          },
-        
           
-    
-        ];
+{
+            id: "pt_part",
+            name: "Code article",
+            field: "pt_part",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'pt_part',
+              formatter: (g) => `Code Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+               
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
+          },        
+          {
+            id: "pt_desc1",
+            name: "Désignation",
+            field: "pt_desc1",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'pt_desc1',
+              formatter: (g) => `Désignation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+               
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
+          }, 
+          {
+            id: "pt_part_type",
+            name: "Sous-famille",
+            field: "pt_part_type",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'pt_part_type',
+              formatter: (g) => `Sous-famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+                
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+            }
+          }, 
+          {
+            id: "pt_group",
+            name: "Groupe",
+            field: "pt_group",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            grouping: {
+              getter: 'pt_group',
+              formatter: (g) => `Groupe: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+                
+              ],
+              aggregateCollapsed: true,
+              collapsed: true,
+              lazyTotalsCalculation:true,
+            }
+          }, 
+          {
+            id: "pt_draw",
+            name: "Article",
+            field: "pt_draw",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            filter: {model: Filters.compoundInput , operator: OperatorType.rangeInclusive },
+            grouping: {
+              getter: 'pt_draw',
+              formatter: (g) => `Service: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+                
+              ],  
+              aggregateCollapsed: true,
+              collapsed: true,
+              lazyTotalsCalculation:true,
+            }
+          }, 
+          {
+            id: "pt_model",
+            name: "Modèle",
+            field: "pt_model",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+            grouping: {
+              getter: 'pt_model',
+              formatter: (g) => `Modèle: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+                
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          },
+           {
+            id: "pt_rev",
+            name: "Taille",
+            field: "pt_rev",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            // filter: {collectionAsync:  this.http.get(`${API_URL_codes}/types`),model: Filters.multipleSelect , operator: OperatorType.inContains },
+            grouping: {
+              getter: 'pt_rev',
+              formatter: (g) => `Taille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+                
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          }, 
+         
+           {
+            id: "pt_break_cat",
+            name: "couleur",
+            field: "pt_break_cat",
+            sortable: true,
+            filterable: true,
+            type: FieldType.string,
+            grouping: {
+              getter: 'pt_break_cat',
+              formatter: (g) => `Couleur: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('tr_qty_loc'),
+                
+              ],
+              aggregateCollapsed: true,
+              lazyTotalsCalculation:true,
+              collapsed:true
+            }
+            
+          },
+          {
+            id: "qty_oh",
+            name: "Stock actuel",
+            field: "qty_oh",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          }, 
+          {
+            id: "rctpo",
+            name: "Achat",
+            field: "rctpo",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          },
+          {
+            id: "issepi",
+            name: "Distribution",
+            field: "issepi",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          },
+          {
+            id: "retepi",
+            name: "Retour",
+            field: "retepi",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          },
+          
+          {
+            id: "ecart",
+            name: "Ecart",
+            field: "ecart",
+            sortable: true,
+            filterable: true,
+            groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
+            type: FieldType.float,
+            filter: { model: Filters.compoundInput,operator: OperatorType.rangeInclusive}
+            
+            
+          },
+           
+          
+      ]
+
 
       this.gridOptions = {
-          enableSorting: true,
-          enableCellNavigation: true,
-          enableExcelCopyBuffer: true,
+         /* autoResize: {
+            containerId: 'demo-container',
+            sidePadding: 10
+          },*/
+          enableDraggableGrouping: true,
+          createPreHeaderPanel: true,
+          showPreHeaderPanel: true,
+          preHeaderPanelHeight: 40,
           enableFiltering: true,
-          autoEdit: false,
-          autoHeight: false,
-          frozenColumn: 0,
-          frozenBottom: true,
+          enableSorting: true,
+          enableAutoResize: true,
+          exportOptions: {
+            sanitizeDataExport: true
+          },
+          gridMenu: {
+            onCommand: (e, args) => {
+              if (args.command === 'toggle-preheader') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.clearGrouping();
+              }
+            },
+          },
+          draggableGrouping: {
+            dropPlaceHolderText: 'Drop a column header here to group by the column',
+            // groupIconCssClass: 'fa fa-outdent',
+            deleteIconCssClass: 'fa fa-times',
+            onGroupChanged: (e, args) => this.onGroupChanged(args),
+            onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+        
+        },
+
+    
+          dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+            var val = undefined;
+            try {
+              val = eval("item." + column.field);
+            } catch (e) {
+              // ignore
+            }
+            return val;
+          },
+
+
       }
 
       // fill the dataset with your data
       this.dataset = []
-      this.inventorytransaction.getByGroupEmp({}).subscribe(
-          (response: any) => (this.dataset = response.data),
-          (error) => {
-              this.dataset = []
-          },
-          () => {}
-      )
-  }
-  prepareGrid1() {
-    this.columnDefinitions1 = [
-        {
-          id: "tr_user1",
-          name: "Employé",
-          field: "tr_user1",
-          sortable: true,
-          filterable: true,
-         
-         
-        },
-       
-        {
-          id: "Structure",
-          name: "Structure",
-          field: "structure",
-          sortable: true,
-          width: 50,
-          filterable: true,
-         
-         
-        },
-        {
-          id: "service",
-          name: "Service",
-          field: "service",
-          sortable: true,
-          width: 50,
-          filterable: true,
-        },
-        {
-          id: "poste",
-          name: "Poste",
-          field: "poste",
-          sortable: true,
-          width: 80,
-          filterable: true,
-         
-        },
-      
-        {
-          id: "spec",
-          name: "Spécialite",
-          field: "spec",
-          sortable: true,
-          width: 80,
-          filterable: true,
-         
-        },
-        {
-          id: "article",
-          name: "article",
-          field: "article",
-          sortable: true,
-          width: 80,
-          filterable: true,
-         
-        },
-        {
-          id: "quantite",
-          name: "Quantité",
-          field: "quantite",
-          sortable: true,
-          width: 80,
-          filterable: true,
-          
-        },
+      this.inventorytransactionService.getByreport({pt_prod_line:'EPI'}).subscribe( 
         
-      ];
-
-    // this.gridOptions1 = {
-    //     enableSorting: true,
-    //     enableCellNavigation: true,
-    //     enableExcelCopyBuffer: true,
-    //     enableFiltering: true,
-    //     autoEdit: false,
-    //     autoHeight: false,
-    //     frozenColumn: 0,
-    //     frozenBottom: true,
-    // }
-    this.gridOptions1 = {
-      enableSorting: true,
-      enableCellNavigation: true,
-      enableExcelCopyBuffer: true,
-      enableFiltering: true,
-      autoEdit: false,
-      autoHeight: false,
-      frozenColumn: 0,
-      frozenBottom: true,
-      enableRowSelection: true,
-      enableCheckboxSelector: true,
-      checkboxSelector: {
-        // optionally change the column index position of the icon (defaults to 0)
-        // columnIndexPosition: 1,
-
-        // remove the unnecessary "Select All" checkbox in header when in single selection mode
-        hideSelectAllCheckbox: true,
-
-        // you can override the logic for showing (or not) the expand icon
-        // for example, display the expand icon only on every 2nd row
-        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
-      },
-      multiSelect: false,
-      rowSelectionOptions: {
-        // True (Single Selection), False (Multiple Selections)
-        selectActiveRow: true,
-      },
-    };
-
-    // fill the dataset with your data
-    this.dataset1 = []
-    this.inventorytransaction.getByGroupEmp({}).subscribe(
-        (response: any) => (this.dataset1 = response.data),
-        (error) => {
-            this.dataset1 = []
-        },
-        () => {}
-    )
-}
-angularGridReady1(angularGrid: AngularGridInstance) {
-    this.angularGrid1 = angularGrid;
-    this.gridObj1 = (angularGrid && angularGrid.slickGrid) || {};
-  }
-handleSelectedRowsChanged1(e, args) {
-  
-  
-  
-  if (Array.isArray(args.rows) && this.gridObj1) {
-    args.rows.map((idx) => {
-      const item = this.gridObj1.getDataItem(idx);
-      console.log(item)
-       
-      this.dataset = []
-      this.inventorytransaction.getByemploye({tr_user1:item.tr_user1}).subscribe(
-          (response: any) => (this.dataset = response.data),
+          (response: any) => {this.dataset = response.data
+            console.log(this.dataset)
+            this.dataview.setItems(this.dataset)},
+          
           (error) => {
               this.dataset = []
           },
           () => {}
+          
+      )
+      console.log(this.dataset)
+  }
+  onGroupChanged(change: { caller?: string; groupColumns: Grouping[] }) {
+      // the "caller" property might not be in the SlickGrid core lib yet, reference PR https://github.com/6pac/SlickGrid/pull/303
+      const caller = change && change.caller || [];
+      const groups = change && change.groupColumns || [];
+
+      if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
+        // update all Group By select dropdown
+        this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
+      } else if (groups.length === 0 && caller === 'remove-group') {
+        this.clearGroupingSelects();
+      }
+    }
+    clearGroupingSelects() {
+      this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
+    }
+    
+    collapseAllGroups() {
+      this.dataviewObj.collapseAllGroups();
+    }
+  
+    expandAllGroups() {
+      this.dataviewObj.expandAllGroups();
+    }
+    clearGrouping() {
+      if (this.draggableGroupingPlugin && this.draggableGroupingPlugin.setDroppedGroups) {
+        this.draggableGroupingPlugin.clearDroppedGroups();
+      }
+      this.gridObj.invalidate(); // invalidate all rows and re-render
+    }
+
+    printpdf() {
+      // const controls = this.totForm.controls
+      let nbr = new Date().toLocaleDateString()
+      console.log("pdf");
+      var doc = new jsPDF("l");
+      let date = new Date()
+     // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+      var img = new Image()
+      // img.src = "./assets/media/logos/inventory-list.png";
+      img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
+      doc.setFontSize(9);
+      // if (this.domain.dom_name != null) {
+      //   doc.text(this.domain.dom_name, 10, 10);
+      // }
+      // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+      // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+      // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+      doc.setFontSize(14);
+    
+      doc.line(10, 35, 300, 35);
+      doc.setFontSize(12);
+      doc.text("Etat des Stocks Du: " + nbr, 100, 45);
+      //doc.text("Date: " + this.dataset[0].tr_effdate, 160, 45);
+      doc.text("imprimé Le: " + date.toLocaleDateString() , 220, 45);
+      doc.text("A: " + new Date().toLocaleTimeString(), 220, 50);
+      doc.text("Edité par: " + this.user.usrd_code, 220, 55);
+      
+      
+      doc.setFontSize(8);
+      //console.log(this.provider.ad_misc2_id)
+     
+    
+      doc.line(10, 85, 300, 85);
+      doc.line(10, 90, 300, 90);
+      doc.line(10, 85, 10, 90);
+      doc.text("LN", 12.5, 88.5);
+      doc.line(20, 85, 20, 90);
+      doc.text("Code Article", 25, 88.5);
+      doc.line(65, 85, 65, 90);
+      doc.text("Désignation", 67.5, 88.5);
+      doc.line(130, 85, 130, 90);
+      doc.text("QTE", 133, 88.5);
+      doc.line(140, 85, 140, 90);
+      doc.text("ORIGINE", 143, 88.5);
+      doc.line(170, 85, 170, 90);
+      doc.text("PAR", 173, 88.5);
+      doc.line(185, 85, 185, 90);
+      doc.text("Lot/Série", 188, 88.5);
+      doc.line(205, 85, 205, 90);
+      doc.text("N PAL", 207, 88.5);
+      doc.line(220, 85, 220, 90);
+      doc.text("DATE", 223, 88.5);
+      doc.line(235, 85, 235, 90);
+      doc.text("SITE", 238, 88.5);
+      doc.line(245, 85, 245, 90);
+      var i = 95;
+      doc.setFontSize(6);
+      let total = 0
+      for (let j = 0; j < this.dataset.length  ; j++) {
+        total = total - Number(this.dataset[j].tr_qty_loc)
+        
+        if ((j % 20 == 0) && (j != 0) ) {
+          doc.addPage();
+          // img.src = "./assets/media/logos/inventory-list.png";
+          img.src = "./assets/media/logos/companyentete"
+    doc.addImage(img, 'png', 5, 5, 200, 30)
+          doc.setFontSize(9);
+          // if (this.domain.dom_name != null) {
+          //   doc.text(this.domain.dom_name, 10, 10);
+          // }
+          // if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+          // if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+          // if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+          doc.setFontSize(14);
+          doc.line(10, 35, 300, 35);
+    
+          doc.setFontSize(12);
+          doc.text("Etat des Stocks Du: " + nbr, 100, 45);
+          //doc.text("Date: " + this.dataset[0].tr_effdate, 160, 45);
+          doc.text("imprimé Le: " + date.toLocaleDateString() , 220, 45);
+          doc.text("A: " + new Date().toLocaleTimeString(), 220, 50);
+          doc.text("Edité par: " + this.user.usrd_code, 220, 55);
+         
+      
+          doc.setFontSize(8);
+          
+    
+          
+      doc.line(10, 85, 300, 85);
+      doc.line(10, 90, 300, 90);
+      doc.line(10, 85, 10, 90);
+      doc.text("LN", 12.5, 88.5);
+      doc.line(20, 85, 20, 90);
+      doc.text("Code Article", 25, 88.5);
+      doc.line(65, 85, 65, 90);
+      doc.text("Désignation", 67.5, 88.5);
+      doc.line(130, 85, 130, 90);
+      doc.text("QTE", 133, 88.5);
+      doc.line(140, 85, 140, 90);
+      doc.text("ORIGINE", 143, 88.5);
+      doc.line(170, 85, 170, 90);
+      doc.text("PAR", 173, 88.5);
+      doc.line(185, 85, 185, 90);
+      doc.text("Lot/Série", 188, 88.5);
+      doc.line(205, 85, 205, 90);
+      doc.text("N PAL", 207, 88.5);
+      doc.line(220, 85, 220, 90);
+      doc.text("DATE", 223, 88.5);
+      doc.line(235, 85, 235, 90);
+      doc.text("SITE", 238, 88.5);
+      doc.line(245, 85, 245, 90);
+          i = 95;
+          doc.setFontSize(6);
+        }
+    
+        
+          doc.line(10, i - 5, 10, i);
+          doc.text(String("0000" + Number(j+1)).slice(-4), 12.5, i - 1);
+          doc.line(20, i - 5, 20, i);
+          doc.text(this.dataset[j].ld_part, 25, i - 1);
+          doc.line(65, i - 5, 65, i);
+          doc.text(this.dataset[j].chr01 + ' ' + this.dataset[j].chr02 + ' ' + this.dataset[j].chr03, 67.5, i - 1);
+          doc.line(130, i - 5, 130, i);
+          doc.text(String(Number(this.dataset[j].tr_qty_loc) ), 137, i - 1, { align: "right" });
+          doc.line(140, i - 5, 140, i);
+          doc.text(String(this.dataset[j].chr04), 143, i - 1);
+          doc.line(170, i - 5, 170, i);
+          doc.text(String(this.dataset[j].created_by), 173, i - 1, );
+          doc.line(185, i - 5, 185, i);
+          doc.text(String(this.dataset[j].ld_lot), 188, i - 1, );
+          doc.line(205, i - 5, 205, i);
+          doc.text(String(this.dataset[j].ld_ref), 207, i - 1, );
+          doc.line(220, i - 5, 220, i);
+          doc.text(String((this.dataset[j].ld_date)) , 223, i - 1, );
+          doc.line(235, i - 5, 235, i);
+          doc.text(String((this.dataset[j].ld_site)) , 238, i - 1, );
+          doc.line(245, i - 5, 245, i);
+          doc.line(10, i, 245, i);
+          i = i + 5;
+        
+      }
+    
+      // doc.line(10, i - 5, 200, i - 5);
+    
+      // doc.line(130, i + 7, 205, i + 7);
+      // doc.line(130, i + 14, 205, i + 14);
+      // //  doc.line(130, i + 21, 200, i + 21 );
+      // //  doc.line(130, i + 28, 200, i + 28 );
+      // //  doc.line(130, i + 35, 200, i + 35 );
+      // doc.line(130, i + 7, 130, i + 14);
+      // doc.line(160, i + 7, 160, i + 14);
+      // doc.line(205, i + 7, 205, i + 14);
+      // doc.setFontSize(10);
+    
+      doc.text("NOMBRE DE BIG BAG   " + String(this.dataset.length) + "  , Total POIDS:  " + String(Number(total)), 40, i + 12, { align: "left" });
+      //  doc.text('TVA', 140 ,  i + 19 , { align: 'left' });
+      //  doc.text('Timbre', 140 ,  i + 26 , { align: 'left' });
+      //  doc.text('Total TC', 140 ,  i + 33 , { align: 'left' });
+    
+      // doc.text(String(Number(total)), 198, i + 12, { align: "right" });
+      //  doc.text(String(Number(controls.tva.value).toFixed(2)), 198 ,  i + 19 , { align: 'right' });
+      //  doc.text(String(Number(controls.timbre.value).toFixed(2)), 198 ,  i + 26 , { align: 'right' });
+      //  doc.text(String(Number(controls.ttc.value).toFixed(2)), 198 ,  i + 33 , { align: 'right' });
+    
+      doc.setFontSize(8);
+      // let mt = NumberToLetters(Number(total), "Dinars Algerien");
+    
+      // if (mt.length > 95) {
+      //   let mt1 = mt.substring(90);
+      //   let ind = mt1.indexOf(" ");
+    
+      //   mt1 = mt.substring(0, 90 + ind);
+      //   let mt2 = mt.substring(90 + ind);
+    
+      //   doc.text("Arretée la présente Commande a la somme de :" + mt1, 20, i + 53);
+      //   doc.text(mt2, 20, i + 60);
+      // } else {
+      //   doc.text("Arretée la présente Commande a la somme de :" + mt, 20, i + 53);
+      // }
+      // window.open(doc.output('bloburl'), '_blank');
+      //window.open(doc.output('blobUrl'));  // will open a new tab
+      doc.save('ES-' + nbr + '.pdf')
+      var blob = doc.output("blob");
+      window.open(URL.createObjectURL(blob));
+    }
+    onSubmit() {
+    
+      this.printpdf(); 
+     
+      // tslint:disable-next-line:prefer-const
+    
+    }
+    vendorlist() {
+    
+      
+      const url = `/providers/list`;
+      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+    
+    }
+    partlist() {
+    
+      
+      const url = `/articles/list`;
+      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+    
+    }
+    polist() {
+    
+      
+      const url = `/inventory-transaction/transaction-list`;
+      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+    
+    }
+    caisse() {
+    
+      
+      const url = `/purchasing/payment-au`;
+      this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+    
+    }
+   
+    
+    reset() {
+    
+      this.dataset = []
+      this.locationDetailService.getBy({chr05:'EPI'}).subscribe( 
+        
+          (response: any) => {this.dataset = response.data
+            console.log(this.dataset)
+            this.dataview.setItems(this.dataset)},
+          
+          (error) => {
+              this.dataset = []
+          },
+          () => {}
+          
       )
     
-    
-  })
- }
+    }
 }
-}
+

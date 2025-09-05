@@ -57,6 +57,13 @@ export class ItemService {
        // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
         
     }
+    public getByTaille(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findtaille`,data, { headers: httpHeaders })
+
+       // return this.http.post(`${API_URL}/find`,data, { headers:httpHeaders })
+        
+    }
     public getByPurchase() {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findpurchasing`, { headers: httpHeaders })

@@ -18,7 +18,7 @@
                 </kt-alert>
                 <div class="row">
                     <div class="form-group col-2">
-                        <label class="form-group">Numero DA:</label>
+                        <label class="form-group">Numero DA*:</label>
                         <div class="input-group input-group-sm">
 
                             <input type="text" class="form-control form-control-solid" formControlName="vp_rqm_nbr"
@@ -33,7 +33,7 @@
 
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">Devis:</label>
+                        <label class="form-group">Devis*:</label>
                         <input type="text" 
                         [className]="vpForm.controls['vp_nbr'].errors && (vpForm.controls['vp_nbr'].dirty || vpForm.controls['vp_nbr'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
                               
@@ -43,7 +43,7 @@
 
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">FOURNISSEUR :</label>
+                        <label class="form-group">FOURNISSEUR* :</label>
                         <div class="input-group input-group-sm">
 
                             <input type="text" class="form-control form-control-solid" formControlName="vp_vend" (change)="onChangeVend()"
@@ -67,7 +67,7 @@
                     </div>
 
                     <div class="form-group col-2">
-                        <label class="form-group">Date offre:</label>
+                        <label class="form-group">Date offre*:</label>
                         <div class="input-group input-group-sm">
                             <input 
                             
@@ -87,7 +87,7 @@
 
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">Delai offre:</label>
+                        <label class="form-group">Delai offre*:</label>
                         <div class="input-group input-group-sm">
                             <input
                             [className]="vpForm.controls['vp_q_date'].errors && (vpForm.controls['vp_q_date'].dirty || vpForm.controls['vp_q_date'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
@@ -112,7 +112,7 @@
                 <div class="row">
 
                     <div class="form-group col-2">
-                        <label class="form-group">Methode de paiement:</label>
+                        <label class="form-group">Methode de paiement*:</label>
                         <select class="form-control form-control-sm form-control-solid" formControlName="vp_pay_meth" (change)="onChangePay()"
                             id="exampleSelects1">
                             <option value=""></option>
@@ -131,14 +131,14 @@
 
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">Delai de livraison :</label>
+                        <label class="form-group">Delai de livraison* :</label>
                         <input type="text" class="form-control form-control-sm form-control-solid"
                             formControlName="vp_vend_lead">
 
 
                     </div>
                     <div class="form-group col-2">
-                        <label class="form-group">DEVISE :</label>
+                        <label class="form-group">DEVISE* :</label>
                         <div class="input-group input-group-sm">
 
                             <input type="text" class="form-control form-control-solid" formControlName="vp_curr" (change)="changeCurr()"
