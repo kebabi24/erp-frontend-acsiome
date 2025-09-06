@@ -6,7 +6,7 @@ import { LayoutUtilsService, MessageType } from 'src/app/core/_base/crud';
 
 import {AuthService,
 } from "../../../../../core/auth"
-
+import { ActivatedRoute, Router } from "@angular/router"
 @Component({
   selector: 'kt-notification',
   templateUrl: './notification.component.html',
@@ -58,6 +58,9 @@ export class NotificationComponent {
 
   constructor(
     private sanitizer: DomSanitizer,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+   
     private authService : AuthService,
     private layoutUtilsService: LayoutUtilsService,
   ) {
@@ -81,6 +84,7 @@ export class NotificationComponent {
   updateNotifications(){
     this.authService.getNewNotifications().subscribe(
       (response) => {
+        console.log(response)
         if (response["data"].length != 0) {
           this.notifications = response["data"].purchase_orders
           this.orders = response["data"].req_approval
@@ -102,8 +106,16 @@ export class NotificationComponent {
         );
       }
     );
+
+    
   }
-  
+  rqmLink(id) {
+    console.log("here",id)
+    const url = `/purchasing/list-approval/${id}`;
+    console.log(url)
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+   
+  }
 
 
 

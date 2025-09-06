@@ -63,6 +63,7 @@ export class ListApprovalComponent implements OnInit {
   daForm: FormGroup;
   user: any;
   reqid: any;
+  rqmnbr : any
     constructor(
       private activatedRoute: ActivatedRoute,
       private router: Router,
@@ -74,11 +75,30 @@ export class ListApprovalComponent implements OnInit {
       private modalService: NgbModal,
       private seqeuncesService: SequenceService,
     ) {
-      this.prepareGrid();
+      // this.prepareGrid();
       this.user = JSON.parse(localStorage.getItem('user'))
     }
   
-    ngOnInit(): void {}
+    ngOnInit(): void {
+
+      this.activatedRoute.params.subscribe((params) => {
+        const id = params.id;
+  console.log("id",id)
+        if (id) {
+          this.rqmnbr = id
+          this.user =  JSON.parse(localStorage.getItem('user'))
+     this.prepareGrid();
+    //  this.setFiltersDefault()
+        }
+        else {
+          this.rqmnbr=null
+          this.user =  JSON.parse(localStorage.getItem('user'))
+          // if (this.user.usrd_site == "*") {this.site = null} else {this.site = this.user.usrd_site }
+          this.prepareGrid();
+        }
+      })
+
+    }
     angularGridReady(angularGrid: AngularGridInstance) {
       this.angularGrid = angularGrid;
       this.gridObj = angularGrid.slickGrid; // grid object
@@ -289,7 +309,9 @@ export class ListApprovalComponent implements OnInit {
       this.requisitionService.getAllApp().subscribe(
         (response: any) => {this.dataset = response.data
           console.log(this.dataset)
-        this.dataView.setItems(this.dataset)},
+        this.dataView.setItems(this.dataset)
+        if(this.rqmnbr!= null){this.setFiltersDefault()}
+      },
         (error) => {
           this.dataset = [];
         },
@@ -319,6 +341,14 @@ export class ListApprovalComponent implements OnInit {
         })
      }
    
+     setFiltersDefault() {
+      // we can Set Filters Dynamically (or different filters) afterward through the FilterService
+      this.angularGrid.filterService.updateFilters([
+        { columnId: 'rqm_nbr', searchTerms: [this.rqmnbr] },
+       
+      ]);
+    }
+    
      createForm() {
        
     

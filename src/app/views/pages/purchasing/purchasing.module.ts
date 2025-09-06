@@ -215,7 +215,7 @@ const routes: Routes = [
         component: EditRequisitionComponent,
       },
       {
-        path: "list-approval",
+        path: "list-approval/:id",
         component: ListApprovalComponent,
       },
       {
