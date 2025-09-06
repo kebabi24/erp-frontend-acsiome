@@ -300,7 +300,9 @@ console.log("id",id)
         
         filterable: true,
         type: FieldType.float,
-        
+        filter:{
+          model: Filters.compoundInputNumber,
+        },
         formatter:Formatters.decimal,
         params: { minDecimal: 2, maxDecimal: 2, exportWithFormatter: true }, 
         headerCssClass: 'text-right',

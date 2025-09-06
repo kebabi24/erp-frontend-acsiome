@@ -38,11 +38,11 @@
 				<ul ktTabClickEvent
 					class="nav nav-bold nav-tabs nav-tabs-line nav-tabs-line-3x nav-tabs-line-transparent-white nav-tabs-line-active-border-success mt-2 px-6"
 					role="tablist">
-					<!--li class="nav-item">
+					<li class="nav-item">
 						<a (click)="tab.select('tab-id-1')" class="nav-link active show" data-toggle="tab"
 							href="javascript:;" role="tab" aria-selected="true">Bon de commande</a>
 					</li>
-					<li class="nav-item">
+					<!--li class="nav-item">
 						<a (click)="tab.select('tab-id-2')" class="nav-link" data-toggle="tab" href="javascript:;"
 							role="tab" aria-selected="false">Commande</a>
 					</li-->
@@ -60,12 +60,12 @@
 			<!--end::Header-->
 
 			<ngb-tabset #tab="ngbTabset" class="tab-content">
-				<!--ngb-tab id="tab-id-1" class="tab-pane">
+				<ngb-tab id="tab-id-1" class="tab-pane">
 					<ng-template ngbTabContent>
 						<div class="p-8">
 							<div class="pr-7 mr-n7 scroll" [perfectScrollbar]="{wheelPropagation: false}"
 								[ngStyle]="{'max-height': '300px', 'position': 'relative'}">
-								<begin::Nav>
+								<!--begin::Nav-->
 								<div *ngFor="let notif of notifications" class="d-flex align-items-center mb-6">
 									<div class="symbol symbol-40 symbol-light-danger mr-5">
 										<span class="symbol-label">
@@ -74,20 +74,20 @@
 										</span>
 									</div>
 									<div class="d-flex flex-column font-weight-bold">
-										<a href="#" class="text-dark text-hover-primary mb-1 font-size-lg">
+										<span class="text-muted"    class="text-dark text-hover-primary mb-1 font-size-lg"  (click)="poLink(notif.po_nbr)">
 											{{notif.po_nbr}}
-										</a>
-										<span class="text-muted">
+										</span>
+										<span class="text-muted" >
 											{{notif.po_vend }} -- {{notif.po_ord_date}}
 										</span>
 									</div>
 								</div>
 								
-								<end::Nav>
+								<!--end::Nav-->
 							</div>
 						</div>
 					</ng-template>
-				</ngb-tab-->
+				</ngb-tab>
 				<!--ngb-tab id="tab-id-2">
 					<ng-template ngbTabContent>
 						<div [perfectScrollbar]="{wheelPropagation: false}" class="navi navi-hover scroll mb-3 mt-3 ps"
@@ -115,14 +115,14 @@
 						</div>
 					</ng-template>
 				</ngb-tab-->
-				<ngb-tab id="tab-id-3">
+				<!--ngb-tab id="tab-id-3">
 					<ng-template ngbTabContent>
 						<div class="d-flex flex-center text-center text-muted" style="min-height: 200px;">
 							All caught up!
 							<br />No new notifications.
 						</div>
 					</ng-template>
-				</ngb-tab>
+				</ngb-tab-->
 				<ngb-tab id="tab-id-4" class="tab-pane">
 					<ng-template ngbTabContent>
 						<div class="p-8">
