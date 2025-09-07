@@ -118,6 +118,14 @@ export class NotificationComponent {
   }
 
 
+  poLink(id) {
+    console.log("here",id)
+    const url = `/purchasing/po-list/${id}`;
+    console.log(url)
+    this.router.navigateByUrl(url, { relativeTo: this.activatedRoute });
+   
+  }
+
 
 
  
