@@ -423,7 +423,7 @@ user;
     _req.rqm_need_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
     //_req.rqm_status=  controls.rqm_status.value
     _req.rqm_open = true;
-    _req.rqm_aprv_stat = "0";
+    _req.rqm_aprv_stat = 0;
     return _req;
   }
 
@@ -518,7 +518,7 @@ user;
         _req.rqm_need_date = controls.pm_ord_date.value ? `${controls.pm_ord_date.value.year}/${controls.pm_ord_date.value.month}/${controls.pm_ord_date.value.day}` : null;
         //_req.rqm_status=  controls.rqm_status.value
         _req.rqm_open = true;
-        _req.rqm_aprv_stat = "0";
+        _req.rqm_aprv_stat = 0;
 
         this.reqdataset.push({
           rqd_line: data.pmd_line,
