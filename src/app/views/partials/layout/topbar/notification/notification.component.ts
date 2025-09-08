@@ -87,8 +87,8 @@ export class NotificationComponent {
         console.log(response)
         if (response["data"].length != 0) {
           this.notifications = response["data"].purchase_orders
-          this.orders = response["data"].req_approval
-          this.notifications_nb = response["data"].purchase_orders.length + response["data"].orders.length 
+          this.orders = response["data"].reqs
+          // this.notifications_nb = response["data"].purchase_orders.length + response["data"].orders.length 
           this.notificationExist = true
           
         }else{
