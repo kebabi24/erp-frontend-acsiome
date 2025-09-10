@@ -1318,7 +1318,7 @@ prepareGridAct() {
 
   // fill the dataset with your data
   this.codeService
-      .getBy({code_fldname:"vd_sort"})
+      .getBy({code_fldname:"pt_draw"})
       .subscribe((response: any) => (this.dataAct = response.data))
 }
 openAct(content) {
