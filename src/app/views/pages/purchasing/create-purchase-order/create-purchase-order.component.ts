@@ -428,7 +428,7 @@ this.addReq(req, this.dataset)
         //   _req.rqm_status=  controls.rqm_status.value
           _req.rqm_rmks=  controls.rqm_rmks.value
           _req.rqm_open= true
-          _req.rqm_aprv_stat = '0'
+          _req.rqm_aprv_stat = 0
           _req.chr01= controls.name.value
           _req.chr02= controls.empname.value
         return _req

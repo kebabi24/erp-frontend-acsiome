@@ -2472,7 +2472,7 @@ prepareReq(): any {
       // _req.rqm_status=  controls.rqm_status.value
       _req.rqm_rmks=  controls.rqm_rmks.value
       _req.rqm_open= true
-      _req.rqm_aprv_stat = '0'
+      _req.rqm_aprv_stat = 0
       _req.chr01 = controls.year.value
       _req.chr02 =controls.pt_dsgn_grp.value
       _req.chr03 = controls.pt_draw.value

@@ -26,5 +26,6 @@ export const environment = {
 key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$b7dhzjxkuGRbLPCGSXW3Yw",
   // key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
   // key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$O5Ed72MwWBjV0QITSt3bag"
+ //prima $argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$Y1rdOurgRpPWagKn1En/X3ATJ2FfskmqvzdZLDMfFk4
  //edelweiss key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$zHjTc5y+XDtK0x6zun1KfIkkfhpDa+rYV4lBLLZX4Bc"
 };

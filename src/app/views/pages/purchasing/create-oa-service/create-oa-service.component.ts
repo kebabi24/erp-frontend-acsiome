@@ -120,10 +120,15 @@ docs: any[] = [];
         private codeService:CodeService,
     ) {
         config.autoClose = true
-        this.codeService
-        .getBy({ code_fldname: "emp_job" })
+        // this.codeService
+        // .getBy({ code_fldname: "emp_job" })
+        // .subscribe((response: any) => (this.rqm_job = response.data))     
+        this.user =  JSON.parse(localStorage.getItem('user')) 
+
+        this.userService
+        .getByService({ usgs_code: this.user.usrd_profile })
         .subscribe((response: any) => (this.rqm_job = response.data))     
-        this.user =  JSON.parse(localStorage.getItem('user'))   
+        this.user =  JSON.parse(localStorage.getItem('user')) 
         // this.sequencesService
         //     .getBy({seq_type: 'RQ', seq_profile: this.user.usrd_profile})
         //     .subscribe((response: any) => (this.sequences = response.data))    
@@ -449,7 +454,7 @@ this.addReq(req, this.dataset)
         //   _req.rqm_status=  controls.rqm_status.value
           _req.rqm_rmks=  controls.rqm_rmks.value
           _req.rqm_open= true
-          _req.rqm_aprv_stat = '0'
+          _req.rqm_aprv_stat = 0
           _req.chr01= controls.name.value
           _req.chr02= controls.empname.value
           _req.chr03= this.seqname

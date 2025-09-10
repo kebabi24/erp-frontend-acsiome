@@ -56,7 +56,7 @@ export class Requisition extends BaseModel {
     rqm_open: Boolean
     rqm_prev_rtp: Boolean
     rqm_cls_date: String
-    rqm_aprv_stat: String
+    rqm_aprv_stat: Number
     rqm_ex_rate2: String
     rqm_ex_ratetype: String
     rqm_exru_seq: Number

@@ -76,7 +76,7 @@ export class ListApprovalComponent implements OnInit {
       private seqeuncesService: SequenceService,
     ) {
       // this.prepareGrid();
-      this.user = JSON.parse(localStorage.getItem('user'))
+      // this.user = JSON.parse(localStorage.getItem('user'))
     }
   
     ngOnInit(): void {
@@ -228,7 +228,7 @@ export class ListApprovalComponent implements OnInit {
             const id = args.dataContext.id
             console.log(this.dataset)
             console.log(args.dataContext.req.rqm_aprv_stat)
-            if (args.dataContext.req.rqm_aprv_stat != "3") {
+            if (args.dataContext.req.rqm_aprv_stat != 3) {
               let element: HTMLElement = document.getElementById(
                 "openDaGrid"
               ) as HTMLElement;
@@ -365,21 +365,21 @@ export class ListApprovalComponent implements OnInit {
     /** check form */
     
    
-    let value = ''
+    let value = 0
     const appr = controls.appr.value
     const {sequence:{seq_appr1,seq_appr2,seq_appr3, seq_appr1_lev,seq_appr2_lev,seq_appr3_lev},rqm_aprv_stat} = this.requistionServer
 
-    if(appr=='1'){
+    if(appr==1){
         const {usrd_code} = this.user
         if(usrd_code == seq_appr1) value = seq_appr1_lev
         if(usrd_code == seq_appr2) value = seq_appr2_lev
         if(usrd_code == seq_appr3) value = seq_appr3_lev
 
     }
-    if(appr=='2'){
-        value = '-1'
+    if(appr==2){
+        value = -1
     }
-    if(appr=='3'){
+    if(appr==3){
         if(rqm_aprv_stat == seq_appr2_lev) value = seq_appr1_lev
         if(rqm_aprv_stat == seq_appr3_lev) value = seq_appr2_lev
     }
