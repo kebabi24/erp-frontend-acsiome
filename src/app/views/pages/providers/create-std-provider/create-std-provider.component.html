@@ -16,6 +16,18 @@
                 <form [formGroup]="formX" class="form">   
                     
                     <div class="row">
+                        <div class="form-group col-2">
+                                        <label class="form-group ">Famille*</label>
+                                        
+                                            <select class="form-control form-control-sm form-control-solid"
+                                                formControlName="famille" id="exampleSelects8">
+                                                <option value=""></option>
+                                                <option *ngFor="let elem of vd_promo" [value]="elem.code_value">
+                                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
+
+                                            </select>
+                                      
+                        </div>
                         <div class="form-group col-4">
                             <label class="form-group ">Nom:</label>
                                 <input type="text" id="ad_name" (change)="onchangename()"
@@ -81,7 +93,7 @@
                                     </div>
                                     
                                     <div class="form-group col-2">
-                                        <label class="form-group">Activité*:</label>
+                                        <label class="form-group">Sous-Famille*:</label>
                                         <div class="input-group input-group-sm">
                                             <input type="text" class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_sort">
@@ -91,6 +103,18 @@
                                                 </div>
                                                 <div *ngIf="providerForm.controls['vd_sort'].errors && (providerForm.controls['vd_sort'].dirty || providerForm.controls['vd_sort'].touched)"
                                                 class="invalid-feedback">Ce Champs est obligatoire</div>   
+                                        </div> 
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label class="form-group">Classe*:</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control form-control-sm form-control-solid"
+                                                formControlName="vd_remit">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" (click)="openclas(contentclas)">
+                                                        <i class="text-dark-50 flaticon2-search"></i> </span>
+                                                </div>
+                                                  
                                         </div> 
                                     </div>
                                     <div class="form-group col-2">
@@ -112,7 +136,7 @@
                                 
                                 <div class="row">
                                     <div class="form-group col-2">
-                                        <label class="form-group ">Mode exp*:</label>
+                                        <label class="form-group ">Incoterme*:</label>
                                         
                                             <select class="form-control form-control-sm form-control-solid"
                                                 formControlName="vd_shipvia" id="exampleSelects5">
@@ -124,7 +148,7 @@
                                             <div *ngIf="providerForm.controls['vd_shipvia'].errors && (providerForm.controls['vd_shipvia'].dirty || providerForm.controls['vd_shipvia'].touched)"
                                     class="invalid-feedback">Ce Champs est obligatoire</div>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group ">Transport:</label>
                                         
                                             <div class="input-group input-group-sm">
@@ -137,8 +161,8 @@
                                                 </div>
                                             </div>
                                     
-                                    </div>
-                                    <div class="form-group col-1">
+                                    </div> -->
+                                    <!-- <div class="form-group col-1">
                                         <label class="form-group">SEQUENCE*:</label>
                                         <div class="input-group input-group-sm">
                 
@@ -155,7 +179,7 @@
                                         </div>
                 
                 
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row">    
                                     
@@ -172,7 +196,7 @@
                                                 </div>
                                             </div>
                                     </div>
-                                    <div class="form-group col-2">
+                                    <!-- <div class="form-group col-2">
                                         <label class="form-group "> Langue:</label>
                                             <select class="form-control form-control-sm form-control-solid"
                                                 id="exampleSelects6" formControlName="vd_lang">
@@ -181,19 +205,8 @@
                                                     {{elem.code_value}} {{elem.code_cmmt}}</option>
 
                                             </select>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group ">Groupe promotion*</label>
-                                        
-                                            <select class="form-control form-control-sm form-control-solid"
-                                                formControlName="vd_promo" id="exampleSelects8">
-                                                <option value=""></option>
-                                                <option *ngFor="let elem of vd_promo" [value]="elem.code_value">
-                                                    {{elem.code_value}} {{elem.code_cmmt}}</option>
-
-                                            </select>
-                                      
-                                    </div>
+                                    </div> -->
+                                    
                                 </div>
                                 <!--div class="row">
                                     <div class="form-group col-2">
@@ -630,7 +643,7 @@
                                     
 
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="form-group col-2">
                                         <label class="form-group ">Compte Ach:</label>
                                        
@@ -711,7 +724,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> -->
                                 <div class="form-group col-12 row">
                                     <label class="col-2 col-form-label text-right"> Detail Banque: </label>
                                 </div>
@@ -911,6 +924,29 @@
                             [columnDefinitions]="columnDefinitionsAct" (onAngularGridCreated)="angularGridReadyAct($event)"
                             (sgOnSelectedRowsChanged)="handleSelectedRowsChangedAct($event.detail.eventData, $event.detail.args)"
                             [gridOptions]="gridOptionsAct" [dataset]="dataAct">
+                        </angular-slickgrid>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+                    <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
+                </div>
+            </ng-template>
+        </div>
+        <div>
+            <ng-template #contentclas let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Choissir Classe</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <angular-slickgrid class="col-12" gridHeight="300" gridId="gridproA"
+                            [columnDefinitions]="columnDefinitionsclas" (onAngularGridCreated)="angularGridReadyclas($event)"
+                            (sgOnSelectedRowsChanged)="handleSelectedRowsChangedclas($event.detail.eventData, $event.detail.args)"
+                            [gridOptions]="gridOptionsclas" [dataset]="dataclas">
                         </angular-slickgrid>
                     </div>
                 </div>

@@ -126,6 +126,11 @@ gridOptionsAct: GridOption = {}
 gridObjAct: any
 angularGridAct: AngularGridInstance
 
+dataclas: []
+columnDefinitionsclas: Column[] = []
+gridOptionsclas: GridOption = {}
+gridObjclas: any
+angularGridclas: AngularGridInstance
 
 error = false
 
@@ -333,6 +338,7 @@ onchangename(){
   const controls = this.addressForm.controls;
   
   let name = controlsX.ad_name.value.substring(0,3)
+  controls1.vd_promo.setValue(controlsX.famille.value)
   this.isExist = false
   this.addressService
         .getBy({ad_type:'vendor'}).subscribe((response: any) => {
@@ -370,6 +376,7 @@ onchangename(){
                 controls.ad_misc2_id.enable()
                 controls1.vd_seq.enable()
                 controls1.vd_sort.enable()
+                controls1.vd_remit.enable()
                 controls1.vd_type.enable()
                 controls1.vd_act_acct.enable()
                 controls1.vd_act_sub.enable()
@@ -386,7 +393,7 @@ onchangename(){
                 // controls1.vd_ap_cntct.enable()
                 controls1.vd_misc_cr.enable()
                 controls1.vd_carrier_id.enable()
-                controls1.vd_promo.enable()
+                // controls1.vd_promo.enable()
                 controls1.vd_kanban_supplier.enable()
                 controls1.vd_cr_terms.enable()
                 controls1.vd_disc_pct.enable()
@@ -396,7 +403,7 @@ onchangename(){
                 controls1.vd_hold.enable()
                 controls1.vd_pay_spec.enable()
                 controls1.vd_vt_id.enable()
-                controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(Number(response.data.length) + Number(1))).slice(-3))  
+                // controlsX.ad_addr.setValue('FOUR-' + name + String('000'+ String(Number(response.data.length) + Number(1))).slice(-3))  
                
                 // document.getElementById("ad_line1").focus(); 
             } 
@@ -432,6 +439,7 @@ onchangename(){
             controls.ad_misc2_id.enable()
             controls1.vd_seq.enable()
             controls1.vd_sort.enable()
+            controls1.vd_remit.enable()
             controls1.vd_type.enable()
             controls1.vd_act_acct.enable()
             controls1.vd_act_sub.enable()
@@ -515,6 +523,7 @@ init() {
 createFormX(){
   this.address = new Address()
   this.formX = this.formBuilder.group({
+    famille:['', Validators.required],
     ad_addr: [this.address.ad_addr, Validators.required],
     ad_name: [this.address.ad_name, Validators.required],
     ad_temp: [{ value: this.address.ad_temp, disabled: !this.isExist }],
@@ -558,6 +567,7 @@ createProviderForm() {
     this.provider = new Provider()
     this.providerForm = this.formBuilder.group({
         vd_sort: [{ value: this.provider.vd_sort, disabled: !this.isExist }],
+        vd_remit: [{ value: this.provider.vd_remit, disabled: !this.isExist }],
         vd_type: [{ value: this.provider.vd_type, disabled: !this.isExist }],
         vd_seq: [{ value: this.provider.vd_seq, disabled: !this.isExist }],
         vd_act_acct: [{ value: this.provider.vd_act_acct, disabled: !this.isExist }],
@@ -693,6 +703,8 @@ onChangeCode() {
                 controls.ad_misc2_id.enable()
                 controls1.vd_seq.enable()
                 controls1.vd_sort.enable()
+                controls1.vd_remit.enable()
+                
                 controls1.vd_type.enable()
                 controls1.vd_act_acct.enable()
                 controls1.vd_act_sub.enable()
@@ -709,7 +721,7 @@ onChangeCode() {
                 // controls1.vd_ap_cntct.enable()
                 controls1.vd_misc_cr.enable()
                 controls1.vd_carrier_id.enable()
-                controls1.vd_promo.enable()
+                // controls1.vd_promo.enable()
                 controls1.vd_kanban_supplier.enable()
                 controls1.vd_cr_terms.enable()
                 controls1.vd_disc_pct.enable()
@@ -916,6 +928,7 @@ prepareProvider(): Provider {
     _provider.vd_addr = this.address.ad_addr
     _provider.vd_seq = controls.vd_seq.value
     _provider.vd_sort = controls.vd_sort.value
+    _provider.vd_remit = controls.vd_remit.value
     _provider.vd_type = controls.vd_type.value
     _provider.vd_act_acct = controls.vd_act_acct.value
     _provider.vd_act_sub = controls.vd_act_sub.value
@@ -1326,6 +1339,85 @@ openAct(content) {
   this.modalService.open(content, { size: "lg" })
 }
 
+handleSelectedRowsChangedclas(e, args) {
+  const controls1 = this.providerForm.controls
+  let clas=''
+
+  if (Array.isArray(args.rows) && this.gridObjclas) {
+      args.rows.map((idx) => {
+          const item = this.gridObjclas.getDataItem(idx)
+          // TODO : HERE itterate on selected field and change the value of the selected field
+         if(clas =='') { clas = item.code_value } else {
+             clas = clas + "," +  item.code_value }
+         
+      })
+  }
+  controls1.vd_remit.setValue(clas)
+}
+angularGridReadyclas(angularGrid: AngularGridInstance) {
+  this.angularGridclas = angularGrid
+  this.gridObjclas = (angularGrid && angularGrid.slickGrid) || {}
+}
+
+prepareGridclas() {
+  this.columnDefinitionsclas = [
+      
+      {
+          id: "id",
+          name: "id",
+          field: "id",
+          sortable: true,
+          minWidth: 80,
+          maxWidth: 80,
+      },
+     
+      {
+        id: "code_value",
+        name: "Code",
+        field: "code_value",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "code_cmmt",
+        name: "Designation",
+        field: "code_cmmt",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+
+  ]
+
+  this.gridOptionsclas = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+      },
+      multiSelect: true,
+      rowSelectionOptions: {
+          selectActiveRow: false,
+      },
+  }
+
+  // fill the dataset with your data
+  this.codeService
+      .getBy({code_fldname:"pt_group"})
+      .subscribe((response: any) => (this.dataclas = response.data))
+}
+openclas(content) {
+  this.prepareGridclas()
+  this.modalService.open(content, { size: "lg" })
+}
 handleSelectedRowsChangedtax(e, args) {
     const controls = this.addressForm.controls
     if (Array.isArray(args.rows) && this.gridObjtax) {
@@ -2098,8 +2190,10 @@ printpdf() {
           doc.setFontSize(12);
           
           doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 50);
-          if(controls.vd_sort.value != null){doc.text("Activité: " + controls.vd_sort.value, 7, 55);}
-          else {doc.text("Activité: " , 7, 55);}
+          if(controls.vd_sort.value != null){doc.text("Sous-Famille: " + controls.vd_sort.value, 7, 55);}
+          else {doc.text("Sous-famille: " , 7, 55);}
+          if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_sort.value, 57, 55);}
+          else {doc.text("Classe: " , 57, 55);}
           doc.line(5,60,200,60)
           if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value, 7, 65);}
           else{doc.text("Addresse: ", 7, 65);}
@@ -2129,8 +2223,8 @@ printpdf() {
           {doc.text("NIS: ", 57, 100)}
           doc.line(5,105,200,105)
           
-          if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value , 7, 110);}
-          else{doc.text("Type: ", 7, 110)}
+          if(controls.vd_type.value != null){doc.text("Famille: " + controls.vd_type.value , 7, 110);}
+          else{doc.text("Famille: ", 7, 110)}
           if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 115);}
           else{doc.text("Séquence: ", 7, 115)}
           if(controls.vd_shipvia.value!=null){doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 120);}

@@ -191,6 +191,11 @@ columnDefinitionsAct: Column[] = []
 gridOptionsAct: GridOption = {}
 gridObjAct: any
 angularGridAct: AngularGridInstance
+dataclas: any[]
+columnDefinitionsclas: Column[] = []
+gridOptionsclas: GridOption = {}
+gridObjclas: any
+angularGridclas: AngularGridInstance
 selectedIndexes2: any[];
 /**
  * Component constructor
@@ -270,8 +275,11 @@ constructor(
         .getBy({ code_fldname: "vd_cr_terms" })
         .subscribe((response: any) => (this.cr_terms = response.data))      
         this.codeService
-        .getBy({ code_fldname: "vd_sort" })
-        .subscribe((response: any) => (this.dataAct = response.data))          
+        .getBy({ code_fldname: "pt_draw" })
+        .subscribe((response: any) => (this.dataAct = response.data)) 
+        this.codeService
+        .getBy({ code_fldname: "pt_group" })
+        .subscribe((response: any) => (this.dataclas = response.data))          
 }
 
 /**
@@ -390,6 +398,7 @@ onchangename(){
                 controls.ad_misc2_id.enable()
                 controls1.vd_seq.enable()
                 controls1.vd_sort.enable()
+                controls1.vd_remit.enable()
                 controls1.vd_type.enable()
                 controls1.vd_act_acct.enable()
                 controls1.vd_act_sub.enable()
@@ -453,6 +462,7 @@ onchangename(){
             controls.ad_misc2_id.enable()
             controls1.vd_seq.enable()
             controls1.vd_sort.enable()
+            controls1.vd_remit.enable()
             controls1.vd_type.enable()
             controls1.vd_act_acct.enable()
             controls1.vd_act_sub.enable()
@@ -597,6 +607,7 @@ createProviderForm() {
     this.provider = new Provider()
     this.providerForm = this.formBuilder.group({
         vd_sort: [this.providerEdit.vd_sort],
+        vd_remit: [this.providerEdit.vd_remit],
         vd_type: [this.providerEdit.vd_type],
         vd_seq: [this.providerEdit.vd_seq],
         vd_act_acct: [this.providerEdit.vd_act_acct],
@@ -732,6 +743,7 @@ onChangeCode() {
                 controls.ad_misc2_id.enable()
                 controls1.vd_seq.enable()
                 controls1.vd_sort.enable()
+                controls1.vd_remit.enable()
                 controls1.vd_type.enable()
                 controls1.vd_act_acct.enable()
                 controls1.vd_act_sub.enable()
@@ -955,6 +967,7 @@ prepareProvider(): Provider {
     _provider.vd_addr = this.address.ad_addr
     _provider.vd_seq = controls.vd_seq.value
     _provider.vd_sort = controls.vd_sort.value
+    _provider.vd_remit = controls.vd_remit.value
     _provider.vd_type = controls.vd_type.value
     _provider.vd_act_acct = controls.vd_act_acct.value
     _provider.vd_act_sub = controls.vd_act_sub.value
@@ -1908,8 +1921,10 @@ printpdf() {
           doc.setFontSize(12);
           
           doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 50);
-          if(controls.vd_sort.value != null){doc.text("Activité: " + controls.vd_sort.value, 7, 55);}
-          else {doc.text("Activité: " , 7, 55);}
+          if(controls.vd_sort.value != null){doc.text("Sous-famille: " + controls.vd_sort.value, 7, 55);}
+          else {doc.text("sous-famille: " , 7, 55);}
+          if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_remit.value, 7, 55);}
+          else {doc.text("Classe: " , 67, 55);}
           doc.line(5,60,200,60)
           if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value, 7, 65);}
           else{doc.text("Addresse: ", 7, 65);}
@@ -2393,6 +2408,117 @@ printpdf() {
     // console.log(dd)
     this.selectedIndexes2 = dd;
     this.prepareGridAct()
+    this.modalService.open(content, { size: "lg" })
+  }
+
+  handleSelectedRowsChangedclas(e, args) {
+    const controls1 = this.providerForm.controls
+    let act=''
+  
+    if (Array.isArray(args.rows) && this.gridObjclas) {
+        args.rows.map((idx) => {
+            const item = this.gridObjclas.getDataItem(idx)
+            // TODO : HERE itterate on selected field and change the value of the selected field
+           if(act =='') { act = item.code_value } else {
+               act = act + "," +  item.code_value }
+           
+        })
+    }
+    controls1.vd_remit.setValue(act)
+  }
+  angularGridReadyclas(angularGrid: AngularGridInstance) {
+    this.angularGridclas = angularGrid
+    this.gridObjclas = (angularGrid && angularGrid.slickGrid) || {}
+  }
+  
+  prepareGridclas() {
+    this.columnDefinitionsclas = [
+        
+        {
+            id: "id",
+            name: "id",
+            field: "id",
+            sortable: true,
+            minWidth: 80,
+            maxWidth: 80,
+        },
+       
+        {
+          id: "code_value",
+          name: "Code",
+          field: "code_value",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+        {
+          id: "code_cmmt",
+          name: "Designation",
+          field: "code_cmmt",
+          sortable: true,
+          filterable: true,
+          type: FieldType.string,
+        },
+  
+    ]
+  
+    this.gridOptionsclas = {
+        enableSorting: true,
+        enableCellNavigation: true,
+        enableExcelCopyBuffer: true,
+        enableFiltering: true,
+        autoEdit: false,
+        autoHeight: false,
+        frozenColumn: 0,
+        frozenBottom: true,
+        enableRowSelection: true,
+        enableCheckboxSelector: true,
+        checkboxSelector: {
+        },
+        multiSelect: true,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: false,
+      },
+      presets: {
+        sorters: [{ columnId: "id", direction: "ASC" }],
+        rowSelection: {
+          // gridRowIndexes: [2],           // the row position of what you see on the screen (UI)
+          gridRowIndexes: this.selectedIndexes2, // (recommended) select by your data object IDs
+          //dataContextIds
+        },
+      },
+    }
+  
+    // fill the dataset with your data
+    // this.codeService
+    //     .getBy({code_fldname:"vd_sort"})
+    //     .subscribe((response: any) => (this.dataAct = response.data))
+  }
+  openclas(content) {
+    console.log(this.dataclas)
+    const controls = this.providerForm.controls
+    const myArray = controls.vd_remit.value.split(',');
+    console.log(myArray)
+    // let dd = myArray;
+    let dd=[]
+    console.log(dd.length)
+    for (let i = 0; i < myArray.length; i++) {
+     console.log(myArray[i])
+      //this.selectedIndexes2.push(1)
+    //   let index = this.dataAct.findIndex((service:any)=>{return service.code_value === dd[i]})
+      let index = this.dataclas.findIndex(x => x.code_value == myArray[i]); 
+      // console.log(index)
+      if (index != -1) {
+      dd.push(index);
+      }
+      // console.log("i",i)
+    }
+    console.log(dd)
+    // console.log(this.selectedIndexes2)
+    // console.log(dd)
+    this.selectedIndexes2 = dd;
+    this.prepareGridclas()
     this.modalService.open(content, { size: "lg" })
   }
   
