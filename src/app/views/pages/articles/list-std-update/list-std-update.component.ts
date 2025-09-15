@@ -134,6 +134,15 @@ export class ListStdUpdateComponent implements OnInit {
         minWidth: 80,
       },
       {
+        id: "pt_ord_mult",
+        name: "Colisage",
+        field: "pt_ord_mult",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+        minWidth: 80,
+      },
+      {
         id: "pt_prod_line",
         name: "Ligne Prod",
         field: "pt_prod_line",

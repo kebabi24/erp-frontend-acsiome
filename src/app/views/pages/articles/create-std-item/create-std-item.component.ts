@@ -406,14 +406,15 @@ export class CreateStdItemComponent implements OnInit {
     this.loadingSubject.next(false);
     this.item = new Item();
     this.formX = this.formBuilder.group({
-      pt_prod_line: [this.item.pt_prod_line, Validators.required],
+      // pt_prod_line: [this.item.pt_prod_line, Validators.required],
       pt_part: [this.item.pt_part,Validators.required],
       pt_desc1: [{ value: this.item.pt_desc1, disabled: !this.isExist },Validators.required],
       pt_um: [{ value: this.item.pt_um, disabled: !this.isExist },Validators.required],
+      pt_ord_mult: [{ value: this.item.pt_ord_mult, disabled: !this.isExist }],
     })
     this.form1 = this.formBuilder.group({
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
-      
+      pt_prod_line: [{ value: this.item.pt_prod_line,disabled: !this.isExist } ],
       pt_part_type: [{ value: this.item.pt_part_type, disabled: !this.isExist }],
       pt_draw: [{ value: this.item.pt_draw, disabled: !this.isExist }],
       pt_status: [{ value: this.item.pt_status, disabled: !this.isExist }],
@@ -464,7 +465,7 @@ export class CreateStdItemComponent implements OnInit {
       pt_po_site: [{ value: this.item.pt_po_site, disabled: !this.isExist }],
       pt_ord_max: [{ value: this.item.pt_ord_max, disabled: !this.isExist }],
       pt_pm_code: [{ value: this.item.pt_pm_code, disabled: !this.isExist }],
-      pt_ord_mult: [{ value: this.item.pt_ord_mult, disabled: !this.isExist }],
+      
       pt_ord_pol: [{ value: this.item.pt_ord_pol, disabled: !this.isExist }],
       pt_cfg_type: [{ value: this.item.pt_cfg_type, disabled: !this.isExist }],
       pt_op_yield: [{ value: this.item.pt_op_yield, disabled: !this.isExist }],
@@ -611,7 +612,8 @@ export class CreateStdItemComponent implements OnInit {
               controls.pt_desc1.enable()
               controls.pt_um.enable()
               controls1.pt_desc2.enable()
-              controls.pt_prod_line.enable()
+              controls.pt_ord_mult.enable()
+              controls1.pt_prod_line.enable()
               controls1.pt_part_type.enable()
               controls1.pt_draw.enable()
               controls1.pt_status.enable()
@@ -656,7 +658,7 @@ export class CreateStdItemComponent implements OnInit {
               controls3.pt_po_site.enable()
               controls3.pt_ord_max.enable()
               controls3.pt_pm_code.enable()
-              controls3.pt_ord_mult.enable()
+             
               controls3.pt_ord_pol.enable()
               controls3.pt_cfg_type.enable()
               controls3.pt_op_yield.enable()
@@ -819,7 +821,8 @@ export class CreateStdItemComponent implements OnInit {
     _item.pt_desc1 = controls.pt_desc1.value;
     _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls.pt_um.value;
-    _item.pt_prod_line = controls.pt_prod_line.value;
+    _item.pt_ord_mult = controls.pt_ord_mult.value;
+    _item.pt_prod_line = controls1.pt_prod_line.value;
     _item.pt_part_type = controls1.pt_part_type.value;
     _item.pt_draw = controls1.pt_draw.value;
     _item.pt_status = controls1.pt_status.value;
@@ -867,7 +870,7 @@ export class CreateStdItemComponent implements OnInit {
     _item.pt_po_site = controls3.pt_po_site.value;
     _item.pt_ord_max = controls3.pt_ord_max.value;
     _item.pt_pm_code = controls3.pt_pm_code.value;
-    _item.pt_ord_mult = controls3.pt_ord_mult.value;
+   
     _item.pt_ord_pol = controls3.pt_ord_pol.value;
     _item.pt_cfg_type = controls3.pt_cfg_type.value;
     _item.pt_op_yield = controls3.pt_op_yield.value;
@@ -1120,8 +1123,10 @@ export class CreateStdItemComponent implements OnInit {
                   controls.pt_part.setValue(controls.pl_prod_line .value+ String('0000'+ String(1)).slice(-4)) 
                   controls.pt_desc1.enable()
                   controls.pt_um.enable()
+                  controls.pt_ord_mult.enable()
+
                   controls1.pt_desc2.enable()
-                  controls.pt_prod_line.enable()
+                  controls1.pt_prod_line.enable()
                   controls1.pt_part_type.enable()
                   controls1.pt_draw.enable()
                   controls1.pt_status.enable()
@@ -1166,7 +1171,7 @@ export class CreateStdItemComponent implements OnInit {
                   controls3.pt_po_site.enable()
                   controls3.pt_ord_max.enable()
                   controls3.pt_pm_code.enable()
-                  controls3.pt_ord_mult.enable()
+                  
                   controls3.pt_ord_pol.enable()
                   controls3.pt_cfg_type.enable()
                   controls3.pt_op_yield.enable()
@@ -1220,7 +1225,8 @@ export class CreateStdItemComponent implements OnInit {
                   controls.pt_desc1.enable()
                   controls.pt_um.enable()
                   controls1.pt_desc2.enable()
-                  controls.pt_prod_line.enable()
+                  controls.pt_ord_mult.enable()
+                  controls1.pt_prod_line.enable()
                   controls1.pt_part_type.enable()
                   controls1.pt_draw.enable()
                   controls1.pt_status.enable()
@@ -1265,7 +1271,7 @@ export class CreateStdItemComponent implements OnInit {
                   controls3.pt_po_site.enable()
                   controls3.pt_ord_max.enable()
                   controls3.pt_pm_code.enable()
-                  controls3.pt_ord_mult.enable()
+                  
                   controls3.pt_ord_pol.enable()
                   controls3.pt_cfg_type.enable()
                   controls3.pt_op_yield.enable()
@@ -1574,215 +1580,8 @@ export class CreateStdItemComponent implements OnInit {
       args.rows.map((idx) => {
         const item = this.gridObjpl.getDataItem(idx);
         controls.pt_prod_line.setValue(item.pl_prod_line || "");
-        const controls1 = this.form1.controls
-        const controls2 = this.form2.controls
-        const controls3 = this.form3.controls
-        const controls4 = this.form4.controls
-        const controls5 = this.form5.controls
-        const controls6 = this.form6.controls
     
-        this.itemService.getBy({pt_prod_line: item.pl_prod_line}).subscribe((response: any) => {
-            
-                if (response.data.length == 0) {
-                  controls.pt_part.setValue(item.pl_prod_line + String('0000'+ String(1)).slice(-4)) 
-                  controls.pt_desc1.enable()
-                  controls.pt_um.enable()
-                  controls1.pt_desc2.enable()
-                  controls.pt_prod_line.enable()
-                  controls1.pt_part_type.enable()
-                  controls1.pt_draw.enable()
-                  controls1.pt_status.enable()
-                  controls1.pt_rev.enable()
-                  controls1.pt_dsgn_grp.enable()
-                  controls1.pt_group.enable()
-                  controls1.pt_drwg_loc.enable()
-                  controls1.pt_drwg_size.enable()
-                  controls1.pt_promo.enable()
-                  controls1.pt_break_cat.enable()
-                  controls1.pt_abc.enable()
-                  controls1.pt_avg_int.enable()
-                  controls1.pt_lot_ser.enable()
-                  controls1.pt_cyc_int.enable()
-                  controls1.pt_site.enable()
-                  controls1.pt_shelflife.enable()
-                  controls1.pt_loc.enable()
-                  controls1.pt_sngl_lot.enable()
-                  controls1.pt_loc_type.enable()
-                  controls1.pt_critical.enable()
-                  controls1.pt_auto_lot.enable()
-                  controls1.pt_rctpo_status.enable()
-                  controls1.pt_rctpo_active.enable()
-                  controls1.pt_lot_grp.enable()
-                  controls1.pt_rctwo_status.enable()
-                  controls1.pt_rctwo_active.enable()
-                  controls1.pt_article.enable()
-                  controls2.pt_ship_wt.enable()
-                  controls2.pt_ship_wt_um.enable()
-                  controls2.pt_net_wt.enable()
-                  controls2.pt_net_wt_um.enable()
-                  controls2.pt_fr_class.enable()
-                  controls2.pt_size.enable()
-                  controls2.pt_size_um.enable()
-                  controls3.pt_ms.enable()
-                  controls3.pt_buyer.enable()
-                  controls3.pt_phantom.enable()
-                  controls3.pt_plan_ord.enable()
-                  controls3.pt_vend.enable()
-                  controls3.pt_ord_min.enable()
-                  controls3.pt_timefence.enable()
-                  controls3.pt_po_site.enable()
-                  controls3.pt_ord_max.enable()
-                  controls3.pt_pm_code.enable()
-                  controls3.pt_ord_mult.enable()
-                  controls3.pt_ord_pol.enable()
-                  controls3.pt_cfg_type.enable()
-                  controls3.pt_op_yield.enable()
-                  controls3.pt_ord_qty.enable()
-                  controls3.pt_insp_rqd.enable()
-                  controls3.pt_yield_pct.enable()
-                  controls3.pt_insp_lead.enable()
-                  controls3.pt_run.enable()
-                  controls3.pt_ord_per.enable()
-                  controls3.pt_mfg_lead.enable()
-                  controls3.pt_pur_lead.enable()
-                  controls3.pt_setup.enable()
-                  controls3.pt_sfty_stk.enable()
-                  controls3.pt_sfty_time.enable()
-                  controls3.pt_rop.enable()
-                  controls3.pt_atp_family.enable()
-                  controls3.pt_network.enable()
-                  controls3.pt_run_seq1.enable()
-                  controls3.pt_routing.enable()
-                  controls3.pt_iss_pol.enable()
-                  controls3.pt_run_seq2.enable()
-                  controls3.pt_bom_code.enable()
-                  controls4.pt_pur_price.enable()
-                  controls4.pt_price.enable()
-                  controls4.pt_taxable.enable()
-                  controls4.pt_taxc.enable()
-    
-                  controls5.pt_iss_pol.enable()
-                  controls5.pt_length.enable()
-                  controls5.pt_height.enable()
-                  controls5.pt_width.enable()
-                  controls5.pt_origin.enable()
-                  
-                  controls5.pt_drwg_size.enable()
-                  controls5.pt_model.enable()
-                  controls5.pt_break_cat.enable()
-                  controls5.int01.enable()
-                  controls5.int02.enable()
-    
-                  controls6.pt_salable.enable()
-                  controls6.pt_inventoryable.enable()
-                  controls6.pt_consignable.enable()
-                  controls6.pt_returnable.enable()
-                  controls6.pt_orderable.enable()
-                  controls6.pt_loadable.enable()
-                  controls6.pt_promotion.enable()
-                  document.getElementById("pt_desc1").focus();
-    
-                } else {
-                  controls.pt_part.setValue(item.pl_prod_line + String('0000'+ String(response.data.length + 1)).slice(-4))
-                  controls.pt_desc1.enable()
-                  controls.pt_um.enable()
-                  controls1.pt_desc2.enable()
-                  controls.pt_prod_line.enable()
-                  controls1.pt_part_type.enable()
-                  controls1.pt_draw.enable()
-                  controls1.pt_status.enable()
-                  controls1.pt_rev.enable()
-                  controls1.pt_dsgn_grp.enable()
-                  controls1.pt_group.enable()
-                  controls1.pt_drwg_loc.enable()
-                  controls1.pt_drwg_size.enable()
-                  controls1.pt_promo.enable()
-                  controls1.pt_break_cat.enable()
-                  controls1.pt_abc.enable()
-                  controls1.pt_avg_int.enable()
-                  controls1.pt_lot_ser.enable()
-                  controls1.pt_cyc_int.enable()
-                  controls1.pt_site.enable()
-                  controls1.pt_shelflife.enable()
-                  controls1.pt_loc.enable()
-                  controls1.pt_sngl_lot.enable()
-                  controls1.pt_loc_type.enable()
-                  controls1.pt_critical.enable()
-                  controls1.pt_auto_lot.enable()
-                  controls1.pt_rctpo_status.enable()
-                  controls1.pt_rctpo_active.enable()
-                  controls1.pt_lot_grp.enable()
-                  controls1.pt_rctwo_status.enable()
-                  controls1.pt_rctwo_active.enable()
-                  controls1.pt_article.enable()
-                  controls2.pt_ship_wt.enable()
-                  controls2.pt_ship_wt_um.enable()
-                  controls2.pt_net_wt.enable()
-                  controls2.pt_net_wt_um.enable()
-                  controls2.pt_fr_class.enable()
-                  controls2.pt_size.enable()
-                  controls2.pt_size_um.enable()
-                  controls3.pt_ms.enable()
-                  controls3.pt_buyer.enable()
-                  controls3.pt_phantom.enable()
-                  controls3.pt_plan_ord.enable()
-                  controls3.pt_vend.enable()
-                  controls3.pt_ord_min.enable()
-                  controls3.pt_timefence.enable()
-                  controls3.pt_po_site.enable()
-                  controls3.pt_ord_max.enable()
-                  controls3.pt_pm_code.enable()
-                  controls3.pt_ord_mult.enable()
-                  controls3.pt_ord_pol.enable()
-                  controls3.pt_cfg_type.enable()
-                  controls3.pt_op_yield.enable()
-                  controls3.pt_ord_qty.enable()
-                  controls3.pt_insp_rqd.enable()
-                  controls3.pt_yield_pct.enable()
-                  controls3.pt_insp_lead.enable()
-                  controls3.pt_run.enable()
-                  controls3.pt_ord_per.enable()
-                  controls3.pt_mfg_lead.enable()
-                  controls3.pt_pur_lead.enable()
-                  controls3.pt_setup.enable()
-                  controls3.pt_sfty_stk.enable()
-                  controls3.pt_sfty_time.enable()
-                  controls3.pt_rop.enable()
-                  controls3.pt_atp_family.enable()
-                  controls3.pt_network.enable()
-                  controls3.pt_run_seq1.enable()
-                  controls3.pt_routing.enable()
-                  controls3.pt_iss_pol.enable()
-                  controls3.pt_run_seq2.enable()
-                  controls3.pt_bom_code.enable()
-                  controls4.pt_pur_price.enable()
-                  controls4.pt_price.enable()
-                  controls4.pt_taxable.enable()
-                  controls4.pt_taxc.enable()
-    
-                  controls5.pt_iss_pol.enable()
-                  controls5.pt_length.enable()
-                  controls5.pt_height.enable()
-                  controls5.pt_width.enable()
-                  controls5.pt_origin.enable()
-                  
-                  controls5.pt_drwg_size.enable()
-                  controls5.pt_model.enable()
-                  controls5.pt_break_cat.enable()
-                  controls5.int01.enable()
-                  controls5.int02.enable()
-    
-                  controls6.pt_salable.enable()
-                  controls6.pt_inventoryable.enable()
-                  controls6.pt_consignable.enable()
-                  controls6.pt_returnable.enable()
-                  controls6.pt_orderable.enable()
-                  controls6.pt_loadable.enable()
-                  controls6.pt_promotion.enable()
-                  document.getElementById("pt_desc1").focus();
-    
-                }
-            })
+
     
       });
     }

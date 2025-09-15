@@ -290,7 +290,7 @@ export class CreatePaymentCustComponent implements OnInit {
           );
           this.loadingSubject.next(false);
           
-          this.router.navigateByUrl("/sales/payment-psh");
+          this.router.navigateByUrl("/sales/create-payment-cust");
           this.reset()
         }
       );

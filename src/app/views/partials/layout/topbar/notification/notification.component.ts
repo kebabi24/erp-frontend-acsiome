@@ -53,7 +53,7 @@ export class NotificationComponent {
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
       observer.next("");
-    }, 1000);
+    }, 100);
   });
 
   constructor(
