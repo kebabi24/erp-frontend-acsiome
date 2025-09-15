@@ -29,6 +29,10 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/direct', data, { headers: httpHeaders })
     }
+    public addceram(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/ceram', data, { headers: httpHeaders })
+    }
     // READ
     public getBy(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()

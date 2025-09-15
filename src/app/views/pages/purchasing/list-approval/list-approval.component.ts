@@ -84,7 +84,8 @@ export class ListApprovalComponent implements OnInit {
       this.activatedRoute.params.subscribe((params) => {
         const id = params.id;
   console.log("id",id)
-        if (id) {
+        if (id && this.rqmnbr  != '') {
+          
           this.rqmnbr = id
           this.user =  JSON.parse(localStorage.getItem('user'))
      this.prepareGrid();
@@ -247,7 +248,14 @@ export class ListApprovalComponent implements OnInit {
         enableExcelCopyBuffer: true,
         enableFiltering: true,
         autoEdit: false,
-        autoHeight: true,
+        autoHeight: false,
+        enableAutoResize:true,
+        autoFitColumnsOnFirstLoad: false,
+        enableAutoSizeColumns: false,
+        // then enable resize by content with these 2 flags
+        autosizeColumnsByCellContentOnFirstLoad: true,
+        enableAutoResizeColumnsByCellContent: true,
+  
         presets: {
         sorters: [
           { columnId: 'rqm_req_date', direction: 'ASC' }
@@ -407,8 +415,10 @@ export class ListApprovalComponent implements OnInit {
                   true
               )
               this.loadingSubject.next(false)
+               this.rqmnbr = ''
               window.location.reload();
-              //  this.router.navigateByUrl("/purchasing/list-approval")
+            // let rqmnbr = ''
+            //    this.router.navigateByUrl(`/purchasing/list-approval/${rqmnbr}`)
             
           }
          

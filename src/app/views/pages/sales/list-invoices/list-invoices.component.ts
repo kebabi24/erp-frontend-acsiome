@@ -447,7 +447,7 @@ export class ListInvoicesComponent implements OnInit {
       this.dataset = []
       
         this.accountreceivableService
-      .getBy({ })
+      .getBy({ ar_type:'I'})
       .subscribe(
         
           (response: any) => {this.dataset = response.data

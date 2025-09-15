@@ -424,6 +424,7 @@ export class EditStdItemComponent implements OnInit {
         pt_part: [this.itemEdit.pt_part,Validators.required],
         pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
         pt_um: [this.itemEdit.pt_um,Validators.required],
+        pt_ord_mult: [this.itemEdit.pt_ord_mult],
       })
       this.form1 = this.form1FB.group({
   
@@ -491,7 +492,7 @@ export class EditStdItemComponent implements OnInit {
       pt_po_site: [this.itemEdit.pt_po_site],
       pt_ord_max: [this.itemEdit.pt_ord_max],
       pt_pm_code: [this.itemEdit.pt_pm_code],
-      pt_ord_mult: [this.itemEdit.pt_ord_mult],
+      
       pt_ord_pol: [this.itemEdit.pt_ord_pol],
       pt_cfg_type: [this.itemEdit.pt_cfg_type],
       pt_op_yield: [this.itemEdit.pt_op_yield],
@@ -671,6 +672,7 @@ prepareItem(): Item {
   _item.pt_desc1 = controls.pt_desc1.value;
   _item.pt_desc2 = controls1.pt_desc2.value;
   _item.pt_um = controls.pt_um.value;
+  _item.pt_ord_mult = controls.pt_ord_mult.value;
   _item.pt_prod_line = controls1.pt_prod_line.value;
   _item.pt_part_type = controls1.pt_part_type.value;
   _item.pt_draw = controls1.pt_draw.value;
@@ -719,7 +721,7 @@ prepareItem(): Item {
   _item.pt_po_site = controls3.pt_po_site.value;
   _item.pt_ord_max = controls3.pt_ord_max.value;
   _item.pt_pm_code = controls3.pt_pm_code.value;
-  _item.pt_ord_mult = controls3.pt_ord_mult.value;
+  
   _item.pt_ord_pol = controls3.pt_ord_pol.value;
   _item.pt_cfg_type = controls3.pt_cfg_type.value;
   _item.pt_op_yield = controls3.pt_op_yield.value;
