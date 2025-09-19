@@ -24,6 +24,10 @@ export class PurchaseReceiveService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL, data, { headers: httpHeaders })
     }
+    public addStd(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/addstd', data, { headers: httpHeaders })
+    }
     public addCab(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/cab', data, { headers: httpHeaders })

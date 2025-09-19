@@ -2460,15 +2460,15 @@ calculatetot(){
      
 
      console.log(tva)
-     if(controlsso.po_cr_terms.value == "ES") { if((tht + tva) <= 30000){timbre = round((tht + tva) / 100, 2)}
-     else{
-       if((tht + tva) > 30000 && (tht + tva) <= 100000){timbre = round((tht + tva) * 1.5 / 100 , 2)}
-       else{timbre = round((tht + tva) * 2 / 100 , 2)}
-     };
+    //  if(controlsso.po_cr_terms.value == "ES") { if((tht + tva) <= 30000){timbre = round((tht + tva) / 100, 2)}
+    //  else{
+    //    if((tht + tva) > 30000 && (tht + tva) <= 100000){timbre = round((tht + tva) * 1.5 / 100 , 2)}
+    //    else{timbre = round((tht + tva) * 2 / 100 , 2)}
+    //  };
      
-     if (timbre < 5) {
-       timbre = 5;
-     } } 
+    //  if (timbre < 5) {
+    //    timbre = 5;
+    //  } } 
   
    }
  ttc = round(tht + tva + timbre,2)
