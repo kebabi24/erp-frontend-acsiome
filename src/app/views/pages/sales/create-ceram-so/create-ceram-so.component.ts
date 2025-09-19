@@ -967,7 +967,7 @@ this.row_number = this.dataset.length;
         this.layoutUtilsService.showActionNotification("Ajout avec succès", MessageType.Create, 10000, true, true);
         this.loadingSubject.next(false);
         console.log(this.dataset);
-        if (controls.print.value == true) {this.printpdf(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
+        if (controls.print.value == true) {this.printpdf(so.so_nbr),this.printpdf2(so.so_nbr)}; //printSO(this.customer, this.dataset, so);
         this.router.navigateByUrl("/");
       }
     );
@@ -2664,6 +2664,257 @@ console.log(tht , tva , timbre,ttc)
   doc.setFont("Times-Roman");
   doc.setFontSize(12);
   doc.text("Commande N° : " + nbr, 87, 60);
+  doc.setFontSize(10);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date : " + this.soo.so_ord_date, 150, 65);
+  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
+  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  // if (this.customer.address.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  // }
+  // if (this.customer.address.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  // }
+  // if (this.customer.address.ad_pst_id) {
+  //   doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  // }
+  // if (this.customer.address.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  // }
+  doc.line(10, 100, 200, 100);
+  doc.line(10, 105, 200, 105);
+  doc.line(10, 100, 10, 105);
+  doc.text("LN", 12.5, 103.5);
+  doc.line(20, 100, 20, 105);
+  doc.text("Code Article", 25, 103.5);
+  doc.line(45, 100, 45, 105);
+  doc.text("Désignation", 67.5, 103.5);
+  doc.line(100, 100, 100, 105);
+  doc.text("QTE", 107, 103.5);
+  doc.line(120, 100, 120, 105);
+  doc.text("UM", 123, 103.5);
+  doc.line(130, 100, 130, 105);
+  doc.text("PU", 138, 103.5);
+  doc.line(150, 100, 150, 105);
+  doc.text("TVA", 152, 103.5);
+  doc.line(160, 100, 160, 105);
+  doc.text("REM", 162, 103.5);
+  doc.line(170, 100, 170, 105);
+  doc.text("THT", 181, 103.5);
+  doc.line(200, 100, 200, 105);
+        i = 110;
+        doc.setFontSize(6);
+      }
+
+      if (this.dataset[j].desc.length > 35) {
+        let desc1 = this.dataset[j].desc.substring(35);
+        let ind = desc1.indexOf(" ");
+        desc1 = this.dataset[j].desc.substring(0, 35 + ind);
+        let desc2 = this.dataset[j].desc.substring(35 + ind);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].sod_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(desc1, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].sod_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
+        doc.line(150, i - 5, 150, i);
+        doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
+        doc.line(160, i - 5, 160, i);
+        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
+        doc.line(170, i - 5, 170, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
+        doc.line(200, i - 5, 200, i);
+        // doc.line(10, i, 200, i );
+  
+        i = i + 5;
+  
+        doc.text(desc2, 47, i - 1);
+  
+        doc.line(10, i - 5, 10, i);
+        doc.line(20, i - 5, 20, i);
+        doc.line(45, i - 5, 45, i);
+        doc.line(100, i - 5, 100, i);
+        doc.line(120, i - 5, 120, i);
+        doc.line(130, i - 5, 130, i);
+        doc.line(150, i - 5, 150, i);
+        doc.line(160, i - 5, 160, i);
+        doc.line(170, i - 5, 170, i);
+        doc.line(200, i - 5, 200, i);
+        doc.line(10, i, 200, i);
+  
+        i = i + 5;
+      } else {
+        doc.line(10, i - 5, 10, i);
+        doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
+        doc.line(20, i - 5, 20, i);
+        doc.text(this.dataset[j].sod_part, 25, i - 1);
+        doc.line(45, i - 5, 45, i);
+        doc.text(this.dataset[j].desc, 47, i - 1);
+        doc.line(100, i - 5, 100, i);
+        doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
+        doc.line(120, i - 5, 120, i);
+        doc.text(this.dataset[j].sod_um, 123, i - 1);
+        doc.line(130, i - 5, 130, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
+        doc.line(150, i - 5, 150, i);
+        doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
+        doc.line(160, i - 5, 160, i);
+        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
+        doc.line(170, i - 5, 170, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
+        doc.line(200, i - 5, 200, i);
+        doc.line(10, i, 200, i);
+        i = i + 5;
+      }
+    }
+
+    // doc.line(10, i - 5, 200, i - 5);
+
+    doc.line(130, i + 7, 200, i + 7);
+    doc.line(130, i + 14, 200, i + 14);
+    doc.line(130, i + 21, 200, i + 21);
+    doc.line(130, i + 28, 200, i + 28);
+    doc.line(130, i + 35, 200, i + 35);
+    doc.line(130, i + 7, 130, i + 35);
+    doc.line(160, i + 7, 160, i + 35);
+    doc.line(200, i + 7, 200, i + 35);
+    doc.setFontSize(10);
+
+    doc.text("Total HT", 140, i + 12, { align: "left" });
+    doc.text("TVA", 140, i + 19, { align: "left" });
+    doc.text("Timbre", 140, i + 26, { align: "left" });
+    doc.text("Total TC", 140, i + 33, { align: "left" });
+
+    doc.text(String(Number(controls.tht.value).toFixed(2)), 198, i + 12, { align: "right" });
+    doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
+    doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
+    doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
+
+    doc.setFontSize(8);
+    let mt = NumberToLetters(Number(controls.ttc.value).toFixed(2), "Dinars Algérien");
+
+    if (mt.length > 95) {
+      let mt1 = mt.substring(90);
+      let ind = mt1.indexOf(" ");
+
+      mt1 = mt.substring(0, 90 + ind);
+      let mt2 = mt.substring(90 + ind);
+
+      doc.text("Arretée la présente Commande a la somme de : " + mt1, 20, i + 53);
+      doc.text(mt2, 20, i + 60);
+    } else {
+      doc.text("Arretée la présente Commande a la somme de : " + mt, 20, i + 53);
+    }
+    // window.open(doc.output('bloburl'), '_blank');
+    //window.open(doc.output('blobUrl'));  // will open a new tab
+    var blob = doc.output("blob");
+    window.open(URL.createObjectURL(blob));
+  }
+  printpdf2(nbr) {
+    const controls = this.totForm.controls;
+    const controlss = this.soForm.controls;
+    console.log("pdf");
+    var doc = new jsPDF();
+
+    // doc.text('This is client-side Javascript, pumping out a PDF.', 20, 30);
+    var img = new Image();
+    img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 55,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
+  doc.setFontSize(12);
+  doc.text("Commande Bureau N° : " + nbr, 87, 60);
+  doc.setFontSize(10);
+  //console.log(this.customer.address.ad_misc2_id);
+  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date : " + this.soo.so_ord_date, 150, 65);
+  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
+  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  // if (this.customer.address.ad_misc2_id != null) {
+  //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
+  // }
+  // if (this.customer.address.ad_gst_id != null) {
+  //   doc.text("RC          : " + this.customer.address.ad_gst_id, 20, 85);
+  // }
+  // if (this.customer.address.ad_pst_id) {
+  //   doc.text("AI            : " + this.customer.address.ad_pst_id, 20, 90);
+  // }
+  // if (this.customer.address.ad_misc1_id != null) {
+  //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
+  // }
+  doc.line(10, 100, 200, 100);
+  doc.line(10, 105, 200, 105);
+  doc.line(10, 100, 10, 105);
+  doc.text("LN", 12.5, 103.5);
+  doc.line(20, 100, 20, 105);
+  doc.text("Code Article", 25, 103.5);
+  doc.line(45, 100, 45, 105);
+  doc.text("Désignation", 67.5, 103.5);
+  doc.line(100, 100, 100, 105);
+  doc.text("QTE", 107, 103.5);
+  doc.line(120, 100, 120, 105);
+  doc.text("UM", 123, 103.5);
+  doc.line(130, 100, 130, 105);
+  doc.text("PU", 138, 103.5);
+  doc.line(150, 100, 150, 105);
+  doc.text("TVA", 152, 103.5);
+  doc.line(160, 100, 160, 105);
+  doc.text("REM", 162, 103.5);
+  doc.line(170, 100, 170, 105);
+  doc.text("THT", 181, 103.5);
+  doc.line(200, 100, 200, 105);
+    var i = 110;
+    doc.setFontSize(6);
+    for (let j = 0; j < this.dataset.length; j++) {
+      if (j % 20 == 0 && j != 0) {
+        doc.addPage();
+        // img.src = "./assets/media/logos/companyentete.png";
+        img.src = "./assets/media/logos/companylogo.png";
+  doc.addImage(img, "png", 160, 5, 50, 30);
+  doc.setFontSize(9);
+  if (this.domain.dom_name != null) {
+    doc.text(this.domain.dom_name, 10, 10);
+  }
+  if (this.domain.dom_addr != null) doc.text(this.domain.dom_addr, 10, 15);
+  if (this.domain.dom_city != null) doc.text(this.domain.dom_city + " " + this.domain.dom_country, 10, 20);
+  if (this.domain.dom_tel != null) doc.text("Tel : " + this.domain.dom_tel, 10, 30);
+  doc.line(10, 32, 200, 32);
+  doc.text( 'RC : ' + this.domain.dom_rc + "          NIF : " + this.domain.dom_nif +  "          AI : " + this.domain.dom_ai  , 60, 37);
+  doc.line(10, 40, 200, 40);
+  doc.barcode(nbr, {
+    fontSize: 40,
+    textColor: "#000000",
+    x: 110,
+    y: 55,
+    textOptions: { align: "center" }, // optional text options
+  });
+  doc.setFont("Times-Roman");
+  doc.setFontSize(12);
+  doc.text("Commande Client N° : " + nbr, 87, 60);
   doc.setFontSize(10);
   //console.log(this.customer.address.ad_misc2_id);
   doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
