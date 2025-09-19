@@ -835,7 +835,12 @@ controls.qtyCart.setValue(qty)
 
       });
   
-      
+      const controls = this.asForm.controls
+    this.bankService
+    .getBy({bk_user1:this.user.usrd_code})
+    .subscribe((response: any) => {
+      console.log(response.data.bank)
+  controls.ao_bank.setValue(response.data.bank.bk_code)});
       
   
     }
