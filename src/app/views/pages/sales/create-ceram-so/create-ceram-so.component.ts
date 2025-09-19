@@ -14,7 +14,9 @@ import { SubheaderService, LayoutConfigService } from "../../../../core/_base/la
 import { LayoutUtilsService, TypesUtilsService, MessageType } from "../../../../core/_base/crud";
 import { MatDialog } from "@angular/material/dialog";
 import { NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
-import { Customer,Address,SaleOrderService, QuoteService, SequenceService, CustomerService,AddressService, UsersService, ItemService, SaleOrder, TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, PayMethService, CostlistService } from "../../../../core/erp";
+import { Customer,Address,SaleOrderService, QuoteService, SequenceService, CustomerService,AddressService, UsersService, ItemService, SaleOrder, TaxeService, DeviseService, CodeService, SiteService, LocationService, MesureService, PricelistService, printSO, ConfigService, PayMethService, CostlistService ,  AccountOrder,
+  AccountOrderService,
+  BankService,} from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { NumberToLetters } from "../../../../core/erp/helpers/numberToString";
 import "jspdf-barcode";
@@ -25,7 +27,7 @@ import { F } from "@angular/cdk/keycodes";
   styleUrls: ['./create-ceram-so.component.scss']
 })
 export class CreateCeramSoComponent implements OnInit {
-
+  accountOrder: AccountOrder;
   saleOrder: SaleOrder;
   Custome: Customer;
   Addres: Address;
@@ -34,6 +36,9 @@ export class CreateCeramSoComponent implements OnInit {
   totForm: FormGroup;
   qtyForm: FormGroup;
   hasFormErrors = false;
+  asForm: FormGroup;
+  hasPayFormErrors = false;
+
   custhasFormErrors = false
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -133,12 +138,24 @@ export class CreateCeramSoComponent implements OnInit {
   conv: any;
   tel: any;
   soo: any
+  ao_pay_method: any[] = [];
+  bl: any;
+  pshnbr: String;
+  check;
+  nbr;
+  banks: [];
+  columnDefinitionsbank: Column[] = [];
+  gridOptionsbank: GridOption = {};
+  gridObjbank: any;
+  angularGridbank: AngularGridInstance;
+
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
     private totFB: FormBuilder,
     private qtyFB: FormBuilder,
     private custFB: FormBuilder,
+    private asFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
@@ -160,7 +177,8 @@ export class CreateCeramSoComponent implements OnInit {
     private pricelistService: PricelistService,
     private configService: ConfigService,
     private payMethService: PayMethService,
-    private costlistService: CostlistService
+    private costlistService: CostlistService,
+    private bankService: BankService,
   ) {
     config.autoClose = true;
 
@@ -625,6 +643,7 @@ export class CreateCeramSoComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.domain = JSON.parse(localStorage.getItem("domain"));
     this.createForm();
+    this.createPayForm()
     this.sequencesService.getByOne({ seq_type: "SO", seq_profile: this.user.usrd_profile }).subscribe((response: any) => (this.so_cat = response.data.seq_seq));
    
     this.createtotForm();
@@ -791,6 +810,35 @@ controls.qtyCart.setValue(qty)
       ttc: [{ value: 0.0, disabled: true }],
     });
   }
+  createPayForm() {
+    this.loadingSubject.next(false);
+      this.accountOrder = new AccountOrder();
+      const date = new Date;
+      
+      this.asForm = this.asFB.group({
+    //    so__chr01: [this.accountOrder.ao__chr01],
+       
+        amt:[{value:0, disabled: true}],
+        rest:[{value:0, disabled: true}],
+       
+        ao_bank: [this.accountOrder.ao_bank, Validators.required],
+       
+        ao_pay_method: [this.accountOrder.ao_pay_method, Validators.required],
+        
+        ao_check: [this.accountOrder.ao_check ],
+
+        ao_amt: [this.accountOrder.ao_amt],
+       
+        ao_po: [this.accountOrder.ao_po],
+        
+
+
+      });
+  
+      
+      
+  
+    }
   onChangeSeq() {
     const controls = this.soForm.controls;
     console.log(this.user.usrd_profile);
@@ -896,8 +944,8 @@ this.row_number = this.dataset.length;
     }
     // tslint:disable-next-line:prefer-const
     let so = this.prepareSo();
-
-    this.addSo(so, this.dataset);
+    let as = this.prepareAS()
+    this.addSo(so,as, this.dataset);
   }
 
   /**
@@ -910,6 +958,7 @@ this.row_number = this.dataset.length;
     const _so = new SaleOrder();
     _so.so_category = this.so_cat;
     _so.so_cust = controls.so_cust.value;
+    _so.so_bill = controls.so_cust.value;
     _so.so_ord_date = controls.so_ord_date.value ? `${controls.so_ord_date.value.year}/${controls.so_ord_date.value.month}/${controls.so_ord_date.value.day}` : null;
     _so.so_due_date = controls.so_ord_date.value ? `${controls.so_ord_date.value.year}/${controls.so_ord_date.value.month}/${controls.so_ord_date.value.day}` : null;
     // if (controls.so_taxable.value == null || controls.so_taxable.value == "") {
@@ -936,12 +985,41 @@ this.row_number = this.dataset.length;
     // }
     return _so;
   }
+
+  prepareAS(): any {
+    
+    const controls = this.asForm.controls;
+    const controlsso = this.soForm.controls;
+    const controls1 = this.totForm.controls;
+     const _ao = new AccountOrder();
+     
+      _ao.ao_cust = controlsso.so_cust.value;
+      _ao.ao_curr = "DA"
+      _ao.ao_ex_rate = 1 ; //controls.so_ex_rate.value;
+      _ao.ao_ex_rate2 = 1 //controls.so_ex_rate2.value;
+      _ao.ao_effdate = controlsso.so_ord_date.value ? `${controlsso.so_ord_date.value.year}/${controlsso.so_ord_date.value.month}/${controlsso.so_ord_date.value.day}` : null;
+  
+      _ao.ao_type = "P";
+     
+      _ao.ao_bank = controls.ao_bank.value;
+      _ao.ao_pay_method = controls.ao_pay_method.value;
+      _ao.ao_cr_terms =  controls.ao_pay_method.value;;
+      _ao.ao_check = controls.ao_check.value;
+    
+      _ao.ao_amt = controls.ao_amt.value;
+      _ao.ao_applied = controls.ao_amt.value;
+      _ao.ao_po = controls.ao_po.value;
+      _ao.ao_open = false
+     return _ao;
+    
+  
+  }
   /**
    * Add po
    *
    * @param _so: so
    */
-  addSo(_so: any, detail: any) {
+  addSo(_so: any,_ao:any, detail: any) {
     for (let data of detail) {
       delete data.id;
       delete data.cmvid;
@@ -950,7 +1028,7 @@ this.row_number = this.dataset.length;
     let so = null;
     const controls = this.soForm.controls;
 
-    this.saleOrderService.addceram({ saleOrder: _so, saleOrderDetail: detail }).subscribe(
+    this.saleOrderService.addceram({ saleOrder: _so,accountOrder:_ao, saleOrderDetail: detail }).subscribe(
       (reponse: any) => {
         so = reponse.data;
         this.soo = reponse.data
@@ -2540,9 +2618,146 @@ this.row_number = this.dataset.length;
       }
     });
   }
+
+  OnchangeBank (){
+
+    const controls = this.asForm.controls 
+    const bk_code  = controls.ao_bank.value
+   
+    
+  this.bankService.getBy({bk_code}).subscribe((res:any)=>{
+      //const {data} = res.data.bank
+      //console.log(res.data.bank)
+      if (res.data.bank == null){ this.layoutUtilsService.showActionNotification(
+          "cette banque n'existe pas!",
+          MessageType.Create,
+          10000,
+          true,
+          true
+      )
+      this.error = true}
+      else {
+          this.error = false
+  
+       
+      }
+
+
+  },error=>console.log(error))
+}  
+  handleSelectedRowsChangedbank(e, args) {
+    const controls = this.asForm.controls;
+    if (Array.isArray(args.rows) && this.gridObjbank) {
+      args.rows.map((idx) => {
+        const item = this.gridObjbank.getDataItem(idx);
+        controls.ao_bank.setValue(item.bk_code || "");
+        
+  
+      
+      });
+    }
+  }
+  
+  angularGridReadybank(angularGrid: AngularGridInstance) {
+    this.angularGridbank = angularGrid;
+    this.gridObjbank = (angularGrid && angularGrid.slickGrid) || {};
+  }
+  
+  prepareGridbank() {
+    this.columnDefinitionsbank = [
+      {
+        id: "id",
+        name: "id",
+        field: "id",
+        sortable: true,
+        minWidth: 80,
+        maxWidth: 80,
+      },
+      {
+        id: "bk_code",
+        name: "code",
+        field: "bk_code",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "address.ad_name",
+        name: "Designation",
+        field: "address.ad_name",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "bk_curr",
+        name: "Devise",
+        field: "bk_curr",
+        sortable: true,
+        filterable: true,
+        type: FieldType.string,
+      },
+      {
+        id: "bk_entity",
+        name: "Entité",
+        field: "bk_entity",
+        sortable: true,
+        filterable: true,
+        type: FieldType.boolean,
+      },
+    ];
+  
+    this.gridOptionsbank = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+  
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+  
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+      dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+        var val = undefined;
+        try {
+          val = eval("item." + column.field);
+        } catch (e) {
+          // ignore
+        }
+        return val;
+      },
+    };
+    // fill the dataset with your data
+    this.bankService
+      .getByAll({bk_userid: this.user.usrd_code})
+      .subscribe((response: any) => {this.banks = response.data
+      console.log(this.banks)});
+  }
+  openbank(content) {
+    this.prepareGridbank();
+    this.modalService.open(content, { size: "lg" });
+  }
+  
   calculatetot() {
     const controls = this.totForm.controls;
-    //const controlsso = this.soForm.controls;
+    const controlsas = this.asForm.controls;
     let tht = 0;
     let tva = 0;
     let timbre = 0;
@@ -2565,8 +2780,24 @@ console.log(tht , tva , timbre,ttc)
     controls.tva.setValue(tva.toFixed(2));
     controls.timbre.setValue(timbre.toFixed(2));
     controls.ttc.setValue(ttc.toFixed(2));
+    controlsas.amt.setValue(ttc.toFixed(2));
+    controlsas.rest.setValue(ttc.toFixed(2));
   }
-
+  onChangeAmt() {
+    const controls = this.asForm.controls;
+  
+  
+    if (Number(controls.ao_amt.value) > Number(controls.rest.value)  ) {
+    
+          alert("Montant du paiement doit etre inferieur ou egale au montant CMD");
+          this.error = true;
+          controls.ao_amt.setValue(0);
+          document.getElementById("amt").focus();
+          
+        }
+    
+    
+  }
   printpdf(nbr) {
     const controls = this.totForm.controls;
     const controlss = this.soForm.controls;
