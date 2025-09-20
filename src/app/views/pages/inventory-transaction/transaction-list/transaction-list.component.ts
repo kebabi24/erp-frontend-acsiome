@@ -776,7 +776,7 @@ export class TransactionListComponent implements OnInit {
           sorters: [
            
           ],
-          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"last_modified_by",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:50},{columnId:"tr__chr01",width:50},{columnId:"tr__chr02",width:50},{columnId:"tr__chr03",width:50},{columnId:"tr_serial",width:50},{columnId:"tr_ref",width:50}, {columnId:"tr_qty_loc",width:50}, {columnId:"tr_status",width:50}, {columnId:"tr_rmks",width:50},{columnId:"tr_type",width:50},{columnId:"tr_so_job",width:50},{columnId:"tr_lot",width:50}, {columnId:"tr_nbr",width:50}]
+          columns:[{columnId:"line",width:50},{columnId:"dec01",width:50},{columnId:"dec02",width:50},{columnId:"last_modified_by",width:50},{columnId:"tr_effdate",width:50},{columnId:"tr_program",width:50},{columnId:"tr_addr",width:50},{columnId:"tr__chr01",width:50},{columnId:"tr__chr02",width:50},{columnId:"tr__chr03",width:50},{columnId:"tr_serial",width:50},{columnId:"tr_ref",width:50}, {columnId:"tr_um",width:50},{columnId:"tr_qty_loc",width:50}, {columnId:"tr__dec02",width:50},{columnId:"tr_status",width:50}, {columnId:"tr_rmks",width:50},{columnId:"tr_type",width:50},{columnId:"tr_so_job",width:50},{columnId:"tr_lot",width:50}, {columnId:"tr_nbr",width:50}]
           
         },
        

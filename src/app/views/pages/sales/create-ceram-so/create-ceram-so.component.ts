@@ -569,9 +569,9 @@ export class CreateCeramSoComponent implements OnInit {
         },
       },
       {
-        id: "sod_cc",
-        name: "Centre de cout",
-        field: "sod_cc",
+        id: "sod_rmks",
+        name: "Note",
+        field: "sod_rmks",
         sortable: true,
         width: 80,
         filterable: false,
@@ -787,7 +787,7 @@ controls.qtyCart.setValue(qty)
       // so_taxable: [this.saleOrder.so_taxable],
 
       // so_po: [this.saleOrder.so_po],
-      // so_rmks: [this.saleOrder.so_rmks],
+      so_rmks: [this.saleOrder.so_rmks],
       // so_curr: [this.saleOrder.so_curr],
       // so_ex_rate: [this.saleOrder.so_ex_rate],
       // so_ex_rate2: [this.saleOrder.so_ex_rate2],
@@ -974,7 +974,7 @@ this.row_number = this.dataset.length;
 
     // _so.so_po = controls.so_po.value;
 
-    // _so.so_rmks = controls.so_rmks.value;
+    _so.so_rmks = controls.so_rmks.value;
     _so.so_curr = "DA"; //controls.so_curr.value;
     _so.so_ex_rate = 1 ; //controls.so_ex_rate.value;
     _so.so_ex_rate2 = 1 //controls.so_ex_rate2.value;
@@ -2773,10 +2773,10 @@ this.row_number = this.dataset.length;
       tva += round(this.dataset[i].sod_price * ((100 - this.dataset[i].sod_disc_pct) / 100) * this.dataset[i].sod_qty_ord * (this.dataset[i].sod_taxc ? this.dataset[i].sod_taxc / 100 : 0), 2);
     }
     console.log("tht", tht, tva)
-        timbre = round((tht + tva) / 100, 2);
-        if (timbre > 10000) {
-          timbre = 10000;
-        }
+        // timbre = round((tht + tva) / 100, 2);
+        // if (timbre > 10000) {
+        //   timbre = 10000;
+        // }
       
     
     ttc = round(tht + tva + timbre, 2);
@@ -2839,6 +2839,7 @@ console.log(tht , tva , timbre,ttc)
   doc.text("Date : " + this.soo.so_ord_date, 150, 65);
   doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
   doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -2906,6 +2907,7 @@ console.log(tht , tva , timbre,ttc)
   doc.text("Date : " + this.soo.so_ord_date, 150, 65);
   doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
   doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -3024,18 +3026,18 @@ console.log(tht , tva , timbre,ttc)
     doc.line(200, i + 7, 200, i + 35);
     doc.setFontSize(10);
 
-    doc.text("Total HT", 140, i + 12, { align: "left" });
-    doc.text("TVA", 140, i + 19, { align: "left" });
-    doc.text("Timbre", 140, i + 26, { align: "left" });
-    doc.text("Total TC", 140, i + 33, { align: "left" });
+    doc.text("Total ", 140, i + 12, { align: "left" });
+    // doc.text("TVA", 140, i + 19, { align: "left" });
+    // doc.text("Timbre", 140, i + 26, { align: "left" });
+    // doc.text("Total TC", 140, i + 33, { align: "left" });
 
     doc.text(String(Number(controls.tht.value).toFixed(2)), 198, i + 12, { align: "right" });
-    doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
-    doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
-    doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
+    // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
+    // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
+    // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
 
     doc.setFontSize(8);
-    let mt = NumberToLetters(Number(controls.ttc.value).toFixed(2), "Dinars Algérien");
+    let mt = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
 
     if (mt.length > 95) {
       let mt1 = mt.substring(90);
@@ -3090,6 +3092,7 @@ console.log(tht , tva , timbre,ttc)
   doc.text("Date : " + this.soo.so_ord_date, 150, 65);
   doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
   doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -3150,13 +3153,14 @@ console.log(tht , tva , timbre,ttc)
   });
   doc.setFont("Times-Roman");
   doc.setFontSize(12);
-  doc.text("Commande Client N° : " + nbr, 87, 60);
+  doc.text("Commande Bureau N° : " + nbr, 87, 60);
   doc.setFontSize(10);
   //console.log(this.customer.address.ad_misc2_id);
   doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
   doc.text("Date : " + this.soo.so_ord_date, 150, 65);
   doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
   doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -3275,18 +3279,18 @@ console.log(tht , tva , timbre,ttc)
     doc.line(200, i + 7, 200, i + 35);
     doc.setFontSize(10);
 
-    doc.text("Total HT", 140, i + 12, { align: "left" });
-    doc.text("TVA", 140, i + 19, { align: "left" });
-    doc.text("Timbre", 140, i + 26, { align: "left" });
-    doc.text("Total TC", 140, i + 33, { align: "left" });
+    doc.text("Total ", 140, i + 12, { align: "left" });
+    // doc.text("TVA", 140, i + 19, { align: "left" });
+    // doc.text("Timbre", 140, i + 26, { align: "left" });
+    // doc.text("Total TC", 140, i + 33, { align: "left" });
 
     doc.text(String(Number(controls.tht.value).toFixed(2)), 198, i + 12, { align: "right" });
-    doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
-    doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
-    doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
+    // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
+    // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
+    // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
 
     doc.setFontSize(8);
-    let mt = NumberToLetters(Number(controls.ttc.value).toFixed(2), "Dinars Algérien");
+    let mt = NumberToLetters(Number(controls.tht.value).toFixed(2), "Dinars Algérien");
 
     if (mt.length > 95) {
       let mt1 = mt.substring(90);

@@ -720,6 +720,10 @@ export class MenuConfig {
               page: "/inventory-transaction/po-receip",
             },
             {
+              title: "Réception achat Direct",
+              page: "/inventory-transaction/po-receip-std",
+            },
+            {
               title: "Réception et Etiquetage",
               page: "/inventory-transaction/po-receip-cab",
             },

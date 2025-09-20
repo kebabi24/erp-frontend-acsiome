@@ -218,7 +218,14 @@ prepareGrid() {
       width: 50,
       filterable: true,
       formatter: Formatters.dateIso,
-      type: FieldType.dateIso,
+      type: FieldType.date,
+      
+      filter: {
+              model: Filters.dateRange,
+              operator: 'RangeInclusive',
+              // override any of the Flatpickr options through "filterOptions"
+              //editorOptions: { minDate: 'today' } as FlatpickrOption
+            },
       grouping: {
         getter: 'psh_ship_date',
         formatter: (g) => `Date Creation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,

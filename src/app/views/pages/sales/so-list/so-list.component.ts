@@ -126,6 +126,12 @@ prepareGrid() {
         formatter: (g) => `N BC: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregateCollapsed: false,
         collapsed: false,
+        aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('sod_qty_ord'),
+                new Aggregators.Sum('ao_applied')
+              ],
       }
     },
     {
@@ -140,6 +146,12 @@ prepareGrid() {
         formatter: (g) => `Client: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregateCollapsed: false,
         collapsed: false,
+        aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('sod_qty_ord'),
+                new Aggregators.Sum('ao_applied')
+              ],
       }
     },
 
@@ -148,33 +160,52 @@ prepareGrid() {
       name: "Date de creation",
       field: "so_ord_date",
       sortable: true,
-      width: 50,
+      formatter: Formatters.dateIso, 
+      minWidth: 75,
+      width: 120,
+      exportWithFormatter: true,
+      type: FieldType.date,
       filterable: true,
-      formatter: Formatters.dateIso,
-      type: FieldType.dateIso,
+      filter: {
+              model: Filters.dateRange,
+              operator: 'RangeInclusive',
+              // override any of the Flatpickr options through "filterOptions"
+              //editorOptions: { minDate: 'today' } as FlatpickrOption
+            },
       grouping: {
         getter: 'so_ord_date',
         formatter: (g) => `Date Creation: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
         aggregateCollapsed: false,
         collapsed: false,
+        aggregators: [
+                // (required), what aggregators (accumulator) to use and on which field to do so
+               // new Aggregators.Avg('tr_qty_loc'),
+                new Aggregators.Sum('sod_qty_ord'),
+                new Aggregators.Sum('ao_applied')
+              ],
       }
     },
-    {
-      id: "so_due_date",
-      name: "Date d echeance",
-      field: "so_due_date",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      formatter: Formatters.dateIso,
-      type: FieldType.dateIso,
-      grouping: {
-        getter: 'so_due_date',
-        formatter: (g) => `Date echeance: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
-        aggregateCollapsed: false,
-        collapsed: false,
-      }
-    },
+    // {
+    //   id: "so_due_date",
+    //   name: "Date d echeance",
+    //   field: "so_due_date",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   formatter: Formatters.dateIso,
+    //   type: FieldType.dateIso,
+    //   grouping: {
+    //     getter: 'so_due_date',
+    //     formatter: (g) => `Date echeance: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+    //     aggregateCollapsed: false,
+    //     collapsed: false,
+    //     aggregators: [
+    //             // (required), what aggregators (accumulator) to use and on which field to do so
+    //            // new Aggregators.Avg('tr_qty_loc'),
+    //             new Aggregators.Sum('sod_qty_ord')
+    //           ],
+    //   }
+    // },
     {
       id: "so_stat",
       name: "Status",
@@ -185,15 +216,15 @@ prepareGrid() {
       type: FieldType.string,
     },
     
-    {
-      id: "so_po",
-      name: "N° Projet ",
-      field: "so_po",
-      sortable: true,
-      width: 50,
-      filterable: true,
-      type: FieldType.string,
-    },
+    // {
+    //   id: "so_po",
+    //   name: "N° Projet ",
+    //   field: "so_po",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    //   type: FieldType.string,
+    // },
     {
       id: "sod_part",
       name: "Article",
@@ -208,7 +239,8 @@ prepareGrid() {
           // (required), what aggregators (accumulator) to use and on which field to do so
          // new Aggregators.Avg('tr_qty_loc'),
           new Aggregators.Sum('sod_qty_ord'),
-          new Aggregators.Sum('sod_qty_rcvd')
+          new Aggregators.Sum('sod_qty_rcvd'),
+          new Aggregators.Sum('ao_applied')
         ],
         aggregateCollapsed: true,
     
@@ -222,6 +254,20 @@ prepareGrid() {
       sortable: true,
       width: 50,
       filterable: true,
+      grouping: {
+        getter: 'pt_desc1',
+        formatter: (g) => `Article: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+        aggregators: [
+          // (required), what aggregators (accumulator) to use and on which field to do so
+         // new Aggregators.Avg('tr_qty_loc'),
+          new Aggregators.Sum('sod_qty_ord'),
+          new Aggregators.Sum('sod_qty_rcvd'),
+          new Aggregators.Sum('ao_applied')
+        ],
+        aggregateCollapsed: true,
+    
+        collapsed: false,
+      }
     },
     {
       id: "sod_um",
@@ -231,14 +277,14 @@ prepareGrid() {
       width: 30,
       filterable: true,
     },
-    {
-      id: "so_channel",
-      name: "Liste Frais",
-      field: "so_channel",
-      sortable: true,
-      width: 50,
-      filterable: true,
-    },
+    // {
+    //   id: "so_channel",
+    //   name: "Liste Frais",
+    //   field: "so_channel",
+    //   sortable: true,
+    //   width: 50,
+    //   filterable: true,
+    // },
     {
       id: "sod_qty_ord",
       name: "Quantite",
@@ -297,6 +343,7 @@ prepareGrid() {
       width: 50,
       filterable: true,
       type: FieldType.float,
+      groupTotalsFormatter: GroupTotalFormatters.sumTotalsColored ,
     },
    
      
