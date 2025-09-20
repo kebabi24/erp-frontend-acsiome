@@ -902,7 +902,7 @@ datatax: [];
      
       _as.au_bank = controls.au_bank.value;
       _as.au_pay_method = controls.au_pay_method.value;
-      _as.au_cr_terms = controls.au_cr_terms.value;
+      _as.au_cr_terms = controls.au_pay_method.value;
       _as.au_check = controls.au_check.value;
       _as.dec01 = controlstot.ttc.value;
       _as.au_amt = controls.au_amt.value;
