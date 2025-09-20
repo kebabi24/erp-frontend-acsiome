@@ -10,7 +10,18 @@
     </kt-portlet-header>
     <kt-portlet-body>
         <div class="example-preview">
-
+            <ngb-tabset>
+                <ngb-tab>
+                    <ng-template ngbTabTitle>
+                        Données Réception
+                        <div style="width: 10px;"></div>
+                        <a *ngIf="hasFormErrors"
+                            class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+                            <i class="flaticon2-information"></i>
+                            <span class="pulse-ring"></span>
+                        </a>
+                    </ng-template>
+                    <ng-template ngbTabContent>
             <form class="form" [formGroup]="prhForm">
                 <kt-alert *ngIf="hasFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
                     (close)="onAlertClose($event)">
@@ -236,6 +247,128 @@
                     
                 </div>            
             </form>
+        </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+      <ng-template ngbTabTitle>
+          Données paiement Fournisseur
+          <div style="width: 10px;"></div>
+          <a *ngIf="hasFormErrors"
+              class="btn btn-sm btn-icon btn-light-danger pulse pulse-danger mr-5">
+              <i class="flaticon2-information"></i>
+              <span class="pulse-ring"></span>
+          </a>
+      </ng-template>
+      <ng-template ngbTabContent>
+        <form class="form" [formGroup]="asForm">
+          <kt-alert *ngIf="hasPayFormErrors" type="warn" [showCloseButton]="true" [duration]="10000"
+              (close)="onAlertClose($event)">
+              {{message}}
+          </kt-alert>
+          <div class="row">
+              <div class="form-group col-2">
+                  <label class="form-group">Banque:</label>
+                  <div class="input-group input-group-sm">
+
+                      <input type="text" 
+                      [className]="asForm.controls['au_bank'].errors && (asForm.controls['au_bank'].dirty || asForm.controls['au_bank'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                      formControlName="au_bank" (change)="OnchangeBank()"
+                          aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                          <span class="input-group-text" (click)="openbank(contentbank)" >
+                              <i class="text-dark-50 flaticon2-search"></i> </span>
+                      </div>
+                      <div *ngIf="asForm.controls['au_bank'].errors && (asForm.controls['au_bank'].dirty || asForm.controls['au_bank'].touched) "
+                      class="invalid-feedback">Ce Champs est obligatoire</div>
+
+                  </div>
+
+              </div>
+             
+              
+
+             
+        
+              <div class="form-group col-2">
+                  <label class="form-group">Montant Réception :</label>
+                  <div class="input-group input-group-sm">
+
+                      <input type="text" class="form-control form-control-solid" formControlName="amt"  
+                          aria-describedby="basic-addon2">
+                      
+                  </div>
+                
+              </div>
+            
+
+                              
+              
+              
+        
+              
+             
+              
+              <div class="form-group col-2">
+                  <label class="form-group ">Méthode de Paiement:</label>
+                  
+                  <select 
+                  [className]="asForm.controls['au_pay_method'].errors && (asForm.controls['au_pay_method'].dirty || asForm.controls['au_pay_method'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
+                     
+                      formControlName="au_pay_method" id="exampleSelects8">
+                      
+                      <option *ngFor="let elem of po_cr_terms" [value]="elem.code_value">
+                          {{elem.code_value}} {{elem.code_cmmt}} </option>
+
+                  </select>
+                  <div *ngIf="asForm.controls['au_pay_method'].errors && (asForm.controls['au_pay_method'].dirty || asForm.controls['au_pay_method'].touched) "
+                  class="invalid-feedback">Ce Champs est obligatoire</div>
+              
+              </div>
+              
+              <div class="form-group col-2">
+                  <label class="form-group">Chéque :</label>
+                  <div class="input-group input-group-sm">
+
+                      <input type="text" class="form-control form-control-solid" formControlName="au_check" id="check"  (change)="onChangeCheck()"
+                          aria-describedby="basic-addon2">
+                      
+                  </div>
+                 
+
+              </div>
+                              
+         
+         
+              <div class="form-group col-2">
+                  <label class="form-group">Montant :</label>
+                  <div class="input-group input-group-sm">
+
+                      <input type="text" class="form-control form-control-solid" formControlName="au_amt"  id="amt"  (change)="onChangeAmt()"
+                          aria-describedby="basic-addon2">
+                      
+                  </div>
+
+              </div>
+
+
+          </div>
+
+        
+          <div class="row">
+              <div class="form-group col-8">
+                  <label class="form-group">Observation:</label>
+                  <textarea class="form-control form-control-sm form-control-solid" formControlName="au_po"
+                      rows="2"></textarea>
+              </div>
+          </div>    
+          
+
+          
+      </form>
+        </ng-template>
+    </ngb-tab>
+</ngb-tabset>
+
         </div>
 
        

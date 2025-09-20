@@ -58,6 +58,8 @@ import {
   InventoryStatusService,
   printReceive,
   TimbreService,
+  AccountUnplanifed,
+  BankService,
 } from "../../../../core/erp";
 import { jsPDF } from "jspdf";
 import { round } from 'lodash';
@@ -85,9 +87,11 @@ const statusValidator: EditorValidator = (value: any, args: EditorArgs) => {
 })
 export class PoReceipStdComponent implements OnInit {
   purchaseReceive: PurchaseReceive;
+  accountUnplanifed : AccountUnplanifed
   inventoryTransaction: InventoryTransaction;
   prhForm: FormGroup;
   totForm: FormGroup;
+  asForm: FormGroup;
   hasFormErrors = false;
   loadingSubject = new BehaviorSubject<boolean>(true);
   loading$: Observable<boolean>;
@@ -172,10 +176,18 @@ datatax: [];
   gridObjtax: any;
   angularGridtax: AngularGridInstance;
   po_cr_terms: any[] = [];
+ 
+  hasPayFormErrors = false;
+  banks: [];
+  columnDefinitionsbank: Column[] = [];
+  gridOptionsbank: GridOption = {};
+  gridObjbank: any;
+  angularGridbank: AngularGridInstance;
   constructor(
     config: NgbDropdownConfig,
     private prhFB: FormBuilder,
     private totFB: FormBuilder,
+    private asFB: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
@@ -198,6 +210,7 @@ datatax: [];
     private inventoryStatusService: InventoryStatusService,
     private locationService: LocationService,
     private timbreService: TimbreService,
+    private bankService: BankService
   ) {
     config.autoClose = true;
     this.codeService
@@ -690,6 +703,7 @@ datatax: [];
     
     this.createForm();
     this.createtotForm();
+    this.createPayForm()
     
   }
 
@@ -738,6 +752,40 @@ datatax: [];
     
 
   }
+
+  createPayForm() {
+    this.loadingSubject.next(false);
+      this.accountUnplanifed = new AccountUnplanifed();
+      const date = new Date;
+      
+      this.asForm = this.asFB.group({
+    //    so__chr01: [this.accountUnplanifed.au__chr01],
+       
+        amt:[{value:0, disabled: true}],
+       
+        au_bank: [this.accountUnplanifed.au_bank, Validators.required],
+       
+        au_pay_method: [this.accountUnplanifed.au_pay_method, Validators.required],
+        
+        au_check: [this.accountUnplanifed.au_check ],
+
+        au_amt: [this.accountUnplanifed.au_amt],
+       
+        au_po: [this.accountUnplanifed.au_po],
+        
+
+
+      });
+  
+      const controls = this.asForm.controls
+    this.bankService
+    .getBy({bk_user1:this.user.usrd_code})
+    .subscribe((response: any) => {
+      console.log(response.data.bank)
+  controls.au_bank.setValue(response.data.bank.bk_code)});
+      
+  
+    }
   //reste form
   reset() {
     this.inventoryTransaction = new InventoryTransaction();
@@ -805,7 +853,8 @@ datatax: [];
       
     // tslint:disable-next-line:prefer-const
     let pr = this.prepare()
-    this.addIt( this.dataset,pr, this.prhnbr);
+    let as = this.prepareAS()
+    this.addIt( this.dataset,pr,as, this.prhnbr);
   })
 
 
@@ -814,6 +863,7 @@ datatax: [];
    // let pr = this.prepare()
     //this.addIt( this.dataset,pr);
   }
+
 
   prepare(){
     const controls = this.prhForm.controls;
@@ -831,6 +881,42 @@ datatax: [];
     _pr.prh_rmks = controls.prh_rmks.value
     return _pr
   }
+  prepareAS(): any {
+    
+    const controls = this.asForm.controls;
+    const controlsprh = this.prhForm.controls;
+    const controlstot = this.totForm.controls;
+   
+     const _as = new AccountUnplanifed();
+      _as.au_vend = controlsprh.prh_vend.value;
+      _as.au_curr = controlsprh.prh_curr.value;
+      
+      
+      _as.au_effdate = controlsprh.prh_rcp_date.value
+        ? `${controlsprh.prh_rcp_date.value.year}/${controlsprh.prh_rcp_date.value.month}/${controlsprh.prh_rcp_date.value.day}`
+        : null;
+  
+       
+      
+      _as.au_type = "P";
+     
+      _as.au_bank = controls.au_bank.value;
+      _as.au_pay_method = controls.au_pay_method.value;
+      _as.au_cr_terms = controls.au_pay_method.value;
+      _as.au_check = controls.au_check.value;
+      _as.dec01 = controlstot.ttc.value;
+      _as.au_amt = controls.au_amt.value;
+      _as.au_applied = controls.au_amt.value;
+      _as.au_po = controls.au_po.value;
+                      
+    
+      _as.au_open = false
+      
+
+     return _as;
+    
+  
+  }
   /**
    *
    * Returns object for saving
@@ -840,7 +926,7 @@ datatax: [];
    *
    * @param _it: it
    */
-  addIt( detail: any, pr,prhnbr) {
+  addIt( detail: any, pr,as,prhnbr) {
     for (let data in detail) {
       delete this.dataset[data].id;
       delete this.dataset[data].cmvid;
@@ -850,7 +936,7 @@ datatax: [];
     const controls = this.prhForm.controls
     let poNbr = 0
     this.purchaseReceiveService
-      .addStd({detail, pr,prhnbr})
+      .addStd({detail, pr,as,prhnbr})
       .subscribe(
        (reponse: any) => (poNbr = reponse.data),
         (error) => {
@@ -903,7 +989,21 @@ datatax: [];
       
       });
   }
+   onChangeAmt() {
+    const controls = this.asForm.controls;
   
+  
+    if (Number(controls.au_amt.value) > Number(controls.amt.value)  ) {
+    
+          alert("Montant du paiement doit etre inferieur ou egale au montant RCT");
+          this.error = true;
+          controls.au_amt.setValue(0);
+          document.getElementById("amt").focus();
+          
+        }
+    
+    
+  }
   onChangeOA() {
     this.dataset=[]
     const controls = this.prhForm.controls;
@@ -2430,6 +2530,7 @@ openum(content) {
 calculatetot(){
   const controls = this.totForm.controls 
    const controlsso = this.prhForm.controls 
+   const controlsas = this.asForm.controls
    let tht = 0
    let tva = 0
    let timbre = 0
@@ -2476,10 +2577,146 @@ controls.ttc.setValue(ttc.toFixed(2));
       controls.tva.setValue(tva.toFixed(2));
       controls.timbre.setValue(timbre.toFixed(2));
       controls.ttc.setValue(ttc.toFixed(2));
+      controlsas.amt.setValue(ttc.toFixed(2));
      })
 
 }
+OnchangeBank (){
 
+  const controls = this.asForm.controls 
+  const bk_code  = controls.ao_bank.value
+ 
+  
+this.bankService.getBy({bk_code}).subscribe((res:any)=>{
+    //const {data} = res.data.bank
+    //console.log(res.data.bank)
+    if (res.data.bank == null){ this.layoutUtilsService.showActionNotification(
+        "cette banque n'existe pas!",
+        MessageType.Create,
+        10000,
+        true,
+        true
+    )
+    this.error = true}
+    else {
+        this.error = false
+
+     
+    }
+
+
+},error=>console.log(error))
+} 
+
+handleSelectedRowsChangedbank(e, args) {
+  const controls = this.asForm.controls;
+  if (Array.isArray(args.rows) && this.gridObjbank) {
+    args.rows.map((idx) => {
+      const item = this.gridObjbank.getDataItem(idx);
+      controls.au_bank.setValue(item.bk_code || "");
+      
+
+    
+    });
+  }
+}
+
+angularGridReadybank(angularGrid: AngularGridInstance) {
+  this.angularGridbank = angularGrid;
+  this.gridObjbank = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridbank() {
+  this.columnDefinitionsbank = [
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "bk_code",
+      name: "code",
+      field: "bk_code",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "address.ad_name",
+      name: "Designation",
+      field: "address.ad_name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "bk_curr",
+      name: "Devise",
+      field: "bk_curr",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "bk_entity",
+      name: "Entité",
+      field: "bk_entity",
+      sortable: true,
+      filterable: true,
+      type: FieldType.boolean,
+    },
+  ];
+
+  this.gridOptionsbank = {
+    enableSorting: true,
+    enableCellNavigation: true,
+    enableExcelCopyBuffer: true,
+    enableFiltering: true,
+    autoEdit: false,
+    autoHeight: false,
+    frozenColumn: 0,
+    frozenBottom: true,
+    enableRowSelection: true,
+    enableCheckboxSelector: true,
+    checkboxSelector: {
+      // optionally change the column index position of the icon (defaults to 0)
+      // columnIndexPosition: 1,
+
+      // remove the unnecessary "Select All" checkbox in header when in single selection mode
+      hideSelectAllCheckbox: true,
+
+      // you can override the logic for showing (or not) the expand icon
+      // for example, display the expand icon only on every 2nd row
+      // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+    },
+    multiSelect: false,
+    rowSelectionOptions: {
+      // True (Single Selection), False (Multiple Selections)
+      selectActiveRow: true,
+    },
+    dataItemColumnValueExtractor: function getItemColumnValue(item, column) {
+      var val = undefined;
+      try {
+        val = eval("item." + column.field);
+      } catch (e) {
+        // ignore
+      }
+      return val;
+    },
+  };
+  // fill the dataset with your data
+  this.bankService
+    .getByAll({bk_userid: this.user.usrd_code})
+    .subscribe((response: any) => {this.banks = response.data
+    console.log(this.banks)});
+}
+openbank(content) {
+  this.prepareGridbank();
+  this.modalService.open(content, { size: "lg" });
+}
 
 
 
