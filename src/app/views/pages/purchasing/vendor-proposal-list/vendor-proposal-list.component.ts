@@ -96,10 +96,19 @@ export class VendorProposalListComponent implements OnInit {
                 
                },
            },
-          
+           {
+            id: "vp_inv_nbr",
+            name: "N° Interne",
+            field: "vp.vp_inv_nbr",
+            minWidth: 80,
+            maxWidth: 80,
+            selectable: true,
+            filterable:true,
+            sortable:true
+        },
            {
             id: "vp_nbr",
-            name: "Devis",
+            name: "N° Devis",
             field: "vp.vp_nbr",
             minWidth: 80,
             maxWidth: 80,

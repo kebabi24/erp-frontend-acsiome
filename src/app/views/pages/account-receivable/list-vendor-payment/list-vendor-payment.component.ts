@@ -708,7 +708,7 @@ export class ListVendorPaymentComponent implements OnInit {
   )
       }
       printpdf2() {
-
+console.log(this.data)
         console.log(this.MntCheque,this.MntDep)
         const controls = this.soForm.controls;
         
@@ -798,7 +798,7 @@ export class ListVendorPaymentComponent implements OnInit {
     
          
             doc.line(30, i - 5, 30, i);
-            doc.text(String("00" + j).slice(-2), 32.5, i - 1);
+            doc.text(String("00" + j+1).slice(-2), 32.5, i - 1);
             doc.line(40, i - 5, 40, i);
             doc.text(this.data[j].chr01, 45, i - 1);
             doc.line(70, i - 5, 70, i);

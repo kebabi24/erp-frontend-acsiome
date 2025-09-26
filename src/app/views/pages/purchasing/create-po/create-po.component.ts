@@ -54,6 +54,7 @@ import {
   printBc,
   TimbreService,
   EmployeService,
+  
 } from "../../../../core/erp";
 import { round } from 'lodash';
 import { jsPDF } from "jspdf";
@@ -137,6 +138,13 @@ error = false;
   gridOptionsloc: GridOption = {};
   gridObjloc: any;
   angularGridloc: AngularGridInstance;
+
+  dataprice: [];
+  columnDefinitionsprice: Column[] = [];
+  gridOptionsprice: GridOption = {};
+  gridObjprice: any;
+  angularGridprice: AngularGridInstance;
+
   seq;
   user;
   row_number;
@@ -399,6 +407,22 @@ console.log(resp.data)
 
           this.calculatetot();
       }
+      },
+      {
+        id: "pmvid",
+        field: "pcmvid",
+        excludeFromHeaderMenu: true,
+        formatter:Formatters.icon,
+        params: { formatterIcon: 'fa fa-money' },
+        minWidth: 30,
+        maxWidth: 30,
+        onCellClick: (e: Event, args: OnEventArgs) => {
+          this.row_number = args.row;
+          let element: HTMLElement = document.getElementById(
+            "openPricesGrid"
+          ) as HTMLElement;
+          element.click();
+        },
       },
       {
         id: "pod_disc_pct",
@@ -1159,13 +1183,9 @@ changeTax(){
           const { data } = res;
   
           if (!data) {
-            this.layoutUtilsService.showActionNotification(
-              "ce fournisseur n'existe pas!",
-              MessageType.Create,
-              10000,
-              true,
-              true
-            );
+           alert("ce fournisseur n'existe pas!")
+           controls.po_vend.setValue(null)
+           document.getElementById("po_vend").focus();
             this.error = true;
           } else {
             this.error = false;
@@ -1506,7 +1526,7 @@ changeTax(){
         updateItem.pod_loc = item.pt_loc
         updateItem.pod_taxable = item.pt_taxable
         updateItem.pod_tax_code = item.pt_taxc
-        updateItem.pod_price = item.pt_pur_price
+        // updateItem.pod_price = item.pt_pur_price
         updateItem.pod_taxc = item.taxe.tx2_tax_pct
         this.gridService.updateItem(updateItem);
       } 
@@ -2442,6 +2462,123 @@ prepareGridloc() {
 }
 openloc(contentloc) {
   this.prepareGridloc();
+  this.modalService.open(contentloc, { size: "lg" });
+}
+
+
+
+handleSelectedRowsChangedprice(e, args) {
+  let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  if (Array.isArray(args.rows) && this.gridObjprice) {
+    args.rows.map((idx) => {
+      const item = this.gridObjprice.getDataItem(idx);
+          
+      updateItem.pod_price = item.price;
+      
+      this.gridService.updateItem(updateItem);
+   
+});
+
+  }
+}
+angularGridReadyprice(angularGrid: AngularGridInstance) {
+  this.angularGridprice = angularGrid;
+  this.gridObjprice = (angularGrid && angularGrid.slickGrid) || {};
+}
+
+prepareGridprice() {
+  this.columnDefinitionsprice = [
+    
+    {
+      id: "id",
+      name: "id",
+      field: "id",
+      sortable: true,
+      minWidth: 80,
+      maxWidth: 80,
+    },
+    {
+      id: "part",
+      name: "Code",
+      field: "part",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "desc",
+      name: "Désignation",
+      field: "desc",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "price",
+      name: "Prix",
+      field: "price",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "vend",
+      name: "Code Fournisseur",
+      field: "vend",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+    },
+    {
+      id: "name",
+      name: "Nom",
+      field: "name",
+      sortable: true,
+      filterable: true,
+      type: FieldType.string,
+      
+    },
+  ];
+
+  this.gridOptionsprice = {
+      enableSorting: true,
+      enableCellNavigation: true,
+      enableExcelCopyBuffer: true,
+      enableFiltering: true,
+      autoEdit: false,
+      autoHeight: false,
+      frozenColumn: 0,
+      frozenBottom: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // optionally change the column index position of the icon (defaults to 0)
+        // columnIndexPosition: 1,
+
+        // remove the unnecessary "Select All" checkbox in header when in single selection mode
+        hideSelectAllCheckbox: true,
+
+        // you can override the logic for showing (or not) the expand icon
+        // for example, display the expand icon only on every 2nd row
+        // selectableOverride: (row: number, dataContext: any, grid: any) => (dataContext.id % 2 === 1)
+      },
+      multiSelect: false,
+      rowSelectionOptions: {
+        // True (Single Selection), False (Multiple Selections)
+        selectActiveRow: true,
+      },
+    };
+    let updateItem = this.gridService.getDataItemByRowIndex(this.row_number);
+  
+  // fill the dataset with your data
+  const controls = this.poForm.controls
+  let obj = {part:updateItem.pod_part,vend:controls.po_vend.value}
+  this.vendorProposalService
+    .getPriceBy( obj )
+    .subscribe((response: any) => (this.dataprice = response.data));
+}
+openprice(contentloc) {
+  this.prepareGridprice();
   this.modalService.open(contentloc, { size: "lg" });
 }
 calculatetot(){

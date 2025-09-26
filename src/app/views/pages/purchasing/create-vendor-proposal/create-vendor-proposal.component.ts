@@ -180,6 +180,30 @@ curr: String;
                 editor: {
                     model: Editors.text,
                 },
+                onCellChange: (e: Event, args: OnEventArgs) => {
+                  console.log(args.dataContext.pod_part)
+                  this.itemsService.getByOne({pt_part: args.dataContext.vpd_part }).subscribe((resp:any)=>{
+        console.log(resp.data)
+                    if (resp.data) {
+               
+        
+                    
+        
+                      this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , desc: resp.data.pt_desc1 , vpd_um:resp.data.pt_um, vpd_tax_code: resp.data.pt_taxc, vpd_taxc: resp.data.taxe.tx2_tax_pct, vpd_taxable: resp.data.pt_taxable})
+        
+                    
+              
+                 }  else {
+                    alert("Article Nexiste pas")
+                    this.gridService.updateItemById(args.dataContext.id,{...args.dataContext , vpd_part: null })
+                 }
+                  
+                  });
+        
+                   
+                 
+                 
+                }
             },
 
             {
@@ -259,6 +283,52 @@ curr: String;
                 // onCellChange : (e: Event, args: OnEventArgs)=>{
                 //     this.calculatetot()
                 // }
+            },
+            {
+              id: "vpd_taxable",
+              name: "Taxable",
+              field: "vpd_taxable",
+              sortable: true,
+              // width: 80,
+              filterable: false,
+              editor: {
+                model: Editors.checkbox
+              },
+              formatter: Formatters.checkmark,
+              cannotTriggerInsert: true,
+              onCellChange: (e: Event, args: OnEventArgs) => {
+        
+              
+      
+                this.calculatetot();
+            }
+            },
+            {
+              id: "vpd_tax_code",
+              name: "Code de Taxe",
+              field: "vpd_tax_code",
+              sortable: true,
+              // width: 80,
+              filterable: false,
+              
+            },  
+            {
+              id: "vpd_taxc",
+              name: "Taux de Taxe",
+              field: "vpd_taxc",
+              sortable: true,
+              // width: 80,
+              filterable: false,
+              editor: {
+                model: Editors.text,
+              },
+              formatter: Formatters.percentComplete,
+              onCellChange: (e: Event, args: OnEventArgs) => {
+        
+              
+      
+                this.calculatetot();
+            }
             },
             {
                 id: "vpd_mfgr_part",
@@ -752,7 +822,12 @@ curr: String;
                 const item = this.gridObj4.getDataItem(idx)
                 console.log(item)
                 updateItem.vpd_part = item.pt_part
+                updateItem.desc = item.pt_desc1
                 updateItem.vpd_um = item.pt_um
+                updateItem.vpd_taxable = item.pt_taxable
+                updateItem.vpd_tax_code = item.pt_taxc
+              
+                updateItem.vpd_taxc = item.taxe.tx2_tax_pct
                 this.gridService.updateItem(updateItem)
             })
         }
@@ -920,7 +995,10 @@ curr: String;
                     })
                   }
                     details.map((value) => {
-                        this.gridService.addItem(
+
+                    this.itemsService.getByOne({pt_part: value.rqd_part }).subscribe((resp:any)=>{
+                       this.gridService.addItem(
+                           
                             {
                                 id: this.dataset.length + 1,
                                 vpd_line: this.dataset.length + 1,
@@ -932,9 +1010,14 @@ curr: String;
                                 vpd_um: value.rqd_um,
                                 vpd_q_price: "",
                                 vpd_mfgr_part: "",
+                                vpd_taxable:value.item.pt_taxable,
+                                vpd_tax_code: value.item.pt_taxc,
+                                vpd_taxc : resp.data.taxe.tx2_tax_pct,
+                                
                             },
                             { position: "bottom" }
                         )
+                          })
                     })
                 },
                 (error) => {
