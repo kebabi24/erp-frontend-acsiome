@@ -148,7 +148,7 @@ export class CreateCeramSoComponent implements OnInit {
   gridOptionsbank: GridOption = {};
   gridObjbank: any;
   angularGridbank: AngularGridInstance;
-
+  piece : Number
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -270,6 +270,8 @@ export class CreateCeramSoComponent implements OnInit {
               } else {
                 this.taxable = resp.data.pt_taxable;
               }
+              this.conv = resp.data.pt_ord_mult
+              this.piece = resp.data.pt_pur_lead
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, sod_site: resp.data.pt_site, sod_loc: resp.data.pt_loc, sod_um: resp.data.pt_um, sod_um_conv: 1, sod_price: resp.data.pt_price, sod_disc_pct: 0, sod_type: this.type, sod_tax_code: resp.data.pt_taxc, sod_taxc: resp.data.taxe.tx2_tax_pct, sod_taxable: this.taxable });
             } else {
               alert("Article Nexiste pas");
@@ -299,138 +301,138 @@ export class CreateCeramSoComponent implements OnInit {
         width: 180,
         filterable: false,
       },
-      {
-        id: "sod_site",
-        name: "Site",
-        field: "sod_site",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          this.siteService.getByOne({ si_site: args.dataContext.sod_site }).subscribe((response: any) => {
-            console.log(response.data);
+      // {
+      //   id: "sod_site",
+      //   name: "Site",
+      //   field: "sod_site",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     this.siteService.getByOne({ si_site: args.dataContext.sod_site }).subscribe((response: any) => {
+      //       console.log(response.data);
 
-            if (response.data) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_site: response.data.si_site });
-            } else {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_site: null });
+      //       if (response.data) {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_site: response.data.si_site });
+      //       } else {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_site: null });
 
-              // this.gridService.onItemUpdated;
-              alert("Site N'existe pas");
-            }
-          });
-        },
-      },
-      {
-        id: "mvids",
-        field: "cmvids",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "sod_loc",
-        name: "Emplacement",
-        field: "sod_loc",
-        sortable: true,
-        width: 50,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.tr_loc);
+      //         // this.gridService.onItemUpdated;
+      //         alert("Site N'existe pas");
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvids",
+      //   field: "cmvids",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openSitesGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "sod_loc",
+      //   name: "Emplacement",
+      //   field: "sod_loc",
+      //   sortable: true,
+      //   width: 50,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.tr_loc);
 
-          this.locationService.getByOne({ loc_loc: args.dataContext.sod_loc, loc_site: args.dataContext.sod_site }).subscribe((response: any) => {
-            if (!response.data) {
-              alert("Emplacement Nexiste pas");
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_loc: null });
-            }
-          });
-        },
-      },
-      {
-        id: "mvidl",
-        field: "cmvidl",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openLocsGrid") as HTMLElement;
-          element.click();
-        },
-      },
-      {
-        id: "sod_um",
-        name: "UM",
-        field: "sod_um",
-        sortable: true,
-        width: 30,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
+      //     this.locationService.getByOne({ loc_loc: args.dataContext.sod_loc, loc_site: args.dataContext.sod_site }).subscribe((response: any) => {
+      //       if (!response.data) {
+      //         alert("Emplacement Nexiste pas");
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_loc: null });
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvidl",
+      //   field: "cmvidl",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openLocsGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
+      // {
+      //   id: "sod_um",
+      //   name: "UM",
+      //   field: "sod_um",
+      //   sortable: true,
+      //   width: 30,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
 
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          console.log(args.dataContext.sod_part);
-          this.itemsService.getByOne({ pt_part: args.dataContext.sod_part }).subscribe((resp: any) => {
-            console.log(args.dataContext.sod_part, resp.data.pt_um);
-            if (args.dataContext.sod_um == resp.data.pt_um) {
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: 1 });
-            } else {
-              //console.log(resp.data.pt_um)
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     console.log(args.dataContext.sod_part);
+      //     this.itemsService.getByOne({ pt_part: args.dataContext.sod_part }).subscribe((resp: any) => {
+      //       console.log(args.dataContext.sod_part, resp.data.pt_um);
+      //       if (args.dataContext.sod_um == resp.data.pt_um) {
+      //         this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: 1 });
+      //       } else {
+      //         //console.log(resp.data.pt_um)
 
-              this.mesureService.getBy({ um_um: args.dataContext.sod_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.sod_part }).subscribe((res: any) => {
-                console.log(res);
-                const { data } = res;
+      //         this.mesureService.getBy({ um_um: args.dataContext.sod_um, um_alt_um: resp.data.pt_um, um_part: args.dataContext.sod_part }).subscribe((res: any) => {
+      //           console.log(res);
+      //           const { data } = res;
 
-                if (data) {
-                  //alert ("Mouvement Interdit Pour ce Status")
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: res.data.um_conv });
-                  this.angularGrid.gridService.highlightRow(1, 1500);
-                } else {
-                  this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.sod_um, um_part: args.dataContext.sod_part }).subscribe((res: any) => {
-                    console.log(res);
-                    const { data } = res;
-                    if (data) {
-                      //alert ("Mouvement Interdit Pour ce Status")
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: res.data.um_conv });
-                    } else {
-                      this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: "1", sod_um: null });
+      //           if (data) {
+      //             //alert ("Mouvement Interdit Pour ce Status")
+      //             this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: res.data.um_conv });
+      //             this.angularGrid.gridService.highlightRow(1, 1500);
+      //           } else {
+      //             this.mesureService.getBy({ um_um: resp.data.pt_um, um_alt_um: args.dataContext.sod_um, um_part: args.dataContext.sod_part }).subscribe((res: any) => {
+      //               console.log(res);
+      //               const { data } = res;
+      //               if (data) {
+      //                 //alert ("Mouvement Interdit Pour ce Status")
+      //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: res.data.um_conv });
+      //               } else {
+      //                 this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_um_conv: "1", sod_um: null });
 
-                      alert("UM conversion manquante");
-                    }
-                  });
-                }
-              });
-            }
-          });
-        },
-      },
-      {
-        id: "mvid",
-        field: "cmvid",
-        excludeFromHeaderMenu: true,
-        formatter: Formatters.infoIcon,
-        minWidth: 30,
-        maxWidth: 30,
-        onCellClick: (e: Event, args: OnEventArgs) => {
-          this.row_number = args.row;
-          let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
-          element.click();
-        },
-      },
+      //                 alert("UM conversion manquante");
+      //               }
+      //             });
+      //           }
+      //         });
+      //       }
+      //     });
+      //   },
+      // },
+      // {
+      //   id: "mvid",
+      //   field: "cmvid",
+      //   excludeFromHeaderMenu: true,
+      //   formatter: Formatters.infoIcon,
+      //   minWidth: 30,
+      //   maxWidth: 30,
+      //   onCellClick: (e: Event, args: OnEventArgs) => {
+      //     this.row_number = args.row;
+      //     let element: HTMLElement = document.getElementById("openUmsGrid") as HTMLElement;
+      //     element.click();
+      //   },
+      // },
       {
         id: "sod_um_conv",
         name: "UM",
@@ -442,7 +444,7 @@ export class CreateCeramSoComponent implements OnInit {
 
       {
         id: "sod_qty_ord",
-        name: "QTE",
+        name: "QTE M",
         field: "sod_qty_ord",
         sortable: true,
         width: 60,
@@ -460,55 +462,78 @@ export class CreateCeramSoComponent implements OnInit {
           console.log(pricebefore);
           this.price = null;
           this.disc = null;
-          this.itemsService.getByOne({ pt_part: args.dataContext.sod_part }).subscribe((resp: any) => {
-            if (resp.data) {
-              console.log(resp.data);
 
-              const date1 = new Date();
-              let obj: {};
-              const part = resp.data.pt_part;
-              const promo = resp.data.pt_promo;
-              const cust = this.customer.cm_addr;
-              const classe = this.customer.cm_class;
-              const qty = args.dataContext.sod_qty_ord;
-              const um = args.dataContext.sod_um;
-              const curr = controls.so_curr.value;
-              const type = "PT";
-              const date = `${controls.so_ord_date.value.year}-${controls.so_ord_date.value.month}-${controls.so_ord_date.value.day}`;
+          
+          let qty = 0 
+          let qtyp = 0
+          let nbrDcm =this.conv.toString().replace(/\d*\./,'').length;
+          console.log(Number(this.conv),Number(args.dataContext.sod_qty_ord) % Number(this.conv) )
+          console.log(nbrDcm,10**nbrDcm)
+          if(Number(args.dataContext.sod_qty_ord * 10**nbrDcm ) % Number(this.conv * 10**nbrDcm ) != 0 ) {
+             qty = Math.floor((Number(args.dataContext.sod_qty_ord) / Number(this.conv)) )  //*  Number(this.conv)
 
-              obj = { part, promo, cust, classe, date, qty, um, curr, type };
-              this.pricelistService.getPrice(obj).subscribe((res: any) => {
-                console.log("price", res);
-                this.price = res.data;
-                if (this.price != 0 && this.price != null) {
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_price: this.price });
-                }
-                //    this.dataset[this.row_number].sod_price = this.price
-                //console.log(this.row_number,this.dataset[this.row_number].sod_price)
-                this.calculatetot();
-              });
+            let qtyr = Number(args.dataContext.sod_qty_ord) - Math.floor((Number(args.dataContext.sod_qty_ord) / Number(this.conv))) * Number(this.conv) 
+                  console.log(qtyr)
+                  console.log(qtyr / (Number(this.conv) / Number(this.piece)))
+                  qtyp = (qtyr / ( Number(this.conv) / Number(this.piece))) 
 
-              let objr: {};
-              const typer = "PR";
-
-              objr = { part, promo, cust, classe, date, qty, um, curr, typer };
-
-              console.log(obj);
-
-              this.pricelistService.getDiscPct(objr).subscribe((resdisc: any) => {
-                console.log(resdisc);
-                this.disc = resdisc.data;
-                if (this.disc != 0 && this.disc != null) {
-                  //this.dataset[this.row_number].sod_disc_pct = this.disc
-                  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_price: this.price, sod_disc_pct: this.disc });
-                  // console.log(this.row_number,this.dataset[this.row_number].sod_price)
-                }
-                this.calculatetot();
-              });
-            }
-          });
-
+           } 
+           else {
+             qty = Number(args.dataContext.sod_qty_ord) / Number(this.conv)
+           }
+          this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_qty_chg: qty ,sod_qty_qote:qtyp});
           //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+          this.calculatetot();
+        },
+      },
+      {
+        id: "sod_qty_chg",
+        name: "QTE Colis",
+        field: "sod_qty_chg",
+        sortable: true,
+        width: 60,
+        filterable: false,
+        type: FieldType.integer,
+        
+        editor: {
+          model: Editors.integer,
+          // params: { decimalPlaces: 2 },
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          const controls = this.soForm.controls;
+
+          
+         
+          //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+          let qtym = args.dataContext.sod_qty_chg * this.conv
+          this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_qty_ord: qtym, sod_qty_qote:0 });
+           
+          this.calculatetot();
+        },
+      },
+      {
+        id: "sod_qty_qote",
+        name: "QTE Piéce",
+        field: "sod_qty_qote",
+        sortable: true,
+        width: 60,
+        filterable: false,
+        type: FieldType.float,
+        formatter: Formatters.decimal,
+        editor: {
+          model: Editors.float,
+          params: { decimalPlaces: 2 },
+          
+        },
+        onCellChange: (e: Event, args: OnEventArgs) => {
+          const controls = this.soForm.controls;
+
+          console.log(this.conv, this.piece)
+         
+          //console.log(this.row_number,this.dataset[this.row_number].sod_price)
+          let qtyq = args.dataContext.sod_qty_chg *  this.conv  +  args.dataContext.sod_qty_qote * (this.conv / Number(this.piece))
+          this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_qty_ord: qtyq });
+           
           this.calculatetot();
         },
       },
@@ -551,35 +576,35 @@ export class CreateCeramSoComponent implements OnInit {
         },
       },
 
-      {
-        id: "sod_type",
-        name: "Type",
-        field: "sod_type",
-        sortable: true,
-        width: 30,
-        filterable: false,
-        editor: {
-          model: Editors.text,
-        },
-        onCellChange: (e: Event, args: OnEventArgs) => {
-          if (args.dataContext.sod_type != "M") {
-            alert("Type doit etre M ou NULL");
-            this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_type: null });
-          }
-        },
-      },
-      {
-        id: "sod_rmks",
-        name: "Note",
-        field: "sod_rmks",
-        sortable: true,
-        width: 80,
-        filterable: false,
+      // {
+      //   id: "sod_type",
+      //   name: "Type",
+      //   field: "sod_type",
+      //   sortable: true,
+      //   width: 30,
+      //   filterable: false,
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      //   onCellChange: (e: Event, args: OnEventArgs) => {
+      //     if (args.dataContext.sod_type != "M") {
+      //       alert("Type doit etre M ou NULL");
+      //       this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_type: null });
+      //     }
+      //   },
+      // },
+      // {
+      //   id: "sod_rmks",
+      //   name: "Note",
+      //   field: "sod_rmks",
+      //   sortable: true,
+      //   width: 80,
+      //   filterable: false,
 
-        editor: {
-          model: Editors.text,
-        },
-      },
+      //   editor: {
+      //     model: Editors.text,
+      //   },
+      // },
       {
         id: "sod_taxable",
         name: "Taxable",
@@ -617,6 +642,7 @@ export class CreateCeramSoComponent implements OnInit {
       enableColumnPicker: true,
       enableCellNavigation: true,
       enableRowSelection: true,
+      autoCommitEdit:true,
       formatterOptions: {
         // Defaults to false, option to display negative numbers wrapped in parentheses, example: -$12.50 becomes ($12.50)
         displayNegativeNumberWithParentheses: true,
@@ -776,23 +802,9 @@ controls.qtyCart.setValue(qty)
           day: date.getDate(),
         },
       ],
-      // so_due_date: [
-      //   {
-      //     year: date.getFullYear(),
-      //     month: date.getMonth() + 1,
-      //     day: date.getDate(),
-      //   },
-      // ],
-
-      // so_taxable: [this.saleOrder.so_taxable],
-
-      // so_po: [this.saleOrder.so_po],
+      chr01:[this.saleOrder.chr01],
+      chr02:[this.saleOrder.chr02],
       so_rmks: [this.saleOrder.so_rmks],
-      // so_curr: [this.saleOrder.so_curr],
-      // so_ex_rate: [this.saleOrder.so_ex_rate],
-      // so_ex_rate2: [this.saleOrder.so_ex_rate2],
-      // so_cr_terms: [this.saleOrder.so_cr_terms],
-      // so_channel: [this.saleOrder.so_channel],
       print: [true],
       ref: [null],
     });
@@ -875,6 +887,7 @@ controls.qtyCart.setValue(qty)
       ) as HTMLElement;
       element.click();
 this.conv = response.data.pt_ord_mult  
+this.piece = response.data.pt_pur_lead
 this.row_number = this.dataset.length;
      this.gridService.addItem(
       {
@@ -981,6 +994,8 @@ this.row_number = this.dataset.length;
     _so.so_cr_terms = "ES" //controls.so_cr_terms.value;
    // _so.so_channel = controls.so_channel.value;
 
+    _so.chr01 = controls.chr01.value;
+    _so.chr02 = controls.chr02.value;
     _so.so_amt = controls1.tht.value;
     _so.so_tax_amt = controls1.tva.value;
     _so.so_trl1_amt = controls1.timbre.value;
@@ -1014,6 +1029,8 @@ this.row_number = this.dataset.length;
       _ao.ao_amt = controls.ao_amt.value;
       _ao.ao_applied = controls.ao_amt.value;
       _ao.ao_po = controls.ao_po.value;
+      _ao.chr01 = controlsso.chr01.value;
+      _ao.chr02 = controlsso.chr02.value;
       _ao.ao_open = false
      return _ao;
     
@@ -1539,6 +1556,7 @@ this.row_number = this.dataset.length;
         updateItem.sod_price = item.pt_price;
         updateItem.sod_disc_pct = 0;
         this.conv = item.pt_ord_mult  
+        this.piece = item.pt_pur_lead
         this.gridService.updateItem(updateItem);
       });
     }
@@ -1586,6 +1604,14 @@ this.row_number = this.dataset.length;
         id: "pt_ord_mult",
         name: "Colisage",
         field: "pt_ord_mult",
+        sortable: true,
+        filterable: true,
+        type: FieldType.float,
+      },
+      {
+        id: "pt_pur_lead",
+        name: "Piéce",
+        field: "pt_pur_lead",
         sortable: true,
         filterable: true,
         type: FieldType.float,
@@ -2835,11 +2861,17 @@ console.log(tht , tva , timbre,ttc)
   doc.text("Commande N° : " + nbr, 87, 60);
   doc.setFontSize(10);
   //console.log(this.customer.address.ad_misc2_id);
-  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
-  doc.text("Date : " + this.soo.so_ord_date, 150, 65);
-  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
-  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
-  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  doc.text("Code        : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 65);
+  doc.text("Nom         : " + this.customer.address.ad_name, 20, 70);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 20, 75); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 20, 80);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 20, 85);}
+  // if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -2852,29 +2884,29 @@ console.log(tht , tva , timbre,ttc)
   // if (this.customer.address.ad_misc1_id != null) {
   //   doc.text("NIS         : " + this.customer.address.ad_misc1_id, 20, 95);
   // }
-  doc.line(10, 100, 200, 100);
-  doc.line(10, 105, 200, 105);
+  doc.line(10, 100, 205, 100);
+  doc.line(10, 105, 205, 105);
   doc.line(10, 100, 10, 105);
   doc.text("LN", 12.5, 103.5);
   doc.line(20, 100, 20, 105);
-  doc.text("Code Article", 25, 103.5);
+  doc.text("Code Article", 22, 103.5);
   doc.line(45, 100, 45, 105);
   doc.text("Désignation", 67.5, 103.5);
   doc.line(100, 100, 100, 105);
-  doc.text("QTE", 107, 103.5);
+  doc.text("QTE Metre", 103, 103.5);
   doc.line(120, 100, 120, 105);
-  doc.text("UM", 123, 103.5);
-  doc.line(130, 100, 130, 105);
-  doc.text("PU", 138, 103.5);
-  doc.line(150, 100, 150, 105);
-  doc.text("TVA", 152, 103.5);
-  doc.line(160, 100, 160, 105);
-  doc.text("REM", 162, 103.5);
+  doc.text("Colis", 123, 103.5);
+  doc.line(135, 100, 135, 105);
+  doc.text("Piéce", 137, 103.5);
+  doc.line(148, 100, 148, 105);
+  doc.text("PU", 158, 103.5);
   doc.line(170, 100, 170, 105);
-  doc.text("THT", 181, 103.5);
-  doc.line(200, 100, 200, 105);
+  doc.text("REM", 172, 103.5);
+  doc.line(181, 100, 181, 105);
+  doc.text("THT", 183, 103.5);
+  doc.line(205, 100, 205, 105);
     var i = 110;
-    doc.setFontSize(6);
+    doc.setFontSize(8);
     for (let j = 0; j < this.dataset.length; j++) {
       if (j % 20 == 0 && j != 0) {
         doc.addPage();
@@ -2903,11 +2935,16 @@ console.log(tht , tva , timbre,ttc)
   doc.text("Commande N° : " + nbr, 87, 60);
   doc.setFontSize(10);
   //console.log(this.customer.address.ad_misc2_id);
-  doc.text("Code Client : " + this.customer.cm_addr, 20, 65);
-  doc.text("Date : " + this.soo.so_ord_date, 150, 65);
-  doc.text("Nom             : " + this.customer.address.ad_name, 20, 70);
-  doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
-  if(this.soo.so_rmks != null){doc.text("Observation       : " + this.soo.so_rmks, 20, 80);}
+  doc.text("Code        : " + this.customer.cm_addr, 20, 65);
+  doc.text("Date        : " + this.soo.so_ord_date, 150, 65);
+  doc.text("Nom         : " + this.customer.address.ad_name, 20, 70);
+  // doc.text("Adresse       : " + this.customer.address.ad_line1, 20, 75);
+  if(controlss.chr01.value!= null) {
+  doc.text("Client      : " + controlss.chr01.value, 20, 75); }
+  if(controlss.chr02.value != null) {
+  doc.text("Tel         : " + controlss.chr02.value, 20, 80);}
+  if(this.soo.so_rmks != null){
+  doc.text("Observation : " + this.soo.so_rmks, 20, 85);}
   // if (this.customer.address.ad_misc2_id != null) {
   //   doc.text("MF          : " + this.customer.address.ad_misc2_id, 20, 80);
   // }
@@ -2925,24 +2962,24 @@ console.log(tht , tva , timbre,ttc)
   doc.line(10, 100, 10, 105);
   doc.text("LN", 12.5, 103.5);
   doc.line(20, 100, 20, 105);
-  doc.text("Code Article", 25, 103.5);
+  doc.text("Code Article", 22, 103.5);
   doc.line(45, 100, 45, 105);
   doc.text("Désignation", 67.5, 103.5);
   doc.line(100, 100, 100, 105);
-  doc.text("QTE", 107, 103.5);
+  doc.text("QTE Metre", 103, 103.5);
   doc.line(120, 100, 120, 105);
-  doc.text("UM", 123, 103.5);
-  doc.line(130, 100, 130, 105);
-  doc.text("PU", 138, 103.5);
-  doc.line(150, 100, 150, 105);
-  doc.text("TVA", 152, 103.5);
-  doc.line(160, 100, 160, 105);
-  doc.text("REM", 162, 103.5);
+  doc.text("Colis", 123, 103.5);
+  doc.line(135, 100, 135, 105);
+  doc.text("Piéce", 137, 103.5);
+  doc.line(148, 100, 148, 105);
+  doc.text("PU", 158, 103.5);
   doc.line(170, 100, 170, 105);
-  doc.text("THT", 181, 103.5);
-  doc.line(200, 100, 200, 105);
+  doc.text("REM", 172, 103.5);
+  doc.line(181, 100, 181, 105);
+  doc.text("THT", 183, 103.5);
+  doc.line(205, 100, 205, 105);
         i = 110;
-        doc.setFontSize(6);
+        doc.setFontSize(8);
       }
 
       if (this.dataset[j].desc.length > 35) {
@@ -2954,22 +2991,23 @@ console.log(tht , tva , timbre,ttc)
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].sod_part, 25, i - 1);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(desc1, 47, i - 1);
         doc.line(100, i - 5, 100, i);
         doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].sod_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
-        doc.line(150, i - 5, 150, i);
-        doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
-        doc.line(160, i - 5, 160, i);
-        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 133, i - 1, { align: "right" });
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 146, i - 1, { align: "right" });
+        doc.line(148, i - 5, 148, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 168, i - 1, { align: "right" });
+        
         doc.line(170, i - 5, 170, i);
-        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
-        doc.line(200, i - 5, 200, i);
+        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(181, i - 5, 181, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
         // doc.line(10, i, 200, i );
   
         i = i + 5;
@@ -2981,49 +3019,50 @@ console.log(tht , tva , timbre,ttc)
         doc.line(45, i - 5, 45, i);
         doc.line(100, i - 5, 100, i);
         doc.line(120, i - 5, 120, i);
-        doc.line(130, i - 5, 130, i);
-        doc.line(150, i - 5, 150, i);
-        doc.line(160, i - 5, 160, i);
+        doc.line(135, i - 5, 135, i);
+        doc.line(148, i - 5, 148, i);
         doc.line(170, i - 5, 170, i);
-        doc.line(200, i - 5, 200, i);
-        doc.line(10, i, 200, i);
+        doc.line(181, i - 5, 181, i);
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
   
         i = i + 5;
       } else {
         doc.line(10, i - 5, 10, i);
         doc.text(String("000" + this.dataset[j].sod_line).slice(-3), 12.5, i - 1);
         doc.line(20, i - 5, 20, i);
-        doc.text(this.dataset[j].sod_part, 25, i - 1);
+        doc.text(this.dataset[j].sod_part, 22, i - 1);
         doc.line(45, i - 5, 45, i);
         doc.text(this.dataset[j].desc, 47, i - 1);
         doc.line(100, i - 5, 100, i);
         doc.text(String(this.dataset[j].sod_qty_ord.toFixed(2)), 118, i - 1, { align: "right" });
         doc.line(120, i - 5, 120, i);
-        doc.text(this.dataset[j].sod_um, 123, i - 1);
-        doc.line(130, i - 5, 130, i);
-        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 148, i - 1, { align: "right" });
-        doc.line(150, i - 5, 150, i);
-        doc.text(String(this.dataset[j].sod_taxc) + "%", 153, i - 1);
-        doc.line(160, i - 5, 160, i);
-        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 163, i - 1);
+        doc.text(String(this.dataset[j].sod_qty_chg.toFixed(2)), 133, i - 1, { align: "right" });
+        doc.line(135, i - 5, 135, i);
+        doc.text(String(this.dataset[j].sod_qty_qote.toFixed(2)), 146, i - 1, { align: "right" });
+        doc.line(148, i - 5, 148, i);
+        doc.text(String(Number(this.dataset[j].sod_price).toFixed(2)), 168, i - 1, { align: "right" });
+        
         doc.line(170, i - 5, 170, i);
-        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 198, i - 1, { align: "right" });
-        doc.line(200, i - 5, 200, i);
-        doc.line(10, i, 200, i);
+        doc.text(String(this.dataset[j].sod_disc_pct) + "%", 173, i - 1);
+        doc.line(181, i - 5, 181, i);
+        doc.text(String((this.dataset[j].sod_price * ((100 - this.dataset[j].sod_disc_pct) / 100) * this.dataset[j].sod_qty_ord).toFixed(2)), 203, i - 1, { align: "right" });
+        doc.line(205, i - 5, 205, i);
+        doc.line(10, i, 205, i);
         i = i + 5;
       }
     }
 
     // doc.line(10, i - 5, 200, i - 5);
 
-    doc.line(130, i + 7, 200, i + 7);
-    doc.line(130, i + 14, 200, i + 14);
-    doc.line(130, i + 21, 200, i + 21);
-    doc.line(130, i + 28, 200, i + 28);
-    doc.line(130, i + 35, 200, i + 35);
-    doc.line(130, i + 7, 130, i + 35);
-    doc.line(160, i + 7, 160, i + 35);
-    doc.line(200, i + 7, 200, i + 35);
+    doc.line(130, i + 7, 205, i + 7);
+    doc.line(130, i + 14, 205, i + 14);
+    // doc.line(130, i + 21, 200, i + 21);
+    // doc.line(130, i + 28, 200, i + 28);
+    // doc.line(130, i + 35, 200, i + 35);
+    doc.line(130, i + 7, 130, i + 14);
+    doc.line(160, i + 7, 160, i + 14);
+    doc.line(205, i + 7, 205, i + 14);
     doc.setFontSize(10);
 
     doc.text("Total ", 140, i + 12, { align: "left" });
@@ -3031,7 +3070,7 @@ console.log(tht , tva , timbre,ttc)
     // doc.text("Timbre", 140, i + 26, { align: "left" });
     // doc.text("Total TC", 140, i + 33, { align: "left" });
 
-    doc.text(String(Number(controls.tht.value).toFixed(2)), 198, i + 12, { align: "right" });
+    doc.text(String(Number(controls.tht.value).toFixed(2)), 203, i + 12, { align: "right" });
     // doc.text(String(Number(controls.tva.value).toFixed(2)), 198, i + 19, { align: "right" });
     // doc.text(String(Number(controls.timbre.value).toFixed(2)), 198, i + 26, { align: "right" });
     // doc.text(String(Number(controls.ttc.value).toFixed(2)), 198, i + 33, { align: "right" });
@@ -3271,9 +3310,9 @@ console.log(tht , tva , timbre,ttc)
 
     doc.line(130, i + 7, 200, i + 7);
     doc.line(130, i + 14, 200, i + 14);
-    doc.line(130, i + 21, 200, i + 21);
-    doc.line(130, i + 28, 200, i + 28);
-    doc.line(130, i + 35, 200, i + 35);
+    // doc.line(130, i + 21, 200, i + 21);
+    // doc.line(130, i + 28, 200, i + 28);
+    // doc.line(130, i + 35, 200, i + 35);
     doc.line(130, i + 7, 130, i + 35);
     doc.line(160, i + 7, 160, i + 35);
     doc.line(200, i + 7, 200, i + 35);

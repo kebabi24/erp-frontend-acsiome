@@ -36,7 +36,7 @@
                 <div *ngIf="soForm.controls['so_category'].errors && (soForm.controls['so_category'].dirty || soForm.controls['so_category'].touched)" class="invalid-feedback">Ce Champs est obligatoire</div>
               </div>
             </div-->
-            <div class="form-group col-12">
+            <div class="form-group col-6">
               <label class="form-group">Client :</label>
               <div class="input-group input-group-sm">
                 <input type="text" class="form-control form-control-solid" formControlName="so_cust" (change)="onChangeCust()" aria-describedby="basic-addon2" />
@@ -45,9 +45,8 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-12">
+         
+            <div class="form-group col-6">
                 <label class="form-group">Date de creation:</label>
                 <div class="input-group input-group-sm">
                     <input class="form-control form-control-sm form-control-solid" formControlName="so_ord_date"  placeholder="jj-mm-aaaa" name="so_ord_date" ngbDatepicker f #so_ord_date="ngbDatepicker" />
@@ -149,11 +148,22 @@
             </div>
           </div-->
           <div class="row">
-            <div class="form-group col-10">
+            <div class="form-group col-2">
+              <label class="form-group">Nom:</label>
+              <input type="text" class="form-control form-control-solid"  formControlName="chr01" id="cli"
+                  aria-describedby="basic-addon2">
+            </div>
+            <div class="form-group col-2">
+              <label class="form-group">Tel:</label>
+              <input type="text" class="form-control form-control-solid"  formControlName="chr02" id="phone"
+                  aria-describedby="basic-addon2">
+            </div>
+
+            <div class="form-group col-6">
               <label class="form-group">Observation:</label>
               <textarea class="form-control form-control-sm form-control-solid" formControlName="so_rmks" rows="2"></textarea>
             </div>
-            <div class="form-group col-6">
+            <div class="form-group col-2">
               <label class="form-group">Imprimer:</label>
               <div class="input-group input-group-sm">
                 <span class="switch switch-icon">
@@ -385,7 +395,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
-            <button type="button" class="btn btn-primary" (click)="SetQty()">Ok</button>
+            <button type="button" class="btn btn-primary" (click)="c('Close click')">Ok</button>
           </div>
         </ng-template>
         <button hidden id="openItemsGrid" class="btn btn-primary" (click)="open4(content4)">Launch demo modal</button>
