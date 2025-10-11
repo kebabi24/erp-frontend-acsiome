@@ -331,7 +331,7 @@ vendname: any
        //   this.dataset[i].rqd_desc = this.dataset[i].item.pt_desc1
        //  }
          this.loadingSubject.next(false)
-        this.title = this.title + this.vendorProposalEdit.vp_nbr
+        this.title = this.title + this.vendorProposalEdit.vp_inv_nbr + " " + this.vendorProposalEdit.vp_nbr 
         console.log(this.title)
        })
    })
@@ -346,6 +346,7 @@ vendname: any
       this.vpForm = this.vpFB.group({
           vp_rqm_nbr: [this.vendorProposalEdit.vp_rqm_nbr],
           vp_nbr: [this.vendorProposalEdit.vp_nbr, Validators.required],
+          // vp_inv_nbr: [this.vendorProposalEdit.vp_inv_nbr, Validators.required],
           vp_vend: [this.vendorProposalEdit.vp_vend],
           name:[null],
           vp_curr: [this.vendorProposalEdit.vp_curr],
@@ -508,6 +509,7 @@ vendname: any
       const _vp = new VendorProposal()
       this.calculatetot()
       _vp.vp_rqm_nbr = controls.vp_rqm_nbr.value
+      _vp.vp_inv_nbr = this.vendorProposalEdit.vp_inv_nbr
       _vp.vp_nbr = controls.vp_nbr.value
       _vp.vp_vend = controls.vp_vend.value
       _vp.vp_date = controls.vp_date.value

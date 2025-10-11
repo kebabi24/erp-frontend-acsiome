@@ -716,6 +716,10 @@ export class MenuConfig {
               page: "/inventory-management/load-request-list",
             },
             {
+              title: "Réception ",
+              page: "/inventory-transaction/po-receip-std",
+            },
+            {
               title: "Réception OA",
               page: "/inventory-transaction/po-receip",
             },
@@ -1033,6 +1037,10 @@ export class MenuConfig {
             {
               title: "Commande Clients",
               page: "/sales/create-so",
+            },
+            {
+              title: "Commande Clients Céramique",
+              page: "/sales/create-ceram-so",
             },
             {
               title: "Fiche de Voeu",

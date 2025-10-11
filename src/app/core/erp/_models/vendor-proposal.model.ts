@@ -4,6 +4,7 @@ import { BaseModel } from "./base.model"
 export class VendorProposal extends BaseModel{
     id: Number
     vp_nbr: String
+    vp_inv_nbr: String
     vp_vend: String
     vp_rqm_nbr: String
     vp_vend_lead: Number

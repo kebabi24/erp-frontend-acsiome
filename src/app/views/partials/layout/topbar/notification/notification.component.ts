@@ -64,7 +64,7 @@ export class NotificationComponent {
     private authService : AuthService,
     private layoutUtilsService: LayoutUtilsService,
   ) {
-      setInterval(()=> { this.updateNotifications() }, 1000000);
+      setInterval(()=> { this.updateNotifications() }, 20000);
     }
 
     ngOnInit(): void {
@@ -88,7 +88,7 @@ export class NotificationComponent {
         if (response["data"].length != 0) {
           this.notifications = response["data"].purchase_orders
           this.orders = response["data"].reqs
-          // this.notifications_nb = response["data"].purchase_orders.length + response["data"].orders.length 
+          this.notifications_nb = response["data"].purchase_orders.length + response["data"].reqs.length 
           this.notificationExist = true
           
         }else{

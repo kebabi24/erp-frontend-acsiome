@@ -46,5 +46,9 @@ export class VendorProposalService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(`${API_URL}/${id}`, { headers: httpHeaders })
     }
+    public getPriceBy(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/findprice', data, { headers: httpHeaders })
+    }
     // DELETE
 }
