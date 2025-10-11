@@ -1921,12 +1921,15 @@ printpdf() {
           doc.setFontSize(12);
           
           doc.text("Nom Fournisseur: " + controlsx.ad_name.value, 7, 50);
-          if(controls.vd_sort.value != null){doc.text("Sous-famille: " + controls.vd_sort.value, 7, 55);}
-          else {doc.text("sous-famille: " , 7, 55);}
-          if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_remit.value, 7, 55);}
-          else {doc.text("Classe: " , 67, 55);}
+          if(controls.vd_promo.value != null){doc.text("Famille: " + controls.vd_promo.value, 7, 55);}
+          else {doc.text("Famille: " , 7, 55);}
+          
+          if(controls.vd_sort.value != null){doc.text("Sous-Famille: " + controls.vd_sort.value, 57, 55);}
+          else {doc.text("Sous-famille: " , 57, 55);}
+          if(controls.vd_remit.value != null){doc.text("Classe: " + controls.vd_sort.value, 157, 55);}
+          else {doc.text("Classe: " , 157, 55);}
           doc.line(5,60,200,60)
-          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value, 7, 65);}
+          if(controlsa.ad_line1.value != null){doc.text("Addresse: " + controlsa.ad_line1.value + ' ' + controlsa.ad_city.value + ' ' + controlsa.ad_state.value, 7, 65);}
           else{doc.text("Addresse: ", 7, 65);}
           if(controlsa.ad_country.value != null){doc.text("Pays: " + controlsa.ad_country.value + ' ' + this.pays, 7, 70);}
           else{doc.text("Pays: ", 7, 70);}
@@ -1956,17 +1959,17 @@ printpdf() {
           
           if(controls.vd_type.value != null){doc.text("Type: " + controls.vd_type.value , 7, 110);}
           else{doc.text("Type: ", 7, 110)}
-          if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 115);}
-          else{doc.text("Séquence: ", 7, 115)}
-          if(controls.vd_shipvia.value!=null){doc.text("Modalité de transport: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 120);}
-          else{doc.text("Modalité de transport: ", 7, 120)}
+          // if(controls.vd_seq.value!=null){doc.text("Séquence: " + controls.vd_seq.value + ' - ' + this.seq, 7, 115);}
+          // else{doc.text("Séquence: ", 7, 115)}
+          if(controls.vd_shipvia.value!=null){doc.text("Incoterme: " + controls.vd_shipvia.value + ' - ' + this.shipvia, 7, 115);}
+          else{doc.text("Incoterme: ", 7, 115)}
           doc.line(5,125,200,125)
           // if(controls.vd_bank.value!=null){doc.text("Banque: " + controls.vd_bank.value + ' - ' + this.banque, 7, 130);}
           // else{doc.text("Banque: ", 7, 130)}
           if(controls.vd_ckfrm.value!=null){doc.text("Méthode de paiement: " + controls.vd_ckfrm.value + ' - ' + this.ckfrm, 7, 130);}
           else{doc.text("Méthode de paiement: ", 7, 130)}
-          if(controls.vd_cr_terms.value!=null){doc.text("Condition: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 135);}
-          else{doc.text("Condition: ", 7, 135)}
+          if(controls.vd_cr_terms.value!=null){doc.text("Délai: " + controls.vd_cr_terms.value + ' -  ' + this.crterms, 7, 135);}
+          else{doc.text("Délai: ", 7, 135)}
           if(controls.vd_curr.value!=null){doc.text("Devise: " + controls.vd_curr.value + ' - ' + this.devise, 7, 140);}
           else{doc.text("Devise: ", 7, 140)}
           // if(controls.vd_db.value!=null){doc.text("RIB: " + controls.vd_db.value, 7, 150);}

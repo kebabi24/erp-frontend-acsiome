@@ -20,8 +20,8 @@
                                         <label class="form-group ">Famille*</label>
                                         
                                             <select class="form-control form-control-sm form-control-solid"
-                                                formControlName="famille" id="exampleSelects8">
-                                                <option value=""></option>
+                                                formControlName="famille" id="exampleSelects8" (change)="onchangepromo()">
+                                                
                                                 <option *ngFor="let elem of vd_promo" [value]="elem.code_value">
                                                     {{elem.code_value}} {{elem.code_cmmt}}</option>
 

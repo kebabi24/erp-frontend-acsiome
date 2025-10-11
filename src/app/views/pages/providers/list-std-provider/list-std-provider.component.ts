@@ -224,14 +224,14 @@ provider : any
 
           {
             id: "vd_sort",
-            name: "Activité",
+            name: "Sous-famille",
             field: "vd_sort",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
               getter: 'vd_sort',
-              formatter: (g) => `Activité: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              formatter: (g) => `Sous-famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
@@ -374,14 +374,14 @@ provider : any
           }, 
           {
             id: "vd_shipvia",
-            name: "Mode Expédition",
+            name: "Incoterme",
             field: "vd_shipvia",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
               getter: 'vd_shipvia',
-              formatter: (g) => `Mode Expédition: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              formatter: (g) => `Incoterme: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
@@ -395,14 +395,14 @@ provider : any
           }, 
           {
             id: "vd_promo",
-            name: "Groupe Promo",
+            name: "Famille",
             field: "vd_promo",
             sortable: true,
             filterable: true,
             type: FieldType.string,
             grouping: {
               getter: 'vd_promo',
-              formatter: (g) => `Groupe promo: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
+              formatter: (g) => `Famille: ${g.value}  <span style="color:green">(${g.count} items)</span>`,
               aggregators: [
                 // (required), what aggregators (accumulator) to use and on which field to do so
                // new Aggregators.Avg('tr_qty_loc'),
@@ -415,9 +415,9 @@ provider : any
             }
           }, 
           {
-            id: "vd_sequence",
-            name: "Sequence",
-            field: "vd_seq",
+            id: "vd_vt_id",
+            name: "Client",
+            field: "vd_vt_id",
             sortable: true,
             filterable: true,
             type: FieldType.string,
@@ -749,10 +749,14 @@ doc.text(this.docs[0].date02, 180, 27);
   doc.setFontSize(12);
   
   doc.text("Nom Fournisseur: " + this.provider.address.ad_name, 7, 50);
-  if(this.provider.vd_sort != null){doc.text("Activité: " + this.provider.vd_sort, 7, 55);}
-  else {doc.text("Activité: " , 7, 55);}
+  if(this.provider.vd_promo != null){doc.text("Famille: " + this.provider.vd_promo, 7, 55);}
+  else {doc.text("Famille: " , 7, 55);}
+  if(this.provider.vd_sort != null){doc.text("Sous-famille: " + this.provider.vd_sort, 57, 55);}
+  else {doc.text("Sous-famille: " , 57, 55);}
+  if(this.provider.vd_remit != null){doc.text("Classe: " + this.provider.vd_remit, 157, 55);}
+  else {doc.text("Classe: " , 157, 55);}
   doc.line(5,60,200,60)
-  if(this.provider.address.ad_line1 != null){doc.text("Addresse: " + this.provider.address.ad_line1, 7, 65);}
+  if(this.provider.address.ad_line1 != null){doc.text("Addresse: " + this.provider.address.ad_line1 + ' ' + this.provider.ad_city + ' ' + this.provider.ad_state, 7, 65);}
   else{doc.text("Addresse: ", 7, 65);}
   if(this.provider.address.ad_country != null){doc.text("Pays: " + this.provider.address.ad_country + ' ' + this.pays, 7, 70);}
   else{doc.text("Pays: ", 7, 70);}
@@ -782,17 +786,17 @@ doc.text(this.docs[0].date02, 180, 27);
   
   if(this.provider.vd_type != null){doc.text("Type: " + this.provider.vd_type + ' - ' , 7, 110);}
   else{doc.text("Type: ", 7, 110)}
-  if(this.provider.vd_seq!=null){doc.text("Séquence: " + this.provider.vd_seq + ' - ' + this.seq, 7, 115);}
-  else{doc.text("Séquence: ", 7, 115)}
-  if(this.provider.vd_shipvia!=null){doc.text("Modalité de transport: " + this.provider.vd_shipvia + ' - ' + this.shipvia, 7, 120);}
-  else{doc.text("Modalité de transport: ", 7, 120)}
+  // if(this.provider.vd_seq!=null){doc.text("Séquence: " + this.provider.vd_seq + ' - ' + this.seq, 7, 115);}
+  // else{doc.text("Séquence: ", 7, 115)}
+  if(this.provider.vd_shipvia!=null){doc.text("Incoterme: " + this.provider.vd_shipvia + ' - ' + this.shipvia, 7, 115);}
+  else{doc.text("Incoterme: ", 7, 115)}
   doc.line(5,125,200,125)
   // if(this.provider.vd_bank!=null){doc.text("Banque: " + this.provider.vd_bank + ' - ' + this.banque, 7, 130);}
   // else{doc.text("Banque: ", 7, 130)}
   if(this.provider.vd_ckfrm!=null){doc.text("Méthode de paiement: " + this.provider.vd_ckfrm + ' - ' + this.ckfrm, 7, 130);}
   else{doc.text("Méthode de paiement: ", 7, 130)}
-  if(this.provider.vd_cr_terms!=null){doc.text("Condition: " + this.provider.vd_cr_terms + ' -  ' + this.crterms, 7, 135);}
-  else{doc.text("Condition: ", 7, 135)}
+  if(this.provider.vd_cr_terms!=null){doc.text("Délai: " + this.provider.vd_cr_terms + ' -  ' + this.crterms, 7, 135);}
+  else{doc.text("Délai: ", 7, 135)}
   if(this.provider.vd_curr!=null){doc.text("Devise: " + this.provider.vd_curr + ' - ' + this.devise, 7, 140);}
   else{doc.text("Devise: ", 7, 140)}
   // if(this.provider.vd_db!=null){doc.text("RIB: " + this.provider.vd_db, 7, 150);}

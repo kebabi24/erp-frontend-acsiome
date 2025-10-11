@@ -334,6 +334,25 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         },
       },
       {
+        id: "emballage",
+        name: "emballage",
+        field: "emballage",
+        
+        sortable: true,
+        width: 80,
+        filterable: false,
+        type: FieldType.string,
+        formatter: myCustomCheckboxFormatter,
+        editor: {
+          model: Editors.singleSelect,
+
+          enableRenderHtml: true,
+          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
+      
+         
+        },
+      },
+      {
         id: "tr_qty_chg",
         name: "QTE",
         field: "tr_qty_chg",
@@ -372,25 +391,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           }
         },
       },
-      {
-        id: "emballage",
-        name: "emballage",
-        field: "emballage",
-        
-        sortable: true,
-        width: 80,
-        filterable: false,
-        type: FieldType.string,
-        formatter: myCustomCheckboxFormatter,
-        editor: {
-          model: Editors.singleSelect,
-
-          enableRenderHtml: true,
-          collectionAsync:  this.http.get(`${API_URL}/emballage`), //this.http.get<[]>( 'http://localhost:3000/api/v1/codes/check/') /*'api/data/pre-requisites')*/ ,
       
-         
-        },
-      },
      
       {
         id: "tr_qty_loc",
@@ -910,7 +911,18 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
         this.domconfig = false;
       }
     );
-    this.seuil = 1200;
+    this.seuil = 999999
+    this.codeService.getByOne({ code_fldname: "LIMIT",code_value:'GLOBAL' }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+       this.seuil = Number(reponse.data.code_cmmt);   
+        } 
+      },
+
+      (error) => {
+        
+      }
+    );
     this.createForm();
     console.log(this.PathPrinter);
     
@@ -1257,7 +1269,7 @@ export class UnplanifiedReceiptCabComponent implements OnInit {
           tr_qty_loc: this.dataset[i - 1].tr_qty_loc,
           tr_um: this.dataset[i - 1].tr_um,
           tr_um_conv: this.dataset[i - 1].tr_um_conv,
-
+emballage: this.dataset[i - 1].emballage,
           tr_price: this.dataset[i - 1].tr_price,
           tr_site: this.dataset[i - 1].tr_site,
           tr_loc: this.dataset[i - 1].tr_loc,
@@ -2724,7 +2736,8 @@ handleSelectedRowsChanged5(e, args) {
         (res: any) => {
           this.dataset = res.data
           this.dataView.setItems(this.dataset)
-       
+       controls.tr_site.setValue(res.data[0].tr_site)
+          controls.tr_loc.setValue(res.data[0].tr_loc)
         },
         (error) => {
           this.message = `Récéption n'existe pas`;

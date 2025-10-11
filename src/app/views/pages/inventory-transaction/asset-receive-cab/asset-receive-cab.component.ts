@@ -558,7 +558,18 @@ export class AssetReceiveCabComponent implements OnInit {
         
       }
     );
-    this.seuil = 999999;
+    this.seuil = 999999
+    this.codeService.getByOne({ code_fldname: "LIMIT",code_value:'GLOBAL' }).subscribe(
+      (reponse: any) => {
+        if (reponse.data != null) {
+       this.seuil = Number(reponse.data.code_cmmt);   
+        } 
+      },
+
+      (error) => {
+        
+      }
+    );
     this.createForm();
     console.log(this.PathPrinter);
     

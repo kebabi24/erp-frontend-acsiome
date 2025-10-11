@@ -1,6 +1,11 @@
 import { Component, OnInit } from "@angular/core"
 import { NgbDropdownConfig, NgbTabsetConfig } from "@ng-bootstrap/ng-bootstrap"
-
+import {
+  NgbModal,
+  NgbActiveModal,
+  ModalDismissReasons,
+  NgbModalOptions,
+} from "@ng-bootstrap/ng-bootstrap"
 // Angular slickgrid
 import {
     Formatter,
@@ -49,7 +54,7 @@ import { MatDialog } from "@angular/material/dialog"
 import { Code, CodeService } from "../../../../core/erp"
 
 @Component({
-  selector: 'kt-provider-settings',
+  selector: 'kt-provider-settings', 
   templateUrl: './provider-settings.component.html',
   styleUrls: ['./provider-settings.component.scss']
 })
@@ -79,7 +84,9 @@ export class ProviderSettingsComponent implements OnInit {
   selectedGroupingFields: Array<string | GroupingGetterFunction> = ['', '', ''];
   gridObj: any;
   dataviewObj: any;
-
+  vdaddr : any 
+  vdname : any
+  idaddr:any
 
   constructor(
       config: NgbDropdownConfig,
@@ -88,7 +95,8 @@ export class ProviderSettingsComponent implements OnInit {
       private router: Router,
       public dialog: MatDialog,
       private layoutUtilsService: LayoutUtilsService,
-      private codeService: CodeService
+      private codeService: CodeService,
+      private modalService: NgbModal,
   ) {
       config.autoClose = true
       this.codeService
@@ -274,7 +282,37 @@ export class ProviderSettingsComponent implements OnInit {
 prepareGrid() {
 
   this.columnDefinitions = [
-    
+      {
+            id: "delete",
+            field: "id",
+            excludeFromColumnPicker: true,
+            excludeFromGridMenu: true,
+            excludeFromHeaderMenu: true,
+            excludeFromExport:true,
+            formatter: (row, cell, value, columnDef, dataContext) => {
+             // you can return a string of a object (of type FormatterResultObject), the 2 types are shown below
+             return `
+                  <a class="btn btn-sm btn-clean btn-icon mr-2" title="Suprimer DA">
+                  <i class="flaticon-delete
+                  "></i>
+              </a>
+              `;
+           },
+            minWidth: 50,
+            maxWidth: 50,
+            // use onCellClick OR grid.onClick.subscribe which you can see down below
+            onCellClick: (e: Event, args: OnEventArgs) => {
+              const id = args.dataContext.id
+              this.idaddr = args.dataContext.id
+              console.log(id)
+            
+             
+                
+                let element: HTMLElement = document.getElementById('deleteDAGrid') as HTMLElement;
+                element.click();
+             
+          },
+          },
   
         {
       id: "code_fldname",
@@ -358,5 +396,43 @@ prepareGrid() {
 
   // fill the dataset with your data
  
+}
+ open(content) {
+    this.modalService.open(content, { size: "lg" })
+}
+deleteProvider() {
+  this.codeService.delete( this.idaddr ).subscribe(
+    (reponse:any) =>   {
+      console.log("here",reponse.message)
+      if(reponse.bool == false) {
+        this.layoutUtilsService.showActionNotification(
+            "Supression  avec succès",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        window.location.reload()
+      }else {
+        alert(reponse.message)
+      }
+        this.loadingSubject.next(false)
+        this.modalService.dismissAll()
+       
+    },
+  
+     
+    (error) => {
+        this.layoutUtilsService.showActionNotification(
+            "Erreur verifier les informations",
+            MessageType.Create,
+            10000,
+            true,
+            true
+        )
+        this.loadingSubject.next(false)
+    },
+ 
+  ) 
 }
 }
