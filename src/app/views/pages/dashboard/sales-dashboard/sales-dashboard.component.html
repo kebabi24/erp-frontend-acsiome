@@ -1,8 +1,8 @@
 <kt-portlet>
     <kt-portlet-body [class]="'kt-portlet__body--fit'">
-      <div>
+      <!--div>
         {{ time | async }}
-      </div>
+      </div-->
   
       
         <form class="form" [formGroup]="dashboardForm">
@@ -154,7 +154,49 @@
           </div>
         </div>
       </div>
+      <div class="row">
 
+      
+
+        <div class="col-xl-6">
+          <kt-portlet [class]="'kt-portlet--height-fluid'">
+            <kt-portlet-header [title]="'QTE par Type Gros'">
+            </kt-portlet-header>
+            <kt-portlet-body>
+              <div id="chartdivN1" style="width: 100%; height: 350px"></div>
+            </kt-portlet-body>
+          </kt-portlet>
+        </div>
+        <div class="col-xl-6">
+            <kt-portlet [class]="'kt-portlet--height-fluid'">
+              <kt-portlet-header [title]="'CA par Type Gros '">
+              </kt-portlet-header>
+              <kt-portlet-body>
+                <div id="chartdivN2" style="width: 100%; height: 350px"></div>
+              </kt-portlet-body>
+            </kt-portlet>
+        </div>
+
+        <div class="col-xl-6">
+            <kt-portlet [class]="'kt-portlet--height-fluid'">
+              <kt-portlet-header [title]="'QTE par Type DD'">
+              </kt-portlet-header>
+              <kt-portlet-body>
+                <div id="chartdivN3" style="width: 100%; height: 350px"></div>
+              </kt-portlet-body>
+            </kt-portlet>
+          </div>
+          <div class="col-xl-6">
+              <kt-portlet [class]="'kt-portlet--height-fluid'">
+                <kt-portlet-header [title]="'CA par Type DD '">
+                </kt-portlet-header>
+                <kt-portlet-body>
+                  <div id="chartdivN4" style="width: 100%; height: 350px"></div>
+                </kt-portlet-body>
+              </kt-portlet>
+          </div>
+     </div>
+  
      <div class="row">
         <div class="col-xl-6">
             <kt-portlet [class]="'kt-portlet--height-fluid'">
@@ -236,49 +278,7 @@
         [gridOptions]="gridOptions3" [dataset]="data">
     </angular-slickgrid>
 </div>
-     <!--div class="row">
-
-      
-
-        <div class="col-xl-6">
-          <kt-portlet [class]="'kt-portlet--height-fluid'">
-            <kt-portlet-header [title]="'QTE par Type Gros'">
-            </kt-portlet-header>
-            <kt-portlet-body>
-              <div id="chartdivN1" style="width: 100%; height: 350px"></div>
-            </kt-portlet-body>
-          </kt-portlet>
-        </div>
-        <div class="col-xl-6">
-            <kt-portlet [class]="'kt-portlet--height-fluid'">
-              <kt-portlet-header [title]="'CA par Type Gros '">
-              </kt-portlet-header>
-              <kt-portlet-body>
-                <div id="chartdivN2" style="width: 100%; height: 350px"></div>
-              </kt-portlet-body>
-            </kt-portlet>
-        </div>
-
-        <div class="col-xl-6">
-            <kt-portlet [class]="'kt-portlet--height-fluid'">
-              <kt-portlet-header [title]="'QTE par Type DD'">
-              </kt-portlet-header>
-              <kt-portlet-body>
-                <div id="chartdivN3" style="width: 100%; height: 350px"></div>
-              </kt-portlet-body>
-            </kt-portlet>
-          </div>
-          <div class="col-xl-6">
-              <kt-portlet [class]="'kt-portlet--height-fluid'">
-                <kt-portlet-header [title]="'CA par Type DD '">
-                </kt-portlet-header>
-                <kt-portlet-body>
-                  <div id="chartdivN4" style="width: 100%; height: 350px"></div>
-                </kt-portlet-body>
-              </kt-portlet>
-          </div>
-     </div-->
-  
+    
     </kt-portlet-body>
   </kt-portlet>
   

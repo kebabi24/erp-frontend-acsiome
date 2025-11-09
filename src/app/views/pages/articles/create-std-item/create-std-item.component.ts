@@ -411,6 +411,7 @@ export class CreateStdItemComponent implements OnInit {
       pt_desc1: [{ value: this.item.pt_desc1, disabled: !this.isExist },Validators.required],
       pt_um: [{ value: this.item.pt_um, disabled: !this.isExist },Validators.required],
       pt_ord_mult: [{ value: this.item.pt_ord_mult, disabled: !this.isExist }],
+      pt_pur_lead: [{ value: this.item.pt_pur_lead, disabled: !this.isExist }],
     })
     this.form1 = this.formBuilder.group({
       pt_desc2: [{ value: this.item.pt_desc2, disabled: !this.isExist }],
@@ -476,7 +477,7 @@ export class CreateStdItemComponent implements OnInit {
       pt_run: [{ value: this.item.pt_run, disabled: !this.isExist }],
       pt_ord_per: [{ value: this.item.pt_ord_per, disabled: !this.isExist }],
       pt_mfg_lead: [{ value: this.item.pt_mfg_lead, disabled: !this.isExist }],
-      pt_pur_lead: [{ value: this.item.pt_pur_lead, disabled: !this.isExist }],
+      
       pt_setup: [{ value: this.item.pt_setup, disabled: !this.isExist }],
       pt_sfty_stk: [{ value: this.item.pt_sfty_stk, disabled: !this.isExist }],
       pt_sfty_time: [{ value: this.item.pt_sfty_time, disabled: !this.isExist }],
@@ -613,6 +614,7 @@ export class CreateStdItemComponent implements OnInit {
               controls.pt_um.enable()
               controls1.pt_desc2.enable()
               controls.pt_ord_mult.enable()
+              controls.pt_pur_lead.enable()
               controls1.pt_prod_line.enable()
               controls1.pt_part_type.enable()
               controls1.pt_draw.enable()
@@ -669,7 +671,7 @@ export class CreateStdItemComponent implements OnInit {
               controls3.pt_run.enable()
               controls3.pt_ord_per.enable()
               controls3.pt_mfg_lead.enable()
-              controls3.pt_pur_lead.enable()
+              
               controls3.pt_setup.enable()
               controls3.pt_sfty_stk.enable()
               controls3.pt_sfty_time.enable()
@@ -822,6 +824,7 @@ export class CreateStdItemComponent implements OnInit {
     _item.pt_desc2 = controls1.pt_desc2.value;
     _item.pt_um = controls.pt_um.value;
     _item.pt_ord_mult = controls.pt_ord_mult.value;
+    _item.pt_pur_lead = controls.pt_pur_lead.value;
     _item.pt_prod_line = controls1.pt_prod_line.value;
     _item.pt_part_type = controls1.pt_part_type.value;
     _item.pt_draw = controls1.pt_draw.value;
@@ -881,7 +884,7 @@ export class CreateStdItemComponent implements OnInit {
     _item.pt_run = controls3.pt_run.value;
     _item.pt_ord_per = controls3.pt_ord_per.value;
     _item.pt_mfg_lead = controls3.pt_mfg_lead.value;
-    _item.pt_pur_lead = controls3.pt_pur_lead.value;
+    
     _item.pt_setup = controls3.pt_setup.value;
     _item.pt_sfty_stk = controls3.pt_sfty_stk.value;
     _item.pt_sfty_time = controls3.pt_sfty_time.value;
@@ -1124,7 +1127,7 @@ export class CreateStdItemComponent implements OnInit {
                   controls.pt_desc1.enable()
                   controls.pt_um.enable()
                   controls.pt_ord_mult.enable()
-
+                  controls.pt_pur_lead.enable()
                   controls1.pt_desc2.enable()
                   controls1.pt_prod_line.enable()
                   controls1.pt_part_type.enable()
@@ -1182,7 +1185,7 @@ export class CreateStdItemComponent implements OnInit {
                   controls3.pt_run.enable()
                   controls3.pt_ord_per.enable()
                   controls3.pt_mfg_lead.enable()
-                  controls3.pt_pur_lead.enable()
+                  
                   controls3.pt_setup.enable()
                   controls3.pt_sfty_stk.enable()
                   controls3.pt_sfty_time.enable()
@@ -1226,6 +1229,7 @@ export class CreateStdItemComponent implements OnInit {
                   controls.pt_um.enable()
                   controls1.pt_desc2.enable()
                   controls.pt_ord_mult.enable()
+                  controls.pt_pur_lead.enable()
                   controls1.pt_prod_line.enable()
                   controls1.pt_part_type.enable()
                   controls1.pt_draw.enable()
@@ -1282,7 +1286,7 @@ export class CreateStdItemComponent implements OnInit {
                   controls3.pt_run.enable()
                   controls3.pt_ord_per.enable()
                   controls3.pt_mfg_lead.enable()
-                  controls3.pt_pur_lead.enable()
+                  
                   controls3.pt_setup.enable()
                   controls3.pt_sfty_stk.enable()
                   controls3.pt_sfty_time.enable()

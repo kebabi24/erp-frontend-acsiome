@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   isMockEnabled: true, // You have to switch this, when your real back-end is done
   authTokenKey: "authce9d77b308c149d5992a80073637e4d5",
-  apiUrl: "http://192.168.1.154:3001/api/v1",
+  apiUrl: "http://10.10.3.6:4141/api/v1",
   
   //  apiUrl: "http://10.10.130.9:3002/api/v1",
   // apiUrl: "http://192.168.60.52:3001/api/v1",
@@ -21,13 +21,13 @@ export const environment = {
   //  apiUrl: "http://10.10.130.9:3001/api/v1",
   // apiUrl: "http://10.10.130.9:3001/api/v1",
   Instance: "Prod",
-  App: "ERP",
+  App: "DD",
    
 //local key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$b7dhzjxkuGRbLPCGSXW3Yw",
-key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$5o7vlPX75k71dFbmK2Bs1KK0RZV/V/l3KGL1GnQCoaU",
+//key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$5o7vlPX75k71dFbmK2Bs1KK0RZV/V/l3KGL1GnQCoaU",
   // key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$hoqzObkMeMlG9nOUKy0g8xwyih/9gjPFUvgRJ229lwQ",
   // key:"$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$O5Ed72MwWBjV0QITSt3bag"
- //prima $argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$Y1rdOurgRpPWagKn1En/X3ATJ2FfskmqvzdZLDMfFk4
+ key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$Y1rdOurgRpPWagKn1En/X3ATJ2FfskmqvzdZLDMfFk4"
  //edelweiss key:"$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$zHjTc5y+XDtK0x6zun1KfIkkfhpDa+rYV4lBLLZX4Bc"
 //edelweiss key: "$argon2id$v=19$m=4096,t=3,p=1$MTIzNDU2Nzg$mTqYWw+lo15HFjUskoHyRa+pWpSTX9qZiY9Er0S6leI"
 

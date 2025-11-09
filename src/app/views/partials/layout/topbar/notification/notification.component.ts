@@ -53,7 +53,7 @@ export class NotificationComponent {
   time = new Observable<string>((observer: Observer<string>) => {
     setInterval(() => {
       observer.next("");
-    }, 100);
+    }, 5000);
   });
 
   constructor(
@@ -87,6 +87,7 @@ export class NotificationComponent {
         console.log(response)
         if (response["data"].length != 0) {
           this.notifications = response["data"].purchase_orders
+          console.log(this.notifications , this.notifications.length)
           this.orders = response["data"].reqs
           this.notifications_nb = response["data"].purchase_orders.length + response["data"].reqs.length 
           this.notificationExist = true

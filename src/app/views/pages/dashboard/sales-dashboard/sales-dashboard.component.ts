@@ -152,11 +152,11 @@ credit_gros : any
 
 }
 
-time = new Observable<string>((observer: Observer<string>) => {
-  setInterval(() => {
-    observer.next("");
-  }, 1000);
-});
+// time = new Observable<string>((observer: Observer<string>) => {
+//   setInterval(() => {
+//     observer.next("");
+//   }, 1000);
+// });
 
 createForm() {
   this.loadingSubject.next(false);
@@ -193,10 +193,10 @@ updateData(){
     .subscribe(
       
       (res: any) => {
-        this.qty_type_data = res.qty_type_data 
-        this.amt_type_data = res.amt_type_data 
-        this.ddqty_type_data = res.ddqty_type_data 
-        this.ddamt_type_data = res.ddamt_type_data 
+        this.qty_type_data = res.typegros
+        this.amt_type_data = res.typegros 
+        this.ddqty_type_data = res.typedd
+        this.ddamt_type_data = res.typedd
         this.ca_zone_data = res.ca_zone_data
         this.ca_cust = res.ca_bill
         this.ca_role = res.ca_role
@@ -266,11 +266,11 @@ updateData(){
         
         // let qtygr= replaceAll(qtyg,",","")
         this.qtygros = res.qtygros
-        // this.createQtyTypeChart()
-        // this.createCATypeChart()
+        this.createQtyTypeChart()
+        this.createCATypeChart()
 
-        // this.createDDQtyTypeChart()
-        // this.createDDCATypeChart()
+        this.createDDQtyTypeChart()
+        this.createDDCATypeChart()
         // this.createCaZoneChart()
         this.createCaCustChart()
         this.createCAZonechartPie()
@@ -303,10 +303,10 @@ getSalesDashboarData(startDate: any , endDate:any){
     .subscribe(
       
       (res: any) => {
-        this.qty_type_data = res.qty_type_data 
-        this.amt_type_data = res.amt_type_data 
-        this.ddqty_type_data = res.ddqty_type_data 
-        this.ddamt_type_data = res.ddamt_type_data 
+        this.qty_type_data = res.typegros
+        this.amt_type_data = res.typegros 
+        this.ddqty_type_data = res.typedd
+        this.ddamt_type_data = res.typedd
         this.ca_zone_data = res.ca_zone_data
         this.ca_cust = res.ca_bill
         this.ca_role = res.ca_role
@@ -368,10 +368,10 @@ getSalesDashboarData(startDate: any , endDate:any){
         this.qtydd = res.qtydd
 
         this.qtygros = res.qtygros
-        // this.createQtyTypeChart()
-        // this.createCATypeChart()
-        // this.createDDQtyTypeChart()
-        // this.createDDCATypeChart()
+        this.createQtyTypeChart()
+        this.createCATypeChart()
+        this.createDDQtyTypeChart()
+        this.createDDCATypeChart()
         // this.createCaZoneChart()
         this.createCaCustChart()
         this.createCAZonechartPie()
@@ -399,6 +399,8 @@ createQtyTypeChart(){
 
   // Add and configure Series
   let pieSeries = chartr.series.push(new am4charts.PieSeries());
+  pieSeries.legendSettings.labelText = '{type}';
+  pieSeries.legendSettings.valueText = '{qty}';
   pieSeries.dataFields.value = "qty";
   pieSeries.dataFields.category = "type";
   pieSeries.slices.template.stroke = am4core.color("#fff");
@@ -409,14 +411,16 @@ createQtyTypeChart(){
   pieSeries.hiddenState.properties.opacity = 1;
   pieSeries.hiddenState.properties.endAngle = -90;
   pieSeries.hiddenState.properties.startAngle = -90;
-
+  chartr.legend = new am4charts.Legend();
 }
 createCATypeChart(){
   let chartr = am4core.create("chartdivN2", am4charts.PieChart);	
   chartr.data = this.amt_type_data ;
-
+ 
   // Add and configure Series
   let pieSeries = chartr.series.push(new am4charts.PieSeries());
+  pieSeries.legendSettings.labelText = '{type}';
+  pieSeries.legendSettings.valueText = '{amt}';
   pieSeries.dataFields.value = "amt";
   pieSeries.dataFields.category = "type";
   pieSeries.slices.template.stroke = am4core.color("#fff");
@@ -427,34 +431,42 @@ createCATypeChart(){
   pieSeries.hiddenState.properties.opacity = 1;
   pieSeries.hiddenState.properties.endAngle = -90;
   pieSeries.hiddenState.properties.startAngle = -90;
-
+  chartr.legend = new am4charts.Legend();
 }
 
 
 createDDQtyTypeChart(){
   let chartr = am4core.create("chartdivN3", am4charts.PieChart);	
   chartr.data = this.ddqty_type_data ;
-
+  console.log("chartr.data",chartr.data)
+  am4core.useTheme(am4themes_animated);
   // Add and configure Series
   let pieSeries = chartr.series.push(new am4charts.PieSeries());
+ 
+  pieSeries.legendSettings.labelText = '{type}';
+  pieSeries.legendSettings.valueText = '{qty}';
   pieSeries.dataFields.value = "qty";
   pieSeries.dataFields.category = "type";
   pieSeries.slices.template.stroke = am4core.color("#fff");
   pieSeries.slices.template.strokeWidth = 2;
   pieSeries.slices.template.strokeOpacity = 1;
-  
   // This creates initial animation
   pieSeries.hiddenState.properties.opacity = 1;
   pieSeries.hiddenState.properties.endAngle = -90;
   pieSeries.hiddenState.properties.startAngle = -90;
+  chartr.legend = new am4charts.Legend();
 
 }
 createDDCATypeChart(){
   let chartr = am4core.create("chartdivN4", am4charts.PieChart);	
   chartr.data = this.ddamt_type_data ;
-
+  am4core.useTheme(am4themes_animated);
   // Add and configure Series
   let pieSeries = chartr.series.push(new am4charts.PieSeries());
+  // pieSeries.labels.template.text = "{type}: {amt}";
+  // pieSeries.slices.template.tooltipText = "{type}: {amt}";
+  pieSeries.legendSettings.labelText = '{type}';
+  pieSeries.legendSettings.valueText = '{amt}';
   pieSeries.dataFields.value = "amt";
   pieSeries.dataFields.category = "type";
   pieSeries.slices.template.stroke = am4core.color("#fff");
@@ -465,7 +477,7 @@ createDDCATypeChart(){
   pieSeries.hiddenState.properties.opacity = 1;
   pieSeries.hiddenState.properties.endAngle = -90;
   pieSeries.hiddenState.properties.startAngle = -90;
-
+  chartr.legend = new am4charts.Legend();
 }
 
 // createCaZoneChart(){

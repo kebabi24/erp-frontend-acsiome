@@ -28,6 +28,10 @@ export class InvoiceOrderTempService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/createiv', data, { headers: httpHeaders })
     }
+    public addAv(data: any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(API_URL+'/avoir', data, { headers: httpHeaders })
+    }
     public imput(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/imput', data, { headers: httpHeaders })
