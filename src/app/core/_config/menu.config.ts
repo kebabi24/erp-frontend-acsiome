@@ -815,6 +815,10 @@ export class MenuConfig {
               page: "/inventory-transaction/bobine-receipt-cab",
             },
             {
+              title: "Imprimer liste des Réalisations extrusion ",
+              page: "/inventory-transaction/ex-wo-print",
+            },
+            {
               title: "Mise A Jour Le Prix Récéption",
               page: "/inventory-transaction/update-price-unp",
             },

@@ -1451,7 +1451,7 @@ export class IssBobineWoComponent implements OnInit {
      }
 
     }
-    this.printpdf(this.trlot)
+    this.printpdf(controls.wo_nbr.value)
     
 
         let tr = this.prepare()
@@ -4164,8 +4164,8 @@ doc.text(this.docs[0].date02, 240, 27);
     // doc.text("Couleur Produit   : " + controls.product_color.value, 20, 60);
     // doc.text("Quantité sortie   : " + controls.total_bobine.value, 20, 65);
     
-        doc.line(10, 85, 205, 85);
-        doc.line(10, 90, 205, 90);
+        doc.line(10, 85, 200, 85);
+        doc.line(10, 90, 200, 90);
         doc.line(10, 85, 10, 90);
         doc.text("LN", 12.5, 88.5);
         doc.line(20, 85, 20, 90);
@@ -4208,8 +4208,8 @@ doc.text(this.docs[0].date02, 240, 27);
         doc.line(170, i - 5, 170, i);
         doc.text(String(this.dataset[j].tr_ref), 183, i - 1, );
         doc.line(185, i - 5, 185, i);
-        doc.text(String(this.dataset[j].tr_program), 203, i - 1, );
-        doc.line(205, i - 5, 205, i);
+        doc.text(String(this.dataset[j].tr_program), 187, i - 1, );
+        doc.line(200, i - 5, 200, i);
         // doc.line(10, i, 200, i );
   
         i = i + 5;
@@ -4224,7 +4224,7 @@ doc.text(this.docs[0].date02, 240, 27);
         doc.line(130, i - 5, 130, i);
         doc.line(170, i - 5, 170, i);
         doc.line(185, i - 5, 185, i);
-        doc.line(205, i - 5, 205, i);
+        doc.line(200, i - 5, 200, i);
         doc.line(10, i, 200, i);
   
         i = i + 5;
@@ -4244,20 +4244,20 @@ doc.text(this.docs[0].date02, 240, 27);
         doc.line(170, i - 5, 170, i);
         doc.text(String(this.dataset[j].tr_ref), 183, i - 1, { align: "right" });
         doc.line(185, i - 5, 185, i);
-        doc.text(String(this.dataset[j].tr_program), 203, i - 1, { align: "right" });
-        doc.line(205, i - 5, 205, i);
-        doc.line(10, i, 205, i);
+        doc.text(String(this.dataset[j].tr_program), 199, i - 1, { align: "right" });
+        doc.line(200, i - 5, 200, i);
+        doc.line(10, i, 200, i);
         i = i + 5;
       }
     }
   
     
   
-    doc.line(130, i + 7, 205, i + 7);
-    doc.line(130, i + 14, 205, i + 14);
+    doc.line(130, i + 7, 200, i + 7);
+    doc.line(130, i + 14, 200, i + 14);
     doc.line(130, i + 7, 130, i + 14);
     doc.line(160, i + 7, 160, i + 14);
-    doc.line(205, i + 7, 205, i + 14);
+    doc.line(200, i + 7, 200, i + 14);
     doc.setFontSize(10);
     doc.text("Validé par: " , 20, i + 22);
     doc.text("Note: " , 20, i + 32);

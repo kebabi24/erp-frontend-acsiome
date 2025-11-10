@@ -343,7 +343,7 @@ autorisation:boolean;
                                     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc,printed:true });
                                     
                                     this.index = this.dataset.findIndex((el) => {
-                                      return el.tr_line == args.dataContext.id;
+                                      return el.id == args.dataContext.id;
                                     });
                                     console.log(this.index);
                                     this.globalState = true;
@@ -677,7 +677,7 @@ autorisation:boolean;
                 this.gridServicesq.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: lab.lb_ref, qty: args.dataContext.tr_qty_loc,sqprinted:true });
                 
                 this.index = this.dataset.findIndex((el) => {
-                  return el.tr_line == args.dataContext.id;
+                  return el.id == args.dataContext.id;
                 });
                 console.log(this.index);
                 this.globalState = true;

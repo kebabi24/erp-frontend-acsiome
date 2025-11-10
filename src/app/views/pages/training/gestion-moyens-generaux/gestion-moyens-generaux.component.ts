@@ -8735,7 +8735,7 @@ if (this.lddetO6 != null)
                         let barcode = lab.lb_ref;
                         
                          this.indexO8 = this.datasetO8.findIndex((el) => {
-                          return el.tr_line == args.dataContext.id;
+                          return el.id == args.dataContext.id;
                         });
                         this.gridServiceO8.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_loc, printed:true });              
                         

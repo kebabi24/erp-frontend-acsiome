@@ -805,7 +805,7 @@ export class EchantillonReceiptCabComponent implements OnInit {
                     let barcode = lab.lb_ref;
                     
                      this.index = this.dataset.findIndex((el) => {
-                      return el.tr_line == args.dataContext.id;
+                      return el.id == args.dataContext.id;
                     });
                     this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, tr_ref: barcode, qty: args.dataContext.tr_qty_chg,qty_loc:args.dataContext.tr_qty_loc, printed:true });              
                     
