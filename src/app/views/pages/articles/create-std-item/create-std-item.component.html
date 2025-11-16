@@ -28,7 +28,7 @@
                             class="invalid-feedback">Ce Champs est obligatoire</div>
 
                     </div>
-                    <div class="form-group col-6">
+                    <div class="form-group col-4">
                         <label class="form-group">Description:</label>
                         <input type="text" id="pt_desc1" (change)="onchangedesc()"
                             [className]="formX.controls['pt_desc1'].errors && (formX.controls['pt_desc1'].dirty || formX.controls['pt_desc1'].touched) ? 'form-control form-control-sm form-control-solid is-invalid' : 'form-control form-control-sm form-control-solid'"
@@ -57,8 +57,14 @@
                     <div class="form-group col-2">
                         <label class="form-group ">Colisage:</label>
 
-                        <input type="text" class="form-control form-control-sm form-control-solid"
+                        <input type="number" class="form-control form-control-sm form-control-solid"
                             formControlName="pt_ord_mult">
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="form-group ">Piéce:</label>
+
+                        <input type="text" class="form-control form-control-sm form-control-solid"
+                            formControlName="pt_pur_lead">
                     </div>
                 </div>
                 <br> <br>
@@ -1064,15 +1070,6 @@
 
                                             <input type="number" class="form-control form-control-solid"
                                                 formControlName="pt_mfg_lead" aria-describedby="basic-addon2">
-
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-2">
-                                        <label class="form-group "> Del ac:</label>
-                                        <div class="input-group input-group-sm">
-
-                                            <input type="number" class="form-control form-control-solid"
-                                                formControlName="pt_pur_lead" aria-describedby="basic-addon2">
 
                                         </div>
                                     </div>

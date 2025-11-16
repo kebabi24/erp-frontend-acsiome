@@ -425,6 +425,7 @@ export class EditStdItemComponent implements OnInit {
         pt_desc1: [this.itemEdit.pt_desc1,Validators.required],
         pt_um: [this.itemEdit.pt_um,Validators.required],
         pt_ord_mult: [this.itemEdit.pt_ord_mult],
+        pt_pur_lead: [this.itemEdit.pt_pur_lead],
       })
       this.form1 = this.form1FB.group({
   
@@ -503,7 +504,7 @@ export class EditStdItemComponent implements OnInit {
       pt_run: [this.itemEdit.pt_run],
       pt_ord_per: [this.itemEdit.pt_ord_per],
       pt_mfg_lead: [this.itemEdit.pt_mfg_lead],
-      pt_pur_lead: [this.itemEdit.pt_pur_lead],
+
       pt_setup: [this.itemEdit.pt_setup],
       pt_sfty_stk: [this.itemEdit.pt_sfty_stk],
       pt_sfty_time: [this.itemEdit.pt_sfty_time],
@@ -673,6 +674,7 @@ prepareItem(): Item {
   _item.pt_desc2 = controls1.pt_desc2.value;
   _item.pt_um = controls.pt_um.value;
   _item.pt_ord_mult = controls.pt_ord_mult.value;
+  _item.pt_pur_lead = controls.pt_pur_lead.value;
   _item.pt_prod_line = controls1.pt_prod_line.value;
   _item.pt_part_type = controls1.pt_part_type.value;
   _item.pt_draw = controls1.pt_draw.value;
@@ -732,7 +734,7 @@ prepareItem(): Item {
   _item.pt_run = controls3.pt_run.value;
   _item.pt_ord_per = controls3.pt_ord_per.value;
   _item.pt_mfg_lead = controls3.pt_mfg_lead.value;
-  _item.pt_pur_lead = controls3.pt_pur_lead.value;
+  
   _item.pt_setup = controls3.pt_setup.value;
   _item.pt_sfty_stk = controls3.pt_sfty_stk.value;
   _item.pt_sfty_time = controls3.pt_sfty_time.value;

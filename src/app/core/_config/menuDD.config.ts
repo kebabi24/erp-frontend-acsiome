@@ -549,6 +549,10 @@ export class MenuDDConfig {
                 page: "/sales/create-invoice",
               },
               {
+                title: "Avoir sur Facture",
+                page: "/sales/undo-invoice",
+              },
+              {
                 title: "Réimpression Facture ",
                 page: "/sales/reprint-invoice",
               },
@@ -597,6 +601,10 @@ export class MenuDDConfig {
               {
                 title: "Liste Ventes Role/Type ",
                 page: "/sales/list-roles-sales",
+              },
+              {
+                title: "Liste CA Par Type",
+                page: "/sales/list-ca-type",
               },
               {
                 title: "Imputation Facture DD  ",

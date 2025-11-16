@@ -1146,6 +1146,14 @@ export class MenuConfig {
               page: "/sales/print-invoice",
             },
             {
+              title: "Avoir sur Facture",
+              page: "/sales/undo-invoice",
+            },
+            {
+              title: "Réimpression Facture ",
+              page: "/sales/reprint-invoice",
+            },
+            {
               title: "Imputation Facture ",
               page: "/sales/input-invoice",
             },

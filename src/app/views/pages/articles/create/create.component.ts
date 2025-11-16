@@ -74,7 +74,7 @@ import {
   TaxeService,
 } from "../../../../core/erp";
 import { _isNumberValue } from '@angular/cdk/coercion';
-
+import { SafeUrl, DomSanitizer } from "@angular/platform-browser";
 // create my custom Formatter with the Formatter type
 const myCustomCheckmarkFormatter: Formatter = (
   row,
@@ -99,6 +99,7 @@ const myCustomCheckmarkFormatter: Formatter = (
     </div>
 	`;
 };
+
 @Component({
   selector: "kt-create",
   templateUrl: "./create.component.html",
@@ -232,7 +233,8 @@ export class CreateComponent implements OnInit {
     private sequenceService: SequenceService,
     private mesureService: MesureService,
     private taxService: TaxeService,
-    private inventoryStatusService: InventoryStatusService
+    private inventoryStatusService: InventoryStatusService,
+    private sanitizer: DomSanitizer
   ) {
     config.autoClose = true;
     this.prepareGrid();
@@ -287,11 +289,32 @@ export class CreateComponent implements OnInit {
       .getBy({ code_fldname: "pt_promo" })
       .subscribe((response: any) => (this.pt_promo = response.data));
   }
+  
   ngOnInit(): void {
     this.loading$ = this.loadingSubject.asObservable();
     this.loadingSubject.next(false);
     this.createForm();
   }
+  image: string | SafeUrl =
+    "assets/media/users/"+ "1.jpg";
+
+  updateImage(ev) {
+    this.image = this.sanitizer.bypassSecurityTrustUrl(
+      window.URL.createObjectURL(ev.target.files[0])
+    );
+    console.log(this.image)
+    const fileContent = ev.target.result; // This holds the file's content
+
+      // Example: If it's a text file, you can log its content
+      console.log("File content:", fileContent);
+
+      // Example: If you want to upload it to a server
+      // uploadFileToServer(file); // Pass the original File object or its content
+
+}
+    
+  
+
   prepareGrid() {
     this.columnDefinitions = [
       {

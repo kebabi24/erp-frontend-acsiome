@@ -147,6 +147,10 @@ export class MobileSettingsService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL}/findsalestype/`, data,{ headers: httpHeaders })
     }
+    public   getSalesRoleType(data:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.post(`${API_URL}/findsalesroletype/`, data,{ headers: httpHeaders })
+    }
     public GetProfileProductPage(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(`${API_URL_2}/findppprofile/`, data,{ headers: httpHeaders })
