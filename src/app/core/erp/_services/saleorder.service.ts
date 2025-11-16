@@ -97,4 +97,8 @@ export class SaleOrderService {
         return this.http.post(API_URL+'/allsojob',data, { headers: httpHeaders })
     }
     // DELETE
+    public delete(nbr:any) {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.delete(`${API_URL}/${nbr}`, { headers: httpHeaders })
+    }
 }
