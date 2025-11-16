@@ -352,7 +352,7 @@ deleteDA() {
     },
     () => {
         this.layoutUtilsService.showActionNotification(
-            "Ajout avec succès",
+            "Supression avec succès",
             MessageType.Create,
             10000,
             true,
