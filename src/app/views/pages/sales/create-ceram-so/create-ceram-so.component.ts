@@ -149,6 +149,8 @@ export class CreateCeramSoComponent implements OnInit {
   gridObjbank: any;
   angularGridbank: AngularGridInstance;
   piece : Number
+  purprice : Number
+  autorisation : Boolean = false
   constructor(
     config: NgbDropdownConfig,
     private soFB: FormBuilder,
@@ -205,9 +207,19 @@ export class CreateCeramSoComponent implements OnInit {
       } else {
         this.codeService.getBy({ code_fldname: "cm_cr_terms" }).subscribe((response: any) => (this.so_cr_terms = response.data));
         console.log(this.so_cr_terms);
+
       }
     });
-
+ this.codeService.getByOne({ code_fldname: "price_autorisation", code_value : "auto" }).subscribe((response: any) => {
+  const text = response.data.code_cmmt
+  console.log("response.data",response.data)
+  if(text.indexOf(this.user.usrd_code) != -1) { this.autorisation = true}
+  console.log(this.autorisation)
+ }
+  
+  );
+       
+    console.log(this.so_cr_terms);
      this.initGrid();
   }
   gridReady(angularGrid: AngularGridInstance) {
@@ -272,7 +284,8 @@ export class CreateCeramSoComponent implements OnInit {
               }
               this.conv = resp.data.pt_ord_mult
               this.piece = resp.data.pt_pur_lead
-              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, desc: resp.data.pt_desc1, sod_site: resp.data.pt_site, sod_loc: resp.data.pt_loc, sod_um: resp.data.pt_um, sod_um_conv: 1, sod_price: resp.data.pt_price, sod_disc_pct: 0, sod_type: this.type, sod_tax_code: resp.data.pt_taxc, sod_taxc: resp.data.taxe.tx2_tax_pct, sod_taxable: this.taxable });
+              this.purprice = resp.data.pt_pur_price
+              this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_desc: resp.data.pt_desc1, sod_site: resp.data.pt_site, sod_loc: resp.data.pt_loc, sod_um: resp.data.pt_um, sod_um_conv: 1, sod_price: resp.data.pt_price, sod_disc_pct: 0, sod_type: this.type, sod_tax_code: resp.data.pt_taxc, sod_taxc: resp.data.taxe.tx2_tax_pct, sod_taxable: this.taxable });
             } else {
               alert("Article Nexiste pas");
               this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_part: null });
@@ -296,7 +309,7 @@ export class CreateCeramSoComponent implements OnInit {
       {
         id: "desc",
         name: "Description",
-        field: "desc",
+        field: "sod_desc",
         sortable: true,
         width: 180,
         filterable: false,
@@ -551,8 +564,15 @@ export class CreateCeramSoComponent implements OnInit {
         },
         formatter: Formatters.decimal,
         onCellChange: (e: Event, args: OnEventArgs) => {
+          if(this.autorisation == false) {
+          if(args.dataContext.sod_price < this.purprice) {
+          alert("Le Prix de vente doit etre supérieur au prix d'achat")
+  this.gridService.updateItemById(args.dataContext.id, { ...args.dataContext, sod_price: 0 });
+        
+          }else {
           console.log(args.dataContext.sod_price);
-          this.calculatetot();
+          this.calculatetot();}
+        } else {   this.calculatetot();}
         },
       },
       
@@ -698,7 +718,7 @@ export class CreateCeramSoComponent implements OnInit {
 
                   sod_part: detail.qod_part,
                   cmvid: "",
-                  desc: detail.item.pt_desc1,
+                  sod_desc: detail.item.pt_desc1,
                   sod_qty_ord: detail.qod_qty_ord,
                   sod_um: detail.qod_um,
                   sod_price: detail.qod_price,
@@ -718,7 +738,7 @@ export class CreateCeramSoComponent implements OnInit {
 
                 sod_part: detail.qod_part,
                 cmvid: "",
-                desc: detail.item.pt_desc1,
+                sod_desc: detail.item.pt_desc1,
                 sod_qty_ord: detail.qod_qty_ord,
                 sod_um: detail.qod_um,
                 sod_price: detail.qod_price,
@@ -897,7 +917,7 @@ this.row_number = this.dataset.length;
         sod_site: response.data.pt_site,
         sod_loc: response.data.pt_loc,
         cmvid: "",
-        desc: response.data.pt_desc1,
+        sod_desc: response.data.pt_desc1,
         //tr_qty_loc: response.data.ld_qty_oh,
       //  qty_oh: response.data.ld_qty_oh,
         sod_um: response.data.pt_um,
@@ -1098,7 +1118,7 @@ this.row_number = this.dataset.length;
 
             sod_part: detail.qod_part,
             cmvid: "",
-            desc: detail.item.pt_desc1,
+            sod_desc: detail.item.pt_desc1,
             sod_qty_ord: detail.qod_qty_ord,
             sod_um: detail.qod_um,
             sod_price: detail.qod_price,
@@ -1119,7 +1139,7 @@ this.row_number = this.dataset.length;
 
           sod_part: detail.qod_part,
           cmvid: "",
-          desc: detail.item.pt_desc1,
+          sod_desc: detail.item.pt_desc1,
           sod_qty_ord: detail.qod_qty_ord,
           sod_um: detail.qod_um,
           sod_price: detail.qod_price,
@@ -1543,7 +1563,7 @@ this.row_number = this.dataset.length;
         }
 
         updateItem.sod_part = item.pt_part;
-        updateItem.desc = item.pt_desc1;
+        updateItem.sod_desc = item.pt_desc1;
         updateItem.sod_um = item.pt_um;
         updateItem.sod_um_conv = 1;
 
@@ -1554,6 +1574,7 @@ this.row_number = this.dataset.length;
         updateItem.sod_taxc = item.taxe.tx2_tax_pct;
         updateItem.sod_type = this.type;
         updateItem.sod_price = item.pt_price;
+        this.purprice = item.pt_pur_price;
         updateItem.sod_disc_pct = 0;
         this.conv = item.pt_ord_mult  
         this.piece = item.pt_pur_lead
@@ -1711,7 +1732,7 @@ this.row_number = this.dataset.length;
 
                   sod_part: detail.qod_part,
                   cmvid: "",
-                  desc: detail.item.pt_desc1,
+                  sod_desc: detail.item.pt_desc1,
                   sod_qty_ord: detail.qod_qty_ord,
                   sod_um: detail.qod_um,
                   sod_price: detail.qod_price,
@@ -1732,7 +1753,7 @@ this.row_number = this.dataset.length;
 
                 sod_part: detail.qod_part,
                 cmvid: "",
-                desc: detail.item.pt_desc1,
+                sod_desc: detail.item.pt_desc1,
                 sod_qty_ord: detail.qod_qty_ord,
                 sod_um: detail.qod_um,
                 sod_price: detail.qod_price,

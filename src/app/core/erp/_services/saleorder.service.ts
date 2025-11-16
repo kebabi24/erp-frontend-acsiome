@@ -58,6 +58,10 @@ export class SaleOrderService {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.get(API_URL+'/allwithdetail', { headers: httpHeaders })
     }
+    public getAllwithDetailCeram() {
+        const httpHeaders = this.httpUtils.getHTTPHeaders()
+        return this.http.get(API_URL+'/allwithdetailceram', { headers: httpHeaders })
+    }
     public getByrange(data: any) {
         const httpHeaders = this.httpUtils.getHTTPHeaders()
         return this.http.post(API_URL+'/findrange', data, { headers: httpHeaders })
